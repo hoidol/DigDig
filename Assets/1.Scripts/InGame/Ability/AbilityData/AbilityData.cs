@@ -1,10 +1,36 @@
 using UnityEngine;
 
-//[CreateAssetMenu(fileName = "AbilityData", menuName = "AbilityData", order = 0)]
+[CreateAssetMenu(fileName = "AbilityData", menuName = "AbilityData", order = 0)]
 public class AbilityData : ScriptableObject
 {
     public string key;
     public Sprite thum;
+    public Grade grade;
+    public int maxLv;
+    public ConditionData[] conditions;
+
+    public bool Unlocked()
+    {
+        foreach (var condition in conditions)
+        {
+            if (!condition.Check())
+                return false;
+        }
+        return true;
+
+    }
+#if UNITY_EDITOR
+    public void Edit()
+    {
+        Debug.Log("AbilityData Edit()");
+        if (string.IsNullOrEmpty(key) || key != name)
+        {
+            key = name;
+        }
+
+    }
+#endif
+
 
 }
 

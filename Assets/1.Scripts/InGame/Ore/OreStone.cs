@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class OreStone : MonoBehaviour, IHittable
 {
-    public const float SIZE = 1f;
+    public const float SIZE = 1.46f;
     public Transform Transform
     {
         get
@@ -19,15 +19,17 @@ public class OreStone : MonoBehaviour, IHittable
     public void Init(int idx, Color color)
     {
         this.idx = idx;
-        this.maxHp = 100 + idx * 100;
+        this.maxHp = 8 + idx * 10;
         curHp = maxHp;
         hpUI = null;
         GetComponentInChildren<SpriteRenderer>().color = color;
     }
 
-    public void OnHit(float damage)
+    public void TakeDamage(float damage)
     {
         curHp -= damage;
+        DamageText damageText = DamageText.Instantiate();
+        damageText.SetDamageText(hpPoint.transform.position, damage.ToString());
         if (hpUI == null || hpUI.hittable != this)
         {
             hpUI = HpUI.GetHpUI(this);
@@ -36,11 +38,18 @@ public class OreStone : MonoBehaviour, IHittable
         hpUI.SetRate(curHp / maxHp);
         if (curHp <= 0)
         {
-            Destroy(gameObject);
-            Ore ore = OreManager.Instance.GetOre();
-            ore.Droped(transform.position, idx.ToString());
-            ore.transform.position = transform.position;
-            hpUI.Release();
+            Destroyed();
         }
+    }
+
+
+    public void Destroyed()
+    {
+        Destroy(gameObject);
+        Ore ore = OreManager.Instance.GetOre();
+        ore.Droped(transform.position, idx.ToString());
+        ore.transform.position = transform.position;
+        hpUI.Release();
+        GameManager.Instance.AddDestroyOreStone();
     }
 }

@@ -12,6 +12,6 @@ public class ExpBar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        image.fillAmount = (float)MagmaCore.Instance.exp / (float)MagmaCore.Instance.GetMaxExp();
+        image.fillAmount = (float)Player.Instance.exp / (float)Player.Instance.GetMaxExp();
     }
 }

@@ -1,16 +1,14 @@
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro;
 public class AbilityPanel : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    AbilityData abilityData;
 
-    // Update is called once per frame
-    void Update()
+    public Image thumImage;
+    public TMP_Text nameText;
+    public void SetAbilityData(AbilityData abilityData)
     {
-        
+        this.abilityData = abilityData;
     }
 }

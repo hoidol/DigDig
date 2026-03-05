@@ -24,7 +24,7 @@ public class MapDisplay : MonoBehaviour
         }
         noiseTex.SetPixels(colorMap);
         noiseTex.Apply();
-        // spriteRenderer.sprite = Sprite.Create(noiseTex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f));
+        spriteRenderer.sprite = Sprite.Create(noiseTex, new Rect(0, 0, width, height), new Vector2(0.5f, 0.5f));
         return noiseTex;
 
     }

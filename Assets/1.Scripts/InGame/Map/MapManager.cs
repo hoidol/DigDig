@@ -20,8 +20,20 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
+
         GenerateMap();
     }
+
+
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            GenerateMap();
+        }
+    }
+#endif
 
     public void GenerateMap()
     {
@@ -30,27 +42,28 @@ public class MapManager : MonoBehaviour
         islandGeneratorByPerlinNoise.xOrg = pseudoRandom.Next(0, 99999); //의사 난수로 부터 랜덤 값 추출
         islandGeneratorByPerlinNoise.yOrg = pseudoRandom.Next(0, 99999);
         tex2D = islandGeneratorByPerlinNoise.GenerateMap();
-        int maxX = islandGeneratorByPerlinNoise.width;
-        int maxY = islandGeneratorByPerlinNoise.width;
 
-        float initX = -maxX / 2;
-        float initY = -maxY / 2;
+        // int maxX = islandGeneratorByPerlinNoise.width;
+        // int maxY = islandGeneratorByPerlinNoise.width;
 
-        for (int y = 0; y < maxY; y++)
-        {
-            for (int x = 0; x < maxX; x++)
-            {
-                Vector3 pos = new Vector3(initX + x, initY + y, 0);
+        // float initX = -maxX / 2;
+        // float initY = -maxY / 2;
 
-                //0,0 기준 반지름 3이내에 있는 점은 continue
-                if (Vector2.Distance(new Vector2(0, 0), pos) <= 3) continue;
-                Color color = tex2D.GetPixel(x, y);
-                int idx = mapDisplay.GetIdx(color);
-                OreStone oreStone = Instantiate(oreStonePrefab, pos, Quaternion.identity);
-                oreStone.transform.parent = transform;
-                oreStone.Init(idx, color);
-            }
-        }
+        // for (int y = 0; y < maxY; y++)
+        // {
+        //     for (int x = 0; x < maxX; x++)
+        //     {
+        //         Vector3 pos = new Vector3(initX + x, initY + y, 0) * OreStone.SIZE;
+
+        //         //0,0 기준 반지름 3이내에 있는 점은 continue
+        //         if (Vector2.Distance(new Vector2(0, 0), pos) <= 4) continue;
+        //         Color color = tex2D.GetPixel(x, y);
+        //         int idx = mapDisplay.GetIdx(color);
+        //         OreStone oreStone = Instantiate(oreStonePrefab, pos, Quaternion.identity);
+        //         oreStone.transform.parent = transform;
+        //         oreStone.Init(idx, color);
+        //     }
+        // }
     }
 
 

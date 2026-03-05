@@ -6,5 +6,5 @@ public interface IHittable
     {
         get;
     }
-    void OnHit(float damage);
+    void TakeDamage(float damage);
 }

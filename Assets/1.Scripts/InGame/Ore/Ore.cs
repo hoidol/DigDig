@@ -16,6 +16,7 @@ public class Ore : MonoBehaviour, IPickable
     }
 
     public int exp = 1;// 임시 경험치량
+    public int gold = 1; //가치
     public void Droped(Vector2 pos, string key)
     {
         transform.position = pos;
@@ -26,11 +27,9 @@ public class Ore : MonoBehaviour, IPickable
     public void Take(IPicker picker)
     {
         IsTaken = true;
-        transform.DOMove(picker.Transform.position, 0.3f).OnComplete(() =>
+        transform.DOMove(picker.Transform.position, 0.35f).OnComplete(() =>
         {
             picker.PickUp(this);
-            //Player.Instance.PickUp(this); //나중에 고치기 - 플레이어 획득하는게 아니게, 범용적으로 
-
         });
     }
 

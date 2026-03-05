@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class MagmaBall : MonoBehaviour
 {
-
     public SpriteRenderer spriteRenderer;
     public void Start()
     {
@@ -16,7 +15,7 @@ public class MagmaBall : MonoBehaviour
     {
         if (other.TryGetComponent(out IHittable hittable))
         {
-            hittable.OnHit(10);
+            hittable.TakeDamage(Player.Instance.playerStatMgr.AttackPower);
         }
     }
 }
