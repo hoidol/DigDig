@@ -16,13 +16,26 @@ public class OreStone : MonoBehaviour, IHittable
     public float curHp;
     public float maxHp;
     public int idx;
+    public GameObject gold;
+    bool isGoldStone;
     public void Init(int idx, Color color)
     {
         this.idx = idx;
-        this.maxHp = 8 + idx * 10;
+
+        float distance = Vector2.Distance(Vector2.zero, transform.position);
+        float disMulti = distance / 6;
+        if (disMulti <= 1)
+            disMulti = 1;
+        this.maxHp = (8 + idx * 10) * disMulti;
+
+
         curHp = maxHp;
         hpUI = null;
         GetComponentInChildren<SpriteRenderer>().color = color;
+
+        isGoldStone = Random.Range(0, 3) == 0;
+
+        gold.SetActive(isGoldStone);
     }
 
     public void TakeDamage(float damage)
@@ -45,11 +58,20 @@ public class OreStone : MonoBehaviour, IHittable
 
     public void Destroyed()
     {
-        Destroy(gameObject);
-        Ore ore = OreManager.Instance.GetOre();
-        ore.Droped(transform.position, idx.ToString());
-        ore.transform.position = transform.position;
+        gameObject.SetActive(false);
+        ExpText expText = ExpText.Instantiate();
+        expText.SetExpText(transform.position, (GameManager.Instance.underground - 1) * 4 + idx + 1);
+
+
+        if (isGoldStone)
+        {
+            Ore ore = OreManager.Instance.GetOre();
+            ore.Droped(transform.position, idx.ToString());
+            ore.transform.position = transform.position;
+        }
+
         hpUI.Release();
         GameManager.Instance.AddDestroyOreStone();
+        Player.Instance.AddExp(idx + 1);
     }
 }

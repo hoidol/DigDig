@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "AbilityData", menuName = "AbilityData", order = 0)]
+[CreateAssetMenu(fileName = "AbilityData", menuName = "Ability/AbilityData", order = 0)]
 public class AbilityData : ScriptableObject
 {
     public string key;
@@ -17,7 +17,11 @@ public class AbilityData : ScriptableObject
                 return false;
         }
         return true;
-
+    }
+    public string Title => key;
+    public string Description()
+    {
+        return "설명";
     }
 #if UNITY_EDITOR
     public void Edit()

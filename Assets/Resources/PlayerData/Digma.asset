@@ -14,21 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Digma
   playerStats:
-  - playerStatType: 0
+  - statType: 0
     upgradeLv: 0
     value: 3
-  - playerStatType: 1
+  - statType: 1
     upgradeLv: 0
     value: 100
-  - playerStatType: 2
+  - statType: 2
     upgradeLv: 0
     value: 0.05
-  - playerStatType: 3
+  - statType: 3
     upgradeLv: 0
     value: 1
-  - playerStatType: 4
+  - statType: 4
     upgradeLv: 0
     value: 3.5
-  - playerStatType: 5
+  - statType: 5
     upgradeLv: 0
     value: 5
+  - statType: 6
+    upgradeLv: 0
+    value: 10

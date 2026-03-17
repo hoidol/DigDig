@@ -4,29 +4,30 @@ public class ParticleEffect : Effect
 {
     ParticleSystem[] particleSystems;
     public float duration;
+    protected float timer = 0;
     public override void Init()
     {
         particleSystems = GetComponentsInChildren<ParticleSystem>();
-        if(duration <= 0)
+        if (duration <= 0)
         {
             duration = particleSystems[0].main.duration;
         }
     }
 
-    public override void Show(Vector3 point)
+    public override void Play(Vector2 point)
     {
-        base.Show(point);
-        for(int i =0;i< particleSystems.Length; i++)
+        base.Play(point);
+        for (int i = 0; i < particleSystems.Length; i++)
         {
             particleSystems[i].Play();
         }
         timer = duration;
     }
 
-    float timer = 0;
+
     private void Update()
     {
-        if(timer <= 0)
+        if (timer <= 0)
         {
             EndEffect();
             return;

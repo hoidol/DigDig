@@ -3,10 +3,12 @@
     Gold,
     Ad,
     InApp,
-    Dia,
-    LuckyCoin,
-    Iron,
-    IronMineTicket,
-    GoldMineTicket,
-    RedDia
+    Dia
+}
+public enum StatOpType
+{
+    Add,       // +=
+    Subtract,  // -=
+    Multiply,  // *=
+    Divide     // /=
 }

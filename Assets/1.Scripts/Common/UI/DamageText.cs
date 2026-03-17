@@ -42,7 +42,7 @@ public class DamageText : MonoBehaviour
         damageText.text = text;
         transform.localScale = Vector3.zero;
 
-        damageText.color = new Color(1, 1, 1, 1); // 투명도 초기화
+        damageText.alpha = 1; // 투명도 초기화
 
         float randomSize = 1f;//Vector3.one;// Random.Range(0.8f, 1f);
         float moveUpAmount = Random.Range(1.0f, 1.5f);

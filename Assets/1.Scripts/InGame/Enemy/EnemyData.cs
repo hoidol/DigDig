@@ -3,7 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EnemyData", menuName = "EnemyData", order = 0)]
 public class EnemyData : ScriptableObject
 {
-    public EnemyType enemyType;
+    public EnemyGrade grade;
+    public EnemyType type;
     public float initHp;
     public float increaseHp;
     public float initAttackPower;
@@ -11,6 +12,7 @@ public class EnemyData : ScriptableObject
     public float attackSpeed;
     public float attackRange;
     public float moveSpeed;
+    public int exp;
 
     public float GetHp(int lv = -1)
     {
@@ -30,8 +32,16 @@ public class EnemyData : ScriptableObject
     }
 }
 
+public enum EnemyGrade
+{
+    Normal,
+    Elite,
+    Boss
+
+}
 public enum EnemyType
 {
     Melee,
-    Ranged
+    Ranged,
+    Boss
 }

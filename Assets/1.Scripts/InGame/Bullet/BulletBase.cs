@@ -3,13 +3,14 @@ using System.Linq;
 public class BulletBase : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
-    Vector3 direction;
+    protected Vector3 direction;
     float damage;
 
     public LayerMask hitLayerMask;
     public virtual void Shoot(Vector2 dir, float damage)
     {
         direction = dir;
+        transform.right = dir;
         this.damage = damage;
     }
 
@@ -42,7 +43,7 @@ public class BulletBase : MonoBehaviour
         return Physics2D.Raycast(transform.position, direction, moveSpeed * Time.deltaTime, hitLayerMask);
     }
 
-    public void Hit(IHittable hit)
+    public virtual void Hit(IHittable hit)
     {
         hit.TakeDamage(damage);
 

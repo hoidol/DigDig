@@ -15,7 +15,7 @@ public class AbilityManager : MonoSingleton<AbilityManager>
         return abilityDatas.Where(w => w.key == key).FirstOrDefault();
     }
 
-    List<AbilityData> canPickAbilityDatas = new List<AbilityData>();
+    [SerializeField] List<AbilityData> canPickAbilityDatas = new List<AbilityData>();
     public AbilityData[] GetAbilityDatas()
     {
         canPickAbilityDatas.Clear();
@@ -24,11 +24,12 @@ public class AbilityManager : MonoSingleton<AbilityManager>
             // 이미 플레이어가 가진 능력은 제외
             var playerAbility = Player.Instance.playerAbilities.FirstOrDefault(a => a.key == abilityData.key);
 
-            // 플레이어가 해당 능력을 소유하고 있고, 레벨이 최대치에 도달했다면 뽑을 수 없음
-            if (playerAbility != null && abilityData.Unlocked())
+
+            if (!abilityData.Unlocked())
                 continue;
 
-            if (abilityData.maxLv > 0 && playerAbility.count >= abilityData.maxLv)
+            // 플레이어가 해당 능력을 소유하고 있고, 레벨이 최대치에 도달했다면 뽑을 수 없음
+            if (playerAbility != null && abilityData.maxLv > 0 && playerAbility.count >= abilityData.maxLv)
                 continue;
 
             // 그렇지 않으면 추가

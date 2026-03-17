@@ -14,22 +14,22 @@ public class Player : MonoSingleton<Player>, IPicker
     {
         get { return transform; }
     }
+    public Transform attackPoint;
     public string key;
     public Rigidbody2D rg;
-    public Joystick joystick;
-    public Transform faceTr;
-    public ParticleSystem pickParticle;
+    public Joystick moveJoystick;
+    public Joystick attackJoystack;
+    // public Transform faceTr;
+    //public ParticleSystem pickParticle;
     public PlayerStatManager playerStatMgr;
     public float angerAmount;
     public Color originColor = new Color(0.1921569f, 1f, 0.4705882f, 1f);
     public Color angerColor = new Color(1f, 0.1921569f, 0.1921569f, 1f); //FF3131 //분노
-    //public Color[] angerStepColors;
-    // public int angerStepIndex = 0;
-    // public AngerStep[] angerSteps;
-    public SpriteRenderer bodySprite;
-    public Transform bodyTr;
+    [SerializeField] Animator animator;
+    public SpriteRenderer[] bodySprites;
+    public Transform bodyRootTr;
 
-    public float maxHp;
+    // public float maxHp;
     public float curHp;
 
     public int exp;
@@ -37,7 +37,7 @@ public class Player : MonoSingleton<Player>, IPicker
     public float attackTimer = 0f;
     public int gold;
     public List<MagmaBall> magmaBalls = new List<MagmaBall>();
-    public MagmaRotation magmaRotation;
+    //public MagmaRotation magmaRotation;
 
     public Inventory inventory;
     public List<PlayerAbility> playerAbilities = new List<PlayerAbility>();
@@ -59,16 +59,24 @@ public class Player : MonoSingleton<Player>, IPicker
         joystick = FindFirstObjectByType<Joystick>();
         rg = GetComponentInChildren<Rigidbody2D>();
         magmaBalls = GetComponentsInChildren<MagmaBall>().ToList();
-        magmaRotation = GetComponentInChildren<MagmaRotation>();
+        //magmaRotation = GetComponentInChildren<MagmaRotation>();
         inventory = GetComponentInChildren<Inventory>();
-        playerStatMgr = new PlayerStatManager(key);
+        playerStatMgr = new PlayerStatManager(this, key);
     }
 
     void Start()
     {
-        bodySprite.color = originColor;
+        SetBodyColor(originColor);
         playerStatMgr.UpdateStat();
-        StartCoroutine(CoBodyEffect());
+        curHp = playerStatMgr.MaxHp;
+        //StartCoroutine(CoBodyEffect());
+    }
+    void SetBodyColor(Color color)
+    {
+        for (int i = 0; i < bodySprites.Length; i++)
+        {
+            bodySprites[i].color = color;
+        }
     }
     bool isAnger;
     void Update()
@@ -78,10 +86,14 @@ public class Player : MonoSingleton<Player>, IPicker
         if (joystick.Direction.magnitude > 0.1f)
         {
             if (joystick.Direction.x >= 0)
-                faceTr.localScale = new Vector3(1, 1, 1);
+                bodyRootTr.localScale = new Vector3(1, 1, 1);
             else
-                faceTr.localScale = new Vector3(-1, 1, 1);
-
+                bodyRootTr.localScale = new Vector3(-1, 1, 1);
+            animator.SetBool("Running", true);
+        }
+        else
+        {
+            animator.SetBool("Running", false);
         }
 
         attackTimer += Time.deltaTime;
@@ -95,17 +107,17 @@ public class Player : MonoSingleton<Player>, IPicker
         if (angerAmount < 0)
             angerAmount = 0;
 
-        if (!isAnger)
-        {
-            magmaRotation.SetRotationSpeed(-150);
-        }
-        else
-        {
-            magmaRotation.SetRotationSpeed(-450);
-        }
+        // if (!isAnger)
+        // {
+        //     magmaRotation.SetRotationSpeed(-150);
+        // }
+        // else
+        // {
+        //     magmaRotation.SetRotationSpeed(-450);
+        // }
 
 
-        magmaBalls.ForEach(ball => ball.SetColor(bodySprite.color));
+        magmaBalls.ForEach(ball => ball.SetColor(bodySprites[0].color));
     }
 
 
@@ -119,13 +131,13 @@ public class Player : MonoSingleton<Player>, IPicker
         {
             if (isAnger)
             {
-                yield return bodyTr.DOScale(0.9f, 0.5f).SetEase(Ease.OutBack).WaitForCompletion();
-                yield return bodyTr.DOScale(1f, 0.5f).SetEase(Ease.InBack).WaitForCompletion();
+                yield return bodyRootTr.DOScale(0.9f, 0.5f).SetEase(Ease.OutBack).WaitForCompletion();
+                yield return bodyRootTr.DOScale(1f, 0.5f).SetEase(Ease.InBack).WaitForCompletion();
             }
             else
             {
-                yield return bodyTr.DOScale(0.99f, 1.5f).SetEase(Ease.OutBack).WaitForCompletion();
-                yield return bodyTr.DOScale(1f, 1.5f).SetEase(Ease.InBack).WaitForCompletion();
+                yield return bodyRootTr.DOScale(0.99f, 1.5f).SetEase(Ease.OutBack).WaitForCompletion();
+                yield return bodyRootTr.DOScale(1f, 1.5f).SetEase(Ease.InBack).WaitForCompletion();
             }
         }
     }
@@ -134,13 +146,14 @@ public class Player : MonoSingleton<Player>, IPicker
     {
         //마지막 방향으로
         //lastVec 방향으로 쏘기
+        TargetIndicator.Instance.SetTaret(null);
+
 
 
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, playerStatMgr.AttackRange, pickLayer);
         Collider2D closestCollider = null;
         float closestDistance = float.MaxValue;
-        // colliders 배열에서 Enemy 태그를 가진 것 중 가장 가까운 콜라이더만 대상으로 판별
-        // System.Linq을 활용하여 최적화된 코드
+
         var enemyColliders = colliders
             .Where(c => c.CompareTag("Enemy"))
             // Vector2.Distance(a, b) 대신 제곱거리((a-b).sqrMagnitude)로 대체하여 연산을 가볍게 함
@@ -150,8 +163,19 @@ public class Player : MonoSingleton<Player>, IPicker
         Collider2D nearestEnemyCollider = enemyColliders.FirstOrDefault();
         if (nearestEnemyCollider != null && nearestEnemyCollider.TryGetComponent(out IHittable enemyHittable))
         {
-            Attack(enemyHittable.Transform.position - transform.position);
+            SetTarget(enemyHittable);
             return;
+        }
+
+        if (target != null && target.Transform != null && target.Transform.gameObject.activeSelf)
+        {
+            float distance = Vector2.Distance(transform.position, target.Transform.position);
+            if (distance <= playerStatMgr.AttackRange)
+            {
+                SetTarget(target);
+                return;
+            }
+
         }
 
         foreach (var collider in colliders)
@@ -166,15 +190,15 @@ public class Player : MonoSingleton<Player>, IPicker
 
         if (closestCollider != null && closestCollider.TryGetComponent(out IHittable hittable))
         {
-            Attack(hittable.Transform.position - transform.position);
+            SetTarget(hittable);
         }
     }
     public void AddHp(float hp)
     {
         curHp += hp;
-        if (curHp > maxHp)
+        if (curHp > playerStatMgr.MaxHp)
         {
-            curHp = maxHp;
+            curHp = playerStatMgr.MaxHp;
         }
     }
 
@@ -186,19 +210,26 @@ public class Player : MonoSingleton<Player>, IPicker
             GameManager.Instance.EndGame(false);
         }
     }
+    IHittable target;
+    void SetTarget(IHittable t)
+    {
+        target = t;
+        TargetIndicator.Instance.SetTaret(target.Transform);
+        Attack(target.Transform.position - transform.position);
+    }
     void Attack(Vector2 dir)//IHittable hittable
     {
 
         FlameBullet flameBullet = FlameBullet.Instantiate();
-        flameBullet.transform.position = transform.position;
+        flameBullet.transform.position = attackPoint.position;
         flameBullet.Shoot(dir, playerStatMgr.AttackPower);
 
         attackTimer = 0f;
 
         if (dir.x >= 0)
-            faceTr.localScale = new Vector3(1, 1, 1);
+            bodyRootTr.localScale = new Vector3(1, 1, 1);
         else
-            faceTr.localScale = new Vector3(-1, 1, 1);
+            bodyRootTr.localScale = new Vector3(-1, 1, 1);
 
         angerAmount += 5f;
         if (angerAmount > 100f && !isAnger)
@@ -211,11 +242,11 @@ public class Player : MonoSingleton<Player>, IPicker
 
     IEnumerator CoAnger()
     {
-        bodySprite.color = angerColor;
+        SetBodyColor(angerColor);
         yield return new WaitForSeconds(10f);
         isAnger = false;
         angerAmount = 0;
-        bodySprite.color = originColor;
+        SetBodyColor(originColor);
     }
 
     public void PickUp(IPickable pickable)
@@ -259,6 +290,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
     void UpdatePlayer()
     {
+        #region  Upgrade에 따른 능력치 적용
         float preMaxHp = playerStatMgr.MaxHp;
         playerStatMgr.UpdateStat();
         float curMaxHp = playerStatMgr.MaxHp;
@@ -267,6 +299,10 @@ public class Player : MonoSingleton<Player>, IPicker
         {
             AddHp(diffMaxHp);
         }
+
+        #endregion
+
+
 
     }
 
@@ -282,6 +318,7 @@ public class Player : MonoSingleton<Player>, IPicker
             AbilityCanvas.Instance.OpenCanvas(() =>
             {
 
+                Time.timeScale = 1;
             });
         }
     }
@@ -333,74 +370,105 @@ public class PlayerAbility
 //[System.Serializable]
 public class PlayerStatManager
 {
-    public Dictionary<PlayerStatType, PlayerStat> playerStatDic = new Dictionary<PlayerStatType, PlayerStat>();
-    public float MaxHp => playerStatDic[PlayerStatType.MaxHp].value;
-    public float AttackPower => playerStatDic[PlayerStatType.AttackPower].value;
-    public float MoveSpeed => playerStatDic[PlayerStatType.MoveSpeed].value;
-    public float RecoveryHp => playerStatDic[PlayerStatType.RecoveryHp].value;
-    public float AttackSpeed => playerStatDic[PlayerStatType.AttackSpeed].value;
-    public float AttackRange => playerStatDic[PlayerStatType.AttackRange].value;
+    public Dictionary<StatType, PlayerStat> statDic = new Dictionary<StatType, PlayerStat>();
+    public float MaxHp => statDic[StatType.MaxHp].value;
+    public float AttackPower => statDic[StatType.AttackPower].value;
+    public float MoveSpeed => statDic[StatType.MoveSpeed].value;
+    public float RecoveryHp => statDic[StatType.RecoveryHp].value;
+    public float AttackSpeed => statDic[StatType.AttackSpeed].value;
+    public float AttackRange => statDic[StatType.AttackRange].value;
 
     PlayerData playerData;
-    public PlayerStatManager(string key)
+    Player player;
+    StatUpAbilityData[] statUpAbilityDatas;
+    public PlayerStatManager(Player p, string key)
     {
+        player = p;
         playerData = Resources.Load<PlayerData>($"PlayerData/{key}");
-        PlayerStat[] playerStats = new PlayerStat[(int)PlayerStatType.Count];
-        for (int i = 0; i < (int)PlayerStatType.Count; i++)
+        if (playerData == null)
+            Debug.Log("if(playerData == null)");
+
+        statDic.Clear();
+        PlayerStat[] playerStats = new PlayerStat[(int)StatType.Count];
+        for (int i = 0; i < (int)StatType.Count; i++)
         {
             playerStats[i] = new PlayerStat();
-            playerStats[i].playerStatType = (PlayerStatType)i;
-            playerStatDic.Add(playerStats[i].playerStatType, playerStats[i]);
+            playerStats[i].statType = (StatType)i;
+            statDic.Add(playerStats[i].statType, playerStats[i]);
         }
-
+        statUpAbilityDatas = Resources.LoadAll<StatUpAbilityData>("AbilityData/StatUpAbilityData");
         Init();
     }
     void Init()
     {
-        playerStatDic[PlayerStatType.MaxHp].value = playerData.GetPlayerStat(PlayerStatType.MaxHp).value;
-        playerStatDic[PlayerStatType.AttackPower].value = playerData.GetPlayerStat(PlayerStatType.AttackPower).value;
-        playerStatDic[PlayerStatType.MoveSpeed].value = playerData.GetPlayerStat(PlayerStatType.MoveSpeed).value;
-        playerStatDic[PlayerStatType.AttackSpeed].value = playerData.GetPlayerStat(PlayerStatType.AttackSpeed).value;
-        playerStatDic[PlayerStatType.AttackRange].value = playerData.GetPlayerStat(PlayerStatType.AttackRange).value;
-        playerStatDic[PlayerStatType.RecoveryHp].value = playerData.GetPlayerStat(PlayerStatType.RecoveryHp).value;
+        statDic[StatType.MaxHp].value = playerData.GetPlayerStat(StatType.MaxHp).value;
+        statDic[StatType.AttackPower].value = playerData.GetPlayerStat(StatType.AttackPower).value;
+        statDic[StatType.MoveSpeed].value = playerData.GetPlayerStat(StatType.MoveSpeed).value;
+        statDic[StatType.AttackSpeed].value = playerData.GetPlayerStat(StatType.AttackSpeed).value;
+        statDic[StatType.AttackRange].value = playerData.GetPlayerStat(StatType.AttackRange).value;
+        statDic[StatType.RecoveryHp].value = playerData.GetPlayerStat(StatType.RecoveryHp).value;
     }
     public void Upgrade(UpgradeType upgradeType)
     {
-        playerStatDic[UpgradeTypeToPlayerStatType(upgradeType)].upgradeLv++;
+        statDic[UpgradeTypeToStatType(upgradeType)].upgradeLv++;
         UpdateStat();
     }
     public void UpdateStat()
     {
         Init();
 
-        playerStatDic[PlayerStatType.AttackPower].value = AttackPower + UpgradeData.GetUpgradeData(UpgradeType.AttackPower).GetValue(playerStatDic[PlayerStatType.AttackPower].upgradeLv);
-        playerStatDic[PlayerStatType.MaxHp].value = MaxHp + UpgradeData.GetUpgradeData(UpgradeType.MaxHp).GetValue(playerStatDic[PlayerStatType.MaxHp].upgradeLv);
-        playerStatDic[PlayerStatType.RecoveryHp].value = RecoveryHp + UpgradeData.GetUpgradeData(UpgradeType.RecoveryHp).GetValue(playerStatDic[PlayerStatType.RecoveryHp].upgradeLv);
+        #region  Upgrade 따른 능력치 적용
+        // statDic[StatType.AttackPower].value = AttackPower + UpgradeData.GetUpgradeData(UpgradeType.AttackPower).GetValue(statDic[StatType.AttackPower].upgradeLv);
+        // statDic[StatType.MaxHp].value = MaxHp + UpgradeData.GetUpgradeData(UpgradeType.MaxHp).GetValue(statDic[StatType.MaxHp].upgradeLv);
+        // statDic[StatType.RecoveryHp].value = RecoveryHp + UpgradeData.GetUpgradeData(UpgradeType.RecoveryHp).GetValue(statDic[StatType.RecoveryHp].upgradeLv);
+
+        #endregion
+
+        #region  Ability 따른 능력치 적용
+        //statDic[StatType.MaxHp].value = player.GetPlayerAbility("HpUp").count
+
+        for (int i = 0; i < statUpAbilityDatas.Length; i++)
+        {
+            var data = statUpAbilityDatas[i];
+            PlayerAbility pAbility = player.GetPlayerAbility(statUpAbilityDatas[i].key);
+
+            if (pAbility == null || pAbility.count <= 0)
+                continue;
+            var stat = statDic[data.statType];
+            stat.value = data.Apply(stat.value, pAbility.count);
+        }
+
+        #endregion
+
+        // foreach (var stat in statDic.Values)
+        // {
+        //     Debug.Log($" {stat.statType} value {stat.value}");
+        // }
     }
-    public int GetUpgradeLv(PlayerStatType type)
+    public int GetUpgradeLv(StatType type)
     {
-        return playerStatDic[type].upgradeLv;
+        return statDic[type].upgradeLv;
     }
-    public static PlayerStatType UpgradeTypeToPlayerStatType(UpgradeType upgradeType)
+    public static StatType UpgradeTypeToStatType(UpgradeType upgradeType)
     {
-        if (Enum.TryParse<PlayerStatType>(upgradeType.ToString(), out PlayerStatType playerStatType))
+        if (Enum.TryParse<StatType>(upgradeType.ToString(), out StatType playerStatType))
         {
             return playerStatType;
         }
-        return PlayerStatType.Count;
+        return StatType.Count;
     }
 }
 
 [System.Serializable]
 public class PlayerStat
 {
-    public PlayerStatType playerStatType;
+    public StatType statType;
     public int upgradeLv;
     public float value;
 }
 
 
-public enum PlayerStatType
+public enum StatType
 {
     AttackPower,
     MaxHp,
@@ -408,5 +476,6 @@ public enum PlayerStatType
     AttackSpeed,
     MoveSpeed,
     AttackRange,
+    AngerTime,
     Count
 }

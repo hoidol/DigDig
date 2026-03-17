@@ -41,6 +41,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: UnderObject
+    uniqueID: 4145294567
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

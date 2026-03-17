@@ -12,34 +12,11 @@ public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
     }
 
 
-    public void Show(EffectType type, Vector3 point)
+    public Effect Instantiate(EffectType type)
     {
-        GetEffect(type).Show(point);
-    }
-    public void Show(EffectType type, Vector3 point, Color color)
-    {
-        GetEffect(type).Show(point, color);
+        return GetEffect(type);
     }
 
-    public PoolingSystem pooingSystem;
-    public void ShowBezierEffect(Vector3 startPoint, Vector3 endPoint, int count, Icon iconName)
-    {
-        Sprite icon = Resources.Load<Sprite>($"Icon/{iconName}");
-        for (int i = 0; i < count; i++)
-        {
-            BezierImage bezierImage = pooingSystem.GetObject<BezierImage>();
-            bezierImage.transform.parent = effectCanvasTr;
-            bezierImage.transform.localScale = Vector3.one;
-            bezierImage.image.sprite = icon;
-            bezierImage.gameObject.SetActive(true);
-
-            Bezier.Instance.MoveTo(bezierImage.transform, startPoint, endPoint, () =>
-            {
-                bezierImage.gameObject.SetActive(false);
-            });
-        }
-
-    }
 
     public Effect GetEffect(EffectType type)
     {
@@ -102,11 +79,7 @@ public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
 
 public enum EffectType
 {
-    Pick,
-    Land,
-    CannonExplosion,
-    Demolish,
-    StrongPick
+    Hit
 }
 public enum Icon
 {

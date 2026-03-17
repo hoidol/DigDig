@@ -5,7 +5,7 @@ public class PlayerData : ScriptableObject
 {
     public string key; // 
 
-    public PlayerStat[] playerStats = new PlayerStat[(int)PlayerStatType.Count];
+    public PlayerStat[] playerStats = new PlayerStat[(int)StatType.Count];
     // public float hp;
     // public float attackPower;
     // public float moveSpeed;
@@ -13,11 +13,11 @@ public class PlayerData : ScriptableObject
     // public float attackRange;
     // public float recoveryHp;
 
-    public PlayerStat GetPlayerStat(PlayerStatType type)
+    public PlayerStat GetPlayerStat(StatType type)
     {
         for (int i = 0; i < playerStats.Length; i++)
         {
-            if (playerStats[i].playerStatType == type)
+            if (playerStats[i].statType == type)
             {
                 return playerStats[i];
             }
@@ -29,7 +29,7 @@ public class PlayerData : ScriptableObject
     {
         for (int i = 0; i < playerStats.Length; i++)
         {
-            playerStats[i].playerStatType = (PlayerStatType)i;
+            playerStats[i].statType = (StatType)i;
         }
     }
 #endif

@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bda2368e9f954f18b0c76e35cec534b, type: 3}
   m_Name: Ranged
   m_EditorClassIdentifier: 
-  enemyType: 1
-  initHp: 60
+  grade: 0
+  type: 1
+  initHp: 25
   increaseHp: 5
   initAttackPower: 2
   increaseAttackPower: 1
   attackSpeed: 3
-  attackRange: 3
+  attackRange: 7
   moveSpeed: 5
+  exp: 1

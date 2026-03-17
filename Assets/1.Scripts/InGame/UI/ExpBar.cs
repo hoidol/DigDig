@@ -6,7 +6,7 @@ public class ExpBar : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        image = GetComponent<Image>();
+        //image = GetComponent<Image>();
     }
 
     // Update is called once per frame

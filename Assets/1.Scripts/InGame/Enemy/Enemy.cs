@@ -24,8 +24,9 @@ public class Enemy : MonoBehaviour, IHittable
     const float OverlapCheckInterval = 0.15f;
     float overlapCheckTimer;
     Vector2 cachedOreStonePush;
+    public bool attacking;
 
-    private void Awake()
+    public virtual void Awake()
     {
         tag = "Enemy";
         root = transform.Find("Root");
@@ -35,7 +36,7 @@ public class Enemy : MonoBehaviour, IHittable
         overlapFilter = new ContactFilter2D().NoFilter();
     }
 
-    public void Spawn(Vector2 pos)
+    public virtual void Spawn(Vector2 pos)
     {
         transform.position = pos;
         maxHp = enemyData.GetHp(1);
@@ -52,6 +53,12 @@ public class Enemy : MonoBehaviour, IHittable
     }
     void Update()
     {
+        if (hpUI != null && hpUI.gameObject.activeSelf)
+            hpUI.transform.position = hpPoint.position;
+
+        if (attacking)
+            return;
+
         if (attackTimer < enemyData.attackSpeed)
             attackTimer += Time.deltaTime;
 
@@ -64,15 +71,19 @@ public class Enemy : MonoBehaviour, IHittable
             UpdateAttack();
         }
 
-        if (hpUI != null && hpUI.gameObject.activeSelf)
-            hpUI.transform.position = hpPoint.position;
     }
 
-    public virtual void Attack()
+    public virtual void StartAttack()
     {
         attackTimer = 0;
+        attacking = true;
     }
+    public virtual void EndAttack()
+    {
 
+        attacking = false;
+        EnterState(EnemyState.Approaching);
+    }
     public virtual void UpdateAttack()
     {
         Vector2 vec = Player.Instance.transform.position - transform.position;
@@ -92,7 +103,7 @@ public class Enemy : MonoBehaviour, IHittable
         rg2d.linearVelocity = Vector2.zero;
         if (attackTimer >= enemyData.attackSpeed)
         {
-            Attack();
+            StartAttack();
         }
     }
 
@@ -149,10 +160,22 @@ public class Enemy : MonoBehaviour, IHittable
         hpUI.SetRate(curHp / maxHp);
         if (curHp <= 0)
         {
-            gameObject.SetActive(false);
-            hpUI.Release();
-            hpUI = null;
+            Dead();
         }
+    }
+    public void Dead()
+    {
+        gameObject.SetActive(false);
+        hpUI.Release();
+        hpUI = null;
+
+        Ore ore = OreManager.Instance.GetOre();
+        ore.Droped(transform.position, "0");
+        ore.transform.position = transform.position;
+
+        ExpText expText = ExpText.Instantiate();
+        expText.SetExpText(transform.position, enemyData.exp);
+        Player.Instance.AddExp(enemyData.exp);
     }
 }
 

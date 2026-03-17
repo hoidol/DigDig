@@ -11,15 +11,19 @@ public class Effect : MonoBehaviour
     {
 
     }
-    public virtual void Show(Vector3 point)
+    public virtual void Play(Vector2 point)
     {
         gameObject.SetActive(true);
         transform.position = point;
     }
 
-    public virtual void Show(Vector3 point, Color color)
+    public virtual void Play(Vector2 point, Color color)
     {
-        Show(point);
+        Play(point);
+    }
+    public virtual void Play(Vector2 point, Vector2 dir)
+    {
+        Play(point);
     }
 
     public virtual void EndEffect()

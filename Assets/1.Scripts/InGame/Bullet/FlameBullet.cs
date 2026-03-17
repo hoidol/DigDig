@@ -22,7 +22,12 @@ public class FlameBullet : BulletBase
             return Instantiate(prefab);
         }
     }
-
+    public override void Hit(IHittable hit)
+    {
+        base.Hit(hit);
+        Effect effect = EffectManager.Instance.Instantiate(EffectType.Hit);
+        effect.Play(transform.position, direction);
+    }
     public override void Release()
     {
         gameObject.SetActive(false);

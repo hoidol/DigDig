@@ -43,27 +43,28 @@ public class MapManager : MonoBehaviour
         islandGeneratorByPerlinNoise.yOrg = pseudoRandom.Next(0, 99999);
         tex2D = islandGeneratorByPerlinNoise.GenerateMap();
 
-        // int maxX = islandGeneratorByPerlinNoise.width;
-        // int maxY = islandGeneratorByPerlinNoise.width;
+        int maxX = islandGeneratorByPerlinNoise.width;
+        int maxY = islandGeneratorByPerlinNoise.width;
 
-        // float initX = -maxX / 2;
-        // float initY = -maxY / 2;
+        float initX = -maxX / 2;
+        float initY = -maxY / 2;
 
-        // for (int y = 0; y < maxY; y++)
-        // {
-        //     for (int x = 0; x < maxX; x++)
-        //     {
-        //         Vector3 pos = new Vector3(initX + x, initY + y, 0) * OreStone.SIZE;
+        for (int y = 0; y < maxY; y++)
+        {
+            for (int x = 0; x < maxX; x++)
+            {
+                Vector3 pos = new Vector3(initX + x, initY + y, 0) * OreStone.SIZE;
+                //0,0 기준 반지름 3이내에 있는 점은 continue
+                if (Vector2.Distance(new Vector2(0, 0), pos) <= 5) continue;
 
-        //         //0,0 기준 반지름 3이내에 있는 점은 continue
-        //         if (Vector2.Distance(new Vector2(0, 0), pos) <= 4) continue;
-        //         Color color = tex2D.GetPixel(x, y);
-        //         int idx = mapDisplay.GetIdx(color);
-        //         OreStone oreStone = Instantiate(oreStonePrefab, pos, Quaternion.identity);
-        //         oreStone.transform.parent = transform;
-        //         oreStone.Init(idx, color);
-        //     }
-        // }
+                Color color = tex2D.GetPixel(x, y);
+                int idx = mapDisplay.GetIdx(color);
+                //                Debug.Log($"x {x} y {y} : " + idx);
+                OreStone oreStone = Instantiate(oreStonePrefab, pos, Quaternion.identity);
+                oreStone.transform.parent = transform;
+                oreStone.Init(idx, color);
+            }
+        }
     }
 
 

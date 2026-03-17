@@ -16,7 +16,7 @@ public class UpgradeData : ScriptableObject
     {
         if (lv == -1)
         {
-            lv = Player.Instance.playerStatMgr.GetUpgradeLv(PlayerStatManager.UpgradeTypeToPlayerStatType(upgradeType));// 임시 
+            lv = Player.Instance.playerStatMgr.GetUpgradeLv(PlayerStatManager.UpgradeTypeToStatType(upgradeType));// 임시 
         }
         return initValue + increaseValue * lv;
     }
