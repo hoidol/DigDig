@@ -15,6 +15,7 @@ public class HpUI : MonoBehaviour
         hUI.timer = 5;
         return hUI;
     }
+
     static HpUI GetHpUIInPooling()
     {
         for (int i = 0; i < list.Count; i++)
@@ -33,7 +34,15 @@ public class HpUI : MonoBehaviour
         list.Add(hUI);
         return hUI;
     }
+    public bool IsOwn(Transform owner)
+    {
+        if (!gameObject.activeSelf)
+            return false;
+        if (hittable.Transform != owner)
+            return false;
+        return true;
 
+    }
     private void OnDestroy()
     {
         list.Remove(this);

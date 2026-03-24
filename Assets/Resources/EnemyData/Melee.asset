@@ -22,3 +22,4 @@ MonoBehaviour:
   attackRange: 3
   moveSpeed: 1
   exp: 1
+  prefab: {fileID: 4842033995043222643, guid: 418f469a0893c4d3ebbc1c5d63d55c48, type: 3}

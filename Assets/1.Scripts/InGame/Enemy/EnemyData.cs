@@ -13,6 +13,7 @@ public class EnemyData : ScriptableObject
     public float attackRange;
     public float moveSpeed;
     public int exp;
+    public Enemy prefab;
 
     public float GetHp(int lv = -1)
     {

@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
+
 public class BulletBase : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
@@ -42,16 +44,37 @@ public class BulletBase : MonoBehaviour
     {
         return Physics2D.Raycast(transform.position, direction, moveSpeed * Time.deltaTime, hitLayerMask);
     }
+    List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
+
+    public void AddBehavior(IBulletBehavior b)
+    {
+        var existing = behaviors.Find(x => x.GetType() == b.GetType());
+        if (existing != null)
+            existing.Merge(b);
+        else
+            behaviors.Add(b);
+    }
+    public void ClearBehaviors() => behaviors.Clear();
 
     public virtual void Hit(IHittable hit)
     {
         hit.TakeDamage(damage);
+        bool shouldRelease = true;
+        foreach (var b in behaviors)
+        {
+            if (b.OnHit(this, hit))
+                break;
+        }
 
-        Release();
-
+        if (shouldRelease) Release();
     }
     public virtual void Release()
     {
         gameObject.SetActive(false);
+    }
+
+    public virtual void Bounce()
+    {
+
     }
 }

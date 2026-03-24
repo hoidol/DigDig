@@ -12,7 +12,7 @@ public class GameManager : MonoSingleton<GameManager>
     public UndergroundEnterance undergroundEnterance;
 
     public List<IGameListener> gameListeners = new List<IGameListener>();
-    public bool isClear;
+
     public void AddGameListener(IGameListener op)
     {
         if (!gameListeners.Contains(op))
@@ -23,8 +23,10 @@ public class GameManager : MonoSingleton<GameManager>
         if (gameListeners.Contains(op))
             gameListeners.Remove(op);
     }
+    public bool isClear;
     void Start()
     {
+        GameEventBus.Clear();
         underground = 1;
         wave = 1;
 
@@ -49,10 +51,7 @@ public class GameManager : MonoSingleton<GameManager>
         underground = lv;
         wave = 1;
 
-        for (int i = 0; i < gameListeners.Count; i++)
-        {
-            gameListeners[i].StartUnderground(GetUndergroundData());
-        }
+        GameEventBus.Publish(new UndergroundStartEvent(GetUndergroundData()));
         StartCoroutine(CWaitingWave());
         StartCoroutine(CoSpawn());
     }
@@ -86,15 +85,11 @@ public class GameManager : MonoSingleton<GameManager>
     List<Coroutine> spawnEnemyCor = new List<Coroutine>();
     void StartWave()
     {
-        waving = true; //30
+        waving = true;
         WaveData waveData = GetWaveData();
-        UndergroundData undergroundData = GetUndergroundData();
         spawnEnemyCor.Clear();
         enemyCounterDic.Clear();
-        for (int i = 0; i < gameListeners.Count; i++)
-        {
-            gameListeners[i].StartWave(waveData);
-        }
+        GameEventBus.Publish(new WaveStartEvent(waveData)); // WaveStartEvent() 객체 발행
         for (int i = 0; i < waveData.enemySpawnDatas.Length; i++)
         {
             StartCoroutine(CoSpawnEnemy(waveData.enemySpawnDatas[i]));
@@ -115,6 +110,7 @@ public class GameManager : MonoSingleton<GameManager>
         {
             StopCoroutine(spawnEnemyCor[i]);
         }
+        GameEventBus.Publish(new WaveEndEvent(GetWaveData()));
     }
     IEnumerator CoSpawnEnemy(EnemySpawnData spawnData)
     {
@@ -174,6 +170,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         isClear = true;
         //플레이어가 Enterance로 들어감
+        GameEventBus.Publish(new UndergroundEndEvent(GetUndergroundData()));
         Player.Instance.transform.DOScale(0, 0.7f);
         Player.Instance.transform.DOMove(undergroundEnterance.transform.position, 0.6f).OnComplete(() =>
         {

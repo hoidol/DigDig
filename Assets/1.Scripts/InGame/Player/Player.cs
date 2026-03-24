@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using System.Linq;
-using UnityEngine.Pool;
-using Unity.Burst.Intrinsics;
 using System;
 
 public class Player : MonoSingleton<Player>, IPicker
@@ -19,8 +17,6 @@ public class Player : MonoSingleton<Player>, IPicker
     public Rigidbody2D rg;
     public Joystick moveJoystick;
     public Joystick attackJoystack;
-    // public Transform faceTr;
-    //public ParticleSystem pickParticle;
     public PlayerStatManager playerStatMgr;
     public float angerAmount;
     public Color originColor = new Color(0.1921569f, 1f, 0.4705882f, 1f);
@@ -38,28 +34,19 @@ public class Player : MonoSingleton<Player>, IPicker
     public int gold;
     public List<MagmaBall> magmaBalls = new List<MagmaBall>();
     //public MagmaRotation magmaRotation;
-
+    Camera mainCamara;
     public Inventory inventory;
     public List<PlayerAbility> playerAbilities = new List<PlayerAbility>();
 
-
-    // public float pickRange = 2f;
     public LayerMask pickLayer;
-
-
-    public void OnDrawGizmos()
-    {
-        if (playerStatMgr == null) return;
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, playerStatMgr.AttackPower);
-    }
 
     private void Awake()
     {
-        joystick = FindFirstObjectByType<Joystick>();
+        mainCamara = Camera.main;
+        moveJoystick = GameObject.Find("MoveJoystick").GetComponent<Joystick>();
+        attackJoystack = GameObject.Find("AttackJoystick").GetComponent<Joystick>();
         rg = GetComponentInChildren<Rigidbody2D>();
         magmaBalls = GetComponentsInChildren<MagmaBall>().ToList();
-        //magmaRotation = GetComponentInChildren<MagmaRotation>();
         inventory = GetComponentInChildren<Inventory>();
         playerStatMgr = new PlayerStatManager(this, key);
     }
@@ -69,7 +56,7 @@ public class Player : MonoSingleton<Player>, IPicker
         SetBodyColor(originColor);
         playerStatMgr.UpdateStat();
         curHp = playerStatMgr.MaxHp;
-        //StartCoroutine(CoBodyEffect());
+
     }
     void SetBodyColor(Color color)
     {
@@ -77,15 +64,22 @@ public class Player : MonoSingleton<Player>, IPicker
         {
             bodySprites[i].color = color;
         }
+
+        magmaBalls.ForEach(ball => ball.SetColor(color));
     }
     bool isAnger;
-    void Update()
+    void Move()
     {
-        rg.linearVelocity = joystick.Direction * playerStatMgr.MoveSpeed;
+        rg.linearVelocity = moveJoystick.Direction * playerStatMgr.MoveSpeed;
 
-        if (joystick.Direction.magnitude > 0.1f)
+#if UNITY_EDITOR
+        // 키보드 조작으로 이동하게 처리
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
+        Vector2 moveDir = new Vector2(x, y).normalized;
+        if (moveDir.magnitude > 0.1f)
         {
-            if (joystick.Direction.x >= 0)
+            if (moveDir.x >= 0)
                 bodyRootTr.localScale = new Vector3(1, 1, 1);
             else
                 bodyRootTr.localScale = new Vector3(-1, 1, 1);
@@ -95,103 +89,111 @@ public class Player : MonoSingleton<Player>, IPicker
         {
             animator.SetBool("Running", false);
         }
+        rg.linearVelocity = moveDir * playerStatMgr.MoveSpeed;
 
-        attackTimer += Time.deltaTime;
-        if (attackTimer >= playerStatMgr.AttackSpeed)
+#else
+
+        if (moveJoystick.Direction.magnitude > 0.1f)
         {
-            attackTimer = playerStatMgr.AttackSpeed;
-            Attack();
+            if (moveJoystick.Direction.x >= 0)
+                bodyRootTr.localScale = new Vector3(1, 1, 1);
+            else
+                bodyRootTr.localScale = new Vector3(-1, 1, 1);
+            animator.SetBool("Running", true);
         }
+        else
+        {
+            animator.SetBool("Running", false);
+        }
+#endif
+    }
+    void Update()
+    {
+        Move();
+        UpdateAttack();
 
         angerAmount -= Time.deltaTime;
         if (angerAmount < 0)
             angerAmount = 0;
 
-        // if (!isAnger)
-        // {
-        //     magmaRotation.SetRotationSpeed(-150);
-        // }
-        // else
-        // {
-        //     magmaRotation.SetRotationSpeed(-450);
-        // }
 
-
-        magmaBalls.ForEach(ball => ball.SetColor(bodySprites[0].color));
     }
 
+    public void UpdateAttack()
+    {
+        attackTimer += Time.deltaTime;
+#if UNITY_EDITOR
+        if (attackTimer >= playerStatMgr.AttackSpeed)
+        {
 
+            // attackPoint에서 마우스 위치로 발사
+            Vector3 mousePosition = Input.mousePosition;
+            mousePosition.z = mainCamara.WorldToScreenPoint(attackPoint.position).z;
+            Vector3 worldMousePos = mainCamara.ScreenToWorldPoint(mousePosition);
+            Vector2 dir = (worldMousePos - attackPoint.position).normalized;
+            Attack(dir);
+        }
+#else
+        if (attackJoystack.Direction.magnitude > 0 && attackTimer >= playerStatMgr.AttackSpeed)
+        {
+            
+            Attack(attackJoystack.Direction.normalized);
+        }
+#endif
+    }
     public void AddGold(int gold)
     {
         this.gold += gold;
-    }
-    IEnumerator CoBodyEffect()
-    {
-        while (true)
-        {
-            if (isAnger)
-            {
-                yield return bodyRootTr.DOScale(0.9f, 0.5f).SetEase(Ease.OutBack).WaitForCompletion();
-                yield return bodyRootTr.DOScale(1f, 0.5f).SetEase(Ease.InBack).WaitForCompletion();
-            }
-            else
-            {
-                yield return bodyRootTr.DOScale(0.99f, 1.5f).SetEase(Ease.OutBack).WaitForCompletion();
-                yield return bodyRootTr.DOScale(1f, 1.5f).SetEase(Ease.InBack).WaitForCompletion();
-            }
-        }
     }
 
     void Attack()
     {
         //마지막 방향으로
         //lastVec 방향으로 쏘기
-        TargetIndicator.Instance.SetTaret(null);
+        //TargetIndicator.Instance.SetTaret(null);
 
+        // Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, playerStatMgr.AttackRange, pickLayer);
+        // Collider2D closestCollider = null;
+        // float closestDistance = float.MaxValue;
 
+        // var enemyColliders = colliders
+        //     .Where(c => c.CompareTag("Enemy"))
+        //     // Vector2.Distance(a, b) 대신 제곱거리((a-b).sqrMagnitude)로 대체하여 연산을 가볍게 함
+        //     .OrderBy(c => (c.transform.position - transform.position).sqrMagnitude)
+        //     .ToArray();
 
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, playerStatMgr.AttackRange, pickLayer);
-        Collider2D closestCollider = null;
-        float closestDistance = float.MaxValue;
+        // Collider2D nearestEnemyCollider = enemyColliders.FirstOrDefault();
+        // if (nearestEnemyCollider != null && nearestEnemyCollider.TryGetComponent(out IHittable enemyHittable))
+        // {
+        //     SetTarget(enemyHittable);
+        //     return;
+        // }
 
-        var enemyColliders = colliders
-            .Where(c => c.CompareTag("Enemy"))
-            // Vector2.Distance(a, b) 대신 제곱거리((a-b).sqrMagnitude)로 대체하여 연산을 가볍게 함
-            .OrderBy(c => (c.transform.position - transform.position).sqrMagnitude)
-            .ToArray();
+        // if (target != null && target.Transform != null && target.Transform.gameObject.activeSelf)
+        // {
+        //     float distance = Vector2.Distance(transform.position, target.Transform.position);
+        //     if (distance <= playerStatMgr.AttackRange)
+        //     {
+        //         SetTarget(target);
+        //         return;
+        //     }
 
-        Collider2D nearestEnemyCollider = enemyColliders.FirstOrDefault();
-        if (nearestEnemyCollider != null && nearestEnemyCollider.TryGetComponent(out IHittable enemyHittable))
-        {
-            SetTarget(enemyHittable);
-            return;
-        }
+        // }
 
-        if (target != null && target.Transform != null && target.Transform.gameObject.activeSelf)
-        {
-            float distance = Vector2.Distance(transform.position, target.Transform.position);
-            if (distance <= playerStatMgr.AttackRange)
-            {
-                SetTarget(target);
-                return;
-            }
+        // foreach (var collider in colliders)
+        // {
+        //     float distance = Vector2.Distance(transform.position, collider.transform.position);
+        //     if (distance < closestDistance)
+        //     {
+        //         closestDistance = distance;
+        //         closestCollider = collider;
+        //     }
+        // }
 
-        }
-
-        foreach (var collider in colliders)
-        {
-            float distance = Vector2.Distance(transform.position, collider.transform.position);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                closestCollider = collider;
-            }
-        }
-
-        if (closestCollider != null && closestCollider.TryGetComponent(out IHittable hittable))
-        {
-            SetTarget(hittable);
-        }
+        // if (closestCollider != null && closestCollider.TryGetComponent(out IHittable hittable))
+        // {
+        //     SetTarget(hittable);
+        // }
     }
     public void AddHp(float hp)
     {
@@ -210,19 +212,20 @@ public class Player : MonoSingleton<Player>, IPicker
             GameManager.Instance.EndGame(false);
         }
     }
-    IHittable target;
-    void SetTarget(IHittable t)
-    {
-        target = t;
-        TargetIndicator.Instance.SetTaret(target.Transform);
-        Attack(target.Transform.position - transform.position);
-    }
-    void Attack(Vector2 dir)//IHittable hittable
-    {
 
-        FlameBullet flameBullet = FlameBullet.Instantiate();
-        flameBullet.transform.position = attackPoint.position;
-        flameBullet.Shoot(dir, playerStatMgr.AttackPower);
+    public void Attack(Vector2 dir)
+    {
+        var bullet = PlayerBullet.Instantiate();
+        bullet.ClearBehaviors();
+        bullet.transform.position = attackPoint.position;
+        bullet.Shoot(dir, playerStatMgr.AttackPower);
+        //총알에 IBulletItem 타입의 아이템 능력 적용
+        foreach (var e in inventory.equippedItems.OfType<IBulletItem>())
+            e.OnBulletFired(bullet);
+
+        //공격시 IAttackItem 타입의 아이템 능력 발동
+        foreach (var e in inventory.equippedItems.OfType<IAttackItem>())
+            e.OnAttack(this, dir);
 
         attackTimer = 0f;
 
@@ -239,7 +242,6 @@ public class Player : MonoSingleton<Player>, IPicker
             StartCoroutine(CoAnger());
         }
     }
-
     IEnumerator CoAnger()
     {
         SetBodyColor(angerColor);
@@ -317,8 +319,8 @@ public class Player : MonoSingleton<Player>, IPicker
             Time.timeScale = 0;
             AbilityCanvas.Instance.OpenCanvas(() =>
             {
-
                 Time.timeScale = 1;
+                AddExp(0);//레벨업 후에도 경험치가 MaxExp 높을때 처리
             });
         }
     }
@@ -331,6 +333,7 @@ public class Player : MonoSingleton<Player>, IPicker
         levelUped = true;
         //강화 UI 활성화
     }
+
     [SerializeField] int maxExp;
     public int GetMaxExp(int l = -1)
     {
@@ -339,7 +342,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
         if (maxExp == 0 || levelUped)
         {
-            maxExp = 10 + lv * 5;
+            maxExp = 10 + l * 5;
             levelUped = false;
         }
 
@@ -371,6 +374,19 @@ public class PlayerAbility
 public class PlayerStatManager
 {
     public Dictionary<StatType, PlayerStat> statDic = new Dictionary<StatType, PlayerStat>();
+    public List<Buff> activeBuffs = new List<Buff>();
+
+    public void AddBuff(Buff buff)
+    {
+        activeBuffs.Add(buff);
+        UpdateStat();
+    }
+
+    public void RemoveBuff(Buff buff)
+    {
+        activeBuffs.Remove(buff);
+        UpdateStat();
+    }
     public float MaxHp => statDic[StatType.MaxHp].value;
     public float AttackPower => statDic[StatType.AttackPower].value;
     public float MoveSpeed => statDic[StatType.MoveSpeed].value;
@@ -438,6 +454,14 @@ public class PlayerStatManager
             stat.value = data.Apply(stat.value, pAbility.count);
         }
 
+        #endregion
+
+        #region Buff 적용
+        foreach (var buff in activeBuffs)
+        {
+            var stat = statDic[buff.statType];
+            stat.value = buff.Apply(stat.value);
+        }
         #endregion
 
         // foreach (var stat in statDic.Values)

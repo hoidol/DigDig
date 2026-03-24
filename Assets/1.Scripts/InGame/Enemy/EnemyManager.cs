@@ -1,46 +1,48 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyManager : MonoSingleton<EnemyManager>
 {
-    public Enemy[] enemiePrefabs;
+    readonly Dictionary<EnemyType, Stack<Enemy>> pool = new(); // 적 종류 별 풀링
+    readonly Dictionary<EnemyType, EnemyData> enemyDataDic = new(); //적 종류 별 게임 데이터
 
-    public Dictionary<EnemyType, List<Enemy>> enemies = new Dictionary<EnemyType, List<Enemy>>();
-    private void Awake()
+    void Awake()
     {
-        enemiePrefabs = Resources.LoadAll<Enemy>("Enemy");
+        EnemyData[] enemyDatas = Resources.LoadAll<EnemyData>("EnemyData");
+        foreach (EnemyData enemyData in enemyDatas)
+            enemyDataDic[enemyData.type] = enemyData;
+
+        GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
     }
 
     public Enemy GetEnemy(EnemyType enemyType)
     {
-        if (!enemies.ContainsKey(enemyType))
-        {
-            enemies.Add(enemyType, new List<Enemy>());
-        }
+        EnemyData data = enemyDataDic[enemyType];
 
-        for (int i = 0; i < enemies[enemyType].Count; i++)
-        {
-            if (enemies[enemyType][i].gameObject.activeSelf)
-                continue;
-            enemies[enemyType][i].gameObject.SetActive(true);
-            return enemies[enemyType][i];
-        }
+        if (!pool.ContainsKey(enemyType))
+            pool[enemyType] = new Stack<Enemy>();
 
-        Enemy prefab = GetEnemyPrefab(enemyType);
-        Enemy enemy = Instantiate(prefab);
-        enemies[enemyType].Add(enemy);
+        Enemy enemy = pool[enemyType].Count > 0
+            ? pool[enemyType].Pop()
+            : Instantiate(data.prefab);
+
+        enemy.gameObject.SetActive(true);
+        enemy.Init(data);
         return enemy;
     }
 
-    Enemy GetEnemyPrefab(EnemyType enemyType)
+    void ReleaseEnemy(Enemy enemy)
     {
-        for (int i = 0; i < enemiePrefabs.Length; i++)
-        {
-            if (enemiePrefabs[i].enemyType == enemyType)
-            {
-                return enemiePrefabs[i];
-            }
-        }
-        return null;
+        if (!pool.ContainsKey(enemy.enemyType))
+            pool[enemy.enemyType] = new Stack<Enemy>();
+
+        enemy.gameObject.SetActive(false);
+        pool[enemy.enemyType].Push(enemy);
+    }
+
+    void EnemyDeadEventListener(EnemyDeadEvent e)
+    {
+        ReleaseEnemy(e.enemy);
     }
 }

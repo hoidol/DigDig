@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 using System;
 
 
-public class WaveTimerPanel : MonoBehaviour, IGameListener
+public class WaveTimerPanel : MonoBehaviour
 {
     public TMP_Text titleText;
     public TMP_Text timeText;
@@ -18,62 +18,19 @@ public class WaveTimerPanel : MonoBehaviour, IGameListener
 
     private void Awake()
     {
-        GameManager.Instance.AddGameListener(this);
+        GameEventBus.Subscribe<UndergroundStartEvent>(StartUnderground); //이벤트 구독 
+        GameEventBus.Subscribe<UndergroundEndEvent>(EndUnderground); //이벤트 구독
+        GameEventBus.Subscribe<WaveStartEvent>(StartWave); //이벤트 구독 - 웨이브 시작
+        GameEventBus.Subscribe<WaveEndEvent>(EndWave); //이벤트 구독 - 웨이브 끝
     }
-    void Start()
+    public void StartWave(WaveStartEvent e)
     {
-
-        waitingIcon.SetActive(true);
-        normalWaveIcon.SetActive(false);
-        hardWaveIcon.SetActive(false);
-        timeText.text = "";
-    }
-
-    async UniTask Test()
-    {
-        Debug.Log("WaveTimerPanel Test() 1");
-        await UniTask.Delay(TimeSpan.FromSeconds(5.0f));
-        Debug.Log("WaveTimerPanel Test() 2");
-    }
-    public WaveData waveData;
-    public UndergroundData undergroundData;
-    public void StartUnderground(UndergroundData uData)
-    {
-        undergroundData = uData;
-        waitingIcon.SetActive(true);
-        normalWaveIcon.SetActive(false);
-        timeText.text = $"Next Wave {uData.idx + 1}-1";
-
-        StartWaveTimerUniTask().Forget();
-    }
-
-    public void EndUnderground()
-    {
-
-    }
-
-    public void StartWave(WaveData wData)
-    {
-        waveData = wData;
+        waveData = e.waveData;
         waitingIcon.SetActive(false);
         normalWaveIcon.SetActive(true);
-    }
-
-    public void EndWave()
-    {
-
-        waitingIcon.SetActive(true);
-        normalWaveIcon.SetActive(false);
-        if (GameManager.Instance.isClear)
-        {
-            timeText.text = $"Next Wave {undergroundData.idx + 1}-{waveData.idx + 1}";
-        }
-        else
-        {
-            timeText.text = $"Go deeper";
-        }
 
     }
+
     private async UniTaskVoid StartWaveTimerUniTask()
     {
         var cancellationToken = this.GetCancellationTokenOnDestroy();
@@ -108,5 +65,47 @@ public class WaveTimerPanel : MonoBehaviour, IGameListener
         }
 
     }
+
+
+    void Start()
+    {
+        waitingIcon.SetActive(true);
+        normalWaveIcon.SetActive(false);
+        hardWaveIcon.SetActive(false);
+        timeText.text = "";
+    }
+
+    public WaveData waveData;
+    public UndergroundData undergroundData;
+    public void EndWave(WaveEndEvent e)
+    {
+        waitingIcon.SetActive(true);
+        normalWaveIcon.SetActive(false);
+        if (GameManager.Instance.isClear)
+        {
+            timeText.text = $"Next Wave {undergroundData.idx + 1}-{waveData.idx + 1}";
+        }
+        else
+        {
+            timeText.text = $"Go deeper";
+        }
+
+    }
+    public void StartUnderground(UndergroundStartEvent e)
+    {
+        undergroundData = e.undergroundData;
+        waitingIcon.SetActive(true);
+        normalWaveIcon.SetActive(false);
+        timeText.text = $"Next Wave {e.undergroundData.idx + 1}-1";
+
+        StartWaveTimerUniTask().Forget();
+    }
+
+    public void EndUnderground(UndergroundEndEvent e)
+    {
+
+    }
+
+
 
 }

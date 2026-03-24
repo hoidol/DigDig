@@ -34,7 +34,8 @@ public class UndergroundData
 public class WaveData
 {
     public int idx;
-    public float waveTime; //
+    public float waveTime;
+    public MerchantGrade merchantGrade;
     public EnemySpawnData[] enemySpawnDatas;
 
 }

@@ -39,19 +39,19 @@ public class CoreCollectingArea : MonoBehaviour
         WaitForSeconds sec = new WaitForSeconds(1);
         while (true)
         {
-            if (timer <= 0)
-            {
-                string oreKey = Player.Instance.inventory.TakeOut();
-                if (oreKey == null)
-                {
-                    yield return sec;
-                    continue;
-                }
+            // if (timer <= 0)
+            // {
+            //     string oreKey = Player.Instance.inventory.TakeOut();
+            //     if (oreKey == null)
+            //     {
+            //         yield return sec;
+            //         continue;
+            //     }
 
 
-                // MagmaCore.Instance.CollectOre(oreKey);
-                timer = 0.2f;
-            }
+            //     // MagmaCore.Instance.CollectOre(oreKey);
+            //     timer = 0.2f;
+            // }
             timer -= Time.deltaTime;
             yield return null;
         }
