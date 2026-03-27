@@ -4,18 +4,14 @@ using System.Collections.Generic;
 using System;
 public abstract class Enemy : MonoBehaviour, IHittable
 {
-    //[SerializeField] protected EnemyView view;
-    public EnemyType enemyType;
+    public EnemyType enemyType; // 적 종류 구분
+    public EnemyState state { get; private set; } // 적 상태 - FSM 패턴
+    public EnemyData enemyData { get; private set; } //게임 데이터
 
-    //protected EnemyModel model;
-
+    #region 
     public float MaxHp { get; private set; }
     public float CurHp { get; private set; }
-    public EnemyState State { get; private set; }
-    public EnemyData Data { get; private set; }
 
-    //public event Action<float, float> OnHpChanged;
-    // 
     [SerializeField] Transform root;
     [SerializeField] Transform hpPoint;
     protected Rigidbody2D rg2d;
@@ -23,30 +19,34 @@ public abstract class Enemy : MonoBehaviour, IHittable
     protected bool attacking;
 
     public Transform Transform => transform;
-    public EnemyData enemyData;
     HpUI hpUI;
+    #endregion
     protected virtual void Awake()
     {
         rg2d = GetComponent<Rigidbody2D>();
     }
+    //Enemy 게임 데이터 설정
     public virtual void Init(EnemyData data)
     {
         enemyData = data;
     }
-
+    //적 생성 시 호출
     public virtual void Spawn(Vector2 pos)
     {
         gameObject.SetActive(true);
         transform.position = pos;
+        MaxHp = enemyData.GetHp();
+        CurHp = MaxHp;
         ChangeState(EnemyState.Approaching);
 
         attackTimer = 0;
         attacking = false;
     }
 
+    //상태 전환
     public void ChangeState(EnemyState state)
     {
-        State = state;
+        this.state = state;
     }
 
 
@@ -57,8 +57,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (attackTimer < enemyData.attackSpeed)
             attackTimer += Time.deltaTime;
 
-        if (State == EnemyState.Approaching) UpdateApproaching();
-        else if (State == EnemyState.Attack) UpdateAttack();
+        if (state == EnemyState.Approaching) UpdateApproaching();
+        else if (state == EnemyState.Attack) UpdateAttack();
 
         //World Canvas UI
         if (hpUI != null && hpUI.IsOwn(transform))
@@ -66,12 +66,9 @@ public abstract class Enemy : MonoBehaviour, IHittable
             hpUI.transform.position = hpPoint.position;
         }
     }
-    public void SetFacing(float dirX)
-    {
-        root.localScale = new Vector3(dirX >= 0 ? 1 : -1, 1, 1);
-    }
 
-    void UpdateApproaching()
+    //상태가 Approaching 인 경우 처리
+    public virtual void UpdateApproaching()
     {
         Vector2 vec = Player.Instance.transform.position - transform.position;
         if (vec.magnitude <= enemyData.attackRange)
@@ -83,7 +80,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         rg2d.linearVelocity = vec.normalized * enemyData.moveSpeed;
     }
 
-    void UpdateAttack()
+    //상태가 Attack 인 경우 처리
+    public virtual void UpdateAttack()
     {
         Vector2 vec = Player.Instance.transform.position - transform.position;
         SetFacing(vec.x);
@@ -92,6 +90,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (attackTimer >= enemyData.attackSpeed)
             StartAttack();
     }
+
 
     protected virtual void StartAttack()
     {
@@ -105,13 +104,19 @@ public abstract class Enemy : MonoBehaviour, IHittable
         ChangeState(EnemyState.Approaching);
     }
 
-    // IHittable
+    // IHittable 인터페이스 구현 부
     public void TakeDamage(float damage)
     {
         CurHp = Mathf.Max(0, CurHp - damage);
         OnHpChanged(CurHp, MaxHp);
         if (CurHp <= 0) OnDead();
     }
+
+    public void SetFacing(float dirX)
+    {
+        root.localScale = new Vector3(dirX >= 0 ? 1 : -1, 1, 1);
+    }
+
     void OnHpChanged(float cur, float max)
     {
         if (hpUI == null)
