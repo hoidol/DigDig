@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: PierceBullet
+  m_EditorClassIdentifier: 
+  key: PierceBullet
+  title: "\uAD00\uD1B5\uC0F7"
+  maxOwnCount: 0
+  isUnique: 0
+  thumbnail: {fileID: 0}
+  price: 15
+  grade: 0
+  itemPrefab: {fileID: -1920589081376603874, guid: d5ba31f32bcbd41a8aa0efe9f7397672, type: 3}
+  applyOrder: 0

@@ -6,12 +6,22 @@ public class ExpBar : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //image = GetComponent<Image>();
+        GameEventBus.Subscribe<ExpChangedEvent>(OnExpChanged);
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnExpChanged(ExpChangedEvent e)
     {
-        image.fillAmount = (float)Player.Instance.exp / (float)Player.Instance.GetMaxExp();
+        image.fillAmount = (float)e.exp / (float)e.maxExp;
+    }
+
+}
+public class ExpChangedEvent
+{
+    public int exp;
+    public int maxExp;
+    public ExpChangedEvent(int e, int mE)
+    {
+        this.exp = e;
+        this.maxExp = mE;
     }
 }

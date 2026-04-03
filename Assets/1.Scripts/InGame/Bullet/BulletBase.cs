@@ -2,18 +2,31 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 
-public class BulletBase : MonoBehaviour
+public abstract class BulletBase : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
     protected Vector3 direction;
-    float damage;
+    public float damage
+    {
+        get;
+        protected set;
+    }
 
     public LayerMask hitLayerMask;
+
+    protected IHittable preTarget;
+    protected List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
+    protected List<IBulletForce> forces = new List<IBulletForce>();
     public virtual void Shoot(Vector2 dir, float damage)
     {
         direction = dir;
         transform.right = dir;
+
         this.damage = damage;
+
+
+        preTarget = null;
+
     }
 
     public virtual void Update()
@@ -32,11 +45,7 @@ public class BulletBase : MonoBehaviour
         RaycastHit2D hit2d = GetRaycastHit2D();
         if (hit2d)
         {
-            IHittable hit = hit2d.collider.GetComponent<IHittable>();
-            if (hit != null)
-            {
-                Hit(hit);
-            }
+            Hit(hit2d);
         }
     }
 
@@ -44,7 +53,7 @@ public class BulletBase : MonoBehaviour
     {
         return Physics2D.Raycast(transform.position, direction, moveSpeed * Time.deltaTime, hitLayerMask);
     }
-    List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
+
 
     public void AddBehavior(IBulletBehavior b)
     {
@@ -55,26 +64,21 @@ public class BulletBase : MonoBehaviour
             behaviors.Add(b);
     }
     public void ClearBehaviors() => behaviors.Clear();
-
-    public virtual void Hit(IHittable hit)
+    public void AddBulletForce(IBulletForce b)
     {
-        hit.TakeDamage(damage);
-        bool shouldRelease = true;
-        foreach (var b in behaviors)
-        {
-            if (b.OnHit(this, hit))
-                break;
-        }
+        forces.Add(b);
 
-        if (shouldRelease) Release();
     }
+    public void ClearBulletForce() => forces.Clear();
+
+    public abstract void Hit(RaycastHit2D hit2D);
     public virtual void Release()
     {
         gameObject.SetActive(false);
     }
 
-    public virtual void Bounce()
+    public virtual void Bounce(RaycastHit2D hit2D)
     {
-
+        //
     }
 }

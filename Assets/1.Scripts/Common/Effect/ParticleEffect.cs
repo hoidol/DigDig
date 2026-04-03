@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ParticleEffect : Effect
 {
-    ParticleSystem[] particleSystems;
+    public ParticleSystem[] particleSystems;
     public float duration;
     protected float timer = 0;
     public override void Init()
@@ -13,7 +13,14 @@ public class ParticleEffect : Effect
             duration = particleSystems[0].main.duration;
         }
     }
-
+    public override void Play()
+    {
+        for (int i = 0; i < particleSystems.Length; i++)
+        {
+            particleSystems[i].Play();
+        }
+        timer = duration;
+    }
     public override void Play(Vector2 point)
     {
         base.Play(point);

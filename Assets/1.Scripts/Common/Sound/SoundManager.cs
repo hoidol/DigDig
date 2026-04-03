@@ -6,7 +6,7 @@ public class SoundMgr : MonoSingleton<SoundMgr>
 {
     [SerializeField] SFXData[] sfxDatas;
     [SerializeField] BGMPlayer[] bgmPlayers;
-    
+
     [SerializeField] AudioSource[] audioSources;
 
 
@@ -45,11 +45,11 @@ public class SoundMgr : MonoSingleton<SoundMgr>
 
     public void PlayBGM(BGMType bGMType)
     {
-        for(int i =0;i< bgmPlayers.Length; i++)
+        for (int i = 0; i < bgmPlayers.Length; i++)
         {
-            if(bgmPlayers[i].bgmType == bGMType)
+            if (bgmPlayers[i].bgmType == bGMType)
             {
-                if(!bgmPlayers[i].audioSource.isPlaying)
+                if (!bgmPlayers[i].audioSource.isPlaying)
                     bgmPlayers[i].audioSource.Play();
             }
             else
@@ -104,21 +104,9 @@ public class SoundMgr : MonoSingleton<SoundMgr>
 
 public enum SFXType //사운드 종류
 {
-    Click,
-    Upgrade,
-    SetUp,
-    StopSpin,
-    GetGold,
-    Jump,
-    Beep,
-    Reward,
-    ViewOpen, //창 열릴때
-    //Clear, //
-        Money_Charge,//동전 많이 받기
-        New,
-        PutOre,
+    Click
 
-    //CannonExplosion
+
 }
 public enum BGMType //사운드 종류
 {
@@ -127,19 +115,3 @@ public enum BGMType //사운드 종류
     //CannonExplosion
 }
 
-[System.Serializable]
-public class SFXData //사운드 관련 데이터
-{
-    public SFXType sfxType;
-    public AudioClip audioClip;
-    public float volume;
-    public bool loop;
-    public bool playOnAwake;
-}
-//[System.Serializable]
-//public class BGMData //사운드 관련 데이터
-//{
-//    public BGMType bgmType;
-//    public AudioClip audioClip;
-//    public float volume;
-//}

@@ -7,8 +7,8 @@ public class MeleeEnemyPresenter : Enemy
     {
         base.Awake();
         meleeAttackIndicator = GetComponentInChildren<MeleeAttackIndicator>();
-
     }
+
     public override void Spawn(Vector2 pos)
     {
         base.Spawn(pos);
@@ -31,5 +31,12 @@ public class MeleeEnemyPresenter : Enemy
             }
             EndAttack();
         });
+    }
+
+    public override void CancelAttack()
+    {
+        base.CancelAttack();
+        meleeAttackIndicator.StopIndicator();
+        EndAttack();
     }
 }

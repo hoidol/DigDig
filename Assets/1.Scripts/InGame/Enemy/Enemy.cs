@@ -7,6 +7,10 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public EnemyType enemyType; // 적 종류 구분
     public EnemyState state { get; private set; } // 적 상태 - FSM 패턴
     public EnemyData enemyData { get; private set; } //게임 데이터
+    public StatusEffectHandler statusEffectHandler
+    {
+        get; set;
+    }
 
     #region 
     public float MaxHp { get; private set; }
@@ -24,6 +28,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     protected virtual void Awake()
     {
         rg2d = GetComponent<Rigidbody2D>();
+        statusEffectHandler = GetComponent<StatusEffectHandler>();
     }
     //Enemy 게임 데이터 설정
     public virtual void Init(EnemyData data)
@@ -52,10 +57,25 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
     void Update()
     {
-        if (attacking) return;
+        if (statusEffectHandler.IsStunned)
+        {
+            if (attacking)
+            {
+                CancelAttack();
+            }
+            return;
+        }
 
         if (attackTimer < enemyData.attackSpeed)
             attackTimer += Time.deltaTime;
+        else
+        {
+            if (attacking)
+                return;
+
+        }
+
+
 
         if (state == EnemyState.Approaching) UpdateApproaching();
         else if (state == EnemyState.Attack) UpdateAttack();
@@ -65,6 +85,11 @@ public abstract class Enemy : MonoBehaviour, IHittable
         {
             hpUI.transform.position = hpPoint.position;
         }
+    }
+
+    public virtual void CancelAttack()
+    {
+
     }
 
     //상태가 Approaching 인 경우 처리

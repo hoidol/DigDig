@@ -73,5 +73,16 @@ public class OreStone : MonoBehaviour, IHittable
         hpUI.Release();
         GameManager.Instance.AddDestroyOreStone();
         Player.Instance.AddExp(idx + 1);
+
+        GameEventBus.Publish(new OreStoneDestroyedEvent(this));
+    }
+}
+
+public class OreStoneDestroyedEvent
+{
+    public OreStone oreStone;
+    public OreStoneDestroyedEvent(OreStone stone)
+    {
+        oreStone = stone;
     }
 }

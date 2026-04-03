@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using System.Linq;
 using System;
+using Cysharp.Threading.Tasks;
 
 public class Player : MonoSingleton<Player>, IPicker
 {
@@ -24,6 +25,7 @@ public class Player : MonoSingleton<Player>, IPicker
     [SerializeField] Animator animator;
     public SpriteRenderer[] bodySprites;
     public Transform bodyRootTr;
+    public Transform bodyCenterTr;
 
     // public float maxHp;
     public float curHp;
@@ -131,7 +133,7 @@ public class Player : MonoSingleton<Player>, IPicker
             mousePosition.z = mainCamara.WorldToScreenPoint(attackPoint.position).z;
             Vector3 worldMousePos = mainCamara.ScreenToWorldPoint(mousePosition);
             Vector2 dir = (worldMousePos - attackPoint.position).normalized;
-            Attack(dir);
+            Attack(dir, true);
         }
 #else
         if (attackJoystack.Direction.magnitude > 0 && attackTimer >= playerStatMgr.AttackSpeed)
@@ -144,57 +146,10 @@ public class Player : MonoSingleton<Player>, IPicker
     public void AddGold(int gold)
     {
         this.gold += gold;
+        GameEventBus.Publish(new GoldChangedEvent(gold));
     }
 
-    void Attack()
-    {
-        //마지막 방향으로
-        //lastVec 방향으로 쏘기
-        //TargetIndicator.Instance.SetTaret(null);
 
-        // Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, playerStatMgr.AttackRange, pickLayer);
-        // Collider2D closestCollider = null;
-        // float closestDistance = float.MaxValue;
-
-        // var enemyColliders = colliders
-        //     .Where(c => c.CompareTag("Enemy"))
-        //     // Vector2.Distance(a, b) 대신 제곱거리((a-b).sqrMagnitude)로 대체하여 연산을 가볍게 함
-        //     .OrderBy(c => (c.transform.position - transform.position).sqrMagnitude)
-        //     .ToArray();
-
-        // Collider2D nearestEnemyCollider = enemyColliders.FirstOrDefault();
-        // if (nearestEnemyCollider != null && nearestEnemyCollider.TryGetComponent(out IHittable enemyHittable))
-        // {
-        //     SetTarget(enemyHittable);
-        //     return;
-        // }
-
-        // if (target != null && target.Transform != null && target.Transform.gameObject.activeSelf)
-        // {
-        //     float distance = Vector2.Distance(transform.position, target.Transform.position);
-        //     if (distance <= playerStatMgr.AttackRange)
-        //     {
-        //         SetTarget(target);
-        //         return;
-        //     }
-
-        // }
-
-        // foreach (var collider in colliders)
-        // {
-        //     float distance = Vector2.Distance(transform.position, collider.transform.position);
-        //     if (distance < closestDistance)
-        //     {
-        //         closestDistance = distance;
-        //         closestCollider = collider;
-        //     }
-        // }
-
-        // if (closestCollider != null && closestCollider.TryGetComponent(out IHittable hittable))
-        // {
-        //     SetTarget(hittable);
-        // }
-    }
     public void AddHp(float hp)
     {
         curHp += hp;
@@ -203,9 +158,10 @@ public class Player : MonoSingleton<Player>, IPicker
             curHp = playerStatMgr.MaxHp;
         }
     }
-
+    StatusEffectHandler statusEffectHandler;
     public void TakeDamage(float damage)
     {
+        if (statusEffectHandler != null && statusEffectHandler.TryBlock()) return;
         curHp -= damage;
         if (curHp < 0)
         {
@@ -213,19 +169,17 @@ public class Player : MonoSingleton<Player>, IPicker
         }
     }
 
-    public void Attack(Vector2 dir)
+    public void Attack(Vector2 dir, bool fromPlayer)
     {
-        var bullet = PlayerBullet.Instantiate();
-        bullet.ClearBehaviors();
-        bullet.transform.position = attackPoint.position;
-        bullet.Shoot(dir, playerStatMgr.AttackPower);
-        //총알에 IBulletItem 타입의 아이템 능력 적용
-        foreach (var e in inventory.equippedItems.OfType<IBulletItem>())
-            e.OnBulletFired(bullet);
+        var bullet = Shoot(dir);//한발쏨
 
-        //공격시 IAttackItem 타입의 아이템 능력 발동
         foreach (var e in inventory.equippedItems.OfType<IAttackItem>())
             e.OnAttack(this, dir);
+
+        if (fromPlayer)
+            RunComboAttacks(dir).Forget();
+
+        GameEventBus.Publish(new BulletFiredEvent(bullet));
 
         attackTimer = 0f;
 
@@ -242,6 +196,32 @@ public class Player : MonoSingleton<Player>, IPicker
             StartCoroutine(CoAnger());
         }
     }
+
+    async UniTaskVoid RunComboAttacks(Vector2 dir)
+    {
+        var comboItems = inventory.equippedItems.OfType<IComboAttackItem>().ToList();
+        foreach (var e in comboItems)
+            await e.OnAttack(this, dir);
+    }
+
+    public PlayerBullet Shoot(Vector2 dir)
+    {
+        var bullet = PlayerBullet.Instantiate();
+        bullet.ClearBehaviors();
+        bullet.transform.position = attackPoint.position;
+
+        //총알에 IBulletItem 타입의 아이템 능력 적용
+        foreach (var e in inventory.equippedItems.OfType<IBulletItem>())
+            e.OnBulletFired(bullet);
+
+        bullet.Shoot(dir, playerStatMgr.AttackPower);
+        return bullet;
+    }
+
+
+
+
+
     IEnumerator CoAnger()
     {
         SetBodyColor(angerColor);
@@ -323,6 +303,8 @@ public class Player : MonoSingleton<Player>, IPicker
                 AddExp(0);//레벨업 후에도 경험치가 MaxExp 높을때 처리
             });
         }
+
+        GameEventBus.Publish(new ExpChangedEvent(exp, GetMaxExp()));
     }
     bool levelUped;
     void LevelUp()
@@ -393,6 +375,8 @@ public class PlayerStatManager
     public float RecoveryHp => statDic[StatType.RecoveryHp].value;
     public float AttackSpeed => statDic[StatType.AttackSpeed].value;
     public float AttackRange => statDic[StatType.AttackRange].value;
+    public float CritChance => statDic[StatType.CritChance].value;
+    public float CritPower => statDic[StatType.CritPower].value;
 
     PlayerData playerData;
     Player player;
@@ -501,5 +485,7 @@ public enum StatType
     MoveSpeed,
     AttackRange,
     AngerTime,
+    CritChance,      // 추가
+    CritPower,  // 추가
     Count
 }

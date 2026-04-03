@@ -53,6 +53,14 @@ public class UndergroundEndEvent
         this.undergroundData = undergroundData;
     }
 }
+public class TryAddItemEvent
+{
+    public ItemData itemData;
+    public TryAddItemEvent(ItemData itemData)
+    {
+        this.itemData = itemData;
+    }
+}
 public class AddedItemEvent
 {
     public ItemData itemData;
@@ -60,4 +68,9 @@ public class AddedItemEvent
     {
         this.itemData = itemData;
     }
+}
+public class BulletFiredEvent
+{
+    public PlayerBullet bullet;
+    public BulletFiredEvent(PlayerBullet bullet) { this.bullet = bullet; }
 }

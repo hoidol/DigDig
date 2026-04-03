@@ -9,9 +9,13 @@ public abstract class Item : MonoBehaviour
             c = count;
         return "아이템을 설명합니다";
     }
-    public ItemData GetItemData()
+    public ItemData itemData => ItemManager.Instance.GetItemData(key);
+
+    public bool CanMerge()
     {
-        return ItemManager.Instance.GetItemData(key);
+        if (count < ItemData.MAX_OWN_COUNT || itemData.isUnique)
+            return false;
+        return true;
     }
     public virtual void OnEquip(Player player)
     {

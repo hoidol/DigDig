@@ -41,7 +41,10 @@ public class DroppedItem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            ItemCanvas.Instance.OpenCanvas(new NearDropItemEvent(itemData));
+            ItemCanvas.Instance.OpenCanvas(new NearDropItemEvent(itemData), (r) =>
+            {
+
+            });
         }
     }
 
@@ -49,7 +52,10 @@ public class DroppedItem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            ItemCanvas.Instance.CloseCanvas(itemData.key);
+            if (ItemCanvas.Instance.curItemData == itemData)
+            {
+                ItemCanvas.Instance.CloseCanvas(itemData.key);
+            }
         }
     }
 

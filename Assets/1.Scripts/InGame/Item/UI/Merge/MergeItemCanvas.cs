@@ -10,7 +10,7 @@ public class MergeItemCanvas : CanvasUI<MergeItemCanvas>
     {
         base.OpenCanvas(closeCallback);
         //아이템 머지 관련
-        mergePanel.SetItem(e.item1, e.item2);
+        mergePanel.SetMergeItemData(e.mergeItemData);
     }
 
 

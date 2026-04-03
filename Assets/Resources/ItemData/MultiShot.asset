@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: MultiShot
+  m_EditorClassIdentifier: 
+  key: MultiShot
+  title: "\uBA40\uD2F0"
+  maxOwnCount: 0
+  isUnique: 0
+  thumbnail: {fileID: 0}
+  price: 15
+  grade: 0
+  itemPrefab: {fileID: 3846058791349799339, guid: 4b67d3d50f0714faa958b7ff7bffec46, type: 3}
+  applyOrder: 0

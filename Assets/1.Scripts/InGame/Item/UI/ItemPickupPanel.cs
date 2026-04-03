@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 public class ItemPickupPanel : MonoBehaviour
 {
     public TMP_Text titleText;
@@ -16,10 +17,11 @@ public class ItemPickupPanel : MonoBehaviour
     public TMP_Text descText;
 
     protected ItemData itemData;
-    public virtual void SetItemData(ItemData itemData)
+    protected Action<bool> result;
+    public virtual void SetItemData(ItemData itemData, Action<bool> r)
     {
         this.itemData = itemData;
-
+        result = r;
         Item item = Player.Instance.inventory.GetItem(itemData.key);
         if (item == null)
         {
@@ -40,7 +42,7 @@ public class ItemPickupPanel : MonoBehaviour
 
     public virtual void OnClickedGet()
     {
-        GameEventBus.Publish<AddedItemEvent>(new AddedItemEvent(itemData));
+        GameEventBus.Publish<TryAddItemEvent>(new TryAddItemEvent(itemData));
         ItemCanvas.Instance.CloseCanvas();
     }
 }

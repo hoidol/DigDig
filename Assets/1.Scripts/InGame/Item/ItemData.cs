@@ -5,7 +5,9 @@ public class ItemData : ScriptableObject
 {
     public string key;
     public string title;
+    public int maxOwnCount;
     public const int MAX_OWN_COUNT = 3;
+    public bool isUnique; //유일한 아이템
     public string GetDescription(int count = 1)
     {
         return itemPrefab.GetDescription(count);
@@ -33,4 +35,30 @@ public class ItemData : ScriptableObject
             _ => Color.white
         };
     }
+
+    public static ItemData GetItemData(string key)
+    {
+        return ItemManager.Instance.GetItemData(key);
+    }
+
+#if UNITY_EDITOR
+    public void Edit()
+    {
+        string[] guids = UnityEditor.AssetDatabase.FindAssets($"{key} t:Prefab", new[] { "Assets/3.Prefabs/Item" });
+        foreach (string guid in guids)
+        {
+            string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+            Item prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<Item>(path);
+            if (prefab != null && System.IO.Path.GetFileNameWithoutExtension(path) == key)
+            {
+                itemPrefab = prefab;
+                UnityEditor.EditorUtility.SetDirty(this);
+                Debug.Log($"[ItemData] {key} prefab 연결 완료: {path}");
+                return;
+            }
+        }
+        Debug.LogWarning($"[ItemData] {key} 와 이름이 같은 프리팹을 찾지 못했습니다.");
+    }
+#endif
+
 }

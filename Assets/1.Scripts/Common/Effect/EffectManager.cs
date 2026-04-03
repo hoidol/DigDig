@@ -61,18 +61,7 @@ public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
         return null;
     }
 
-    //public void StartLuckyMine()
-    //{
 
-    //}
-
-    //public void EndLuckyMine()
-    //{
-    //    foreach(var effects in effectDic)
-    //    {
-    //        effects.Value.Clear();
-    //    }
-    //}
 
 
 }

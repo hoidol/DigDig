@@ -1,0 +1,55 @@
+using UnityEngine;
+
+//광석을 부수면 이동속도 빨라짐
+public class LeatherBootsItem : Item
+{
+    Buff buff;
+
+
+    public override void OnEquip(Player player)
+    {
+        buff = new Buff(StatType.MoveSpeed, 1f + 0.1f * count, StatOpType.Multiply);
+        player.playerStatMgr.AddBuff(buff);
+        GameEventBus.Subscribe<OreStoneDestroyedEvent>(OnOreStoneDestroyedEvent);
+    }
+    int overlapCount;
+    int MAX_OVERLAP_COUNT = 5;
+    float timer;
+    float duraction = 5;
+    public void OnOreStoneDestroyedEvent(OreStoneDestroyedEvent e)
+    {
+        overlapCount++;
+        if (overlapCount > MAX_OVERLAP_COUNT)
+            overlapCount = MAX_OVERLAP_COUNT;
+        timer = duraction;
+    }
+    void Update()
+    {
+        if (timer <= 0)
+        {
+            overlapCount--;
+            UpdateItem();
+        }
+
+        if (timer > 0)
+            timer -= Time.deltaTime;
+    }
+    public override void UpdateItem()
+    {
+        Player player = Player.Instance;
+        player.playerStatMgr.RemoveBuff(buff);
+        if (count > 0)
+        {
+            buff = new Buff(StatType.MoveSpeed, 1f + 0.1f * count, StatOpType.Multiply);
+            player.playerStatMgr.AddBuff(buff);
+        }
+
+
+    }
+
+    public override void OnUnequip(Player player)
+    {
+        player.playerStatMgr.RemoveBuff(buff);
+        GameEventBus.Unsubscribe<OreStoneDestroyedEvent>(OnOreStoneDestroyedEvent);
+    }
+}

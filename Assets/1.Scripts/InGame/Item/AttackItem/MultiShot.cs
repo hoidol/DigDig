@@ -2,27 +2,29 @@ using UnityEngine;
 
 public class MultiShot : Item, IAttackItem
 {
-    public int extraCount = 2;
-    public float spreadAngle = 15f;
+    public float spacing = 0.4f; // 총알 간격
 
     public override void OnEquip(Player player) { }
     public override void OnUnequip(Player player) { }
 
     public void OnAttack(Player player, Vector2 dir)
     {
-        for (int i = 1; i <= extraCount; i++)
+        // 발사 방향의 수직 벡터
+        Vector2 perp = new(-dir.y, dir.x);
+
+        // count개를 중앙 기준으로 균등 배치
+        // count=1 → offset 0
+        // count=2 → -0.5, +0.5
+        // count=3 → -1, 0, +1
+        float start = -(count - 1) * 0.5f;
+
+        for (int i = 0; i < count; i++)
         {
-            float angle = spreadAngle * i;
-            FireAt(player, Rotate(dir, angle));
-            FireAt(player, Rotate(dir, -angle));
+            Vector2 offset = perp * (spacing * (start + i));
+
+            var bullet = Player.Instance.Shoot(dir);
+            bullet.transform.position = (Vector2)player.attackPoint.position + offset;
+            bullet.Shoot(dir, player.playerStatMgr.AttackPower);
         }
     }
-    void FireAt(Player player, Vector2 dir)
-    {
-        var bullet = PlayerBullet.Instantiate();
-        bullet.transform.position = player.attackPoint.position;
-        bullet.Shoot(dir, player.playerStatMgr.AttackPower);
-    }
-    Vector2 Rotate(Vector2 v, float deg) =>
-        Quaternion.Euler(0, 0, deg) * v;
 }

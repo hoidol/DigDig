@@ -58,3 +58,12 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 unity_project/build
+
+# User-specific editor settings (local only)
+[Uu]ser[Ss]ettings/
+
+# Unity temporary files
+.utmp/
+
+# Render output (local captures)
+[Aa]ssets/[Rr]ender[Oo]utput/

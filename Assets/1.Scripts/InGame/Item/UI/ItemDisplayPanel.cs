@@ -8,6 +8,11 @@ public class ItemDisplayPanel : MonoBehaviour
     public Image bgImage;
     public GameObject[] overlapCountImages;
 
+    public ItemData itemData
+    {
+        get;
+        private set;
+    }
     public virtual void SetItemData(ItemData itemData, int count)
     {
         bgImage.color = ItemData.GetGradeColor(itemData.grade);
@@ -17,7 +22,7 @@ public class ItemDisplayPanel : MonoBehaviour
 
     public virtual void UpdateOverlapCount(ItemData itemData, int count)
     {
-        if (itemData.grade >= Grade.Legend)
+        if (itemData.isUnique || itemData.grade >= Grade.Legend)
         {
             for (int i = 0; i < overlapCountImages.Length; i++)
             {

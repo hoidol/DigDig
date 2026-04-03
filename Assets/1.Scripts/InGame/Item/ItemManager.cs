@@ -5,6 +5,7 @@ using UnityEngine;
 public class ItemManager : MonoSingleton<ItemManager>
 {
     public Dictionary<string, ItemData> itemDataDic = new Dictionary<string, ItemData>();
+    public MergeItemData[] mergeItemDatas;
 
     void Awake()
     {
@@ -13,6 +14,8 @@ public class ItemManager : MonoSingleton<ItemManager>
         {
             itemDataDic[itemData.key] = itemData;
         }
+
+        mergeItemDatas = Resources.LoadAll<MergeItemData>("MergeItemData");
     }
 
 
@@ -25,6 +28,9 @@ public class ItemManager : MonoSingleton<ItemManager>
                 if (item != null)
                 {
                     if (item.count >= ItemData.MAX_OWN_COUNT)
+                        return false;
+
+                    if (item.count >= d.maxOwnCount)
                         return false;
                 }
                 return d.grade <= grade;
@@ -47,15 +53,22 @@ public class ItemManager : MonoSingleton<ItemManager>
     {
         return itemDataDic[key];
     }
+
+    public MergeItemData GetMergeItemData(params string[] itemKeys)
+    {
+        return mergeItemDatas.FirstOrDefault(d =>
+            itemKeys.All(key => d.resourceItemKeys.Contains(key)) &&
+            d.resourceItemKeys.Length == itemKeys.Length);
+    }
 }
+
+
 public class TryPurchaseItemEvent
 {
     public ItemData itemData;
-    public Grade grade;
-    public TryPurchaseItemEvent(ItemData iData, Grade grade)
+    public TryPurchaseItemEvent(ItemData iData)
     {
         itemData = iData;
-        this.grade = grade;
     }
 }
 public class NearDropItemEvent
@@ -69,12 +82,11 @@ public class NearDropItemEvent
 
 public class TryMergeItemEvent
 {
-    public Item item1;
-    public Item item2;
-    public TryMergeItemEvent(Item i1, Item i2)
+    public MergeItemData mergeItemData;
+
+    public TryMergeItemEvent(MergeItemData data)
     {
-        item1 = i1;
-        item2 = i2;
+        mergeItemData = data;
     }
 }
 

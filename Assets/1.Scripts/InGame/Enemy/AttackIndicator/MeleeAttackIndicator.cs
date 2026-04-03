@@ -14,5 +14,9 @@ public class MeleeAttackIndicator : AttackIndicator
             gameObject.SetActive(false);
         });
     }
-
+    public override void StopIndicator()
+    {
+        warningTr.DOKill();
+        gameObject.SetActive(false);
+    }
 }

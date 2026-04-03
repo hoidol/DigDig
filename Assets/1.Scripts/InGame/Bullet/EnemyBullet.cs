@@ -22,6 +22,10 @@ public class EnemyBullet : BulletBase
             return Instantiate(prefab);
         }
     }
+    public override void Hit(RaycastHit2D hit2D)
+    {
+
+    }
 
     public override void Release()
     {
@@ -43,7 +47,8 @@ public class EnemyBullet : BulletBase
         IHittable hit = other.GetComponent<IHittable>();
         if (hit != null)
         {
-            Hit(hit);
+            hit.TakeDamage(damage);
+            Release();
         }
     }
 

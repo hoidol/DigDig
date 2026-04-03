@@ -2,7 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 
-public class RapidFire : Item, IAttackItem
+public class RapidFire : Item, IComboAttackItem
 {
     public int rapidCount = 2;
 
@@ -13,22 +13,19 @@ public class RapidFire : Item, IAttackItem
         base.OnEquip(player);
         cts = new CancellationTokenSource();
     }
+
     public override void OnUnequip(Player player)
     {
         cts?.Cancel();
         cts?.Dispose();
     }
 
-    public void OnAttack(Player player, Vector2 dir)
-    {
-        Fire(dir).Forget();
-    }
-    async UniTask Fire(Vector2 dir)
+    public async UniTask OnAttack(Player player, Vector2 dir)
     {
         for (int i = 0; i < rapidCount; i++)
         {
-            await UniTask.Delay(200, cancellationToken: cts.Token);
-            Player.Instance.Attack(dir);
+            await UniTask.Delay(70, cancellationToken: cts.Token);
+            Player.Instance.Attack(dir, false);
         }
     }
 }

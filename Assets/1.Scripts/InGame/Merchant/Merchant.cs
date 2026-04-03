@@ -1,18 +1,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Merchant : MonoBehaviour
 {
-    public MerchantView view;
 
     public Stall[] stalls;
     public float stayTime = 60; //유지 시간 
     public float stayTimer;
     bool isAppear;
+
+    public Image timerImage;
+    public GameObject body;
+
     void Awake()
     {
-        view = GetComponentInChildren<MerchantView>();
         stalls = GetComponentsInChildren<Stall>();
         GameEventBus.Subscribe<WaveEndEvent>(EndWave);
     }
@@ -36,7 +39,7 @@ public class Merchant : MonoBehaviour
             return;
         }
 
-        view.SetTimer(stayTimer / stayTime);
+        timerImage.fillAmount = stayTimer / stayTime;
         stayTimer -= Time.deltaTime;
     }
 
@@ -47,7 +50,7 @@ public class Merchant : MonoBehaviour
         //플레이어와 중심점 방향으로 상점이 생김 - 뚫여있을 확률이 매우 높음 + 최종 경계를 벗어나지 않음
         Vector2 pos = (Vector2)Player.Instance.transform.position + (Vector2.zero - (Vector2)Player.Instance.transform.position).normalized * 3.5f;
         transform.position = pos;
-        view.gameObject.SetActive(true);
+        body.gameObject.SetActive(true);
         stayTimer = stayTime;
 
         List<ItemData> itemDatas = ItemManager.Instance.GetItems(MerchantGradeToGrade(waveData.merchantGrade), 4);
@@ -63,9 +66,13 @@ public class Merchant : MonoBehaviour
         }
 
     }
-    void Disappear()
+    public void Disappear()
     {
         isAppear = false;
+        for (int i = 0; i < stalls.Length; i++)
+        {
+            stalls[i].Close();
+        }
         GameEventBus.Publish(new MerchantClosedEvent());
     }
     Grade MerchantGradeToGrade(MerchantGrade merchantGrade)

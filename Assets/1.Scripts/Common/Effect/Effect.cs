@@ -11,6 +11,10 @@ public class Effect : MonoBehaviour
     {
 
     }
+    public virtual void Play()
+    {
+
+    }
     public virtual void Play(Vector2 point)
     {
         gameObject.SetActive(true);
