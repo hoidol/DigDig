@@ -3,6 +3,7 @@ using UnityEngine;
 public class InstakillBehavior : IBulletBehavior
 {
     float chance;
+    DamageData damageData = new DamageData();
 
     public InstakillBehavior(float chance)
     {
@@ -17,7 +18,8 @@ public class InstakillBehavior : IBulletBehavior
             Component comp = hit as Component;
             if (comp != null && !comp.CompareTag("Boss") && !comp.CompareTag("Elite"))
             {
-                hit.TakeDamage(float.MaxValue);
+                damageData.damage = float.MaxValue;
+                hit.TakeDamage(damageData);
             }
         }
         return true;

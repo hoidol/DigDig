@@ -27,18 +27,21 @@ public class BurnEffect : StatusEffect
             if (damagePerSecond < burnEffect.damagePerSecond)
                 damagePerSecond = burnEffect.damagePerSecond;
         }
+
+        damageData.damage = damagePerSecond;
     }
 
     public override void OnRemove(StatusEffectHandler handler)
     {
 
     }
+    DamageData damageData = new DamageData();
 
     public override void OnUpdate(StatusEffectHandler handler)
     {
         if (damageTimer >= 1)
         {
-            hittable?.TakeDamage(damagePerSecond);
+            hittable?.TakeDamage(damageData);
             damageTimer = 0;
         }
         damageTimer += Time.deltaTime;

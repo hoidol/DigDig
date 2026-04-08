@@ -38,11 +38,12 @@ public class OreStone : MonoBehaviour, IHittable
         gold.SetActive(isGoldStone);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(DamageData damage)
     {
-        curHp -= damage;
-        DamageText damageText = DamageText.Instantiate();
-        damageText.SetDamageText(hpPoint.transform.position, damage.ToString());
+        curHp -= damage.damage;
+        damage.Applyed(hpPoint.transform.position);
+
+
         if (hpUI == null || hpUI.hittable != this)
         {
             hpUI = HpUI.GetHpUI(this);

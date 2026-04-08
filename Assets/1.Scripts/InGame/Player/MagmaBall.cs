@@ -15,7 +15,7 @@ public class MagmaBall : MonoBehaviour
     {
         if (other.TryGetComponent(out IHittable hittable))
         {
-            hittable.TakeDamage(Player.Instance.playerStatMgr.AttackPower);
+            //hittable.TakeDamage(Player.Instance.statMgr.AttackPower);
         }
     }
 }

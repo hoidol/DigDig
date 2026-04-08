@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -9,23 +11,46 @@ public class DynamicJoystick : Joystick
 
     [SerializeField] private float moveThreshold = 1;
 
-    protected override void Start()
+
+    CancellationTokenSource waitCts;
+    protected async override void Start()
     {
         MoveThreshold = moveThreshold;
         base.Start();
+#if UNITY_EDITOR
+        background.gameObject.SetActive(false);
+        return;
+#endif
+        background.gameObject.SetActive(true);
+        WaitInactive().Forget();
+    }
+    public async UniTaskVoid WaitInactive()
+    {
+        waitCts?.Cancel();
+        waitCts = new CancellationTokenSource();
+
+        await UniTask.Delay(3000, cancellationToken: waitCts.Token);
         background.gameObject.SetActive(false);
     }
-
     public override void OnPointerDown(PointerEventData eventData)
     {
-        background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
+#if UNITY_EDITOR
+        background.gameObject.SetActive(false);
+        return;
+#endif
+        waitCts?.Cancel();  // 실행 중인 WaitInactive 취소
         background.gameObject.SetActive(true);
+        background.anchoredPosition = ScreenPointToAnchoredPosition(eventData.position);
         base.OnPointerDown(eventData);
     }
 
     public override void OnPointerUp(PointerEventData eventData)
     {
+#if UNITY_EDITOR
         background.gameObject.SetActive(false);
+        return;
+#endif
+        WaitInactive().Forget();
         base.OnPointerUp(eventData);
     }
 

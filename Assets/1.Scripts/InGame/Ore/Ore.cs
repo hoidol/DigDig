@@ -15,6 +15,7 @@ public class Ore : MonoBehaviour, IPickable
         set;
     }
 
+
     public int exp = 1;// 임시 경험치량
     public int gold = 1; //가치
     public void Droped(Vector2 pos, string key)

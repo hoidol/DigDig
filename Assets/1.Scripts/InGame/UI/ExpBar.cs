@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 public class ExpBar : MonoBehaviour
@@ -7,6 +8,7 @@ public class ExpBar : MonoBehaviour
     void Start()
     {
         GameEventBus.Subscribe<ExpChangedEvent>(OnExpChanged);
+        image.fillAmount = 0;
     }
 
     void OnExpChanged(ExpChangedEvent e)

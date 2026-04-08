@@ -16,10 +16,12 @@ public class UpgradeData : ScriptableObject
     {
         if (lv == -1)
         {
-            lv = Player.Instance.playerStatMgr.GetUpgradeLv(PlayerStatManager.UpgradeTypeToStatType(upgradeType));// 임시 
+            lv = 0;
+            //lv = Player.Instance.playerStatMgr.GetUpgradeLv(PlayerStatManager.UpgradeTypeToStatType(upgradeType));// 임시 
         }
         return initValue + increaseValue * lv;
     }
+
     public static UpgradeData GetUpgradeData(UpgradeType upgradeType)
     {
         return Resources.Load<UpgradeData>($"UpgradeData/{upgradeType}");

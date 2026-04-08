@@ -8,7 +8,7 @@ public static class AOEUtil
         foreach (var col in cols)
         {
             if (col.TryGetComponent(out IHittable h))
-                h.TakeDamage(damage);
+                h.TakeDamage(new DamageData() { damage = damage });
         }
     }
 }

@@ -37,7 +37,7 @@ public class EnemyBullet : BulletBase
     public override void CheckHit()
     {
     }
-
+    DamageData damageData = new DamageData();
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!hitTags.Contains(other.tag))
@@ -47,7 +47,8 @@ public class EnemyBullet : BulletBase
         IHittable hit = other.GetComponent<IHittable>();
         if (hit != null)
         {
-            hit.TakeDamage(damage);
+            damageData.damage = damage;
+            hit.TakeDamage(damageData);
             Release();
         }
     }

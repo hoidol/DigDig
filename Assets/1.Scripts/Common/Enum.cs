@@ -12,3 +12,11 @@ public enum StatOpType
     Multiply,  // *=
     Divide     // /=
 }
+public enum Grade
+{
+    Normal,
+    Rare,
+    Unique,
+    Legend,
+    Myth
+}

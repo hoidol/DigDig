@@ -29,6 +29,7 @@ public abstract class BulletBase : MonoBehaviour
 
     }
 
+
     public virtual void Update()
     {
 

@@ -1,3 +1,4 @@
+[System.Serializable]
 public abstract class StatusEffect
 {
     public float duration;        // 지속 시간

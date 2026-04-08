@@ -1,5 +1,5 @@
 using UnityEngine;
-public class MeleeEnemyPresenter : Enemy
+public class MeleeEnemy : Enemy
 {
     MeleeAttackIndicator meleeAttackIndicator;
     public Transform attackPoint;

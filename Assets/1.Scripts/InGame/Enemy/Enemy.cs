@@ -7,10 +7,10 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public EnemyType enemyType; // 적 종류 구분
     public EnemyState state { get; private set; } // 적 상태 - FSM 패턴
     public EnemyData enemyData { get; private set; } //게임 데이터
-    public StatusEffectHandler statusEffectHandler
-    {
-        get; set;
-    }
+    public StatusEffectHandler statusEffectHandler;
+    // {
+    //     get; set;
+    // }
 
     #region 
     public float MaxHp { get; private set; }
@@ -19,6 +19,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     [SerializeField] Transform root;
     [SerializeField] Transform hpPoint;
     protected Rigidbody2D rg2d;
+    public Rigidbody2D Rigidbody2D => rg2d;
     protected float attackTimer;
     protected bool attacking;
 
@@ -34,6 +35,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public virtual void Init(EnemyData data)
     {
         enemyData = data;
+        statusEffectHandler.Init();
     }
     //적 생성 시 호출
     public virtual void Spawn(Vector2 pos)
@@ -72,10 +74,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         {
             if (attacking)
                 return;
-
         }
-
-
 
         if (state == EnemyState.Approaching) UpdateApproaching();
         else if (state == EnemyState.Attack) UpdateAttack();
@@ -130,11 +129,14 @@ public abstract class Enemy : MonoBehaviour, IHittable
     }
 
     // IHittable 인터페이스 구현 부
-    public void TakeDamage(float damage)
+    public void TakeDamage(DamageData damage)
     {
-        CurHp = Mathf.Max(0, CurHp - damage);
+        if (state == EnemyState.Dead)
+            return;
+        damage.Applyed(hpPoint.transform.position);
+        CurHp = Mathf.Max(0, CurHp - damage.damage);
         OnHpChanged(CurHp, MaxHp);
-        if (CurHp <= 0) OnDead();
+        if (CurHp <= 0) OnDead(damage);
     }
 
     public void SetFacing(float dirX)
@@ -142,7 +144,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         root.localScale = new Vector3(dirX >= 0 ? 1 : -1, 1, 1);
     }
 
-    void OnHpChanged(float cur, float max)
+    protected virtual void OnHpChanged(float cur, float max)
     {
         if (hpUI == null)
         {
@@ -153,18 +155,21 @@ public abstract class Enemy : MonoBehaviour, IHittable
         hpUI.SetRate(cur / max);
     }
 
-    void OnDead()
+    protected virtual void OnDead(DamageData damage)
     {
+        ChangeState(EnemyState.Dead);
         hpUI?.Release();
         gameObject.SetActive(false);
         // 이벤트 발행 → 각 시스템이 알아서 처리
-        GameEventBus.Publish(new EnemyDeadEvent(this));
+        GameEventBus.Publish(new EnemyDeadEvent(this, damage.cause));
     }
 }
 
 public enum EnemyState
 {
-
     Approaching,
-    Attack
+    Attack,
+    PhaseTransition,
+    Dash,
+    Dead
 }

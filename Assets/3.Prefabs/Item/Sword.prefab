@@ -4986,9 +4986,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Sword
   count: 0
-  activeTime: 0
   coolTime: 5
-  active: 0
   hitPoint: {fileID: 2778636667003123005}
   radiuses:
   - 1

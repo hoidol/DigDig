@@ -47,7 +47,7 @@ public class UpgradePanel : MonoBehaviour
         }
 
         Player.Instance.AddGold(-upgradeData.GetPrice());
-        Player.Instance.Upgrade(upgradeType);
+        //Player.Instance.Upgrade(upgradeType);
         UpgradeCanvas.Instance.UpdateCanvas();
     }
 }

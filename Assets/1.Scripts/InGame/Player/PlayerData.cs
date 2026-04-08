@@ -3,16 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerData", menuName = "PlayerData", order = 0)]
 public class PlayerData : ScriptableObject
 {
-    public string key; // 
+    public string key;
 
     public PlayerStat[] playerStats = new PlayerStat[(int)StatType.Count];
-    // public float hp;
-    // public float attackPower;
-    // public float moveSpeed;
-    // public float attackSpeed;
-    // public float attackRange;
-    // public float recoveryHp;
-
     public PlayerStat GetPlayerStat(StatType type)
     {
         for (int i = 0; i < playerStats.Length; i++)

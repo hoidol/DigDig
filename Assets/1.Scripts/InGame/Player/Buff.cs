@@ -1,3 +1,4 @@
+[System.Serializable]
 public class Buff
 {
     public StatType statType;

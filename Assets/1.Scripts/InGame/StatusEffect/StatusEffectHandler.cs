@@ -5,7 +5,7 @@ using System.Linq;
 using System;
 public class StatusEffectHandler : MonoBehaviour
 {
-    public bool IsStunned  { get; set; }
+    public bool IsStunned { get; set; }
     public bool IsShielded { get; set; }
 
     // 방어막 소모 시도. 막으면 true 반환
@@ -17,31 +17,57 @@ public class StatusEffectHandler : MonoBehaviour
         shield?.Consume(this);
         return true;
     }
-
-    List<StatusEffect> effects = new List<StatusEffect>();
-    Dictionary<string, List<StatusEffectView>> activeEffects = new();
-    void Awake()
+    public bool OnDebuff() //디버프(화염 독 스턴 등) 적용 중이면
     {
-        StatusEffectView[] views = GetComponentsInChildren<StatusEffectView>();
-        foreach (StatusEffectView view in views)
+        return effects.Count > 0;
+    }
+
+    public bool HasEffect(string effectKey) // 특정 이펙트 보유 여부
+    {
+        for (int i = 0; i < effects.Count; i++)
+            if (effects[i].EffectKey == effectKey) return true;
+        return false;
+    }
+    [SerializeField] List<StatusEffect> effects = new List<StatusEffect>();
+    Dictionary<string, List<StatusEffectView>> activeEffects = new();
+    public void Init()
+    {
+        Debug.Log("StatusEffectHandler Init()1");
+        if (activeEffects.Count <= 0)
         {
-            if (!activeEffects.ContainsKey(view.effectKey))
+            StatusEffectView[] views = GetComponentsInChildren<StatusEffectView>();
+
+            Debug.Log($"StatusEffectHandler Init() {views.Length}");
+            foreach (StatusEffectView view in views)
             {
-                activeEffects[view.effectKey] = new List<StatusEffectView>();
+                if (!activeEffects.ContainsKey(view.effectKey))
+                {
+                    activeEffects[view.effectKey] = new List<StatusEffectView>();
+                }
+                activeEffects[view.effectKey].Add(view);
+                view.gameObject.SetActive(false);
             }
-            activeEffects[view.effectKey].Add(view);
         }
+        for (int i = effects.Count - 1; i >= 0; i--)
+        {
+            effects[i].OnRemove(this);
+            StopEffect(effects[i]);   // 파티클 해제
+        }
+        effects.Clear();
+
     }
 
     public void Apply(StatusEffect effect)
     {
         // 같은 타입이 이미 있으면 시간만 갱신
+        Debug.Log($"{effect.EffectKey} 적용 대상{gameObject.name}");
         var existing = effects.FirstOrDefault(e => e.GetType() == effect.GetType());
         if (existing != null)
         {
             existing.OnApply(effect, this);
             return;
         }
+
 
         effects.Add(effect);
         effect.OnApply(effect, this);

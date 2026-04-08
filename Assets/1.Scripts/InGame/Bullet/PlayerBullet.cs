@@ -1,11 +1,12 @@
 using UnityEngine;
 
 using System.Collections.Generic;
+using Unity.Android.Gradle.Manifest;
 public class PlayerBullet : BulletBase
 {
     private static Queue<PlayerBullet> pool = new Queue<PlayerBullet>();
     private static PlayerBullet prefab;
-
+    public PlayerDamageData damageData = new PlayerDamageData();
     public static PlayerBullet Instantiate()
     {
         if (prefab == null)
@@ -32,16 +33,23 @@ public class PlayerBullet : BulletBase
             return;
 
         preTarget = hit;
+        damageData.Init();
+        damageData.cause = transform;
 
         float finalDamage = damage;
-        var statMgr = Player.Instance.playerStatMgr;
-        if (Random.value <= statMgr.CritChance)
-            finalDamage *= statMgr.CritPower;
+
+        Debug.Log($"playerBullet Hit 1 finalDamage {finalDamage}");
         for (int i = 0; i < forces.Count; i++)
         {
+            Debug.Log($"playerBullet Hit forces [{i}] {forces[i].GetType().Name} finalDamage {finalDamage}");
             finalDamage += forces[i].GetMultiDamage(this, hit, hit2D);
         }
-        hit.TakeDamage(finalDamage);
+
+
+        Debug.Log($"playerBullet Hit 2 finalDamage {finalDamage}");
+        damageData.Calculate(finalDamage);
+        Debug.Log($"playerBullet Hit 3 finalDamage {finalDamage}");
+        hit.TakeDamage(damageData);
         bool shouldRelease = true;
         foreach (var b in behaviors)
         {

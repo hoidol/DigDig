@@ -15,23 +15,32 @@ MonoBehaviour:
   key: Digma
   playerStats:
   - statType: 0
-    upgradeLv: 0
     value: 3
   - statType: 1
-    upgradeLv: 0
     value: 100
   - statType: 2
-    upgradeLv: 0
-    value: 0.05
+    value: 0
   - statType: 3
-    upgradeLv: 0
-    value: 1
+    value: 0.5
   - statType: 4
-    upgradeLv: 0
     value: 3.5
   - statType: 5
-    upgradeLv: 0
     value: 5
   - statType: 6
-    upgradeLv: 0
     value: 10
+  - statType: 7
+    value: 5
+  - statType: 8
+    value: 1.5
+  - statType: 9
+    value: 12
+  - statType: 10
+    value: 1
+  - statType: 11
+    value: 1
+  - statType: 12
+    value: 3
+  - statType: 13
+    value: 0
+  - statType: 14
+    value: 2

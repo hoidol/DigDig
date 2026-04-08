@@ -24,9 +24,13 @@ public class GameManager : MonoSingleton<GameManager>
             gameListeners.Remove(op);
     }
     public bool isClear;
+    protected void Awake()
+    {
+
+        GameEventBus.Clear();
+    }
     void Start()
     {
-        GameEventBus.Clear();
         underground = 1;
         wave = 1;
 

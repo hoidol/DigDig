@@ -1,4 +1,5 @@
 // StunEffect.cs
+[System.Serializable]
 public class StunEffect : StatusEffect
 {
     public override string EffectKey => "Stun";

@@ -62,7 +62,7 @@ public class Merchant : MonoBehaviour
         Collider2D[] cols = Physics2D.OverlapCircleAll(pos, 5, LayerMask.GetMask("Hittable"));
         for (int i = 0; i < cols.Length; i++)
         {
-            cols[i].GetComponent<IHittable>().TakeDamage(999999);
+            cols[i].GetComponent<IHittable>().TakeDamage(new DamageData { damage = 999999 });
         }
 
     }
