@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MultiShot : Item, IAttackItem
+public class MultiShotItem : Item, IAttackItem
 {
     public float spacing = 0.4f; // 총알 간격
 
@@ -22,9 +22,7 @@ public class MultiShot : Item, IAttackItem
         {
             Vector2 offset = perp * (spacing * (start + i));
 
-            var bullet = Player.Instance.Shoot(dir);
-            bullet.transform.position = (Vector2)player.attackPoint.position + offset;
-            bullet.Shoot(dir, player.statMgr.AttackPower);
+            Player.Instance.Shoot(dir, (Vector2)player.attackPoint.position + offset);
         }
     }
 }

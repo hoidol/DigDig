@@ -66,9 +66,7 @@ public class OreStone : MonoBehaviour, IHittable
 
         if (isGoldStone)
         {
-            Ore ore = OreManager.Instance.GetOre();
-            ore.Droped(transform.position, idx.ToString());
-            ore.transform.position = transform.position;
+            Gold.Dropped(transform.position, idx.ToString());
         }
 
         hpUI.Release();

@@ -9,12 +9,14 @@ public class ItemInventory : MonoBehaviour
     public readonly int MAX_ITEM_COUNT = 5;
 
     // 인터페이스별 캐시 - 장착/해제 시점에만 갱신
+    public List<IPreAttack> preAttackItems = new List<IPreAttack>();
     public List<IAttackItem> attackItems = new List<IAttackItem>();
     public List<IComboAttackItem> comboAttackItems = new List<IComboAttackItem>();
     public List<IBulletItem> bulletItems = new List<IBulletItem>();
 
     void RefreshCache()
     {
+        preAttackItems = equippedItems.OfType<IPreAttack>().ToList();
         attackItems = equippedItems.OfType<IAttackItem>().ToList();
         comboAttackItems = equippedItems.OfType<IComboAttackItem>().ToList();
         bulletItems = equippedItems.OfType<IBulletItem>().ToList();
@@ -29,6 +31,7 @@ public class ItemInventory : MonoBehaviour
     {
 #if UNITY_EDITOR
         AddItem("Sword");
+        AddItem("Pickaxe");
 #endif
     }
 

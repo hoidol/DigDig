@@ -1,33 +1,28 @@
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class DroppedItem : MonoBehaviour
 {
-    public static List<DroppedItem> list = new List<DroppedItem>();
-    static DroppedItem droppedItemPrefab;
+    static readonly Stack<DroppedItem> pool = new();
+    static DroppedItem prefab;
+
     public static DroppedItem Instantiate()
     {
-        DroppedItem droppedItem = GetDroppedItemInPooling();
-        return droppedItem;
+        if (pool.Count > 0)
+        {
+            DroppedItem item = pool.Pop();
+            item.gameObject.SetActive(true);
+            return item;
+        }
+        if (prefab == null)
+            prefab = Resources.Load<DroppedItem>("UI/DroppedItem");
+        return Instantiate(prefab);
     }
-    static DroppedItem GetDroppedItemInPooling()
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i].gameObject.activeSelf)
-                continue;
-            list[i].gameObject.SetActive(true);
-            return list[i];
-        }
-        if (droppedItemPrefab == null)
-        {
-            droppedItemPrefab = Resources.Load<DroppedItem>("UI/DroppedItem");
-        }
 
-        DroppedItem dText = Instantiate(droppedItemPrefab);
-        list.Add(dText);
-        return dText;
+    public void Release()
+    {
+        gameObject.SetActive(false);
+        pool.Push(this);
     }
 
     public ItemData itemData;

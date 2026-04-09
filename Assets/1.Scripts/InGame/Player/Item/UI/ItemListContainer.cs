@@ -3,9 +3,10 @@ using UnityEngine;
 public class ItemListContainer : MonoBehaviour
 {
     public ItemActivePanel[] itemActivePanels;
-    void Awake()
+    void Start()
     {
         GameEventBus.Subscribe<AddedItemEvent>(AddedItemEvent);
+        UpdateContainer();
     }
 
     void AddedItemEvent(AddedItemEvent e)

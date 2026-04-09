@@ -44,5 +44,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
     void EnemyDeadEventListener(EnemyDeadEvent e)
     {
         ReleaseEnemy(e.enemy);
+
+        Gold.Dropped(e.position, "0");
     }
 }

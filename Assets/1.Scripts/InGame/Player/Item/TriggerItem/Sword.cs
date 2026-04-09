@@ -41,6 +41,7 @@ public class Sword : TriggerItem
         coolTime = 5;
         transform.parent = Player.Instance.bodyRootTr;
         transform.position = Player.Instance.bodyCenterTr.position;//위치 맞추기
+        transform.localScale = Vector3.one;
         effect.Init();
     }
     public override void UpdateItem()

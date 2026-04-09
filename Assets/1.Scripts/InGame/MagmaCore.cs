@@ -16,11 +16,11 @@ public class MagmaCore : MonoBehaviour//MonoSingleton<MagmaCore>, IPicker
     }
     public void CollectOre(string oreKey)
     {
-        Ore ore = OreManager.Instance.GetOre();
-        ore.Droped(Player.Instance.transform.position, oreKey);
-        // ore.Take(this);
+        // Ore ore = OreManager.Instance.GetOre();
+        // ore.Droped(Player.Instance.transform.position, oreKey);
+        // // ore.Take(this);
 
-        AddGold(ore.gold, true);
+        // AddGold(ore.gold, true);
     }
     public void AddGold(int g, bool effect = false)
     {

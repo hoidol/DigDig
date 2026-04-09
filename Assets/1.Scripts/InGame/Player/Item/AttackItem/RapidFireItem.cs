@@ -2,7 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Threading;
 
-public class RapidFire : Item, IComboAttackItem
+public class RapidFireItem : Item, IComboAttackItem
 {
     public int rapidCount = 2;
 

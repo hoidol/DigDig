@@ -4,7 +4,7 @@ public class ParticleEffect : Effect
 {
     public ParticleSystem[] particleSystems;
     public float duration;
-    protected float timer = 0;
+    [SerializeField] protected float timer = 0;
     public override void Init()
     {
         particleSystems = GetComponentsInChildren<ParticleSystem>();
@@ -15,6 +15,7 @@ public class ParticleEffect : Effect
     }
     public override void Play()
     {
+        base.Play();
         for (int i = 0; i < particleSystems.Length; i++)
         {
             particleSystems[i].Play();

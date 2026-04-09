@@ -237,11 +237,24 @@ public class Player : MonoSingleton<Player>, IPicker
             GameManager.Instance.EndGame(false);
         }
     }
+    int pendingSpread;
+    public void RequestSpread(int count) => pendingSpread += count;
+
+
     BulletFiredEvent bulletFiredEvent = new BulletFiredEvent();
     public void Attack(Vector2 dir, bool fromPlayer)
     {
         LastAttackDir = dir;
-        var bullet = Shoot(dir);//한발쏨
+        pendingSpread = 0;
+
+        // 1단계: 발사 전 준비 (spread 수집)
+        foreach (var e in itemInventory.preAttackItems)
+            e.OnPreAttack(this, dir);
+        foreach (var e in abilityInventory.preAttackItems)
+            e.OnPreAttack(this, dir);
+
+        // 2단계: 메인 탄 + 확산 발사
+        Shoot(dir, attackPoint.position, fromPlayer);
 
         foreach (var e in itemInventory.attackItems)
             e.OnAttack(this, dir);
@@ -262,7 +275,6 @@ public class Player : MonoSingleton<Player>, IPicker
         }
 
 
-        bulletFiredEvent.SetBullet(bullet);
         bulletFiredEvent.currentBulletCount = curBulletCount;
         bulletFiredEvent.maxBulletCount = statMgr.BulletCount;
         bulletFiredEvent.fromPlayer = fromPlayer;
@@ -304,21 +316,44 @@ public class Player : MonoSingleton<Player>, IPicker
         }
     }
 
-    public PlayerBullet Shoot(Vector2 dir)
+    public void Shoot(Vector2 dir, Vector2 pos, bool fromPlayer = false)
+    {
+        if (pos == Vector2.zero)
+            pos = attackPoint.position;
+
+        int totalBullet = fromPlayer ? 1 + pendingSpread : 1;
+
+        if (totalBullet == 1)
+        {
+            FireBullet(dir, pos);
+            return;
+        }
+
+        float totalAngle = 30f;
+        float angleStep = totalAngle / totalBullet;
+        float baseAngle = Vector2.SignedAngle(Vector2.right, dir);
+
+        for (int i = 0; i < totalBullet; i++)
+        {
+            float angle = baseAngle - totalAngle / 2f + angleStep * 0.5f + angleStep * i;
+            float rad = angle * Mathf.Deg2Rad;
+            FireBullet(new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)), pos);
+        }
+    }
+
+    void FireBullet(Vector2 dir, Vector2 pos)
     {
         var bullet = PlayerBullet.Instantiate();
         bullet.ClearBehaviors();
         bullet.ClearBulletForce();
-        bullet.transform.position = attackPoint.position;
+        bullet.transform.position = pos;
 
-        //총알에 IBulletItem 타입의 아이템 능력 적용
         foreach (var e in itemInventory.bulletItems)
             e.OnBulletFired(bullet);
         foreach (var e in abilityInventory.bulletItems)
             e.OnBulletFired(bullet);
 
         bullet.Shoot(dir, statMgr.AttackPower);
-        return bullet;
     }
 
     //public float reloadTimer;
@@ -542,11 +577,6 @@ public enum StatType
 }
 public class BulletFiredEvent
 {
-    public PlayerBullet bullet
-    {
-        get;
-        private set;
-    }
     public bool fromPlayer
     {
         get; set;
@@ -562,10 +592,6 @@ public class BulletFiredEvent
         set;
     }
     public Vector2 dir;
-    public void SetBullet(PlayerBullet b)
-    {
-        bullet = b;
-    }
 }
 
 public class ReloadEvent

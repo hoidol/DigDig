@@ -38,17 +38,17 @@ public class PlayerBullet : BulletBase
 
         float finalDamage = damage;
 
-        Debug.Log($"playerBullet Hit 1 finalDamage {finalDamage}");
+        // Debug.Log($"playerBullet Hit 1 finalDamage {finalDamage}");
         for (int i = 0; i < forces.Count; i++)
         {
-            Debug.Log($"playerBullet Hit forces [{i}] {forces[i].GetType().Name} finalDamage {finalDamage}");
+            // Debug.Log($"playerBullet Hit forces [{i}] {forces[i].GetType().Name} finalDamage {finalDamage}");
             finalDamage += forces[i].GetMultiDamage(this, hit, hit2D);
         }
 
 
-        Debug.Log($"playerBullet Hit 2 finalDamage {finalDamage}");
+        // Debug.Log($"playerBullet Hit 2 finalDamage {finalDamage}");
         damageData.Calculate(finalDamage);
-        Debug.Log($"playerBullet Hit 3 finalDamage {finalDamage}");
+        // Debug.Log($"playerBullet Hit 3 finalDamage {finalDamage}");
         hit.TakeDamage(damageData);
         bool shouldRelease = true;
         foreach (var b in behaviors)

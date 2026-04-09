@@ -48,7 +48,7 @@ public class MultiTargetAbility : Ability
             if (fired >= count) break;
             Vector2 dir = ((Vector2)col.transform.position - (Vector2)Player.Instance.attackPoint.position).normalized;
             if (e.dir == dir) continue;
-            Player.Instance.Shoot(dir);
+            Player.Instance.Shoot(dir, Vector2.zero);
             fired++;
         }
     }

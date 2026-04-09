@@ -32,7 +32,7 @@ public class EmergencyFireAbility : Ability, IAttackItem
 
         foreach (var d in dirs)
         {
-            Player.Instance.Shoot(d);
+            Player.Instance.Shoot(d, Vector2.zero);
         }
     }
 

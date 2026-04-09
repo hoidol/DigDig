@@ -16,7 +16,7 @@ public class KillExplosionAbility : Ability, IBulletItem
     public void OnBulletFired(PlayerBullet bullet)
     {
         float dmg = Player.Instance.statMgr.AttackPower * ratios[count - 1];
-        Debug.Log($"KillExplosionAbility OnBulletFired() {dmg}");
+        // Debug.Log($"KillExplosionAbility OnBulletFired() {dmg}");
         bullet.AddBehavior(new KillExplosionBehavior(
             radii[count - 1], dmg, LayerMask.GetMask("Hittable")));
     }

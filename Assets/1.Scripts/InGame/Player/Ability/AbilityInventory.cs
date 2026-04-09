@@ -7,6 +7,7 @@ public class AbilityInventory : MonoBehaviour
     public List<Ability> equippedAbilitys = new List<Ability>();
     //public readonly int MAX_SKILL_COUNT = 3;
 
+    public List<IPreAttack> preAttackItems = new List<IPreAttack>();
     public List<IAttackItem> attackItems = new List<IAttackItem>();
     public List<IComboAttackItem> comboAttackItems = new List<IComboAttackItem>();
     public List<IBulletItem> bulletItems = new List<IBulletItem>();
@@ -32,6 +33,7 @@ public class AbilityInventory : MonoBehaviour
 
     void RefreshCache()
     {
+        preAttackItems = equippedAbilitys.OfType<IPreAttack>().ToList();
         attackItems = equippedAbilitys.OfType<IAttackItem>().ToList();
         comboAttackItems = equippedAbilitys.OfType<IComboAttackItem>().ToList();
         bulletItems = equippedAbilitys.OfType<IBulletItem>().ToList();

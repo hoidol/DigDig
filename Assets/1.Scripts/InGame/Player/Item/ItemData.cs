@@ -44,20 +44,56 @@ public class ItemData : ScriptableObject
 #if UNITY_EDITOR
     public void Edit()
     {
-        string[] guids = UnityEditor.AssetDatabase.FindAssets($"{key} t:Prefab", new[] { "Assets/3.Prefabs/Item" });
+        if (string.IsNullOrEmpty(key) || key != name)
+            key = name;
+
+        string prefabFolder = "Assets/3.Prefabs/Item";
+
+        // 기존 프리팹 탐색
+        string[] guids = UnityEditor.AssetDatabase.FindAssets($"{key} t:Prefab", new[] { prefabFolder });
         foreach (string guid in guids)
         {
             string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+            if (System.IO.Path.GetFileNameWithoutExtension(path) != key) continue;
+
             Item prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<Item>(path);
-            if (prefab != null && System.IO.Path.GetFileNameWithoutExtension(path) == key)
+            if (prefab != null)
             {
                 itemPrefab = prefab;
+                itemPrefab.key = key;
                 UnityEditor.EditorUtility.SetDirty(this);
                 Debug.Log($"[ItemData] {key} prefab 연결 완료: {path}");
                 return;
             }
         }
-        Debug.LogWarning($"[ItemData] {key} 와 이름이 같은 프리팹을 찾지 못했습니다.");
+
+        // 프리팹 없으면 새로 생성
+        if (!UnityEditor.AssetDatabase.IsValidFolder(prefabFolder))
+            System.IO.Directory.CreateDirectory(prefabFolder);
+
+        var go = new GameObject(key);
+
+        // key+"Item" 이름의 타입이 존재하면 컴포넌트 추가
+        string componentTypeName = key + "Item";
+        System.Type itemType = System.Type.GetType(componentTypeName);
+        if (itemType != null && typeof(Item).IsAssignableFrom(itemType))
+        {
+            go.AddComponent(itemType);
+            Debug.Log($"[ItemData] {componentTypeName} 컴포넌트 추가됨");
+        }
+        else
+        {
+            Debug.LogWarning($"[ItemData] {componentTypeName} 타입을 찾지 못해 빈 GameObject로 생성됨");
+        }
+
+        string newPath = $"{prefabFolder}/{key}.prefab";
+        var newPrefab = UnityEditor.PrefabUtility.SaveAsPrefabAsset(go, newPath);
+        DestroyImmediate(go);
+
+        itemPrefab = newPrefab.GetComponent<Item>();
+        itemPrefab.key = key;
+        UnityEditor.EditorUtility.SetDirty(this);
+        Debug.Log($"[ItemData] {key} 새 prefab 생성 완료: {newPath}");
     }
 #endif
 
