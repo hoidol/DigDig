@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: FocusPotion
+  m_EditorClassIdentifier: 
+  key: FocusPotion
+  itemName: "\uC9D1\uC911\uB825 \uBB3C\uC57D"
+  desc: "\uACF5\uACA9\uB825 +2"
+  level: 3
+  maxOwnCount: 2
+  hideDisplay: 1
+  acquireMethod: 3
+  thumbnail: {fileID: 0}
+  grade: 1
+  itemPrefab: {fileID: 4334098022002427651, guid: f605a1f7615514d6394d58ce8e59d89c, type: 3}
+  addEffectUnlockConditions: []
+  applyOrder: 0
+  mergeItemKeys: []
+  IncludingItems: []

@@ -1,0 +1,44 @@
+Key,Name,Desc,Level,MaxLv,TotalAbilityCount,AbilityType
+Focus,집중력,공격력 증가,0,-1,,Base
+Swift,신속함,공격 속도 증가,0,5,,Base
+Vitality,체력,최대 체력 증가,0,-1,,Base
+Agility,기민함,이동속도 증가,0,5,5,Base
+Composure,침착함,크리티컬력 증가,1,-1,5,Base
+Sensitivity,예민함,아이템 획득 범위 증가,1,3,5,Base
+Sharpness,예리함,크리티컬 확률 증가,1,-1,5,Base
+Wisdom,지혜,마력 증가,1,-1,5,Base
+InstantHeal,즉시 회복,체력 즉시 회복,2,-1,5,Base
+HealBoost,회복 증폭,회복양 증가,2,3,5,Base
+DepthReward,골드 보상,10 즉시 골드 획득,2,-1,20,Base
+MultiShotOnReload,과적재,장전 후 첫발 멀티샷,2,1,0,Core
+BloodFrenzy,혈투,HP 30% 이하 시 공격력 +40%,2,1,0,Core
+UnequalExchange,교묘한 교환,골드를 얻을때 30% 총알 1발을 충전,2,1,0,Core
+WeaknessExploit,약점 공략,디버프 걸린 적에게 추가 피해,2,1,0,Core
+EmergencyFire,긴급 호출,장전 직전 방사형으로 충쏨,2,1,0,Core
+StillFocus,집중 대응,이동하지 않으면 공격 속도 증가,2,1,0,Core
+SniperFocus,예민함 유지,가만히있으면 크리티컬 확률 증가,2,1,0,Core
+BoundShoot,고무탄,광석 파괴 후 도탄 발사 (튕김 +1),2,1,0,Core
+MiningPierce,광석 관통,광석 채굴 후 관통탄 (관통 +1),2,1,0,Core
+BloodScent,짙은 피 냄새,적 처치 후 다음 공격 크리티컬 확률 대폭 상승 (40%),2,1,0,Core
+WildInstinct,야생의 본능,적 처치 시 공격속도,2,1,0,Core
+FocusSustain,집중력 유지,적 처치 시 추가 발사,2,1,0,Core
+GunpowderBullet,화약탄,10%확률로 폭발탄 발사 ,2,1,0,Core
+AimlessBullet ,오발탄,공격 시 30% 확률로 오발탄이 나감,2,1,0,Core
+AnkleShoot,앵클샷,적중 시 확률로 슬로우,2,1,0,Core
+FinisherShot,일격탄,마지막 탄 크리티컬 확률 50%,2,1,0,Core
+SteadyReload,정교한 장전,정지 상태에서 장전하면 속도 빨라짐,2,1,0,Core
+PointBlank,위험 감수,가까이서 때리면 추가 데미지,2,1,0,Core
+BoobyTrap,부비 트립,특정 이동량마다 트립 설치,2,1,0,Core
+RapidFire,속사,한발더 추가 발사,3,1,0,Synergy
+Predation,포식,확산탄 추가 발사,3,1,0,Synergy
+HuntersThirst,사냥꾼의 갈증,적 처치 시 5%확률로 체력의 0.1% 즉시 회복,3,1,0,Synergy
+EagleEye,이글아이,타격 거리가 멀수록 데미지 증가 (최대 2배),3,1,0,Synergy
+IronNest,벙커 소환,벙커 구조물 소환 (광석 20개 파괴 시 소환 가능),3,1,0,Synergy
+VeinBlast,광맥 폭발,광석 제거 시 해당 위치 주변 범위에 피해,3,1,0,Synergy
+FrenzyHunt,광폭 사냥,적 사망 시 3방향으로 데미지 50%의 분열탄 발사,3,1,0,Synergy
+ScatterVolley,방사,일반 공격 시 30% 확률로 방사형 탄 발사,3,1,0,Synergy
+MultiTarget,멀티 타겟,공격 시 근처 적에게 추가 발사,3,1,0,Synergy
+Perseverance,분노,분노 유지 시간 증가,1,5,5,Base
+Calm,차분함,체력 회복력 증가,0,5,5,Base
+Dexterity,손재주,장전 속도 증가,0,5,5,Base
+Lucky,행운,행운 증가,0,-1,5,Base

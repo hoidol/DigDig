@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AbilityCanvas : CanvasUI<AbilityCanvas>
@@ -11,10 +12,24 @@ public class AbilityCanvas : CanvasUI<AbilityCanvas>
 
         //선택 가능한 능력치 걸러고 뽑기 진행
 
-        AbilityData[] abilityDatas = AbilityManager.Instance.GetAbilityDatas();
-        for (int i = 0; i < abilityDatas.Length; i++)
+        UpdateCanvas();
+    }
+    void UpdateCanvas()
+    {
+        List<AbilityData> abilityDatas = AbilityManager.Instance.GetAbilityDatas(4);
+        for (int i = 0; i < abilityPanels.Length; i++)
         {
-            abilityPanels[i].SetAbilityData(abilityDatas[i]);
+            if (i < abilityDatas.Count)
+                abilityPanels[i].SetAbilityData(abilityDatas[i]);
+            else
+                abilityPanels[i].SetAbilityData(null);
         }
+
+    }
+    public void OnClickedReset()
+    {
+        UpdateCanvas();
+
+
     }
 }

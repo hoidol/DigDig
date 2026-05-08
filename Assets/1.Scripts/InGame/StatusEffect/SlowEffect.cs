@@ -1,31 +1,23 @@
 public class SlowEffect : StatusEffect
 {
-    private float slowRate;  // 0.5 = 50% 감속
+    const float RATE = 0.6f; // 이동속도 60%로 고정
 
-    public SlowEffect(float duration, float slowRate)
+    public SlowEffect(float duration)
     {
         this.duration = duration;
         this.remainingTimer = duration;
-        this.slowRate = slowRate;
     }
 
     public override void OnApply(StatusEffect effect, StatusEffectHandler handler)
     {
-        if (effect != this)
-        {
-            if (remainingTimer < effect.duration)
-            {
-                remainingTimer = effect.duration;
-            }
-            SlowEffect slowEffect = effect as SlowEffect;
-            if (slowRate > slowEffect.slowRate)
-                slowRate = slowEffect.slowRate;
-        }
-        //대상 적용
+        if (effect != this && remainingTimer < effect.duration)
+            remainingTimer = effect.duration;
+
+        handler.SlowRate = RATE;
     }
 
     public override void OnRemove(StatusEffectHandler handler)
     {
-        //대상 해제
+        handler.SlowRate = 1f;
     }
 }

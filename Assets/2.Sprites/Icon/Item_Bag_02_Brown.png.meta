@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 294311b9699c84163b8fb5a0536bbb45
+guid: 99af6c68fbdf54efb85d41b395e8aaef
 AssetOrigin:
   serializedVersion: 1
   productId: 358058
   packageName: GUI Pro - Minimal Game Dark
   packageVersion: 1.0.1
-  assetPath: Assets/Layer Lab/GUI Pro-MinimalGame/Shared/Icons/UniqueIcon/256/Item_Bag_02_Brown.png
+  assetPath: Assets/Layer Lab/GUI Pro-MinimalGame/Shared/Icons/UniqueIcon/128/Item_Bag_02_Brown.png
   uploadId: 866768
 TextureImporter:
   internalIDToNameTable: []

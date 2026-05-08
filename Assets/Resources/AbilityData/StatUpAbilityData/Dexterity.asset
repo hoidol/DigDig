@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: Dexterity
   m_EditorClassIdentifier: 
   key: Dexterity
+  level: 0
+  desc: "\uC7A5\uC804 \uC18D\uB3C4 \uC99D\uAC00"
   thum: {fileID: 0}
-  grade: 0
-  maxLv: -1
+  maxLv: 5
   abilityPrefab: {fileID: -4713474119574428925, guid: df7dc4ffb69a14b3fa0659dc846ec099, type: 3}
-  conditions: []
-  statType: 11
-  initValue: 0
-  increasedValue: 0.3
-  opType: 1
+  conditions:
+  - conditionType: 1
+    value: 
+    count: 5
+  abilityType: 0
+  applyOrder: 0

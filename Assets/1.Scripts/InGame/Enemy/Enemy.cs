@@ -7,13 +7,14 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public EnemyType enemyType; // 적 종류 구분
     public EnemyState state { get; private set; } // 적 상태 - FSM 패턴
     public EnemyData enemyData { get; private set; } //게임 데이터
-    public StatusEffectHandler statusEffectHandler;
-    // {
-    //     get; set;
-    // }
+    [field: SerializeField]
+    public StatusEffectHandler statusEffectHandler
+    {
+        get; set;
+    }
 
     #region 
-    public float MaxHp { get; private set; }
+    [SerializeField] float MaxHp;//{ get; private set; }
     public float CurHp { get; private set; }
 
     [SerializeField] Transform root;
@@ -70,11 +71,9 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
         if (attackTimer < enemyData.attackSpeed)
             attackTimer += Time.deltaTime;
-        else
-        {
-            if (attacking)
-                return;
-        }
+
+        if (attacking)
+            return;
 
         if (state == EnemyState.Approaching) UpdateApproaching();
         else if (state == EnemyState.Attack) UpdateAttack();
@@ -85,6 +84,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
             hpUI.transform.position = hpPoint.position;
         }
     }
+
 
     public virtual void CancelAttack()
     {
@@ -101,7 +101,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
             return;
         }
         SetFacing(vec.x);
-        rg2d.linearVelocity = vec.normalized * enemyData.moveSpeed;
+        rg2d.linearVelocity = vec.normalized * (enemyData.moveSpeed * statusEffectHandler.SlowRate);
     }
 
     //상태가 Attack 인 경우 처리
@@ -148,7 +148,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     {
         if (hpUI == null)
         {
-            hpUI = HpUI.GetHpUI(this);
+            hpUI = HpUI.Get(this);
         }
 
         hpUI.transform.position = hpPoint.position;
@@ -161,7 +161,14 @@ public abstract class Enemy : MonoBehaviour, IHittable
         hpUI?.Release();
         gameObject.SetActive(false);
         // 이벤트 발행 → 각 시스템이 알아서 처리
+
+        ExpText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.3f, "1");
+        Player.Instance.AddExp(1);
         GameEventBus.Publish(new EnemyDeadEvent(this, damage.cause));
+    }
+    public bool CanHit()
+    {
+        return CurHp > 0;
     }
 }
 

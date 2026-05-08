@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: Composure
   m_EditorClassIdentifier: 
   key: Composure
+  level: 1
+  desc: "\uD06C\uB9AC\uD2F0\uCEEC\uB825 \uC99D\uAC00"
   thum: {fileID: 0}
-  grade: 0
   maxLv: -1
   abilityPrefab: {fileID: -6654482734512912311, guid: 213fd1beab4bb41b294cffc769ef9155, type: 3}
-  conditions: []
-  statType: 8
-  initValue: 0
-  increasedValue: 0.1
-  opType: 0
+  conditions:
+  - conditionType: 1
+    value: 
+    count: 5
+  abilityType: 0
+  applyOrder: 0

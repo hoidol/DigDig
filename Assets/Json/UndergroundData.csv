@@ -1,0 +1,5 @@
+stageKey	idx	isBoss	difficulty	initOreHps	increaseOreHpsPerWave	hpMultiplierPerUnderground	AttackPowerMultiplierPerUnderground
+Greed	0	FALSE	1	4	10	1	1
+Greed	1	FALSE	1.25	32	15	2	1.5
+Greed	2	FALSE	1.5	70	20	3	2
+Greed	3	TRUE	1.75	100	25	4	2.5

@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Linq;
 using System.Collections.Generic;
 public class EnemyBullet : BulletBase
 {
@@ -32,18 +31,18 @@ public class EnemyBullet : BulletBase
         gameObject.SetActive(false);
         pool.Enqueue(this);
     }
-    public string[] hitTags;
+    static int playerSideLayer = -1;
 
-    public override void CheckHit()
-    {
-    }
+    public override void CheckHit() { }
+
     DamageData damageData = new DamageData();
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!hitTags.Contains(other.tag))
-        {
-            return;
-        }
+        if (playerSideLayer == -1)
+            playerSideLayer = LayerMask.NameToLayer("PlayerSide");
+
+        if (other.gameObject.layer != playerSideLayer) return;
+
         IHittable hit = other.GetComponent<IHittable>();
         if (hit != null)
         {

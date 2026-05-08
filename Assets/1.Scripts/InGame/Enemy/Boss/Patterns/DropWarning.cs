@@ -26,7 +26,7 @@ public class DropWarning : MonoBehaviour
         {
             if (col.CompareTag("Player"))
             {
-                Player.Instance.TakeDamage(damage);
+                Player.Instance.TakeDamage(new DamageData() { damage = damage });
                 break;
             }
         }

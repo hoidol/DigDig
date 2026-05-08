@@ -7,4 +7,5 @@ public interface IHittable
         get;
     }
     void TakeDamage(DamageData damageData);
+    bool CanHit();
 }

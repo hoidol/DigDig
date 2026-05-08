@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
 {
@@ -49,6 +50,11 @@ public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
         return effect;
 
     }
+    public void Play(EffectType type, Vector2 pos)
+    {
+        Effect e = GetEffect(type);
+        e.Play(pos);
+    }
     Effect GetEffectPrefab(EffectType effectType)
     {
         for (int i = 0; i < effectPrefabs.Length; i++)
@@ -68,7 +74,7 @@ public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
 
 public enum EffectType
 {
-    Hit
+    Hit, Explosion, OreStoneBreak, SmallExplosion, Spark
 }
 public enum Icon
 {

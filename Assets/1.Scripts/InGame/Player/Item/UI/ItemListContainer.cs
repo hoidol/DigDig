@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemListContainer : MonoBehaviour
 {
-    public ItemActivePanel[] itemActivePanels;
+    public ItemNotifyEffectPanel[] itemNotifyEffectPanels;
     void Start()
     {
         GameEventBus.Subscribe<AddedItemEvent>(AddedItemEvent);
@@ -16,16 +17,18 @@ public class ItemListContainer : MonoBehaviour
 
     void UpdateContainer()
     {
-        for (int i = 0; i < itemActivePanels.Length; i++)
+        List<string> itemKeys = Player.Instance.itemInventory.GetItemKeys();
+        for (int i = 0; i < itemNotifyEffectPanels.Length; i++)
         {
-            if (i < Player.Instance.itemInventory.equippedItems.Count)
+            if (i < itemKeys.Count)
             {
-                itemActivePanels[i].SetItemData(Player.Instance.itemInventory.equippedItems[i].itemData, Player.Instance.itemInventory.equippedItems[i].count);
-                itemActivePanels[i].gameObject.SetActive(true);
+
+                itemNotifyEffectPanels[i].SetItemData(ItemData.GetItemData(itemKeys[i]));
+                itemNotifyEffectPanels[i].gameObject.SetActive(true);
             }
             else
             {
-                itemActivePanels[i].gameObject.SetActive(false);
+                itemNotifyEffectPanels[i].gameObject.SetActive(false);
             }
 
         }

@@ -1,71 +1,54 @@
 using UnityEngine;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine.UI;
+
 public class HpUI : MonoBehaviour
 {
-    public static List<HpUI> list = new List<HpUI>();
-    static HpUI hpUIPrefab;
+    static readonly Stack<HpUI> pool = new();
+    static HpUI prefab;
+
     public Image hpImage;
     public IHittable hittable;
-    public static HpUI GetHpUI(IHittable hittable)
+    public float timer;
+
+    public static HpUI Get(IHittable hittable)
     {
-        HpUI hUI = GetHpUIInPooling();
-        hUI.hittable = hittable;
-        hUI.timer = 5;
-        return hUI;
+        HpUI ui = pool.Count > 0 ? pool.Pop() : Instantiate(GetPrefab(), GameWorldCanvas.Instance.transform);
+        ui.gameObject.SetActive(true);
+        ui.hittable = hittable;
+        ui.timer = 5f;
+        return ui;
     }
 
-    static HpUI GetHpUIInPooling()
+    static HpUI GetPrefab()
     {
-        for (int i = 0; i < list.Count; i++)
-        {
-            if (list[i].gameObject.activeSelf)
-                continue;
-            list[i].gameObject.SetActive(true);
-            return list[i];
-        }
-        if (hpUIPrefab == null)
-        {
-            hpUIPrefab = Resources.Load<HpUI>("UI/HpUI");
-        }
-
-        HpUI hUI = Instantiate(hpUIPrefab, GameWorldCanvas.Instance.transform);
-        list.Add(hUI);
-        return hUI;
+        if (prefab == null)
+            prefab = Resources.Load<HpUI>("UI/HpUI");
+        return prefab;
     }
+
     public bool IsOwn(Transform owner)
     {
-        if (!gameObject.activeSelf)
-            return false;
-        if (hittable.Transform != owner)
-            return false;
-        return true;
+        return gameObject.activeSelf && hittable.Transform == owner;
+    }
 
-    }
-    private void OnDestroy()
-    {
-        list.Remove(this);
-    }
     public void SetRate(float rate)
     {
         hpImage.fillAmount = rate;
-        timer = 5;
-    }
-    public float timer = 5;
-    void Update()
-    {
-        timer -= Time.deltaTime;
-        if (timer <= 0)
-        {
-            Release();
-        }
+        timer = 5f;
     }
 
-    //반환하다
     public void Release()
     {
         hittable = null;
         gameObject.SetActive(false);
+        pool.Push(this);
+    }
+
+    void Update()
+    {
+        timer -= Time.deltaTime;
+        if (timer <= 0f)
+            Release();
     }
 }

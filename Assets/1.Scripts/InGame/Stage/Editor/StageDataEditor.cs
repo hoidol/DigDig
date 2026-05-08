@@ -13,17 +13,15 @@ public class StageDataEditor : Editor
         StageData stageData = (StageData)target;
 
         GUILayout.Space(10);
+        if (GUILayout.Button("LoadData"))
+        {
+            stageData.LoadData();
+            AssetDatabase.SaveAssets();
+        }
         if (GUILayout.Button("Edit"))
         {
-            var method = stageData.GetType().GetMethod("Edit", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-            if (method != null)
-            {
-                method.Invoke(stageData, null);
-            }
-            else
-            {
-                Debug.LogWarning("Edit() method does not exist on AbilityData.");
-            }
+            stageData.Edit();
+            AssetDatabase.SaveAssets();
         }
     }
 }

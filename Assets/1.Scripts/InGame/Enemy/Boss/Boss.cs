@@ -8,6 +8,7 @@ public abstract class Boss : Enemy
     public int CurrentPhase => currentPhase;
 
     [SerializeField] BossPhase[] phases;
+    DamageData damageData = new DamageData();
 
     IBossMovement movement;
 
@@ -28,6 +29,7 @@ public abstract class Boss : Enemy
         currentPhase = 0;
         base.Spawn(pos);
         OnEnterPhase(0);
+        damageData.damage = enemyData.GetAttackPower();
         GameEventBus.Publish(new BossSpawnEvent(this));
     }
 
@@ -96,13 +98,12 @@ public abstract class Boss : Enemy
         movement?.Cancel();
         EndAttack();
     }
-
     // Dash 중 플레이어와 접촉 시 데미지
     void OnTriggerEnter2D(Collider2D other)
     {
         if (state != EnemyState.Dash) return;
         if (other.CompareTag("Player"))
-            Player.Instance.TakeDamage(enemyData.GetAttackPower());
+            Player.Instance.TakeDamage(damageData);
     }
 
     BossAttackPattern GetCurrentPattern()

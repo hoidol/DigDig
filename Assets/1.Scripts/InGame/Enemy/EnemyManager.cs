@@ -1,11 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Mono.Cecil;
 using UnityEngine;
 
 public class EnemyManager : MonoSingleton<EnemyManager>
 {
     readonly Dictionary<EnemyType, Stack<Enemy>> pool = new(); // 적 종류 별 풀링
     readonly Dictionary<EnemyType, EnemyData> enemyDataDic = new(); //적 종류 별 게임 데이터
+    public EnemyPatternData[] enemyPatternData;
+    [field: SerializeField] public int ActiveEnemyCount { get; private set; }
 
     void Awake()
     {
@@ -13,6 +17,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
         foreach (EnemyData enemyData in enemyDatas)
             enemyDataDic[enemyData.type] = enemyData;
 
+        enemyPatternData = Resources.LoadAll<EnemyPatternData>("EnemyPatternData");
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
     }
 
@@ -29,6 +34,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
         enemy.gameObject.SetActive(true);
         enemy.Init(data);
+        ActiveEnemyCount++;
         return enemy;
     }
 
@@ -39,12 +45,19 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
         enemy.gameObject.SetActive(false);
         pool[enemy.enemyType].Push(enemy);
+        ActiveEnemyCount = Mathf.Max(0, ActiveEnemyCount - 1);
     }
 
     void EnemyDeadEventListener(EnemyDeadEvent e)
     {
         ReleaseEnemy(e.enemy);
 
-        Gold.Dropped(e.position, "0");
     }
+
+    public EnemyPatternData GetEnemyPattern(EnemyPatternType pType)
+    {
+        return enemyPatternData.FirstOrDefault(e => e.patternType == pType);
+    }
+
+
 }

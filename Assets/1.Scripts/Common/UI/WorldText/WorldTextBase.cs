@@ -43,7 +43,7 @@ public abstract class WorldTextBase<T> : MonoBehaviour where T : WorldTextBase<T
         pool.Clear();
     }
 
-    public void SetText(string text)
+    public virtual void SetText(string text)
     {
         damageText.text = text;
         transform.localScale = Vector3.zero;

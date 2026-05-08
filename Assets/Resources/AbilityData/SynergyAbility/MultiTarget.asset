@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5de19883b796a472bbc8466deea66fef, type: 3}
+  m_Name: MultiTarget
+  m_EditorClassIdentifier: 
+  key: MultiTarget
+  level: 3
+  desc: "\uACF5\uACA9 \uC2DC \uADFC\uCC98 \uC801\uC5D0\uAC8C \uCD94\uAC00 \uBC1C\uC0AC"
+  thum: {fileID: 0}
+  maxLv: 1
+  abilityPrefab: {fileID: 4966704830282666135, guid: 9e45e2760474f42d9b8a35bb9f9c9652, type: 3}
+  conditions: []
+  abilityType: 2
+  applyOrder: 0
+  synergyType: 6

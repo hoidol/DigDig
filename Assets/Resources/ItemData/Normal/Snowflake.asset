@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Snowflake
+  m_EditorClassIdentifier: 
+  key: Snowflake
+  itemName: "\uB208\uC1A1\uC774"
+  desc: "10% \uD655\uB960 \uBE59\uACB0"
+  level: 2
+  maxOwnCount: 1
+  hideDisplay: 0
+  acquireMethod: 3
+  thumbnail: {fileID: 21300000, guid: 7a6bc842ba7fc4d25ad00669d5925bd3, type: 3}
+  grade: 0
+  itemPrefab: {fileID: -7706341506777979075, guid: fc1d9819859184212b2245f2733b344d, type: 3}
+  addEffectUnlockConditions: []
+  applyOrder: 0
+  mergeItemKeys: []
+  IncludingItems: []

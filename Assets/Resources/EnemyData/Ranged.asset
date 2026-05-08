@@ -14,12 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grade: 0
   type: 1
-  initHp: 25
-  increaseHp: 5
-  initAttackPower: 2
-  increaseAttackPower: 1
   attackSpeed: 3
   attackRange: 7
-  moveSpeed: 5
+  moveSpeed: 2
   exp: 1
   prefab: {fileID: 3778664763791200787, guid: 194dbc45c65d642dda037c3e4f97c241, type: 3}
+  hpMultiplier: 0.6
+  attackPowerMultiplier: 1

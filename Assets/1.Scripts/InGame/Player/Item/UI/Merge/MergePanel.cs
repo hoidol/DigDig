@@ -14,7 +14,7 @@ public class MergePanel : MonoBehaviour
                 string key = data.resourceItemKeys[i];
                 Item item = Player.Instance.itemInventory.GetItem(key);
                 if (item != null)
-                    itemDisplayPanels[i].SetItemData(item.itemData, item.count);
+                    itemDisplayPanels[i].SetItemData(item.itemData);
                 itemDisplayPanels[i].gameObject.SetActive(true);
             }
             else

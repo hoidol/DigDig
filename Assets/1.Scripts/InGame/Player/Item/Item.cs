@@ -2,18 +2,16 @@ using UnityEngine;
 
 public abstract class Item : PlayerEnhancement
 {
-    public override string GetDescription(int c = -1)
+    public override string GetDescription(int c = -1, bool detail = false)
     {
         if (c <= 0) c = count;
-        return "아이템을 설명합니다";
+        return itemData.desc;
     }
 
     public ItemData itemData => ItemManager.Instance.GetItemData(key);
 
     public bool CanMerge()
     {
-        if (count < ItemData.MAX_OWN_COUNT || itemData.isUnique)
-            return false;
         return true;
     }
 

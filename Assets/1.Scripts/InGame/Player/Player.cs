@@ -5,10 +5,10 @@ using DG.Tweening;
 using System.Linq;
 using System;
 using Cysharp.Threading.Tasks;
-using Random = UnityEngine.Random;
 
-public class Player : MonoSingleton<Player>, IPicker
+public class Player : MonoSingleton<Player>, IPicker, IHittable
 {
+    public const int COMBO_ATTACK_INTERVAL_MS = 70;
     public Transform Transform
     {
         get { return transform; }
@@ -26,6 +26,10 @@ public class Player : MonoSingleton<Player>, IPicker
     public SpriteRenderer[] bodySprites;
     public Transform bodyRootTr;
     public Transform bodyCenterTr;
+    public CameraShake cameraShake;
+    public int maxDistance; //플레이어가 중심점에서 멀어진 최대 길이
+    //Vector2 centerPoint;
+    float maxDistanceSqr;
 
     public float curHp;
 
@@ -34,7 +38,7 @@ public class Player : MonoSingleton<Player>, IPicker
     public float attackTimer = 0f;
     public Vector2 LastAttackDir { get; private set; }
 
-    int extraShotCount;
+    public int extraShotCount;
     bool processingExtraShots;
 
     //여분의 총알 발사 등록하기 - Why? Item, Ability 등 총알이 발사되는 곳이 많을 경우 총알 겹침 방지
@@ -81,19 +85,42 @@ public class Player : MonoSingleton<Player>, IPicker
         magmaBalls = GetComponentsInChildren<MagmaBall>().ToList();
         itemInventory = GetComponentInChildren<ItemInventory>();
         abilityInventory = GetComponentInChildren<AbilityInventory>();
+        statusEffectHandler = GetComponentInChildren<StatusEffectHandler>();
 
         statMgr = new PlayerStatManager(this, key);
     }
 
     void Start()
     {
-        SetBodyColor(originColor);
-        curHp = statMgr.MaxHp;
-        curBulletCount = statMgr.BulletCount;
-        UpdatePlayer();
+        GameEventBus.Subscribe<UndergroundStartEvent>(OnUndergroundStart);
 
+        curHp = statMgr.MaxHp;
+        UpdatePlayer();
         RunRecover().Forget();
     }
+
+    void OnUndergroundStart(UndergroundStartEvent e)
+    {
+        //centerPoint = transform.position;
+        maxDistance = 0;
+        maxDistanceSqr = 0f;
+
+        SetBodyColor(originColor);
+
+        isReloading = false;
+        isAnger = false;
+        angerAmount = 0;
+        attackTimer = statMgr.AttackSpeed;
+        extraShotCount = 0;
+        processingExtraShots = false;
+        pendingMultiShot = 1;
+        pendingSpread = 0;
+        curBulletCount = statMgr.BulletCount;
+
+        StopAllCoroutines();
+        GameEventBus.Publish(new ReloadEndEvent());
+    }
+
     void SetBodyColor(Color color)
     {
         for (int i = 0; i < bodySprites.Length; i++)
@@ -105,48 +132,40 @@ public class Player : MonoSingleton<Player>, IPicker
     }
     bool isAnger;
     public Transform dirTr;
+    public Vector2 MoveDirection { get; private set; }
+
     void Move()
     {
-        rg.linearVelocity = moveJoystick.Direction * statMgr.MoveSpeed;
-
-#if UNITY_EDITOR
-        // 키보드 조작으로 이동하게 처리
+#if UNITY_EDITOR||!UNITY_ANDROID && !UNITY_IOS
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
-        Vector2 moveDir = new Vector2(x, y).normalized;
-        if (moveDir.magnitude > 0.1f)
-        {
-            if (moveDir.x >= 0)
-                bodyRootTr.localScale = new Vector3(1, 1, 1);
-            else
-                bodyRootTr.localScale = new Vector3(-1, 1, 1);
-            animator.SetBool("Running", true);
-
-        }
-        else
-        {
-            animator.SetBool("Running", false);
-        }
-        rg.linearVelocity = moveDir * statMgr.MoveSpeed;
-
+        MoveDirection = new Vector2(x, y).normalized;
 #else
-        //moveDir = moveJoystick.Direction;
-        if (moveJoystick.Direction.magnitude > 0.1f)
+        MoveDirection = moveJoystick.Direction;
+#endif
+        if (MoveDirection.magnitude > 0.1f)
         {
-            if (moveJoystick.Direction.x >= 0)
-                bodyRootTr.localScale = new Vector3(1, 1, 1);
-            else
-                bodyRootTr.localScale = new Vector3(-1, 1, 1);
+            bodyRootTr.localScale = new Vector3(MoveDirection.x >= 0 ? 1 : -1, 1, 1);
             animator.SetBool("Running", true);
+
+            float sqrDist = ((Vector2)transform.position - Vector2.zero).sqrMagnitude;
+            if (sqrDist > maxDistanceSqr)
+            {
+                maxDistanceSqr = sqrDist;
+                maxDistance = (int)Mathf.Sqrt(sqrDist);
+            }
         }
         else
         {
             animator.SetBool("Running", false);
         }
-#endif
+
+        rg.linearVelocity = MoveDirection * statMgr.MoveSpeed;
     }
     void Update()
     {
+        if (GameManager.Instance.isClear)
+            return;
         Move();
         UpdateAttack();
 
@@ -155,14 +174,14 @@ public class Player : MonoSingleton<Player>, IPicker
             angerAmount = 0;
 
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             AddExp(10);
         }
         if (Input.GetKeyDown(KeyCode.Minus))
         {
-            TakeDamage(40);
-            abilityInventory.AddAbility("InstantHeal");
+            TakeDamage(new DamageData { damage = 40 });
+            //abilityInventory.AddAbility("InstantHeal");
         }
 #endif
     }
@@ -207,7 +226,7 @@ public class Player : MonoSingleton<Player>, IPicker
     public void AddGold(int gold)
     {
         this.gold += gold;
-        GameEventBus.Publish(new GoldChangedEvent(gold));
+        GameEventBus.Publish(new GoldChangedEvent(this.gold, gold));
     }
 
 
@@ -226,25 +245,19 @@ public class Player : MonoSingleton<Player>, IPicker
         GameEventBus.Publish(new PlayerHpChangedEvent(curHp, statMgr.MaxHp));
     }
     StatusEffectHandler statusEffectHandler;
-    public void TakeDamage(float damage)
-    {
-        if (statusEffectHandler != null && statusEffectHandler.TryBlock()) return;
-
-        curHp -= damage;
-        GameEventBus.Publish(new PlayerHpChangedEvent(curHp, statMgr.MaxHp));
-        if (curHp < 0)
-        {
-            GameManager.Instance.EndGame(false);
-        }
-    }
-    int pendingSpread;
+    int pendingMultiShot; // 기본이 1야
+    int pendingSpread; //기본이 0이야. 만약이 1이되면 오른쪽부터 15도 2면 왼쪽 15도 추가 3면 오른쪽 30도 추가 이런씩으로 증가
+    public void RequestMulti(int count) => pendingMultiShot += count;
     public void RequestSpread(int count) => pendingSpread += count;
 
-
     BulletFiredEvent bulletFiredEvent = new BulletFiredEvent();
+    bool levelUped;
+    [SerializeField] int maxExp;
+
     public void Attack(Vector2 dir, bool fromPlayer)
     {
         LastAttackDir = dir;
+        pendingMultiShot = 1;
         pendingSpread = 0;
 
         // 1단계: 발사 전 준비 (spread 수집)
@@ -253,8 +266,25 @@ public class Player : MonoSingleton<Player>, IPicker
         foreach (var e in abilityInventory.preAttackItems)
             e.OnPreAttack(this, dir);
 
-        // 2단계: 메인 탄 + 확산 발사
-        Shoot(dir, attackPoint.position, fromPlayer);
+        // 2단계: multiShot 횟수만큼 나란히 발사 (수직 오프셋)
+        Vector2 perp = new(-dir.y, dir.x);
+        const float MULTI_SPACING = 0.2f;
+        float startOffset = -(pendingMultiShot - 1) * 0.5f * MULTI_SPACING;
+        for (int i = 0; i < pendingMultiShot; i++)
+        {
+            Vector2 pos = (Vector2)attackPoint.position + perp * (startOffset + MULTI_SPACING * i);
+            Shoot(dir, pos);
+        }
+
+        // i=0 → 오른쪽 15°, i=1 → 왼쪽 15°, i=2 → 오른쪽 30°, i=3 → 왼쪽 30°...
+        float baseAngle = Vector2.SignedAngle(Vector2.right, dir);
+        for (int i = 0; i < pendingSpread; i++)
+        {
+            int sign = (i % 2 == 0) ? 1 : -1;
+            float offset = (i / 2 + 1) * 40f;
+            float rad = (baseAngle + sign * offset) * Mathf.Deg2Rad;
+            Shoot(new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)), attackPoint.position);
+        }
 
         foreach (var e in itemInventory.attackItems)
             e.OnAttack(this, dir);
@@ -262,8 +292,10 @@ public class Player : MonoSingleton<Player>, IPicker
             e.OnAttack(this, dir);
 
         if (fromPlayer)
+        {
             RunComboAttacks(dir).Forget();
-
+            cameraShake.Shake(0.15f);
+        }
 
         attackTimer = 0f;
 
@@ -281,10 +313,7 @@ public class Player : MonoSingleton<Player>, IPicker
         bulletFiredEvent.dir = dir;
         GameEventBus.Publish(bulletFiredEvent);
 
-        if (dir.x >= 0)
-            bodyRootTr.localScale = new Vector3(1, 1, 1);
-        else
-            bodyRootTr.localScale = new Vector3(-1, 1, 1);
+        ;
 
         angerAmount += 5f;
         if (angerAmount > 100f && !isAnger)
@@ -316,33 +345,11 @@ public class Player : MonoSingleton<Player>, IPicker
         }
     }
 
-    public void Shoot(Vector2 dir, Vector2 pos, bool fromPlayer = false)
+    public PlayerBullet Shoot(Vector2 dir, Vector2 pos)
     {
         if (pos == Vector2.zero)
             pos = attackPoint.position;
 
-        int totalBullet = fromPlayer ? 1 + pendingSpread : 1;
-
-        if (totalBullet == 1)
-        {
-            FireBullet(dir, pos);
-            return;
-        }
-
-        float totalAngle = 30f;
-        float angleStep = totalAngle / totalBullet;
-        float baseAngle = Vector2.SignedAngle(Vector2.right, dir);
-
-        for (int i = 0; i < totalBullet; i++)
-        {
-            float angle = baseAngle - totalAngle / 2f + angleStep * 0.5f + angleStep * i;
-            float rad = angle * Mathf.Deg2Rad;
-            FireBullet(new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)), pos);
-        }
-    }
-
-    void FireBullet(Vector2 dir, Vector2 pos)
-    {
         var bullet = PlayerBullet.Instantiate();
         bullet.ClearBehaviors();
         bullet.ClearBulletForce();
@@ -354,7 +361,9 @@ public class Player : MonoSingleton<Player>, IPicker
             e.OnBulletFired(bullet);
 
         bullet.Shoot(dir, statMgr.AttackPower);
+        return bullet;
     }
+
 
     //public float reloadTimer;
     async UniTaskVoid CoReload()
@@ -424,7 +433,7 @@ public class Player : MonoSingleton<Player>, IPicker
         this.exp += e;
         if (exp >= GetMaxExp())
         {
-            Debug.Log("LevelUp!");
+            // Debug.Log("LevelUp!");
             LevelUp();
             Time.timeScale = 0;
             AbilityCanvas.Instance.OpenCanvas(() =>
@@ -436,7 +445,6 @@ public class Player : MonoSingleton<Player>, IPicker
 
         GameEventBus.Publish(new ExpChangedEvent(exp, GetMaxExp()));
     }
-    bool levelUped;
     void LevelUp()
     {
         int remain = exp - GetMaxExp();
@@ -446,7 +454,6 @@ public class Player : MonoSingleton<Player>, IPicker
         //강화 UI 활성화
     }
 
-    [SerializeField] int maxExp;
     public int GetMaxExp(int l = -1)
     {
         if (l == -1)
@@ -454,11 +461,31 @@ public class Player : MonoSingleton<Player>, IPicker
 
         if (maxExp == 0 || levelUped)
         {
-            maxExp = 10 + l * 5;
+            int increaseValue = 3;
+
+            maxExp = 5 + l * increaseValue;
             levelUped = false;
         }
 
         return maxExp;
+    }
+
+    public void TakeDamage(DamageData damageData)
+    {
+        if (statusEffectHandler != null && statusEffectHandler.TryBlock()) return;
+
+        PlayerTakeDamageText.SetText(hpPoint.position, $"-{((int)damageData.damage).ToString()}");
+        curHp -= damageData.damage;
+        GameEventBus.Publish(new PlayerHpChangedEvent(curHp, statMgr.MaxHp));
+        if (curHp < 0)
+        {
+            GameManager.Instance.EndGame(false);
+        }
+    }
+
+    public bool CanHit()
+    {
+        return curHp > 0;
     }
 }
 
@@ -524,8 +551,7 @@ public class PlayerStatManager
                 continue;
             var stat = statDic[pAbility.statType];
             stat.value = pAbility.Apply(stat.value, pAbility.count);
-
-            Debug.Log($"Ability 따른 능력치 적용 {pAbility.key} value {stat.value}");
+            // Debug.Log($"Ability 따른 능력치 적용 {pAbility.key} value {stat.value}");
         }
 
         #endregion

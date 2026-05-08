@@ -4,6 +4,11 @@ using UnityEngine;
 public class MergeItemData : ScriptableObject
 {
     public string[] resourceItemKeys;
-    public string[] resourceSkillKeys;
+    public string[] resourceAbilityKeys;
+    public bool isHidden;
     public string resultItemKey;
+    public static MergeItemData GetMergeItemData(string resultKey)
+    {
+        return ItemManager.Instance.GetMergeItemData(resultKey);
+    }
 }

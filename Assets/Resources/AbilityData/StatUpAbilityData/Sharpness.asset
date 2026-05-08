@@ -13,12 +13,14 @@ MonoBehaviour:
   m_Name: Sharpness
   m_EditorClassIdentifier: 
   key: Sharpness
+  level: 1
+  desc: "\uD06C\uB9AC\uD2F0\uCEEC \uD655\uB960 \uC99D\uAC00"
   thum: {fileID: 0}
-  grade: 0
   maxLv: -1
   abilityPrefab: {fileID: -1709814627790422382, guid: 899ae6cc6d9984fc39c29749882a96ee, type: 3}
-  conditions: []
-  statType: 7
-  initValue: 0
-  increasedValue: 5
-  opType: 0
+  conditions:
+  - conditionType: 1
+    value: 
+    count: 5
+  abilityType: 0
+  applyOrder: 0

@@ -1,0 +1,9 @@
+key	enemyType	minCount	maxCount	minIntervalTime	maxIntervalTime	repeat
+weak	Melee	2	3	2	3	0
+weak	Ranged	1	1	7	10	0
+middle	Melee	3	4	2	3	0
+middle	Ranged	2	2	7	10	0
+fence	Melee	2	4	2	4	0
+fence	Ranged	1	1	7	10	0
+strong	Melee	3	4	2	3	0
+strong	Ranged	1	2	7	8	0

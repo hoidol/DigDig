@@ -4,10 +4,12 @@ public class EnemyDeadEvent
 {
     public Enemy enemy;
     public Vector2 position;
-    public EnemyDeadEvent(Enemy enemy, Transform cause)
+    public Transform cause;
+    public EnemyDeadEvent(Enemy enemy, Transform c)
     {
         this.enemy = enemy;
         position = enemy.transform.position;
+        cause = c;
     }
 }
 
@@ -124,3 +126,13 @@ public class AddedItemEvent
         this.itemData = itemData;
     }
 }
+
+// 벙커 소환 가능 상태 알림
+public class IronNestReadyEvent
+{
+    public int remainingCount; // 현재 누적 파괴 수 / 임계값 표시용
+    public IronNestReadyEvent(int remaining) { remainingCount = remaining; }
+}
+
+// 소환 버튼 클릭 시 발행
+public class IronNestSpawnRequestEvent { }

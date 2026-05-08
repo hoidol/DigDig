@@ -7,7 +7,7 @@ public abstract class PlayerEnhancement : MonoBehaviour
     public string key;
     public int count;
 
-    public virtual string GetDescription(int c = -1)
+    public virtual string GetDescription(int c = -1, bool detail = false)
     {
         if (c <= 0) c = count;
         return "설명 없음";

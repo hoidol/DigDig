@@ -11,27 +11,34 @@ public abstract class BulletBase : MonoBehaviour
         get;
         protected set;
     }
+    public float damageMultiplier { get; set; } = 1f;
 
     public LayerMask hitLayerMask;
 
     protected IHittable preTarget;
     protected List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
     protected List<IBulletForce> forces = new List<IBulletForce>();
+    const float LIFETIME = 5f;
+    float lifetimeTimer;
+
     public virtual void Shoot(Vector2 dir, float damage)
     {
         direction = dir;
         transform.right = dir;
-
         this.damage = damage;
-
-
+        damageMultiplier = 1f;
         preTarget = null;
-
+        lifetimeTimer = 0f;
     }
-
 
     public virtual void Update()
     {
+        lifetimeTimer += Time.deltaTime;
+        if (lifetimeTimer >= LIFETIME)
+        {
+            Release();
+            return;
+        }
 
         Move();
         CheckHit();

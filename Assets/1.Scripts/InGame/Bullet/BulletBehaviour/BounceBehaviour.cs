@@ -6,12 +6,11 @@ public class BounceBehavior : IBulletBehavior
 
     public bool OnHit(BulletBase bullet, IHittable hit, RaycastHit2D hit2D)
     {
-        if (remaining-- > 0)
-        {
-            bullet.Bounce(hit2D);
-            return false;
-        }
-        return true;
+        bullet.damageMultiplier *= 0.75f;
+        if (remaining-- <= 0 || bullet.damage * bullet.damageMultiplier < 1f)
+            return true;
+        bullet.Bounce(hit2D);
+        return false;
     }
     public void OnMove(BulletBase bullet) { }
     public void Merge(IBulletBehavior other)

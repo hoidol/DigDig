@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: BrokenGun
+  m_EditorClassIdentifier: 
+  key: BrokenGun
+  itemName: "\uACE0\uC7A5\uB09C \uCD1D"
+  desc: "3\uCD08\uB9C8\uB2E4 \uB79C\uB364\uBC29\uD5A5\uC73C\uB85C \uCD1D \uBC1C\uC0AC\uB428"
+  level: 2
+  maxOwnCount: 1
+  hideDisplay: 0
+  acquireMethod: 3
+  thumbnail: {fileID: 0}
+  grade: 0
+  itemPrefab: {fileID: 6181023174614568203, guid: d77a6ab620cb340eaaec51835b4dde3a, type: 3}
+  addEffectUnlockConditions: []
+  applyOrder: 0
+  mergeItemKeys: []
+  IncludingItems: []

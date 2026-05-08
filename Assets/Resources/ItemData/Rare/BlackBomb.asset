@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: BlackBomb
+  m_EditorClassIdentifier: 
+  key: BlackBomb
+  itemName: "\uAC80\uC740 \uD3ED\uD0C4"
+  desc: "\uB79C\uB364 \uBC29\uD5A5 \uD3ED\uD0C4"
+  level: 4
+  maxOwnCount: 1
+  hideDisplay: 0
+  acquireMethod: 3
+  thumbnail: {fileID: 21300000, guid: d8e4ff1d2d1864b80b0a66838d39181c, type: 3}
+  grade: 1
+  itemPrefab: {fileID: 8982147787028005668, guid: 416fe72bf92fc46aa8c2f068f287eab3, type: 3}
+  addEffectUnlockConditions: []
+  applyOrder: 0
+  mergeItemKeys: []
+  IncludingItems: []

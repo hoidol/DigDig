@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -47,14 +48,18 @@ public class ChangeItemCanvas : CanvasUI<ChangeItemCanvas>
         selectIndicatorRect.gameObject.SetActive(false);
         selectedPanel = null;
         this.newItemData = newItemData;
-        newItemDisplayPanel.SetItemData(newItemData, 1);
+        newItemDisplayPanel.SetItemData(newItemData);
+
+        List<string> itemKeys = Player.Instance.itemInventory.GetItemKeys();
+
+
         for (int i = 0; i < itemDisplayPanels.Length; i++)
         {
-            if (i < Player.Instance.itemInventory.equippedItems.Count)
+            if (i < itemKeys.Count)
             {
+
                 itemDisplayPanels[i].gameObject.SetActive(true);
-                Item item = Player.Instance.itemInventory.equippedItems[i];
-                itemDisplayPanels[i].SetItemData(item.itemData, item.count);
+                itemDisplayPanels[i].SetItemData(ItemData.GetItemData(itemKeys[i]));
             }
             else
             {

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Prism
+  m_EditorClassIdentifier: 
+  key: Prism
+  itemName: "\uD504\uB9AC\uC998"
+  desc: "\uCD1D\uC54C\uC774 \uB2FF\uC73C\uBA74 \uBD84\uD560\uB428 + \uB370\uBBF8\uC9C0
+    \uAC10\uC18C (\uD50C\uB808\uC774\uC5B4 \uC8FC\uBCC0 \uD68C\uC804)(TriggerCycle)"
+  level: 4
+  maxOwnCount: 2
+  hideDisplay: 0
+  acquireMethod: 3
+  thumbnail: {fileID: 0}
+  grade: 1
+  itemPrefab: {fileID: 4486324064406632826, guid: b84e8096ec15c47acaff4c9d53f7e974, type: 3}
+  addEffectUnlockConditions: []
+  applyOrder: 0
+  mergeItemKeys: []
+  IncludingItems: []

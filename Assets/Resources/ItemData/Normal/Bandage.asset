@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Bandage
+  m_EditorClassIdentifier: 
+  key: Bandage
+  itemName: "\uBC34\uB4DC"
+  desc: "40\uCD08\uB9C8\uB2E4 HP (5>7>9) \uD68C\uBCF5"
+  level: 2
+  maxOwnCount: 2
+  hideDisplay: 0
+  acquireMethod: 3
+  thumbnail: {fileID: 21300000, guid: 3795023cb67f04d0a81e0bdf923ab645, type: 3}
+  grade: 0
+  itemPrefab: {fileID: 963865796218268727, guid: 1e0732e1ea3004bafa2bbbbf2af727d0, type: 3}
+  addEffectUnlockConditions: []
+  applyOrder: 0
+  mergeItemKeys: []
+  IncludingItems: []

@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Perseverance
   m_EditorClassIdentifier: 
   key: Perseverance
+  level: 1
+  desc: "\uBD84\uB178 \uC720\uC9C0 \uC2DC\uAC04 \uC99D\uAC00"
   thum: {fileID: 0}
-  grade: 0
-  maxLv: -1
+  maxLv: 5
   abilityPrefab: {fileID: -5172173112963609508, guid: 1b13bf423762b461085cc00077671232, type: 3}
   conditions:
   - conditionType: 1
     value: 
-    count: 3
+    count: 5
+  abilityType: 0
+  applyOrder: 0

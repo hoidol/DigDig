@@ -1,5 +1,5 @@
 using UnityEngine;
-public class RangedEnemy : Enemy
+public class RangedEnemy : NormalEnemy
 {
     public Transform attackPoint;
     protected override void StartAttack()

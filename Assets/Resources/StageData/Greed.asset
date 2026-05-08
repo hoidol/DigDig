@@ -14,91 +14,193 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Greed
   level: 1
+  difficulty: 1
+  enemyHp: 9
+  enemyAttackPower: 3
+  initOreHps:
+  - 2
+  - 32
+  - 70
+  - 100
+  increaseOreHpsPerIdx:
+  - 10
+  - 15
+  - 20
+  - 25
+  boss: {fileID: 2323350187061452681, guid: e6611bd74967549bcb718b7ae82ef851, type: 3}
   undergroundDatas:
   - idx: 0
-    waveWaitTime: 60
+    hpMultiplier: 1
+    attackPowerMultiplier: 1
+    isBoss: 0
     waveDatas:
     - idx: 0
-      waveTime: 40
-      enemySpawnDatas:
-      - enemyType: 1
-        enemyKey: 
-        intervalRange: {x: 3, y: 5}
-        countRange: {x: 2, y: 3}
-        maxCount: 50
-    - idx: 0
-      waveTime: 40
-      enemySpawnDatas:
-      - enemyType: 0
-        enemyKey: 
-        intervalRange: {x: 3, y: 5}
-        countRange: {x: 2, y: 3}
-        maxCount: 50
-    - idx: 0
-      waveTime: 40
-      enemySpawnDatas:
-      - enemyType: 0
-        enemyKey: 
-        intervalRange: {x: 3, y: 5}
-        countRange: {x: 2, y: 3}
-        maxCount: 50
-  - idx: 0
-    waveWaitTime: 60
+      patternType: 0
+      hpAdd: 0
+      attackPowerAdd: 0
+    - idx: 1
+      patternType: 1
+      hpAdd: 2
+      attackPowerAdd: 0
+    - idx: 2
+      patternType: 2
+      hpAdd: 4
+      attackPowerAdd: 1
+    - idx: 3
+      patternType: 1
+      hpAdd: 6
+      attackPowerAdd: 1
+    eventDatas:
+    - eventType: 0
+      spawnMode: 0
+      trigger: 3
+      maxSpawnCount: 0
+      cooldown: 0
+      minDistanceFromOrigin: 0
+      hpThreshold: 0.3
+      triggerDistance: 50
+      triggerWave: 0
+      time: {x: 25, y: 30}
+      probability: {x: 0, y: 0, z: 0}
+    - eventType: 0
+      spawnMode: 0
+      trigger: 3
+      maxSpawnCount: 0
+      cooldown: 0
+      minDistanceFromOrigin: 0
+      hpThreshold: 0.3
+      triggerDistance: 50
+      triggerWave: 0
+      time: {x: 120, y: 60}
+      probability: {x: 0, y: 0, z: 0}
+    - eventType: 1
+      spawnMode: 0
+      trigger: 3
+      maxSpawnCount: 0
+      cooldown: 0
+      minDistanceFromOrigin: 0
+      hpThreshold: 0.3
+      triggerDistance: 50
+      triggerWave: 0
+      time: {x: 50, y: 60}
+      probability: {x: 0, y: 0, z: 0}
+    - eventType: 6
+      spawnMode: 0
+      trigger: 3
+      maxSpawnCount: 0
+      cooldown: 0
+      minDistanceFromOrigin: 0
+      hpThreshold: 0.3
+      triggerDistance: 50
+      triggerWave: 0
+      time: {x: 40, y: 50}
+      probability: {x: 0, y: 0, z: 0}
+    - eventType: 10
+      spawnMode: 0
+      trigger: 3
+      maxSpawnCount: 0
+      cooldown: 0
+      minDistanceFromOrigin: 0
+      hpThreshold: 0.3
+      triggerDistance: 50
+      triggerWave: 0
+      time: {x: 40, y: 50}
+      probability: {x: 70, y: 30, z: 0}
+    - eventType: 10
+      spawnMode: 0
+      trigger: 3
+      maxSpawnCount: 0
+      cooldown: 0
+      minDistanceFromOrigin: 0
+      hpThreshold: 0.3
+      triggerDistance: 50
+      triggerWave: 0
+      time: {x: 40, y: 50}
+      probability: {x: 70, y: 25, z: 5}
+    - eventType: 6
+      spawnMode: 1
+      trigger: 0
+      maxSpawnCount: 0
+      cooldown: 0
+      minDistanceFromOrigin: 0
+      hpThreshold: 0.3
+      triggerDistance: 50
+      triggerWave: 0
+      time: {x: 0, y: 0}
+      probability: {x: 0, y: 0, z: 0}
+    - eventType: 10
+      spawnMode: 1
+      trigger: 0
+      maxSpawnCount: 0
+      cooldown: 0
+      minDistanceFromOrigin: 0
+      hpThreshold: 0.3
+      triggerDistance: 50
+      triggerWave: 0
+      time: {x: 0, y: 0}
+      probability: {x: 70, y: 30, z: 0}
+    - eventType: 10
+      spawnMode: 1
+      trigger: 0
+      maxSpawnCount: 0
+      cooldown: 0
+      minDistanceFromOrigin: 0
+      hpThreshold: 0.3
+      triggerDistance: 50
+      triggerWave: 0
+      time: {x: 0, y: 0}
+      probability: {x: 70, y: 30, z: 0}
+  - idx: 1
+    hpMultiplier: 2
+    attackPowerMultiplier: 1.5
+    isBoss: 0
     waveDatas:
     - idx: 0
-      waveTime: 40
-      enemySpawnDatas:
-      - enemyType: 0
-        enemyKey: 
-        intervalRange: {x: 3, y: 5}
-        countRange: {x: 2, y: 3}
-        maxCount: 50
-    - idx: 0
-      waveTime: 40
-      enemySpawnDatas:
-      - enemyType: 0
-        enemyKey: 
-        intervalRange: {x: 3, y: 5}
-        countRange: {x: 2, y: 3}
-        maxCount: 50
-    - idx: 0
-      waveTime: 40
-      enemySpawnDatas:
-      - enemyType: 0
-        enemyKey: 
-        intervalRange: {x: 3, y: 5}
-        countRange: {x: 2, y: 3}
-        maxCount: 50
-  - idx: 0
-    waveWaitTime: 60
+      patternType: 1
+      hpAdd: 8
+      attackPowerAdd: 2
+    - idx: 1
+      patternType: 0
+      hpAdd: 10
+      attackPowerAdd: 2
+    - idx: 2
+      patternType: 2
+      hpAdd: 12
+      attackPowerAdd: 2
+    - idx: 3
+      patternType: 3
+      hpAdd: 14
+      attackPowerAdd: 2
+    eventDatas: []
+  - idx: 2
+    hpMultiplier: 3
+    attackPowerMultiplier: 2
+    isBoss: 0
     waveDatas:
     - idx: 0
-      waveTime: 40
-      enemySpawnDatas:
-      - enemyType: 0
-        enemyKey: 
-        intervalRange: {x: 3, y: 5}
-        countRange: {x: 2, y: 3}
-        maxCount: 50
-    - idx: 0
-      waveTime: 40
-      enemySpawnDatas:
-      - enemyType: 0
-        enemyKey: 
-        intervalRange: {x: 3, y: 5}
-        countRange: {x: 2, y: 3}
-        maxCount: 50
-    - idx: 0
-      waveTime: 40
-      enemySpawnDatas:
-      - enemyType: 0
-        enemyKey: 
-        intervalRange: {x: 3, y: 5}
-        countRange: {x: 2, y: 3}
-        maxCount: 50
+      patternType: 0
+      hpAdd: 16
+      attackPowerAdd: 3
+    - idx: 1
+      patternType: 3
+      hpAdd: 18
+      attackPowerAdd: 3
+    - idx: 2
+      patternType: 2
+      hpAdd: 20
+      attackPowerAdd: 3
+    - idx: 3
+      patternType: 3
+      hpAdd: 22
+      attackPowerAdd: 3
+    eventDatas: []
   - idx: 3
-    waveWaitTime: 0
+    hpMultiplier: 4
+    attackPowerMultiplier: 2.5
+    isBoss: 1
     waveDatas:
     - idx: 0
-      waveTime: 0
-      enemySpawnDatas: []
+      patternType: 0
+      hpAdd: 24
+      attackPowerAdd: 4
+    eventDatas: []

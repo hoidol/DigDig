@@ -16,12 +16,17 @@ public class WaveTimerPanel : MonoBehaviour
     public GameObject normalWaveIcon;
     public GameObject hardWaveIcon;
 
-    private void Awake()
+    void Start()
     {
         GameEventBus.Subscribe<UndergroundStartEvent>(StartUnderground); //이벤트 구독 
         GameEventBus.Subscribe<UndergroundEndEvent>(EndUnderground); //이벤트 구독
         GameEventBus.Subscribe<WaveStartEvent>(StartWave); //이벤트 구독 - 웨이브 시작
         GameEventBus.Subscribe<WaveEndEvent>(EndWave); //이벤트 구독 - 웨이브 끝
+
+        waitingIcon.SetActive(true);
+        normalWaveIcon.SetActive(false);
+        hardWaveIcon.SetActive(false);
+        timeText.text = "";
     }
     public void StartWave(WaveStartEvent e)
     {
@@ -31,12 +36,24 @@ public class WaveTimerPanel : MonoBehaviour
 
     }
 
+    float waveTime;
+    public void StartUnderground(UndergroundStartEvent e)
+    {
+        undergroundData = e.undergroundData;
+        waveTime = StageData.WAVE_TIMES[undergroundData.idx];
+        waitingIcon.SetActive(true);
+        normalWaveIcon.SetActive(false);
+        timeText.text = $"Next Wave";
+
+        StartWaveTimerUniTask().Forget();
+    }
+
     private async UniTaskVoid StartWaveTimerUniTask()
     {
         var cancellationToken = this.GetCancellationTokenOnDestroy();
         while (true)
         {
-            float remainingTime = undergroundData.waveWaitTime - GameManager.Instance.waveWaitingTimer;
+            float remainingTime = waveTime - GameManager.Instance.waveWaitingTimer;
             if (remainingTime < 0f) remainingTime = 0f;
 
             int minutes = Mathf.FloorToInt(remainingTime / 60f);
@@ -46,33 +63,6 @@ public class WaveTimerPanel : MonoBehaviour
 
             await UniTask.Delay(250, cancellationToken: cancellationToken);
         }
-    }
-
-    IEnumerator StartWaveTimer()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.25f);
-        while (true)
-        {
-            float remainingTime = undergroundData.waveWaitTime - GameManager.Instance.waveWaitingTimer;
-            if (remainingTime < 0f) remainingTime = 0f;
-
-            int minutes = Mathf.FloorToInt(remainingTime / 60f);
-            int seconds = Mathf.FloorToInt(remainingTime % 60f);
-
-            timeText.text = $"{minutes:D2}:{seconds:D2}";
-
-            yield return waitForSeconds;
-        }
-
-    }
-
-
-    void Start()
-    {
-        waitingIcon.SetActive(true);
-        normalWaveIcon.SetActive(false);
-        hardWaveIcon.SetActive(false);
-        timeText.text = "";
     }
 
     public WaveData waveData;
@@ -90,15 +80,6 @@ public class WaveTimerPanel : MonoBehaviour
             timeText.text = $"Go deeper";
         }
 
-    }
-    public void StartUnderground(UndergroundStartEvent e)
-    {
-        undergroundData = e.undergroundData;
-        waitingIcon.SetActive(true);
-        normalWaveIcon.SetActive(false);
-        timeText.text = $"Next Wave {e.undergroundData.idx + 1}-1";
-
-        StartWaveTimerUniTask().Forget();
     }
 
     public void EndUnderground(UndergroundEndEvent e)

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//
 public class HammerExplosionBehavior : IBulletBehavior
 {
     float chance;
@@ -9,9 +10,9 @@ public class HammerExplosionBehavior : IBulletBehavior
 
     public HammerExplosionBehavior(float chance, float radius, float damage, LayerMask enemyLayer)
     {
-        this.chance     = chance;
-        this.radius     = radius;
-        this.damage     = damage;
+        this.chance = chance;
+        this.radius = radius;
+        this.damage = damage;
         this.enemyLayer = enemyLayer;
     }
 

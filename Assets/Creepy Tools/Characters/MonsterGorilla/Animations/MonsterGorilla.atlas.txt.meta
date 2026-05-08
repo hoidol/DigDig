@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dfeb47029bf8a934cb2514730a537ab1
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 334750
+  packageName: Stylized Demon - in-game animations (Spine 2D)
+  packageVersion: 1.0
+  assetPath: Assets/Creepy Tools/Characters/MonsterGorilla/Animations/MonsterGorilla.atlas.txt
+  uploadId: 793944

@@ -3,6 +3,23 @@ using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
+public static class AbilityDataMenuItems
+{
+    [MenuItem("Tools/Load All AbilityData")]
+    static void LoadAllAbilityData()
+    {
+        var allData = Resources.LoadAll<AbilityData>("AbilityData");
+        int count = 0;
+        foreach (var data in allData)
+        {
+            data.LoadData();
+            count++;
+        }
+        AssetDatabase.SaveAssets();
+        Debug.Log($"[AbilityData] 전체 LoadData 완료 ({count}개)");
+    }
+}
+
 [CustomEditor(typeof(AbilityData), true)]
 public class AbilityDataEditor : Editor
 {
@@ -13,17 +30,15 @@ public class AbilityDataEditor : Editor
         AbilityData abilityData = (AbilityData)target;
 
         GUILayout.Space(10);
+        if (GUILayout.Button("LoadData"))
+        {
+            abilityData.LoadData();
+            AssetDatabase.SaveAssets();
+        }
         if (GUILayout.Button("Edit"))
         {
-            var method = abilityData.GetType().GetMethod("Edit", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-            if (method != null)
-            {
-                method.Invoke(abilityData, null);
-            }
-            else
-            {
-                Debug.LogWarning("Edit() method does not exist on AbilityData.");
-            }
+            abilityData.Edit();
+            AssetDatabase.SaveAssets();
         }
     }
 }

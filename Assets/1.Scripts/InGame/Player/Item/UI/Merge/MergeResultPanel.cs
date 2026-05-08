@@ -9,7 +9,7 @@ public class MergeResultPanel : MonoBehaviour
     [SerializeField] TMP_Text descText;
     public void SetMergedItemEvent(MergedItemEvent e)
     {
-        titleText.text = e.resultItemData.title;
+        titleText.text = e.resultItemData.Title;
         descText.text = e.resourceItem1.GetDescription();
     }
 

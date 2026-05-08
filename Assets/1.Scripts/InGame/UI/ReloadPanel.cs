@@ -13,9 +13,15 @@ public class ReloadPanel : MonoBehaviour
 
     void Start()
     {
+        GameEventBus.Subscribe<UndergroundStartEvent>(OnUndergroundStart);
         GameEventBus.Subscribe<PlayerUpdateEvent>(OnPlayerUpdated);
         GameEventBus.Subscribe<BulletFiredEvent>(OnBulletFired);
         GameEventBus.Subscribe<BulletChargedEvent>(OnBulletCharged);
+    }
+    void OnUndergroundStart(UndergroundStartEvent e)
+    {
+        int cur = Player.Instance.statMgr.BulletCount;
+        UpdateBulletUI(cur, (int)Player.Instance.statMgr.MaxHp);
     }
 
     void OnPlayerUpdated(PlayerUpdateEvent e)

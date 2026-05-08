@@ -7,6 +7,7 @@ public class StatusEffectHandler : MonoBehaviour
 {
     public bool IsStunned { get; set; }
     public bool IsShielded { get; set; }
+    public float SlowRate { get; set; } = 1f;
 
     // 방어막 소모 시도. 막으면 true 반환
     public bool TryBlock()
@@ -32,12 +33,12 @@ public class StatusEffectHandler : MonoBehaviour
     Dictionary<string, List<StatusEffectView>> activeEffects = new();
     public void Init()
     {
-        Debug.Log("StatusEffectHandler Init()1");
+        // Debug.Log("StatusEffectHandler Init()1");
         if (activeEffects.Count <= 0)
         {
             StatusEffectView[] views = GetComponentsInChildren<StatusEffectView>();
 
-            Debug.Log($"StatusEffectHandler Init() {views.Length}");
+            // Debug.Log($"StatusEffectHandler Init() {views.Length}");
             foreach (StatusEffectView view in views)
             {
                 if (!activeEffects.ContainsKey(view.effectKey))
@@ -60,7 +61,7 @@ public class StatusEffectHandler : MonoBehaviour
     public void Apply(StatusEffect effect)
     {
         // 같은 타입이 이미 있으면 시간만 갱신
-        Debug.Log($"{effect.EffectKey} 적용 대상{gameObject.name}");
+        // Debug.Log($"{effect.EffectKey} 적용 대상{gameObject.name}");
         var existing = effects.FirstOrDefault(e => e.GetType() == effect.GetType());
         if (existing != null)
         {

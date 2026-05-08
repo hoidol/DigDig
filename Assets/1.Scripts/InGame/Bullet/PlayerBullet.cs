@@ -36,7 +36,7 @@ public class PlayerBullet : BulletBase
         damageData.Init();
         damageData.cause = transform;
 
-        float finalDamage = damage;
+        float finalDamage = damage * damageMultiplier;
 
         // Debug.Log($"playerBullet Hit 1 finalDamage {finalDamage}");
         for (int i = 0; i < forces.Count; i++)

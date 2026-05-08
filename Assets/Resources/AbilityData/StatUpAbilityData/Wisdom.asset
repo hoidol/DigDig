@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Wisdom
   m_EditorClassIdentifier: 
   key: Wisdom
+  level: 1
+  desc: "\uB9C8\uB825 \uC99D\uAC00"
   thum: {fileID: 0}
-  grade: 0
   maxLv: -1
   abilityPrefab: {fileID: -115636968313133042, guid: ac4af24a701484eb891598107c0d2a71, type: 3}
   conditions:
   - conditionType: 1
     value: 
-    count: 3
+    count: 5
+  abilityType: 0
+  applyOrder: 0

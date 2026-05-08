@@ -5,6 +5,7 @@ using UnityEngine;
 public class AbilityInventory : MonoBehaviour
 {
     public List<Ability> equippedAbilitys = new List<Ability>();
+    public List<SynergyData> currentSynergyDatas = new List<SynergyData>();
     //public readonly int MAX_SKILL_COUNT = 3;
 
     public List<IPreAttack> preAttackItems = new List<IPreAttack>();
@@ -19,10 +20,17 @@ public class AbilityInventory : MonoBehaviour
     void Start()
     {
 #if UNITY_EDITOR
-
-
+        GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
 #endif
     }
+#if UNITY_EDITOR
+    void OnStartGame(StartGameEvent e)
+    {
+        currentSynergyDatas.Clear();
+
+
+    }
+#endif
 
 
     public void SortingAbility()
@@ -56,7 +64,6 @@ public class AbilityInventory : MonoBehaviour
 
     public void AddAbility(AbilityData abilityData)
     {
-
         Ability ability = equippedAbilitys.FirstOrDefault(e => e.key == abilityData.key);
         if (ability != null)
         {
@@ -74,7 +81,22 @@ public class AbilityInventory : MonoBehaviour
         abilityCount++;
         GameEventBus.Publish(new AddedAbilityEvent(abilityData));
         SortingAbility();
+        CheckSynergy();
         Player.Instance.UpdatePlayer();
+    }
+    void CheckSynergy()
+    {
+        for (int i = 0; i < AbilityManager.Instance.synergyDatas.Length; i++)
+        {
+            SynergyData synergyData = currentSynergyDatas.FirstOrDefault(e => e.synergyType == AbilityManager.Instance.synergyDatas[i].synergyType);
+            if (synergyData != null)
+                continue;
+            bool canPick = AbilityManager.Instance.synergyDatas[i].CanPickSynergyAbility();
+            if (!canPick)
+                continue;
+
+            currentSynergyDatas.Add(synergyData); // new 시너지
+        }
     }
 
 }

@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: Vitality
   m_EditorClassIdentifier: 
   key: Vitality
+  level: 0
+  desc: "\uCD5C\uB300 \uCCB4\uB825 \uC99D\uAC00"
   thum: {fileID: 0}
-  grade: 0
   maxLv: -1
   abilityPrefab: {fileID: -1948720150196757408, guid: ed05557fb80f04ba0bff17dba24a4d69, type: 3}
   conditions: []
-  statType: 1
-  initValue: 0
-  increasedValue: 10
-  opType: 0
+  abilityType: 0
+  applyOrder: 0

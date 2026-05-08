@@ -10,6 +10,10 @@ public interface IPickable
         get;
         set;
     }
+    public Transform Transform
+    {
+        get;
+    }
 
     public void Droped(Vector2 pos, string key);
     void Take(IPicker picker); // 플레이어가 가질때

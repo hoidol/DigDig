@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5de19883b796a472bbc8466deea66fef, type: 3}
+  m_Name: Predation
+  m_EditorClassIdentifier: 
+  key: Predation
+  level: 3
+  desc: "\uD655\uC0B0\uD0C4 \uCD94\uAC00 \uBC1C\uC0AC"
+  thum: {fileID: 0}
+  maxLv: 1
+  abilityPrefab: {fileID: 267224659665963214, guid: a209307b39ee14205b6613871d5d73b4, type: 3}
+  conditions: []
+  abilityType: 2
+  applyOrder: 0
+  synergyType: 4

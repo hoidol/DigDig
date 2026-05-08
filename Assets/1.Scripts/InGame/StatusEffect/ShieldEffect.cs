@@ -1,11 +1,15 @@
+using System;
+
 public class ShieldEffect : StatusEffect
 {
     public override string EffectKey => "Shield";
+    Action consumeListener;
 
     // 지속시간 없이 1회 막으면 해제 → duration 무한대
-    public ShieldEffect()
+    public ShieldEffect(Action cListener)
     {
-        duration       = float.MaxValue;
+        consumeListener = cListener;
+        duration = float.MaxValue;
         remainingTimer = float.MaxValue;
     }
 
@@ -23,5 +27,6 @@ public class ShieldEffect : StatusEffect
     public void Consume(StatusEffectHandler handler)
     {
         remainingTimer = 0; // IsExpired → true → 다음 Update에서 OnRemove
+        consumeListener?.Invoke();
     }
 }

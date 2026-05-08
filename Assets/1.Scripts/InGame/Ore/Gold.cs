@@ -8,6 +8,8 @@ public class Gold : MonoBehaviour, IPickable
     public string key;
     public bool IsTaken { get; set; }
 
+    public Transform Transform => transform;
+
     static readonly Stack<Gold> pool = new();
     static Gold prefab;
 

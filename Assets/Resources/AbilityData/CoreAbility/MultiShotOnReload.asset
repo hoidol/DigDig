@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9f689bf6652b48f4a9e1caf6cd6aea7, type: 3}
+  m_Name: MultiShotOnReload
+  m_EditorClassIdentifier: 
+  key: MultiShotOnReload
+  level: 2
+  desc: "\uC7A5\uC804 \uD6C4 \uCCAB\uBC1C \uBA40\uD2F0\uC0F7"
+  thum: {fileID: 0}
+  maxLv: 1
+  abilityPrefab: {fileID: 4632296737370868380, guid: 7f08ea2299d2c4444a32943cdc66e0fb, type: 3}
+  conditions: []
+  abilityType: 1
+  applyOrder: 0

@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: dd63eee74e3c344bba36a09f9bc09eab
+guid: e6ad83173ea1b4360936f72b6ce4ea51
 AssetOrigin:
   serializedVersion: 1
   productId: 358058
   packageName: GUI Pro - Minimal Game Dark
   packageVersion: 1.0.1
-  assetPath: Assets/Layer Lab/GUI Pro-MinimalGame/Shared/Icons/UniqueIcon/128/Economy_Gem_05_Red.png
+  assetPath: Assets/Layer Lab/GUI Pro-MinimalGame/Shared/Icons/UniqueIcon/256/Economy_Gem_05_Red.png
   uploadId: 866768
 TextureImporter:
   internalIDToNameTable: []

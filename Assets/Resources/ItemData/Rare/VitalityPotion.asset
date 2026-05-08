@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: VitalityPotion
+  m_EditorClassIdentifier: 
+  key: VitalityPotion
+  itemName: "\uCCB4\uB825 \uBB3C\uC57D"
+  desc: "\uCCB4\uB825 +10"
+  level: 3
+  maxOwnCount: 2
+  hideDisplay: 1
+  acquireMethod: 3
+  thumbnail: {fileID: 0}
+  grade: 1
+  itemPrefab: {fileID: 9102534723578449416, guid: fb243cda6e30641668bf8ccb5e4796d9, type: 3}
+  addEffectUnlockConditions: []
+  applyOrder: 0
+  mergeItemKeys: []
+  IncludingItems: []

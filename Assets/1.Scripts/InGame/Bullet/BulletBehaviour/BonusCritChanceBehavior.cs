@@ -9,8 +9,15 @@ public class BonusCritChanceBehavior : IBulletForce
 
     public float GetMultiDamage(BulletBase bullet, IHittable hit, RaycastHit2D hit2D)
     {
+        PlayerDamageData d = ((PlayerBullet)bullet).damageData;
+        if (bonusChance < Player.Instance.statMgr.CritChance)
+        {
+            bonusChance = Player.Instance.statMgr.CritChance;
+        }
+
         if (Random.Range(0f, 100f) <= bonusChance)
-            ((PlayerBullet)bullet).damageData.mustCrit = true;
+            d.mustCrit = true;
+
         return 0;
     }
 }

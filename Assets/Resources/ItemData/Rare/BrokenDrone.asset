@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: BrokenDrone
+  m_EditorClassIdentifier: 
+  key: BrokenDrone
+  itemName: "\uACE0\uC7A5\uB09C \uB4DC\uB860"
+  desc: "\uCD1D\uC54C\uC5D0 \uB9DE\uC73C\uBA74 \uBC14\uB77C\uBCF4\uB294 \uBC29\uD5A5\uC73C\uB85C
+    \uCD1D\uC54C \uBC1C\uC0AC\uD568 (\uB370\uBBF8\uC9C0 50%)"
+  level: 4
+  maxOwnCount: 1
+  hideDisplay: 0
+  acquireMethod: 3
+  thumbnail: {fileID: 0}
+  grade: 1
+  itemPrefab: {fileID: 3677555556252879011, guid: a582b88822732485280142041f711e28, type: 3}
+  addEffectUnlockConditions: []
+  applyOrder: 0
+  mergeItemKeys: []
+  IncludingItems: []

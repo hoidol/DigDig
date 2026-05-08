@@ -7,19 +7,23 @@ public class GoldPanel : MonoBehaviour
     void Start()
     {
         GameEventBus.Subscribe<GoldChangedEvent>(OnGoldChanged);
+        goldText.text = "0";
     }
 
     void OnGoldChanged(GoldChangedEvent e)
     {
-        goldText.text = e.gold.ToString();  // 변경 시에만 실행
+        goldText.text = e.totalGold.ToString();  // 변경 시에만 실행
     }
 }
 
 public class GoldChangedEvent
 {
-    public int gold;
-    public GoldChangedEvent(int gold)
+
+    public int totalGold;
+    public int addGold;
+    public GoldChangedEvent(int gold, int aGold)
     {
-        this.gold = gold;
+        totalGold = gold;
+        addGold = aGold;
     }
 }

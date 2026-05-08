@@ -7,6 +7,8 @@ TagManager:
   - MagmaCore
   - Enemy
   - OreStone
+  - Gold
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -15,10 +17,10 @@ TagManager:
   - Water
   - UI
   - Pickable
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - OnlyHittable
+  - PhysicArea
+  - PlayerSide
   - 
   - 
   - 

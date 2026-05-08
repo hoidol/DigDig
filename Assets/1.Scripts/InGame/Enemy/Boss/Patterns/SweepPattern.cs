@@ -11,21 +11,21 @@ public class SweepPattern : BossAttackPattern
     [SerializeField] float radiusPerPhase = 0.5f;
     [SerializeField] float sweepAngle = 120f;           // 부채꼴 각도
     [SerializeField] float damageMultiplier = 1.5f;
-
+    DamageData damageData = new DamageData();
     public override void Execute(Boss boss, Action onEnd)
     {
         float radius = baseRadius + boss.CurrentPhase * radiusPerPhase;
         float damage = boss.enemyData.GetAttackPower() * damageMultiplier;
         Vector2 aimDir = (Player.Instance.transform.position - boss.transform.position).normalized;
-
+        damageData.damage = damage;
         sweepIndicator.PlayIndicator(() =>
         {
-            DealDamage(boss.transform.position, aimDir, radius, damage);
+            DealDamage(boss.transform.position, aimDir, radius);
             onEnd?.Invoke();
         });
     }
 
-    void DealDamage(Vector2 origin, Vector2 aimDir, float radius, float damage)
+    void DealDamage(Vector2 origin, Vector2 aimDir, float radius)
     {
         Collider2D[] cols = Physics2D.OverlapCircleAll(origin, radius);
         foreach (var col in cols)
@@ -34,7 +34,7 @@ public class SweepPattern : BossAttackPattern
 
             Vector2 toTarget = ((Vector2)col.transform.position - origin).normalized;
             if (Vector2.Angle(aimDir, toTarget) <= sweepAngle * 0.5f)
-                Player.Instance.TakeDamage(damage);
+                Player.Instance.TakeDamage(damageData);
         }
     }
 

@@ -1,33 +1,52 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class OreStone : MonoBehaviour, IHittable
 {
     public const float SIZE = 1.46f;
-    public Transform Transform
+    public Transform Transform => transform;
+
+    static readonly Stack<OreStone> pool = new();
+
+    public static OreStone Get(OreStone prefab, Vector3 pos, Transform parent)
     {
-        get
-        {
-            return transform;
-        }
+        OreStone ore = pool.Count > 0 ? pool.Pop() : Instantiate(prefab, parent);
+        ore.transform.SetParent(parent);
+        ore.transform.position = pos;
+        ore.gameObject.SetActive(true);
+        return ore;
     }
+
+    public void Return()
+    {
+        if (!gameObject.activeSelf) return;
+        hpUI?.Release();
+        hpUI = null;
+        gameObject.SetActive(false);
+        pool.Push(this);
+    }
+
     public Transform hpPoint;
     HpUI hpUI = null;
     public float curHp;
     public float maxHp;
     public int idx;
+    public Vector2Int gridPos;
     public GameObject gold;
     bool isGoldStone;
-    public void Init(int idx, Color color)
+    public void Init(int idx, Color color, Vector2Int gridPos)
     {
         this.idx = idx;
+        this.gridPos = gridPos;
 
         float distance = Vector2.Distance(Vector2.zero, transform.position);
-        float disMulti = distance / 6;
+        float disMulti = distance / 4;
         if (disMulti <= 1)
             disMulti = 1;
-        this.maxHp = (8 + idx * 10) * disMulti;
 
+        int undergroundIdx = GameManager.Instance.underground;
+        this.maxHp = (GameManager.Instance.stageData.initOreHps[undergroundIdx] + idx * GameManager.Instance.stageData.increaseOreHpsPerIdx[undergroundIdx]) * disMulti;
 
         curHp = maxHp;
         hpUI = null;
@@ -38,50 +57,59 @@ public class OreStone : MonoBehaviour, IHittable
         gold.SetActive(isGoldStone);
     }
 
+    DamageData lastDamage;
+
     public void TakeDamage(DamageData damage)
     {
+        lastDamage = damage;
         curHp -= damage.damage;
         damage.Applyed(hpPoint.transform.position);
 
 
         if (hpUI == null || hpUI.hittable != this)
         {
-            hpUI = HpUI.GetHpUI(this);
+            hpUI = HpUI.Get(this);
             hpUI.transform.position = hpPoint.position;
         }
         hpUI.SetRate(curHp / maxHp);
         if (curHp <= 0)
         {
-            Destroyed();
+            Destroyed(true);
         }
     }
 
-
-    public void Destroyed()
+    int Exp => (GameManager.Instance.underground - 1) * 4 + idx + 1;
+    public void Destroyed(bool reward)
     {
-        gameObject.SetActive(false);
-        ExpText expText = ExpText.Instantiate();
-        expText.SetExpText(transform.position, (GameManager.Instance.underground - 1) * 4 + idx + 1);
+        MapManager.Instance.RegisterDestroyed(gridPos);
 
-
-        if (isGoldStone)
+        if (reward)
         {
-            Gold.Dropped(transform.position, idx.ToString());
+            ExpText.SetText(transform.position, Exp.ToString());
+            if (isGoldStone)
+                Gold.Dropped(transform.position, idx.ToString());
+            GameManager.Instance.AddDestroyOreStone();
+            EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
+            Player.Instance.AddExp(idx + 1);
+            GameEventBus.Publish(new OreStoneDestroyedEvent(this, lastDamage));
         }
 
-        hpUI.Release();
-        GameManager.Instance.AddDestroyOreStone();
-        Player.Instance.AddExp(idx + 1);
+        Return();
+    }
 
-        GameEventBus.Publish(new OreStoneDestroyedEvent(this));
+    public bool CanHit()
+    {
+        return curHp > 0;
     }
 }
 
 public class OreStoneDestroyedEvent
 {
     public OreStone oreStone;
-    public OreStoneDestroyedEvent(OreStone stone)
+    public DamageData lastDamage;
+    public OreStoneDestroyedEvent(OreStone stone, DamageData lastDamage)
     {
         oreStone = stone;
+        this.lastDamage = lastDamage;
     }
 }

@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: Lucky
   m_EditorClassIdentifier: 
   key: Lucky
+  level: 0
+  desc: "\uD589\uC6B4 \uC99D\uAC00"
   thum: {fileID: 0}
-  grade: 0
   maxLv: -1
   abilityPrefab: {fileID: -3482727341325001054, guid: dc73edf1dd39c47e5908eb31267cfc9b, type: 3}
   conditions:
   - conditionType: 1
     value: 
-    count: 3
+    count: 5
+  abilityType: 0
+  applyOrder: 0

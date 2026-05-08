@@ -1,0 +1,11 @@
+synergyType,name,ability1Key,ability1Count,ability2Key,ability2Count,ability3,ability3Count,ability4Key,ability4Count,ability5Key,ability5Count,synergyAbility
+Tracker,추적자,WildInstinct,1,FocusSustain,1,BloodScent,1,SniperFocus,1,FinisherShot,1,RapidFire
+Gunner,탄환 전문가,MultiShotOnReload,1,EmergencyFire,1,UnequalExchange,1,AimlessBullet ,1,SteadyReload,1,ScatterVolley
+Sniper,저격수,StillFocus,1,SniperFocus,1,SteadyReload,1,BloodScent,1,FinisherShot,1,EagleEye
+Berserker,광전 사냥꾼,BloodFrenzy,1,HealBoost,1,PointBlank,1,EmergencyFire,1,BloodScent,1,HuntersThirst
+Predator,포식자,WildInstinct,1,BoundShoot,1,MiningPierce,1,FocusSustain,1,StillFocus,1,Predation
+Survivor,마지막 생존자,WeaknessExploit,1,AnkleShoot,1,GunpowderBullet,1,HealBoost,1,BoobyTrap,1,IronNest
+Counter,반격자,MultiShotOnReload,1,WeaknessExploit,1,FocusSustain,1,AnkleShoot,1,PointBlank,1,MultiTarget
+MinerHunter,채굴 사냥,UnequalExchange,1,BoundShoot,1,MiningPierce,1,GunpowderBullet,1,StillFocus,1,VeinBlast
+Rampage,광폭 사냥,BoobyTrap,1,GunpowderBullet,1,AimlessBullet ,1,BloodFrenzy,1,PointBlank,1,FrenzyHunt
+LuckyMan,럭키맨,Luck,4,,,,,,,,,

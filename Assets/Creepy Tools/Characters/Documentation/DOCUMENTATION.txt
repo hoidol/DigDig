@@ -1,0 +1,39 @@
+CreepyTools Spine Animation Demo
+================================
+
+Overview
+--------
+This package contains a simple demo scene showcasing the loop through Spine animations using Unity UI buttons and text fields. 
+
+Tested On
+------------
+- Unity Version: Unity 6 LTS (6000.x.x or later)
+- Spine Runtime: Spine-Unity 4.1 (from Esoteric Software)
+  * You must install this separately.
+  * Download from: http://esotericsoftware.com/spine-unity-download
+
+⚠️ The Spine runtime is not included in this package due to licensing restrictions.
+
+Installation
+------------
+1. Import the Spine-Unity runtime (v4.1) into your project.
+2. Import this package into Unity.
+3. Open the demo scene:
+   Assets/Creepy Tools/Characters/{CHARACTERNAME}/{CHARACTERNAME}.unity
+
+Usage
+-----
+- Use the Next and Previous UI buttons to cycle through all available animations.
+- The current animation name and character name are displayed on screen.
+
+Scripts included:
+- AnimationController.cs → Handles loading and switching animations on a SkeletonAnimation.
+- UIController.cs → Connects Unity UI buttons and text fields to the AnimationController.
+
+Support & Notes
+---------------
+- Ensure your Spine skeleton assets are compatible with Spine-Unity 4.1.
+- For Spine runtime issues, please consult the official Spine documentation:
+  http://esotericsoftware.com/spine-unity-documentation
+- In case of questions please contact us on Discord: https://discord.gg/hTN4BstV2G
+

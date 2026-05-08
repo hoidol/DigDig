@@ -9,23 +9,18 @@ public class AbilityPanel : MonoBehaviour
     public Image thumImage;
     public TMP_Text titleText;
     public TMP_Text descriptionText;
-    public GameObject synergyNotifyObj;
-    public SynergyItemPanel[] synergyItems;
+    public GameObject closeObject;
     public void SetAbilityData(AbilityData abilityData)
     {
+        closeObject.gameObject.SetActive(abilityData == null);
+        if (abilityData == null)
+        {
+            return;
+        }
+
         this.abilityData = abilityData;
         titleText.text = abilityData.Title;
         descriptionText.text = abilityData.Description();
-        synergyNotifyObj.SetActive(false);
-        // synergyNotifyObj.SetActive(abilityData.synergyItems.Length > 0);
-        // for (int i = 0; i < synergyItems.Length; i++)
-        // {
-        //     if (i < abilityData.synergyItems.Length)
-        //     {
-        //         synergyItems[i].synergyItemImage.sprite = ItemManager.Instance.GetItemData(abilityData.synergyItems[i]).thumbnail;
-        //     }
-        //     synergyItems[i].gameObject.SetActive(i < abilityData.synergyItems.Length);
-        // }
     }
 
     public void OnClickedSelect()

@@ -6,7 +6,10 @@ public class PierceBehavior : IBulletBehavior
 
     public bool OnHit(BulletBase bullet, IHittable hit, RaycastHit2D hit2D)
     {
-        return --remaining <= 0;
+        bullet.damageMultiplier *= 0.75f;
+        if (--remaining <= 0 || bullet.damage * bullet.damageMultiplier < 1f)
+            return true;
+        return false;
     }
     public void OnMove(BulletBase bullet) { }
     public void Merge(IBulletBehavior other)

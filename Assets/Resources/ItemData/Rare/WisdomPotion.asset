@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: WisdomPotion
+  m_EditorClassIdentifier: 
+  key: WisdomPotion
+  itemName: "\uC815\uC2E0\uB825 \uBB3C\uC57D"
+  desc: "\uB9C8\uB825 +1"
+  level: 3
+  maxOwnCount: 2
+  hideDisplay: 1
+  acquireMethod: 3
+  thumbnail: {fileID: 0}
+  grade: 1
+  itemPrefab: {fileID: 2050241791747388244, guid: d9510bdac65a944b7ac9cff694a5ea8b, type: 3}
+  addEffectUnlockConditions: []
+  applyOrder: 0
+  mergeItemKeys: []
+  IncludingItems: []
