@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7da49a64942b84609bf05b49d5e78f02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: 
+  key: HustleArmor
   count: 0

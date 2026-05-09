@@ -29,7 +29,7 @@ public class MiningPierceAbility : Ability, IBulletItem
     {
         if (!applyNext) return;
         applyNext = false;
-        Debug.Log("MiningPierceAbility Added");
+        // Debug.Log("MiningPierceAbility Added");
         bullet.AddBehavior(new PierceBehavior(count + 1));
 
     }

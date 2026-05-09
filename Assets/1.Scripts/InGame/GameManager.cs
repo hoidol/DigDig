@@ -13,23 +13,12 @@ public class GameManager : MonoSingleton<GameManager>
         get;
         private set;
     }
-    public int underground = 0;
-    public int wave;
+    public int ordealClearCount; //9~12개? 해보자
+    // public int underground = 0;
+    // public int wave;
     public int destroyOreStone { get; private set; }
     public StageData stageData;
 
-    public List<IGameListener> gameListeners = new List<IGameListener>();
-
-    public void AddGameListener(IGameListener op)
-    {
-        if (!gameListeners.Contains(op))
-            gameListeners.Add(op);
-    }
-    public void RemoveGameListener(IGameListener op)
-    {
-        if (gameListeners.Contains(op))
-            gameListeners.Remove(op);
-    }
     public bool isClear;
     protected void Awake()
     {
@@ -39,6 +28,7 @@ public class GameManager : MonoSingleton<GameManager>
     void Start()
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
+        GameEventBus.Subscribe<ReachedOrdealEvent>(OnReachedOrdealEvent);
         FadeCanvs.Instance.FadeIn("망각의 늪", () =>
         {
             StargGame();
@@ -59,8 +49,9 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
     //게임 흐름
-    //아이템 선택 -> 파밍 -> 2분 뒤 전투 (난이도 :약) -> 1분 뒤 특정 위치 도착 유도(3분 안에 특정 위치 도착 유도)
-
+    // 아이템 선택 
+    // -> Ordeal 3갈래 시작
+    // -> 
 
 
     public bool isPlaying;
@@ -71,30 +62,43 @@ public class GameManager : MonoSingleton<GameManager>
         () =>
         {
             isPlaying = true;
+            ApproachingOrdeal();
+            StartCoroutine(CoSpawn());
+
         });
 
-
         isClear = false;
-        underground = 0;
         GameEventBus.Publish(new StartGameEvent(stageData));
-        StartUnderground(underground);
+    }
+    public void ApproachingOrdeal()
+    {
+        gameState = GameState.ApproachingOrdeal;
+        GameEventBus.Publish(new ApproachingOrdealStartEvent(stageData.GetOrdealProgressData()));
     }
 
-    public void StartUnderground(int lv)
+    void OnReachedOrdealEvent(ReachedOrdealEvent e)
     {
-        underground = lv;
-        wave = 0;
-        UndergroundData undergroundData = GetUndergroundData();
-        if (undergroundData.isBoss)
+        if (gameState == GameState.ApproachingOrdeal)
         {
-            StartBoss();
+            StartOrdeal(e.ordealData);
         }
-        else
-        {
-            WaitWave(wave);
-        }
+    }
 
-        GameEventBus.Publish(new UndergroundStartEvent(undergroundData));
+    public void StartOrdeal(OrdealData ordealData)
+    {
+        gameState = GameState.UndergoingOrdeal;
+        GameEventBus.Publish(new OrdealStartEvent(ordealData, stageData.GetOrdealProgressData()));
+
+    }
+    public void EndOrdeal(OrdealData ordealData)
+    {
+        ordealClearCount++;
+        //여기서 특수 이벤트 실행 처리!
+        gameState = GameState.ClearOrdeal;
+
+        GameEventBus.Publish(new OrdealEndEvent(ordealData, ordealClearCount));
+
+        ApproachingOrdeal();
     }
 
     void StartBoss()
@@ -103,68 +107,7 @@ public class GameManager : MonoSingleton<GameManager>
         gameState = GameState.Boss;
     }
 
-    void WaitWave(int nextWave)
-    {
-        gameState = GameState.WaitingWave;
-        StartCoroutine(CoWaitingWave(nextWave));
-        StartCoroutine(CoSpawn()); //적이 조금씩만 생성
-    }
 
-    public float waveWaitingTimer = 0;
-    public bool waving;
-    IEnumerator CoWaitingWave(int nextWave)
-    {
-        waveWaitingTimer = 0;
-        float waveWaitTime = StageData.WAIT_WAVE_TIMES[GetUndergroundData().idx];
-        while (true)
-        {
-            if (waveWaitingTimer >= waveWaitTime)
-            {
-                //웨이브 시작
-                StartWave(nextWave);
-                yield break;
-            }
-            yield return null;
-            waveWaitingTimer += Time.deltaTime;
-        }
-    }
-
-    async UniTaskVoid StartWave(int w)
-    {
-        gameState = GameState.Wave;
-        wave = w;
-        waving = true;
-        WaveData waveData = GetWaveData();
-        GameEventBus.Publish(new WaveStartEvent(waveData)); // WaveStartEvent() 객체 발행
-
-
-        EnemyPatternData enemyPatternData = EnemyManager.Instance.GetEnemyPattern(waveData.patternType);
-        EnemyPattern enemyPattern = Instantiate(enemyPatternData.enemyPatternPrefab);
-        enemyPattern.StartPattern();
-
-        int mSec = (int)(StageData.WAVE_TIMES[GetUndergroundData().idx] * 1000);
-        await UniTask.Delay(mSec);
-
-        enemyPattern.EndPattern();
-        EndWave();
-    }
-
-    void EndWave()
-    {
-        waving = false;
-        WaveData wData = GetWaveData(); //현재 웨이브
-        if (wData.idx < GetUndergroundData().waveDatas.Length - 1)
-        {
-            WaitWave(wave + 1);
-        }
-        else
-        {
-            Debug.Log("모든 웨이브 끝!");
-            EndUnderground();
-        }
-        GameEventBus.Publish(new WaveEndEvent(GetWaveData()));
-
-    }
 #if UNITY_EDITOR
     void Update()
     {
@@ -197,7 +140,11 @@ public class GameManager : MonoSingleton<GameManager>
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(6, 8));
+            yield return new WaitForSeconds(Random.Range(6, 10));
+
+            if (gameState == GameState.UndergoingOrdeal)
+                continue;
+
             Enemy enemy = EnemyManager.Instance.GetEnemy(EnemyType.Melee);
             Vector2 randomPos = (Vector2)Player.Instance.transform.position + Random.insideUnitCircle.normalized * 15;
             enemy.Spawn(randomPos);
@@ -210,50 +157,12 @@ public class GameManager : MonoSingleton<GameManager>
         FadeCanvs.Instance.FadeIn($"msg", () => { SceneManager.LoadScene("InGame"); });
     }
 
-    public void EndUnderground()
-    {
-        isClear = true;
-        gameState = GameState.ClearUnderground;
-        //플레이어가 Enterance로 들어감
-        if (underground < stageData.undergroundDatas.Length)
-        {
-            EndUndergroundEffect().Forget();
-        }
-
-        GameEventBus.Publish(new UndergroundEndEvent(GetUndergroundData()));
-    }
-    async UniTaskVoid EndUndergroundEffect()
-    {
-        CameraManager.Instance.Shake(3f, 3f);
-        await UniTask.Delay(1000);
-        FadeCanvs.Instance.FadeOutIn($"더 깊은 곳으로\n지하 {underground + 1}층", () =>
-        {
-            StartUnderground(underground + 1);
-        });
-    }
-
-    public UndergroundData GetUndergroundData()
-    {
-        return stageData.undergroundDatas[underground];
-    }
-    public WaveData GetWaveData()
-    {
-        return GetUndergroundData().waveDatas[wave];
-    }
-
     void EnemyDeadEventListener(EnemyDeadEvent e)
     {
         Gold.Dropped(e.position, "0");
     }
 }
 
-public interface IGameListener
-{
-    void StartUnderground(UndergroundData uData);
-    void EndUnderground();
-    void StartWave(WaveData wData);
-    void EndWave();
-}
 
 public class StartGameEvent
 {
@@ -265,9 +174,9 @@ public class StartGameEvent
 }
 public enum GameState
 {
-    WaitingWave,
-    Wave,
-    ClearUnderground,
+    ApproachingOrdeal, //시련 다가가는중
+    UndergoingOrdeal, //시련 중
+    ClearOrdeal, //시련 중
     Boss
 }
 public class BossEvent

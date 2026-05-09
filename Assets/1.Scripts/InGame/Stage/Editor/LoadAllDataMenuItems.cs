@@ -10,6 +10,7 @@ public static class LoadAllDataMenuItems
         LoadAllEnemyData();
         LoadAllStageData();
         LoadAllEnemyPatternData();
+        OrdealDataEditor.LoadAllOrdealData();
         AssetDatabase.SaveAssets();
         Debug.Log("[LoadAll] 전체 데이터 로드 완료");
     }

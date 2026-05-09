@@ -18,42 +18,7 @@ public class MapManager : MonoSingleton<MapManager>
     private Dictionary<Vector2Int, List<OreStone>> loadedChunks = new Dictionary<Vector2Int, List<OreStone>>();
     private HashSet<Vector2Int> destroyedTiles = new HashSet<Vector2Int>();
 
-    public void RegisterDestroyed(Vector2Int gridPos)
-    {
-        if (!destroyedTiles.Contains(gridPos))
-            destroyedTiles.Add(gridPos);
-    }
 
-    // NPC 등장 시 호출 - 반경 내 타일 제거 및 재생성 방지
-    public void ClearTilesInRadius(Vector2 center, float radius)
-    {
-        int gridRadius = Mathf.CeilToInt(radius / OreStone.SIZE);
-        Vector2Int centerGrid = new Vector2Int(
-            Mathf.RoundToInt(center.x / OreStone.SIZE),
-            Mathf.RoundToInt(center.y / OreStone.SIZE)
-        );
-        for (int dy = -gridRadius; dy <= gridRadius; dy++)
-        {
-            for (int dx = -gridRadius; dx <= gridRadius; dx++)
-            {
-                Vector2Int gridPos = new Vector2Int(centerGrid.x + dx, centerGrid.y + dy);
-                Vector3 worldPos = new Vector3(gridPos.x * OreStone.SIZE, gridPos.y * OreStone.SIZE);
-                if (Vector2.Distance(center, worldPos) <= radius)
-                    destroyedTiles.Add(gridPos);
-            }
-        }
-        // 현재 로드된 타일 즉시 제거
-        Collider2D[] cols = Physics2D.OverlapCircleAll(center, radius, LayerMask.GetMask("Hittable"));
-        foreach (var col in cols)
-        {
-            if (col.tag == "OreStone")
-            {
-                col.GetComponent<OreStone>()?.Destroyed(false);
-            }
-
-        }
-
-    }
 
     private void Awake()
     {
@@ -67,20 +32,26 @@ public class MapManager : MonoSingleton<MapManager>
     [SerializeField] private float[] weights;
     private async void Start()
     {
-        GameEventBus.Subscribe<UndergroundStartEvent>(OnUndergroundStart);
+        GameEventBus.Subscribe<OrdealEndEvent>(OnOrdealEndEvent);
+        GameEventBus.Subscribe<ReachedOrdealEvent>(OnReachedOrdealEvent);
+
         weights = new float[weightCurves.Length];
         UpdateChunks();
         RunUpdateChunk().Forget();
     }
+    void OnReachedOrdealEvent(ReachedOrdealEvent e)
+    {
+        //
+    }
 
-    void OnUndergroundStart(UndergroundStartEvent e)
+    void OnOrdealEndEvent(OrdealEndEvent e)
     {
         // 모든 청크 언로드 및 상태 초기화
-        foreach (var coord in new List<Vector2Int>(loadedChunks.Keys))
-            UnloadChunk(coord);
-        destroyedTiles.Clear();
-        currentPlayerChunk = new Vector2Int(int.MaxValue, int.MaxValue);
-        UpdateChunks();
+        // foreach (var coord in new List<Vector2Int>(loadedChunks.Keys))
+        //     UnloadChunk(coord);
+        // destroyedTiles.Clear();
+        // currentPlayerChunk = new Vector2Int(int.MaxValue, int.MaxValue);
+        // UpdateChunks();
     }
 
     async UniTaskVoid RunUpdateChunk()
@@ -204,5 +175,42 @@ public class MapManager : MonoSingleton<MapManager>
             if (rand < cumulative) return i;
         }
         return n - 1;
+    }
+
+    public void RegisterDestroyed(Vector2Int gridPos)
+    {
+        if (!destroyedTiles.Contains(gridPos))
+            destroyedTiles.Add(gridPos);
+    }
+
+    // NPC 등장 시 호출 - 반경 내 타일 제거 및 재생성 방지
+    public void ClearTilesInRadius(Vector2 center, float radius)
+    {
+        int gridRadius = Mathf.CeilToInt(radius / OreStone.SIZE);
+        Vector2Int centerGrid = new Vector2Int(
+            Mathf.RoundToInt(center.x / OreStone.SIZE),
+            Mathf.RoundToInt(center.y / OreStone.SIZE)
+        );
+        for (int dy = -gridRadius; dy <= gridRadius; dy++)
+        {
+            for (int dx = -gridRadius; dx <= gridRadius; dx++)
+            {
+                Vector2Int gridPos = new Vector2Int(centerGrid.x + dx, centerGrid.y + dy);
+                Vector3 worldPos = new Vector3(gridPos.x * OreStone.SIZE, gridPos.y * OreStone.SIZE);
+                if (Vector2.Distance(center, worldPos) <= radius)
+                    destroyedTiles.Add(gridPos);
+            }
+        }
+        // 현재 로드된 타일 즉시 제거
+        Collider2D[] cols = Physics2D.OverlapCircleAll(center, radius, LayerMask.GetMask("Hittable"));
+        foreach (var col in cols)
+        {
+            if (col.tag == "OreStone")
+            {
+                col.GetComponent<OreStone>()?.Destroyed(false);
+            }
+
+        }
+
     }
 }

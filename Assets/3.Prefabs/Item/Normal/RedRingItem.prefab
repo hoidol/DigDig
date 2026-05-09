@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 705c870eaa06049669cf81a9b08d4873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: 
+  key: RedRing
   count: 0

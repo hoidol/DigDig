@@ -6,6 +6,6 @@ public class AngerPanel : MonoBehaviour
 
     void Update()
     {
-        progressBar.fillAmount = Player.Instance.angerAmount / 100f;
+        //progressBar.fillAmount = Player.Instance.angerAmount / 100f;
     }
 }

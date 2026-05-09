@@ -5,8 +5,6 @@ public class UnequalExchangeAbility : Ability
 {
     static readonly float[] chances = { 25f, 45f, 70f };
 
-    int prevGold;
-
     public override string GetDescription(int c = -1, bool detail = false)
     {
         if (c <= 0) c = count;
@@ -16,7 +14,6 @@ public class UnequalExchangeAbility : Ability
 
     public override void OnEquip(Player player)
     {
-        prevGold = player.gold;
         GameEventBus.Subscribe<GoldChangedEvent>(OnGoldChanged);
     }
 
@@ -37,7 +34,7 @@ public class UnequalExchangeAbility : Ability
 
         if (UnityEngine.Random.Range(0f, 100f) > chances[count - 1]) return;
 
-        player.curBulletCount++;
+        player.weapon.AddBullet();
         GameEventBus.Publish(new BulletChargedEvent(player.curBulletCount, max));
     }
 }

@@ -26,6 +26,6 @@ public class MultiShotOnReloadAbility : Ability, IPreAttack
     {
         if (!firstShot) return;
         firstShot = false;
-        player.RequestSpread(count + 1); // count=1→spread2→총3발, count=2→spread3→총4발, count=3→spread4→총5발
+        player.weapon.RequestSpread(count + 1); // count=1→spread2→총3발, count=2→spread3→총4발, count=3→spread4→총5발
     }
 }

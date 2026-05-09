@@ -95,7 +95,7 @@ public class AbilityInventory : MonoBehaviour
             if (!canPick)
                 continue;
 
-            currentSynergyDatas.Add(synergyData); // new 시너지
+            currentSynergyDatas.Add(AbilityManager.Instance.synergyDatas[i]); // new 시너지
         }
     }
 

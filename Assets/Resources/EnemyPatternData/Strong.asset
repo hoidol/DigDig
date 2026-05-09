@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94281483b42f9450698941e38ac72229, type: 3}
   m_Name: Strong
   m_EditorClassIdentifier: 
-  patternType: 3
+  patternType: 2
   enemySpawnPatternDatas:
   - enemyType: 0
     intervalRange: {x: 2, y: 3}
@@ -20,4 +20,3 @@ MonoBehaviour:
   - enemyType: 1
     intervalRange: {x: 7, y: 8}
     countRange: {x: 1, y: 2}
-  enemyPatternPrefab: {fileID: 7393760953585296773, guid: 958d125e8a4aa4ccc83efc46e82000de, type: 3}

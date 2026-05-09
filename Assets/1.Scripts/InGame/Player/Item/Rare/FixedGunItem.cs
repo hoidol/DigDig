@@ -23,15 +23,14 @@ public class FixedGunItem : TriggerItem
     public override void OnTrigger()
     {
         base.OnTrigger();
-        Player player = Player.Instance;
-        Vector2 dir = player.dirTr.right;
+        Vector2 dir = Player.Instance.weapon.dirTr.right;
         int count = ShotCount;
 
         for (int i = 0; i < count; i++)
         {
             var bullet = PlayerBullet.Instantiate();
-            bullet.transform.position = player.transform.position;
-            bullet.Shoot(dir, player.statMgr.AttackPower);
+            bullet.transform.position = Player.Instance.transform.position;
+            bullet.Shoot(dir, Player.Instance.statMgr.AttackPower);
         }
     }
 

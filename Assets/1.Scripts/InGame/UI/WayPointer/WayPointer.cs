@@ -1,29 +1,76 @@
 using UnityEngine.UI;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System;
 
 public class WayPointer : MonoBehaviour
 {
     Camera mainCamera;
     public GameObject rootTr;
-    //[SerializeField] Camera uiCamara;
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
+
     public IWayPointerTarget wayPointerTarget;
     public Transform directionTr;
     public Image thumImage;
     public Image timerImage;
 
-    public void SetTarget(IWayPointerTarget target)
+    bool isPlayingEffect;
+
+    void Awake()
     {
-        Debug.Log("WayPointer SetTarget()");
-        wayPointerTarget = target;
+        mainCamera = Camera.main;
     }
 
-    // Update is called once per frame
+    public void Show(IWayPointerTarget target, bool effect = false, float delay = 0)
+    {
+        wayPointerTarget = target;
+        if (effect)
+            PlayEffect(delay).Forget();
+    }
+
+    async UniTaskVoid PlayEffect(float delay)
+    {
+        isPlayingEffect = true;
+        rootTr.SetActive(true);
+
+        Vector3 centerScreen = new(Screen.width * 0.5f, Screen.height * 0.5f, 1f);
+        Vector3 centerWorld = mainCamera.ScreenToWorldPoint(centerScreen);
+        centerWorld.z = 0f;
+        transform.position = centerWorld;
+
+        var token = this.GetCancellationTokenOnDestroy();
+        await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
+
+        float duration = 0.4f;
+        float elapsed = 0f;
+        Vector3 fromPos = centerWorld;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            Vector3 toPos = CalcPointerWorldPos();
+            transform.position = Vector3.Lerp(fromPos, toPos, elapsed / duration);
+            await UniTask.Yield(cancellationToken: token);
+        }
+
+        isPlayingEffect = false;
+    }
+
+    Vector3 CalcPointerWorldPos()
+    {
+        float borderSize = 100f;
+        Vector3 screenPos = mainCamera.WorldToScreenPoint(wayPointerTarget.Transform.position);
+        if (screenPos.x <= borderSize) screenPos.x = borderSize;
+        if (screenPos.x >= Screen.width - borderSize) screenPos.x = Screen.width - borderSize;
+        if (screenPos.y <= borderSize) screenPos.y = borderSize;
+        if (screenPos.y >= Screen.height - borderSize) screenPos.y = Screen.height - borderSize;
+        Vector3 world = mainCamera.ScreenToWorldPoint(screenPos);
+        world.z = 0f;
+        return world;
+    }
+
     void Update()
     {
+        if (wayPointerTarget == null) return;
+
         timerImage.fillAmount = wayPointerTarget.CurTimer / wayPointerTarget.MaxTime;
         thumImage.sprite = wayPointerTarget.Thum;
 
@@ -34,30 +81,23 @@ public class WayPointer : MonoBehaviour
         float angle = Util.GetAngleFromVector(dir);
         directionTr.localEulerAngles = new Vector3(0, 0, angle);
 
-        float borderSize = 200f;
+        if (isPlayingEffect) return;
+
+        float borderSize = 150f;
         Vector3 targetPosScreenPoint = mainCamera.WorldToScreenPoint(wayPointerTarget.Transform.position);
         bool isOffScreen = targetPosScreenPoint.x <= borderSize ||
-        targetPosScreenPoint.x >= Screen.width - borderSize ||
-        targetPosScreenPoint.y <= borderSize ||
-        targetPosScreenPoint.y >= Screen.height - borderSize;
+            targetPosScreenPoint.x >= Screen.width - borderSize ||
+            targetPosScreenPoint.y <= borderSize ||
+            targetPosScreenPoint.y >= Screen.height - borderSize;
 
         if (isOffScreen)
         {
             rootTr.SetActive(true);
-            Vector3 cappedTargetScreenPos = targetPosScreenPoint;
-            if (cappedTargetScreenPos.x <= borderSize) cappedTargetScreenPos.x = borderSize;
-            if (cappedTargetScreenPos.x >= Screen.width - borderSize) cappedTargetScreenPos.x = Screen.width - borderSize;
-            if (cappedTargetScreenPos.y <= borderSize) cappedTargetScreenPos.y = borderSize;
-            if (cappedTargetScreenPos.y >= Screen.height - borderSize) cappedTargetScreenPos.y = Screen.height - borderSize;
-
-            Vector3 pointerWorldPos = mainCamera.ScreenToWorldPoint(cappedTargetScreenPos);
-            transform.position = pointerWorldPos;
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, 0);
+            transform.position = CalcPointerWorldPos();
         }
         else
         {
             rootTr.SetActive(false);
-
         }
     }
 }

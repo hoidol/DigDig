@@ -33,10 +33,10 @@ public abstract class Boss : Enemy
         GameEventBus.Publish(new BossSpawnEvent(this));
     }
 
-    protected override void OnHpChanged(float cur, float max)
+    protected override void OnHpChanged()
     {
-        base.OnHpChanged(cur, max);
-        CheckPhaseTransition(cur / max);
+        base.OnHpChanged();
+        CheckPhaseTransition();
     }
 
     protected override void OnDead(DamageData damageData)
@@ -46,10 +46,10 @@ public abstract class Boss : Enemy
         GameEventBus.Publish(new BossDeadEvent(this));
     }
 
-    void CheckPhaseTransition(float hpRate)
+    void CheckPhaseTransition()
     {
         if (bossData?.phaseThresholds == null) return;
-
+        float hpRate = CurHp / MaxHp;
         int newPhase = 0;
         for (int i = 0; i < bossData.phaseThresholds.Length; i++)
         {

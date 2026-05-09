@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d393c27f507646ec89487e83b4820a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: 
+  key: SturdyMagazine
   count: 0

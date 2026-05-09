@@ -18,74 +18,70 @@ public class WaveTimerPanel : MonoBehaviour
 
     void Start()
     {
-        GameEventBus.Subscribe<UndergroundStartEvent>(StartUnderground); //이벤트 구독 
-        GameEventBus.Subscribe<UndergroundEndEvent>(EndUnderground); //이벤트 구독
-        GameEventBus.Subscribe<WaveStartEvent>(StartWave); //이벤트 구독 - 웨이브 시작
-        GameEventBus.Subscribe<WaveEndEvent>(EndWave); //이벤트 구독 - 웨이브 끝
 
         waitingIcon.SetActive(true);
         normalWaveIcon.SetActive(false);
         hardWaveIcon.SetActive(false);
         timeText.text = "";
     }
-    public void StartWave(WaveStartEvent e)
-    {
-        waveData = e.waveData;
-        waitingIcon.SetActive(false);
-        normalWaveIcon.SetActive(true);
+    // public void StartWave(WaveStartEvent e)
+    // {
+    //     waveData = e.waveData;
+    //     waitingIcon.SetActive(false);
+    //     normalWaveIcon.SetActive(true);
 
-    }
+    // }
 
-    float waveTime;
-    public void StartUnderground(UndergroundStartEvent e)
-    {
-        undergroundData = e.undergroundData;
-        waveTime = StageData.WAVE_TIMES[undergroundData.idx];
-        waitingIcon.SetActive(true);
-        normalWaveIcon.SetActive(false);
-        timeText.text = $"Next Wave";
+    // float waveTime;
+    // public void StartUnderground(UndergroundStartEvent e)
+    // {
+    //     undergroundData = e.undergroundData;
+    //     waveTime = StageData.WAVE_TIMES[undergroundData.idx];
+    //     waitingIcon.SetActive(true);
+    //     normalWaveIcon.SetActive(false);
+    //     timeText.text = $"Next Wave";
 
-        StartWaveTimerUniTask().Forget();
-    }
+    //     StartWaveTimerUniTask().Forget();
+    // }
 
-    private async UniTaskVoid StartWaveTimerUniTask()
-    {
-        var cancellationToken = this.GetCancellationTokenOnDestroy();
-        while (true)
-        {
-            float remainingTime = waveTime - GameManager.Instance.waveWaitingTimer;
-            if (remainingTime < 0f) remainingTime = 0f;
+    // private async UniTaskVoid StartWaveTimerUniTask()
+    // {
+    //     var cancellationToken = this.GetCancellationTokenOnDestroy();
+    //     while (true)
+    //     {
+    //         float remainingTime = waveTime - GameManager.Instance.waveWaitingTimer;
+    //         if (remainingTime < 0f) remainingTime = 0f;
 
-            int minutes = Mathf.FloorToInt(remainingTime / 60f);
-            int seconds = Mathf.FloorToInt(remainingTime % 60f);
+    //         int minutes = Mathf.FloorToInt(remainingTime / 60f);
+    //         int seconds = Mathf.FloorToInt(remainingTime % 60f);
 
-            timeText.text = $"{minutes:D2}:{seconds:D2}";
+    //         timeText.text = $"{minutes:D2}:{seconds:D2}";
 
-            await UniTask.Delay(250, cancellationToken: cancellationToken);
-        }
-    }
+    //         await UniTask.Delay(250, cancellationToken: cancellationToken);
+    //     }
+    // }
 
-    public WaveData waveData;
-    public UndergroundData undergroundData;
-    public void EndWave(WaveEndEvent e)
-    {
-        waitingIcon.SetActive(true);
-        normalWaveIcon.SetActive(false);
-        if (GameManager.Instance.isClear)
-        {
-            timeText.text = $"Next Wave {undergroundData.idx + 1}-{waveData.idx + 1}";
-        }
-        else
-        {
-            timeText.text = $"Go deeper";
-        }
+    // public WaveData waveData;
+    // public UndergroundData undergroundData;
+    // public void EndWave(WaveEndEvent e)
+    // {
+    //     waitingIcon.SetActive(true);
+    //     normalWaveIcon.SetActive(false);
+    //     if (GameManager.Instance.isClear)
+    //     {
+    //         timeText.text = $"Next Wave {undergroundData.idx + 1}-{waveData.idx + 1}";
+    //     }
+    //     else
+    //     {
+    //         timeText.text = $"Go deeper";
+    //     }
 
-    }
+    // }
 
-    public void EndUnderground(UndergroundEndEvent e)
-    {
+    // public void EndUnderground(UndergroundEndEvent e)
+    // {
 
-    }
+    // }
 
 
 

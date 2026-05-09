@@ -7,6 +7,6 @@ public class PredationAbility : SynergyAbility, IPreAttack
 
     public void OnPreAttack(Player player, Vector2 dir)
     {
-        player.RequestSpread(2);
+        player.weapon.RequestSpread(2);
     }
 }

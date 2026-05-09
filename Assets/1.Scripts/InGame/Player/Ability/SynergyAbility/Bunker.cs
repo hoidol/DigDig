@@ -20,15 +20,6 @@ public class Bunker : MonoBehaviour, IHittable
     [SerializeField] Image hpBar;
     [SerializeField] TMP_Text hpText;
 
-    void Start()
-    {
-        GameEventBus.Subscribe<UndergroundEndEvent>(OnUndergroundEndEvent);
-    }
-
-    void OnUndergroundEndEvent(UndergroundEndEvent e)
-    {
-        DestroyBunker();
-    }
     public void Spawn(Vector2 pos)
     {
         transform.position = pos;

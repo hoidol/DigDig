@@ -44,6 +44,6 @@ public class SteadyReloadAbility : Ability
     public override string GetDescription(int c = -1, bool detail = false)
     {
         if (c <= 0) c = count;
-        return $"장전 중 정지 시 장전 시간 {reductions[c - 1] * 100:0}% 감소";
+        return $"정지 중 장전 시간 {reductions[c - 1] * 100:0}% 감소";
     }
 }

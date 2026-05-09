@@ -8,14 +8,14 @@ public class HpUI : MonoBehaviour
     static HpUI prefab;
 
     public Image hpImage;
-    public IHittable hittable;
+    public IHpUI target;
     public float timer;
 
-    public static HpUI Get(IHittable hittable)
+    public static HpUI Get(IHpUI target)
     {
         HpUI ui = pool.Count > 0 ? pool.Pop() : Instantiate(GetPrefab(), GameWorldCanvas.Instance.transform);
         ui.gameObject.SetActive(true);
-        ui.hittable = hittable;
+        ui.target = target;
         ui.timer = 5f;
         return ui;
     }
@@ -27,28 +27,24 @@ public class HpUI : MonoBehaviour
         return prefab;
     }
 
-    public bool IsOwn(Transform owner)
-    {
-        return gameObject.activeSelf && hittable.Transform == owner;
-    }
-
-    public void SetRate(float rate)
-    {
-        hpImage.fillAmount = rate;
-        timer = 5f;
-    }
+    public bool IsOwn(IHpUI owner) => gameObject.activeSelf && target == owner;
 
     public void Release()
     {
-        hittable = null;
+        target = null;
         gameObject.SetActive(false);
         pool.Push(this);
+    }
+    public void UpdateTime()
+    {
+        timer = 5;
     }
 
     void Update()
     {
         timer -= Time.deltaTime;
-        if (timer <= 0f)
-            Release();
+        if (timer <= 0f) { Release(); return; }
+        transform.position = target.HpUIPosition;
+        hpImage.fillAmount = target.CurHp / target.MaxHp;
     }
 }

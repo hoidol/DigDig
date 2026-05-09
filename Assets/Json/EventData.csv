@@ -1,10 +1,14 @@
-eventType	undergroundIdx	spawnMode	trigger	triggerData	cooldown	maxSpawnCount	minDistanceFromOrigin
-NormalMerchant	0	DirectionBased	Time	25/30	0	0	0
-NormalMerchant	0	DirectionBased	Time	120/60	0	0	0
-RareMerchant	0	DirectionBased	Time	50/60	0	0	0
-NormalBox	0	DirectionBased	Time	40/50	0	0	0
-RandomBox	0	DirectionBased	Time	40/50,70/30/0	0	0	0
-RandomBox	0	DirectionBased	Time	40/50,70/25/5	0	0	0
-NormalBox	0	NearPlayer	WaveEnd	0	0	0	0
-RandomBox	0	NearPlayer	WaveEnd	70/30/0	0	0	0
-RandomBox	0	NearPlayer	WaveEnd	70/30/0	0	0	0
+eventTypes,chances,triggers,ordealClearCount,hpThreshold,distancesFromPlayer
+NormalBox,,OrdealEnd,1,,10/12
+NormalMerchant,,OrdealEnd,1,,10/12
+NormalMerchant/RareMerchant,70/30,OrdealEnd,2,,10/12
+NormalMerchant,,OrdealEnd,3,,10/12
+NormalBox/RareBox,70/30,OrdealEnd,4,,10/12
+NormalMerchant/RareMerchant,70/30,OrdealEnd,5,,10/12
+NormalMerchant/RareMerchant,70/30,OrdealEnd,6,,10/12
+NormalBox,,OrdealEnd,7,,10/12
+LifeFountain,30,OrdealEnd/LowHp,2,0.6,10/12
+LifeFountain,30,OrdealEnd/LowHp,5,0.6,10/12
+LifeFountain,30,OrdealEnd/LowHp,8,0.6,10/12
+Snake,,OrdealEnd,3,,10/12
+Snake,,OrdealEnd,7,,10/12

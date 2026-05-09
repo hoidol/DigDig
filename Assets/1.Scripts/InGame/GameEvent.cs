@@ -19,40 +19,37 @@ public class PlayerDamagedEvent
     public PlayerDamagedEvent(float damage) { Damage = damage; }
 }
 
-public class WaveStartEvent
+
+
+public class ApproachingOrdealStartEvent
 {
-    public int undergroundIdx;
-    public WaveData waveData; //웨이브 데이터
-    public WaveStartEvent(WaveData waveData)
+    public OrdealProgressData ordealProgressData;
+    public ApproachingOrdealStartEvent(OrdealProgressData ordealProgressData)
     {
-        this.waveData = waveData;
-    }
-}
-public class WaveEndEvent
-{
-    public WaveData waveData;
-    public WaveEndEvent(WaveData waveData)
-    {
-        this.waveData = waveData;
+        this.ordealProgressData = ordealProgressData;
     }
 }
 
-
-public class UndergroundStartEvent
+public class OrdealStartEvent
 {
-    public UndergroundData undergroundData;
-    public UndergroundStartEvent(UndergroundData undergroundData)
+    public OrdealData ordealData;
+
+    public OrdealProgressData ordealProgressData;
+    public OrdealStartEvent(OrdealData ordealData, OrdealProgressData ordealProgressData)
     {
-        this.undergroundData = undergroundData;
+        this.ordealData = ordealData;
+        this.ordealProgressData = ordealProgressData;
     }
 }
 
-public class UndergroundEndEvent
+public class OrdealEndEvent
 {
-    public UndergroundData undergroundData;
-    public UndergroundEndEvent(UndergroundData undergroundData)
+    public OrdealData ordealData;
+    public int ordealClearCount;
+    public OrdealEndEvent(OrdealData ordealData, int ordealClearCount)
     {
-        this.undergroundData = undergroundData;
+        this.ordealData = ordealData;
+        this.ordealClearCount = ordealClearCount;
     }
 }
 public class ReloadStartEvent
@@ -136,3 +133,20 @@ public class IronNestReadyEvent
 
 // 소환 버튼 클릭 시 발행
 public class IronNestSpawnRequestEvent { }
+
+// public class AngerChangedEvent
+// {
+//     public bool isAngry;
+//     public AngerChangedEvent(bool isAngry) { this.isAngry = isAngry; }
+// }
+
+// public class OrdealTimerEvent
+// {
+//     public float remainTime;
+//     public float totalTime;
+//     public OrdealTimerEvent(float remainTime, float totalTime)
+//     {
+//         this.remainTime = remainTime;
+//         this.totalTime = totalTime;
+//     }
+// }

@@ -20,28 +20,15 @@ public class EnemyData : ScriptableObject
     public float attackPowerMultiplier;
 
     // 최종 체력 = stageData.enemyHp * 에너미 배율 * 층 배율 * 웨이브 배율
-    public float GetHp(StageData stageData = null, UndergroundData undergroundData = null, WaveData waveData = null)
+    public float GetHp()
     {
-        if (stageData == null)
-            stageData = GameManager.Instance.stageData;
-        if (undergroundData == null)
-            undergroundData = GameManager.Instance.GetUndergroundData();
-        if (waveData == null)
-            waveData = GameManager.Instance.GetWaveData();
-        return (stageData.enemyHp + waveData.hpAdd) * hpMultiplier * undergroundData.hpMultiplier;
+        return GameManager.Instance.stageData.GetOrdealProgressData().enemyHp * hpMultiplier;
     }
 
     // 최종 공격력 = stageData.enemyAttackPower * 에너미 배율 * 층 배율 * 웨이브 배율
-    public float GetAttackPower(StageData stageData = null, UndergroundData undergroundData = null, WaveData waveData = null)
+    public float GetAttackPower()
     {
-        if (stageData == null)
-            stageData = GameManager.Instance.stageData;
-        if (undergroundData == null)
-            undergroundData = GameManager.Instance.GetUndergroundData();
-        if (waveData == null)
-            waveData = GameManager.Instance.GetWaveData();
-
-        return (stageData.enemyAttackPower + waveData.attackPowerAdd) * attackPowerMultiplier * undergroundData.attackPowerMultiplier;
+        return GameManager.Instance.stageData.GetOrdealProgressData().enemyAttackPower * attackPowerMultiplier;
     }
 
 #if UNITY_EDITOR

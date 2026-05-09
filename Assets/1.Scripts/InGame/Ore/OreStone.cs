@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class OreStone : MonoBehaviour, IHittable
+public class OreStone : MonoBehaviour, IHittable, IHpUI
 {
     public const float SIZE = 1.46f;
     public Transform Transform => transform;
@@ -31,6 +31,10 @@ public class OreStone : MonoBehaviour, IHittable
     HpUI hpUI = null;
     public float curHp;
     public float maxHp;
+
+    float IHpUI.MaxHp => maxHp;
+    float IHpUI.CurHp => curHp;
+    Vector3 IHpUI.HpUIPosition => hpPoint.position;
     public int idx;
     public Vector2Int gridPos;
     public GameObject gold;
@@ -41,12 +45,11 @@ public class OreStone : MonoBehaviour, IHittable
         this.gridPos = gridPos;
 
         float distance = Vector2.Distance(Vector2.zero, transform.position);
-        float disMulti = distance / 4;
+        float disMulti = distance / 6;
         if (disMulti <= 1)
             disMulti = 1;
 
-        int undergroundIdx = GameManager.Instance.underground;
-        this.maxHp = (GameManager.Instance.stageData.initOreHps[undergroundIdx] + idx * GameManager.Instance.stageData.increaseOreHpsPerIdx[undergroundIdx]) * disMulti;
+        this.maxHp = GameManager.Instance.stageData.GetOrdealProgressData().oreHp * disMulti;
 
         curHp = maxHp;
         hpUI = null;
@@ -66,19 +69,17 @@ public class OreStone : MonoBehaviour, IHittable
         damage.Applyed(hpPoint.transform.position);
 
 
-        if (hpUI == null || hpUI.hittable != this)
-        {
+        if (hpUI == null || !hpUI.IsOwn(this))
             hpUI = HpUI.Get(this);
-            hpUI.transform.position = hpPoint.position;
-        }
-        hpUI.SetRate(curHp / maxHp);
+        hpUI.UpdateTime();
+
         if (curHp <= 0)
         {
             Destroyed(true);
         }
     }
 
-    int Exp => (GameManager.Instance.underground - 1) * 4 + idx + 1;
+    int Exp => (GameManager.Instance.ordealClearCount - 1) * 4 + idx + 1;
     public void Destroyed(bool reward)
     {
         MapManager.Instance.RegisterDestroyed(gridPos);

@@ -18,11 +18,11 @@ public class WayPointerCanvas : CanvasUI<WayPointerCanvas>
         //pointerRectTr = transform.Find("Pointer").GetComponent<RectTransform>();
     }
 
-    public WayPointer AddWayPoint(IWayPointerTarget wayPointerTarget)
+    public WayPointer AddWayPoint(IWayPointerTarget wayPointerTarget, bool effect = false, float delay = 0)
     {
         Debug.Log("WayPointerCanvas AddWayPoint");
         WayPointer wayPointer = Instantiate(wayPointerPrefab, parentTr);
-        wayPointer.SetTarget(wayPointerTarget);
+        wayPointer.Show(wayPointerTarget, effect, delay);
         wayPointers.Add(wayPointer);
         return wayPointer;
     }

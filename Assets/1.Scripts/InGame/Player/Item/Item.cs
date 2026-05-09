@@ -5,6 +5,7 @@ public abstract class Item : PlayerEnhancement
     public override string GetDescription(int c = -1, bool detail = false)
     {
         if (c <= 0) c = count;
+        Debug.Log($"gameObject.name {gameObject.name}");
         return itemData.desc;
     }
 

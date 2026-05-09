@@ -14,13 +14,13 @@ public class IronNestSpawnButton : MonoBehaviour
     void Start()
     {
         GameEventBus.Subscribe<IronNestReadyEvent>(OnReady);
-        GameEventBus.Subscribe<UndergroundStartEvent>(OnUndergroundStartEvent);
+        // GameEventBus.Subscribe<UndergroundStartEvent>(OnUndergroundStartEvent);
     }
 
-    void OnUndergroundStartEvent(UndergroundStartEvent e)
-    {
-        button.gameObject.SetActive(false);
-    }
+    // void OnUndergroundStartEvent(UndergroundStartEvent e)
+    // {
+    //     button.gameObject.SetActive(false);
+    // }
 
     void OnReady(IronNestReadyEvent e)
     {

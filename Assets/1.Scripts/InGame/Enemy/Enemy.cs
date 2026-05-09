@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-public abstract class Enemy : MonoBehaviour, IHittable
+public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
 {
     public EnemyType enemyType; // 적 종류 구분
     public EnemyState state { get; private set; } // 적 상태 - FSM 패턴
@@ -14,7 +14,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     }
 
     #region 
-    [SerializeField] float MaxHp;//{ get; private set; }
+    [SerializeField] public float MaxHp;//{ get; private set; }
     public float CurHp { get; private set; }
 
     [SerializeField] Transform root;
@@ -26,6 +26,10 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
     public Transform Transform => transform;
     HpUI hpUI;
+
+    float IHpUI.MaxHp => MaxHp;
+    float IHpUI.CurHp => CurHp;
+    Vector3 IHpUI.HpUIPosition => hpPoint.position;
     #endregion
     protected virtual void Awake()
     {
@@ -78,11 +82,6 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (state == EnemyState.Approaching) UpdateApproaching();
         else if (state == EnemyState.Attack) UpdateAttack();
 
-        //World Canvas UI
-        if (hpUI != null && hpUI.IsOwn(transform))
-        {
-            hpUI.transform.position = hpPoint.position;
-        }
     }
 
 
@@ -135,7 +134,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
             return;
         damage.Applyed(hpPoint.transform.position);
         CurHp = Mathf.Max(0, CurHp - damage.damage);
-        OnHpChanged(CurHp, MaxHp);
+        OnHpChanged();
         if (CurHp <= 0) OnDead(damage);
     }
 
@@ -144,15 +143,11 @@ public abstract class Enemy : MonoBehaviour, IHittable
         root.localScale = new Vector3(dirX >= 0 ? 1 : -1, 1, 1);
     }
 
-    protected virtual void OnHpChanged(float cur, float max)
+    protected virtual void OnHpChanged()
     {
-        if (hpUI == null)
-        {
+        if (hpUI == null || !hpUI.IsOwn(this))
             hpUI = HpUI.Get(this);
-        }
-
-        hpUI.transform.position = hpPoint.position;
-        hpUI.SetRate(cur / max);
+        hpUI.UpdateTime();
     }
 
     protected virtual void OnDead(DamageData damage)
