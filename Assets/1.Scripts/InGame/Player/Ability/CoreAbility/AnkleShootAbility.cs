@@ -3,8 +3,8 @@ using UnityEngine;
 // 앵클샷 - 적중 시 확률로 슬로우
 public class AnkleShootAbility : Ability, IBulletItem
 {
-    static readonly float[] chances   = { 0.20f, 0.30f, 0.40f };
-    static readonly float[] durations = { 2f, 2.5f, 3f };
+    static readonly float[] chances   = { 0.25f, 0.30f, 0.40f, 0.45f, 0.55f };
+    static readonly float[] durations = { 2f, 2.5f, 3f, 3.5f, 4f };
 
     public override void OnEquip(Player player) { }
     public override void OnUnequip(Player player) { }

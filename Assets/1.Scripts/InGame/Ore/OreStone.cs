@@ -36,13 +36,13 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI
     float IHpUI.CurHp => curHp;
     Vector3 IHpUI.HpUIPosition => hpPoint.position;
     public int idx;
-    public Vector2Int gridPos;
+    // public Vector2Int gridPos;
     public GameObject gold;
     bool isGoldStone;
-    public void Init(int idx, Color color, Vector2Int gridPos)
+    public void Init(int idx, Color color)//, Vector2Int gridPos
     {
         this.idx = idx;
-        this.gridPos = gridPos;
+        // this.gridPos = gridPos;
 
         float distance = Vector2.Distance(Vector2.zero, transform.position);
         float disMulti = distance / 6;
@@ -82,7 +82,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI
     int Exp => (GameManager.Instance.ordealClearCount - 1) * 4 + idx + 1;
     public void Destroyed(bool reward)
     {
-        MapManager.Instance.RegisterDestroyed(gridPos);
+        // MapManager.Instance.RegisterDestroyed(gridPos);
 
         if (reward)
         {

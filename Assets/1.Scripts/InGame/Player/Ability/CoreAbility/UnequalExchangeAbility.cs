@@ -3,13 +3,14 @@
 // 총알 1발을 충전(curBulletCount++). 최대 탄약 수 초과 및 재장전 중에는 충전 불가.
 public class UnequalExchangeAbility : Ability
 {
-    static readonly float[] chances = { 25f, 45f, 70f };
+    static readonly float[] chances = { 25f, 40f, 55f, 70f, 85f };
+    static readonly int[] bulletCounts = { 1, 1, 1, 2, 2 };
 
     public override string GetDescription(int c = -1, bool detail = false)
     {
         if (c <= 0) c = count;
         if (c < 1) c = 1;
-        return $"골드를 획득할 때마다 {chances[c - 1]}% 확률로 총알 1발을 충전합니다.";
+        return $"골드를 획득할 때마다 {chances[c - 1]}% 확률로 총알 {bulletCounts[c - 1]}발을 충전";
     }
 
     public override void OnEquip(Player player)

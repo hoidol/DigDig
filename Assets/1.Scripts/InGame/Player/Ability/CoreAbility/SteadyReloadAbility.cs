@@ -1,37 +1,55 @@
 using UnityEngine;
 
-// 정교한 장전 - 장전 중 정지 상태이면 장전 시간 감소, 움직이면 즉시 해제
+// 정교한 장전 - X초 이상 정지 시 장전 속도 증가
 public class SteadyReloadAbility : Ability
 {
-    static readonly float[] reductions = { 0.20f, 0.30f, 0.40f };
+    static readonly float[] waitTimes = { 5f, 4f, 3f, 2f, 1f };
+    static readonly float[] speedUps  = { 0.70f, 0.75f, 0.80f, 0.90f, 1.00f };
 
     Buff buff;
     bool buffActive;
+    float stillTimer;
 
-    void Update()
+    public override string GetDescription(int c = -1, bool detail = false)
     {
-        if (!Player.Instance.isReloading)
-        {
-            RemoveBuff();
-            return;
-        }
-
-        bool standing = Player.Instance.rg.linearVelocity.magnitude < 0.1f;
-        if (standing && !buffActive)
-        {
-            buff = new Buff(StatType.ReloadTime, 1f - reductions[count - 1], StatOpType.Multiply);
-            Player.Instance.AddBuff(buff);
-            buffActive = true;
-        }
-        else if (!standing && buffActive)
-        {
-            RemoveBuff();
-        }
+        if (c <= 0) c = count;
+        return $"{waitTimes[c - 1]}초 정지 시 장전 속도 {speedUps[c - 1] * 100:0}% 향상";
     }
 
     public override void OnUnequip(Player player)
     {
         RemoveBuff();
+        stillTimer = 0;
+    }
+
+    public override void UpdateEnhancement()
+    {
+        if (!buffActive) return;
+        RemoveBuff();
+        ApplyBuff();
+    }
+
+    void Update()
+    {
+        bool stopped = Player.Instance.rg.linearVelocity.sqrMagnitude < 0.01f;
+        if (stopped)
+        {
+            stillTimer += Time.deltaTime;
+            if (!buffActive && stillTimer >= waitTimes[count - 1])
+                ApplyBuff();
+        }
+        else
+        {
+            stillTimer = 0;
+            RemoveBuff();
+        }
+    }
+
+    void ApplyBuff()
+    {
+        buff = new Buff(StatType.ReloadTime, 1f / (1f + speedUps[count - 1]), StatOpType.Multiply);
+        Player.Instance.AddBuff(buff);
+        buffActive = true;
     }
 
     void RemoveBuff()
@@ -39,11 +57,5 @@ public class SteadyReloadAbility : Ability
         if (!buffActive) return;
         Player.Instance.RemoveBuff(buff);
         buffActive = false;
-    }
-
-    public override string GetDescription(int c = -1, bool detail = false)
-    {
-        if (c <= 0) c = count;
-        return $"정지 중 장전 시간 {reductions[c - 1] * 100:0}% 감소";
     }
 }

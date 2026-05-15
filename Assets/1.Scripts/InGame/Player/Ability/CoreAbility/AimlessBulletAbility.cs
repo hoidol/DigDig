@@ -3,7 +3,7 @@ using UnityEngine;
 // 오발탄 - 확률로 랜덤 방향 추가 총알 발사
 public class AimlessBulletAbility : Ability, IBulletItem
 {
-    static readonly float[] probs = { 0.30f, 0.35f, 0.40f };
+    static readonly float[] probs = { 0.30f, 0.35f, 0.45f, 0.50f, 0.60f };
 
     bool isFiring;
 

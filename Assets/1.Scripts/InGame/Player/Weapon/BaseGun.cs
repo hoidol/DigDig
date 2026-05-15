@@ -26,6 +26,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
 
     readonly BulletFiredEvent bulletFiredEvent = new();
 
+    // Player 및 의존 컴포넌트 참조 초기화
     public void Init(Player player)
     {
         this.player = player;
@@ -34,11 +35,13 @@ public abstract class BaseGun : MonoBehaviour, IGun
         mainCamera = Camera.main;
     }
 
+    // 외부에서 탄약을 직접 충전할 때 (최대치 초과 방지)
     public void AddBullet(int count = 1)
     {
         CurBulletCount = Mathf.Min(CurBulletCount + count, statMgr.BulletCount);
     }
 
+    // 시련 진입 시 무기 상태 초기화
     public void ResetOnUndergroundStart()
     {
         IsReloading = false;
@@ -50,6 +53,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         GameEventBus.Publish(new ReloadEndEvent());
     }
 
+    // 마우스(PC) 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
     {
         Vector3 mousePosition = Input.mousePosition;
@@ -58,6 +62,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         return (worldMousePos - attackPoint.position).normalized;
     }
 
+    // 매 프레임 호출: 조준 방향 갱신 + 자동 발사 판정
     public void UpdateWeapon()
     {
         if (IsReloading) return;
@@ -82,6 +87,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
 
     float attackTimer;
 
+    // AttackSpeed 간격마다 Attack 호출
     void UpdateAttackInternal()
     {
         attackTimer += Time.deltaTime;
@@ -95,9 +101,20 @@ public abstract class BaseGun : MonoBehaviour, IGun
 #endif
     }
 
+    // 다음 Attack에서 발사할 멀티샷 수 누적 (아이템/어빌리티에서 호출)
     public void RequestMulti(int count) => pendingMultiShot += count;
+    // 다음 Attack에서 발사할 확산탄 수 누적
     public void RequestSpread(int count) => pendingSpread += count;
 
+    // 추가 발사 요청 누적 후 순차 처리 시작 (중복 실행 방지) - 뒤따라 발사함
+    public void QueueExtraShot(int count = 1)
+    {
+        extraShotCount += count;
+        if (!processingExtraShots)
+            ProcessExtraShots().Forget();
+    }
+
+    // 실제 발사 처리: preAttack 콜백 → 멀티/확산 Shoot → postAttack 콜백 → 장전 판정
     public void Attack(Vector2 dir, bool fromPlayer)
     {
         LastAttackDir = dir;
@@ -109,6 +126,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         foreach (var e in player.abilityInventory.preAttackItems)
             e.OnPreAttack(player, dir);
 
+        // 멀티샷: 발사 방향에 수직으로 간격을 두어 여러 발 생성
         Vector2 perp = new(-dir.y, dir.x);
         const float MULTI_SPACING = 0.2f;
         float startOffset = -(pendingMultiShot - 1) * 0.5f * MULTI_SPACING;
@@ -118,6 +136,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
             Shoot(dir, pos);
         }
 
+        // 확산탄: 기준 방향에서 좌우 교대로 40도씩 벌려서 발사
         float baseAngle = Vector2.SignedAngle(Vector2.right, dir);
         for (int i = 0; i < pendingSpread; i++)
         {
@@ -152,9 +171,9 @@ public abstract class BaseGun : MonoBehaviour, IGun
         bulletFiredEvent.fromPlayer = fromPlayer;
         bulletFiredEvent.dir = dir;
         GameEventBus.Publish(bulletFiredEvent);
-
     }
 
+    // 총알 인스턴스 생성 후 아이템/어빌리티 효과 적용하여 발사
     public PlayerBullet Shoot(Vector2 dir, Vector2 pos)
     {
         if (pos == Vector2.zero)
@@ -174,13 +193,8 @@ public abstract class BaseGun : MonoBehaviour, IGun
         return bullet;
     }
 
-    public void QueueExtraShot(int count = 1)
-    {
-        extraShotCount += count;
-        if (!processingExtraShots)
-            ProcessExtraShots().Forget();
-    }
 
+    // 누적된 추가 발사를 짧은 딜레이 간격으로 순차 처리
     async UniTaskVoid ProcessExtraShots()
     {
         processingExtraShots = true;
@@ -196,6 +210,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         processingExtraShots = false;
     }
 
+    // 아이템/어빌리티의 콤보 공격을 순서대로 실행
     async UniTaskVoid RunComboAttacks(Vector2 dir)
     {
         foreach (var e in player.itemInventory.comboAttackItems)
@@ -204,6 +219,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
             await e.OnAttack(player, dir);
     }
 
+    // 탄약 소진 시 한 발씩 충전하는 장전 처리
     async UniTaskVoid CoReload()
     {
         IsReloading = true;
@@ -223,5 +239,4 @@ public abstract class BaseGun : MonoBehaviour, IGun
         attackTimer = statMgr.AttackSpeed;
         GameEventBus.Publish(new ReloadEndEvent());
     }
-
 }

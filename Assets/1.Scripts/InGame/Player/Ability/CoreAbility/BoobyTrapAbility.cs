@@ -4,7 +4,7 @@ using UnityEngine;
 // 부비 트랩 - 특정 이동량마다 트랩 자동 설치
 public class BoobyTrapAbility : Ability
 {
-    static readonly float[] triggerDistances = { 30f, 27f, 23f };
+    static readonly float[] triggerDistances = { 50f, 45f, 40f, 35f, 30f };
 
     public Trap trapPrefab;
 

@@ -3,7 +3,7 @@ public class BloodFrenzyAbility : Ability
 {
     Buff buff;
     const float HP_THRESHOLD = 0.3f;
-    float[] bonuses = { 0.2f, 0.3f, 0.4f };
+    float[] bonuses = { 0.4f, 0.7f, 1f, 1.4f, 2f };
     public override string GetDescription(int c = -1, bool detail = false)
     {
         if (c == -1)

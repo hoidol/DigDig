@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// 광석 관통 - 확률로 발사된 총알에 관통 부여
-public class MiningPierceAbility : Ability, IBulletItem
+// 빠른 발사 - 확률로 연속 발사
+public class QuickFireAbility : Ability, IAttackItem
 {
     static readonly float[] probs = { 0.10f, 0.15f, 0.20f, 0.25f, 0.35f };
 
@@ -9,14 +9,14 @@ public class MiningPierceAbility : Ability, IBulletItem
     {
         if (c == -1) c = count;
         if (c <= 0) c = 1;
-        return $"{probs[c - 1] * 100:0}% 확률로 관통탄 발사 (관통 +1)";
+        return $"{probs[c - 1] * 100}% 확률로 연속 발사";
     }
 
     public override void OnUnequip(Player player) { }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnAttack(Player player, Vector2 dir)
     {
         if (Random.value < probs[count - 1])
-            bullet.AddBehavior(new PierceBehavior(1));
+            player.weapon.QueueExtraShot(1);
     }
 }
