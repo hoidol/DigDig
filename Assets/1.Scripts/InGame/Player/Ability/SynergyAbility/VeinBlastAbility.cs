@@ -10,15 +10,15 @@ public class VeinBlastAbility : SynergyAbility
     public override void OnEquip(Player player)
     {
         enemyLayer = LayerMask.GetMask("Hittable");
-        GameEventBus.Subscribe<OreStoneDestroyedEvent>(OnOreDestroyed);
+        GameEventBus.Subscribe<DestroyedStoneEvent>(OnOreDestroyed);
     }
 
     public override void OnUnequip(Player player)
     {
-        GameEventBus.Unsubscribe<OreStoneDestroyedEvent>(OnOreDestroyed);
+        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnOreDestroyed);
     }
 
-    void OnOreDestroyed(OreStoneDestroyedEvent e)
+    void OnOreDestroyed(DestroyedStoneEvent e)
     {
         if (e.lastDamage.cause == null)
             return;

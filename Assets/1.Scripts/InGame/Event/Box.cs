@@ -13,7 +13,7 @@ public class Box : EventObject
             {
                 Time.timeScale = 1;
                 Player.Instance.UpdatePlayer();
-                OnDestroy();
+                Destroy();
             });
         }
     }

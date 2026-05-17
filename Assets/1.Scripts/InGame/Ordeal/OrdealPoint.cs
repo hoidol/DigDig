@@ -18,14 +18,14 @@ public class OrdealPoint : MonoBehaviour, IWayPointerTarget
     [SerializeField] protected float clearRadius = 5f;
 
 
-    public void OnAppear(Vector2 spawnPos)
+    public void Appear(Vector2 spawnPos)
     {
         curTimer = OrdealManager.WAIT_TIME;
         WayPointerCanvas.Instance.AddWayPoint(this, true, 2);
         ClearArea(transform.position);
     }
 
-    public void OnDestroy()
+    public void Destroy()
     {
         Destroy(gameObject);
         if (!entered)
@@ -45,7 +45,7 @@ public class OrdealPoint : MonoBehaviour, IWayPointerTarget
     {
         entered = false;
         this.ordealData = ordealData;
-        OnAppear(transform.position);
+        Appear(transform.position);
     }
     bool entered;
     void OnTriggerEnter2D(Collider2D collision)
@@ -55,19 +55,19 @@ public class OrdealPoint : MonoBehaviour, IWayPointerTarget
         if (collision.CompareTag("Player"))
         {
             entered = true;
-            GameEventBus.Publish(new ReachedOrdealEvent(ordealData, transform.position));
+            // GameEventBus.Publish(new ReachedOrdealEvent(ordealData, transform.position));
             WayPointerCanvas.Instance.Remove(this);
         }
     }
 }
 
-public class ReachedOrdealEvent
-{
-    public OrdealData ordealData;
-    public Vector2 pos;
-    public ReachedOrdealEvent(OrdealData ordealData, Vector2 pos)
-    {
-        this.ordealData = ordealData;
-        this.pos = pos;
-    }
-}
+// public class ReachedOrdealEvent
+// {
+//     public OrdealData ordealData;
+//     public Vector2 pos;
+//     public ReachedOrdealEvent(OrdealData ordealData, Vector2 pos)
+//     {
+//         this.ordealData = ordealData;
+//         this.pos = pos;
+//     }
+// }

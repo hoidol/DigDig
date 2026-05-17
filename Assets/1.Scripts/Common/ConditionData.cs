@@ -25,6 +25,11 @@ public class ConditionData
             if (ability == null || ability.count < count)
                 return false;
         }
+        else if (conditionType == ConditionType.TotalStatCount)
+        {
+            if (Player.Instance.statInventory.statTotalCount < count)
+                return false;
+        }
         return true;
     }
 }
@@ -36,5 +41,6 @@ public enum ConditionType
     NeedAbilityLevel,   // 해당 어빌리티가 count 레벨 이상 (value = 어빌리티 key, count = 필요 레벨)
     NeedItem,
     NeedItemCount,
+    TotalStatCount,   // 스탯 총 개수
     Count,
 }

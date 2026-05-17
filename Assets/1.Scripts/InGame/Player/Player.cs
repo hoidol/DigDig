@@ -23,6 +23,7 @@ public class Player : MonoSingleton<Player>, IPicker
     public LayerMask pickLayer;
     [SerializeField] Transform hpPoint;
 
+    public StatInventory statInventory;
     public ItemInventory itemInventory;
     public AbilityInventory abilityInventory;
     public List<MagmaBall> magmaBalls = new List<MagmaBall>();
@@ -39,7 +40,10 @@ public class Player : MonoSingleton<Player>, IPicker
 
     public Transform attackPoint => weapon.AttackPoint;
     public Vector2 MoveDirection => movement.MoveDirection;
-    public int maxDistance => movement.maxDistance;
+    public float maxDistance => movement.maxDistance;
+    public int destroyCount;
+    public float distanceMaxDistanceDestroiedStone;
+    public float distanceMinDistanceDestroiedStone;
     public Vector2 LastAttackDir => weapon.LastAttackDir;
 
     public Transform Transform => transform;
@@ -65,6 +69,7 @@ public class Player : MonoSingleton<Player>, IPicker
         magmaBalls = GetComponentsInChildren<MagmaBall>().ToList();
         itemInventory = GetComponentInChildren<ItemInventory>();
         abilityInventory = GetComponentInChildren<AbilityInventory>();
+        statInventory = GetComponentInChildren<StatInventory>();
         var statusEffectHandler = GetComponentInChildren<StatusEffectHandler>();
 
         health = GetComponentInChildren<PlayerHealth>();
@@ -81,9 +86,6 @@ public class Player : MonoSingleton<Player>, IPicker
     void Start()
     {
         // GameEventBus.Subscribe<UndergroundStartEvent>(OnUndergroundStart);
-
-
-
         UpdatePlayer();
 
         health.curHp = statMgr.MaxHp;
@@ -91,9 +93,25 @@ public class Player : MonoSingleton<Player>, IPicker
 
         movement.ResetOnUndergroundStart();
         weapon.ResetOnUndergroundStart();
+
+        destroyCount = 0;
+        distanceMaxDistanceDestroiedStone = 0f;
+        distanceMinDistanceDestroiedStone = float.MaxValue;
+        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
+    void OnDestroy()
+    {
+        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
+    }
 
+    void OnDestroyedStone(DestroyedStoneEvent e)
+    {
+        destroyCount++;
+        float dist = Vector2.Distance(transform.position, e.oreStone.transform.position);
+        if (dist > distanceMaxDistanceDestroiedStone) distanceMaxDistanceDestroiedStone = dist;
+        if (dist < distanceMinDistanceDestroiedStone) distanceMinDistanceDestroiedStone = dist;
+    }
 
     void Update()
     {
@@ -204,7 +222,7 @@ public class PlayerStatManager
 
     PlayerData playerData;
     Player player;
-    StatUpAbilityData[] statUpAbilityDatas;
+    //StatUpAbilityData[] statUpAbilityDatas;
 
     public PlayerStatManager(Player p, string key)
     {
@@ -219,7 +237,7 @@ public class PlayerStatManager
             statList.Add(ps);
             statDic.Add(ps.statType, ps);
         }
-        statUpAbilityDatas = Resources.LoadAll<StatUpAbilityData>("AbilityData/StatUpAbilityData");
+        // statUpAbilityDatas = Resources.LoadAll<StatUpAbilityData>("AbilityData/StatUpAbilityData");
         Init();
     }
 
@@ -235,13 +253,25 @@ public class PlayerStatManager
     public void UpdateStat()
     {
         Init();
-        for (int i = 0; i < statUpAbilityDatas.Length; i++)
+        //for (int i = 0; i < statUpAbilityDatas.Length; i++)
+        //{
+        //    StatUpAbility pAbility = player.abilityInventory.GetAbility(statUpAbilityDatas[i].key) as StatUpAbility;
+        //    if (pAbility == null || pAbility.count <= 0) continue;
+        //    var stat = statDic[pAbility.statType];
+        //    stat.value = pAbility.Apply(stat.value, pAbility.count);
+        //}
+        for (int i = 0; i < player.statInventory.ownStats.Count; i++)
         {
-            StatUpAbility pAbility = player.abilityInventory.GetAbility(statUpAbilityDatas[i].key) as StatUpAbility;
-            if (pAbility == null || pAbility.count <= 0) continue;
-            var stat = statDic[pAbility.statType];
-            stat.value = pAbility.Apply(stat.value, pAbility.count);
+            Stat stat = player.statInventory.ownStats[i];
+            if (stat.count <= 0) continue;
+            StatData statData = StatData.GetStatData(stat.statType.ToString());
+
+            var playerStat = statDic[stat.statType];
+            playerStat.value = statData.Apply(playerStat.value, stat.count);
         }
+
+
+
         foreach (var buff in activeBuffs)
         {
             var stat = statDic[buff.statType];

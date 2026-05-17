@@ -19,7 +19,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget
 
 
     // NpcManager.Spawn() 호출 시 위치가 결정된 뒤 실행됨
-    public virtual void OnAppear(Vector2 spawnPos)
+    public virtual void Appear(Vector2 spawnPos)
     {
         curTimer = maxTime;
         Debug.Log("EventObject OnAppear");
@@ -27,7 +27,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget
         ClearArea(transform.position);
     }
 
-    public virtual void OnDestroy()
+    public virtual void Destroy()
     {
         EventManager.Instance?.RemoveEventObject(this);
         Destroy(gameObject);

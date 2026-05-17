@@ -16,19 +16,19 @@ public class IronNestAbility : SynergyAbility
         oreDestroyCount = 0;
         bunkerActive = false;
         buttonShown = false;
-        GameEventBus.Subscribe<OreStoneDestroyedEvent>(OnOreDestroyed);
+        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
         GameEventBus.Subscribe<IronNestSpawnRequestEvent>(OnSpawnRequested);
         // GameEventBus.Subscribe<UndergroundStartEvent>(OnUndergroundStartEvent);
     }
 
     public override void OnUnequip(Player player)
     {
-        GameEventBus.Unsubscribe<OreStoneDestroyedEvent>(OnOreDestroyed);
+        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
         GameEventBus.Unsubscribe<IronNestSpawnRequestEvent>(OnSpawnRequested);
     }
 
 
-    void OnOreDestroyed(OreStoneDestroyedEvent e)
+    void OnDestroyedStone(DestroyedStoneEvent e)
     {
         if (bunkerActive || buttonShown) return;
 

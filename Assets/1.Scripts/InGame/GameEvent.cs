@@ -21,14 +21,14 @@ public class PlayerDamagedEvent
 
 
 
-public class ApproachingOrdealStartEvent
-{
-    public OrdealProgressData ordealProgressData;
-    public ApproachingOrdealStartEvent(OrdealProgressData ordealProgressData)
-    {
-        this.ordealProgressData = ordealProgressData;
-    }
-}
+// public class ApproachingOrdealStartEvent
+// {
+//     public OrdealProgressData ordealProgressData;
+//     public ApproachingOrdealStartEvent(OrdealProgressData ordealProgressData)
+//     {
+//         this.ordealProgressData = ordealProgressData;
+//     }
+// }
 
 public class OrdealStartEvent
 {

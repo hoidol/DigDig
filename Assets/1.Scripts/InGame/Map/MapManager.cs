@@ -17,22 +17,23 @@ public class MapManager : MonoSingleton<MapManager>
     [SerializeField] private float[] weights;
     readonly List<OreStone> activeOres = new();
 
-    private async void Start()
+    public void SpawnMap()
+    {
+        weights = new float[weightCurves.Length];
+        SpawnTile(Vector2.zero, 36, MIN_RANGE_RADIUS);
+    }
+    void Start()
     {
         GameEventBus.Subscribe<OrdealEndEvent>(OnOrdealEndEvent);
-        GameEventBus.Subscribe<ReachedOrdealEvent>(OnReachedOrdealEvent);
 
-        weights = new float[weightCurves.Length];
-        SpawnTile(Vector2.zero, 36, 6);
-    }
-    void OnReachedOrdealEvent(ReachedOrdealEvent e)
-    {
-        //
     }
 
+    public const float MIN_RANGE_RADIUS = 6f;
     void OnOrdealEndEvent(OrdealEndEvent e)
     {
+
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.T))
@@ -40,7 +41,7 @@ public class MapManager : MonoSingleton<MapManager>
             foreach (var ore in activeOres)
                 if (ore != null) ore.Return();
             activeOres.Clear();
-            SpawnTile(Player.Instance.transform.position, 36, 6);
+            SpawnTile(Player.Instance.transform.position, 36, MIN_RANGE_RADIUS);
         }
     }
     public void SpawnTile(Vector2 pos, float radius, float exclueRadius)
@@ -63,13 +64,13 @@ public class MapManager : MonoSingleton<MapManager>
                 int colorIdx = PickColorIndex(dist);
                 OreStone ore = OreStone.Get(oreStonePrefab, cellPos, transform);
                 ore.Init(colorIdx, fillColors[colorIdx]);
-                ore.gameObject.SetActive(false);
+                //ore.gameObject.SetActive(false);
                 activeOres.Add(ore);
                 spawnList.Add((ore, dist));
             }
         }
 
-        RevealTiles(spawnList).Forget();
+        // RevealTiles(spawnList).Forget();
     }
 
     async UniTaskVoid RevealTiles(List<(OreStone ore, float dist)> spawnList)

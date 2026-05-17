@@ -153,7 +153,7 @@ public class EventManager : MonoSingleton<EventManager>
 
         EventObject eventObject = Instantiate(prefab, spawnPos, Quaternion.identity);
         activeEventObjects.Add(eventObject);
-        eventObject.OnAppear(spawnPos);
+        eventObject.Appear(spawnPos);
         return eventObject;
     }
 

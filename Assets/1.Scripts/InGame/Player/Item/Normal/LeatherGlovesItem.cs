@@ -10,13 +10,13 @@ public class LeatherGloves : Item
     {
         buff = new Buff(StatType.AttackSpeed, 1f + 0.1f * count, StatOpType.Multiply);
         player.AddBuff(buff);
-        GameEventBus.Subscribe<OreStoneDestroyedEvent>(OnOreStoneDestroyedEvent);
+        GameEventBus.Subscribe<DestroyedStoneEvent>(OnOreStoneDestroyedEvent);
     }
     int overlapCount;
     int MAX_OVERLAP_COUNT = 5;
     float timer;
     float duraction = 5;
-    public void OnOreStoneDestroyedEvent(OreStoneDestroyedEvent e)
+    public void OnOreStoneDestroyedEvent(DestroyedStoneEvent e)
     {
         overlapCount++;
         if (overlapCount > MAX_OVERLAP_COUNT)
@@ -50,6 +50,6 @@ public class LeatherGloves : Item
     public override void OnUnequip(Player player)
     {
         player.RemoveBuff(buff);
-        GameEventBus.Unsubscribe<OreStoneDestroyedEvent>(OnOreStoneDestroyedEvent);
+        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnOreStoneDestroyedEvent);
     }
 }

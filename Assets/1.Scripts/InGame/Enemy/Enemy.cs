@@ -24,6 +24,9 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
     protected float attackTimer;
     protected bool attacking;
 
+    bool isPushed;
+    Coroutine pushCoroutine;
+
     public Transform Transform => transform;
     HpUI hpUI;
 
@@ -73,6 +76,9 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
             return;
         }
 
+        if (isPushed)
+            return;
+
         if (attackTimer < enemyData.attackSpeed)
             attackTimer += Time.deltaTime;
 
@@ -82,6 +88,22 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
         if (state == EnemyState.Approaching) UpdateApproaching();
         else if (state == EnemyState.Attack) UpdateAttack();
 
+    }
+
+    public void Push(Vector2 force)
+    {
+        if (state == EnemyState.Dead) return;
+        if (pushCoroutine != null) StopCoroutine(pushCoroutine);
+        pushCoroutine = StartCoroutine(PushRoutine(force));
+    }
+
+    IEnumerator PushRoutine(Vector2 force)
+    {
+        isPushed = true;
+        rg2d.AddForce(force, ForceMode2D.Impulse);
+        yield return new WaitUntil(() => rg2d.linearVelocity.sqrMagnitude < 0.01f);
+        isPushed = false;
+        pushCoroutine = null;
     }
 
 

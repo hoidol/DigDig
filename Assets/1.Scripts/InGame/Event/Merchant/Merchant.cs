@@ -32,9 +32,9 @@ public class Merchant : EventObject
         curTimer -= Time.deltaTime;
     }
 
-    public override void OnAppear(Vector2 spawnPos)
+    public override void Appear(Vector2 spawnPos)
     {
-        base.OnAppear(spawnPos);
+        base.Appear(spawnPos);
         isAppear = true;
         //Vector2 pos = EventManager.Instance.CalcSpawnPosition();
         // transform.position = pos;
@@ -47,7 +47,7 @@ public class Merchant : EventObject
         isAppear = false;
         ItemStoreCanvas.Instance.CloseCanvas(transform);
         GameEventBus.Publish(new MerchantClosedEvent());
-        OnDestroy();
+        Destroy();
     }
     public void OnTriggerEnter2D(Collider2D collision)
     {

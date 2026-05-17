@@ -1,11 +1,11 @@
-clearCount	isBoss	ordealLevels	oreHp	enemyHp	enemyAttackPower
-0	FALSE	1	7	9	3
-1	FALSE	2	14	16	5
-2	FALSE	2/4	21	23	7
-3	FALSE	1	28	30	9
-4	FALSE	2	35	37	11
-5	FALSE	2/4	42	44	13
-6	FALSE	1	49	51	15
-7	FALSE	2	56	58	17
-8	FALSE	2/4	63	65	19
-9	TRUE		70	72	21
+clearCount	isBoss	ordealLevels	enemyHp	enemyAttackPower
+0	FALSE	1	11	3
+1	FALSE	2	18	5
+2	FALSE	4	25	7
+3	FALSE	1	32	9
+4	FALSE	2	39	11
+5	FALSE	4	46	13
+6	FALSE	1	53	15
+7	FALSE	2	60	17
+8	FALSE	4	67	19
+9	TRUE	1	74	21

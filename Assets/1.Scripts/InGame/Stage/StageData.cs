@@ -15,6 +15,8 @@ public class StageData : ScriptableObject
     public string key;
     public string Title => key;
     public int level;
+
+    public float oreHp;
     public OrdealProgressData[] ordealProgressDatas;
     public EventData[] eventDatas;
 
@@ -24,8 +26,6 @@ public class StageData : ScriptableObject
         if (count < 0)
             count = GameManager.Instance.ordealClearCount;
         return ordealProgressDatas[count];
-
-
     }
 
 #if UNITY_EDITOR
@@ -50,6 +50,8 @@ public class StageData : ScriptableObject
         int iLevel = System.Array.IndexOf(headers, "level");
         int iBossName = System.Array.IndexOf(headers, "bossName");
 
+        int iOreHp = System.Array.IndexOf(headers, "oreHp");
+
         for (int i = 1; i < lines.Length; i++)
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
@@ -57,6 +59,7 @@ public class StageData : ScriptableObject
             if (Col(cols, iKey) != key) continue;
 
             if (int.TryParse(Col(cols, iLevel), out var lv)) level = lv;
+            if (float.TryParse(Col(cols, iOreHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float oh)) oreHp = oh;
 
             string bossName = Col(cols, iBossName);
             if (!string.IsNullOrEmpty(bossName))
@@ -88,12 +91,11 @@ public class StageData : ScriptableObject
         string[] headers = lines[0].Split('\t');
         for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
 
-        int iClearCount   = System.Array.IndexOf(headers, "clearCount");
-        int iIsBoss       = System.Array.IndexOf(headers, "isBoss");
+        int iClearCount = System.Array.IndexOf(headers, "clearCount");
+        int iIsBoss = System.Array.IndexOf(headers, "isBoss");
         int iOrdealLevels = System.Array.IndexOf(headers, "ordealLevels");
-        int iOreHp        = System.Array.IndexOf(headers, "oreHp");
-        int iEnemyHp      = System.Array.IndexOf(headers, "enemyHp");
-        int iEnemyAtk     = System.Array.IndexOf(headers, "enemyAttackPower");
+        int iEnemyHp = System.Array.IndexOf(headers, "enemyHp");
+        int iEnemyAtk = System.Array.IndexOf(headers, "enemyAttackPower");
 
         var list = new List<OrdealProgressData>();
         for (int i = 1; i < lines.Length; i++)
@@ -105,18 +107,11 @@ public class StageData : ScriptableObject
             if (int.TryParse(Col(cols, iClearCount), out int cc)) d.clearCount = cc;
             d.isBoss = Col(cols, iIsBoss).ToUpper() == "TRUE";
 
-            string levelsRaw = Col(cols, iOrdealLevels);
-            if (!string.IsNullOrEmpty(levelsRaw))
-            {
-                string[] parts = levelsRaw.Split('/');
-                var lvList = new List<int>();
-                foreach (var p in parts)
-                    if (int.TryParse(p.Trim(), out int lv)) lvList.Add(lv);
-                d.ordealLevels = lvList.ToArray();
-            }
 
-            if (float.TryParse(Col(cols, iOreHp),    NumberStyles.Float, CultureInfo.InvariantCulture, out float oh)) d.oreHp = oh;
-            if (float.TryParse(Col(cols, iEnemyHp),  NumberStyles.Float, CultureInfo.InvariantCulture, out float eh)) d.enemyHp = eh;
+            if (int.TryParse(Col(cols, iOrdealLevels), out int ol)) d.ordealLevel = ol;
+
+
+            if (float.TryParse(Col(cols, iEnemyHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float eh)) d.enemyHp = eh;
             if (float.TryParse(Col(cols, iEnemyAtk), NumberStyles.Float, CultureInfo.InvariantCulture, out float ea)) d.enemyAttackPower = ea;
             list.Add(d);
         }
@@ -218,8 +213,7 @@ public class OrdealProgressData
 {
     public int clearCount;
     public bool isBoss;
-    public int[] ordealLevels;
-    public float oreHp;
+    public int ordealLevel;
     public float enemyHp;
     public float enemyAttackPower;
 }

@@ -24,11 +24,13 @@ public class GameManager : MonoSingleton<GameManager>
     {
         GameEventBus.Clear();
         stageData = Resources.Load<StageData>($"StageData/{User.Instance.stageKey}");
+        MapManager.Instance.SpawnMap();
     }
+
     void Start()
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
-        GameEventBus.Subscribe<ReachedOrdealEvent>(OnReachedOrdealEvent);
+
         FadeCanvs.Instance.FadeIn("망각의 늪", () =>
         {
             StargGame();
@@ -62,43 +64,40 @@ public class GameManager : MonoSingleton<GameManager>
         () =>
         {
             isPlaying = true;
-            ApproachingOrdeal();
             StartCoroutine(CoSpawn());
+            StartOrdeal();
 
         });
 
         isClear = false;
         GameEventBus.Publish(new StartGameEvent(stageData));
     }
-    public void ApproachingOrdeal()
-    {
-        gameState = GameState.ApproachingOrdeal;
-        GameEventBus.Publish(new ApproachingOrdealStartEvent(stageData.GetOrdealProgressData()));
-    }
 
-    void OnReachedOrdealEvent(ReachedOrdealEvent e)
-    {
-        if (gameState == GameState.ApproachingOrdeal)
-        {
-            StartOrdeal(e.ordealData);
-        }
-    }
-
-    public void StartOrdeal(OrdealData ordealData)
+    public void StartOrdeal()
     {
         gameState = GameState.UndergoingOrdeal;
-        GameEventBus.Publish(new OrdealStartEvent(ordealData, stageData.GetOrdealProgressData()));
+        OrdealProgressData ordealProgressData = stageData.GetOrdealProgressData();
+        if (ordealProgressData.isBoss)
+        {
+            StartBoss();
+            return;
+        }
+        else
+        {
+            OrdealManager.Instance.StartOrdeal(ordealProgressData);
+        }
 
     }
+
     public void EndOrdeal(OrdealData ordealData)
     {
         ordealClearCount++;
         //여기서 특수 이벤트 실행 처리!
         gameState = GameState.ClearOrdeal;
-
         GameEventBus.Publish(new OrdealEndEvent(ordealData, ordealClearCount));
 
-        ApproachingOrdeal();
+        //10초 뒤에 시작하기
+        Invoke(nameof(StartOrdeal), 10f);
     }
 
     void StartBoss()
@@ -174,9 +173,9 @@ public class StartGameEvent
 }
 public enum GameState
 {
-    ApproachingOrdeal, //시련 다가가는중
+    //ApproachingOrdeal, //시련 다가가는중
     UndergoingOrdeal, //시련 중
-    ClearOrdeal, //시련 중
+    ClearOrdeal, //시련 종료
     Boss
 }
 public class BossEvent

@@ -1,2 +1,2 @@
-key	level	difficulty	bossName	enemyHp	enemyAttackPower
-Greed	1	1	TigerWraithBoss	15	3
+key	level	difficulty	bossName	oreHp
+Greed	1	1	TigerWraithBoss	21

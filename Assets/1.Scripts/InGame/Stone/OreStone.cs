@@ -45,11 +45,11 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI
         // this.gridPos = gridPos;
 
         float distance = Vector2.Distance(Vector2.zero, transform.position);
-        float disMulti = distance / 6;
+        float disMulti = distance / 4.5f;
         if (disMulti <= 1)
             disMulti = 1;
 
-        this.maxHp = GameManager.Instance.stageData.GetOrdealProgressData().oreHp * disMulti;
+        this.maxHp = GameManager.Instance.stageData.oreHp * disMulti;
 
         curHp = maxHp;
         hpUI = null;
@@ -92,7 +92,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI
             GameManager.Instance.AddDestroyOreStone();
             EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
             Player.Instance.AddExp(idx + 1);
-            GameEventBus.Publish(new OreStoneDestroyedEvent(this, lastDamage));
+            GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
         }
 
         Return();
@@ -104,11 +104,11 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI
     }
 }
 
-public class OreStoneDestroyedEvent
+public class DestroyedStoneEvent
 {
     public OreStone oreStone;
     public DamageData lastDamage;
-    public OreStoneDestroyedEvent(OreStone stone, DamageData lastDamage)
+    public DestroyedStoneEvent(OreStone stone, DamageData lastDamage)
     {
         oreStone = stone;
         this.lastDamage = lastDamage;

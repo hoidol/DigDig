@@ -4,11 +4,8 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - MagmaCore
-  - Enemy
   - OreStone
-  - Gold
-  - Bullet
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -16,11 +13,7 @@ TagManager:
   - Hittable
   - Water
   - UI
-  - Pickable
   - Player
-  - OnlyHittable
-  - PhysicArea
-  - PlayerSide
   - 
   - 
   - 
@@ -33,6 +26,10 @@ TagManager:
   - 
   - 
   - 
+  - 
+  - Layer 1
+  - Layer 2
+  - Layer 3
   - 
   - 
   - 
@@ -43,14 +40,17 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: UnderObject
-    uniqueID: 4145294567
+  - name: UnderDefault
+    uniqueID: 2425651459
     locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: WorldUI
-    uniqueID: 1775821121
+  - name: OverDefault
+    uniqueID: 4250941897
+    locked: 0
+  - name: UI
+    uniqueID: 4189426099
     locked: 0
   m_RenderingLayers:
   - Default

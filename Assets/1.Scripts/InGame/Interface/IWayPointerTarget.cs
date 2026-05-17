@@ -6,8 +6,8 @@ public interface IWayPointerTarget
     Sprite Thum { get; }
     float MaxTime { get; }
     float CurTimer { get; }
-    void OnAppear(Vector2 spawnPos);
-    void OnDestroy();
+    void Appear(Vector2 spawnPos);
+    void Destroy();
 
     void ClearArea(Vector2 pos);
 }

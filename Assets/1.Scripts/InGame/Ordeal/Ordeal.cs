@@ -4,7 +4,7 @@ using UnityEngine;
 public class Ordeal : MonoBehaviour
 {
     public OrdealType ordealType;
-    OrdealData ordealData;
+    public OrdealData ordealData;
     public EnemyPattern enemyPattern;
     public virtual void StartOrdeal(OrdealData ordealData)
     {

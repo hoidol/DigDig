@@ -13,12 +13,12 @@ public class ChainPickaxeItem : Item
 
     public override void OnEquip(Player player)
     {
-        GameEventBus.Subscribe<OreStoneDestroyedEvent>(OnOreDestroyed);
+        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
     public override void OnUnequip(Player player)
     {
-        GameEventBus.Unsubscribe<OreStoneDestroyedEvent>(OnOreDestroyed);
+        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
     public override string GetDescription(int c = -1, bool detail = false)
@@ -28,7 +28,7 @@ public class ChainPickaxeItem : Item
         return $"총알로 광석 파괴 시 {chance}% 확률로 주변 광석 {c}개 연쇄 타격";
     }
 
-    void OnOreDestroyed(OreStoneDestroyedEvent e)
+    void OnDestroyedStone(DestroyedStoneEvent e)
     {
         if (e.lastDamage == null || e.lastDamage.cause == null) return;
         if (e.lastDamage.cause.GetComponent<PlayerBullet>() == null) return;

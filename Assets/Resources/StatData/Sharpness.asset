@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5313931225564a61bc9c097afe90512, type: 3}
+  m_Name: Sharpness
+  m_EditorClassIdentifier: 
+  statType: 7
+  desc: 
+  thum: {fileID: 0}
+  maxLv: -1
+  conditions:
+  - conditionType: 5
+    value: 
+    count: 5
+  initValue: 0
+  increasedValue: 3
+  opType: 0

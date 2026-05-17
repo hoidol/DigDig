@@ -8,15 +8,15 @@ public class CrystalExplosionItem : Item
 
     public override void OnEquip(Player player)
     {
-        GameEventBus.Subscribe<OreStoneDestroyedEvent>(OnOreDestroyed);
+        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
     public override void OnUnequip(Player player)
     {
-        GameEventBus.Unsubscribe<OreStoneDestroyedEvent>(OnOreDestroyed);
+        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
-    void OnOreDestroyed(OreStoneDestroyedEvent e)
+    void OnDestroyedStone(DestroyedStoneEvent e)
     {
         AOEUtil.DamageEnemies(
             e.oreStone.transform.position,

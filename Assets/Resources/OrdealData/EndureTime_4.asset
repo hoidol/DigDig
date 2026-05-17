@@ -16,7 +16,7 @@ MonoBehaviour:
   level: 4
   isHard: 1
   type: 1
-  data: 120
-  desc: "120\uCD08\uB97C \uBC84\uD2F0\uC2ED\uC2DC\uC624"
+  data: 180
+  desc: "180\uCD08\uB97C \uBC84\uD2F0\uC2ED\uC2DC\uC624"
   enemyPatternType: 2
   enemyPatternData: {fileID: 11400000, guid: b29417fe39ef2431cb602e5302f3e2b1, type: 2}

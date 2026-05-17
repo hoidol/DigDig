@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     Player player;
 
     public Vector2 MoveDirection { get; private set; }
-    public int maxDistance { get; private set; }
+    public float maxDistance { get; private set; }
     float maxDistanceSqr;
 
     public void Init(Player player, Rigidbody2D rg, Animator animator, Transform bodyRootTr, Joystick moveJoystick)

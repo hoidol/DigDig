@@ -2,7 +2,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System;
-
+using TMPro;
 public class WayPointer : MonoBehaviour
 {
     Camera mainCamera;
@@ -12,6 +12,7 @@ public class WayPointer : MonoBehaviour
     public Transform directionTr;
     public Image thumImage;
     public Image timerImage;
+    public TMP_Text distanceText;
 
     bool isPlayingEffect;
 
@@ -73,6 +74,7 @@ public class WayPointer : MonoBehaviour
 
         timerImage.fillAmount = wayPointerTarget.CurTimer / wayPointerTarget.MaxTime;
         thumImage.sprite = wayPointerTarget.Thum;
+        distanceText.text = $"{Vector2.Distance(Player.Instance.bodyCenterTr.position, wayPointerTarget.Transform.position):F1}M";
 
         Vector3 toPos = wayPointerTarget.Transform.position;
         Vector3 fromPos = mainCamera.transform.position;

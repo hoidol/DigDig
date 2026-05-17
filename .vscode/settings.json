@@ -56,5 +56,8 @@
         "temp/": true,
         "Temp/": true
     },
+    "editor.suggest.showWords": false,
+    "editor.inlayHints.enabled": "on",
+    "dotnet.backgroundAnalysis.analyzerDiagnosticsScope": "fullSolution",
     "dotnet.defaultSolution": "DigDig.sln"
 }

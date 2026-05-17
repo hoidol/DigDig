@@ -14,66 +14,57 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Greed
   level: 1
+  oreHp: 21
   ordealProgressDatas:
   - clearCount: 0
     isBoss: 0
-    ordealLevels: 01000000
-    oreHp: 3
-    enemyHp: 5
+    ordealLevel: 1
+    enemyHp: 11
     enemyAttackPower: 3
   - clearCount: 1
     isBoss: 0
-    ordealLevels: 02000000
-    oreHp: 7
-    enemyHp: 16
+    ordealLevel: 2
+    enemyHp: 18
     enemyAttackPower: 5
   - clearCount: 2
     isBoss: 0
-    ordealLevels: 0200000004000000
-    oreHp: 21
-    enemyHp: 23
+    ordealLevel: 4
+    enemyHp: 25
     enemyAttackPower: 7
   - clearCount: 3
     isBoss: 0
-    ordealLevels: 01000000
-    oreHp: 28
-    enemyHp: 30
+    ordealLevel: 1
+    enemyHp: 32
     enemyAttackPower: 9
   - clearCount: 4
     isBoss: 0
-    ordealLevels: 02000000
-    oreHp: 35
-    enemyHp: 37
+    ordealLevel: 2
+    enemyHp: 39
     enemyAttackPower: 11
   - clearCount: 5
     isBoss: 0
-    ordealLevels: 0200000004000000
-    oreHp: 42
-    enemyHp: 44
+    ordealLevel: 4
+    enemyHp: 46
     enemyAttackPower: 13
   - clearCount: 6
     isBoss: 0
-    ordealLevels: 01000000
-    oreHp: 49
-    enemyHp: 51
+    ordealLevel: 1
+    enemyHp: 53
     enemyAttackPower: 15
   - clearCount: 7
     isBoss: 0
-    ordealLevels: 02000000
-    oreHp: 56
-    enemyHp: 58
+    ordealLevel: 2
+    enemyHp: 60
     enemyAttackPower: 17
   - clearCount: 8
     isBoss: 0
-    ordealLevels: 0200000004000000
-    oreHp: 63
-    enemyHp: 65
+    ordealLevel: 4
+    enemyHp: 67
     enemyAttackPower: 19
   - clearCount: 9
     isBoss: 1
-    ordealLevels: 
-    oreHp: 70
-    enemyHp: 72
+    ordealLevel: 1
+    enemyHp: 74
     enemyAttackPower: 21
   eventDatas:
   - eventTypes: 06000000
