@@ -8,7 +8,7 @@ public class ReloadPanel : MonoBehaviour
     public List<GameObject> bulletUIs;
     public HorizontalLayoutGroup horizontalLayoutGroup;
     public GameObject bulletUIPrefab;
-    public TMP_Text bulletText;
+    // public TMP_Text bulletText;
     int maxCount;
 
     void Start()
@@ -38,7 +38,7 @@ public class ReloadPanel : MonoBehaviour
             horizontalLayoutGroup.enabled = false;
         }
 
-        bulletText.text = $"{e.player.curBulletCount}/{maxCount}";
+        // bulletText.text = $"{e.player.curBulletCount}/{maxCount}";
     }
 
     void OnBulletFired(BulletFiredEvent e)
@@ -56,6 +56,6 @@ public class ReloadPanel : MonoBehaviour
         for (int i = 0; i < bulletUIs.Count; i++)
             bulletUIs[i].SetActive(i < cur);
 
-        bulletText.text = $"{cur}/{max}";
+        // bulletText.text = $"{cur}/{max}";
     }
 }

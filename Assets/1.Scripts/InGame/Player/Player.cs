@@ -191,7 +191,7 @@ public class Player : MonoSingleton<Player>, IPicker
         if (l == -1) l = lv;
         if (maxExp == 0 || levelUped)
         {
-            maxExp = 3 + l * 3;
+            maxExp = 3 + l * 5;
             levelUped = false;
         }
         return maxExp;
@@ -263,11 +263,11 @@ public class PlayerStatManager
         for (int i = 0; i < player.statInventory.ownStats.Count; i++)
         {
             Stat stat = player.statInventory.ownStats[i];
-            if (stat.count <= 0) continue;
+            if (stat.lv <= 0) continue;
             StatData statData = StatData.GetStatData(stat.statType.ToString());
 
             var playerStat = statDic[stat.statType];
-            playerStat.value = statData.Apply(playerStat.value, stat.count);
+            playerStat.value = statData.Apply(playerStat.value, stat.lv);
         }
 
 

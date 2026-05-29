@@ -14,10 +14,8 @@ public class DepthRewardAbility : Ability
         return (count + 1) * 5;
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = 1;
-
-        return $"골드 (시련 클리어 횟수+1 * 5)획득";
+        return "골드 (시련 클리어 횟수+1 * 5) 획득";
     }
 }

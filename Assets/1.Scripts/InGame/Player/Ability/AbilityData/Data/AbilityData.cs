@@ -28,11 +28,9 @@ public class AbilityData : ScriptableObject
         return true;
     }
     public string Title => key;
-    public string Description(int c = -1)
+    public string Description()
     {
-        if (c < 0)
-            c = 1;
-        return abilityPrefab.GetDescription(c);
+        return abilityPrefab.GetDescription();
     }
 
     public static AbilityData GetAbilityData(string key)

@@ -18,13 +18,13 @@ public class SynergyData : ScriptableObject
     public bool CanPickSynergyAbility()
     {
         Ability sAbility = Player.Instance.abilityInventory.GetAbility(synergyAbilityKey);
-        if (sAbility != null && sAbility.count > 0)
+        if (sAbility != null)
             return false;
 
         bool notEnough = abilitieResources.Any(e =>
             {
                 Ability a = Player.Instance.abilityInventory.GetAbility(e.key);
-                return a == null || a.count < e.count;
+                return a == null;
             });
         return !notEnough;
     }

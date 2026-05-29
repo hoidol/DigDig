@@ -1,14 +1,15 @@
 using UnityEngine;
 
+// 스킬 창: 1% 확률로 즉사
 public class SkillSpearItem : Item, IBulletItem
 {
-    public float instakillChance = 0.01f; // 1%
+    const float INSTAKILL_CHANCE = 0.01f;
 
     public override void OnEquip(Player player) { }
     public override void OnUnequip(Player player) { }
 
     public void OnBulletFired(PlayerBullet bullet)
     {
-        bullet.AddBehavior(new InstakillBehavior(instakillChance * count));
+        bullet.AddBehavior(new InstakillBehavior(INSTAKILL_CHANCE));
     }
 }

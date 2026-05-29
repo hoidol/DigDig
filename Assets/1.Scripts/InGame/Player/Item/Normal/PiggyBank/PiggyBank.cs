@@ -1,54 +1,34 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-// 골드를 줍고 플레이어에게 전달한 뒤 사라지는 저금통
+// 골드를 자동으로 수집. 골드 없으면 플레이어 오른쪽 상단에 대기.
 public class PiggyBank : MonoBehaviour, IPicker
 {
     public Transform Transform => transform;
 
-    int maxPickCount;
-    float moveSpeed;
-    Action onFinished;
+    float moveSpeed = 4f;
 
-    int pickedCount;
     readonly List<Collider2D> claimedGolds = new();
     CancellationTokenSource cts;
 
-    static readonly int pickableLayer = -1; // 초기화는 Init에서
+    static readonly Vector3 IDLE_OFFSET = new Vector3(0.8f, 0.8f, 0);
 
-    public void Init(int maxPickCount, float moveSpeed, Action onFinished)
+    public void Init(float moveSpeed)
     {
-        this.maxPickCount = maxPickCount;
         this.moveSpeed = moveSpeed;
-        this.onFinished = onFinished;
-        pickedCount = 0;
         claimedGolds.Clear();
 
+        cts?.Cancel();
         cts = new CancellationTokenSource();
         CollectLoop(cts.Token).Forget();
-    }
-
-    public void UpdateStats(int newMaxPickCount, float newMoveSpeed)
-    {
-        maxPickCount = newMaxPickCount;
-        moveSpeed = newMoveSpeed;
     }
 
     public void PickUp(IPickable pickable)
     {
         pickable.PickedUp();
         Player.Instance.AddGold(1);
-        pickedCount++;
-
-        if (pickedCount >= maxPickCount)
-        {
-            cts?.Cancel();
-            Destroy(gameObject);
-            onFinished?.Invoke();
-        }
     }
 
     async UniTaskVoid CollectLoop(CancellationToken token)
@@ -61,13 +41,12 @@ public class PiggyBank : MonoBehaviour, IPicker
 
             if (target == null)
             {
+                MoveToIdlePosition();
                 await UniTask.Yield(token);
                 continue;
             }
 
             IPickable pickable = target.GetComponent<IPickable>();
-
-            // 목표 골드로 이동
             await MoveToward(pickable, token);
             if (token.IsCancellationRequested) return;
 
@@ -76,6 +55,12 @@ public class PiggyBank : MonoBehaviour, IPicker
 
             await UniTask.Yield(token);
         }
+    }
+
+    void MoveToIdlePosition()
+    {
+        Vector3 target = Player.Instance.transform.position + IDLE_OFFSET;
+        transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
     }
 
     Collider2D FindNearestGold(int mask)

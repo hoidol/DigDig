@@ -15,9 +15,10 @@ MonoBehaviour:
   patternType: 0
   enemySpawnPatternDatas:
   - enemyType: 0
-    intervalRange: {x: 2, y: 3}
-    countRange: {x: 2, y: 3}
+    intervalRange: {x: 6, y: 9}
+    countRange: {x: 1, y: 2}
+    repeat: 0
   - enemyType: 1
-    intervalRange: {x: 7, y: 10}
+    intervalRange: {x: 10, y: 15}
     countRange: {x: 1, y: 1}
-  enemyPatternPrefab: {fileID: 6552531467921720064, guid: 8279f7d836d3744cbad64fdda85fc3d9, type: 3}
+    repeat: 0

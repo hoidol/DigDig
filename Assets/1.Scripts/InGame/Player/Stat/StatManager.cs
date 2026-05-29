@@ -20,9 +20,6 @@ public class StatManager : MonoSingleton<StatManager>
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnOreStoneDestroyed);
 
-        SpawnStatSpawn(MapManager.MIN_RANGE_RADIUS + OreStone.SIZE * 2, true);
-        SpawnStatSpawn(MapManager.MIN_RANGE_RADIUS + OreStone.SIZE * 5, true);
-        SpawnStatSpawn(MapManager.MIN_RANGE_RADIUS + OreStone.SIZE * 8, true);
     }
 
 
@@ -34,7 +31,7 @@ public class StatManager : MonoSingleton<StatManager>
     Vector2 randomGap = new Vector2(1f, 2.5f);
     private void OnStartGame(StartGameEvent e)
     {
-        Debug.Log("StatManager OnStartGame");
+        // Debug.Log("StatManager OnStartGame");
     }
     float spawnTime = 15;
     float timer = 0;
@@ -73,7 +70,7 @@ public class StatManager : MonoSingleton<StatManager>
         if (far <= 0)
             far = minDistance + Random.Range(randomGap.x, randomGap.y);
 
-        Vector2 spawnPosition = Random.insideUnitCircle * far;
+        Vector2 spawnPosition = Random.insideUnitCircle.normalized * far;
         for (int i = 0; i < statStones.Count; i++)
         {
             if (statStones[i] != null)
@@ -82,7 +79,7 @@ public class StatManager : MonoSingleton<StatManager>
                 if (dist < 4)
                 {
                     // 너무 가까우면 스폰 위치 재설정
-                    spawnPosition = Random.insideUnitCircle * far;
+                    spawnPosition = Random.insideUnitCircle.normalized * far;
                     i = -1; // 처음부터 다시 체크
                 }
             }
@@ -94,7 +91,7 @@ public class StatManager : MonoSingleton<StatManager>
         int lv = 1;
         if (Random.Range(0f, 100) < 20)
             lv = 2;
-
+        spawnPosition = MapManager.SnappedPosition(spawnPosition);
 
         List<StatData> statDatas = statDataDic.Values.Where(data => data.Unlocked()).ToList();
         StatData statData = statDatas[Random.Range(0, statDatas.Count)];
@@ -118,10 +115,9 @@ public class StatManager : MonoSingleton<StatManager>
             return null;
         }
     }
-
-    class StatSpawnCount
+    public List<StatData> GetStatDatas(int count)
     {
-        public StatType statType;
-        public int count;
+        List<StatData> statDatas = statDataDic.Values.Where(data => data.Unlocked()).ToList();
+        return statDatas.OrderBy(x => Random.value).Take(count).ToList();
     }
 }

@@ -25,9 +25,8 @@ public class ScatterVolleyAbility : SynergyAbility, IAttackItem
         }
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
         return $"공격 시 {prob * 100:0}% 확률로 {bulletCount}방향 방사형 탄 발사 (공격력 {ratio * 100:0}%)";
     }
 }

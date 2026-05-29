@@ -13,11 +13,11 @@ public class Gold : MonoBehaviour, IPickable
     static readonly Stack<Gold> pool = new();
     static Gold prefab;
 
-    public static Gold Dropped(Vector2 pos, string key)
+    public static Gold Dropped(Vector2 pos)
     {
         Gold gold = Get();
         gold.gameObject.SetActive(true);
-        gold.Droped(pos, key);
+        gold.Droped(pos);
         return gold;
     }
 
@@ -35,10 +35,9 @@ public class Gold : MonoBehaviour, IPickable
     public int exp = 1;
     public int gold = 1;
 
-    public void Droped(Vector2 pos, string key)
+    public void Droped(Vector2 pos)
     {
         transform.position = pos;
-        this.key = key;
         IsTaken = false;
     }
 

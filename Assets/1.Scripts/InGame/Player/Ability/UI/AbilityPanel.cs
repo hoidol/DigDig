@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Linq;
 public class AbilityPanel : MonoBehaviour
 {
     [SerializeField] AbilityData abilityData;

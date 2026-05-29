@@ -21,7 +21,9 @@ public class OrdealData : ScriptableObject
         switch (type)
         {
             case OrdealType.KillEnemies:
-                return $"KILL {data} Enemies";
+                return $"모든 적을 처치하라 ";
+            case OrdealType.EndureTime:
+                return $"시간을 견뎌라";
         }
         return "";
     }
@@ -77,6 +79,5 @@ public class OrdealData : ScriptableObject
 public enum OrdealType
 {
     KillEnemies,
-    EndureTime,
-    KillThemAll
+    EndureTime
 }

@@ -1,8 +1,7 @@
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 
-// 적 처치 시 다음 공격 1회 추가 발사
-public class BowItem : Item, IComboAttackItem
+// 적 처치 시 다음 공격 1회 좌우 ±40도 확산탄 발사
+public class BowItem : Item, IPreAttack
 {
     bool extraShot;
 
@@ -22,15 +21,10 @@ public class BowItem : Item, IComboAttackItem
         extraShot = true;
     }
 
-    public async UniTask OnAttack(Player player, Vector2 dir)
+    public void OnPreAttack(Player player, Vector2 dir)
     {
         if (!extraShot) return;
         extraShot = false;
-
-        for (int i = 0; i < count; i++)
-        {
-            await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS);
-            Player.Instance.Attack(dir, false);
-        }
+        player.weapon.RequestSpread(2);
     }
 }

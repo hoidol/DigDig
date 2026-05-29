@@ -11,10 +11,9 @@ public class ThunderItem : TriggerItem
 
     static readonly float[] damageRates = { 0.8f, 1.2f, 1.8f };
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        float rate = damageRates[Mathf.Clamp(c - 1, 0, damageRates.Length - 1)];
+        float rate = damageRates[Mathf.Clamp(count - 1, 0, damageRates.Length - 1)];
         return $"쿨타임마다 번개 낙하 (마력의 {rate * 100:0}% 데미지, 가까운 적/광석 우선 타격)";
     }
 

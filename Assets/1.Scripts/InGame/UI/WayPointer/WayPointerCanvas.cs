@@ -20,7 +20,7 @@ public class WayPointerCanvas : CanvasUI<WayPointerCanvas>
 
     public WayPointer AddWayPoint(IWayPointerTarget wayPointerTarget, bool effect = false, float delay = 0)
     {
-        Debug.Log("WayPointerCanvas AddWayPoint");
+        // Debug.Log("WayPointerCanvas AddWayPoint");
         WayPointer wayPointer = Instantiate(wayPointerPrefab, parentTr);
         wayPointer.Show(wayPointerTarget, effect, delay);
         wayPointers.Add(wayPointer);

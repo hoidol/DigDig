@@ -1,30 +1,21 @@
 using UnityEngine;
 
-// 고장난 드론: 총알이 드론에 닿으면 랜덤 방향으로 count발 동시 발사
+// 고장난 드론: 총알이 드론에 닿으면 랜덤 방향으로 1발 동시 발사 (데미지 50%)
 public class BrokenDroneItem : Item
 {
-    static readonly float[] damageRates = { 0.5f, 0.7f, 1.0f };
-
-    //public BrokenDrone dronePrefab;
+    const float DAMAGE_RATE = 0.5f;
+    const int BULLET_COUNT = 1;
 
     public BrokenDrone drone;
-
-    float DamageRate => damageRates[UnityEngine.Mathf.Clamp(count - 1, 0, damageRates.Length - 1)];
 
     public override void OnEquip(Player player)
     {
         drone.gameObject.SetActive(true);
         drone.transform.parent = null;
         drone.transform.localPosition = Vector3.zero;
-        drone.Init(DamageRate, count);
-        drone.Spawn(transform.position, count);
+        drone.Init(DAMAGE_RATE, BULLET_COUNT);
+        drone.Spawn(transform.position, BULLET_COUNT);
         drone.StartShooting();
-    }
-
-    public override void UpdateItem()
-    {
-        if (drone == null) return;
-        drone.Init(DamageRate, count);
     }
 
     public override void OnUnequip(Player player)
@@ -34,10 +25,8 @@ public class BrokenDroneItem : Item
         drone.gameObject.SetActive(false);
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        float rate = damageRates[UnityEngine.Mathf.Clamp(c - 1, 0, damageRates.Length - 1)];
-        return $"총알이 드론에 닿으면 랜덤 방향으로 {c}발 동시 발사 (데미지 {rate * 100:0}%)";
+        return $"총알이 드론에 닿으면 랜덤 방향으로 {BULLET_COUNT}발 동시 발사 (데미지 {DAMAGE_RATE * 100:0}%)";
     }
 }

@@ -1,19 +1,17 @@
 using UnityEngine;
 
-// 정교한 장전 - X초 이상 정지 시 장전 속도 증가
+// 정교한 장전 - 2초 이상 정지 시 장전 속도 100% 빨라짐
 public class SteadyReloadAbility : Ability
 {
-    static readonly float[] waitTimes = { 5f, 4f, 3f, 2f, 1f };
-    static readonly float[] speedUps  = { 0.70f, 0.75f, 0.80f, 0.90f, 1.00f };
+    const float WAIT_TIME = 2f;
 
     Buff buff;
     bool buffActive;
     float stillTimer;
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        return $"{waitTimes[c - 1]}초 정지 시 장전 속도 {speedUps[c - 1] * 100:0}% 향상";
+        return $"{WAIT_TIME}초 이상 이동하지 않으면 장전 속도 100% 빨라짐";
     }
 
     public override void OnUnequip(Player player)
@@ -22,20 +20,13 @@ public class SteadyReloadAbility : Ability
         stillTimer = 0;
     }
 
-    public override void UpdateEnhancement()
-    {
-        if (!buffActive) return;
-        RemoveBuff();
-        ApplyBuff();
-    }
-
     void Update()
     {
         bool stopped = Player.Instance.rg.linearVelocity.sqrMagnitude < 0.01f;
         if (stopped)
         {
             stillTimer += Time.deltaTime;
-            if (!buffActive && stillTimer >= waitTimes[count - 1])
+            if (!buffActive && stillTimer >= WAIT_TIME)
                 ApplyBuff();
         }
         else
@@ -47,7 +38,7 @@ public class SteadyReloadAbility : Ability
 
     void ApplyBuff()
     {
-        buff = new Buff(StatType.ReloadTime, 1f / (1f + speedUps[count - 1]), StatOpType.Multiply);
+        buff = new Buff(StatType.ReloadTime, 0.5f, StatOpType.Multiply);
         Player.Instance.AddBuff(buff);
         buffActive = true;
     }

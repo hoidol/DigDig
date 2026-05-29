@@ -1,23 +1,22 @@
 using UnityEngine;
 
-// 앵클샷 - 적중 시 확률로 슬로우
+// 앵클샷 - 적중 시 40% 확률로 슬로우
 public class AnkleShootAbility : Ability, IBulletItem
 {
-    static readonly float[] chances   = { 0.25f, 0.30f, 0.40f, 0.45f, 0.55f };
-    static readonly float[] durations = { 2f, 2.5f, 3f, 3.5f, 4f };
+    const float CHANCE = 0.40f;
+    const float DURATION = 3f;
 
     public override void OnEquip(Player player) { }
     public override void OnUnequip(Player player) { }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public override string GetDescription(bool detail = false)
     {
-        bullet.AddBehavior(new SlowOnHitBehavior(chances[count - 1], durations[count - 1]));
+        return $"적중 시 {CHANCE * 100:0}% 확률로 {DURATION}초 슬로우";
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public void OnBulletFired(PlayerBullet bullet)
     {
-        if (c <= 0) c = count;
-        return $"{chances[c - 1] * 100:0}% 확률로 {durations[c - 1]}초 슬로우";
+        bullet.AddBehavior(new SlowOnHitBehavior(CHANCE, DURATION));
     }
 }
 
@@ -28,7 +27,7 @@ public class SlowOnHitBehavior : IBulletBehavior
 
     public SlowOnHitBehavior(float chance, float duration)
     {
-        this.chance   = chance;
+        this.chance = chance;
         this.duration = duration;
     }
 

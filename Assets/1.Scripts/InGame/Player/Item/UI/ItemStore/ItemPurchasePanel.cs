@@ -19,6 +19,6 @@ public class ItemPurchasePanel : ItemPanel
             return;
         }
         GameEventBus.Publish<TryAddItemEvent>(new TryAddItemEvent(itemData));
-        //ItemCanvas.Instance.CloseCanvas();
+        ItemStoreCanvas.Instance.CloseCanvas();
     }
 }

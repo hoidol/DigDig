@@ -1,8 +1,9 @@
 using UnityEngine;
 
+// 클로버: 광석 파괴 시 30% 확률로 골드 추가 드랍
 public class CloverItem : Item
 {
-    public float[] bonusChances = { 0.2f, 0.3f, 0.4f }; // 30%
+    const float CHANCE = 0.30f;
 
     public override void OnEquip(Player player)
     {
@@ -16,17 +17,12 @@ public class CloverItem : Item
 
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
-        if (Random.value < bonusChances[count - 1])
-        {
-            Debug.Log("CloverItem Drop Gold");
-            Gold.Dropped(e.oreStone.transform.position, "1");
-        }
-
+        if (Random.value < CHANCE)
+            Gold.Dropped(e.oreStone.transform.position);
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        return $"광석 파괴 시 {bonusChances[c - 1] * 100:0}% 확률로 골드 드랍";
+        return $"광석 파괴 시 {CHANCE * 100:0}% 확률로 골드 드랍";
     }
 }

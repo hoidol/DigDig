@@ -5,18 +5,21 @@ using UnityEngine;
 public abstract class PlayerEnhancement : MonoBehaviour
 {
     public string key;
-    public int count;
+    public bool equipped;
+    public int count = 1;
 
-    public virtual string GetDescription(int c = -1, bool detail = false)
+    public virtual string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
         return "설명 없음";
     }
-    public virtual void OnEquip(Player player) { }
-    public virtual void OnUnequip(Player player) { }
-    public virtual void LevelUp()
+    public virtual void LevelUp() { count++; }
+    public virtual void OnEquip(Player player)
     {
-        count++;
+        equipped = true;
+    }
+    public virtual void OnUnequip(Player player)
+    {
+        equipped = false;
     }
     public virtual void UpdateEnhancement() { }
 }

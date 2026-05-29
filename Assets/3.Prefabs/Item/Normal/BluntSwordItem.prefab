@@ -4986,7 +4986,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: BluntSword
+  equipped: 0
   count: 0
-  coolTime: 5
+  coolTime: 3
   hitPoint: {fileID: 2778636667003123005}
   effect: {fileID: 6635562790402616728}

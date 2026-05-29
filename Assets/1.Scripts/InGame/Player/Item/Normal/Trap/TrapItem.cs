@@ -10,10 +10,10 @@ public class TrapItem : TriggerItem
     public Trap trapPrefab;
     public float throwDistance = 4f;
     public float damage = 10f;
-    int maxTrapCount = 2;
+    int maxTrapCount = 3;
 
     int tripCount;
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
         return "랜덤 방향으로 덫을 던집니다.\n적이 밟으면 폭발 데미지와 스턴을 줍니다.";
     }

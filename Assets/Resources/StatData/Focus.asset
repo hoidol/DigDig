@@ -17,6 +17,6 @@ MonoBehaviour:
   thum: {fileID: 0}
   maxLv: -1
   conditions: []
-  initValue: 0
+  initValue: 1
   increasedValue: 0.1
   opType: 2

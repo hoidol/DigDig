@@ -1,15 +1,14 @@
 using UnityEngine;
 
 // [연쇄 곡괭이]
-// 플레이어 총알로 광석을 파괴했을 때 일정 확률(30%/50%/100%)로 주변 광석을 count개 연쇄 타격.
-// OreStoneDestroyedEvent를 구독하며, cause가 PlayerBullet인 경우에만 발동.
-// 주변 광석을 거리순으로 정렬 후 가까운 순서대로 타격.
+// 플레이어 총알로 광석을 파괴했을 때 40% 확률로 주변 광석 1개 연쇄 타격.
 public class ChainPickaxeItem : Item
 {
+    const float CHANCE = 40f;
+    const int CHAIN_COUNT = 1;
+
     public float chainRadius = 5f;
     public LayerMask oreLayer;
-
-    static readonly float[] chances = { 30f, 50f, 100f };
 
     public override void OnEquip(Player player)
     {
@@ -21,23 +20,20 @@ public class ChainPickaxeItem : Item
         GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        float chance = chances[Mathf.Clamp(c - 1, 0, chances.Length - 1)];
-        return $"총알로 광석 파괴 시 {chance}% 확률로 주변 광석 {c}개 연쇄 타격";
+        return $"총알로 광석 파괴 시 {CHANCE}% 확률로 주변 광석 {CHAIN_COUNT}개 연쇄 타격";
     }
 
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
         if (e.lastDamage == null || e.lastDamage.cause == null) return;
         if (e.lastDamage.cause.GetComponent<PlayerBullet>() == null) return;
-        if (Random.Range(0f, 100f) > chances[Mathf.Clamp(count - 1, 0, chances.Length - 1)]) return;
+        if (Random.Range(0f, 100f) > CHANCE) return;
 
         Collider2D[] cols = Physics2D.OverlapCircleAll(
             e.oreStone.transform.position, chainRadius, oreLayer);
 
-        // 거리순 정렬 후 count개 타격
         var candidates = new System.Collections.Generic.List<(OreStone ore, float dist)>();
         foreach (var col in cols)
         {
@@ -49,12 +45,11 @@ public class ChainPickaxeItem : Item
         candidates.Sort((a, b) => a.dist.CompareTo(b.dist));
 
         float damage = Player.Instance.statMgr.MagicPower;
-        int hitCount = Mathf.Min(count, candidates.Count);
+        int hitCount = Mathf.Min(CHAIN_COUNT, candidates.Count);
         for (int i = 0; i < hitCount; i++)
         {
             candidates[i].ore.TakeDamage(new DamageData { damage = damage });
             EffectManager.Instance.Play(EffectType.Spark, candidates[i].ore.transform.position);
         }
-
     }
 }

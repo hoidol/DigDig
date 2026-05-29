@@ -7,7 +7,3 @@ EndureTime_1	EndureTime	180초를 버티십시오	1	180	FALSE	Weak
 EndureTime_2	EndureTime	180초를 버티십시오	2	180	FALSE	Middle
 EndureTime_3	EndureTime	180초를 버티십시오	3	180	FALSE	Middle
 EndureTime_4	EndureTime	180초를 버티십시오	4	180	TRUE	Strong
-KillThemAll_1	KillThemAll	모든 적을 처치하십시오	1	30	FALSE	Weak
-KillThemAll_2	KillThemAll	모든 적을 처치하십시오	2	40	FALSE	Middle
-KillThemAll_3	KillThemAll	모든 적을 처치하십시오	3	50	FALSE	Middle
-KillThemAll_4	KillThemAll	모든 적을 처치하십시오	4	77	TRUE	Strong

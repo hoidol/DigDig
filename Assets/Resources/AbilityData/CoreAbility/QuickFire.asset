@@ -17,7 +17,8 @@ MonoBehaviour:
   desc: "\uACE8\uB4DC\uB97C \uC5BB\uC744\uB54C 30% \uCD1D\uC54C 1\uBC1C\uC744 \uCDA9\uC804"
   thum: {fileID: 0}
   maxLv: 1
-  abilityPrefab: {fileID: 0}
+  abilityPrefab: {fileID: 8642850757062537886, guid: 7706b3cd7370c400ca9faa19baff1b6b,
+    type: 3}
   conditions: []
   abilityType: 1
   applyOrder: 0

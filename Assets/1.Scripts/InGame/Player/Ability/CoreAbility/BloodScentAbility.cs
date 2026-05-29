@@ -1,17 +1,13 @@
-// 짙은 피 냄새 - 적 처치 후 다음 공격 크리티컬 확률 대폭 상승 (30%/40%/50%)
+// 짙은 피 냄새 - 적 처치 시 다음 공격 크리티컬 확률 30% 상승
 public class BloodScentAbility : Ability, IBulletItem
 {
-    static readonly float[] bonusCritChances = { 30f, 40f, 50f };
+    const float BONUS_CRIT = 30f;
 
     bool applyNext;
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c == -1)
-            c = count;
-        if (count <= 0)
-            c = 1;
-        return $"적 처치 시 크리티컬 확률 {bonusCritChances[c - 1]}% 상승";
+        return $"적 처치 시 크리티컬 확률 {BONUS_CRIT}% 상승";
     }
 
     public override void OnEquip(Player player)
@@ -31,6 +27,6 @@ public class BloodScentAbility : Ability, IBulletItem
     {
         if (!applyNext) return;
         applyNext = false;
-        bullet.AddBulletForce(new BonusCritChanceBehavior(bonusCritChances[count - 1]));
+        bullet.AddBulletForce(new BonusCritChanceBehavior(BONUS_CRIT));
     }
 }

@@ -45,7 +45,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI
         // this.gridPos = gridPos;
 
         float distance = Vector2.Distance(Vector2.zero, transform.position);
-        float disMulti = distance / 4.5f;
+        float disMulti = distance / 6f;
         if (disMulti <= 1)
             disMulti = 1;
 
@@ -79,7 +79,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI
         }
     }
 
-    int Exp => (GameManager.Instance.ordealClearCount - 1) * 4 + idx + 1;
+    int Exp => idx + 1;
     public void Destroyed(bool reward)
     {
         // MapManager.Instance.RegisterDestroyed(gridPos);
@@ -87,11 +87,14 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI
         if (reward)
         {
             ExpText.SetText(transform.position, Exp.ToString());
+            Player.Instance.AddExp(Exp);
+
             if (isGoldStone)
-                Gold.Dropped(transform.position, idx.ToString());
+                Gold.Dropped(transform.position);
             GameManager.Instance.AddDestroyOreStone();
+
             EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
-            Player.Instance.AddExp(idx + 1);
+
             GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
         }
 

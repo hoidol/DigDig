@@ -158,7 +158,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     void EnemyDeadEventListener(EnemyDeadEvent e)
     {
-        Gold.Dropped(e.position, "0");
+        //Gold.Dropped(e.position);
     }
 }
 

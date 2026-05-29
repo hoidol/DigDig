@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.UI;
 
 public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
 {
@@ -36,11 +37,12 @@ public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
     public float curTimer;
 
 
-    public float curHp;
-    public float maxHp;
+    // public float curHp;
+    // public float maxHp;
     public Transform maskTr;
-    public TMP_Text statInfoText;
-    public Transform damageTextPoint;
+    public Image groundGuageImage;
+    // public TMP_Text statInfoText;
+    // public Transform damageTextPoint;
     StatData statData;
     public void Spawn(Vector2 pos, StatData statData, int lv)
     {
@@ -52,17 +54,51 @@ public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
         if (disMulti <= 1)
             disMulti = 1;
 
-        this.maxHp = GameManager.Instance.stageData.oreHp * disMulti * 3;
-        curHp = maxHp;
+        // this.maxHp = GameManager.Instance.stageData.oreHp * disMulti * 3;
+        // curHp = maxHp;
         maskTr.localScale = new Vector3(1, 0, 1);
+        groundGuageImage.fillAmount = 0;
         curTimer = MaxTime;
-        statInfoText.text = statData.GetDescription(lv);
+        // statInfoText.text = statData.GetDescription(lv);
 
         Appear(pos);
     }
+    [SerializeField] float maxGauge = 10;
+    [SerializeField] float curGauge = 0;
 
     void Update()
     {
+        if (entered)
+        {
+            curGauge += Time.deltaTime;
+            if (curGauge >= maxGauge)
+            {
+                curGauge = maxGauge;
+                Destroy();
+            }
+        }
+        else
+        {
+            if (curGauge > 0)
+                curGauge -= Time.deltaTime * 2;
+            else
+            {
+                curGauge = 0;
+            }
+        }
+        float gaugePercent = curGauge / maxGauge;
+        if (gaugePercent > 0)
+        {
+            maskTr.localScale = new Vector3(1, gaugePercent, 1);
+            groundGuageImage.fillAmount = gaugePercent;
+        }
+        else
+        {
+            maskTr.localScale = new Vector3(1, 0, 1);
+            groundGuageImage.fillAmount = 0;
+        }
+
+
         if (curTimer > 0)
             curTimer -= Time.deltaTime;
         else
@@ -70,30 +106,20 @@ public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
     }
     public bool CanHit()
     {
-        return !destroying;
+        return false;
     }
 
     public void TakeDamage(DamageData damage)
     {
         if (!CanHit())
             return;
-        damage.Applyed(damageTextPoint.position);
-        curHp = Mathf.Max(0, curHp - damage.damage);
 
-        //maskTr.localScale 체려 비율에 따라 0->1으로 줄어들게
-        float hpRatio = (maxHp - curHp) / maxHp;
-        maskTr.localScale = new Vector3(1, hpRatio, 1);
-        if (curHp <= 0)
-        {
-            Destroy();
-        }
     }
     bool destroying = false;
     public void Destroy()
     {
         destroying = true;
-        Player.Instance.statInventory.AddStat(statData);
-
+        StatCanvas.Instance.OpenCanvas();
         WayPointerCanvas.Instance?.Remove(this);
         Return();
     }
@@ -101,12 +127,29 @@ public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
     public void Appear(Vector2 spawnPos)
     {
         WayPointerCanvas.Instance.AddWayPoint(this);
-        ClearArea(transform.position);
+        ClearArea(spawnPos);
     }
 
     public void ClearArea(Vector2 pos)
     {
-        MapManager.Instance.ClearTilesInRadius(pos, 1f);
+        MapManager.Instance.ClearTilesInRadius(pos, 3f, 2);
+    }
+    bool entered = false;
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            Debug.Log("StatStone OnTiggerEnter2D entered ");
+            entered = true;
+        }
+    }
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            entered = false;
+            Debug.Log("StatStone OnTiggerExit2D exited ");
+        }
     }
 
 }

@@ -31,9 +31,8 @@ public class CandleItem : Item
         cinemachineCamera.Lens.OrthographicSize = BASE_SIZE + sizeIncrease * count;
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
         return $"시야가 넓어짐";
     }
 }

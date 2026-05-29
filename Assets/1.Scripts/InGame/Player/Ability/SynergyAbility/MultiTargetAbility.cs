@@ -7,7 +7,7 @@ public class MultiTargetAbility : Ability
     const float SEARCH_RADIUS = 15f;
     const float EXCLUDE_ANGLE = 15f;
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
         return $"매 발사 시 주변 적 최대 {MAX_TARGETS}명 추가 공격";
     }

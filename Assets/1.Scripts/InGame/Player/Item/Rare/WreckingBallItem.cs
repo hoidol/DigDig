@@ -2,30 +2,27 @@ using UnityEngine;
 
 // [레킹볼]
 // TriggerCycleItem. 활성화 시 WreckingBall을 소환해 플레이어 주변을 튕겨다니며 광석/적에게 피해.
-// 활성 시간 10/15/20초, 데미지는 마력의 50%/70%/100%.
-// 비활성화(OnDeactivate) 또는 장비 해제 시 볼 파괴.
+// 활성 시간 15초, 데미지는 마력의 70%.
 public class WreckingBallItem : TriggerCycleItem
 {
+    const float ACTIVE_TIME = 15f;
+    const float DAMAGE_RATE = 0.7f;
+
     public WreckingBall ballPrefab;
 
     WreckingBall ball;
-    float[] activeTimes = { 10f, 15f, 20f };
-    float[] damageRates = { 0.5f, 0.7f, 1 };
 
-    public override void UpdateItem()
+    public override void OnEquip(Player player)
     {
-        base.UpdateItem();
-        activeTime = activeTimes[count - 1];
-        if (ball == null) return;
-
-        ball.Init(Player.Instance.statMgr.MagicPower, damageRates[count - 1]);
+        base.OnEquip(player);
+        activeTime = ACTIVE_TIME;
     }
 
     public override void OnActivate()
     {
         if (ball != null) return;
         ball = Instantiate(ballPrefab, Player.Instance.transform.position, UnityEngine.Quaternion.identity);
-        ball.Init(Player.Instance.statMgr.MagicPower, damageRates[count - 1]);
+        ball.Init(Player.Instance.statMgr.MagicPower, DAMAGE_RATE);
     }
 
     public override void OnDeactivate()
@@ -41,7 +38,7 @@ public class WreckingBallItem : TriggerCycleItem
         if (ball != null) { Destroy(ball.gameObject); ball = null; }
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
         return "활성화 시 도탄하며 광석과 적에게 피해를 줍니다.";
     }

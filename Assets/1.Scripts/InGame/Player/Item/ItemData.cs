@@ -47,9 +47,9 @@ public class ItemData : ScriptableObject
         };
     }
 
-    public string GetDescription(int count = 1)
+    public string GetDescription(bool detail = false)
     {
-        return itemPrefab.GetDescription(count);
+        return itemPrefab.GetDescription(detail);
     }
 
     public static ItemData GetItemData(string key)

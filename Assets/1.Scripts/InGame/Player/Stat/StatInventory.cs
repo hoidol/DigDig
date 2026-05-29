@@ -37,22 +37,22 @@ public class StatInventory : MonoBehaviour
         return ownStats.FirstOrDefault(s => s.statType == type);
     }
 
-    public void AddStat(string key)
+    public void AddStat(string key, int lv)
     {
-        AddStat(StatData.GetStatData(key));
+        AddStat(StatData.GetStatData(key), lv);
     }
 
-    public void AddStat(StatData statData)
+    public void AddStat(StatData statData, int lv)
     {
         Stat stat = ownStats.FirstOrDefault(e => e.statType == statData.statType);
         if (stat != null)
         {
-            stat.LevelUp();
+            stat.LevelUp(lv);
         }
         else
         {
             stat = new Stat(statData.statType);
-            stat.LevelUp();
+            stat.LevelUp(lv);
             ownStats.Add(stat);
         }
 

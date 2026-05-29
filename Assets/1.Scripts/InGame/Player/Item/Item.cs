@@ -2,9 +2,8 @@ using UnityEngine;
 
 public abstract class Item : PlayerEnhancement
 {
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
         Debug.Log($"gameObject.name {gameObject.name}");
         return itemData.desc;
     }
@@ -18,6 +17,7 @@ public abstract class Item : PlayerEnhancement
 
     public override void OnEquip(Player player)
     {
+        base.OnEquip(player);
         UpdateItem();
     }
 

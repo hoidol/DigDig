@@ -5,7 +5,7 @@ using UnityEngine;
 public class AroundAttackDrone : Drone
 {
 
-    public float[] attackTimes = { 3f, 2.5f, 2f };
+    public float attackInterval = 0.5f;
     public float damage;
     public Transform dirTr;
 
@@ -32,7 +32,7 @@ public class AroundAttackDrone : Drone
     {
         while (true)
         {
-            yield return new WaitForSeconds(attackTimes[level - 1]);
+            yield return new WaitForSeconds(attackInterval);
             Fire();
         }
     }

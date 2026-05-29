@@ -1,25 +1,24 @@
 using UnityEngine;
 
-// 화약탄 - 확률로 발사된 총알에 폭발 효과 추가
+// 화약탄 - 15% 확률로 폭발탄 발사
 public class GunpowderBulletAbility : Ability, IBulletItem
 {
-    static readonly float[] probs  = { 0.10f, 0.15f, 0.20f, 0.25f, 0.35f };
-    static readonly float[] radii  = { 1.4f,  1.7f,  2.0f,  2.3f,  2.7f  };
-    static readonly float[] ratios = { 0.4f,  0.6f,  0.8f,  1.0f,  1.2f  };
+    const float PROB = 0.15f;
+    const float RADIUS = 1.0f;
+    const float DAMAGE_RATIO = 0.8f;
 
     public override void OnEquip(Player player) { }
     public override void OnUnequip(Player player) { }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public override string GetDescription(bool detail = false)
     {
-        if (Random.value > probs[count - 1]) return;
-        float dmg = Player.Instance.statMgr.AttackPower * ratios[count - 1];
-        bullet.AddBehavior(new ExplosionBehaviour(radii[count - 1], dmg, LayerMask.GetMask("Hittable")));
+        return $"{PROB * 100:0}% 확률로 폭발탄 발사";
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public void OnBulletFired(PlayerBullet bullet)
     {
-        if (c <= 0) c = count;
-        return $"{probs[c - 1] * 100:0}% 확률로 폭발탄 발사";
+        if (Random.value > PROB) return;
+        float dmg = Player.Instance.statMgr.AttackPower * DAMAGE_RATIO;
+        bullet.AddBehavior(new ExplosionBehaviour(RADIUS, dmg, LayerMask.GetMask("Hittable")));
     }
 }

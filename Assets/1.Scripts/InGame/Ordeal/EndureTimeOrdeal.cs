@@ -6,7 +6,7 @@ using TMPro;
 public class EndureTimeOrdeal : Ordeal
 {
     public TMP_Text remainTimeText;
-    public Image timeImage;
+    // public Image timeImage;
     public float RemainTime { get; private set; }
     public float TotalTime { get; private set; }
 
@@ -25,9 +25,13 @@ public class EndureTimeOrdeal : Ordeal
         while (RemainTime > 0f)
         {
             RemainTime -= Time.deltaTime;
-            float ratio = Mathf.Clamp01(RemainTime / TotalTime);
-            if (timeImage != null) timeImage.fillAmount = ratio;
-            if (remainTimeText != null) remainTimeText.text = Mathf.CeilToInt(RemainTime).ToString();
+            // float ratio = Mathf.Clamp01(RemainTime / TotalTime);
+            // if (timeImage != null) timeImage.fillAmount = ratio;
+            if (remainTimeText != null)
+            {
+                int total = Mathf.CeilToInt(RemainTime);
+                remainTimeText.text = $"{total / 60:00}:{total % 60:00}";
+            }
             await UniTask.Yield(cancellationToken: token);
         }
         RemainTime = 0f;

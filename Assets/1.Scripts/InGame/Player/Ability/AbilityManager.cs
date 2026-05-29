@@ -28,7 +28,7 @@ public class AbilityManager : MonoSingleton<AbilityManager>
             foreach (var aRes in Player.Instance.abilityInventory.currentSynergyDatas[i].abilitieResources)
             {
                 Ability a = Player.Instance.abilityInventory.GetAbility(aRes.key);
-                if (a != null && a.count >= aRes.count)
+                if (a != null)
                     continue;
                 currentSynergyAbilityDatas.Add(GetAbilityData(aRes.key));
             }
@@ -53,7 +53,7 @@ public class AbilityManager : MonoSingleton<AbilityManager>
             }
 
 
-            if (playerAbility != null && abilityData.maxLv > 0 && playerAbility.count >= abilityData.maxLv)
+            if (playerAbility != null)
             {
                 // Debug.Log($"abilityData max Count");
                 continue;

@@ -8,12 +8,11 @@ public class StatUpAbility : Ability
 
     public StatOpType opType;   // 어떤 방식으로 적용할지
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
         if (statType == StatType.AttackPower)
         {
-            if (detail) return $"공격력 {GetValue(c - 1)} > {GetValue(c)} 증가";
-            else return $"공격력 증가";
+            return "공격력 증가";
         }
         else if (statType == StatType.AngerTime)
         {

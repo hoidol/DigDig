@@ -1,18 +1,16 @@
 using UnityEngine;
 
+// 맹독탄: 30% 확률로 독 상태이상 부여
 public class PoisonBulletItem : Item, IBulletItem
 {
-    static readonly float[] durations = { 3f, 4f, 5f };
-    static readonly float[] dpsValues = { 2f, 3f, 4f };
-    static readonly float[] chances = { 5f, 8f, 12f };
+    const float CHANCE = 30f;
+    const float DURATION = 3f;
 
     float dpsValue;
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        if (c < 1) c = 1;
-        return $"{chances[c - 1]}% 확률로 맹독탄 발사";
+        return $"{CHANCE}% 확률로 맹독탄 발사";
     }
 
     public override void OnEquip(Player player) { UpdateEnhancement(); }
@@ -20,13 +18,13 @@ public class PoisonBulletItem : Item, IBulletItem
 
     public override void UpdateEnhancement()
     {
-        dpsValue = Player.Instance.statMgr.AttackPower * 0.01f * dpsValues[count - 1];
+        dpsValue = Player.Instance.statMgr.AttackPower * 0.02f;
         if (dpsValue < 1f) dpsValue = 1f;
     }
 
     public void OnBulletFired(PlayerBullet bullet)
     {
-        if (Random.Range(0f, 100f) < chances[count - 1])
-            bullet.AddBehavior(new PoisonOnHitBehavior(durations[count - 1], dpsValue));
+        if (Random.Range(0f, 100f) < CHANCE)
+            bullet.AddBehavior(new PoisonOnHitBehavior(DURATION, dpsValue));
     }
 }

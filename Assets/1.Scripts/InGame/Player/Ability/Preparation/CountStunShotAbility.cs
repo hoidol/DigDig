@@ -1,19 +1,15 @@
-// 5번째 발사 총알은 스턴 (보스 제외)
+// 6번째 발사 총알은 스턴 (보스 제외)
 using UnityEngine;
 
 public class CountStunShotAbility : Ability, IAttackItem, IBulletItem
 {
     int shotCount;
     bool applyNext;
-    int TriggerCount(int c) => 7 - c;
-    public override string GetDescription(int c = -1, bool detail = false)
-    {
-        if (c == -1)
-            c = count;
-        if (count <= 0)
-            c = 1;
+    const int TRIGGER_COUNT = 6;
 
-        return $"{TriggerCount(c)}번 탄 발사 시 다음 공격 스턴";
+    public override string GetDescription(bool detail = false)
+    {
+        return $"{TRIGGER_COUNT}번 탄 발사 시 다음 공격 스턴";
     }
 
     public override void OnUnequip(Player player)
@@ -25,7 +21,7 @@ public class CountStunShotAbility : Ability, IAttackItem, IBulletItem
     public void OnAttack(Player player, Vector2 dir)
     {
         shotCount++;
-        if (shotCount < TriggerCount(count)) return; //7 - count
+        if (shotCount < TRIGGER_COUNT) return;
         shotCount = 0;
         applyNext = true;
     }

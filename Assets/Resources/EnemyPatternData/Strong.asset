@@ -16,7 +16,9 @@ MonoBehaviour:
   enemySpawnPatternDatas:
   - enemyType: 0
     intervalRange: {x: 2, y: 3}
-    countRange: {x: 3, y: 4}
+    countRange: {x: 2, y: 3}
+    repeat: 0
   - enemyType: 1
-    intervalRange: {x: 7, y: 8}
+    intervalRange: {x: 8, y: 9}
     countRange: {x: 1, y: 2}
+    repeat: 0

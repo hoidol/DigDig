@@ -1,12 +1,13 @@
 using UnityEngine;
 
-// 멀티샷 - 장전 완료 후 첫 발은 멀티샷
+// 과적재 - 장전 완료 후 첫 발은 멀티샷
 public class MultiShotOnReloadAbility : Ability, IPreAttack
 {
     bool firstShot;
-    public override string GetDescription(int c = -1, bool detail = false)
+
+    public override string GetDescription(bool detail = false)
     {
-        return $"장전 후 첫발 멀티샷";
+        return "장전 후 첫발 멀티샷";
     }
 
     public override void OnEquip(Player player)
@@ -26,6 +27,6 @@ public class MultiShotOnReloadAbility : Ability, IPreAttack
     {
         if (!firstShot) return;
         firstShot = false;
-        player.weapon.RequestSpread(count + 1); // count=1→spread2→총3발, count=2→spread3→총4발, count=3→spread4→총5발
+        player.weapon.RequestMulti(1);
     }
 }

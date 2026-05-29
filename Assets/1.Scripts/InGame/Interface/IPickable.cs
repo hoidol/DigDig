@@ -15,7 +15,7 @@ public interface IPickable
         get;
     }
 
-    public void Droped(Vector2 pos, string key);
+    public void Droped(Vector2 pos);
     void Take(IPicker picker); // 플레이어가 가질때
     void PickedUp(); //플레이어가 얻을떄
 }

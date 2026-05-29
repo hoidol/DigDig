@@ -44,12 +44,21 @@ public class MapManager : MonoSingleton<MapManager>
             SpawnTile(Player.Instance.transform.position, 36, MIN_RANGE_RADIUS);
         }
     }
+    public static Vector2 SnappedPosition(Vector2 pos)
+    {
+        int snappedX = Mathf.RoundToInt(pos.x / OreStone.SIZE);
+        int snappedY = Mathf.RoundToInt(pos.y / OreStone.SIZE);
+
+        return new(snappedX * OreStone.SIZE, snappedY * OreStone.SIZE);
+    }
     public void SpawnTile(Vector2 pos, float radius, float exclueRadius)
     {
         int snappedX = Mathf.RoundToInt(pos.x / OreStone.SIZE);
         int snappedY = Mathf.RoundToInt(pos.y / OreStone.SIZE);
+        Vector2 snappedPos = SnappedPosition(pos);
+
         int cellRadius = Mathf.CeilToInt(radius / OreStone.SIZE);
-        Vector2 snappedPos = new(snappedX * OreStone.SIZE, snappedY * OreStone.SIZE);
+
 
         var spawnList = new List<(OreStone ore, float dist)>();
 
@@ -123,10 +132,13 @@ public class MapManager : MonoSingleton<MapManager>
 
 
     // NPC 등장 시 호출 - 반경 내 타일 제거 및 재생성 방지
-    public void ClearTilesInRadius(Vector2 center, float radius)
+    public void ClearTilesInRadius(Vector2 center, float width, float height)
     {
         // 현재 로드된 타일 즉시 제거
-        Collider2D[] cols = Physics2D.OverlapCircleAll(center, radius, LayerMask.GetMask("Hittable"));
+        var mask = LayerMask.GetMask("Hittable");
+        Collider2D[] cols = Mathf.Approximately(width, height)
+            ? Physics2D.OverlapCircleAll(center, width / 2f, mask)
+            : Physics2D.OverlapBoxAll(center, new Vector2(width, height), 0f, mask);
         foreach (var col in cols)
         {
             if (col.tag == "OreStone")

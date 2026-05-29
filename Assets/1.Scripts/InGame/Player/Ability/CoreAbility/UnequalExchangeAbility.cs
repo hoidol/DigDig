@@ -1,16 +1,11 @@
-// [비등가교환]
-// GoldChangedEvent를 구독해 골드가 증가할 때마다 count에 따라 25%/45%/70% 확률로
-// 총알 1발을 충전(curBulletCount++). 최대 탄약 수 초과 및 재장전 중에는 충전 불가.
+// 교묘한 교환 - 골드를 얻을 때 30% 확률로 총알 1발 충전
 public class UnequalExchangeAbility : Ability
 {
-    static readonly float[] chances = { 25f, 40f, 55f, 70f, 85f };
-    static readonly int[] bulletCounts = { 1, 1, 1, 2, 2 };
+    const float CHANCE = 30f;
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        if (c < 1) c = 1;
-        return $"골드를 획득할 때마다 {chances[c - 1]}% 확률로 총알 {bulletCounts[c - 1]}발을 충전";
+        return $"골드를 획득할 때마다 {CHANCE}% 확률로 총알 1발 충전";
     }
 
     public override void OnEquip(Player player)
@@ -25,7 +20,7 @@ public class UnequalExchangeAbility : Ability
 
     void OnGoldChanged(GoldChangedEvent e)
     {
-        if (e.addGold < 0) { return; }
+        if (e.addGold < 0) return;
 
         Player player = Player.Instance;
         if (player.isReloading) return;
@@ -33,7 +28,7 @@ public class UnequalExchangeAbility : Ability
         int max = (int)player.statMgr.BulletCount;
         if (player.curBulletCount >= max) return;
 
-        if (UnityEngine.Random.Range(0f, 100f) > chances[count - 1]) return;
+        if (UnityEngine.Random.Range(0f, 100f) > CHANCE) return;
 
         player.weapon.AddBullet();
         GameEventBus.Publish(new BulletChargedEvent(player.curBulletCount, max));

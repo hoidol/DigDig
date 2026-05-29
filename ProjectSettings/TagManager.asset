@@ -6,6 +6,8 @@ TagManager:
   tags:
   - OreStone
   - Enemy
+  - Boss
+  - Elite
   layers:
   - Default
   - TransparentFX
@@ -13,7 +15,11 @@ TagManager:
   - Hittable
   - Water
   - UI
+  - Pickable
   - Player
+  - OnlyHittable
+  - PhysicArea
+  - PlayerSide
   - 
   - 
   - 
@@ -26,10 +32,6 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - Layer 1
-  - Layer 2
-  - Layer 3
   - 
   - 
   - 

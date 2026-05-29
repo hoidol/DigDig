@@ -66,18 +66,13 @@ public class AbilityInventory : MonoBehaviour
     {
         Ability ability = equippedAbilitys.FirstOrDefault(e => e.key == abilityData.key);
         if (ability != null)
-        {
-            ability.LevelUp();
-            ability.UpdateEnhancement();
-        }
-        else
-        {
-            ability = Instantiate(abilityData.abilityPrefab, transform);
-            ability.key = abilityData.key;
-            ability.count = 1;
-            ability.OnEquip(Player.Instance);
-            equippedAbilitys.Add(ability);
-        }
+            return;
+
+        ability = Instantiate(abilityData.abilityPrefab, transform);
+        ability.key = abilityData.key;
+        ability.count = 1;
+        ability.OnEquip(Player.Instance);
+        equippedAbilitys.Add(ability);
         abilityCount++;
         GameEventBus.Publish(new AddedAbilityEvent(abilityData));
         SortingAbility();

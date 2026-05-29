@@ -1,25 +1,22 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
-// 야생의 본능 - 적 처치 시 공격속도 증가 (최대 5중첩, 시간 지나면 해제)
+// 야생의 본능 - 적 처치 시 공격속도 8% 증가 (최대 5중첩, 5초 유지)
 public class WildInstinctAbility : Ability
 {
+    const float BONUS_PER_STACK = 0.08f;
     const int MAX_STACK = 5;
-    float[] bonusPerStacks = { 0.08f, 0.1f, 0.13f };  // 중첩당 공격속도 8% 감소
     const float STACK_DURATION = 5f;
 
     int stackCount;
     Buff buff;
     CancellationTokenSource cts;
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c == -1)
-            c = count;
-        if (count <= 0)
-            c = 1;
-        return $"적 처치 시 {100 * bonusPerStacks[c - 1]}% 만큼 공격 속도 증가 \n(최대 {MAX_STACK} 중첩)";
+        return $"적 처치 시 공격속도 {BONUS_PER_STACK * 100}% 증가 (최대 {MAX_STACK}중첩, {STACK_DURATION}초 유지)";
     }
+
     public override void OnEquip(Player player)
     {
         buff = new Buff(StatType.AttackSpeed, 1f, StatOpType.Multiply);
@@ -43,7 +40,7 @@ public class WildInstinctAbility : Ability
 
     void RefreshBuff()
     {
-        buff.value = 1f - bonusPerStacks[count - 1] * stackCount;
+        buff.value = 1f + BONUS_PER_STACK * stackCount;
         Player.Instance.RemoveBuff(buff);
         Player.Instance.AddBuff(buff);
         Player.Instance.UpdatePlayer();

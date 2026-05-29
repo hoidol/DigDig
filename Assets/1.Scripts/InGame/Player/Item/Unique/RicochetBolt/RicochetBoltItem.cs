@@ -30,7 +30,7 @@ public class RicochetBoltItem : TriggerCycleItem
 
     public override void OnDeactivate() { }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
         return "랜덤 방향으로 관통 투사체를 발사합니다.\n화면 끝에 닿으면 반사됩니다.";
     }

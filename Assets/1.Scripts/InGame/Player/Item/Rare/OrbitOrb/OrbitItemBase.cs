@@ -27,13 +27,16 @@ public abstract class OrbitItemBase : TriggerCycleItem
         RebuildOrbs();
     }
 
+    protected virtual int OrbCount => count;
+
     protected void RebuildOrbs()
     {
         foreach (var orb in orbs) Destroy(orb.gameObject);
         orbs.Clear();
 
-        float angleStep = 360f / count;
-        for (int i = 0; i < count; i++)
+        int n = OrbCount;
+        float angleStep = 360f / n;
+        for (int i = 0; i < n; i++)
         {
             float rad = angleStep * i * Mathf.Deg2Rad;
             Vector3 localPos = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad)) * orbitRadius;

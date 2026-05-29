@@ -4,14 +4,11 @@ using Cysharp.Threading.Tasks;
 // 긴급 호출 - 마지막 탄 발사 시 360도 방향으로 방사형 탄 발사
 public class EmergencyFireAbility : Ability, IAttackItem
 {
-    int[] bulletCouns = { 3, 4, 5, 6, 7 };
+    const int BULLET_COUNT = 5;
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c == -1) c = count;
-        if (c <= 0) c = 1;
-        int idx = Mathf.Clamp(c - 1, 0, bulletCouns.Length - 1);
-        return $"마지막 탄 발사 시 주변으로 {bulletCouns[idx]}탄 발사";
+        return $"모든 총알 소비 후 방사형으로 {BULLET_COUNT}탄 난사";
     }
 
     public void OnAttack(Player player, Vector2 dir)
@@ -24,11 +21,9 @@ public class EmergencyFireAbility : Ability, IAttackItem
 
     async UniTaskVoid FireRadial(Player player, Vector2 dir)
     {
-        int bulletCount = bulletCouns[Mathf.Clamp(count - 1, 0, bulletCouns.Length - 1)];
-        float angleStep = 360f / bulletCount;
+        float angleStep = 360f / BULLET_COUNT;
         float baseAngle = Vector2.SignedAngle(Vector2.right, dir);
-
-        for (int i = 0; i < bulletCount; i++)
+        for (int i = 0; i < BULLET_COUNT; i++)
         {
             float rad = (baseAngle + angleStep * i) * Mathf.Deg2Rad;
             Vector2 shootDir = new(Mathf.Cos(rad), Mathf.Sin(rad));

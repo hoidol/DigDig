@@ -1,22 +1,30 @@
-// 집중력 물약: 공격력 +2
+// 집중력 물약: 공격력 +2 (소모성, 중첩 가능)
 public class FocusPotionItem : Item
 {
-    const float BONUS = 2f;
+    const float BONUS_PER_STACK = 3f;
     Buff buff;
 
     public override void OnEquip(Player player)
     {
-        buff = new Buff(StatType.AttackPower, BONUS, StatOpType.Add);
-        player.AddBuff(buff);
+        count++;
+        UpdateItem();
     }
 
-    public override void UpdateItem() { }
+    public override void UpdateItem()
+    {
+        Player player = Player.Instance;
+
+        if (buff != null) player.RemoveBuff(buff);
+
+        buff = new Buff(StatType.AttackPower, BONUS_PER_STACK * count, StatOpType.Add);
+        player.AddBuff(buff);
+    }
 
     public override void OnUnequip(Player player)
     {
         player.RemoveBuff(buff);
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
-        => $"공격력 +{BONUS}";
+    public override string GetDescription(bool detail = false)
+        => $"공격력 +{BONUS_PER_STACK * count}";
 }

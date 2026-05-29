@@ -13,9 +13,8 @@ public class HoneItem : Item, IBulletItem
         bullet.AddBehavior(new PierceBehavior(count + basePierceCount));
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        return $"탄 관통력 +{c + basePierceCount}";
+        return $"탄 관통력 +{count + basePierceCount}";
     }
 }

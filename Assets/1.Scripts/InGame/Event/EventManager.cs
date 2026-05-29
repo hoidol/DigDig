@@ -194,7 +194,7 @@ public class EventManager : MonoSingleton<EventManager>
     public Vector2 CalcSpawnPosition(Vector2 howFarRange)
     {
         Vector2 playerPos = Player.Instance.transform.position;
-        return playerPos + Random.insideUnitCircle.normalized * Random.Range(howFarRange.x, howFarRange.y);
+        return MapManager.SnappedPosition(playerPos + Random.insideUnitCircle.normalized * Random.Range(howFarRange.x, howFarRange.y));
     }
 }
 

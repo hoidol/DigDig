@@ -15,7 +15,7 @@ public class StatData : ScriptableObject
     public float increasedValue;
     public StatOpType opType;   // 어떤 방식으로 적용할지
 
-
+    public string Title => statType.ToString();
     public virtual bool Unlocked()
     {
         foreach (var condition in conditions)
@@ -121,16 +121,16 @@ public class StatData : ScriptableObject
 public class Stat
 {
     public StatType statType;
-    public int count;
+    public int lv;
     public Stat(StatType type)
     {
         statType = type;
-        count = 0;
+        lv = 0;
     }
 
-    public void LevelUp()
+    public void LevelUp(int l)
     {
-        count++;
+        lv += l;
     }
 
 }

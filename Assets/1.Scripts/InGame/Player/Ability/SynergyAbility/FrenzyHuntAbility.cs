@@ -37,9 +37,8 @@ public class FrenzyHuntAbility : SynergyAbility
 
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        return $"적 처치 시 사망 위치에서 3방향 분열탄 발사 (공격력 {damageRatio * 100:0}%)";
+        return $"적 처치 시 사망 위치에서 {BULLET_COUNT}방향 분열탄 발사 (공격력 {damageRatio * 100:0}%)";
     }
 }

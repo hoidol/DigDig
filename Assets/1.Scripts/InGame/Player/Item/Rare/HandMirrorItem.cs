@@ -15,9 +15,8 @@ public class HandMirrorItem : Item, IBulletItem
         bullet.AddBehavior(new BounceBehavior(count));
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        return $"탄 튕김 +{c}";
+        return $"탄 튕김 +{count}";
     }
 }

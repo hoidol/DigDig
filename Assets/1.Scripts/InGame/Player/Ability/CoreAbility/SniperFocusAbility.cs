@@ -1,20 +1,18 @@
 using UnityEngine;
 
-// 예민함 유지 - X초 이상 정지 시 크리티컬 확률 증가
+// 예민함 유지 - 2초 이상 정지 시 크리티컬 확률 40% 증가
 public class SniperFocusAbility : Ability
 {
-    static readonly float[] waitTimes = { 5f, 4f, 3f, 2f, 1f };
-    static readonly float[] adds      = { 30f, 35f, 40f, 45f, 50f };
+    const float WAIT_TIME = 2f;
+    const float CRIT_BONUS = 40f;
 
     Buff buff;
     bool buffApplied;
     float stillTimer;
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c == -1) c = count;
-        if (c <= 0) c = 1;
-        return $"{waitTimes[c - 1]}초 정지 시 크리티컬 확률 {adds[c - 1]:0}% 상승";
+        return $"{WAIT_TIME}초 이상 이동하지 않으면 크리티컬 확률 {CRIT_BONUS}% 증가";
     }
 
     public override void OnUnequip(Player player)
@@ -23,20 +21,13 @@ public class SniperFocusAbility : Ability
         stillTimer = 0;
     }
 
-    public override void UpdateEnhancement()
-    {
-        if (!buffApplied) return;
-        RemoveBuff();
-        ApplyBuff();
-    }
-
     void Update()
     {
         bool stopped = Player.Instance.rg.linearVelocity.sqrMagnitude < 0.01f;
         if (stopped)
         {
             stillTimer += Time.deltaTime;
-            if (!buffApplied && stillTimer >= waitTimes[count - 1])
+            if (!buffApplied && stillTimer >= WAIT_TIME)
                 ApplyBuff();
         }
         else
@@ -48,7 +39,7 @@ public class SniperFocusAbility : Ability
 
     void ApplyBuff()
     {
-        buff = new Buff(StatType.CritChance, adds[count - 1], StatOpType.Add);
+        buff = new Buff(StatType.CritChance, CRIT_BONUS, StatOpType.Add);
         Player.Instance.AddBuff(buff);
         buffApplied = true;
     }

@@ -3,14 +3,9 @@ using UnityEngine;
 // 사냥꾼의 갈증 - 적 처치 시 흡혈
 public class HuntersThirstAbility : SynergyAbility
 {
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c == -1)
-            c = count;
-        if (count <= 0)
-            c = 1;
-
-        return $"적 처치 시 5% 확률로 최대 체력에 {(0.01f * c) * 100}% 추가 회복";
+        return "적 처치 시 5% 확률로 최대 체력의 1% 추가 회복";
     }
     public override void OnEquip(Player player)
     {

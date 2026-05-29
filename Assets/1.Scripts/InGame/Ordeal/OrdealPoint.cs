@@ -34,7 +34,7 @@ public class OrdealPoint : MonoBehaviour, IWayPointerTarget
 
     public void ClearArea(Vector2 pos)
     {
-        MapManager.Instance.ClearTilesInRadius(pos, clearRadius);
+        MapManager.Instance.ClearTilesInRadius(pos, clearRadius, clearRadius);
     }
     void Update()
     {

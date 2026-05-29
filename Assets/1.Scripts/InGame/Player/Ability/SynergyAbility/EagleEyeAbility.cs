@@ -22,10 +22,9 @@ public class EagleEyeAbility : SynergyAbility, IBulletItem
         bullet.AddBulletForce(new EagleEyeForce(maxBonusRatio, MAX_RANGE));
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        return $"거리가 멀수록 최대 공격력 {100}% 추가 데미지";
+        return "거리가 멀수록 최대 공격력 100% 추가 데미지";
     }
 }
 

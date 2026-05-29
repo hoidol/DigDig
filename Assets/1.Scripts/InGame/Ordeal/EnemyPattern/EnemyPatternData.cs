@@ -27,14 +27,15 @@ public class EnemyPatternData : ScriptableObject
         if (lines.Length < 2) return;
 
         string[] headers = lines[0].Split('\t');
-        int iKey = System.Array.IndexOf(headers, "key");
+        int iKey = System.Array.IndexOf(headers, "patternType");
         int iEnemyType = System.Array.IndexOf(headers, "enemyType");
         int iMinCount = System.Array.IndexOf(headers, "minCount");
         int iMaxCount = System.Array.IndexOf(headers, "maxCount");
         int iMinInterval = System.Array.IndexOf(headers, "minIntervalTime");
         int iMaxInterval = System.Array.IndexOf(headers, "maxIntervalTime");
+        int iRepeat = System.Array.IndexOf(headers, "repeat");
 
-        string patternKey = patternType.ToString().ToLower();
+        string patternKey = patternType.ToString();
         var spawnList = new List<EnemySpawnPatternData>();
 
         for (int i = 1; i < lines.Length; i++)
@@ -43,7 +44,7 @@ public class EnemyPatternData : ScriptableObject
             string[] cols = lines[i].Split('\t');
 
             string rowKey = iKey >= 0 && iKey < cols.Length ? cols[iKey].Trim() : "";
-            if (rowKey != patternKey) continue;
+            if (!string.Equals(rowKey, patternKey, System.StringComparison.OrdinalIgnoreCase)) continue;
 
             var spawnData = new EnemySpawnPatternData();
 
@@ -60,6 +61,10 @@ public class EnemyPatternData : ScriptableObject
             if (iMinInterval >= 0 && iMinInterval < cols.Length) float.TryParse(cols[iMinInterval].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out minInterval);
             if (iMaxInterval >= 0 && iMaxInterval < cols.Length) float.TryParse(cols[iMaxInterval].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out maxInterval);
             spawnData.intervalRange = new Vector2(minInterval, maxInterval);
+
+            int repeat = 0;
+            if (iRepeat >= 0 && iRepeat < cols.Length) int.TryParse(cols[iRepeat].Trim(), out repeat);
+            spawnData.repeat = repeat;
 
             spawnList.Add(spawnData);
         }
@@ -80,4 +85,5 @@ public class EnemySpawnPatternData
     public EnemyType enemyType;
     public Vector2 intervalRange;
     public Vector2Int countRange;
+    public int repeat;
 }

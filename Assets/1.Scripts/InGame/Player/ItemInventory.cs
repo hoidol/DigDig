@@ -24,11 +24,11 @@ public class ItemInventory : MonoBehaviour
 
     void Awake()
     {
-        GameEventBus.Subscribe<TryAddItemEvent>(TryAddItemEvent);
     }
 
     void Start()
     {
+        GameEventBus.Subscribe<TryAddItemEvent>(TryAddItemEvent);
 #if UNITY_EDITOR
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
 #endif
@@ -95,7 +95,7 @@ public class ItemInventory : MonoBehaviour
     /// <param name="openChangeItem"> 아이템 더이상 획득 못하면 교체창 열기</param>
     public void AddItem(ItemData itemData, bool openChangeItem = true)
     {
-        Debug.Log($"{itemData.key} 아이템 장착하기");
+        // Debug.Log($"{itemData.key} 아이템 장착하기");
         Item item = equippedItems.FirstOrDefault(e => e.key == itemData.key);
         if (item != null)
         {

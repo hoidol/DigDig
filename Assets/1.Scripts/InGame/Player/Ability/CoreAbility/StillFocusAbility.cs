@@ -1,19 +1,18 @@
 using UnityEngine;
-// 집중 대응 - X초 이상 정지 시 공격 속도 증가
+
+// 집중 대응 - 2초 이상 정지 시 공격 속도 100% 증가
 public class StillFocusAbility : Ability
 {
-    static readonly float[] waitTimes = { 5f, 4f, 3f, 2f, 1f };
-    static readonly float[] multipliers = { 1.70f, 1.75f, 1.80f, 1.90f, 2.00f };
+    const float WAIT_TIME = 2f;
+    const float SPEED_MULTIPLIER = 2.0f;
 
     Buff buff;
     bool buffApplied;
     float stillTimer;
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c == -1) c = count;
-        if (c <= 0) c = 1;
-        return $"{waitTimes[c - 1]}초 정지 시 공격속도 {(multipliers[c - 1] - 1f) * 100:0}% 상승";
+        return $"{WAIT_TIME}초 이상 이동하지 않으면 공격 속도 100% 증가";
     }
 
     public override void OnUnequip(Player player)
@@ -22,20 +21,13 @@ public class StillFocusAbility : Ability
         stillTimer = 0;
     }
 
-    public override void UpdateEnhancement()
-    {
-        if (!buffApplied) return;
-        RemoveBuff();
-        ApplyBuff();
-    }
-
     void Update()
     {
         bool stopped = Player.Instance.rg.linearVelocity.sqrMagnitude < 0.01f;
         if (stopped)
         {
             stillTimer += Time.deltaTime;
-            if (!buffApplied && stillTimer >= waitTimes[count - 1])
+            if (!buffApplied && stillTimer >= WAIT_TIME)
                 ApplyBuff();
         }
         else
@@ -47,7 +39,7 @@ public class StillFocusAbility : Ability
 
     void ApplyBuff()
     {
-        buff = new Buff(StatType.AttackSpeed, multipliers[count - 1], StatOpType.Multiply);
+        buff = new Buff(StatType.AttackSpeed, SPEED_MULTIPLIER, StatOpType.Multiply);
         Player.Instance.AddBuff(buff);
         buffApplied = true;
     }

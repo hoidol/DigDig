@@ -7,10 +7,8 @@ public class FlameBulletItem : Item, IBulletItem
     static readonly float chance = 20f;
 
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        if (c < 1) c = 1;
         return $"{chance}% 확률로 불꽃탄 발사";
     }
 

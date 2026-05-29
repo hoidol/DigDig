@@ -58,9 +58,8 @@ public class IronNestAbility : SynergyAbility
         bunker.onDestroyed += () => bunkerActive = false;
     }
 
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
         return $"광석 {thresholds}개 파괴 시 벙커 소환 (체력 최대HP 40%)";
     }
 }

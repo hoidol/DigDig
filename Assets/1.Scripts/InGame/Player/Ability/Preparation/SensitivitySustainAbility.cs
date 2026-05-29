@@ -1,16 +1,13 @@
-// 예민함 유지 - 광석 파괴 시 count만큼 추가 발사
+// 예민함 유지 - 광석 파괴 시 1회 연속 발사
 using UnityEngine;
 
 public class SensitivitySustainAbility : Ability
 {
-    public override string GetDescription(int c = -1, bool detail = false)
+    public override string GetDescription(bool detail = false)
     {
-        if (c == -1)
-            c = count;
-        if (count <= 0)
-            c = 1;
-        return $"광석 제거 후 {c}회 연속 발사";
+        return "광석 제거 후 1회 연속 발사";
     }
+
     public override void OnEquip(Player player)
     {
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
@@ -23,6 +20,6 @@ public class SensitivitySustainAbility : Ability
 
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
-        Player.Instance.QueueExtraShot(count);
+        Player.Instance.QueueExtraShot(1);
     }
 }

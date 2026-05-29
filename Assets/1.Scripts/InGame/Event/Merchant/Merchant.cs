@@ -36,8 +36,6 @@ public class Merchant : EventObject
     {
         base.Appear(spawnPos);
         isAppear = true;
-        //Vector2 pos = EventManager.Instance.CalcSpawnPosition();
-        // transform.position = pos;
 
         ClearArea(transform.position);
 
@@ -46,7 +44,6 @@ public class Merchant : EventObject
     {
         isAppear = false;
         ItemStoreCanvas.Instance.CloseCanvas(transform);
-        GameEventBus.Publish(new MerchantClosedEvent());
         Destroy();
     }
     public void OnTriggerEnter2D(Collider2D collision)
@@ -56,13 +53,10 @@ public class Merchant : EventObject
             ItemStoreCanvas.Instance.OpenCanvas(transform, maxGrade, count, () =>
             {
                 Player.Instance.UpdatePlayer();
+                Disappear();
             });
         }
     }
-
-}
-public class MerchantClosedEvent
-{
 
 }
 

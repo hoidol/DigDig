@@ -1,16 +1,20 @@
-//시간 마다 체력 회복
+// 붕대: 30초마다 체력 5 회복
 public class BandageItem : TriggerItem
 {
-    public float[] healAmounts = { 5f, 7f, 9f };
+    public override void OnEquip(Player player)
+    {
+        coolTime = 30f;
+        base.OnEquip(player);
+    }
 
     public override void OnTrigger()
     {
         base.OnTrigger();
-        Player.Instance.AddHp(healAmounts[count - 1]);
+        Player.Instance.AddHp(5f);
     }
-    public override string GetDescription(int c = -1, bool detail = false)
+
+    public override string GetDescription(bool detail = false)
     {
-        if (c <= 0) c = count;
-        return $"{coolTime}초 마다 {healAmounts[c - 1]}만큼 체력 회복";
+        return $"{coolTime}초 마다 5만큼 체력 회복";
     }
 }
