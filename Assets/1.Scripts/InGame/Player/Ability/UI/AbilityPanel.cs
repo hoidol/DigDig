@@ -24,7 +24,7 @@ public class AbilityPanel : MonoBehaviour
 
     public void OnClickedSelect()
     {
-        Player.Instance.abilityInventory.AddAbility(this.abilityData.key);
+        // Player.Instance.abilityInventory.AddAbility(this.abilityData.key);
         AbilityCanvas.Instance.CloseCanvas();
     }
 }

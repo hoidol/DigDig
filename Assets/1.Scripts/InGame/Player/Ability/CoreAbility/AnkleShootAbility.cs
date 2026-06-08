@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 앵클샷 - 적중 시 40% 확률로 슬로우
-public class AnkleShootAbility : Ability, IBulletItem
+public class AnkleShootAbility : Ability, IBullet
 {
     const float CHANCE = 0.40f;
     const float DURATION = 3f;
@@ -14,7 +14,7 @@ public class AnkleShootAbility : Ability, IBulletItem
         return $"적중 시 {CHANCE * 100:0}% 확률로 {DURATION}초 슬로우";
     }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         bullet.AddBehavior(new SlowOnHitBehavior(CHANCE, DURATION));
     }
@@ -31,7 +31,7 @@ public class SlowOnHitBehavior : IBulletBehavior
         this.duration = duration;
     }
 
-    public bool OnHit(BulletBase bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
     {
         if (Random.value < chance && hit is Enemy enemy)
         {
@@ -41,6 +41,6 @@ public class SlowOnHitBehavior : IBulletBehavior
         return true;
     }
 
-    public void OnMove(BulletBase bullet) { }
+    public void OnMove(BulletObject bullet) { }
     public void Merge(IBulletBehavior other) { }
 }

@@ -5,8 +5,8 @@ public class SmoothBoltItem : Item
 
     public override void OnEquip(Player player)
     {
-        buff = new Buff(StatType.ReloadTime, 0.6f, StatOpType.Multiply);
-        player.AddBuff(buff);
+        // buff = new Buff(StatType.ReloadTime, 0.6f, StatOpType.Multiply);
+        // player.AddBuff(buff);
     }
 
     public override void OnUnequip(Player player)

@@ -1,14 +1,14 @@
 // 사냥꾼의 표식 - 명중 시 표식 부여, 표식 대상에게 추가 피해
-public class HunterMarkAbility : Ability, IBulletItem
+public class HunterMarkAbility : Ability, IBullet
 {
-    static readonly float[] bonusRatios = { 0.2f, 0.3f, 0.4f };
+    static readonly float bonusRatio = 0.3f;
 
     public override void OnEquip(Player player) { }
     public override void OnUnequip(Player player) { }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
-        var force = new HunterMarkForce(bonusRatios[count - 1]);
+        var force = new HunterMarkForce(bonusRatio);
         bullet.AddBulletForce(force);
     }
 }

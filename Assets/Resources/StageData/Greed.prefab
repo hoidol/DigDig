@@ -1,0 +1,524 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6500449848808860252
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 889402024886929064}
+  - component: {fileID: 26569467191874071}
+  m_Layer: 0
+  m_Name: Greed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &889402024886929064
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6500449848808860252}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10.822786, y: 4.1924314, z: 90}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &26569467191874071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6500449848808860252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9d68eef31f674aceb2670508d91813f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specialEnemyPatternSpawners: []
+  key: Greed
+  level: 1
+  oreHp: 21
+  phaseDatas:
+  - phase: 0
+    isBoss: 0
+    ordealLevel: 1
+    enemyHp: 11
+    enemyAttackPower: 3
+    time: 30
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 0
+        triggerTime: 0
+        endTime: 15
+        enemyType: 0
+        countRange: {x: 1, y: 1}
+        intervalRange: {x: 8, y: 9}
+      - phase: 0
+        triggerTime: 0
+        endTime: 15
+        enemyType: 1
+        countRange: {x: 1, y: 1}
+        intervalRange: {x: 10, y: 15}
+      - phase: 0
+        triggerTime: 15
+        endTime: 30
+        enemyType: 0
+        countRange: {x: 1, y: 2}
+        intervalRange: {x: 7, y: 8}
+      - phase: 0
+        triggerTime: 15
+        endTime: 30
+        enemyType: 1
+        countRange: {x: 1, y: 1}
+        intervalRange: {x: 8, y: 12}
+  - phase: 1
+    isBoss: 0
+    ordealLevel: 2
+    enemyHp: 18
+    enemyAttackPower: 5
+    time: 40
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 1
+        triggerTime: 0
+        endTime: 10
+        enemyType: 0
+        countRange: {x: 1, y: 1}
+        intervalRange: {x: 8, y: 9}
+      - phase: 1
+        triggerTime: 0
+        endTime: 10
+        enemyType: 1
+        countRange: {x: 1, y: 1}
+        intervalRange: {x: 10, y: 15}
+      - phase: 1
+        triggerTime: 15
+        endTime: 30
+        enemyType: 0
+        countRange: {x: 1, y: 2}
+        intervalRange: {x: 7, y: 8}
+      - phase: 1
+        triggerTime: 15
+        endTime: 30
+        enemyType: 1
+        countRange: {x: 1, y: 1}
+        intervalRange: {x: 8, y: 12}
+      - phase: 1
+        triggerTime: 30
+        endTime: 30
+        enemyType: 0
+        countRange: {x: 2, y: 2}
+        intervalRange: {x: 5, y: 6}
+      - phase: 1
+        triggerTime: 30
+        endTime: 30
+        enemyType: 1
+        countRange: {x: 1, y: 1}
+        intervalRange: {x: 8, y: 9}
+  - phase: 2
+    isBoss: 0
+    ordealLevel: 4
+    enemyHp: 25
+    enemyAttackPower: 7
+    time: 90
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 2
+        triggerTime: 0
+        endTime: 30
+        enemyType: 0
+        countRange: {x: 7, y: 9}
+        intervalRange: {x: 2, y: 4}
+      - phase: 2
+        triggerTime: 0
+        endTime: 30
+        enemyType: 1
+        countRange: {x: 4, y: 5}
+        intervalRange: {x: 5, y: 7}
+      - phase: 2
+        triggerTime: 30
+        endTime: 60
+        enemyType: 0
+        countRange: {x: 9, y: 12}
+        intervalRange: {x: 2, y: 3}
+      - phase: 2
+        triggerTime: 30
+        endTime: 60
+        enemyType: 1
+        countRange: {x: 5, y: 7}
+        intervalRange: {x: 4, y: 6}
+      - phase: 2
+        triggerTime: 60
+        endTime: 90
+        enemyType: 0
+        countRange: {x: 12, y: 15}
+        intervalRange: {x: 1, y: 3}
+      - phase: 2
+        triggerTime: 60
+        endTime: 90
+        enemyType: 1
+        countRange: {x: 6, y: 9}
+        intervalRange: {x: 3, y: 5}
+  - phase: 3
+    isBoss: 0
+    ordealLevel: 1
+    enemyHp: 32
+    enemyAttackPower: 9
+    time: 40
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 3
+        triggerTime: 0
+        endTime: 15
+        enemyType: 0
+        countRange: {x: 4, y: 5}
+        intervalRange: {x: 3, y: 5}
+      - phase: 3
+        triggerTime: 0
+        endTime: 15
+        enemyType: 1
+        countRange: {x: 2, y: 3}
+        intervalRange: {x: 7, y: 8}
+      - phase: 3
+        triggerTime: 15
+        endTime: 30
+        enemyType: 0
+        countRange: {x: 5, y: 6}
+        intervalRange: {x: 2, y: 4}
+      - phase: 3
+        triggerTime: 15
+        endTime: 30
+        enemyType: 1
+        countRange: {x: 3, y: 4}
+        intervalRange: {x: 6, y: 7}
+      - phase: 3
+        triggerTime: 30
+        endTime: 40
+        enemyType: 0
+        countRange: {x: 6, y: 8}
+        intervalRange: {x: 2, y: 3}
+      - phase: 3
+        triggerTime: 30
+        endTime: 40
+        enemyType: 1
+        countRange: {x: 3, y: 5}
+        intervalRange: {x: 5, y: 6}
+  - phase: 4
+    isBoss: 0
+    ordealLevel: 2
+    enemyHp: 39
+    enemyAttackPower: 11
+    time: 60
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 4
+        triggerTime: 0
+        endTime: 20
+        enemyType: 0
+        countRange: {x: 6, y: 8}
+        intervalRange: {x: 2, y: 4}
+      - phase: 4
+        triggerTime: 0
+        endTime: 20
+        enemyType: 1
+        countRange: {x: 3, y: 5}
+        intervalRange: {x: 5, y: 7}
+      - phase: 4
+        triggerTime: 20
+        endTime: 40
+        enemyType: 0
+        countRange: {x: 8, y: 10}
+        intervalRange: {x: 2, y: 3}
+      - phase: 4
+        triggerTime: 20
+        endTime: 40
+        enemyType: 1
+        countRange: {x: 4, y: 6}
+        intervalRange: {x: 4, y: 6}
+      - phase: 4
+        triggerTime: 40
+        endTime: 60
+        enemyType: 0
+        countRange: {x: 10, y: 13}
+        intervalRange: {x: 2, y: 3}
+      - phase: 4
+        triggerTime: 40
+        endTime: 60
+        enemyType: 1
+        countRange: {x: 5, y: 7}
+        intervalRange: {x: 3, y: 5}
+  - phase: 5
+    isBoss: 0
+    ordealLevel: 4
+    enemyHp: 46
+    enemyAttackPower: 13
+    time: 60
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 5
+        triggerTime: 0
+        endTime: 20
+        enemyType: 0
+        countRange: {x: 9, y: 11}
+        intervalRange: {x: 2, y: 3}
+      - phase: 5
+        triggerTime: 0
+        endTime: 20
+        enemyType: 1
+        countRange: {x: 5, y: 7}
+        intervalRange: {x: 4, y: 6}
+      - phase: 5
+        triggerTime: 20
+        endTime: 40
+        enemyType: 0
+        countRange: {x: 11, y: 14}
+        intervalRange: {x: 1, y: 3}
+      - phase: 5
+        triggerTime: 20
+        endTime: 40
+        enemyType: 1
+        countRange: {x: 6, y: 8}
+        intervalRange: {x: 3, y: 5}
+      - phase: 5
+        triggerTime: 40
+        endTime: 60
+        enemyType: 0
+        countRange: {x: 14, y: 17}
+        intervalRange: {x: 1, y: 2}
+      - phase: 5
+        triggerTime: 40
+        endTime: 60
+        enemyType: 1
+        countRange: {x: 8, y: 11}
+        intervalRange: {x: 2, y: 4}
+  - phase: 6
+    isBoss: 0
+    ordealLevel: 1
+    enemyHp: 53
+    enemyAttackPower: 15
+    time: 60
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 6
+        triggerTime: 0
+        endTime: 20
+        enemyType: 0
+        countRange: {x: 5, y: 7}
+        intervalRange: {x: 3, y: 5}
+      - phase: 6
+        triggerTime: 0
+        endTime: 20
+        enemyType: 1
+        countRange: {x: 3, y: 4}
+        intervalRange: {x: 6, y: 8}
+      - phase: 6
+        triggerTime: 20
+        endTime: 40
+        enemyType: 0
+        countRange: {x: 7, y: 9}
+        intervalRange: {x: 2, y: 4}
+      - phase: 6
+        triggerTime: 20
+        endTime: 40
+        enemyType: 1
+        countRange: {x: 4, y: 5}
+        intervalRange: {x: 5, y: 7}
+      - phase: 6
+        triggerTime: 40
+        endTime: 60
+        enemyType: 0
+        countRange: {x: 8, y: 10}
+        intervalRange: {x: 2, y: 3}
+      - phase: 6
+        triggerTime: 40
+        endTime: 60
+        enemyType: 1
+        countRange: {x: 4, y: 6}
+        intervalRange: {x: 4, y: 5}
+  - phase: 7
+    isBoss: 0
+    ordealLevel: 2
+    enemyHp: 60
+    enemyAttackPower: 17
+    time: 90
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 7
+        triggerTime: 0
+        endTime: 30
+        enemyType: 0
+        countRange: {x: 12, y: 15}
+        intervalRange: {x: 1, y: 3}
+      - phase: 7
+        triggerTime: 0
+        endTime: 30
+        enemyType: 1
+        countRange: {x: 6, y: 8}
+        intervalRange: {x: 3, y: 5}
+      - phase: 7
+        triggerTime: 30
+        endTime: 60
+        enemyType: 0
+        countRange: {x: 15, y: 18}
+        intervalRange: {x: 1, y: 2}
+      - phase: 7
+        triggerTime: 30
+        endTime: 60
+        enemyType: 1
+        countRange: {x: 8, y: 10}
+        intervalRange: {x: 2, y: 4}
+      - phase: 7
+        triggerTime: 60
+        endTime: 90
+        enemyType: 0
+        countRange: {x: 18, y: 22}
+        intervalRange: {x: 1, y: 2}
+      - phase: 7
+        triggerTime: 60
+        endTime: 90
+        enemyType: 1
+        countRange: {x: 10, y: 13}
+        intervalRange: {x: 2, y: 3}
+  - phase: 8
+    isBoss: 0
+    ordealLevel: 4
+    enemyHp: 67
+    enemyAttackPower: 19
+    time: 50
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 8
+        triggerTime: 0
+        endTime: 15
+        enemyType: 0
+        countRange: {x: 6, y: 8}
+        intervalRange: {x: 2, y: 4}
+      - phase: 8
+        triggerTime: 0
+        endTime: 15
+        enemyType: 1
+        countRange: {x: 3, y: 5}
+        intervalRange: {x: 5, y: 7}
+      - phase: 8
+        triggerTime: 15
+        endTime: 30
+        enemyType: 0
+        countRange: {x: 8, y: 10}
+        intervalRange: {x: 2, y: 3}
+      - phase: 8
+        triggerTime: 15
+        endTime: 30
+        enemyType: 1
+        countRange: {x: 4, y: 6}
+        intervalRange: {x: 4, y: 6}
+      - phase: 8
+        triggerTime: 30
+        endTime: 50
+        enemyType: 0
+        countRange: {x: 10, y: 13}
+        intervalRange: {x: 2, y: 3}
+      - phase: 8
+        triggerTime: 30
+        endTime: 50
+        enemyType: 1
+        countRange: {x: 5, y: 7}
+        intervalRange: {x: 3, y: 5}
+  - phase: 9
+    isBoss: 1
+    ordealLevel: 1
+    enemyHp: 74
+    enemyAttackPower: 21
+    time: 0
+    enemyPatternData:
+      enemySpawnPatternDatas:
+      - phase: 9
+        triggerTime: 0
+        endTime: 0
+        enemyType: 0
+        countRange: {x: 3, y: 5}
+        intervalRange: {x: 4, y: 6}
+      - phase: 9
+        triggerTime: 0
+        endTime: 0
+        enemyType: 1
+        countRange: {x: 2, y: 3}
+        intervalRange: {x: 8, y: 10}
+  eventDatas:
+  - eventTypes: 03000000
+    triggers: 00000000
+    chances: []
+    phaseIdx: 1
+  - eventTypes: 
+    triggers: 00000000
+    chances: []
+    phaseIdx: 2
+  - eventTypes: 
+    triggers: 00000000
+    chances:
+    - 70
+    - 30
+    phaseIdx: 3
+  - eventTypes: 
+    triggers: 00000000
+    chances: []
+    phaseIdx: 4
+  - eventTypes: 0300000004000000
+    triggers: 00000000
+    chances:
+    - 70
+    - 30
+    phaseIdx: 5
+  - eventTypes: 
+    triggers: 00000000
+    chances:
+    - 70
+    - 30
+    phaseIdx: 6
+  - eventTypes: 
+    triggers: 00000000
+    chances:
+    - 70
+    - 30
+    phaseIdx: 7
+  - eventTypes: 03000000
+    triggers: 00000000
+    chances: []
+    phaseIdx: 8
+  - eventTypes: 03000000
+    triggers: 00000000
+    chances: []
+    phaseIdx: 9
+  - eventTypes: 02000000
+    triggers: 00000000
+    chances:
+    - 90
+    phaseIdx: 2
+  - eventTypes: 02000000
+    triggers: 00000000
+    chances:
+    - 50
+    phaseIdx: 5
+  - eventTypes: 02000000
+    triggers: 00000000
+    chances:
+    - 90
+    phaseIdx: 8
+  - eventTypes: 01000000
+    triggers: 00000000
+    chances: []
+    phaseIdx: 3
+  - eventTypes: 01000000
+    triggers: 00000000
+    chances: []
+    phaseIdx: 7
+  boss: {fileID: 2323350187061452681, guid: e6611bd74967549bcb718b7ae82ef851, type: 3}

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 //안씀
-public class HammerItem : Item, IBulletItem
+public class HammerItem : Item, IBullet
 {
     public float explosionChance = 0.3f;
     public float explosionRadius = 2.5f;
@@ -11,7 +11,7 @@ public class HammerItem : Item, IBulletItem
     public override void OnEquip(Player player) { }
     public override void OnUnequip(Player player) { }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         bullet.AddBehavior(new HammerExplosionBehavior(
             explosionChance,

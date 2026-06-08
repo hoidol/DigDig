@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FlameBulletItem : Item, IBulletItem
+public class FlameBulletItem : Item, IBullet
 {
     static readonly float duration = 3f;
     static readonly float dpsValue = 2f;
@@ -16,7 +16,7 @@ public class FlameBulletItem : Item, IBulletItem
     public override void OnUnequip(Player player) { }
 
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         if (Random.Range(0f, 100f) < chance)
             bullet.AddBehavior(new BurnOnHitBehavior(duration, dpsValue));

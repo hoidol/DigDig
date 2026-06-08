@@ -5,7 +5,7 @@ public class StaffItem : Item
 
     public override void OnEquip(Player player)
     {
-        buff = new Buff(StatType.MagicPower, 6f, StatOpType.Add);
+        // buff = new Buff(StatType.MagicPower, 6f, StatOpType.Add);
         player.AddBuff(buff);
     }
 

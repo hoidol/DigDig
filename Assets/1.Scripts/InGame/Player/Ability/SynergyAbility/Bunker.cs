@@ -126,4 +126,9 @@ public class Bunker : MonoBehaviour, IHittable
         onDestroyed?.Invoke();
         Destroy(gameObject);
     }
+
+    public void ApplyStatusEffect(StatusEffect effect)
+    {
+
+    }
 }

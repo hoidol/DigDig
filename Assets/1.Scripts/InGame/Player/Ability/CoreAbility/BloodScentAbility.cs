@@ -1,5 +1,5 @@
 // 짙은 피 냄새 - 적 처치 시 다음 공격 크리티컬 확률 30% 상승
-public class BloodScentAbility : Ability, IBulletItem
+public class BloodScentAbility : Ability, IBullet
 {
     const float BONUS_CRIT = 30f;
 
@@ -23,7 +23,7 @@ public class BloodScentAbility : Ability, IBulletItem
 
     void OnEnemyDead(EnemyDeadEvent e) => applyNext = true;
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         if (!applyNext) return;
         applyNext = false;

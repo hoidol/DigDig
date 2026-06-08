@@ -42,9 +42,9 @@ public class BrokenDrone : Drone
     void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Bullet")) return;
-        if (other.GetComponent<PlayerBullet>() == null) return;
+        if (other.GetComponent<PlayerBulletObject>() == null) return;
 
-        float damage = Player.Instance.statMgr.MagicPower * damageRate;
+        float damage = Player.Instance.statMgr.AttackPower * damageRate;
         Shoot(rotation.up, damage);
     }
 
@@ -55,7 +55,7 @@ public class BrokenDrone : Drone
             await UniTask.Delay(System.TimeSpan.FromSeconds(3f), cancellationToken: token);
             if (token.IsCancellationRequested) return;
 
-            float damage = Player.Instance.statMgr.MagicPower * damageRate;
+            float damage = Player.Instance.statMgr.AttackPower * damageRate;
             for (int i = 0; i < shotCount; i++)
             {
                 float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;

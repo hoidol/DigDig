@@ -53,4 +53,8 @@ public class PlayerHealth : MonoBehaviour, IHittable
             await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: token);
         }
     }
+    public void ApplyStatusEffect(StatusEffect effect)
+    {
+
+    }
 }

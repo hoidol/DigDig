@@ -6,8 +6,10 @@ public class PlayerData : ScriptableObject
     public string key;
 
     public PlayerStat[] playerStats = new PlayerStat[(int)StatType.Count];
+    public string defaultBullets;
     public PlayerStat GetPlayerStat(StatType type)
     {
+        // Debug.Log($" GetPlayer Stat {type}");
         for (int i = 0; i < playerStats.Length; i++)
         {
             if (playerStats[i].statType == type)

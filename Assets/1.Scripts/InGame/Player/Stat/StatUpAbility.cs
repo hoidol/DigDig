@@ -14,22 +14,22 @@ public class StatUpAbility : Ability
         {
             return "공격력 증가";
         }
-        else if (statType == StatType.AngerTime)
-        {
-            return $"분노 시간 증가";
-        }
-        else if (statType == StatType.AttackRange)
-        {
-            return $"공격 범위 증가";
-        }
+        // else if (statType == StatType.AngerTime)
+        // {
+        //     return $"분노 시간 증가";
+        // }
+        // else if (statType == StatType.AttackRange)
+        // {
+        //     return $"공격 범위 증가";
+        // }
         else if (statType == StatType.AttackSpeed)
         {
             return $"공격 속도 증가";
         }
-        else if (statType == StatType.BulletCount)
-        {
-            return $"총알 개수 증가";
-        }
+        // else if (statType == StatType.BulletCount)
+        // {
+        //     return $"총알 개수 증가";
+        // }
         else if (statType == StatType.CritChance)
         {
             return $"크리티컬 확률 증가";
@@ -38,14 +38,14 @@ public class StatUpAbility : Ability
         {
             return $"크리티컬 파워 증가";
         }
-        else if (statType == StatType.Lucky)
-        {
-            return $"행운 증가";
-        }
-        else if (statType == StatType.MagicPower)
-        {
-            return $"마력 +1 증가";
-        }
+        // else if (statType == StatType.Lucky)
+        // {
+        //     return $"행운 증가";
+        // }
+        // else if (statType == StatType.MagicPower)
+        // {
+        //     return $"마력 +1 증가";
+        // }
         else if (statType == StatType.MoveSpeed)
         {
             return $"이동 속도 증가";
@@ -66,11 +66,6 @@ public class StatUpAbility : Ability
         {
             return $"재장전 속도 증가";
         }
-        else if (statType == StatType.ReloadTime)
-        {
-            return $"재장전 시간 감속";
-        }
-
 
         return $"-";
     }

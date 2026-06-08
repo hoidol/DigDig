@@ -73,7 +73,7 @@ public class WayPointer : MonoBehaviour
         if (wayPointerTarget == null) return;
 
         timerImage.fillAmount = wayPointerTarget.CurTimer / wayPointerTarget.MaxTime;
-        thumImage.sprite = wayPointerTarget.Thum;
+        thumImage.sprite = wayPointerTarget.GetThum();
         distanceText.text = $"{Vector2.Distance(Player.Instance.bodyCenterTr.position, wayPointerTarget.Transform.position):F1}M";
 
         Vector3 toPos = wayPointerTarget.Transform.position;

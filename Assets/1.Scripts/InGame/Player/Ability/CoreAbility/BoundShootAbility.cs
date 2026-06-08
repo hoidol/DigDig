@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 고무탄 - 25% 확률로 도탄 발사 (튕김 +1)
-public class BoundShootAbility : Ability, IBulletItem
+public class BoundShootAbility : Ability, IBullet
 {
     const float PROB = 0.25f;
 
@@ -12,7 +12,7 @@ public class BoundShootAbility : Ability, IBulletItem
 
     public override void OnUnequip(Player player) { }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         if (Random.value < PROB)
             bullet.AddBehavior(new BounceBehavior(1));

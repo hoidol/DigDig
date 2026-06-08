@@ -17,16 +17,17 @@ public class SynergyData : ScriptableObject
     }
     public bool CanPickSynergyAbility()
     {
-        Ability sAbility = Player.Instance.abilityInventory.GetAbility(synergyAbilityKey);
-        if (sAbility != null)
-            return false;
+        // Ability sAbility = Player.Instance.abilityInventory.GetAbility(synergyAbilityKey);
+        // if (sAbility != null)
+        //     return false;
 
-        bool notEnough = abilitieResources.Any(e =>
-            {
-                Ability a = Player.Instance.abilityInventory.GetAbility(e.key);
-                return a == null;
-            });
-        return !notEnough;
+        // bool notEnough = abilitieResources.Any(e =>
+        //     {
+        //         Ability a = Player.Instance.abilityInventory.GetAbility(e.key);
+        //         return a == null;
+        //     });
+        //return !notEnough;
+        return false;
     }
 
 

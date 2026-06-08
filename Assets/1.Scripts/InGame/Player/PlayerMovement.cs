@@ -55,4 +55,16 @@ public class PlayerMovement : MonoBehaviour
 
         rg.linearVelocity = MoveDirection * player.statMgr.MoveSpeed;
     }
+
+    void FixedUpdate()
+    {
+        Vector2 pos = rg.position;
+        float maxR = MapManager.MAX_RANGE_RADIUS;
+        if (pos.sqrMagnitude > maxR * maxR)
+        {
+            rg.position = pos.normalized * maxR;
+            if (Vector2.Dot(rg.linearVelocity, pos) > 0)
+                rg.linearVelocity = Vector2.zero;
+        }
+    }
 }

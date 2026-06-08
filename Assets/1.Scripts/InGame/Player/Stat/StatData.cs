@@ -35,21 +35,17 @@ public class StatData : ScriptableObject
         {
             return $"공격력 {(int)(increasedValue * lv * 100)}% 증가";
         }
-        else if (statType == StatType.AngerTime)
-        {
-            return $"분노 시간 증가";
-        }
-        else if (statType == StatType.AttackRange)
-        {
-            return $"공격 범위 증가";
-        }
+        // else if (statType == StatType.AngerTime)
+        // {
+        //     return $"분노 시간 증가";
+        // }
+        // else if (statType == StatType.AttackRange)
+        // {
+        //     return $"공격 범위 증가";
+        // }
         else if (statType == StatType.AttackSpeed)
         {
             return $"공격 속도 {(int)(increasedValue * lv * 100)}% 증가";
-        }
-        else if (statType == StatType.BulletCount)
-        {
-            return $"총알 개수 증가";
         }
         else if (statType == StatType.CritChance)
         {
@@ -58,14 +54,6 @@ public class StatData : ScriptableObject
         else if (statType == StatType.CritPower)
         {
             return $"크리티컬 파워 {(increasedValue * lv):F1}배 증가";
-        }
-        else if (statType == StatType.Lucky)
-        {
-            return $"행운 증가";
-        }
-        else if (statType == StatType.MagicPower)
-        {
-            return $"마력 +{(int)(increasedValue * lv)} 증가";
         }
         else if (statType == StatType.MoveSpeed)
         {
@@ -86,10 +74,6 @@ public class StatData : ScriptableObject
         else if (statType == StatType.ReloadSpeed)
         {
             return $"재장전 속도 {(int)(increasedValue * lv * 100)}% 증가";
-        }
-        else if (statType == StatType.ReloadTime)
-        {
-            return $"재장전 시간 감속";
         }
 
 

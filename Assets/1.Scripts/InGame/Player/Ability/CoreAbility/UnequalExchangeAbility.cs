@@ -25,12 +25,12 @@ public class UnequalExchangeAbility : Ability
         Player player = Player.Instance;
         if (player.isReloading) return;
 
-        int max = (int)player.statMgr.BulletCount;
-        if (player.curBulletCount >= max) return;
+        // int max = (int)player.statMgr.BulletCount;
+        // if (player.curBulletCount >= max) return;
 
         if (UnityEngine.Random.Range(0f, 100f) > CHANCE) return;
 
-        player.weapon.AddBullet();
-        GameEventBus.Publish(new BulletChargedEvent(player.curBulletCount, max));
+        // player.weapon.AddBullet();
+        // GameEventBus.Publish(new BulletChargedEvent(player.curBulletCount, max));
     }
 }

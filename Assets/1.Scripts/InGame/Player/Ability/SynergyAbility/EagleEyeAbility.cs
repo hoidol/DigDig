@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 독수리눈 - 거리가 멀수록 데미지 증가
-public class EagleEyeAbility : SynergyAbility, IBulletItem
+public class EagleEyeAbility : SynergyAbility, IBullet
 {
     static readonly float maxBonusRatio = 1f;
     float MAX_RANGE = 10f;
@@ -17,7 +17,7 @@ public class EagleEyeAbility : SynergyAbility, IBulletItem
         Camera mainCamera = Camera.main;
         MAX_RANGE = mainCamera.orthographicSize * mainCamera.aspect;
     }
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         bullet.AddBulletForce(new EagleEyeForce(maxBonusRatio, MAX_RANGE));
     }
@@ -39,7 +39,7 @@ public class EagleEyeForce : IBulletForce
         this.maxRange = maxRange;
     }
 
-    public float GetMultiDamage(BulletBase bullet, IHittable hit, RaycastHit2D hit2D)
+    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
     {
         float dist = Vector2.Distance(Player.Instance.transform.position, hit2D.point);
         float ratio = Mathf.Clamp01(dist / maxRange);

@@ -21,7 +21,7 @@ public class FrenzyHuntAbility : SynergyAbility
         if (e.cause == null)
             return;
 
-        if (e.cause.TryGetComponent<PlayerBullet>(out var b))
+        if (e.cause.TryGetComponent<PlayerBulletObject>(out var b))
         {
             float dmg = Player.Instance.statMgr.AttackPower * damageRatio;
             float angleStep = 360f / BULLET_COUNT;
@@ -29,7 +29,7 @@ public class FrenzyHuntAbility : SynergyAbility
             {
                 float rad = i * angleStep * Mathf.Deg2Rad;
                 Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-                PlayerBullet pBullet = Player.Instance.Shoot(dir, e.position);
+                PlayerBulletObject pBullet = Player.Instance.Shoot(new NormalBullet(), dir, e.position);
                 pBullet.damageData.damage = dmg;
             }
         }

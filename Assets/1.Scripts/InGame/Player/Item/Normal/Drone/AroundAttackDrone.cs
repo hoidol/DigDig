@@ -49,7 +49,7 @@ public class AroundAttackDrone : Drone
         //     b.transform.position = transform.position;
         //     b.Shoot(dir, damage);
         // }
-        damage = Player.Instance.statMgr.MagicPower;
+        damage = Player.Instance.statMgr.AttackPower;
 
         Vector2 dir = dirTr.up;
         AllyBullet b = AllyBullet.Instantiate();

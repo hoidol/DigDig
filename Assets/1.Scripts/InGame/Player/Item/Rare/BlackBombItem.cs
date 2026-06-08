@@ -11,7 +11,7 @@ public class BlackBombItem : TriggerItem
     public override void OnTrigger()
     {
         base.OnTrigger();
-        float damage = Player.Instance.statMgr.MagicPower * DAMAGE_RATE;
+        float damage = Player.Instance.statMgr.AttackPower * DAMAGE_RATE;
         Vector2 randomDir = Random.insideUnitCircle.normalized;
 
         var bomb = Instantiate(bombPrefab);

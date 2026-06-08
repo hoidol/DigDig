@@ -20,7 +20,7 @@ public class SpearItem : TriggerItem
         base.OnTrigger();
 
         Vector2 dir = Random.insideUnitCircle.normalized;
-        float damage = Player.Instance.statMgr.MagicPower * DAMAGE_RATE;
+        float damage = Player.Instance.statMgr.AttackPower * DAMAGE_RATE;
 
         var spear = Instantiate(spearPrefab, Player.Instance.transform.position, Quaternion.identity);
         spear.Init(dir, damage, PIERCE_COUNT);

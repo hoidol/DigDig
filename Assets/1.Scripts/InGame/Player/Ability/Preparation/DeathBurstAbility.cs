@@ -23,7 +23,7 @@ public class DeathBurstAbility : Ability
 
     void OnEnemyDead(EnemyDeadEvent e)
     {
-        if (e.cause == null || e.cause.GetComponent<PlayerBullet>() == null) return;
+        if (e.cause == null || e.cause.GetComponent<PlayerBulletObject>() == null) return;
 
         float damage = Player.Instance.statMgr.AttackPower * DAMAGE_RATE;
         float angleStep = 360f / SPLIT_COUNT;

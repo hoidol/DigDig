@@ -1,15 +1,15 @@
 using UnityEngine;
 // [손거울]
-// 발사된 총알에 튕김(BounceBehavior)을 추가하는 IBulletItem.
+// 발사된 총알에 튕김(BounceBehavior)을 추가하는 IBullet.
 // count만큼 튕김 횟수가 증가하며, 총알이 벽이나 적에 맞으면 반사 방향으로 계속 진행.
-public class HandMirrorItem : Item, IBulletItem
+public class HandMirrorItem : Item, IBullet
 {
     public int bounceCount = 1;
 
     public override void OnEquip(Player player) { }
     public override void OnUnequip(Player player) { }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         Debug.Log("HandMirrorItem OnBulletFired");
         bullet.AddBehavior(new BounceBehavior(count));

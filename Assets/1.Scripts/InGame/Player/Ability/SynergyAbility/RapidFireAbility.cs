@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 
 // 속사 - 연속 발사
-public class RapidFireAbility : SynergyAbility, IComboAttackItem
+public class RapidFireAbility : SynergyAbility, IComboAttack
 {
     public int rapidCount = 1;
 
@@ -25,7 +25,7 @@ public class RapidFireAbility : SynergyAbility, IComboAttackItem
         for (int i = 0; i < rapidCount; i++)
         {
             await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
-            Player.Instance.Attack(dir, false);
+            Player.Instance.Shoot(new NormalBullet(), dir, Player.Instance.attackPoint.position);
         }
     }
 }

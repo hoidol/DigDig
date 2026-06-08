@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 위험 감수 - 근접 거리 명중 시 공격력 100% 추가 데미지
-public class PointBlankAbility : Ability, IBulletItem
+public class PointBlankAbility : Ability, IBullet
 {
     const float CLOSE_RANGE = 2.5f;
 
@@ -13,7 +13,7 @@ public class PointBlankAbility : Ability, IBulletItem
         return $"{CLOSE_RANGE}m 이내 적중 시 공격력 100% 추가 데미지";
     }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         bullet.AddBulletForce(new PointBlankForce(CLOSE_RANGE));
     }
@@ -28,7 +28,7 @@ public class PointBlankForce : IBulletForce
         this.range = range;
     }
 
-    public float GetMultiDamage(BulletBase bullet, IHittable hit, RaycastHit2D hit2D)
+    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
     {
         float dist = Vector2.Distance(Player.Instance.transform.position, hit2D.point);
         return dist <= range ? Player.Instance.statMgr.AttackPower : 0f;

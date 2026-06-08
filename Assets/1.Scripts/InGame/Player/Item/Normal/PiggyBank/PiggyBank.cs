@@ -28,7 +28,7 @@ public class PiggyBank : MonoBehaviour, IPicker
     public void PickUp(IPickable pickable)
     {
         pickable.PickedUp();
-        Player.Instance.AddGold(1);
+        // Player.Instance.AddGold(1);
     }
 
     async UniTaskVoid CollectLoop(CancellationToken token)

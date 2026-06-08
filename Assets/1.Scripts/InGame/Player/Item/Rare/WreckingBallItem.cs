@@ -22,7 +22,7 @@ public class WreckingBallItem : TriggerCycleItem
     {
         if (ball != null) return;
         ball = Instantiate(ballPrefab, Player.Instance.transform.position, UnityEngine.Quaternion.identity);
-        ball.Init(Player.Instance.statMgr.MagicPower, DAMAGE_RATE);
+        ball.Init(Player.Instance.statMgr.AttackPower, DAMAGE_RATE);
     }
 
     public override void OnDeactivate()

@@ -15,7 +15,7 @@ public class Trap : Ally
     {
         base.Spawn(pos, lv);
         transform.position = Player.Instance.transform.position;
-        damage = Player.Instance.statMgr.MagicPower;
+        damage = Player.Instance.statMgr.AttackPower;
         readyToBomb = false;
         transform.DOMove(pos, 0.4f).OnComplete(() =>
         {

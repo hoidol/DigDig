@@ -14,7 +14,7 @@ public class ItemDisplayPanel : MonoBehaviour
     }
     public virtual void SetItemData(ItemData itemData)
     {
-        bgImage.color = ItemData.GetGradeColor(itemData.grade);
+        // bgImage.color = ItemData.GetGradeColor(itemData.grade);
         thumImage.sprite = itemData.thumbnail;
     }
 

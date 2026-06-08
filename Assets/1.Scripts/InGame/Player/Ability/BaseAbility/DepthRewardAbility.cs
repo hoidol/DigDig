@@ -6,7 +6,7 @@ public class DepthRewardAbility : Ability
 
     public override void OnEquip(Player player)
     {
-        Player.Instance.AddGold(RewardGold(GameManager.Instance.ordealClearCount));
+        // Player.Instance.AddGold(RewardGold(GameManager.Instance.ordealClearCount));
     }
 
     public int RewardGold(int count)

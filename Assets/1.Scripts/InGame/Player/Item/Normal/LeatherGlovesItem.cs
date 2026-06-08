@@ -8,7 +8,7 @@ public class LeatherGloves : Item
 
     public override void OnEquip(Player player)
     {
-        buff = new Buff(StatType.AttackSpeed, 1f + 0.1f * count, StatOpType.Multiply);
+        buff = new Buff(StatType.AttackSpeed, 1f + 0.1f, StatOpType.Multiply);
         player.AddBuff(buff);
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnOreStoneDestroyedEvent);
     }
@@ -38,11 +38,11 @@ public class LeatherGloves : Item
     {
         Player player = Player.Instance;
         player.RemoveBuff(buff);
-        if (count > 0)
-        {
-            buff = new Buff(StatType.AttackSpeed, 1f + 0.1f * count, StatOpType.Multiply);
-            player.AddBuff(buff);
-        }
+        // if (count > 0)
+        // {
+        //     buff = new Buff(StatType.AttackSpeed, 1f + 0.1f * count, StatOpType.Multiply);
+        //     player.AddBuff(buff);
+        // }
 
 
     }

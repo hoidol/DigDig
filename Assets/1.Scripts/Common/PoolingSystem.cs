@@ -41,4 +41,10 @@ public class PoolingSystem : MonoBehaviour
         list.Add(obj);
         return obj;
     }
+
+    public void ReturnAll()
+    {
+        for (int i = 0; i < list.Count; i++)
+            list[i].SetActive(false);
+    }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 맹독탄: 30% 확률로 독 상태이상 부여
-public class PoisonBulletItem : Item, IBulletItem
+public class PoisonBulletItem : Item, IBullet
 {
     const float CHANCE = 30f;
     const float DURATION = 3f;
@@ -22,7 +22,7 @@ public class PoisonBulletItem : Item, IBulletItem
         if (dpsValue < 1f) dpsValue = 1f;
     }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         if (Random.Range(0f, 100f) < CHANCE)
             bullet.AddBehavior(new PoisonOnHitBehavior(DURATION, dpsValue));

@@ -16,14 +16,14 @@ public class AbilityCanvas : CanvasUI<AbilityCanvas>
     }
     void UpdateCanvas()
     {
-        List<AbilityData> abilityDatas = AbilityManager.Instance.GetAbilityDatas(4);
-        for (int i = 0; i < abilityPanels.Length; i++)
-        {
-            if (i < abilityDatas.Count)
-                abilityPanels[i].SetAbilityData(abilityDatas[i]);
-            else
-                abilityPanels[i].SetAbilityData(null);
-        }
+        // List<AbilityData> abilityDatas = AbilityManager.Instance.GetAbilityDatas(4);
+        // for (int i = 0; i < abilityPanels.Length; i++)
+        // {
+        //     if (i < abilityDatas.Count)
+        //         abilityPanels[i].SetAbilityData(abilityDatas[i]);
+        //     else
+        //         abilityPanels[i].SetAbilityData(null);
+        // }
 
     }
     public void OnClickedReset()

@@ -12,9 +12,11 @@ public class EnemyData : ScriptableObject
     public EnemyType type;
     public float attackSpeed;
     public float attackRange;
-    public float moveSpeed;
+    public float moveRange;
     public int exp;
     public Enemy prefab;
+    public Vector2Int size;
+    public bool breakTileWhenSpawn;
 
     public float hpMultiplier;
     public float attackPowerMultiplier;
@@ -22,13 +24,13 @@ public class EnemyData : ScriptableObject
     // 최종 체력 = stageData.enemyHp * 에너미 배율 * 층 배율 * 웨이브 배율
     public float GetHp()
     {
-        return GameManager.Instance.stageData.GetOrdealProgressData().enemyHp * hpMultiplier;
+        return GameManager.Instance.stageData.GetPhaseData().enemyHp * hpMultiplier;
     }
 
     // 최종 공격력 = stageData.enemyAttackPower * 에너미 배율 * 층 배율 * 웨이브 배율
     public float GetAttackPower()
     {
-        return GameManager.Instance.stageData.GetOrdealProgressData().enemyAttackPower * attackPowerMultiplier;
+        return GameManager.Instance.stageData.GetPhaseData().enemyAttackPower * attackPowerMultiplier;
     }
 
 #if UNITY_EDITOR
@@ -45,10 +47,12 @@ public class EnemyData : ScriptableObject
         int iType = System.Array.IndexOf(headers, "type");
         int iAttackSpeed = System.Array.IndexOf(headers, "attackSpeed");
         int iAttackRange = System.Array.IndexOf(headers, "attackRange");
-        int iMoveSpeed = System.Array.IndexOf(headers, "moveSpeed");
+        int iMoveRange = System.Array.IndexOf(headers, "moveRange");
         int iExp = System.Array.IndexOf(headers, "exp");
         int iHpMul = System.Array.IndexOf(headers, "hpMultiplier");
         int iAtkMul = System.Array.IndexOf(headers, "attackPowerMultiplier");
+        int iSize = System.Array.IndexOf(headers, "size");
+        int iBreakTile = System.Array.IndexOf(headers, "breakTileWhenSpawn");
 
         for (int i = 1; i < lines.Length; i++)
         {
@@ -60,10 +64,13 @@ public class EnemyData : ScriptableObject
             if (System.Enum.TryParse<EnemyGrade>(Col(cols, iGrade), out var g)) grade = g;
             if (float.TryParse(Col(cols, iAttackSpeed), NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) attackSpeed = v;
             if (float.TryParse(Col(cols, iAttackRange), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) attackRange = v;
-            if (float.TryParse(Col(cols, iMoveSpeed), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) moveSpeed = v;
+            if (float.TryParse(Col(cols, iMoveRange), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) moveRange = v;
             if (int.TryParse(Col(cols, iExp), out var e)) exp = e;
             if (float.TryParse(Col(cols, iHpMul), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) hpMultiplier = v;
             if (float.TryParse(Col(cols, iAtkMul), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) attackPowerMultiplier = v;
+            if (int.TryParse(Col(cols, iSize), out var s)) size = new Vector2Int(s, s);
+            var breakStr = Col(cols, iBreakTile).ToUpper();
+            if (breakStr == "TRUE" || breakStr == "FALSE") breakTileWhenSpawn = breakStr == "TRUE";
 
             EditorUtility.SetDirty(this);
             Debug.Log($"[EnemyData] {type} LoadData 완료");

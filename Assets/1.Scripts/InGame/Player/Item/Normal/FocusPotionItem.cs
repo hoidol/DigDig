@@ -6,7 +6,7 @@ public class FocusPotionItem : Item
 
     public override void OnEquip(Player player)
     {
-        count++;
+        //count++;
         UpdateItem();
     }
 
@@ -16,7 +16,7 @@ public class FocusPotionItem : Item
 
         if (buff != null) player.RemoveBuff(buff);
 
-        buff = new Buff(StatType.AttackPower, BONUS_PER_STACK * count, StatOpType.Add);
+        buff = new Buff(StatType.AttackPower, BONUS_PER_STACK, StatOpType.Add);
         player.AddBuff(buff);
     }
 
@@ -26,5 +26,5 @@ public class FocusPotionItem : Item
     }
 
     public override string GetDescription(bool detail = false)
-        => $"공격력 +{BONUS_PER_STACK * count}";
+        => $"공격력 +{BONUS_PER_STACK}";
 }

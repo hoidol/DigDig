@@ -6,13 +6,13 @@ public abstract class PlayerEnhancement : MonoBehaviour
 {
     public string key;
     public bool equipped;
-    public int count = 1;
+    // public int count = 1;
 
     public virtual string GetDescription(bool detail = false)
     {
         return "설명 없음";
     }
-    public virtual void LevelUp() { count++; }
+    // public virtual void LevelUp() { count++; }
     public virtual void OnEquip(Player player)
     {
         equipped = true;

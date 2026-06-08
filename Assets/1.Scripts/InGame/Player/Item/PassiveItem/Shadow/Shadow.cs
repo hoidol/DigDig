@@ -16,7 +16,7 @@ public class Shadow : MonoBehaviour
 
     public void Shoot(Vector2 dir, float damage)
     {
-        var bullet = PlayerBullet.Instantiate();
+        var bullet = PlayerBulletObject.Instantiate();
         bullet.ClearBehaviors();
         bullet.transform.position = attackPoint != null
             ? attackPoint.position

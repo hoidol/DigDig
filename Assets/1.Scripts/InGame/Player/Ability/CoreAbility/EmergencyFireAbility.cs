@@ -2,7 +2,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 
 // 긴급 호출 - 마지막 탄 발사 시 360도 방향으로 방사형 탄 발사
-public class EmergencyFireAbility : Ability, IAttackItem
+public class EmergencyFireAbility : Ability, IAttack, IPreAttack
 {
     const int BULLET_COUNT = 5;
 
@@ -11,10 +11,14 @@ public class EmergencyFireAbility : Ability, IAttackItem
         return $"모든 총알 소비 후 방사형으로 {BULLET_COUNT}탄 난사";
     }
 
+    public void OnPreAttack(Player player, Vector2 dir, int shotOrder)
+    {
+
+    }
     public void OnAttack(Player player, Vector2 dir)
     {
         if (player.isReloading) return;
-        if (player.curBulletCount != 1) return;
+        //if (player.curBulletCount != 1) return; //마지막 탄인지 확인
 
         FireRadial(player, dir).Forget();
     }
@@ -27,10 +31,11 @@ public class EmergencyFireAbility : Ability, IAttackItem
         {
             float rad = (baseAngle + angleStep * i) * Mathf.Deg2Rad;
             Vector2 shootDir = new(Mathf.Cos(rad), Mathf.Sin(rad));
-            player.weapon.Shoot(shootDir, Vector2.zero);
+            player.weapon.Shoot(new NormalBullet(), shootDir, Vector2.zero);
             await UniTask.Delay(30);
         }
     }
 
     public override void OnUnequip(Player player) { }
+
 }

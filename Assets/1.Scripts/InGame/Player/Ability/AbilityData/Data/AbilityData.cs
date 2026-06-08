@@ -35,7 +35,7 @@ public class AbilityData : ScriptableObject
 
     public static AbilityData GetAbilityData(string key)
     {
-        return AbilityManager.Instance.GetAbilityData(key);
+        return null;// return AbilityManager.Instance.GetAbilityData(key);
     }
 
 #if UNITY_EDITOR
@@ -88,11 +88,11 @@ public class AbilityData : ScriptableObject
             if (iTotalCount >= 0 && iTotalCount < cols.Length &&
                 int.TryParse(cols[iTotalCount].Trim(), out int totalCount) && totalCount > 0)
             {
-                condList.Add(new ConditionData
-                {
-                    conditionType = ConditionType.TotalAbilityCount,
-                    count = totalCount
-                });
+                // condList.Add(new ConditionData
+                // {
+                //     conditionType = ConditionType.TotalAbilityCount,
+                //     count = totalCount
+                // });
             }
             conditions = condList.ToArray();
 

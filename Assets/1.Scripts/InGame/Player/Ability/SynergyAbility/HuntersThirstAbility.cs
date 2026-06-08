@@ -22,7 +22,7 @@ public class HuntersThirstAbility : SynergyAbility
         if (Random.Range(0f, 100f) <= 5)
         {
             Debug.Log("HuntersThirstAbility 체력 회복");
-            float healAmount = Player.Instance.statMgr.MaxHp * 0.01f * count;
+            float healAmount = Player.Instance.statMgr.MaxHp * 0.01f;
             Player.Instance.AddHp(healAmount);
         }
 

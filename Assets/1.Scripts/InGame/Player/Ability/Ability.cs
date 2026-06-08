@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class Ability : PlayerEnhancement
 {
-    public AbilityData abilityData => AbilityManager.Instance.GetAbilityData(key);
+    public AbilityData abilityData;// => AbilityManager.Instance.GetAbilityData(key);
 
 
 

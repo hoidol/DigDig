@@ -54,7 +54,7 @@ public class ThunderItem : TriggerItem
 
     void Strike(Vector2 pos)
     {
-        float damage = Player.Instance.statMgr.MagicPower
+        float damage = Player.Instance.statMgr.AttackPower
             * damageRates[Mathf.Clamp(count - 1, 0, damageRates.Length - 1)];
 
         AOEUtil.DamageEnemies(pos, strikeRadius, damage, hittableLayer);

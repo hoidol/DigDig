@@ -15,7 +15,7 @@ public class Prism : OrbitOrb
     // OrbitOrb의 OnTriggerEnter2D(IHittable) 대신 PlayerBullet 감지
     void OnTriggerEnter2D(Collider2D other)
     {
-        PlayerBullet bullet = other.GetComponent<PlayerBullet>();
+        PlayerBulletObject bullet = other.GetComponent<PlayerBulletObject>();
         if (bullet == null) return;
 
         Vector2 dir = bullet.transform.right;

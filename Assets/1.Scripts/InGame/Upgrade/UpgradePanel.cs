@@ -40,13 +40,13 @@ public class UpgradePanel : MonoBehaviour
     public virtual void OnClickedUpgrade()
     {
 
-        if (upgradeData.GetPrice() > Player.Instance.gold)
-        {
-            //구매 불가
-            return;
-        }
+        // if (upgradeData.GetPrice() > Player.Instance.gold)
+        // {
+        //     //구매 불가
+        //     return;
+        // }
 
-        Player.Instance.AddGold(-upgradeData.GetPrice());
+        // Player.Instance.AddGold(-upgradeData.GetPrice());
         //Player.Instance.Upgrade(upgradeType);
         UpgradeCanvas.Instance.UpdateCanvas();
     }

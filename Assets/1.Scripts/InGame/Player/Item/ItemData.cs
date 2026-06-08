@@ -6,34 +6,47 @@ public enum AcquireMethod
     Purchase = 1 << 0,
     Select = 1 << 1,
     Merge = 1 << 2,
+
 }
 
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
+    public static readonly int MAX_LEVEL = 3;
     public string key;
     public string Title => itemName;
     public string itemName;
     public string desc;
-    public int level;//무기의 레벨 1부터 ->10까지
-    public int maxOwnCount; //최대 소유 개수 
+    //public int level;//무기의 레벨 1부터 ->10까지
+    // public int maxOwnCount; //최대 소유 개수 
     public bool hideDisplay; // true면 보유 현황 UI에 표시 안 함 - 물약용
     public AcquireMethod acquireMethod;
     public Sprite thumbnail;
     //[SerializeField] int price;
 
-    public int GetPrice()
-    {
-        return prices[level - 1];
-    }
-    public Grade grade;      // 등급별 필터링용
+    // public int GetPrice()
+    // {
+    //     return prices[level - 1];
+    // }
+    // public Grade grade;      // 등급별 필터링용
     public Item itemPrefab;
-    public ConditionData[] addEffectUnlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
+    public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
     public int applyOrder; // 아이템 적용 순서
-    public string[] mergeItemKeys; // 재료가 될 수 있는 상위 아이템
-    public string[] IncludingItems; // 보유 시 보유처리되는 아이템 리스트
+    // public string[] mergeItemKeys; // 재료가 될 수 있는 상위 아이템
+    // public string[] IncludingItems; // 보유 시 보유처리되는 아이템 리스트
     // 실제 효과는 Item 컴포넌트(or Strategy)로 분리
-
+    public bool CheckUnlock()
+    {
+        bool unlocked = true;
+        for (int i = 0; i < unlockConditions.Length; i++)
+        {
+            if (!unlockConditions[i].Check())
+            {
+                unlocked = false;
+            }
+        }
+        return unlocked;
+    }
     public static Color GetGradeColor(Grade grade)
     {
         return grade switch
@@ -79,11 +92,11 @@ public class ItemData : ScriptableObject
         int iDesc = System.Array.IndexOf(headers, "Desc");
         int iAcquire = System.Array.IndexOf(headers, "Purchase,Select");
         int iGrade = System.Array.IndexOf(headers, "Grade");
-        int iLevel = System.Array.IndexOf(headers, "Level");
+        // int iLevel = System.Array.IndexOf(headers, "Level");
         int iHide = System.Array.IndexOf(headers, "hideDisplay");
         int iOwn = System.Array.IndexOf(headers, "OwnCount");
-        int iIncluding = System.Array.IndexOf(headers, "IncludingItems");
-        int iMerge = System.Array.IndexOf(headers, "MergeItems");
+        // int iIncluding = System.Array.IndexOf(headers, "IncludingItems");
+        // int iMerge = System.Array.IndexOf(headers, "MergeItems");
 
         for (int i = 1; i < lines.Length; i++)
         {
@@ -107,24 +120,24 @@ public class ItemData : ScriptableObject
                         acquireMethod |= am;
                 }
             }
-            if (iGrade >= 0 && iGrade < cols.Length && System.Enum.TryParse<Grade>(cols[iGrade].Trim(), out var g))
-                grade = g;
-            if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
-                level = lv;
+            // if (iGrade >= 0 && iGrade < cols.Length && System.Enum.TryParse<Grade>(cols[iGrade].Trim(), out var g))
+            //     grade = g;
+            // if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
+            //     level = lv;
             if (iHide >= 0 && iHide < cols.Length)
                 hideDisplay = cols[iHide].Trim().ToUpper() == "TRUE";
-            if (iOwn >= 0 && iOwn < cols.Length && int.TryParse(cols[iOwn].Trim(), out int own))
-                maxOwnCount = own;
-            if (iIncluding >= 0 && iIncluding < cols.Length)
-            {
-                string raw = cols[iIncluding].Trim();
-                IncludingItems = string.IsNullOrEmpty(raw) ? new string[0] : raw.Split(';');
-            }
-            if (iMerge >= 0 && iMerge < cols.Length)
-            {
-                string raw = cols[iMerge].Trim();
-                mergeItemKeys = string.IsNullOrEmpty(raw) ? new string[0] : raw.Split(';');
-            }
+            // if (iOwn >= 0 && iOwn < cols.Length && int.TryParse(cols[iOwn].Trim(), out int own))
+            //     maxOwnCount = own;
+            // if (iIncluding >= 0 && iIncluding < cols.Length)
+            // {
+            //     string raw = cols[iIncluding].Trim();
+            //     IncludingItems = string.IsNullOrEmpty(raw) ? new string[0] : raw.Split(';');
+            // }
+            // if (iMerge >= 0 && iMerge < cols.Length)
+            // {
+            //     string raw = cols[iMerge].Trim();
+            //     mergeItemKeys = string.IsNullOrEmpty(raw) ? new string[0] : raw.Split(';');
+            // }
 
             UnityEditor.EditorUtility.SetDirty(this);
             Debug.Log($"[ItemData] {key} LoadData 완료");
@@ -156,12 +169,9 @@ public class ItemData : ScriptableObject
             key = name;
 
         string prefabRootFolder = "Assets/3.Prefabs/Item";
-        string gradeFolder = $"{prefabRootFolder}/{grade}";
 
         // 기존 프리팹 탐색 (grade 폴더 → 루트 폴더 순)
-        string[] searchFolders = UnityEditor.AssetDatabase.IsValidFolder(gradeFolder)
-            ? new[] { gradeFolder, prefabRootFolder }
-            : new[] { prefabRootFolder };
+        string[] searchFolders = new[] { prefabRootFolder };
         string[] guids = UnityEditor.AssetDatabase.FindAssets($"{key}Item t:Prefab", searchFolders);
         foreach (string guid in guids)
         {
@@ -182,8 +192,6 @@ public class ItemData : ScriptableObject
         // 프리팹 없으면 grade 폴더에 새로 생성
         if (!UnityEditor.AssetDatabase.IsValidFolder(prefabRootFolder))
             System.IO.Directory.CreateDirectory(prefabRootFolder);
-        if (!UnityEditor.AssetDatabase.IsValidFolder(gradeFolder))
-            UnityEditor.AssetDatabase.CreateFolder(prefabRootFolder, grade.ToString());
 
         var go = new GameObject(key);
 
@@ -204,14 +212,14 @@ public class ItemData : ScriptableObject
             return;
         }
 
-        string newPath = $"{gradeFolder}/{key}Item.prefab";
-        var newPrefab = UnityEditor.PrefabUtility.SaveAsPrefabAsset(go, newPath);
+        // string newPath = $"{gradeFolder}/{key}Item.prefab";
+        var newPrefab = UnityEditor.PrefabUtility.SaveAsPrefabAsset(go, prefabRootFolder);
         DestroyImmediate(go);
 
         itemPrefab = newPrefab.GetComponent<Item>();
         itemPrefab.key = key;
         UnityEditor.EditorUtility.SetDirty(this);
-        Debug.Log($"[ItemData] {key} 새 prefab 생성 완료: {newPath}");
+        Debug.Log($"[ItemData] {key} 새 prefab 생성 완료: {prefabRootFolder}");
     }
 
     string CreateItemScript(string className)
@@ -245,6 +253,6 @@ public class {className} : Item
         return filePath;
     }
 #endif
-    int[] prices = { 10, 25, 45, 70, 100, 135, 175, 220, 270, 325 };
+    // int[] prices = { 10, 25, 45, 70, 100, 135, 175, 220, 270, 325 };
 
 }

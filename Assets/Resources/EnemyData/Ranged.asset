@@ -16,8 +16,10 @@ MonoBehaviour:
   type: 1
   attackSpeed: 3
   attackRange: 7
-  moveSpeed: 2
+  moveRange: 8
   exp: 1
   prefab: {fileID: 3778664763791200787, guid: 194dbc45c65d642dda037c3e4f97c241, type: 3}
+  size: {x: 2, y: 2}
+  breakTileWhenSpawn: 0
   hpMultiplier: 0.6
   attackPowerMultiplier: 1

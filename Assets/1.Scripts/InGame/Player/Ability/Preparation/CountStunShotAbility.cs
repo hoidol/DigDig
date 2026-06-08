@@ -1,7 +1,7 @@
 // 6번째 발사 총알은 스턴 (보스 제외)
 using UnityEngine;
 
-public class CountStunShotAbility : Ability, IAttackItem, IBulletItem
+public class CountStunShotAbility : Ability, IAttack, IBullet
 {
     int shotCount;
     bool applyNext;
@@ -26,7 +26,7 @@ public class CountStunShotAbility : Ability, IAttackItem, IBulletItem
         applyNext = true;
     }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         if (!applyNext) return;
         applyNext = false;

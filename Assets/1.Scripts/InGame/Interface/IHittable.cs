@@ -8,4 +8,6 @@ public interface IHittable
     }
     void TakeDamage(DamageData damageData);
     bool CanHit();
+
+    void ApplyStatusEffect(StatusEffect effect);
 }

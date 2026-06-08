@@ -16,7 +16,7 @@ public class WisdomPotionItem : Item
 
         if (buff != null) player.RemoveBuff(buff);
 
-        buff = new Buff(StatType.MagicPower, BONUS_PER_STACK * count, StatOpType.Add);
+        // buff = new Buff(StatType.MagicPower, BONUS_PER_STACK * count, StatOpType.Add);
         player.AddBuff(buff);
     }
 

@@ -20,7 +20,7 @@ public class BladeOrbitItem : OrbitItemBase
 
     void ApplyDamage()
     {
-        float damage = Player.Instance.statMgr.MagicPower * DAMAGE_RATE;
+        float damage = Player.Instance.statMgr.AttackPower * DAMAGE_RATE;
         foreach (var orb in orbs)
             orb.damage = damage;
     }

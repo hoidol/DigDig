@@ -1,14 +1,15 @@
-eventTypes,chances,triggers,ordealClearCount,hpThreshold,distancesFromPlayer
-NormalBox,,OrdealEnd,1,,10/12
-NormalMerchant,,OrdealEnd,1,,10/12
-NormalMerchant/RareMerchant,70/30,OrdealEnd,2,,10/12
-NormalMerchant,,OrdealEnd,3,,10/12
-NormalBox/RareBox,70/30,OrdealEnd,4,,10/12
-NormalMerchant/RareMerchant,70/30,OrdealEnd,5,,10/12
-NormalMerchant/RareMerchant,70/30,OrdealEnd,6,,10/12
-NormalBox,,OrdealEnd,7,,10/12
-LifeFountain,30,OrdealEnd/LowHp,2,0.6,10/12
-LifeFountain,30,OrdealEnd/LowHp,5,0.6,10/12
-LifeFountain,30,OrdealEnd/LowHp,8,0.6,10/12
-Snake,,OrdealEnd,3,,10/12
-Snake,,OrdealEnd,7,,10/12
+eventTypes	chances	triggers	phaseIdx
+NormalBox		PhaseEnd	1
+NormalMerchant		PhaseEnd	2
+NormalMerchant/RareMerchant	70/30	PhaseEnd	3
+NormalMerchant		PhaseEnd	4
+NormalBox/RareBox	70/30	PhaseEnd	5
+NormalMerchant/RareMerchant	70/30	PhaseEnd	6
+NormalMerchant/RareMerchant	70/30	PhaseEnd	7
+NormalBox		PhaseEnd	8
+NormalBox		PhaseEnd	9
+LifeFountain	90	PhaseEnd	2
+LifeFountain	50	PhaseEnd	5
+LifeFountain	90	PhaseEnd	8
+Snake		PhaseEnd	3
+Snake		PhaseEnd	7

@@ -5,7 +5,7 @@ public class BrokenMagazineItem : Item
 
     public override void OnEquip(Player player)
     {
-        buff = new Buff(StatType.BulletCount, -5, StatOpType.Add);
+        // buff = new Buff(StatType.BulletCount, -5, StatOpType.Add);
         player.AddBuff(buff);
     }
 

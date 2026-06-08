@@ -24,7 +24,7 @@ public abstract class Boss : Enemy
         bossData = data as BossData;
     }
 
-    public override void Spawn(Vector2 pos)
+    public override void Spawn(Vector2 pos, params Vector2Int[] indexs)
     {
         currentPhase = 0;
         base.Spawn(pos);
@@ -68,7 +68,7 @@ public abstract class Boss : Enemy
 
     protected virtual void OnEnterPhase(int phase)
     {
-        ChangeState(EnemyState.Approaching);
+        ChangeState(EnemyState.Waiting);
     }
 
     protected override void StartAttack()

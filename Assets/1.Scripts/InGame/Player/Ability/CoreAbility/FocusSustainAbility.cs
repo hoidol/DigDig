@@ -20,6 +20,6 @@ public class FocusSustainAbility : Ability
 
     void OnEnemyDead(EnemyDeadEvent e)
     {
-        Player.Instance.QueueExtraShot(1);
+        // Player.Instance.QueueExtraShot(1);
     }
 }

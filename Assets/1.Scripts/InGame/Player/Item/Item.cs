@@ -2,6 +2,7 @@ using UnityEngine;
 
 public abstract class Item : PlayerEnhancement
 {
+    public int count;
     public override string GetDescription(bool detail = false)
     {
         Debug.Log($"gameObject.name {gameObject.name}");

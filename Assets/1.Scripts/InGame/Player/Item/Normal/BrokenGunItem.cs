@@ -14,7 +14,8 @@ public class BrokenGunItem : TriggerItem
         base.OnTrigger();
         float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
         Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-        Player player = Player.Instance;
-        player.Shoot(dir, player.transform.position);
+        // Player player = Player.Instance;
+        // player.Shoot(dir, player.transform.position);
+        Player.Instance.weapon.Shoot(new NormalBullet(), dir, Vector2.zero);
     }
 }

@@ -20,6 +20,6 @@ public class SensitivitySustainAbility : Ability
 
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
-        Player.Instance.QueueExtraShot(1);
+        // Player.Instance.QueueExtraShot(1);
     }
 }

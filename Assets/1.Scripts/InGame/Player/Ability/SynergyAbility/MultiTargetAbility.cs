@@ -24,7 +24,7 @@ public class MultiTargetAbility : Ability
 
     void OnBulletFired(BulletFiredEvent e)
     {
-        if (!e.fromPlayer) return;
+        // if (!e.fromPlayer) return;
 
         Collider2D[] cols = Physics2D.OverlapCircleAll(
             Player.Instance.transform.position, SEARCH_RADIUS,
@@ -41,7 +41,8 @@ public class MultiTargetAbility : Ability
             if (fired >= MAX_TARGETS) break;
             Vector2 dir = ((Vector2)col.transform.position - (Vector2)Player.Instance.attackPoint.position).normalized;
             if (Vector2.Angle(e.dir, dir) < EXCLUDE_ANGLE) continue;
-            Player.Instance.Shoot(dir, Vector2.zero);
+
+            Player.Instance.weapon.Shoot(new NormalBullet(), dir, Vector2.zero);
             fired++;
         }
     }

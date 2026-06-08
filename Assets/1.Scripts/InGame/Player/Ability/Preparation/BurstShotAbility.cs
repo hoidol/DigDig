@@ -24,10 +24,10 @@ public class BurstShotAbility : Ability
 
     void OnBulletFired(BulletFiredEvent e)
     {
-        if (!e.fromPlayer) return;
+        //if (!e.fromPlayer) return;
         shotCount++;
         if (shotCount < TRIGGER_COUNT) return;
         shotCount = 0;
-        Player.Instance.QueueExtraShot(1);
+        // Player.Instance.QueueExtraShot(1);
     }
 }

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 화약탄 - 15% 확률로 폭발탄 발사
-public class GunpowderBulletAbility : Ability, IBulletItem
+public class GunpowderBulletAbility : Ability, IBullet
 {
     const float PROB = 0.15f;
     const float RADIUS = 1.0f;
@@ -15,7 +15,7 @@ public class GunpowderBulletAbility : Ability, IBulletItem
         return $"{PROB * 100:0}% 확률로 폭발탄 발사";
     }
 
-    public void OnBulletFired(PlayerBullet bullet)
+    public void OnBulletFired(PlayerBulletObject bullet)
     {
         if (Random.value > PROB) return;
         float dmg = Player.Instance.statMgr.AttackPower * DAMAGE_RATIO;

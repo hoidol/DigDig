@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
+using System.Linq;
+public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
 {
     public EnemyType enemyType; // 적 종류 구분
     public EnemyState state { get; private set; } // 적 상태 - FSM 패턴
@@ -12,7 +13,9 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
     {
         get; set;
     }
-
+    public int size;
+    [Header("생성 시 타일을 부수면서 등장함")]
+    public bool breakTileWhenSpawn;
     #region 
     [SerializeField] public float MaxHp;//{ get; private set; }
     public float CurHp { get; private set; }
@@ -33,7 +36,18 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
     float IHpUI.MaxHp => MaxHp;
     float IHpUI.CurHp => CurHp;
     Vector3 IHpUI.HpUIPosition => hpPoint.position;
+
+    public List<Vector2Int> Indexs => indexs;
+
+
+
+    public int Size => size;
+
+    public bool BreakTileWhenSpawn => breakTileWhenSpawn;
+    public List<Vector2Int> indexs = new List<Vector2Int>();
+    public float apearTime = 2;
     #endregion
+
     protected virtual void Awake()
     {
         rg2d = GetComponent<Rigidbody2D>();
@@ -42,17 +56,36 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
     //Enemy 게임 데이터 설정
     public virtual void Init(EnemyData data)
     {
+
         enemyData = data;
         statusEffectHandler.Init();
     }
     //적 생성 시 호출
-    public virtual void Spawn(Vector2 pos)
+    public virtual void Spawn(Vector2 pos, params Vector2Int[] indexs)
     {
-        gameObject.SetActive(true);
+        //apearTime 초 후에 등장
+        for (int i = 0; i < indexs.Length; i++)
+        {
+            RegisterIndex(indexs[i]);
+        }
+
+        gameObject.SetActive(false);
+
+        EnemySpawnIndicator.Get(pos, null).PlayIndicator((float)size, apearTime, () =>
+        {
+            gameObject.SetActive(true);
+
+            if (breakTileWhenSpawn)
+            {
+
+            }
+        });
+
+
         transform.position = pos;
         MaxHp = enemyData.GetHp();
         CurHp = MaxHp;
-        ChangeState(EnemyState.Approaching);
+        ChangeState(EnemyState.Waiting);
 
         attackTimer = 0;
         attacking = false;
@@ -85,7 +118,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
         if (attacking)
             return;
 
-        if (state == EnemyState.Approaching) UpdateApproaching();
+        if (state == EnemyState.Waiting) UpdateWaiting();
         else if (state == EnemyState.Attack) UpdateAttack();
 
     }
@@ -106,14 +139,26 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
         pushCoroutine = null;
     }
 
+    public void ApplyStatusEffect(StatusEffect effect)
+    {
 
+        if (statusEffectHandler == null)
+        {
+            statusEffectHandler = GetComponent<StatusEffectHandler>();
+            if (statusEffectHandler == null)
+            {
+                statusEffectHandler = gameObject.AddComponent<StatusEffectHandler>();
+            }
+        }
+        statusEffectHandler.Apply(effect);
+    }
     public virtual void CancelAttack()
     {
 
     }
 
-    //상태가 Approaching 인 경우 처리
-    public virtual void UpdateApproaching()
+    //상태가 Waiting 인 경우 처리
+    public virtual void UpdateWaiting()
     {
         Vector2 vec = Player.Instance.transform.position - transform.position;
         if (vec.magnitude <= enemyData.attackRange)
@@ -122,9 +167,12 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
             return;
         }
         SetFacing(vec.x);
-        rg2d.linearVelocity = vec.normalized * (enemyData.moveSpeed * statusEffectHandler.SlowRate);
-    }
 
+    }
+    public virtual void UpdateMoving()
+    {
+
+    }
     //상태가 Attack 인 경우 처리
     public virtual void UpdateAttack()
     {
@@ -146,7 +194,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
     protected void EndAttack()
     {
         attacking = false;
-        ChangeState(EnemyState.Approaching);
+        ChangeState(EnemyState.Waiting);
     }
 
     // IHittable 인터페이스 구현 부
@@ -174,6 +222,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
 
     protected virtual void OnDead(DamageData damage)
     {
+        ReleaseIndex();
         ChangeState(EnemyState.Dead);
         hpUI?.Release();
         gameObject.SetActive(false);
@@ -187,11 +236,24 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI
     {
         return CurHp > 0;
     }
+
+    public void RegisterIndex(Vector2Int index)
+    {
+        indexs.Add(index);
+
+    }
+
+    public void ReleaseIndex()
+    {
+        MapManager.Instance.RegisterEmpty(indexs);
+
+    }
 }
 
 public enum EnemyState
 {
-    Approaching,
+    Waiting,
+    Moving,
     Attack,
     PhaseTransition,
     Dash,

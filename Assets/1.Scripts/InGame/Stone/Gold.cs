@@ -44,7 +44,7 @@ public class Gold : MonoBehaviour, IPickable
     public void Take(IPicker picker)
     {
         IsTaken = true;
-        transform.DOMove(picker.Transform.position, 0.35f).OnComplete(() =>
+        transform.DOMove(picker.Transform.position, 0.1f).OnComplete(() =>
         {
             picker.PickUp(this);
         });

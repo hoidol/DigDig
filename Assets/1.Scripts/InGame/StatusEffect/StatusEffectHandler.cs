@@ -102,7 +102,7 @@ public class StatusEffectHandler : MonoBehaviour
         }
     }
 
-    void StopEffect(StatusEffect effect)
+    public void StopEffect(StatusEffect effect)
     {
         if (effect.EffectKey == null) return;
         if (!activeEffects.TryGetValue(effect.EffectKey, out var views)) return;

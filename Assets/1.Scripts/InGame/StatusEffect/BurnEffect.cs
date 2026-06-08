@@ -39,10 +39,12 @@ public class BurnEffect : StatusEffect
 
     public override void OnUpdate(StatusEffectHandler handler)
     {
-        if (damageTimer >= 1)
+        Debug.Log("BurnEffect OnUpdate");
+        if (damageTimer >= 0.5f)
         {
+            Debug.Log("BurnEffect OnUpdate if (damageTimer >= 0.5f)");
             hittable?.TakeDamage(damageData);
-            damageTimer = 0;
+            damageTimer = 0f;
         }
         damageTimer += Time.deltaTime;
     }

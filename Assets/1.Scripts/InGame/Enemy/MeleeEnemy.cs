@@ -6,12 +6,12 @@ public class MeleeEnemy : NormalEnemy
     protected override void Awake()
     {
         base.Awake();
-        meleeAttackIndicator = GetComponentInChildren<MeleeAttackIndicator>();
+        meleeAttackIndicator = GetComponentInChildren<MeleeAttackIndicator>(true);
     }
     DamageData damageData = new DamageData();
-    public override void Spawn(Vector2 pos)
+    public override void Spawn(Vector2 pos, params Vector2Int[] indexs)
     {
-        base.Spawn(pos);
+        base.Spawn(pos, indexs);
         meleeAttackIndicator.gameObject.SetActive(false);
         damageData.damage = enemyData.GetAttackPower();
     }
@@ -19,7 +19,7 @@ public class MeleeEnemy : NormalEnemy
     {
         base.StartAttack();
         meleeAttackIndicator.transform.right = Player.Instance.transform.position - transform.position;
-        meleeAttackIndicator.PlayIndicator(() =>
+        meleeAttackIndicator.PlayIndicator(0.7f, () =>
         {
             Collider2D[] cols = Physics2D.OverlapCircleAll(attackPoint.position, 1, LayerMask.GetMask("PlayerSide"));
             for (int i = 0; i < cols.Length; i++)

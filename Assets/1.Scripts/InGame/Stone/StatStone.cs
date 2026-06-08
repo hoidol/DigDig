@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 
-public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
+public class StatStone : EventObject, IHittable, IWayPointerTarget
 {
     static readonly Stack<StatStone> pool = new();
     public static StatStone prefab;
@@ -20,6 +20,8 @@ public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
     }
 
 
+
+
     public void Return()
     {
         if (!gameObject.activeSelf) return;
@@ -27,14 +29,10 @@ public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
         pool.Push(this);
     }
 
-    public Transform Transform => transform;
 
-    public Sprite Thum => statData.thum;
 
-    public float MaxTime => 120;
+    public override Sprite GetThum() => statData.thum;
 
-    public float CurTimer => curTimer;
-    public float curTimer;
 
 
     // public float curHp;
@@ -44,8 +42,9 @@ public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
     // public TMP_Text statInfoText;
     // public Transform damageTextPoint;
     StatData statData;
-    public void Spawn(Vector2 pos, StatData statData, int lv)
+    public void Spawn(Vector2 pos, StatData statData, int lv, Vector2Int index)
     {
+        RegisterIndex(index);
         this.statData = statData;
         destroying = false;
         transform.position = pos;
@@ -116,21 +115,22 @@ public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
 
     }
     bool destroying = false;
-    public void Destroy()
+    public override void Destroy()
     {
         destroying = true;
+        Debug.Log("StatStone Destroy()");
         StatCanvas.Instance.OpenCanvas();
         WayPointerCanvas.Instance?.Remove(this);
         Return();
     }
 
-    public void Appear(Vector2 spawnPos)
+    public override void Appear(Vector2 spawnPos)
     {
         WayPointerCanvas.Instance.AddWayPoint(this);
         ClearArea(spawnPos);
     }
 
-    public void ClearArea(Vector2 pos)
+    public override void ClearArea(Vector2 pos)
     {
         MapManager.Instance.ClearTilesInRadius(pos, 3f, 2);
     }
@@ -150,6 +150,11 @@ public class StatStone : MonoBehaviour, IHittable, IWayPointerTarget
             entered = false;
             Debug.Log("StatStone OnTiggerExit2D exited ");
         }
+    }
+
+    public void ApplyStatusEffect(StatusEffect effect)
+    {
+
     }
 
 }

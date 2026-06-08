@@ -18,13 +18,13 @@ public class TargetIndicator : MonoSingleton<TargetIndicator>
         }
 
         float dis = Vector2.Distance(target.position, Player.Instance.transform.position);
-        if (dis > Player.Instance.statMgr.AttackRange)
-        {
+        // if (dis > Player.Instance.statMgr.AttackRange)
+        // {
 
-            gameObject.SetActive(false);
-            target = null;
-            return;
-        }
+        //     gameObject.SetActive(false);
+        //     target = null;
+        //     return;
+        // }
 
 
         transform.position = target.position;

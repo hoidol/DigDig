@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShadowItem : Item, IAttackItem
+public class ShadowItem : Item, IAttack
 {
     public Shadow shadowPrefab;
     public float damageRate = 0.3f;

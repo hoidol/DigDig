@@ -28,7 +28,7 @@ public class ChainPickaxeItem : Item
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
         if (e.lastDamage == null || e.lastDamage.cause == null) return;
-        if (e.lastDamage.cause.GetComponent<PlayerBullet>() == null) return;
+        if (e.lastDamage.cause.GetComponent<PlayerBulletObject>() == null) return;
         if (Random.Range(0f, 100f) > CHANCE) return;
 
         Collider2D[] cols = Physics2D.OverlapCircleAll(
@@ -44,7 +44,7 @@ public class ChainPickaxeItem : Item
         }
         candidates.Sort((a, b) => a.dist.CompareTo(b.dist));
 
-        float damage = Player.Instance.statMgr.MagicPower;
+        float damage = Player.Instance.statMgr.AttackPower;
         int hitCount = Mathf.Min(CHAIN_COUNT, candidates.Count);
         for (int i = 0; i < hitCount; i++)
         {

@@ -38,9 +38,9 @@ public class SteadyReloadAbility : Ability
 
     void ApplyBuff()
     {
-        buff = new Buff(StatType.ReloadTime, 0.5f, StatOpType.Multiply);
-        Player.Instance.AddBuff(buff);
-        buffActive = true;
+        // buff = new Buff(StatType.ReloadTime, 0.5f, StatOpType.Multiply);
+        // Player.Instance.AddBuff(buff);
+        // buffActive = true;
     }
 
     void RemoveBuff()

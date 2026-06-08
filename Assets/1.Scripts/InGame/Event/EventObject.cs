@@ -1,20 +1,30 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EventObject : MonoBehaviour, IWayPointerTarget
+public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 {
     public EventType eventType;
     [SerializeField] protected float clearRadius = 5f;
     public Transform Transform => transform;
 
-    public Sprite Thum => thum;
+    public virtual Sprite GetThum() => thum;
     [SerializeField] Sprite thum;
 
     public float MaxTime => maxTime;
     [SerializeField] protected float maxTime;
 
     public float CurTimer => curTimer;
+
+    public List<Vector2Int> Indexs => indexs;
+
     [SerializeField] protected float curTimer;
+
+    List<Vector2Int> indexs = new List<Vector2Int>();
+
+    public bool BreakTileWhenSpawn => true;
+
+    public int Size => 1;
 
 
 
@@ -39,9 +49,22 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget
         if (curTimer > 0)
             curTimer -= Time.deltaTime;
     }
-    public void ClearArea(Vector2 pos)
+    public virtual void ClearArea(Vector2 pos)
     {
         MapManager.Instance.ClearTilesInRadius(pos, clearRadius, clearRadius);
+    }
+
+
+    public void RegisterIndex(Vector2Int index)
+    {
+        indexs.Add(index);
+
+    }
+
+    public void ReleaseIndex()
+    {
+        MapManager.Instance.RegisterEmpty(indexs);
+
     }
 
 }

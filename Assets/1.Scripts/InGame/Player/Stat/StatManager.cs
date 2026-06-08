@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 public class StatManager : MonoSingleton<StatManager>
 {
     private Dictionary<string, StatData> statDataDic = new Dictionary<string, StatData>();
@@ -18,23 +17,20 @@ public class StatManager : MonoSingleton<StatManager>
     void Start()
     {
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
-        GameEventBus.Subscribe<DestroyedStoneEvent>(OnOreStoneDestroyed);
-
+        timer = 20;
     }
 
 
     List<StatStone> statStones = new();
     int spawnCount;
-    int destroyStoneCount;
-    //float maxStatStoneDistance = 7;
-    //float minStatStoneDistance = 7;
     Vector2 randomGap = new Vector2(1f, 2.5f);
     private void OnStartGame(StartGameEvent e)
     {
-        // Debug.Log("StatManager OnStartGame");
+        timer = 20;
     }
-    float spawnTime = 15;
+    float spawnTime = 20;
     float timer = 0;
+    const int MAX_STATSTONE_COUNT = 3;
     void Update()
     {
         if (timer > 0)
@@ -42,13 +38,8 @@ public class StatManager : MonoSingleton<StatManager>
 
         if (timer <= 0)
         {
-            SpawnStatSpawn();
+            // SpawnStatSpawn();
         }
-    }
-    private void OnOreStoneDestroyed(DestroyedStoneEvent e)
-    {
-        destroyStoneCount++;
-        SpawnStatSpawn();
     }
 
     void SpawnStatSpawn(float far = 0, bool immediate = false)
@@ -58,14 +49,10 @@ public class StatManager : MonoSingleton<StatManager>
             if (timer > 0)
                 return;
 
-            if (destroyStoneCount < 20)
-                return;
 
-            if (statStones.Count >= 4)
+            if (statStones.Count >= MAX_STATSTONE_COUNT)
                 return;
         }
-
-
 
         if (far <= 0)
             far = minDistance + Random.Range(randomGap.x, randomGap.y);
@@ -95,11 +82,10 @@ public class StatManager : MonoSingleton<StatManager>
 
         List<StatData> statDatas = statDataDic.Values.Where(data => data.Unlocked()).ToList();
         StatData statData = statDatas[Random.Range(0, statDatas.Count)];
-        statStone.Spawn(spawnPosition, statData, lv);
-
+        // statStone.Spawn(spawnPosition, statData, lv);
 
         timer = spawnTime;
-        destroyStoneCount = 0;
+        // destroyStoneCount = 0;
         spawnCount++;
     }
 

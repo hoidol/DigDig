@@ -29,95 +29,22 @@ public class ItemManager : MonoSingleton<ItemManager>
         return mergeItemDataDic[key];
     }
 
-    public List<ItemData> GetItems(Grade grade, int count)
+    public List<ItemData> GetDrawItems(int count)
     {
         //조합할 수 있는 아이템이 나올 확률 올리기
-        List<string> canPickItemKeys = new List<string>();
-        List<string> needItemDataForMerged = new List<string>(); //조합에 필요한 아이템 데이터
-        List<ItemCounter> itemCounters = new();
-
-        ItemCounter GetItemCounter(string key)
-        {
-            ItemCounter iCounter = itemCounters.FirstOrDefault(e => e.key == key);
-            if (iCounter == null)
-            {
-                iCounter = new ItemCounter();
-                iCounter.key = key;
-                itemCounters.Add(iCounter);
-            }
-
-            return iCounter;
-        }
-        List<Item> items = Player.Instance.itemInventory.equippedItems;
-
-        for (int i = 0; i < items.Count; i++)
-        {
-            ItemCounter itemCounter = GetItemCounter(items[i].key);
-            itemCounter.count++;
-            foreach (string mergeItemKey in items[i].itemData.mergeItemKeys)
-            {
-                MergeItemData mergeItemData = MergeItemData.GetMergeItemData(mergeItemKey);
-                if (mergeItemData != null)
-                {
-                    foreach (string itemKey in mergeItemData.resourceItemKeys)
-                    {
-                        if (!needItemDataForMerged.Contains(itemKey))
-                            needItemDataForMerged.Add(itemKey);
-                    }
-                }
-            }
-            foreach (string includingItemKey in items[i].itemData.IncludingItems)
-            {
-                itemCounter = GetItemCounter(includingItemKey);
-                itemCounter.count++;
-            }
-        }
-
-        var pool = itemDataDic.Values.Where(d =>
-        {
-            if ((d.acquireMethod & (AcquireMethod.Purchase | AcquireMethod.Select)) == 0)
-                return false;
-            ItemCounter itemCounter = GetItemCounter(d.key);
-            if (itemCounter.count >= d.maxOwnCount)
-                return false;
-            return d.grade <= grade;
-        }).ToList();
-
-        var weightPool = new List<ItemPickChance>();
-        foreach (var itemData in pool)
-        {
-            float weight = itemData.grade switch
-            {
-                Grade.Normal => 65f,
-                Grade.Rare => 30f,
-                Grade.Unique => 5f,
-                _ => 0f,
-            };
-            if (needItemDataForMerged.Contains(itemData.key))
-                weight *= 1.5f;
-            if (weight <= 0f) continue;
-            weightPool.Add(new ItemPickChance { itemData = itemData, chance = weight });
-        }
-
         var result = new List<ItemData>();
-        int pickCount = Mathf.Min(count, weightPool.Count);
-        for (int i = 0; i < pickCount; i++)
+        for (int i = 0; i < itemDatas.Length; i++)
         {
-            float total = weightPool.Sum(e => e.chance);
-            float roll = Random.Range(0f, total);
-            float cumulative = 0f;
-            for (int j = 0; j < weightPool.Count; j++)
+            if (itemDatas[i].CheckUnlock())
+                continue;
+
+            if (Player.Instance.itemInventory.curItems.Any(e => e.key == itemDatas[i].key))
             {
-                cumulative += weightPool[j].chance;
-                if (roll < cumulative)
-                {
-                    result.Add(weightPool[j].itemData);
-                    weightPool.RemoveAt(j);
-                    break;
-                }
+                continue;
             }
+            result.Add(itemDatas[i]);
         }
-        return result;
+        return result.OrderBy(i => Random.value).Take(count).ToList();
     }
     class ItemCounter
     {

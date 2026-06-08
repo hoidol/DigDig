@@ -1,4 +1,4 @@
-public class BerserkerItem : Item, IToggleItem
+public class BerserkerItem : Item, IToggle
 {
     const float HP_THRESHOLD = 0.3f;
     const float ATTACK_BONUS = 0.2f;
@@ -8,7 +8,7 @@ public class BerserkerItem : Item, IToggleItem
 
     public override void OnEquip(Player player)
     {
-        buff = new Buff(StatType.AttackPower, 1f + ATTACK_BONUS * count, StatOpType.Multiply);
+        buff = new Buff(StatType.AttackPower, 1f + ATTACK_BONUS, StatOpType.Multiply);
     }
 
     public override void OnUnequip(Player player)
@@ -21,7 +21,7 @@ public class BerserkerItem : Item, IToggleItem
         // count 변화 시 버프 세기 갱신
         bool wasOn = isOn;
         if (wasOn) OnTurnOff();
-        buff = new Buff(StatType.AttackPower, 1f + ATTACK_BONUS * count, StatOpType.Multiply);
+        buff = new Buff(StatType.AttackPower, 1f + ATTACK_BONUS, StatOpType.Multiply);
         if (wasOn) OnTurnOn();
     }
 

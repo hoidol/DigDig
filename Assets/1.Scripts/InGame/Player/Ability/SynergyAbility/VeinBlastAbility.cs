@@ -23,7 +23,7 @@ public class VeinBlastAbility : SynergyAbility
         if (e.lastDamage.cause == null)
             return;
 
-        if (e.lastDamage.cause.TryGetComponent<PlayerBullet>(out var bullet))
+        if (e.lastDamage.cause.TryGetComponent<PlayerBulletObject>(out var bullet))
         {
             // Debug.Log("VeinBlastAbility OnOreDestroyed");
             float dmg = Player.Instance.statMgr.AttackPower; //* ratios[count - 1];

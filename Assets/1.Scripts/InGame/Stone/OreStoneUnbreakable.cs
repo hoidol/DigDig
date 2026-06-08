@@ -35,4 +35,15 @@ public class OreStoneUnbreakable : MonoBehaviour, IHittable
         gameObject.SetActive(false);
         pool.Push(this);
     }
+    StatusEffectHandler statusEffectHandler;
+    public void ApplyStatusEffect(StatusEffect effect)
+    {
+
+        if (statusEffectHandler == null)
+        {
+
+            statusEffectHandler = gameObject.AddComponent<StatusEffectHandler>();
+        }
+        statusEffectHandler.Apply(effect);
+    }
 }

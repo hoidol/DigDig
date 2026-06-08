@@ -1,0 +1,12 @@
+key	Name	specialBullet	Level	Desc	multiplyATK	acquireMethod	mergeKeys	conditionTypes	conditionValues	Level	TotalAbilityCount
+Normal	일반탄	FALSE	0	탄이 튕깁니다.							
+Pierce	관통탄	TRUE	1	탄이 모두 튕긴 후 관통합니다.	1						
+Condense	응축탄	TRUE	1	튕기는 횟수 절반, 감소된 만큼 데미지 증가(튕기는 횟수 10 → 5가됨 5* 50%, 2.5배)	0.5						
+Giant	거대탄	TRUE	1	탄이 커지고 데미지가 1.5배 증가	1.5						
+Iron	철탄	TRUE	1	튕겨도 데미지 감소 안함	1						
+Flame	불탄	TRUE	1	30% 확률로 불 붙음	1						
+Orbit	회전탄	TRUE	1	튕기는 횟수만큼 부딪히고 회전하고 사라짐 (Radius 고정)	1						
+Thunder	낙뢰	TRUE	1	주변 랜덤으로 낙뢰 떨어짐	1						
+Vampire	흡혈탄	TRUE	1	적 처리 시 체력의 0.5%	1						
+Split	분열	TRUE	1	처지 시 분열, 분열된 탄은 데미지 절반 + 튕김 없음	1						
+Scatter	산탄	TRUE	1	3방향으로 쏨	0.5						

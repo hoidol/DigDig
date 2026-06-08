@@ -29,29 +29,6 @@ public class PlayerDamagedEvent
 //         this.ordealProgressData = ordealProgressData;
 //     }
 // }
-
-public class OrdealStartEvent
-{
-    public OrdealData ordealData;
-
-    public OrdealProgressData ordealProgressData;
-    public OrdealStartEvent(OrdealData ordealData, OrdealProgressData ordealProgressData)
-    {
-        this.ordealData = ordealData;
-        this.ordealProgressData = ordealProgressData;
-    }
-}
-
-public class OrdealEndEvent
-{
-    public OrdealData ordealData;
-    public int ordealClearCount;
-    public OrdealEndEvent(OrdealData ordealData, int ordealClearCount)
-    {
-        this.ordealData = ordealData;
-        this.ordealClearCount = ordealClearCount;
-    }
-}
 public class ReloadStartEvent
 {
     public float reloadTime;
@@ -85,16 +62,16 @@ public class BossDeadEvent
     public BossDeadEvent(Boss boss) { this.boss = boss; position = boss.transform.position; }
 }
 
-public class BulletChargedEvent
-{
-    public int currentBulletCount;
-    public int maxBulletCount;
-    public BulletChargedEvent(int cur, int max)
-    {
-        currentBulletCount = cur;
-        maxBulletCount = max;
-    }
-}
+// public class BulletChargedEvent
+// {
+//     public int currentBulletCount;
+//     public int maxBulletCount;
+//     public BulletChargedEvent(int cur, int max)
+//     {
+//         currentBulletCount = cur;
+//         maxBulletCount = max;
+//     }
+// }
 
 public class PlayerHpChangedEvent
 {
@@ -115,15 +92,6 @@ public class TryAddItemEvent
         this.itemData = itemData;
     }
 }
-public class AddedItemEvent
-{
-    public ItemData itemData;
-    public AddedItemEvent(ItemData itemData)
-    {
-        this.itemData = itemData;
-    }
-}
-
 // 벙커 소환 가능 상태 알림
 public class IronNestReadyEvent
 {

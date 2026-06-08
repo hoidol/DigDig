@@ -24,7 +24,7 @@ public class DroneItem : TriggerCycleItem
     {
         drone.attackInterval = 0.5f;
         drone.gameObject.SetActive(true);
-        drone.Spawn(transform.position, count);
+        drone.Spawn(transform.position, 2);
     }
 
     public override void OnDeactivate()

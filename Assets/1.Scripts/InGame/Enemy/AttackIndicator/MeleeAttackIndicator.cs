@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
 using DG.Tweening;
-public class MeleeAttackIndicator : AttackIndicator
+public class MeleeAttackIndicator : AreaIndicator
 {
     public Transform warningTr;
-    public override void PlayIndicator(Action end)
+    public override void PlayIndicator(float sec, Action end)
     {
         gameObject.SetActive(true);
         warningTr.localScale = Vector2.zero;

@@ -12,11 +12,14 @@ public class EventManager : MonoSingleton<EventManager>
     {
         public EventType eventType;
         public EventTrigger[] triggers;
-        public float hpThreshold;
-        public int ordealClearCount;
-        public Vector2 distanceFromPlayer;
-        public bool hpArmed;
+
+        public int phaseIdx;
+
+
     }
+
+
+    //StatStone - 
 
     float eventObjectMinDistance = 7f;
     [SerializeField] private int maxAttempts = 5;
@@ -32,18 +35,18 @@ public class EventManager : MonoSingleton<EventManager>
             prefabMap[entry.eventType] = entry;
     }
 
-    private void Start()
-    {
-        GameEventBus.Subscribe<OrdealEndEvent>(OnOrdealEndEvent);
-        GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
+    // private void Start()
+    // {
+    //     GameEventBus.Subscribe<PhaseEndEvent>(OnPhaseEndEvent);
+    //     GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
 
-    }
+    // }
 
-    private void OnDestroy()
-    {
-        GameEventBus.Unsubscribe<OrdealEndEvent>(OnOrdealEndEvent);
-        GameEventBus.Unsubscribe<StartGameEvent>(OnStartGameEvent);
-    }
+    // private void OnDestroy()
+    // {
+    //     GameEventBus.Unsubscribe<PhaseEndEvent>(OnPhaseEndEvent);
+    //     GameEventBus.Unsubscribe<StartGameEvent>(OnStartGameEvent);
+    // }
 
     private void OnStartGameEvent(StartGameEvent e)
     {
@@ -58,9 +61,9 @@ public class EventManager : MonoSingleton<EventManager>
             {
                 eventType = resolved.Value,
                 triggers = eventData.triggers,
-                hpThreshold = eventData.hpThreshold,
-                ordealClearCount = eventData.ordealClearCount,
-                distanceFromPlayer = eventData.distanceFromPlayer,
+
+                phaseIdx = eventData.phaseIdx,
+
             });
         }
     }
@@ -93,7 +96,7 @@ public class EventManager : MonoSingleton<EventManager>
         return data.eventTypes[^1];
     }
 
-    private void OnOrdealEndEvent(OrdealEndEvent e)
+    private void OnPhaseEndEvent(PhaseEndEvent e)
     {
         foreach (var state in conditionStates)
         {
@@ -102,18 +105,14 @@ public class EventManager : MonoSingleton<EventManager>
         }
     }
 
-    private bool AllTriggersSatisfied(ConditionState state, OrdealEndEvent e)
+    private bool AllTriggersSatisfied(ConditionState state, PhaseEndEvent e)
     {
         foreach (var trigger in state.triggers)
         {
             switch (trigger)
             {
-                case EventTrigger.OrdealEnd:
-                    if (state.ordealClearCount != e.ordealClearCount) return false;
-                    break;
-                case EventTrigger.LowHp:
-                    float hpRate = Player.Instance.curHp / Player.Instance.statMgr.MaxHp;
-                    if (hpRate > state.hpThreshold) return false;
+                case EventTrigger.PhaseEnd:
+                    if (state.phaseIdx != e.phaseIdx) return false;
                     break;
             }
         }
@@ -145,15 +144,15 @@ public class EventManager : MonoSingleton<EventManager>
             return null;
         }
 
-        if (!TryGetValidSpawnPosition(state.distanceFromPlayer, out Vector2 spawnPos))
-        {
-            Debug.Log($"EventObjectManager: {state.eventType} 스폰 취소 - 유효한 위치를 찾지 못했습니다.");
-            return null;
-        }
+        // if (!TryGetValidSpawnPosition(state.distanceFromPlayer, out Vector2 spawnPos))
+        // {
+        //     Debug.Log($"EventObjectManager: {state.eventType} 스폰 취소 - 유효한 위치를 찾지 못했습니다.");
+        //     return null;
+        // }
 
-        EventObject eventObject = Instantiate(prefab, spawnPos, Quaternion.identity);
+        EventObject eventObject = Instantiate(prefab, Vector2.zero, Quaternion.identity);
         activeEventObjects.Add(eventObject);
-        eventObject.Appear(spawnPos);
+        eventObject.Appear(Vector2.zero);
         return eventObject;
     }
 
@@ -201,14 +200,11 @@ public class EventManager : MonoSingleton<EventManager>
 
 public enum EventType
 {
-    NormalMerchant,       // 일반 상인 
-    RareMerchant,  // 레어 상인 
-    UniqueMerchant, // 유니크 상인 
     FallenAngel,    // 타락 천사 - 추가 능력치, 패널티
     Snake,          // 뱀 - 추가 능력치, 패널티
     LifeFountain,   // 생명 분수 - 체력 증가
     NormalBox,
     RareBox,
     UniqueBox,
-
+    StatStone
 }

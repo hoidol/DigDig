@@ -16,7 +16,7 @@ public class HpUI : MonoBehaviour
         HpUI ui = pool.Count > 0 ? pool.Pop() : Instantiate(GetPrefab(), GameWorldCanvas.Instance.transform);
         ui.gameObject.SetActive(true);
         ui.target = target;
-        ui.timer = 5f;
+        ui.timer = 20f;
         return ui;
     }
 

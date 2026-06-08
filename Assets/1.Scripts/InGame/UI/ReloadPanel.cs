@@ -15,12 +15,12 @@ public class ReloadPanel : MonoBehaviour
     {
         GameEventBus.Subscribe<PlayerUpdateEvent>(OnPlayerUpdated);
         GameEventBus.Subscribe<BulletFiredEvent>(OnBulletFired);
-        GameEventBus.Subscribe<BulletChargedEvent>(OnBulletCharged);
+        // GameEventBus.Subscribe<BulletChargedEvent>(OnBulletCharged);
     }
 
     void OnPlayerUpdated(PlayerUpdateEvent e)
     {
-        int newMax = e.player.statMgr.BulletCount;
+        int newMax = e.player.weapon.bulletInventory.bullets.Count;
         if (newMax != maxCount)
         {
             maxCount = newMax;
@@ -38,18 +38,18 @@ public class ReloadPanel : MonoBehaviour
             horizontalLayoutGroup.enabled = false;
         }
 
-        // bulletText.text = $"{e.player.curBulletCount}/{maxCount}";
+        //bulletText.text = $"{e.player.curBulletCount}/{maxCount}";
     }
 
     void OnBulletFired(BulletFiredEvent e)
     {
-        UpdateBulletUI(e.currentBulletCount, e.maxBulletCount);
+        // UpdateBulletUI(e.currentBulletCount, e.maxBulletCount);
     }
 
-    void OnBulletCharged(BulletChargedEvent e)
-    {
-        UpdateBulletUI(e.currentBulletCount, e.maxBulletCount);
-    }
+    // void OnBulletCharged(BulletChargedEvent e)
+    // {
+    //     UpdateBulletUI(e.currentBulletCount, e.maxBulletCount);
+    // }
 
     void UpdateBulletUI(int cur, int max)
     {

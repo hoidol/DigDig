@@ -1,0 +1,69 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Orbit : BulletSubTool
+{
+    public OrbitBulletObject orbitBulletObjectPrefab;
+    public float radius = 2f;
+    public float rotationSpeed = 90f;
+
+    readonly List<OrbitBulletObject> orbitBulletObjects = new();
+    readonly Queue<OrbitBulletObject> pool = new();
+
+    // ── 풀링 ──────────────────────────────────────────────
+    OrbitBulletObject GetFromPool()
+    {
+        if (pool.Count > 0)
+        {
+            OrbitBulletObject pooled = pool.Dequeue();
+            pooled.gameObject.SetActive(true);
+            return pooled;
+        }
+        return Instantiate(orbitBulletObjectPrefab, transform);
+    }
+
+    void ReturnToPool(OrbitBulletObject obj)
+    {
+        obj.gameObject.SetActive(false);
+        pool.Enqueue(obj);
+    }
+
+    // ── 추가 / 제거 ────────────────────────────────────────
+    public void AddOrbitBullet(OrbitBullet orbitBullet)
+    {
+        OrbitBulletObject obj = GetFromPool();
+        orbitBulletObjects.Add(obj);
+        obj.SetOrbitBullet(orbitBullet);
+        Sorting();
+    }
+
+    public void RemoveOrbitBullet(OrbitBulletObject obj)
+    {
+        orbitBulletObjects.Remove(obj);
+        ReturnToPool(obj);
+        Sorting();
+    }
+
+    // ── Sorting ────────────────────────────────────────────
+    // 첫 번째 인덱스의 현재 회전 기준으로 나머지를 localPosition 균등 배치
+    void Sorting()
+    {
+        int count = orbitBulletObjects.Count;
+        if (count == 0) return;
+
+        float angleBetween = 360f / count;
+        for (int i = 0; i < count; i++)
+        {
+            float rad = angleBetween * i * Mathf.Deg2Rad;
+            orbitBulletObjects[i].transform.localPosition =
+                new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * radius;
+        }
+    }
+
+    // ── Update ─────────────────────────────────────────────
+    // 부모 오브젝트 자체를 회전 → 자식들이 자동으로 공전
+    void Update()
+    {
+        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
+    }
+}

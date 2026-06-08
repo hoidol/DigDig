@@ -6,7 +6,7 @@ using System;
 // 페이즈가 높을수록 범위와 피해 증가
 public class SweepPattern : BossAttackPattern
 {
-    [SerializeField] AttackIndicator sweepIndicator;
+    [SerializeField] AreaIndicator sweepIndicator;
     [SerializeField] float baseRadius = 3.5f;
     [SerializeField] float radiusPerPhase = 0.5f;
     [SerializeField] float sweepAngle = 120f;           // 부채꼴 각도
@@ -18,7 +18,7 @@ public class SweepPattern : BossAttackPattern
         float damage = boss.enemyData.GetAttackPower() * damageMultiplier;
         Vector2 aimDir = (Player.Instance.transform.position - boss.transform.position).normalized;
         damageData.damage = damage;
-        sweepIndicator.PlayIndicator(() =>
+        sweepIndicator.PlayIndicator(3, () =>
         {
             DealDamage(boss.transform.position, aimDir, radius);
             onEnd?.Invoke();

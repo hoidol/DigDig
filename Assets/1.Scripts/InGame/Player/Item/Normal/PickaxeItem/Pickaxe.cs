@@ -69,7 +69,7 @@ public class Pickaxe : Ally
                 await MoveToward(target.transform.position, token);
                 if (token.IsCancellationRequested) return;
 
-                damageData.damage = Player.Instance.statMgr.MagicPower;
+                damageData.damage = Player.Instance.statMgr.AttackPower;
                 target.TakeDamage(damageData);
                 if (!target.CanHit())
                     ReleaseTarget();

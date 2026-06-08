@@ -6,12 +6,10 @@ public class AbilityInventory : MonoBehaviour
 {
     public List<Ability> equippedAbilitys = new List<Ability>();
     public List<SynergyData> currentSynergyDatas = new List<SynergyData>();
-    //public readonly int MAX_SKILL_COUNT = 3;
-
-    public List<IPreAttack> preAttackItems = new List<IPreAttack>();
-    public List<IAttackItem> attackItems = new List<IAttackItem>();
-    public List<IComboAttackItem> comboAttackItems = new List<IComboAttackItem>();
-    public List<IBulletItem> bulletItems = new List<IBulletItem>();
+    public List<IPreAttack> preAttacks = new List<IPreAttack>();
+    public List<IAttack> attacks = new List<IAttack>();
+    public List<IComboAttack> comboAttacks = new List<IComboAttack>();
+    public List<IBullet> bullets = new List<IBullet>();
 
     public int abilityCount
     {
@@ -41,10 +39,10 @@ public class AbilityInventory : MonoBehaviour
 
     void RefreshCache()
     {
-        preAttackItems = equippedAbilitys.OfType<IPreAttack>().ToList();
-        attackItems = equippedAbilitys.OfType<IAttackItem>().ToList();
-        comboAttackItems = equippedAbilitys.OfType<IComboAttackItem>().ToList();
-        bulletItems = equippedAbilitys.OfType<IBulletItem>().ToList();
+        preAttacks = equippedAbilitys.OfType<IPreAttack>().ToList();
+        attacks = equippedAbilitys.OfType<IAttack>().ToList();
+        comboAttacks = equippedAbilitys.OfType<IComboAttack>().ToList();
+        bullets = equippedAbilitys.OfType<IBullet>().ToList();
     }
 
     public bool HasAbility(string key)
@@ -70,7 +68,6 @@ public class AbilityInventory : MonoBehaviour
 
         ability = Instantiate(abilityData.abilityPrefab, transform);
         ability.key = abilityData.key;
-        ability.count = 1;
         ability.OnEquip(Player.Instance);
         equippedAbilitys.Add(ability);
         abilityCount++;
@@ -81,17 +78,17 @@ public class AbilityInventory : MonoBehaviour
     }
     void CheckSynergy()
     {
-        for (int i = 0; i < AbilityManager.Instance.synergyDatas.Length; i++)
-        {
-            SynergyData synergyData = currentSynergyDatas.FirstOrDefault(e => e.synergyType == AbilityManager.Instance.synergyDatas[i].synergyType);
-            if (synergyData != null)
-                continue;
-            bool canPick = AbilityManager.Instance.synergyDatas[i].CanPickSynergyAbility();
-            if (!canPick)
-                continue;
+        // for (int i = 0; i < AbilityManager.Instance.synergyDatas.Length; i++)
+        // {
+        //     SynergyData synergyData = currentSynergyDatas.FirstOrDefault(e => e.synergyType == AbilityManager.Instance.synergyDatas[i].synergyType);
+        //     if (synergyData != null)
+        //         continue;
+        //     bool canPick = AbilityManager.Instance.synergyDatas[i].CanPickSynergyAbility();
+        //     if (!canPick)
+        //         continue;
 
-            currentSynergyDatas.Add(AbilityManager.Instance.synergyDatas[i]); // new 시너지
-        }
+        //     currentSynergyDatas.Add(AbilityManager.Instance.synergyDatas[i]); // new 시너지
+        // }
     }
 
 }

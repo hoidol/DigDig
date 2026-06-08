@@ -9,7 +9,7 @@ public class Box : EventObject
         if (collision.CompareTag("Player"))
         {
             Time.timeScale = 0;
-            SelectItemCanvas.Instance.OpenCanvas(grade, () =>
+            SelectItemCanvas.Instance.OpenCanvas(() =>
             {
                 Time.timeScale = 1;
                 Player.Instance.UpdatePlayer();

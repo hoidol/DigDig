@@ -21,10 +21,10 @@ public class BowItem : Item, IPreAttack
         extraShot = true;
     }
 
-    public void OnPreAttack(Player player, Vector2 dir)
+    public void OnPreAttack(Player player, Vector2 dir, int shotOrder)
     {
         if (!extraShot) return;
         extraShot = false;
-        player.weapon.RequestSpread(2);
+        // player.weapon.RequestSpread(2);
     }
 }

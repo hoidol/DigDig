@@ -14,9 +14,11 @@ public enum StatOpType
 }
 public enum Grade
 {
+
     Normal,
     Rare,
     Unique,
     Legend,
-    Myth
+    Myth,
+    None,
 }
