@@ -16,7 +16,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
     public float CurTimer => curTimer;
 
-    public Vector2Int[,] IndexArr => indexArr;
+    public Vector2Int[,] TileIndexArr => indexArr;
 
     [SerializeField] protected float curTimer;
 
@@ -24,7 +24,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
     public bool BreakTileWhenSpawn => true;
 
-    public int Size => 1;
+    public Vector2Int Size => Vector2Int.one;
 
 
 

@@ -23,17 +23,17 @@ public class DeathBurstAbility : Ability
 
     void OnEnemyDead(EnemyDeadEvent e)
     {
-        if (e.cause == null || e.cause.GetComponent<PlayerBulletObject>() == null) return;
+        // if (e.cause == null || e.cause.GetComponent<PlayerBulletObject>() == null) return;
 
-        float damage = Player.Instance.statMgr.AttackPower * DAMAGE_RATE;
-        float angleStep = 360f / SPLIT_COUNT;
-        Vector2 baseDir = Random.insideUnitCircle.normalized;
-        for (int i = 0; i < SPLIT_COUNT; i++)
-        {
-            Vector2 dir = Quaternion.Euler(0, 0, angleStep * i) * baseDir;
-            var bullet = AllyBullet.Instantiate();
-            bullet.transform.position = e.position;
-            bullet.Shoot(dir, damage);
-        }
+        // float damage = Player.Instance.statMgr.AttackPower * DAMAGE_RATE;
+        // float angleStep = 360f / SPLIT_COUNT;
+        // Vector2 baseDir = Random.insideUnitCircle.normalized;
+        // for (int i = 0; i < SPLIT_COUNT; i++)
+        // {
+        //     Vector2 dir = Quaternion.Euler(0, 0, angleStep * i) * baseDir;
+        //     var bullet = AllyBullet.Instantiate();
+        //     bullet.transform.position = e.position;
+        //     bullet.Shoot(dir, damage);
+        // }
     }
 }

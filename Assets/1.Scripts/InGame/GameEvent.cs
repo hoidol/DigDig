@@ -4,12 +4,10 @@ public class EnemyDeadEvent
 {
     public Enemy enemy;
     public Vector2 position;
-    public Transform cause;
-    public EnemyDeadEvent(Enemy enemy, Transform c)
+    public EnemyDeadEvent(Enemy enemy)
     {
         this.enemy = enemy;
         position = enemy.transform.position;
-        cause = c;
     }
 }
 

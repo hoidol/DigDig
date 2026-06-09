@@ -8,7 +8,6 @@ using UnityEditor;
 [CreateAssetMenu(fileName = "EnemyData", menuName = "EnemyData", order = 0)]
 public class EnemyData : ScriptableObject
 {
-    public EnemyGrade grade;
     public EnemyType type;
     public float attackSpeed;
     public float attackRange;
@@ -43,7 +42,6 @@ public class EnemyData : ScriptableObject
         if (lines.Length < 2) return;
 
         string[] headers = lines[0].Split('\t');
-        int iGrade = System.Array.IndexOf(headers, "grade");
         int iType = System.Array.IndexOf(headers, "type");
         int iAttackSpeed = System.Array.IndexOf(headers, "attackSpeed");
         int iAttackRange = System.Array.IndexOf(headers, "attackRange");
@@ -60,8 +58,6 @@ public class EnemyData : ScriptableObject
             string[] cols = lines[i].Split('\t');
 
             if (!System.Enum.TryParse<EnemyType>(Col(cols, iType), out var rowType) || rowType != type) continue;
-
-            if (System.Enum.TryParse<EnemyGrade>(Col(cols, iGrade), out var g)) grade = g;
             if (float.TryParse(Col(cols, iAttackSpeed), NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) attackSpeed = v;
             if (float.TryParse(Col(cols, iAttackRange), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) attackRange = v;
             if (float.TryParse(Col(cols, iMoveRange), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) moveRange = v;
@@ -83,16 +79,10 @@ public class EnemyData : ScriptableObject
 #endif
 }
 
-public enum EnemyGrade
-{
-    Normal,
-    Elite,
-    Boss
-
-}
 public enum EnemyType
 {
     Melee,
     Ranged,
+    Elite,
     Boss
 }

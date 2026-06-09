@@ -7,6 +7,7 @@ using UnityEngine;
 public class EnemyManager : MonoSingleton<EnemyManager>
 {
     readonly Dictionary<EnemyType, Stack<Enemy>> pool = new(); // 적 종류 별 풀링
+    readonly HashSet<Enemy> activeEnemies = new();
     static readonly Dictionary<EnemyType, EnemyData> enemyDataDic = new(); //적 종류 별 게임 데이터
     public EnemyPatternData[] enemyPatternData;
     [field: SerializeField] public int ActiveEnemyCount { get; private set; }
@@ -16,9 +17,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
         EnemyData[] enemyDatas = Resources.LoadAll<EnemyData>("EnemyData");
         foreach (EnemyData enemyData in enemyDatas)
             enemyDataDic[enemyData.type] = enemyData;
-
-        // enemyPatternData = Resources.LoadAll<EnemyPatternData>("EnemyPatternData");
-        // GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
+        GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
     }
 
     public static EnemyData GetEnemyData(EnemyType type)
@@ -39,6 +38,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
         enemy.gameObject.SetActive(true);
         enemy.Init(data);
+        activeEnemies.Add(enemy);
         ActiveEnemyCount++;
         return enemy;
     }
@@ -48,6 +48,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
         if (!pool.ContainsKey(enemy.enemyType))
             pool[enemy.enemyType] = new Stack<Enemy>();
 
+        activeEnemies.Remove(enemy);
         enemy.gameObject.SetActive(false);
         pool[enemy.enemyType].Push(enemy);
         ActiveEnemyCount = Mathf.Max(0, ActiveEnemyCount - 1);
@@ -56,13 +57,19 @@ public class EnemyManager : MonoSingleton<EnemyManager>
     void EnemyDeadEventListener(EnemyDeadEvent e)
     {
         ReleaseEnemy(e.enemy);
-
     }
 
-    // public EnemyPatternData GetEnemyPattern(EnemyPatternType pType)
-    // {
-    //     return enemyPatternData.FirstOrDefault(e => e.patternType == pType);
-    // }
+    public Enemy GetEnemyInTileIndex(Vector2Int tileIdx)
+    {
+        foreach (Enemy enemy in activeEnemies)
+        {
+            foreach (Vector2Int idx in enemy.tileIndexArr)
+            {
+                if (idx == tileIdx) return enemy;
+            }
+        }
+        return null;
+    }
 
 
 }

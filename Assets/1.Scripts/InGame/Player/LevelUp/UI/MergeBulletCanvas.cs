@@ -5,11 +5,12 @@ using System.Collections.Generic;
 public class MergeBulletCanvas : CanvasUI<MergeBulletCanvas>
 {
     public MergeBulletPanel mergeBulletPanelPrefab;
-    [SerializeField] PoolingSystem pool;
+    PoolingSystem<MergeBulletPanel> poolingSystem;
 
     void Awake()
     {
-        pool.SetObject(mergeBulletPanelPrefab);
+        poolingSystem = new PoolingSystem<MergeBulletPanel>();
+        poolingSystem.SetPrefab("UI/MergeBulletPanel");
     }
     int remainMergeCount = 0;
     public override void OpenCanvas(Action closeCallback = null)
@@ -21,11 +22,11 @@ public class MergeBulletCanvas : CanvasUI<MergeBulletCanvas>
 
     public void UpdateContainer()
     {
-         pool.ReturnAll();
+         poolingSystem.ReturnAll();
         List<MergeBulletData> canMergeBulletDatas = Player.Instance.weapon.bulletInventory.GetCanMergeBulletData();
         for (int i = 0; i < canMergeBulletDatas.Count; i++)
         {
-            MergeBulletPanel panel = pool.GetObject<MergeBulletPanel>();
+            MergeBulletPanel panel = poolingSystem.GetObject<MergeBulletPanel>();
             panel.SetMergeBulletData(canMergeBulletDatas[i]);
         }
     }

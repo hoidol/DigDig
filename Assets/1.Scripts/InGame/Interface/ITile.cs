@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public interface ITile
 {
-    Vector2Int[,] IndexArr
+    Vector2Int[,] TileIndexArr
     {
         get;
     }
@@ -13,7 +13,7 @@ public interface ITile
         get;
     }
 
-    public int Size
+    public Vector2Int Size
     {
         get;
     }

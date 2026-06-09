@@ -15,7 +15,6 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
     {
         get; set;
     }
-    public int size;
     [Header("생성 시 타일을 부수면서 등장함")]
     public bool breakTileWhenSpawn;
     #region 
@@ -39,11 +38,11 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
     float IHpUI.CurHp => CurHp;
     Vector3 IHpUI.HpUIPosition => hpPoint.position;
 
-    public Vector2Int[,] IndexArr => indexArr;
-    public int Size => size;
+    public Vector2Int[,] TileIndexArr => tileIndexArr;
+    public Vector2Int Size => enemyData.size;
 
     public bool BreakTileWhenSpawn => breakTileWhenSpawn;
-    public Vector2Int[,]  indexArr;
+    public Vector2Int[,]  tileIndexArr;
     public float apearTime = 2; //떨어지면서 등장하는 시간
     public const float MOVE_SPEED = 2; //떨어지면서 등장하는 시간
 
@@ -64,25 +63,20 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
         statusEffectHandler.Init();
     }
     //적 생성 시 호출
-    public virtual void Spawn(Vector2 pos, Vector2Int[,] idxArr)
+    public virtual void Spawn(Vector2Int[,] idxArr)
     {   
         moveTimer = MOVE_SPEED;
         //apearTime 초 후에 등장
-        indexArr = new Vector2Int[size,size];
+        tileIndexArr = new Vector2Int[enemyData.size.x,enemyData.size.y];
         RegisterTile(idxArr);
 
         gameObject.SetActive(false);
+        Vector2 pos = MapManager.TileIndexToCenterPosition(idxArr);
 
-        EnemySpawnIndicator.Get(pos, null).PlayIndicator((float)size, apearTime, () =>
-        {
-            gameObject.SetActive(true);
-
-            if (breakTileWhenSpawn)
-            {
-
-            }
+        EnemySpawnIndicator.Get(pos, null).PlayIndicator(tileIndexArr, apearTime, () =>
+        {   
+            Apear();
         });
-
 
         transform.position = pos;
         MaxHp = enemyData.GetHp();
@@ -91,6 +85,10 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
 
         attackTimer = 0;
         attacking = false;
+    }
+    public virtual void Apear()
+    {
+        gameObject.SetActive(true);
     }
 
     //상태 전환
@@ -201,7 +199,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
 
         for (int i = 0; i < dirs.Length; i++)
         {
-            if(!MapManager.CheckMoveTo(indexArr, dirs[i]))
+            if(!MapManager.CheckMoveTo(tileIndexArr, dirs[i]))
                 continue;
             
             MoveTo(dirs[i]).Forget();
@@ -214,17 +212,17 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
         if (moving) return;
 
         moving = true;
-        Vector2Int[,] newTiles = MapManager.GetIndexArray(indexArr, dir);
+        Vector2Int[,] newTiles = MapManager.GetIndexArray(tileIndexArr, dir);
         MapManager.RegisterTile(newTiles); // 이동 중 다른 오브젝트가 점유 못하게 선점
 
-        Vector2 dest = MapManager.IndexToPosition(newTiles);
+        Vector2 dest = MapManager.TileIndexToCenterPosition(newTiles);
         SetFacing(dir.x);
         await UniTask.Delay(3000);
         transform.DOMove(dest, 0.3f)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
-                MapManager.ReleaseTile(indexArr);
+                MapManager.ReleaseTile(tileIndexArr);
                 RegisterTile(newTiles);
             });
 
@@ -267,7 +265,11 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
         damage.Applyed(hpPoint.transform.position);
         CurHp = Mathf.Max(0, CurHp - damage.damage);
         OnHpChanged();
-        if (CurHp <= 0) OnDead(damage);
+        if (CurHp <= 0)
+        {
+            Reward();
+            OnDead();
+        } 
     }
 
     public void SetFacing(float dirX)
@@ -281,18 +283,19 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
             hpUI = HpUI.Get(this);
         hpUI.UpdateTime();
     }
-
-    protected virtual void OnDead(DamageData damage)
+    public void Reward()
+    {
+        ExpText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.3f, "1");
+        Player.Instance.AddExp(1);
+    }
+    public virtual void OnDead()
     {
         ReleaseTile();
         ChangeState(EnemyState.Dead);
         hpUI?.Release();
         gameObject.SetActive(false);
         // 이벤트 발행 → 각 시스템이 알아서 처리
-
-        ExpText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.3f, "1");
-        Player.Instance.AddExp(1);
-        GameEventBus.Publish(new EnemyDeadEvent(this, damage.cause));
+        GameEventBus.Publish(new EnemyDeadEvent(this));
     }
     public bool CanHit()
     {
@@ -301,14 +304,14 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
 
     public void RegisterTile(Vector2Int[,] idxArr)
     {
-        indexArr = idxArr;
+        tileIndexArr = idxArr;
         MapManager.RegisterTile(idxArr);
 
     }
 
     public void ReleaseTile()
     {
-        MapManager.ReleaseTile(indexArr);
+        MapManager.ReleaseTile(tileIndexArr);
     }
 
 

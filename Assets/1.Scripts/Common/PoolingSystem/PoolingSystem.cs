@@ -2,22 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolingSystem : MonoBehaviour
+public class PoolingSystem<T> where T : MonoBehaviour
 {
-    List<GameObject> list = new List<GameObject>();
-    [SerializeField] GameObject prefab;
+    List<T> list = new List<T>();
+    [SerializeField] T prefab;
 
-    public void SetObject(GameObject _prefab)
+    public void SetPrefab(string path)
     {
         if (prefab != null)
-            prefab = _prefab;
+            prefab = Resources.Load<T>(path);
 
     }
-    public void SetObject(Component component)
-    {
-        prefab = component.gameObject;
-    }
-
 
     public T GetObject<T>() where T : Component
     {
@@ -25,26 +20,26 @@ public class PoolingSystem : MonoBehaviour
         return obj.GetComponent<T>();
     }
 
-    public GameObject GetObject()
+    public GameObject GetObject(Transform parent =null)
     {
         for (int i = 0; i < list.Count; i++)
         {
             if (!list[i].gameObject.activeSelf)
             {
                 list[i].gameObject.SetActive(true);
-                return list[i];
+                return list[i].gameObject;
             }
 
         }
-        GameObject obj = Instantiate(prefab);
-        obj.transform.SetParent(transform);
+        T obj = GameObject.Instantiate(prefab);
+        obj.transform.SetParent(parent);
         list.Add(obj);
-        return obj;
+        return obj.gameObject;
     }
 
     public void ReturnAll()
     {
         for (int i = 0; i < list.Count; i++)
-            list[i].SetActive(false);
+            list[i].gameObject.SetActive(false);
     }
 }

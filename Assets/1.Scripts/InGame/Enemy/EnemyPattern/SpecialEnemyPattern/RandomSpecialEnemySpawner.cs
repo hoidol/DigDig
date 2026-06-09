@@ -35,11 +35,10 @@ public class RandomSpecialEnemySpawner : SpecialEnemySpawner
         count = e.count
     });
         
-        Vector2Int startIndex = MapManager.PositionToIndex((Vector2)Player.Instance.transform.position + dir * includeSize);
+        Vector2Int startIndex = MapManager.PositionToTileIndex((Vector2)Player.Instance.transform.position + dir * includeSize);
         Vector2Int tempIndex = startIndex;
         for(int i = 0; i < includeSize; i++)
         {
-            
             for(int j = 0; j < includeSize; j++)
             {
                 if(MapManager.CheckEmpty(tempIndex))

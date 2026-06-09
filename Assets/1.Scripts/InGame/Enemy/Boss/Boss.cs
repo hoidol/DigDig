@@ -24,10 +24,10 @@ public abstract class Boss : Enemy
         bossData = data as BossData;
     }
 
-    public override void Spawn(Vector2 pos, Vector2Int[,] idxArr)
+    public override void Spawn(Vector2Int[,] idxArr)
     {
         currentPhase = 0;
-        base.Spawn(pos,idxArr);
+        base.Spawn(idxArr);
         OnEnterPhase(0);
         damageData.damage = enemyData.GetAttackPower();
         GameEventBus.Publish(new BossSpawnEvent(this));
@@ -39,10 +39,10 @@ public abstract class Boss : Enemy
         CheckPhaseTransition();
     }
 
-    protected override void OnDead(DamageData damageData)
+    public override void OnDead()
     {
         movement?.Cancel();
-        base.OnDead(damageData);
+        base.OnDead();
         GameEventBus.Publish(new BossDeadEvent(this));
     }
 

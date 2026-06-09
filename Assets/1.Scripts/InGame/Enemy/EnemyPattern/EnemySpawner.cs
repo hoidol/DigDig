@@ -52,59 +52,59 @@ public class EnemySpawner
         Vector2 center = bestChecker.transform.position;
         Vector2 rPoint = center + Random.insideUnitCircle * 5f;
 
+        //dir 방향
         Vector2 offset = rPoint - (Vector2)Player.Instance.transform.position;
         Vector2Int dir = Mathf.Abs(offset.x) > Mathf.Abs(offset.y)
-            ? (offset.x > 0 ? Vector2Int.right : Vector2Int.left)
-            : (offset.y > 0 ? Vector2Int.up : Vector2Int.down);
+            ? (offset.y > 0 ? Vector2Int.up : Vector2Int.down)
+            : (offset.x > 0 ? Vector2Int.right : Vector2Int.left);
 
-        Vector2 spawnPoint;
 
+        Vector2Int[,] spawnTileArray = null;
+        bool canSpawn =true;
         if (enemyData.size == Vector2Int.one && bestChecker.tile != null && Random.Range(0f, 100f) < 70)
         {
             Debug.Log($"best Checker 생성 시도 {bestChecker.name}");
-            Vector2Int tileIdx = MapManager.PositionToIndex(bestChecker.tile.Transform.position);
-
-            Vector2Int? found = FindEmptyInDir(tileIdx, dir, 4)
-                             ?? FindEmptyInDir(tileIdx, -dir, 4);
-
-            if (!found.HasValue)
+            Vector2Int startTileArr = MapManager.PositionToTileIndex(bestChecker.tile.Transform.position);
+            if(!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
             {
-                Vector2Int rIdx = MapManager.PositionToIndex(rPoint);
-                if (MapManager.CheckEmpty(rIdx)) found = rIdx;
+                if(!FindEmptyInDir(startTileArr,enemyData.size, dir, 4, out spawnTileArray))
+                {
+                    if(!FindEmptyInDir(startTileArr, enemyData.size, -dir, 4, out spawnTileArray))
+                    {
+                        canSpawn = false;
+                    }
+                }
             }
-
-            if (!found.HasValue)
-            {
-                Debug.Log("빈칸이 없어서 생성 못함");
-                return; // 빈칸 없으면 생성 안함
-            }
-            spawnPoint = MapManager.IndexToPosition(found.Value);
         }
         else
         {
-
-            spawnPoint = rPoint + (Vector2)Player.Instance.transform.position;
-            Debug.Log($"랜덤으로 생성 시도 {spawnPoint}");
-            if (!MapManager.CheckEmpty(MapManager.PositionToIndex(spawnPoint)))
+            Vector2Int startTileArr = MapManager.PositionToTileIndex(rPoint);
+            if(!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
             {
-                return;
+                canSpawn = false;
             }
-
-            spawnPoint = MapManager.SnappedPosition(spawnPoint);
         }
-
-        Enemy enemy = EnemyManager.Instance.Instantiate(type);
-        // enemy?.Spawn(spawnPoint);
+        if (canSpawn)
+        {
+            Enemy enemy = EnemyManager.Instance.Instantiate(type);
+            enemy?.Spawn(spawnTileArray);    
+        }
+        
     }
 
-    Vector2Int? FindEmptyInDir(Vector2Int startIdx, Vector2Int dir, int steps)
+    bool FindEmpty(Vector2Int tileIndex)
     {
+        return MapManager.CheckEmpty(tileIndex);
+    }
+    bool FindEmptyInDir(Vector2Int startIdx,Vector2Int size ,Vector2Int dir, int steps, out Vector2Int[,] spawnTileArray)
+    {
+        spawnTileArray = new Vector2Int[size.x,size.y];
         for (int i = 1; i <= steps; i++)
         {
             Vector2Int candidate = startIdx + dir * i;
-            if (MapManager.CheckEmpty(candidate)) return candidate;
+            if(MapManager.GetTileArray(candidate, size, out spawnTileArray)) return true;
         }
-        return null;
+        return false;
     }
 
 

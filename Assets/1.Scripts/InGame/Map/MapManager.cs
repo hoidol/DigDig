@@ -29,30 +29,6 @@ public class MapManager : MonoSingleton<MapManager>
     public const int MAX_RANGE_RADIUS = 40;
 
 
-    
-    //특정 위치
-    public static Vector2Int[] GetIndies(Vector2 pos, Vector2 dir, Vector2 farRange, float radius, Vector2Int size)
-    {
-        Vector2 center = pos + dir.normalized * ((farRange.x + farRange.y) * 0.5f);
-        Vector2Int centerIdx = PositionToIndex(center);
-        int cellRadius = Mathf.CeilToInt(radius / TILE_SIZE);
-
-        var result = new List<Vector2Int>();
-        for (int cx = centerIdx.x - cellRadius; cx <= centerIdx.x + cellRadius; cx += size.x)
-        {
-            for (int cy = centerIdx.y - cellRadius; cy <= centerIdx.y + cellRadius; cy += size.y)
-            {
-                Vector2Int idx = new(cx, cy);
-                
-                float distFromCenter = Vector2.Distance(center, IndexToPosition(idx));
-                float distFromPos = Vector2.Distance(pos, IndexToPosition(idx));
-                if (distFromCenter <= radius && distFromPos >= farRange.x && distFromPos <= farRange.y)
-                    result.Add(idx);
-            }
-        }
-        return result.ToArray();
-    }
-
     public static Vector2 SnappedPosition(Vector2 pos)
     {
         int snappedX = Mathf.RoundToInt(pos.x / TILE_SIZE);
@@ -61,20 +37,24 @@ public class MapManager : MonoSingleton<MapManager>
         return new(snappedX * TILE_SIZE, snappedY * TILE_SIZE);
     }
 
-    public static Vector2Int PositionToIndex(Vector2 pos)
+
+    public static Vector2 TileIndexToPosition(Vector2Int idx)
     {
-        int x = Mathf.RoundToInt(pos.x / TILE_SIZE);
-        int y = Mathf.RoundToInt(pos.y / TILE_SIZE);
-        return new Vector2Int(x, y);
+        Vector2Int originIndex = new Vector2Int(idx.x - MAX_RANGE_RADIUS, idx.y - MAX_RANGE_RADIUS);
+        return new Vector2(originIndex.x * TILE_SIZE, originIndex.y * TILE_SIZE);
     }
 
-    public static Vector2 IndexToPosition(Vector2Int idx)
+    public static Vector2Int PositionToTileIndex(Vector2 pos)
     {
-        return new Vector2(idx.x * TILE_SIZE, idx.y * TILE_SIZE);
+        Vector2 spappedPos = SnappedPosition(pos);
+       
+        
+        int x = Mathf.RoundToInt(spappedPos.x / TILE_SIZE) + MAX_RANGE_RADIUS;
+        int y = Mathf.RoundToInt(spappedPos.y / TILE_SIZE) + MAX_RANGE_RADIUS;
+        return new Vector2Int(x,y);
     }
 
-
-    public static Vector2 IndexToPosition(Vector2Int[,] idxArr)
+    public static Vector2 TileIndexToCenterPosition(Vector2Int[,] idxArr)
     {
         Vector2 sum = Vector2.zero;
         foreach(Vector2Int idx in idxArr)
@@ -85,25 +65,6 @@ public class MapManager : MonoSingleton<MapManager>
         return center;
     }
 
-
-    public static List<Vector2Int> GetIndicesInRadius(Vector2 pos, Vector2 dir, float farRange, float radius)
-    {
-        Vector2 center = pos + dir.normalized * farRange;
-        Vector2Int centerIdx = PositionToIndex(center);
-        int cellRadius = Mathf.CeilToInt(radius / TILE_SIZE);
-
-        var result = new List<Vector2Int>();
-        for (int cx = centerIdx.x - cellRadius; cx <= centerIdx.x + cellRadius; cx++)
-        {
-            for (int cy = centerIdx.y - cellRadius; cy <= centerIdx.y + cellRadius; cy++)
-            {
-                Vector2 cellPos = IndexToPosition(new Vector2Int(cx, cy));
-                if (Vector2.Distance(center, cellPos) <= radius)
-                    result.Add(new Vector2Int(cx, cy));
-            }
-        }
-        return result;
-    }
 
     public static void ReleaseTile(Vector2Int[,] indexArr)
     {
@@ -170,16 +131,6 @@ public class MapManager : MonoSingleton<MapManager>
         }
     }
 
-
-    public static Vector2 GetCenterPostion(List<Vector2Int> indexs)
-    {
-        Vector2 sum = Vector2.zero;
-        for (int i = 0; i < indexs.Count; i++)
-        {
-            sum += IndexToPosition(indexs[i]);
-        }
-        return sum / indexs.Count;
-    }
 
 
     // fixWeights[i]: 거리 무관 고정 가중치
@@ -266,5 +217,22 @@ public class MapManager : MonoSingleton<MapManager>
             }
         }
         return array;
+    }
+
+    public static bool GetTileArray(Vector2Int startTileIndex, Vector2Int size, out Vector2Int[,] tileArrays)
+    {
+        tileArrays = new Vector2Int[size.x, size.y]; // out은 내부에서 할당 필수
+        bool empty = true;
+        for (int x = 0; x < size.x; x++)
+        {
+            for (int y = 0; y < size.y; y++)
+            {
+                Vector2Int tileIndex = startTileIndex + new Vector2Int(x, y);
+                tileArrays[x, y] = tileIndex;
+                if (!emptyTileArray[tileIndex.x, tileIndex.y])
+                    empty = false;
+            }
+        }
+        return empty;
     }
 }

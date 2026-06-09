@@ -9,9 +9,9 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 
     static readonly Stack<OreStone> pool = new();
 
-    public Vector2Int[,] IndexArr => indexArr;
-    public Vector2Int[,] indexArr;
-    public int Size => 1;
+    public Vector2Int[,] TileIndexArr => tileIndexArr;
+    public Vector2Int[,] tileIndexArr;
+    public Vector2Int Size => Vector2Int.one;
 
     public bool BreakTileWhenSpawn => false;
 
@@ -122,12 +122,12 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 
     public void RegisterTile(Vector2Int[,] idxArr)
     {
-        indexArr = idxArr;
+        tileIndexArr = idxArr;
     }
 
     public void ReleaseTile()
     {
-        MapManager.ReleaseTile(indexArr);
+        MapManager.ReleaseTile(tileIndexArr);
 
     }
     StatusEffectHandler statusEffectHandler;

@@ -2,22 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+public class BezierSpawner : MonoBehaviour
 {
     //[SerializeField] Piece picePrefab;
 
     [SerializeField] Transform startTr;
     [SerializeField] Transform endTr;
 
-    PoolingSystem pooingSystem;
+    PoolingSystem<BezierSprite> pooingSystem;
     private void Start()
     {
-        pooingSystem = GetComponentInChildren<PoolingSystem>();
-        if (pooingSystem == null)
-        {
-            pooingSystem = gameObject.AddComponent<PoolingSystem>();
-            //pooingSystem.SetObject(picePrefab);
-        }
+        pooingSystem =  new PoolingSystem<BezierSprite>();
+        
             
     }
     public Transform parent;

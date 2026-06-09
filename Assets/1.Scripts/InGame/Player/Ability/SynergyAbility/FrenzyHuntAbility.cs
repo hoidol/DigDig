@@ -18,21 +18,21 @@ public class FrenzyHuntAbility : SynergyAbility
 
     void OnEnemyDead(EnemyDeadEvent e)
     {
-        if (e.cause == null)
-            return;
+        // if (e.cause == null)
+        //     return;
 
-        if (e.cause.TryGetComponent<PlayerBulletObject>(out var b))
-        {
-            float dmg = Player.Instance.statMgr.AttackPower * damageRatio;
-            float angleStep = 360f / BULLET_COUNT;
-            for (int i = 0; i < BULLET_COUNT; i++)
-            {
-                float rad = i * angleStep * Mathf.Deg2Rad;
-                Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-                PlayerBulletObject pBullet = Player.Instance.Shoot(new NormalBullet(), dir, e.position);
-                pBullet.damageData.damage = dmg;
-            }
-        }
+        // if (e.cause.TryGetComponent<PlayerBulletObject>(out var b))
+        // {
+        //     float dmg = Player.Instance.statMgr.AttackPower * damageRatio;
+        //     float angleStep = 360f / BULLET_COUNT;
+        //     for (int i = 0; i < BULLET_COUNT; i++)
+        //     {
+        //         float rad = i * angleStep * Mathf.Deg2Rad;
+        //         Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+        //         PlayerBulletObject pBullet = Player.Instance.Shoot(new NormalBullet(), dir, e.position);
+        //         pBullet.damageData.damage = dmg;
+        //     }
+        // }
 
 
     }
