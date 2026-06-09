@@ -76,6 +76,14 @@ public abstract class BaseGun : MonoBehaviour, IGun
         GameEventBus.Publish(new AddedBulletEvent(bulletData));
 
     }
+    public void ReleaseBullet(string key)
+    {
+        Bullet bullet = bulletInventory.ReleaseBullet(key);
+        BulletInventoryUI.Instance.RemovedBullet(bullet);
+        GameEventBus.Publish(new RemovedBulletEvent(bullet.bulletData));
+
+    }
+
 
     // 시련 진입 시 무기 상태 초기화
     public void ResetOnUndergroundStart()

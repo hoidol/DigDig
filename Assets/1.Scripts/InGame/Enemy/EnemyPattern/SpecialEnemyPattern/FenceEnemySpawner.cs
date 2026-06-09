@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FenceEnemyPattern : EnemyPatternSpawner
+public class FenceEnemySpawner : SpecialEnemySpawner
 {
     [SerializeField] OreStoneUnbreakable oreStonePrefab;
     [SerializeField] float radius = 15f;
@@ -9,11 +9,9 @@ public class FenceEnemyPattern : EnemyPatternSpawner
 
     readonly List<OreStoneUnbreakable> oreStoneUnbreakables = new();
 
-    public override void StartPattern(EnemyPatternData enemyPatternData)
+    public override void Spawn()
     {
-
-
-        Vector2 center = Player.Instance.transform.position;
+         Vector2 center = Player.Instance.transform.position;
         int count = Mathf.CeilToInt(2f * Mathf.PI * radius / spacing);
 
         for (int i = 0; i < count; i++)
@@ -28,11 +26,11 @@ public class FenceEnemyPattern : EnemyPatternSpawner
         }
     }
 
-    public override void EndPattern()
+    public override void EndSpawn()
     {
         foreach (var ore in oreStoneUnbreakables)
             if (ore != null) ore.Return();
         oreStoneUnbreakables.Clear();
-        base.EndPattern();
     }
+
 }

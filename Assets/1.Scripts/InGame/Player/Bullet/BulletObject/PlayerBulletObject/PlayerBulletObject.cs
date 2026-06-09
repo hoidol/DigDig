@@ -1,7 +1,7 @@
 using UnityEngine;
 
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
+
 public class PlayerBulletObject : BulletObject
 {
     private static Queue<PlayerBulletObject> pool = new Queue<PlayerBulletObject>();

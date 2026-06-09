@@ -9,9 +9,9 @@ public class MeleeEnemy : NormalEnemy
         meleeAttackIndicator = GetComponentInChildren<MeleeAttackIndicator>(true);
     }
     DamageData damageData = new DamageData();
-    public override void Spawn(Vector2 pos, params Vector2Int[] indexs)
+    public override void Spawn(Vector2 pos, Vector2Int[,] indexArr)
     {
-        base.Spawn(pos, indexs);
+        base.Spawn(pos, indexArr);
         meleeAttackIndicator.gameObject.SetActive(false);
         damageData.damage = enemyData.GetAttackPower();
     }

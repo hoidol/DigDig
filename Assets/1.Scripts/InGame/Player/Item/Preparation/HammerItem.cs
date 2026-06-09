@@ -15,8 +15,8 @@ public class HammerItem : Item, IBullet
     {
         bullet.AddBehavior(new HammerExplosionBehavior(
             explosionChance,
-            explosionRadius * count,
-            explosionDamage * count,
+            explosionRadius * GetLevel(),
+            explosionDamage * GetLevel(),
             enemyLayer
         ));
     }

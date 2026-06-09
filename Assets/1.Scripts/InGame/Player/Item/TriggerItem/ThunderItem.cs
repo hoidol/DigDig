@@ -13,7 +13,7 @@ public class ThunderItem : TriggerItem
 
     public override string GetDescription(bool detail = false)
     {
-        float rate = damageRates[Mathf.Clamp(count - 1, 0, damageRates.Length - 1)];
+        float rate = damageRates[Mathf.Clamp(GetLevel() - 1, 0, damageRates.Length - 1)];
         return $"쿨타임마다 번개 낙하 (마력의 {rate * 100:0}% 데미지, 가까운 적/광석 우선 타격)";
     }
 
@@ -55,7 +55,7 @@ public class ThunderItem : TriggerItem
     void Strike(Vector2 pos)
     {
         float damage = Player.Instance.statMgr.AttackPower
-            * damageRates[Mathf.Clamp(count - 1, 0, damageRates.Length - 1)];
+            * damageRates[Mathf.Clamp(GetLevel() - 1, 0, damageRates.Length - 1)];
 
         AOEUtil.DamageEnemies(pos, strikeRadius, damage, hittableLayer);
         EffectManager.Instance.Play(EffectType.Spark, pos);

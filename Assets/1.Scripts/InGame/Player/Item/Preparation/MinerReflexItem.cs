@@ -27,7 +27,7 @@ public class MinerReflexItem : Item, IComboAttack
         if (!extraShot) return;
         extraShot = false;
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < GetLevel(); i++)
         {
             await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS);
             // Player.Instance.Attack(dir, false);

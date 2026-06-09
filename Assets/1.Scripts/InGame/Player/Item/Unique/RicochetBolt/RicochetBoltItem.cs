@@ -13,10 +13,10 @@ public class RicochetBoltItem : TriggerCycleItem
     public override void UpdateItem()
     {
         base.UpdateItem();
-        activeTime = activeTimes[count - 1];
-        if (ricochetBolt == null) return;
+        // activeTime = activeTimes[count - 1];
+        // if (ricochetBolt == null) return;
 
-        ricochetBolt.SetDamageRate(damageRates[count - 1]);
+        // ricochetBolt.SetDamageRate(damageRates[count - 1]);
     }
 
     public override void OnActivate()

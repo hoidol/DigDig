@@ -28,9 +28,11 @@ public class BlessingCanvas : CanvasUI<BlessingCanvas>
             }
             itemKeys.Add(Player.Instance.itemInventory.curItems[i].key);
         }
+        int totalCanDrawCount =  bulletDataKeys.Count + itemKeys.Count;
+        selectReinforceButton.gameObject.SetActive(totalCanDrawCount > 0);
+
 
         #region  SelectItem
-
         if (Player.Instance.itemInventory.curItems.Count >= 5)
         {
             selectDrawItemButton.gameObject.SetActive(false);

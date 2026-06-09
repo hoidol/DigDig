@@ -15,8 +15,8 @@ public class ShadowItem : Item, IAttack
         foreach (var s in shadows) Destroy(s.gameObject);
         shadows.Clear();
 
-        float angleStep = 360f / count;
-        for (int i = 0; i < count; i++)
+        float angleStep = 360f / GetLevel();
+        for (int i = 0; i < GetLevel(); i++)
         {
             Shadow shadow = Instantiate(shadowPrefab);
             // count가 늘면 주위를 원형으로 배치

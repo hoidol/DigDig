@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public interface ITile
 {
-    List<Vector2Int> Indexs
+    Vector2Int[,] IndexArr
     {
         get;
     }
-    void RegisterIndex(Vector2Int index);
-    void ReleaseIndex();
+    void RegisterTile(Vector2Int[,] idxArr);
+    void ReleaseTile();
     Transform Transform
     {
         get;

@@ -50,22 +50,22 @@ public class ChangeItemCanvas : CanvasUI<ChangeItemCanvas>
         this.newItemData = newItemData;
         newItemDisplayPanel.SetItemData(newItemData);
 
-        List<string> itemKeys = Player.Instance.itemInventory.GetItemKeys();
+        // List<string> itemKeys = Player.Instance.itemInventory.GetItemKeys();
 
 
-        for (int i = 0; i < itemDisplayPanels.Length; i++)
-        {
-            if (i < itemKeys.Count)
-            {
+        // for (int i = 0; i < itemDisplayPanels.Length; i++)
+        // {
+        //     if (i < itemKeys.Count)
+        //     {
 
-                itemDisplayPanels[i].gameObject.SetActive(true);
-                itemDisplayPanels[i].SetItemData(ItemData.GetItemData(itemKeys[i]));
-            }
-            else
-            {
-                itemDisplayPanels[i].gameObject.SetActive(false);
-            }
-        }
+        //         itemDisplayPanels[i].gameObject.SetActive(true);
+        //         itemDisplayPanels[i].SetItemData(ItemData.GetItemData(itemKeys[i]));
+        //     }
+        //     else
+        //     {
+        //         itemDisplayPanels[i].gameObject.SetActive(false);
+        //     }
+        // }
     }
 
 }

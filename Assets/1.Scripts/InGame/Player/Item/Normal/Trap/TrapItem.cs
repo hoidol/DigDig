@@ -34,7 +34,7 @@ public class TrapItem : TriggerItem
             spawnPos = Player.Instance.transform.position + (Vector3)(dir * (hit.distance - 0.5f));
 
         var trap = Instantiate(trapPrefab, spawnPos, Quaternion.identity);
-        trap.Spawn(spawnPos, count);
+        trap.Spawn(spawnPos, GetLevel());
         trap.Init(this);
         tripCount++;
     }

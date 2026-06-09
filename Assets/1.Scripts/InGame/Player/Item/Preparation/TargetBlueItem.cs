@@ -5,6 +5,6 @@ public class TargetBlueItem : Item, IBullet
 
     public void OnBulletFired(PlayerBulletObject bullet)
     {
-        bullet.AddBehavior(new PierceBehavior(count));
+        bullet.AddBehavior(new PierceBehavior(GetLevel()));
     }
 }

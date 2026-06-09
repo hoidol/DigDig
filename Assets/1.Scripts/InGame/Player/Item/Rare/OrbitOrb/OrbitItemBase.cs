@@ -27,7 +27,7 @@ public abstract class OrbitItemBase : TriggerCycleItem
         RebuildOrbs();
     }
 
-    protected virtual int OrbCount => count;
+    protected virtual int OrbCount => GetLevel();
 
     protected void RebuildOrbs()
     {

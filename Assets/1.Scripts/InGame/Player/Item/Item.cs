@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public abstract class Item : PlayerEnhancement
+public abstract class Item : MonoBehaviour, IReinforce
 {
-    public int count;
-    public override string GetDescription(bool detail = false)
+    public string key;
+    public bool equipped;
+
+    public virtual string GetDescription(bool detail = false)
     {
-        Debug.Log($"gameObject.name {gameObject.name}");
         return itemData.desc;
     }
-
     public ItemData itemData => ItemManager.Instance.GetItemData(key);
 
     public bool CanMerge()
@@ -16,15 +16,23 @@ public abstract class Item : PlayerEnhancement
         return true;
     }
 
-    public override void OnEquip(Player player)
+    public virtual void OnEquip(Player player)
     {
-        base.OnEquip(player);
+        equipped = true;
         UpdateItem();
     }
 
-    public abstract override void OnUnequip(Player player);
+    public virtual void OnUnequip(Player player)
+    {
+         equipped = false;
+    }
 
     public virtual void UpdateItem() { }
 
-    public override void UpdateEnhancement() => UpdateItem();
+    public virtual void UpdateEnhancement() => UpdateItem();
+
+    public int GetLevel()
+    {
+        return Player.Instance.statMgr.itemStatDic[key].lv;
+    }
 }

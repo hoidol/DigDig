@@ -35,18 +35,18 @@ public class EventManager : MonoSingleton<EventManager>
             prefabMap[entry.eventType] = entry;
     }
 
-    // private void Start()
-    // {
-    //     GameEventBus.Subscribe<PhaseEndEvent>(OnPhaseEndEvent);
-    //     GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
+    private void Start()
+    {
+        GameEventBus.Subscribe<PhaseEndEvent>(OnPhaseEndEvent);
+        GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
 
-    // }
+    }
 
-    // private void OnDestroy()
-    // {
-    //     GameEventBus.Unsubscribe<PhaseEndEvent>(OnPhaseEndEvent);
-    //     GameEventBus.Unsubscribe<StartGameEvent>(OnStartGameEvent);
-    // }
+    private void OnDestroy()
+    {
+        GameEventBus.Unsubscribe<PhaseEndEvent>(OnPhaseEndEvent);
+        GameEventBus.Unsubscribe<StartGameEvent>(OnStartGameEvent);
+    }
 
     private void OnStartGameEvent(StartGameEvent e)
     {

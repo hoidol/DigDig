@@ -16,11 +16,11 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
     public float CurTimer => curTimer;
 
-    public List<Vector2Int> Indexs => indexs;
+    public Vector2Int[,] IndexArr => indexArr;
 
     [SerializeField] protected float curTimer;
 
-    List<Vector2Int> indexs = new List<Vector2Int>();
+    Vector2Int[,] indexArr ;
 
     public bool BreakTileWhenSpawn => true;
 
@@ -55,15 +55,16 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
     }
 
 
-    public void RegisterIndex(Vector2Int index)
+    public void RegisterTile(Vector2Int[,] idxArr)
     {
-        indexs.Add(index);
+        indexArr  = idxArr;
+        MapManager.RegisterTile(idxArr);
 
     }
 
-    public void ReleaseIndex()
+    public void ReleaseTile()
     {
-        MapManager.Instance.RegisterEmpty(indexs);
+        MapManager.ReleaseTile(indexArr);
 
     }
 

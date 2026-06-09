@@ -30,7 +30,6 @@ public class Player : MonoSingleton<Player>, IPicker
 
     public StatInventory statInventory;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
-    public List<MagmaBall> magmaBalls = new List<MagmaBall>();
     public TileChecker[] tileCheckers;
     public PlayerHealth health;
     public PlayerMovement movement;
@@ -63,7 +62,6 @@ public class Player : MonoSingleton<Player>, IPicker
         attackJoystick = GameObject.Find("AttackJoystick").GetComponent<Joystick>();
 
         rg = GetComponentInChildren<Rigidbody2D>();
-        magmaBalls = GetComponentsInChildren<MagmaBall>().ToList();
         itemInventory = GetComponentInChildren<ItemInventory>();
         // abilityInventory = GetComponentInChildren<AbilityInventory>();
 

@@ -20,8 +20,8 @@ public class CrystalExplosionItem : Item
     {
         AOEUtil.DamageEnemies(
             e.oreStone.transform.position,
-            explosionRadius * count,
-            explosionDamage * count,
+            explosionRadius * GetLevel(),
+            explosionDamage * GetLevel(),
             enemyLayer
         );
     }

@@ -5,14 +5,12 @@ using UnityEngine.InputSystem;
 
 public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 {
-    public const float SIZE = 1.46f;
     public Transform Transform => transform;
 
     static readonly Stack<OreStone> pool = new();
 
-    public List<Vector2Int> Indexs => indexs;
-    public List<Vector2Int> indexs = new List<Vector2Int>();
-
+    public Vector2Int[,] IndexArr => indexArr;
+    public Vector2Int[,] indexArr;
     public int Size => 1;
 
     public bool BreakTileWhenSpawn => false;
@@ -47,13 +45,13 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
     public int level;
     // public Vector2Int gridPos;
     // public GameObject gold;
-    bool isGoldStone;
-    public void Init(int level, Color color, Vector2Int index)//, Vector2Int gridPos
+    // bool isGoldStone;
+    public void Init(int level, Color color, Vector2Int[,] idxArr)//, Vector2Int gridPos
     {
         this.level = level;
-        indexs.Clear();
-        RegisterIndex(index);
 
+        RegisterTile(idxArr);
+        
         float distance = Vector2.Distance(Vector2.zero, transform.position);
         float disMulti = distance / 6f;
         if (disMulti <= 1)
@@ -65,7 +63,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
         hpUI = null;
         GetComponentInChildren<SpriteRenderer>().color = color;
 
-        isGoldStone = Random.Range(0, 3) == 0;
+        // isGoldStone = Random.Range(0, 3) == 0;
 
     }
 
@@ -99,19 +97,17 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 
     public void Destroyed(bool reward)
     {
-        ReleaseIndex();
+        ReleaseTile();
 
         if (reward)
         {
             ExpText.SetText(transform.position, Exp.ToString());
             Player.Instance.AddExp(Exp);
 
-            if (isGoldStone)
-                Gold.Dropped(transform.position);
-            GameManager.Instance.AddDestroyOreStone();
+            // if (isGoldStone)
+            //     Gold.Dropped(transform.position);
 
             EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
-
             GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
         }
 
@@ -123,15 +119,15 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
         return curHp > 0;
     }
 
-    public void RegisterIndex(Vector2Int index)
-    {
-        indexs.Add(index);
 
+    public void RegisterTile(Vector2Int[,] idxArr)
+    {
+        indexArr = idxArr;
     }
 
-    public void ReleaseIndex()
+    public void ReleaseTile()
     {
-        MapManager.Instance.RegisterEmpty(indexs);
+        MapManager.ReleaseTile(indexArr);
 
     }
     StatusEffectHandler statusEffectHandler;
@@ -143,6 +139,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
         }
         statusEffectHandler.Apply(effect);
     }
+
 }
 
 public class DestroyedStoneEvent

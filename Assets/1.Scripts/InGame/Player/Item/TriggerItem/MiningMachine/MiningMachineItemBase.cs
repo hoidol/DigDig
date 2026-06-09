@@ -12,7 +12,7 @@ public abstract class MiningMachineItemBase : Item
         foreach (var m in machines) Destroy(m.gameObject);
         machines.Clear();
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < GetLevel(); i++)
         {
             var machine = Instantiate(machinePrefab);
             machine.attackPower = GetAttackPower();

@@ -36,7 +36,7 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
     {
         UpdateContainer();
     }
-    public void RemovedBulletEvent(Bullet bullet)
+    public void RemovedBullet(Bullet bullet)
     {
         UpdateContainer();
     }

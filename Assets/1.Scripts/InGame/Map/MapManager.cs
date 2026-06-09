@@ -5,73 +5,37 @@ using UnityEngine;
 
 public class MapManager : MonoSingleton<MapManager>
 {
-    public static List<Vector2Int> emptyidxs = new List<Vector2Int>();
+
+    public const float TILE_SIZE = 1.46f;
+    //public static List<Vector2Int> emptyIndexs = new List<Vector2Int>();
+    public static bool[,] emptyTileArray;
+    public static Vector2[,] tilePositionArray;
     public OreStone oreStonePrefab;
     public Color[] fillColors;
     // 각 색상별로 거리(x축) → 가중치(y축) 커브를 Inspector에서 그래프로 설정
     public float[] fixWeights;
     public AnimationCurve[] weightCurves;
     [SerializeField] private float[] weights;
-    readonly List<OreStone> activeOres = new();
 
     public void SpawnMap()
     {
         weights = new float[weightCurves.Length];
-        SpawnTile(Vector2.zero, MAX_RANGE_RADIUS, MIN_RANGE_RADIUS);
+        emptyTileArray = new bool[MAX_RANGE_RADIUS * 2, MAX_RANGE_RADIUS * 2];
+        tilePositionArray = new Vector2[MAX_RANGE_RADIUS * 2, MAX_RANGE_RADIUS * 2];
+        SpawnTile( MAX_RANGE_RADIUS, MIN_RANGE_RADIUS);
     }
 
-    public const float MIN_RANGE_RADIUS = 6f;
-    public const float MAX_RANGE_RADIUS = 40f;
+    public const int MIN_RANGE_RADIUS = 6;
+    public const int MAX_RANGE_RADIUS = 40;
 
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            foreach (var ore in activeOres)
-                if (ore != null) ore.Return();
-            activeOres.Clear();
-            SpawnTile(Player.Instance.transform.position, MAX_RANGE_RADIUS, MIN_RANGE_RADIUS);
-        }
-    }
-    // List<Vector2Int> tempEmptyIndies = new List<Vector2Int>();
-    // List<Vector2Int> GetEmptyIndies(GridPattern gridPattern, bool random) //높은 확률로 기존 타일이 있으면 최대한 붙여서 소환하자
-    // {
-    //     tempEmptyIndies.Clear();
-    //     var sorted = Player.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
-    //     // for (int rank = 0; rank < sorted.Count; rank++)
-    //     //     Debug.Log($"[{rank}] {sorted[rank].gameObject.name} | checkCount: {sorted[rank].TileCount()} | pos: {sorted[rank].transform.position}");
-
-    //     var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
-    //     Debug.Log($"bestChecker {bestChecker.name} | gameObject: {bestChecker.gameObject.name} | pos: {bestChecker.transform.position} | active: {bestChecker.gameObject.activeSelf}");
-    //     Vector2 center = bestChecker.transform.position;
-    //     Vector2 randomPoint = center + Random.insideUnitCircle * 5f;
-    //     Vector2Int startIdx = PositionToIndex(randomPoint);
-
-
-    //     Vector2 offset = center - (Vector2)Player.Instance.transform.position;
-    //     Vector2Int dir = Mathf.Abs(offset.x) > Mathf.Abs(offset.y) ? Vector2Int.up : Vector2Int.right;
-    //     Vector2Int otherDir = dir == Vector2Int.up ? Vector2Int.right : Vector2Int.up;
-    //     for (int y = 0; y < 2; y++)
-    //     {
-    //         Vector2Int sIdx = startIdx + otherDir * y;
-    //         for (int x = 0; x < 3; x++)
-    //         {
-    //             Vector2Int idx = sIdx + dir * x;
-    //             if (!emptyidxs.Contains(idx))
-    //                 continue;
-    //             tempEmptyIndies.Add(idx);
-    //         }
-    //     }
-    //     return tempEmptyIndies;
-    // }
-
+    
     //특정 위치
     public static Vector2Int[] GetIndies(Vector2 pos, Vector2 dir, Vector2 farRange, float radius, Vector2Int size)
     {
         Vector2 center = pos + dir.normalized * ((farRange.x + farRange.y) * 0.5f);
         Vector2Int centerIdx = PositionToIndex(center);
-        int cellRadius = Mathf.CeilToInt(radius / OreStone.SIZE);
+        int cellRadius = Mathf.CeilToInt(radius / TILE_SIZE);
 
         var result = new List<Vector2Int>();
         for (int cx = centerIdx.x - cellRadius; cx <= centerIdx.x + cellRadius; cx += size.x)
@@ -79,6 +43,7 @@ public class MapManager : MonoSingleton<MapManager>
             for (int cy = centerIdx.y - cellRadius; cy <= centerIdx.y + cellRadius; cy += size.y)
             {
                 Vector2Int idx = new(cx, cy);
+                
                 float distFromCenter = Vector2.Distance(center, IndexToPosition(idx));
                 float distFromPos = Vector2.Distance(pos, IndexToPosition(idx));
                 if (distFromCenter <= radius && distFromPos >= farRange.x && distFromPos <= farRange.y)
@@ -90,29 +55,42 @@ public class MapManager : MonoSingleton<MapManager>
 
     public static Vector2 SnappedPosition(Vector2 pos)
     {
-        int snappedX = Mathf.RoundToInt(pos.x / OreStone.SIZE);
-        int snappedY = Mathf.RoundToInt(pos.y / OreStone.SIZE);
+        int snappedX = Mathf.RoundToInt(pos.x / TILE_SIZE);
+        int snappedY = Mathf.RoundToInt(pos.y / TILE_SIZE);
 
-        return new(snappedX * OreStone.SIZE, snappedY * OreStone.SIZE);
+        return new(snappedX * TILE_SIZE, snappedY * TILE_SIZE);
     }
 
     public static Vector2Int PositionToIndex(Vector2 pos)
     {
-        int x = Mathf.RoundToInt(pos.x / OreStone.SIZE);
-        int y = Mathf.RoundToInt(pos.y / OreStone.SIZE);
+        int x = Mathf.RoundToInt(pos.x / TILE_SIZE);
+        int y = Mathf.RoundToInt(pos.y / TILE_SIZE);
         return new Vector2Int(x, y);
     }
 
     public static Vector2 IndexToPosition(Vector2Int idx)
     {
-        return new Vector2(idx.x * OreStone.SIZE, idx.y * OreStone.SIZE);
+        return new Vector2(idx.x * TILE_SIZE, idx.y * TILE_SIZE);
     }
+
+
+    public static Vector2 IndexToPosition(Vector2Int[,] idxArr)
+    {
+        Vector2 sum = Vector2.zero;
+        foreach(Vector2Int idx in idxArr)
+        {
+            sum += tilePositionArray[idx.x,idx.y];
+        }
+        Vector2 center = sum / (idxArr.GetLength(0) * idxArr.GetLength(1));
+        return center;
+    }
+
 
     public static List<Vector2Int> GetIndicesInRadius(Vector2 pos, Vector2 dir, float farRange, float radius)
     {
         Vector2 center = pos + dir.normalized * farRange;
         Vector2Int centerIdx = PositionToIndex(center);
-        int cellRadius = Mathf.CeilToInt(radius / OreStone.SIZE);
+        int cellRadius = Mathf.CeilToInt(radius / TILE_SIZE);
 
         var result = new List<Vector2Int>();
         for (int cx = centerIdx.x - cellRadius; cx <= centerIdx.x + cellRadius; cx++)
@@ -127,78 +105,71 @@ public class MapManager : MonoSingleton<MapManager>
         return result;
     }
 
-    public void RegisterEmpty(List<Vector2Int> indices)
+    public static void ReleaseTile(Vector2Int[,] indexArr)
     {
-        foreach (var idx in indices)
-            if (!emptyidxs.Contains(idx))
-                emptyidxs.Add(idx);
+        foreach (var index in indexArr)
+            ReleaseTile(index);
     }
-    public void RegisterEmpty(Vector2Int index)
+
+    public static void ReleaseTile(Vector2Int index)
     {
-        if (!emptyidxs.Contains(index))
-            emptyidxs.Add(index);
+        emptyTileArray[index.x + MAX_RANGE_RADIUS, index.y + MAX_RANGE_RADIUS] = true;
+    }
+    public static void RegisterTile(Vector2Int[,] indexArr)
+    {
+        foreach (var index in indexArr)
+            RegisterTile(index);
+    }
+    public static void RegisterTile(Vector2Int index)
+    {
+        emptyTileArray[index.x + MAX_RANGE_RADIUS, index.y + MAX_RANGE_RADIUS] = false;
     }
 
     public static bool CheckEmpty(Vector2Int index)
     {
-        return emptyidxs.Contains(index);
+        return emptyTileArray[index.x, index.y];
     }
 
 
-    public void SpawnTile(Vector2 pos, float radius, float exclueRadius)
+    public void SpawnTile(float radius, float exclueRadius)
     {
-        int snappedX = Mathf.RoundToInt(pos.x / OreStone.SIZE);
-        int snappedY = Mathf.RoundToInt(pos.y / OreStone.SIZE);
-        Vector2 snappedPos = SnappedPosition(pos);
+        // int snappedX = Mathf.RoundToInt(pos.x / TILE_SIZE);
+        // int snappedY = Mathf.RoundToInt(pos.y / TILE_SIZE);
+        // Vector2 snappedPos = SnappedPosition(pos);
 
-        int cellRadius = Mathf.CeilToInt(radius / OreStone.SIZE);
+        int cellRadius = Mathf.CeilToInt(radius / TILE_SIZE);
 
         var spawnList = new List<(OreStone ore, float dist)>();
 
-        for (int cx = snappedX - cellRadius; cx <= snappedX + cellRadius; cx++)
+        for (int cx =  -cellRadius; cx <= cellRadius; cx++)
         {
-            for (int cy = snappedY - cellRadius; cy <= snappedY + cellRadius; cy++)
-            {
-                Vector2 cellPos = new(cx * OreStone.SIZE, cy * OreStone.SIZE);
-                float dist = Vector2.Distance(snappedPos, cellPos);
+            for (int cy = -cellRadius; cy <= cellRadius; cy++)
+            {   
+                Vector2Int index = new Vector2Int(MAX_RANGE_RADIUS+cx, MAX_RANGE_RADIUS+cy); 
+                Vector2 cellPos = new(cx * TILE_SIZE, cy * TILE_SIZE);
+                tilePositionArray[index.x, index.y] = cellPos;
+
+                float dist = Vector2.Distance(Vector2.zero, cellPos);
                 if (dist > radius) continue;
 
                 if (dist < exclueRadius)
                 {
                     var emptyIdx = new Vector2Int(cx, cy);
-                    RegisterEmpty(emptyIdx);
+                    ReleaseTile(emptyIdx);
                     continue;
                 }
 
                 int colorIdx = PickColorIndex(dist);
                 OreStone ore = OreStone.Get(oreStonePrefab, cellPos, transform);
-                ore.Init(colorIdx, fillColors[colorIdx], new Vector2Int(cx, cy));
-                //ore.gameObject.SetActive(false);
-                activeOres.Add(ore);
+                Vector2Int[,] indexArr = new Vector2Int[1,1];
+                indexArr[0,0] = index;
+                ore.Init(colorIdx, fillColors[colorIdx], indexArr);
+   
                 spawnList.Add((ore, dist));
             }
         }
     }
 
-    // async UniTaskVoid RevealTiles(List<(OreStone ore, float dist)> spawnList)
-    // {
-    //     spawnList.Sort((a, b) => a.dist.CompareTo(b.dist));
-
-    //     var token = this.GetCancellationTokenOnDestroy();
-    //     int i = 0;
-    //     while (i < spawnList.Count)
-    //     {
-    //         float curDist = spawnList[i].dist;
-    //         while (i < spawnList.Count && Mathf.Approximately(spawnList[i].dist, curDist) ||
-    //                i < spawnList.Count && spawnList[i].dist - curDist < OreStone.SIZE * 0.5f)
-    //         {
-    //             if (spawnList[i].ore != null)
-    //                 spawnList[i].ore.gameObject.SetActive(true);
-    //             i++;
-    //         }
-    //         await UniTask.Delay(25, cancellationToken: token);
-    //     }
-    // }
 
     public static Vector2 GetCenterPostion(List<Vector2Int> indexs)
     {
@@ -254,5 +225,46 @@ public class MapManager : MonoSingleton<MapManager>
 
         }
 
+    }
+    //이동 가능한지 체크
+    public static bool CheckMoveTo(Vector2Int[,] idxArr, Vector2Int dir) //dir방향으로 갈 수 있는지 확인
+    {
+        var currentSet = new HashSet<Vector2Int>();
+        foreach (var idx in idxArr)
+            currentSet.Add(idx);
+
+        foreach (var idx in idxArr)
+        {
+            Vector2Int next = idx + dir;
+            if (currentSet.Contains(next)) continue; // 자신이 이미 점유 중인 타일은 통과
+
+            int ax = next.x + MAX_RANGE_RADIUS;
+            int ay = next.y + MAX_RANGE_RADIUS;
+            if (ax < 0 || ay < 0 ||
+                ax >= emptyTileArray.GetLength(0) || ay >= emptyTileArray.GetLength(1))
+                return false;
+
+            if (!emptyTileArray[ax, ay])
+                return false;
+        }
+        return true;
+    }
+
+
+    public static Vector2Int[,] GetIndexArray(Vector2Int[,] idxArr, Vector2Int dir) //dir방향으로 갈 수 있는지 확인
+    {
+        Vector2Int[,] array = new Vector2Int[idxArr.GetLength(0),idxArr.GetLength(1)];
+        var currentSet = new HashSet<Vector2Int>();
+        foreach (var idx in idxArr)
+            currentSet.Add(idx);
+
+        for (int x =0;x<idxArr.GetLength(0);x++)
+        {
+            for (int y = 0; y < idxArr.GetLength(1); y++)
+            {
+                array[x,y] = idxArr[x,y] + dir;
+            }
+        }
+        return array;
     }
 }

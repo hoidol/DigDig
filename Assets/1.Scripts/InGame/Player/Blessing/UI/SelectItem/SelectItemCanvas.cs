@@ -16,10 +16,10 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
             selectItemPanels = GetComponentsInChildren<SelectItemPanel>();
 
         }
-        OnClickedReset();
+        UpdateCanvas();
     }
 
-    public void OnClickedReset()
+    public void UpdateCanvas()
     {
         List<ItemData> items = ItemManager.Instance.GetDrawItems(3);
         for (int i = 0; i < selectItemPanels.Length; i++)

@@ -37,25 +37,22 @@ public class ItemManager : MonoSingleton<ItemManager>
         {
             if (itemDatas[i].CheckUnlock())
                 continue;
-
+            //현재 보유중
             if (Player.Instance.itemInventory.curItems.Any(e => e.key == itemDatas[i].key))
             {
                 continue;
             }
+            //이미 Result안에 있음
+            if (result.Any(e => e.key == itemDatas[i].key))
+            {
+                continue;
+            }
+
             result.Add(itemDatas[i]);
         }
         return result.OrderBy(i => Random.value).Take(count).ToList();
     }
-    class ItemCounter
-    {
-        public string key;
-        public int count;
-    }
-    struct ItemPickChance
-    {
-        public ItemData itemData;
-        public float chance;
-    }
+  
     public ItemData GetItemData(string key)
     {
         if (!itemDataDic.ContainsKey(key))
@@ -76,44 +73,3 @@ public class ItemManager : MonoSingleton<ItemManager>
 
 }
 
-
-public class TryPurchaseItemEvent
-{
-    public ItemData itemData;
-    public TryPurchaseItemEvent(ItemData iData)
-    {
-        itemData = iData;
-    }
-}
-public class NearDropItemEvent
-{
-    public ItemData itemData;
-    public NearDropItemEvent(ItemData iData)
-    {
-        itemData = iData;
-    }
-}
-
-public class TryMergeItemEvent
-{
-    public MergeItemData mergeItemData;
-
-    public TryMergeItemEvent(MergeItemData data)
-    {
-        mergeItemData = data;
-    }
-}
-
-
-public class MergedItemEvent
-{
-    public Item resourceItem1;
-    public Item resourceItem2;
-    public ItemData resultItemData;
-    public MergedItemEvent(Item i1, Item i2, ItemData resultItemData)
-    {
-        resourceItem1 = i1;
-        resourceItem2 = i2;
-        this.resultItemData = resultItemData;
-    }
-}

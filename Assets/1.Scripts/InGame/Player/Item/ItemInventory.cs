@@ -56,7 +56,7 @@ public class ItemInventory : MonoBehaviour
         int totalCount = 0;
         for (int i = 0; i < curItems.Count; i++)
         {
-            totalCount += curItems[i].count;
+            // totalCount += curItems[i].count;
         }
 
         if (item == null)
@@ -69,19 +69,6 @@ public class ItemInventory : MonoBehaviour
         }
         return true;
     }
-    List<string> itemKeys = new List<string>();
-    public List<string> GetItemKeys()
-    {
-        itemKeys.Clear();
-        for (int i = 0; i < Player.Instance.itemInventory.curItems.Count; i++)
-        {
-            for (int j = 0; j < Player.Instance.itemInventory.curItems[i].count; j++)
-            {
-                itemKeys.Add(Player.Instance.itemInventory.curItems[i].key);
-            }
-        }
-        return itemKeys;
-    }
 
     public void AddItem(string key)
     {
@@ -93,23 +80,13 @@ public class ItemInventory : MonoBehaviour
     /// </summary>
     /// <param name="itemData"></param>
     /// <param name="openChangeItem"> 아이템 더이상 획득 못하면 교체창 열기</param>
-    public void AddItem(ItemData itemData, bool openChangeItem = true)
+    public void AddItem(ItemData itemData)
     {
         // Debug.Log($"{itemData.key} 아이템 장착하기");
-        Item item = curItems.FirstOrDefault(e => e.key == itemData.key);
-        if (item != null)
-        {
-            item.count++;
-            item.UpdateItem();
-        }
-        else
-        {
-            item = Instantiate(itemData.itemPrefab, transform);
-            item.key = itemData.key;
-            item.count = 1;
-            item.OnEquip(Player.Instance);
-            curItems.Add(item);
-        }
+        Item item = Instantiate(itemData.itemPrefab, transform);
+        item.key = itemData.key;
+        item.OnEquip(Player.Instance);
+        curItems.Add(item);
 
         GameEventBus.Publish(new AddedItemEvent(itemData));
         SortingItem();
@@ -124,13 +101,9 @@ public class ItemInventory : MonoBehaviour
     public void ReleaseItem(string key)
     {
         Item item = curItems.FirstOrDefault(e => e.key == key);
-        item.count--;
-        if (item.count == 0)
-        {
-            item.OnUnequip(Player.Instance);
-            curItems.Remove(item);
-            Destroy(item.gameObject);
-        }
+        item.OnUnequip(Player.Instance);
+        curItems.Remove(item);
+        Destroy(item.gameObject);
         SortingItem(); // RefreshCache 포함
     }
 

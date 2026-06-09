@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class EnemyPatternSpawner
+public class EnemySpawner
 {
     public EnemyPatternData enemyPatternData;
     //public Action onSpawned;
@@ -94,7 +94,7 @@ public class EnemyPatternSpawner
         }
 
         Enemy enemy = EnemyManager.Instance.Instantiate(type);
-        enemy?.Spawn(spawnPoint);
+        // enemy?.Spawn(spawnPoint);
     }
 
     Vector2Int? FindEmptyInDir(Vector2Int startIdx, Vector2Int dir, int steps)

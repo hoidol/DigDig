@@ -6,15 +6,16 @@ using DG.Tweening;
 using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
 using System.Threading.Tasks;
+using System;
 public class GameManager : MonoSingleton<GameManager>
 {
     public int phase;
-    // public int underground = 0;
-    // public int wave;
-    public int destroyOreStone { get; private set; }
+    public int destroyOreCount { get; private set; }
+    public int killEnemyCount { get; private set; }
     public StageData stageData;
 
     public bool isClear;
+    public bool isPlaying;
     protected void Awake()
     {
         GameEventBus.Clear();
@@ -23,40 +24,32 @@ public class GameManager : MonoSingleton<GameManager>
         MapManager.Instance.SpawnMap();
     }
 
+    [field:SerializeField] public float gameTimer
+    {
+        get;
+        private set;
+    }
     void Start()
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
+        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
 
-        FadeCanvs.Instance.FadeIn("망각의 늪", () =>
-        {
+        Joystick joystick = FindFirstObjectByType<Joystick>();
+        joystick.gameObject.SetActive(false);
+        FadeCanvs.Instance.FadeIn(stageData.Title, () =>
+        { 
+            joystick.gameObject.SetActive(true);
             StartGame();
-
-
         });
-
-        // Joystick joystick = FindFirstObjectByType<Joystick>();
-        // joystick.gameObject.SetActive(false);
-        // Player.Instance.gameObject.SetActive(false);
-        // PlayerInLobby.Instance.StartGame(() =>
-        // {
-        //     Player.Instance.gameObject.SetActive(true);
-        //     joystick.gameObject.SetActive(true);
-        //     
-        //     StartUnderground(1);
-        // });
     }
-
-    //게임 흐름
-    // 아이템 선택 
-    // -> Ordeal 3갈래 시작
-    // -> 
-
-
-    public bool isPlaying;
+    EnemySpawner enemySpawner;
     void StartGame()
     {
         phase = 0;
+        gameTimer = 0;
         isPlaying = true;
+
+         enemySpawner = new EnemySpawner();
         StartPhase(phase);
 
         isClear = false;
@@ -66,21 +59,25 @@ public class GameManager : MonoSingleton<GameManager>
     public void StartPhase(int phase)
     {
         PhaseData phaseData = stageData.GetPhaseData(phase);
+        
         Debug.Log($"GameManager StartPhase {phase}");
-        EnemyPatternSpawner spawner = new EnemyPatternSpawner();
-        spawner.StartPattern(phaseData.enemyPatternData);
+        enemySpawner.StartPattern(phaseData.enemyPatternData);
 
         if (phaseData.isBoss)
         {
             StartBoss();
         }
-
-
-
+        else
+        {
+            WaitPhase(phaseData.time).Forget();    
+        }
     }
 
-
-
+    async UniTaskVoid WaitPhase(float t)
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(t));
+        EndPhase();
+    }
 
     public void EndPhase()
     {
@@ -94,26 +91,22 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
 
-#if UNITY_EDITOR
+
     void Update()
     {
+        gameTimer += Time.deltaTime;
+
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.E))
         {
 
-            EnemyPatternSpawner spawner = new EnemyPatternSpawner();
+            EnemySpawner spawner = new EnemySpawner();
             spawner.Spawn(EnemyType.Melee);
         }
-    }
 #endif
-
-
-
-    public void AddDestroyOreStone(int amount = 1)
-    {
-        destroyOreStone += amount;
-
-        // 필요하면 여기서 UI 업데이트, 세이브, 업적 체크 등도 같이 처리
     }
+
+
 
 
     public void EndGame(bool clear)
@@ -124,8 +117,15 @@ public class GameManager : MonoSingleton<GameManager>
 
     void EnemyDeadEventListener(EnemyDeadEvent e)
     {
-        //Gold.Dropped(e.position);
+        killEnemyCount++;
     }
+    public void OnDestroyedStoneEvent(DestroyedStoneEvent e)
+    {
+        destroyOreCount++;
+
+        // 필요하면 여기서 UI 업데이트, 세이브, 업적 체크 등도 같이 처리
+    }
+
 }
 
 

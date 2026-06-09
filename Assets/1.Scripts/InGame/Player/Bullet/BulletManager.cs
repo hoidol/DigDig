@@ -39,8 +39,6 @@ public class BulletManager : MonoSingleton<BulletManager>
     {
         bulletDatas = Resources.LoadAll<BulletData>("BulletData");
         mergeBulletDatas = Resources.LoadAll<MergeBulletData>("MergeBulletData");
-
-
     }
 
     float apearMergeBulletChance = 10f;
@@ -152,6 +150,14 @@ public class BulletManager : MonoSingleton<BulletManager>
     {
         public BulletData bulletData;
         public float chance;
+    }
+
+    public void Merge(MergeBulletData mergeBulletData)
+    {
+        Player.Instance.weapon.ReleaseBullet(mergeBulletData.resourceBulletKeys[0]);
+        Player.Instance.weapon.ReleaseBullet(mergeBulletData.resourceBulletKeys[1]);
+
+        Player.Instance.weapon.AddBullet(mergeBulletData.resultBulletKey);
     }
 
     public BulletData GetBulletData(string key)

@@ -12,11 +12,11 @@ public class HandMirrorItem : Item, IBullet
     public void OnBulletFired(PlayerBulletObject bullet)
     {
         Debug.Log("HandMirrorItem OnBulletFired");
-        bullet.AddBehavior(new BounceBehavior(count));
+        // bullet.AddBehavior(new BounceBehavior(count));
     }
 
     public override string GetDescription(bool detail = false)
     {
-        return $"탄 튕김 +{count}";
+        return $"탄 튕김 +";
     }
 }

@@ -6,10 +6,10 @@ using System.IO;
 using UnityEditor;
 #endif
 
-[CreateAssetMenu(fileName = "StageData", menuName = "StageData", order = 0)]
+
 public class StageData : MonoBehaviour
 {
-    public SpecialEnemyPatternSpawner[] specialEnemyPatternSpawners;
+    public SpecialEnemySpawner[] specialEnemySpawners;
     public static readonly int MAX_ENEMY_COUNT = 50;
     public string key;
     public string Title => key;
@@ -24,6 +24,11 @@ public class StageData : MonoBehaviour
         if (idx < 0)
             idx = GameManager.Instance.phase;
         return phaseDatas[idx];
+    }
+
+    void Start()
+    {
+        specialEnemySpawners = GetComponentsInChildren<SpecialEnemySpawner>();
     }
 
 #if UNITY_EDITOR

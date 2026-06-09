@@ -28,7 +28,7 @@ public class CandleItem : Item
     void ApplySize()
     {
         if (cinemachineCamera == null) return;
-        cinemachineCamera.Lens.OrthographicSize = BASE_SIZE + sizeIncrease * count;
+        cinemachineCamera.Lens.OrthographicSize = BASE_SIZE + sizeIncrease * GetLevel();
     }
 
     public override string GetDescription(bool detail = false)

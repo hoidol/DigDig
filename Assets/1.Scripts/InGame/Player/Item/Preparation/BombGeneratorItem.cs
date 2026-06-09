@@ -17,7 +17,7 @@ public class BombGeneratorItem : TriggerItem
 
         var bomb = Object.Instantiate(bombPrefab);
         bomb.transform.position = Player.Instance.transform.position;
-        bomb.Shoot(dir, bombDamage * count);
+        bomb.Shoot(dir, bombDamage * GetLevel());
     }
 
 }

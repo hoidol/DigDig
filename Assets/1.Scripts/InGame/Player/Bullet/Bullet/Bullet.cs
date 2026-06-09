@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 [System.Serializable]
-public abstract class Bullet : IBullet
+public abstract class Bullet : IBullet, IReinforce
 {
     public string key;
     public BulletData bulletData => BulletManager.Instance.GetBulletData(key);
@@ -31,5 +31,10 @@ public abstract class Bullet : IBullet
     public virtual string GetDescription(bool detail = false)
     {
         return $"탄 설명";
+    }
+
+    public int GetLevel()
+    {
+        return Player.Instance.statMgr.bulletStatDic[key].lv;
     }
 }

@@ -6,7 +6,6 @@ public class WisdomPotionItem : Item
 
     public override void OnEquip(Player player)
     {
-        count++;
         UpdateItem();
     }
 
@@ -26,5 +25,5 @@ public class WisdomPotionItem : Item
     }
 
     public override string GetDescription(bool detail = false)
-        => $"마력 +{BONUS_PER_STACK * count}";
+        => $"마력 +{BONUS_PER_STACK * GetLevel()}";
 }

@@ -6,7 +6,6 @@ public class VitalityPotionItem : Item
 
     public override void OnEquip(Player player)
     {
-        count++;
         UpdateItem();
     }
 
@@ -16,7 +15,7 @@ public class VitalityPotionItem : Item
 
         if (buff != null) player.RemoveBuff(buff);
 
-        buff = new Buff(StatType.MaxHp, BONUS_PER_STACK * count, StatOpType.Add);
+        buff = new Buff(StatType.MaxHp, BONUS_PER_STACK * GetLevel(), StatOpType.Add);
         player.AddBuff(buff);
     }
 
@@ -26,5 +25,5 @@ public class VitalityPotionItem : Item
     }
 
     public override string GetDescription(bool detail = false)
-        => $"체력 +{BONUS_PER_STACK * count}";
+        => $"체력 +{BONUS_PER_STACK * GetLevel()}";
 }

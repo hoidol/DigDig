@@ -42,9 +42,9 @@ public class StatStone : EventObject, IHittable, IWayPointerTarget
     // public TMP_Text statInfoText;
     // public Transform damageTextPoint;
     StatData statData;
-    public void Spawn(Vector2 pos, StatData statData, int lv, Vector2Int index)
+    public void Spawn(Vector2 pos, StatData statData, int lv, Vector2Int[,] index)
     {
-        RegisterIndex(index);
+        RegisterTile(index);
         this.statData = statData;
         destroying = false;
         transform.position = pos;

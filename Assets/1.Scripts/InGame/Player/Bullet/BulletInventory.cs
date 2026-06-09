@@ -71,13 +71,14 @@ public class BulletInventory : MonoBehaviour
     }
 
 
-    public void ReleaseBullet(string key)
+    public Bullet ReleaseBullet(string key)
     {
         Bullet bullet = curBullets.FirstOrDefault(e => e.key == key);
 
         curBullets.Remove(bullet);
 
         RefreshCache(); // RefreshCache 포함
+        return bullet;
     }
 
 
@@ -122,6 +123,7 @@ public class BulletInventory : MonoBehaviour
         }
         return canMergeBulletDatas;
     }
+
 
     public PlayerBulletObject GetBullet(Bullet bullet)
     {

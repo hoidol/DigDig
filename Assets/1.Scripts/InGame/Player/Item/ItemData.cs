@@ -10,7 +10,7 @@ public enum AcquireMethod
 }
 
 [CreateAssetMenu]
-public class ItemData : ScriptableObject
+public class ItemData : ScriptableObject,IReinforceData
 {
     public static readonly int MAX_LEVEL = 3;
     public string key;
@@ -69,6 +69,11 @@ public class ItemData : ScriptableObject
     {
         return ItemManager.Instance.GetItemData(key);
     }
+    public int GetLevel()
+    {
+        return Player.Instance.statMgr.itemStatDic[key].lv;
+    }
+
 
 #if UNITY_EDITOR
     public void LoadData()
@@ -91,10 +96,10 @@ public class ItemData : ScriptableObject
         int iName = System.Array.IndexOf(headers, "Name");
         int iDesc = System.Array.IndexOf(headers, "Desc");
         int iAcquire = System.Array.IndexOf(headers, "Purchase,Select");
-        int iGrade = System.Array.IndexOf(headers, "Grade");
+        // int iGrade = System.Array.IndexOf(headers, "Grade");
         // int iLevel = System.Array.IndexOf(headers, "Level");
         int iHide = System.Array.IndexOf(headers, "hideDisplay");
-        int iOwn = System.Array.IndexOf(headers, "OwnCount");
+        // int iOwn = System.Array.IndexOf(headers, "OwnCount");
         // int iIncluding = System.Array.IndexOf(headers, "IncludingItems");
         // int iMerge = System.Array.IndexOf(headers, "MergeItems");
 

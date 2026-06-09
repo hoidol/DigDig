@@ -6,7 +6,7 @@ using UnityEditor;
 #endif
 
 [CreateAssetMenu(menuName = "Data/BulletData", fileName = "BulletData")]
-public class BulletData : ScriptableObject
+public class BulletData : ScriptableObject,IReinforceData
 {
     public static readonly int MAX_LEVEL = 3;
     public string key;
@@ -25,17 +25,9 @@ public class BulletData : ScriptableObject
     public float multiplyATK; // 공격력 배율 (예: 1.2f는 20% 증가)
     public PlayerBulletObject prefab;
 
-    public static Color GetGradeColor(Grade grade)
+    public int GetLevel()
     {
-        return grade switch
-        {
-            Grade.Normal => new Color(0.78f, 0.78f, 0.78f), // 회색
-            Grade.Rare => new Color(0.00f, 0.44f, 0.87f), // 파랑
-            Grade.Unique => new Color(0.56f, 0.28f, 0.98f), // 보라
-            Grade.Legend => new Color(1.00f, 0.64f, 0.00f), // 주황/금
-            Grade.Myth => new Color(0.98f, 0.18f, 0.18f), // 빨강
-            _ => Color.white
-        };
+        return Player.Instance.statMgr.bulletStatDic[key].lv;
     }
 
     public string GetDescription(bool detail = false)

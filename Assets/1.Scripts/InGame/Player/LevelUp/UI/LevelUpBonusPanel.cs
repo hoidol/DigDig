@@ -53,7 +53,7 @@ public class LevelUpBonusPanel : MonoBehaviour
                 break;
             case LevelUpBonusType.MergeBullet:
                 Time.timeScale = 0;
-                PickedBulletCanvas.Instance.OpenCanvas(() =>
+                MergeBulletCanvas.Instance.OpenCanvas(() =>
                 {
                     Time.timeScale = 1;
                 });
