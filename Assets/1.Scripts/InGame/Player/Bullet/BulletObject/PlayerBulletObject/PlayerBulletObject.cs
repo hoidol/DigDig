@@ -43,7 +43,7 @@ public class PlayerBulletObject : BulletObject
         for (int i = 0; i < forces.Count; i++)
         {
             // Debug.Log($"playerBullet Hit forces [{i}] {forces[i].GetType().Name} finalDamage {finalDamage}");
-            finalDamage += forces[i].GetMultiDamage(this, hit, hit2D);
+            finalDamage += forces[i].GetMultiDamage(this, hit, hit2D,direction);
         }
         if (finalDamage < 1f)
             finalDamage = 1f;
@@ -53,7 +53,7 @@ public class PlayerBulletObject : BulletObject
         bool shouldRelease = true;
         foreach (var b in behaviors)
         {
-            shouldRelease = b.OnHit(this, hit, hit2D); //입사 벡터, 법선 벡터, 전달 필요 
+            shouldRelease = b.OnHit(this, hit, hit2D,direction); //입사 벡터, 법선 벡터, 전달 필요 
             if (!shouldRelease)
                 return;
         }

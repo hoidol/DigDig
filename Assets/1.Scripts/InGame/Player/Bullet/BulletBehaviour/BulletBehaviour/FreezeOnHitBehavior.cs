@@ -11,7 +11,7 @@ public class FreezeOnHitBehavior : IBulletBehavior
         this.duration = duration;
     }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         if (Random.value <= chance)
         {

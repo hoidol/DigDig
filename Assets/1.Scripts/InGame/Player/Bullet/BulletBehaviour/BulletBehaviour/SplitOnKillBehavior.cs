@@ -12,7 +12,7 @@ public class SplitOnKillBehavior : IBulletBehavior
         this.damageRatio = damageRatio;
     }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         if (hit is Enemy enemy && enemy.CurHp <= 0)
         {

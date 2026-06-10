@@ -8,7 +8,7 @@ public class StunOnHitBehavior : IBulletBehavior
     {
         duration = d;
     }
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         if (hit is Enemy enemy && hit is not Boss)
             enemy.GetComponent<StatusEffectHandler>()?.Apply(new StunEffect(duration));

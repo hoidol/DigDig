@@ -16,6 +16,8 @@ public class StageData : MonoBehaviour
     public int level;
 
     public float oreHp;
+    public Enemy[] enemyPrefabs; //해당 스테이지의 등장할 원거리, 근거리 엘리트 등 적 설정
+    Dictionary<EnemyType, Enemy> enemyPrefabDic = new Dictionary<EnemyType, Enemy>();
     public PhaseData[] phaseDatas;
     public EventData[] eventDatas;
     public Boss boss;
@@ -25,10 +27,18 @@ public class StageData : MonoBehaviour
             idx = GameManager.Instance.phase;
         return phaseDatas[idx];
     }
-
-    void Start()
+    void Awake()
     {
         specialEnemySpawners = GetComponentsInChildren<SpecialEnemySpawner>();
+        for(int i =0;i < enemyPrefabs.Length; i++)
+        {
+            enemyPrefabDic.Add(enemyPrefabs[i].enemyType, enemyPrefabs[i]);
+        }
+    }
+
+    public Enemy GetEnemyPrefab(EnemyType enemyType)
+    {
+        return enemyPrefabDic[enemyType];
     }
 
 #if UNITY_EDITOR

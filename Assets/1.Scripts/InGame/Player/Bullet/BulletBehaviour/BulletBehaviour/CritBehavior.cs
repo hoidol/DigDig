@@ -4,7 +4,7 @@ using UnityEngine;
 public class CritBehavior : IBulletForce
 {
 
-    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         PlayerBulletObject pb = bullet as PlayerBulletObject;
         pb.damageData.mustCrit = true;

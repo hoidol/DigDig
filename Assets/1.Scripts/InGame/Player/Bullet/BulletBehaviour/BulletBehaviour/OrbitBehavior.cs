@@ -21,7 +21,7 @@ public class OrbitBehavior : IBulletBehavior
         orbitDuration = 360f / angularSpeed;
     }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         remaining--;
         center = hit2D.point;

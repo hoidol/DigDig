@@ -63,10 +63,10 @@ public class StatData : ScriptableObject
         {
             return $"최대 체력 {(int)(increasedValue * lv * 100)}% 증가";
         }
-        else if (statType == StatType.PickUpRange)
-        {
-            return $"픽업 범위 증가";
-        }
+        // else if (statType == StatType.PickUpRange)
+        // {
+        //     return $"픽업 범위 증가";
+        // }
         else if (statType == StatType.RecoveryHp)
         {
             return $"회복력 증가";

@@ -44,10 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d68eef31f674aceb2670508d91813f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  specialEnemyPatternSpawners: []
+  specialEnemySpawners: []
   key: Greed
   level: 1
   oreHp: 21
+  enemyPrefabs:
+  - {fileID: 4842033995043222643, guid: 418f469a0893c4d3ebbc1c5d63d55c48, type: 3}
+  - {fileID: 3778664763791200787, guid: 194dbc45c65d642dda037c3e4f97c241, type: 3}
+  - {fileID: -623162833200235267, guid: 1d3cacd36ecba40c3b55703eee730486, type: 3}
   phaseDatas:
   - phase: 0
     isBoss: 0

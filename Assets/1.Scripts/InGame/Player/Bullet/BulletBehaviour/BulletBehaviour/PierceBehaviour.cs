@@ -4,7 +4,7 @@ public class PierceBehavior : IBulletBehavior
     int remaining;
     public PierceBehavior(int count) { remaining = count; }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         bullet.damageMultiplier *= Player.Instance.statMgr.AmmoEfficiency;
         if (--remaining <= 0)

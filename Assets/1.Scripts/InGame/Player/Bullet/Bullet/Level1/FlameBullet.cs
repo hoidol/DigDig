@@ -39,7 +39,7 @@ public class ChanceBurnBehavior : IBulletBehavior
         this.dps = dps;
     }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         if (Random.value < chance)
         {

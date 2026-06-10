@@ -31,12 +31,7 @@ MonoBehaviour:
   - statType: 7
     value: 5
   - statType: 8
-    value: 1
-  - statType: 9
-    value: 3
-  - statType: 10
-    value: 3
-  - statType: 11
     value: 2
-  - statType: 12
+  - statType: 9
     value: 0.6
+  defaultBullets: 

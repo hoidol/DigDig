@@ -7,9 +7,9 @@ using Random = UnityEngine.Random;
 
 public class EliteSpecialEnemySpawner : SpecialEnemySpawner
 {
-    public EliteEnemy eliteEnemyPrefab;
     public override void Spawn()
     {
+        Enemy eliteEnemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Elite);
         EnemyData enemyData = EnemyManager.GetEnemyData(eliteEnemyPrefab.enemyType);
         var sorted = Player.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
         var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
@@ -19,7 +19,7 @@ public class EliteSpecialEnemySpawner : SpecialEnemySpawner
         Vector2Int startTileArr = MapManager.PositionToTileIndex(rPoint);
         MapManager.GetTileArray(startTileArr, enemyData.size, out Vector2Int[,] spawnTileArray);
         
-        EliteEnemy enemy = EnemyManager.Instance.Instantiate(eliteEnemyPrefab.enemyType) as EliteEnemy;
+        EliteEnemy enemy = EnemyManager.Instance.Instantiate(eliteEnemyPrefab) as EliteEnemy;
         enemy?.Spawn(spawnTileArray);    
     }
 

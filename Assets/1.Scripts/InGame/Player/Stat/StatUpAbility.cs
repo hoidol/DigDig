@@ -54,10 +54,10 @@ public class StatUpAbility : Ability
         {
             return $"최대 체력 증가";
         }
-        else if (statType == StatType.PickUpRange)
-        {
-            return $"픽업 범위 증가";
-        }
+        // else if (statType == StatType.PickUpRange)
+        // {
+        //     return $"픽업 범위 증가";
+        // }
         else if (statType == StatType.RecoveryHp)
         {
             return $"회복력 증가";

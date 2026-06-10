@@ -14,7 +14,7 @@ public class ThunderOnHitBehavior : IBulletBehavior
         this.damageRate = damageRate;
     }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         Vector2 target = (Vector2)bullet.transform.position + Random.insideUnitCircle * searchRadius;
         //Vector2 target = FindTarget(bullet.hitLayerMask);

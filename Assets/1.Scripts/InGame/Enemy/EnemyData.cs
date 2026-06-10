@@ -13,7 +13,6 @@ public class EnemyData : ScriptableObject
     public float attackRange;
     public float moveRange;
     public int exp;
-    public Enemy prefab;
     public Vector2Int size;
     public bool breakTileWhenSpawn;
 

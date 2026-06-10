@@ -5,7 +5,7 @@ public class DamageBoostForce : IBulletForce
     readonly float ratio;
     public DamageBoostForce(float ratio) { this.ratio = ratio; }
 
-    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         return bullet.damage * ratio;
     }

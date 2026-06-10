@@ -14,7 +14,7 @@ public class KillExplosionBehavior : IBulletBehavior
         this.enemyLayer = enemyLayer;
     }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         if (hit is Enemy enemy && enemy.CurHp <= 0)
         {

@@ -20,6 +20,17 @@ public class EventData
 
 }
 
+public enum EventType
+{
+    FallenAngel,    // 타락 천사 - 추가 능력치, 패널티
+    Snake,          // 뱀 - 추가 능력치, 패널티
+    LifeFountain,   // 생명 분수 - 체력 증가
+    // NormalBox,
+    // RareBox,
+    // UniqueBox,
+    // StatStone
+}
+
 public enum EventTrigger
 {
     PhaseEnd

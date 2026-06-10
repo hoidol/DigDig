@@ -240,7 +240,6 @@ public class PlayerStatManager
     public float CritChance => statDic[StatType.CritChance].value;
     public float CritPower => statDic[StatType.CritPower].value;
     public float ReloadSpeed => statDic[StatType.ReloadSpeed].value;
-    public float PickUpRange => statDic[StatType.PickUpRange].value;
     public float AmmoDuration => statDic[StatType.AmmoDuration].value;
     public float AmmoEfficiency => statDic[StatType.AmmoEfficiency].value;
 
@@ -253,7 +252,6 @@ public class PlayerStatManager
 StatType.RecoveryHp,StatType.AttackSpeed,StatType.CritChance,
 StatType.CritPower,
 StatType.ReloadSpeed,
-StatType.PickUpRange,
 StatType.AmmoDuration //총알 지속시간
 ,StatType.AmmoEfficiency
     };
@@ -382,7 +380,6 @@ public enum StatType
     CritPower,
     // BulletCount,
     ReloadSpeed,
-    PickUpRange,
     // ReloadTime,
     AmmoDuration,
     AmmoEfficiency, //튕기는 때 데미지 감소량을 줄어듦

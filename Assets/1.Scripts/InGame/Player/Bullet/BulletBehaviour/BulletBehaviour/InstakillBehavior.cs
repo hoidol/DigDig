@@ -10,7 +10,7 @@ public class InstakillBehavior : IBulletBehavior
         this.chance = chance;
     }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2d)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2d, Vector2 shootDir)
     {
         if (Random.value <= chance)
         {

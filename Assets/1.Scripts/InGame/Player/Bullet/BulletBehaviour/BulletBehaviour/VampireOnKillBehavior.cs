@@ -5,7 +5,7 @@ public class VampireOnKillBehavior : IBulletBehavior
     readonly float healRate;
     public VampireOnKillBehavior(float healRate) { this.healRate = healRate; }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         if (hit is Enemy enemy && enemy.CurHp <= 0)
             Player.Instance.AddHp(Player.Instance.statMgr.MaxHp * healRate);

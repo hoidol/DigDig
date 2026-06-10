@@ -13,7 +13,7 @@ public class ExplosionBehaviour : IBulletBehavior
         this.layer = layer;
     }
 
-    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         AOEUtil.DamageEnemies(bullet.transform.position, radius, damage, layer);
         return true;

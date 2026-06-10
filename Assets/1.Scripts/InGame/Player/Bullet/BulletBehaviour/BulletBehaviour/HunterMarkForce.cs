@@ -11,7 +11,7 @@ public class HunterMarkForce : IBulletForce
     }
 
     // IBulletForce: 표식 있으면 추가 피해
-    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         StatusEffectHandler handler = (hit as Component)?.GetComponent<StatusEffectHandler>();
 

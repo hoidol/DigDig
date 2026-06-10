@@ -86,7 +86,8 @@ public class EnemySpawner
         }
         if (canSpawn)
         {
-            Enemy enemy = EnemyManager.Instance.Instantiate(type);
+            Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type);
+            Enemy enemy = EnemyManager.Instance.Instantiate(enemyPrefab);
             enemy?.Spawn(spawnTileArray);    
         }
         

@@ -9,7 +9,7 @@ public class OreDamageBehavior : IBulletForce
         this.bonusDamageRate = rate;
     }
 
-    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D)
+    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         if (hit.Transform.CompareTag("OreStone"))
         {
