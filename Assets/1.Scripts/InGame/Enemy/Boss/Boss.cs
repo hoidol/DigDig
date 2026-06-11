@@ -1,16 +1,19 @@
 using UnityEngine;
 using System;
 
+
 public abstract class Boss : Enemy
 {
-    protected BossData bossData;
+    public BossState bossState;
     protected int currentPhase;
     public int CurrentPhase => currentPhase;
 
     [SerializeField] BossPhase[] phases;
+    BossPhase curBossPhase;
     DamageData damageData = new DamageData();
 
     IBossMovement movement;
+    
 
     protected override void Awake()
     {
@@ -21,11 +24,12 @@ public abstract class Boss : Enemy
     public override void Init(EnemyData data)
     {
         base.Init(data);
-        bossData = data as BossData;
+        //bossData = data as BossData;
     }
 
     public override void Spawn(Vector2Int[,] idxArr)
     {
+        bossState = BossState.IntroAnim;
         currentPhase = 0;
         base.Spawn(idxArr);
         OnEnterPhase(0);
@@ -33,6 +37,17 @@ public abstract class Boss : Enemy
         GameEventBus.Publish(new BossSpawnEvent(this));
     }
 
+    public override void Update()
+    {
+        if(bossState == BossState.IntroAnim)
+            return;
+
+        base.Update();
+    }
+    public override void UpdateAttack()
+    {
+        
+    }
     protected override void OnHpChanged()
     {
         base.OnHpChanged();
@@ -48,12 +63,11 @@ public abstract class Boss : Enemy
 
     void CheckPhaseTransition()
     {
-        if (bossData?.phaseThresholds == null) return;
         float hpRate = CurHp / MaxHp;
         int newPhase = 0;
-        for (int i = 0; i < bossData.phaseThresholds.Length; i++)
+        for (int i = 0; i < phases.Length; i++)
         {
-            if (hpRate <= bossData.phaseThresholds[i])
+            if (hpRate <= phases[i].phaseThreshold)
                 newPhase = i + 1;
         }
 
@@ -65,9 +79,10 @@ public abstract class Boss : Enemy
             OnEnterPhase(currentPhase);
         }
     }
-
     protected virtual void OnEnterPhase(int phase)
     {
+        curBossPhase = phases[phase];
+        curBossPhase.StartPhase();
         ChangeState(EnemyState.Waiting);
     }
 
@@ -75,10 +90,6 @@ public abstract class Boss : Enemy
     {
         base.StartAttack();
 
-        BossAttackPattern pattern = GetCurrentPattern();
-        if (pattern == null) { AfterAttack(); return; }
-
-        pattern.Execute(this, AfterAttack);
     }
 
     // 공격 완료 후 → Dash → EndAttack 순서
@@ -93,7 +104,7 @@ public abstract class Boss : Enemy
     public override void CancelAttack()
     {
         if (phases != null && currentPhase < phases.Length)
-            phases[currentPhase].CancelCurrent();
+            phases[currentPhase].EndPhase();
 
         movement?.Cancel();
         EndAttack();
@@ -106,36 +117,35 @@ public abstract class Boss : Enemy
             Player.Instance.TakeDamage(damageData);
     }
 
-    BossAttackPattern GetCurrentPattern()
-    {
-        if (phases == null || currentPhase >= phases.Length) return null;
-        return phases[currentPhase].GetNextPattern();
-    }
 }
 
-[Serializable]
-public class BossPhase
+// [Serializable]
+// public class BossPhase
+// {
+//     public BossAttackPattern[] patterns;
+
+//     int patternIndex;
+
+//     public BossAttackPattern GetNextPattern()
+//     {
+//         if (patterns == null || patterns.Length == 0) return null;
+
+//         BossAttackPattern pattern = patterns[patternIndex];
+//         patternIndex = (patternIndex + 1) % patterns.Length;
+//         return pattern;
+//     }
+
+//     public void CancelCurrent()
+//     {
+//         if (patterns == null || patterns.Length == 0) return;
+
+//         int cur = (patternIndex - 1 + patterns.Length) % patterns.Length;
+//         patterns[cur]?.Cancel();
+//     }
+
+//     public void Reset() => patternIndex = 0;
+// }
+public enum BossState
 {
-    public BossAttackPattern[] patterns;
-
-    int patternIndex;
-
-    public BossAttackPattern GetNextPattern()
-    {
-        if (patterns == null || patterns.Length == 0) return null;
-
-        BossAttackPattern pattern = patterns[patternIndex];
-        patternIndex = (patternIndex + 1) % patterns.Length;
-        return pattern;
-    }
-
-    public void CancelCurrent()
-    {
-        if (patterns == null || patterns.Length == 0) return;
-
-        int cur = (patternIndex - 1 + patterns.Length) % patterns.Length;
-        patterns[cur]?.Cancel();
-    }
-
-    public void Reset() => patternIndex = 0;
+    IntroAnim//등장 연출
 }

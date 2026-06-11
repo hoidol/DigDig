@@ -19,10 +19,6 @@ public class FlameBullet : Bullet
     public override string GetDescription(bool detail = false)
         => $"{BURN_CHANCE * 100:0}% 확률로 화상 ({BURN_DURATION}초 {BURN_DPS} DPS)";
 
-    public override PlayerBulletObject GetBulletObject()
-    {
-        return null;
-    }
 }
 
 // FlameBullet 전용 인라인 Behavior (파일 분리 불필요한 단순 래퍼)

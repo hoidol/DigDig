@@ -22,11 +22,11 @@ public class SplitOnKillBehavior : IBulletBehavior
             {
                 float rad = i * angleStep * Mathf.Deg2Rad;
                 Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-                var splitBullet = PlayerBulletObject.Instantiate();
-                splitBullet.ClearBehaviors();
-                splitBullet.ClearBulletForce();
-                splitBullet.transform.position = enemy.transform.position;
-                splitBullet.Shoot(dir, splitDamage);
+                // var splitBullet = PlayerBulletObject.Instantiate();
+                // splitBullet.ClearBehaviors();
+                // splitBullet.ClearBulletForce();
+                // splitBullet.transform.position = enemy.transform.position;
+                // splitBullet.Shoot(dir, splitDamage);
             }
         }
         return true;

@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
-public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
+public abstract class Enemy : MonoBehaviour, IHittable, ITile
 {
     public EnemyType enemyType; // 적 종류 구분
     public EnemyState state { get; private set; } // 적 상태 - FSM 패턴
@@ -22,7 +22,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
     public float CurHp { get; private set; }
 
     [SerializeField] Transform root;
-    [SerializeField] Transform hpPoint;
+    [SerializeField] protected Transform hpPoint;
     protected Rigidbody2D rg2d;
     public Rigidbody2D Rigidbody2D => rg2d;
     protected float attackTimer;
@@ -32,11 +32,8 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
     Coroutine pushCoroutine;
 
     public Transform Transform => transform;
-    HpUI hpUI;
 
-    float IHpUI.MaxHp => MaxHp;
-    float IHpUI.CurHp => CurHp;
-    Vector3 IHpUI.HpUIPosition => hpPoint.position;
+   
 
     public Vector2Int[,] TileIndexArr => tileIndexArr;
     public Vector2Int Size => enemyData.size;
@@ -98,7 +95,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
     }
 
 
-    void Update()
+    public virtual void Update()
     {
         if (statusEffectHandler.IsStunned)
         {
@@ -145,7 +142,6 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
 
     public void ApplyStatusEffect(StatusEffect effect)
     {
-
         if (statusEffectHandler == null)
         {
             statusEffectHandler = GetComponent<StatusEffectHandler>();
@@ -234,15 +230,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
     }
 
     //상태가 Attack 인 경우 처리
-    public virtual void UpdateAttack()
-    {
-        Vector2 vec = Player.Instance.transform.position - transform.position;
-        SetFacing(vec.x);
-        rg2d.linearVelocity = Vector2.zero;
-
-        if (attackTimer >= enemyData.attackSpeed)
-            StartAttack();
-    }
+    public abstract void UpdateAttack();
 
 
     protected virtual void StartAttack()
@@ -279,9 +267,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
 
     protected virtual void OnHpChanged()
     {
-        if (hpUI == null || !hpUI.IsOwn(this))
-            hpUI = HpUI.Get(this);
-        hpUI.UpdateTime();
+        
     }
     public void Reward()
     {
@@ -292,7 +278,6 @@ public abstract class Enemy : MonoBehaviour, IHittable, IHpUI, ITile
     {
         ReleaseTile();
         ChangeState(EnemyState.Dead);
-        hpUI?.Release();
         gameObject.SetActive(false);
         // 이벤트 발행 → 각 시스템이 알아서 처리
         GameEventBus.Publish(new EnemyDeadEvent(this));

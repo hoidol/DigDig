@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class EliteEnemy : Enemy
+public class EliteEnemy : NormalEnemy
 {
     List<Enemy> enemies = new List<Enemy>();
     public override void Spawn(Vector2Int[,] idxArr)

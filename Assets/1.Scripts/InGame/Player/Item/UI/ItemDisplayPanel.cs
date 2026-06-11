@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class ItemDisplayPanel : MonoBehaviour
 {
     public Image thumImage;
-    public Image bgImage;
+    //public Image bgImage;
 
     public ItemData itemData
     {

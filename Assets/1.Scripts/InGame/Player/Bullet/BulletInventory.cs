@@ -125,10 +125,6 @@ public class BulletInventory : MonoBehaviour
     }
 
 
-    public PlayerBulletObject GetBullet(Bullet bullet)
-    {
-        return PlayerBulletObject.Instantiate();
-    }
 }
 
 public class UpdaterMergeRecommendBulletEvent

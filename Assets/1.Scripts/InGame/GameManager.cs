@@ -59,7 +59,6 @@ public class GameManager : MonoSingleton<GameManager>
     public void StartPhase(int phase)
     {
         PhaseData phaseData = stageData.GetPhaseData(phase);
-        
         Debug.Log($"GameManager StartPhase {phase}");
         enemySpawner.StartPattern(phaseData.enemyPatternData);
 
@@ -88,6 +87,13 @@ public class GameManager : MonoSingleton<GameManager>
     void StartBoss()
     {
         GameEventBus.Publish<BossEvent>(new BossEvent());
+        Boss boss = Instantiate(stageData.boss);
+        
+        Vector2Int tileIndex = MapManager.PositionToTileIndex( Player.Instance.transform.position);
+        Vector2Int[,] tileIndexArr = MapManager.GetIndexArray(tileIndex, boss.Size);
+
+        boss.Spawn(tileIndexArr);
+        BossCanvas.Instance.SetBoss(boss);
     }
 
 

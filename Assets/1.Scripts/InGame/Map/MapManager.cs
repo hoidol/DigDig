@@ -219,6 +219,23 @@ public class MapManager : MonoSingleton<MapManager>
         return array;
     }
 
+
+    //idxArr를 중심으로 
+    public static Vector2Int[,] GetIndexArray(Vector2Int idxArr, Vector2Int size) 
+    {
+        Vector2Int[,] tileIndexs = new  Vector2Int[size.x,size.y];
+        int startX = Mathf.Clamp(idxArr.x - size.x / 2, 0, MAX_RANGE_RADIUS * 2 - size.x);
+        int startY = Mathf.Clamp(idxArr.y - size.y / 2, 0, MAX_RANGE_RADIUS * 2 - size.y);
+        for(int x = startX; x < startX + size.x; x++)
+        {
+            for(int y = startY; y < startY + size.y; y++)
+            {
+                tileIndexs[x - startX, y - startY] = new Vector2Int(x, y);
+            }
+        }
+        return tileIndexs;
+    }
+
     public static bool GetTileArray(Vector2Int startTileIndex, Vector2Int size, out Vector2Int[,] tileArrays)
     {
         tileArrays = new Vector2Int[size.x, size.y]; // out은 내부에서 할당 필수

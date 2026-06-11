@@ -10,8 +10,4 @@ public class IronBullet : Bullet
 
     public override string GetDescription(bool detail = false) => "튕겨도 데미지 감소 없음";
 
-    public override PlayerBulletObject GetBulletObject()
-    {
-        return null;
-    }
 }

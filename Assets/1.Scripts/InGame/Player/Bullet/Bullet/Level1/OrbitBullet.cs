@@ -16,8 +16,5 @@ public class OrbitBullet : Bullet
 
     public override string GetDescription(bool detail = false)
         => $"적중마다 반경 {ORBIT_RADIUS} 공전, {Player.Instance.bounce}회 후 소멸";
-    public override PlayerBulletObject GetBulletObject()
-    {
-        return null;
-    }
+
 }

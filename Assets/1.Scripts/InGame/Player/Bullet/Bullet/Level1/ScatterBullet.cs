@@ -22,8 +22,5 @@ public class ScatterBullet : Bullet, IPreAttack
     public override string GetDescription(bool detail = false)
         => "3방향 발사, 탄당 데미지 0.5×";
 
-    public override PlayerBulletObject GetBulletObject()
-    {
-        return null;
-    }
+    
 }

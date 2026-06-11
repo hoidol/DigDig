@@ -226,9 +226,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
             pos = attackPoint.position;
 
 
-        var playerBullet = PlayerBulletObject.Instantiate();
-
-        // var bullet = Player.Instance.bulletInventory.GetBullet(bullet);
+        var playerBullet = bullet.GetBulletObject();//bullet.GetBulletObject();
         playerBullet.ClearBehaviors();
         playerBullet.ClearBulletForce();
         playerBullet.transform.position = pos;

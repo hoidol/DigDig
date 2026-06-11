@@ -22,6 +22,32 @@ public class BulletManager : MonoSingleton<BulletManager>
         { "Split",    () => new SplitBullet() },
         { "Scatter",  () => new ScatterBullet() },
     };
+    Dictionary<string, Stack<PlayerBulletObject>> bulletPool = new();
+    Dictionary<string, PlayerBulletObject> bulletPrefabDic = new();
+
+    public PlayerBulletObject GetPlayerBulletObject(string key)
+    {
+        if (!bulletPrefabDic.ContainsKey(key))
+            bulletPrefabDic[key] = Resources.Load<PlayerBulletObject>("PlayerBulletObject");
+
+        if (bulletPool.TryGetValue(key, out var stack) && stack.Count > 0)
+        {
+            var pooled = stack.Pop();
+            pooled.gameObject.SetActive(true);
+            return pooled;
+        }
+
+        return Instantiate(bulletPrefabDic[key]);
+    }
+
+    public void ReturnPlayerBulletObject(string key, PlayerBulletObject obj)
+    {
+        if (!bulletPool.ContainsKey(key))
+            bulletPool[key] = new Stack<PlayerBulletObject>();
+
+        obj.gameObject.SetActive(false);
+        bulletPool[key].Push(obj);
+    }
 
     public static Bullet Create(string key)
     {

@@ -26,8 +26,4 @@ public class CondenseBullet : Bullet
         return $"튕김 {bounce} → {half}회 줄고, 데미지 {1f + boost:0.##}배 상승";
     }
 
-    public override PlayerBulletObject GetBulletObject()
-    {
-        return null;
-    }
 }

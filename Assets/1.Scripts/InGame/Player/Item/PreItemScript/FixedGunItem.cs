@@ -18,9 +18,9 @@ public class FixedGunItem : TriggerItem
 
         for (int i = 0; i < SHOT_COUNT; i++)
         {
-            var bullet = PlayerBulletObject.Instantiate();
-            bullet.transform.position = Player.Instance.transform.position;
-            bullet.Shoot(dir, Player.Instance.statMgr.AttackPower);
+            // var bullet = PlayerBulletObject.Instantiate();
+            // bullet.transform.position = Player.Instance.transform.position;
+            // bullet.Shoot(dir, Player.Instance.statMgr.AttackPower);
         }
     }
 

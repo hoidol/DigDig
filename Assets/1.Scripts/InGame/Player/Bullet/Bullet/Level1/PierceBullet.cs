@@ -16,8 +16,5 @@ public class PierceBullet : Bullet
         return $"탄 모두 튕긴 후 관통 +{pierceCount}";
     }
 
-    public override PlayerBulletObject GetBulletObject()
-    {
-        return null;
-    }
+    
 }

@@ -13,8 +13,5 @@ public class SplitBullet : Bullet
 
     public override string GetDescription(bool detail = false)
         => $"처치 시 {SPLIT_COUNT}방향 분열탄 (데미지 {DAMAGE_RATIO * 100:0}%)";
-    public override PlayerBulletObject GetBulletObject()
-    {
-        return null;
-    }
+    
 }

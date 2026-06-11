@@ -17,26 +17,5 @@ public class ItemPanel : ItemPanelOnlyImage
         thumImage.sprite = itemData.thumbnail;
         titleText.text = itemData.Title;
         descText.text = itemData.GetDescription();
-        // if (itemData.mergeItemKeys.Length > 0)
-        // {
-        //     mergePanel.SetActive(true);
-        //     for (int i = 0; i < mergeItemPanels.Length; i++)
-        //     {
-        //         if (i < itemData.mergeItemKeys.Length)
-        //         {
-        //             mergeItemPanels[i].gameObject.SetActive(true);
-        //             mergeItemPanels[i].SetItemData(ItemData.GetItemData(itemData.mergeItemKeys[i]));
-        //         }
-        //         else
-        //         {
-        //             mergeItemPanels[i].gameObject.SetActive(false);
-        //         }
-
-        //     }
-        // }
-        // else
-        // {
-        //     mergePanel.SetActive(false);
-        // }
     }
 }

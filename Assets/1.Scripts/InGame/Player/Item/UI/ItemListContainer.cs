@@ -4,33 +4,33 @@ using UnityEngine;
 public class ItemListContainer : MonoBehaviour
 {
     public ItemNotifyEffectPanel[] itemNotifyEffectPanels;
-    // void Start()
-    // {
-    //     GameEventBus.Subscribe<AddedItemEvent>(AddedItemEvent);
-    //     UpdateContainer();
-    // }
+    void Start()
+    {
+        GameEventBus.Subscribe<AddedItemEvent>(AddedItemEvent);
+        UpdateContainer();
+    }
 
-    // void AddedItemEvent(AddedItemEvent e)
-    // {
-    //     UpdateContainer();
-    // }
+    void AddedItemEvent(AddedItemEvent e)
+    {
+        UpdateContainer();
+    }
 
-    // void UpdateContainer()
-    // {
-    //     List<string> itemKeys = Player.Instance.itemInventory.GetItemKeys();
-    //     for (int i = 0; i < itemNotifyEffectPanels.Length; i++)
-    //     {
-    //         if (i < itemKeys.Count)
-    //         {
+    void UpdateContainer()
+    {
+        List<Item> items = Player.Instance.itemInventory.curItems;
+        for (int i = 0; i < itemNotifyEffectPanels.Length; i++)
+        {
+            if (i < items.Count)
+            {
 
-    //             itemNotifyEffectPanels[i].SetItemData(ItemData.GetItemData(itemKeys[i]));
-    //             itemNotifyEffectPanels[i].gameObject.SetActive(true);
-    //         }
-    //         else
-    //         {
-    //             itemNotifyEffectPanels[i].gameObject.SetActive(false);
-    //         }
+                itemNotifyEffectPanels[i].SetItem(items[i]);
+                itemNotifyEffectPanels[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                itemNotifyEffectPanels[i].gameObject.SetActive(false);
+            }
 
-    //     }
-    // }
+        }
+    }
 }

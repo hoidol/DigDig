@@ -2,90 +2,74 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ItemNotifyEffectPanel : ItemDisplayPanel
+public class ItemNotifyEffectPanel : MonoBehaviour
 {
-    public Image cooltimeImage;
 
-    TriggerItem triggerItem;
-    TriggerCycleItem triggerCycleItem;
+    public Image thumImage;
+    // public Image cooltimeImage;
 
-    public override void SetItemData(ItemData itemData)
+
+    public void SetItem(Item item)
     {
-        base.SetItemData(itemData);
-
-        triggerItem = null;
-        triggerCycleItem = null;
-
-        Item i = Player.Instance.itemInventory.GetItem(itemData.key);
-
-        if (i is TriggerItem ti)
-        {
-            triggerItem = ti;
-
-            triggerItem.triggerListener -= Triggered;
-            triggerItem.triggerListener += Triggered;
-            cooltimeImage.gameObject.SetActive(true);
-        }
-        else if (i is TriggerCycleItem tci)
-        {
-            triggerCycleItem = tci;
-            cooltimeImage.gameObject.SetActive(true);
-        }
-        else
-        {
-            cooltimeImage.gameObject.SetActive(false);
-        }
+        thumImage.sprite = item.itemData.thumbnail;
+        // item.notifyListener = null;
+        // item.notifyListener += Notify;
     }
 
-    bool wasActive;
+    // void Notify()
+    // {
+        
+    // }
 
-    public void Triggered()
-    {
-        thumImage.transform.DOKill();
-        thumImage.transform.DOScale(1.2f, 0.2f).OnComplete(() =>
-        {
-            thumImage.transform.DOScale(1f, 0.2f);
-        });
-    }
+    // bool wasActive;
 
-    void StartPulse()
-    {
-        thumImage.transform.DOKill();
-        thumImage.transform
-            .DOScale(1.2f, 0.4f)
-            .SetLoops(-1, LoopType.Yoyo)
-            .SetEase(Ease.InOutSine);
-    }
+    // public void Triggered()
+    // {
+    //     thumImage.transform.DOKill();
+    //     thumImage.transform.DOScale(1.2f, 0.2f).OnComplete(() =>
+    //     {
+    //         thumImage.transform.DOScale(1f, 0.2f);
+    //     });
+    // }
 
-    void StopPulse()
-    {
-        thumImage.transform.DOKill();
-        thumImage.transform.localScale = Vector3.one;
-    }
+    // void StartPulse()
+    // {
+    //     thumImage.transform.DOKill();
+    //     thumImage.transform
+    //         .DOScale(1.2f, 0.4f)
+    //         .SetLoops(-1, LoopType.Yoyo)
+    //         .SetEase(Ease.InOutSine);
+    // }
 
-    void Update()
-    {
-        if (triggerItem != null)
-        {
-            cooltimeImage.fillAmount = triggerItem.coolTime > 0
-                ? triggerItem.CoolTimer / triggerItem.coolTime
-                : 0f;
-        }
-        else if (triggerCycleItem != null)
-        {
-            bool isActive = triggerCycleItem.IsActive;
+    // void StopPulse()
+    // {
+    //     thumImage.transform.DOKill();
+    //     thumImage.transform.localScale = Vector3.one;
+    // }
 
-            if (isActive != wasActive)
-            {
-                wasActive = isActive;
-                if (isActive) StartPulse();
-                else StopPulse();
-            }
+    // void Update()
+    // {
+    //     if (triggerItem != null)
+    //     {
+    //         cooltimeImage.fillAmount = triggerItem.coolTime > 0
+    //             ? triggerItem.CoolTimer / triggerItem.coolTime
+    //             : 0f;
+    //     }
+    //     else if (triggerCycleItem != null)
+    //     {
+    //         bool isActive = triggerCycleItem.IsActive;
 
-            cooltimeImage.fillAmount = isActive ? 0f
-                : triggerCycleItem.coolTime > 0
-                    ? triggerCycleItem.CoolTimer / triggerCycleItem.coolTime
-                    : 0f;
-        }
-    }
+    //         if (isActive != wasActive)
+    //         {
+    //             wasActive = isActive;
+    //             if (isActive) StartPulse();
+    //             else StopPulse();
+    //         }
+
+    //         cooltimeImage.fillAmount = isActive ? 0f
+    //             : triggerCycleItem.coolTime > 0
+    //                 ? triggerCycleItem.CoolTimer / triggerCycleItem.coolTime
+    //                 : 0f;
+    //     }
+    // }
 }

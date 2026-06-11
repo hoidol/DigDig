@@ -4,26 +4,10 @@ using System.Collections.Generic;
 
 public class PlayerBulletObject : BulletObject
 {
-    private static Queue<PlayerBulletObject> pool = new Queue<PlayerBulletObject>();
-    private static PlayerBulletObject prefab;
+    // private static Queue<PlayerBulletObject> pool = new Queue<PlayerBulletObject>();
+    // private static PlayerBulletObject prefab;
+    public string key;
     public PlayerDamageData damageData = new PlayerDamageData();
-    public static PlayerBulletObject Instantiate()
-    {
-        if (prefab == null)
-            prefab = Resources.Load<PlayerBulletObject>("Bullet/PlayerBulletObject");
-
-        if (pool.Count > 0)
-        {
-            PlayerBulletObject bullet = pool.Dequeue();
-            bullet.transform.localScale = Vector3.one;
-            bullet.gameObject.SetActive(true);
-            return bullet;
-        }
-        else
-        {
-            return Instantiate(prefab);
-        }
-    }
     public override void Hit(RaycastHit2D hit2D)
     {
         IHittable hit = hit2D.collider.GetComponent<IHittable>();
@@ -70,7 +54,8 @@ public class PlayerBulletObject : BulletObject
     public override void Release()
     {
         gameObject.SetActive(false);
-        pool.Enqueue(this);
+        BulletManager.Instance.ReturnPlayerBulletObject(key, this);
+        //pool.Enqueue(this);
     }
     public override void Bounce(RaycastHit2D hit2D)
     {

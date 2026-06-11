@@ -27,7 +27,10 @@ public abstract class Bullet : IBullet, IReinforce
         return false;
     }
 
-    public abstract PlayerBulletObject GetBulletObject();
+    public virtual PlayerBulletObject GetBulletObject()
+    {
+        return BulletManager.Instance.GetPlayerBulletObject(key);
+    }
     public virtual string GetDescription(bool detail = false)
     {
         return $"탄 설명";

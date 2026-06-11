@@ -12,8 +12,5 @@ public class VampireBullet : Bullet
 
     public override string GetDescription(bool detail = false)
         => $"처치 시 최대 체력의 {HEAL_RATE * 100:0.#}% 회복";
-    public override PlayerBulletObject GetBulletObject()
-    {
-        return null;
-    }
+    
 }

@@ -15,8 +15,4 @@ public class ThunderBullet : Bullet
     public override string GetDescription(bool detail = false)
         => $"적중 시 낙뢰 (공격력 {DAMAGE_RATE * 100:0}% 데미지, 주변 {SEARCH_RADIUS}m 내 타격)";
 
-    public override PlayerBulletObject GetBulletObject()
-    {
-        return null;
-    }
 }
