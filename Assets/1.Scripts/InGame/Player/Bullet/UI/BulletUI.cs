@@ -12,6 +12,10 @@ public class BulletUI : MonoBehaviour
 
     public void SetBulletData(BulletData bulletData)
     {
+        if (bulletData == null)
+        {
+            Debug.Log(" public void SetBulletData(BulletData bulletData)  == null");
+        }
         thum.sprite = bulletData.thumbnail;
     }
 

@@ -28,15 +28,15 @@ public class EnemySpawnIndicator : AreaIndicator
 
     public Transform warningTr;
     public Transform warningParentTr;
-    public  void PlayIndicator(Vector2Int[,] tileIndexArr, float sec, Action end)
+    public void PlayIndicator(Vector2Int[,] tileIndexArr, float sec, Action end)
     {
-        Debug.Log("EnemySpawnIndicator PlayIndicator Start");
+        // Debug.Log("EnemySpawnIndicator PlayIndicator Start");
         gameObject.SetActive(true);
-        warningParentTr.localScale = new Vector3 (tileIndexArr.GetLength(0),tileIndexArr.GetLength(1),1);
+        warningParentTr.localScale = new Vector3(tileIndexArr.GetLength(0), tileIndexArr.GetLength(1), 1);
         warningTr.localScale = Vector2.zero;
         warningTr.DOScale(Vector2.one, sec).SetEase(Ease.InCubic).OnComplete(() =>
         {
-            Debug.Log("EnemySpawnIndicator PlayIndicator End");
+            // Debug.Log("EnemySpawnIndicator PlayIndicator End");
             end.Invoke();
             StopIndicator();
         });

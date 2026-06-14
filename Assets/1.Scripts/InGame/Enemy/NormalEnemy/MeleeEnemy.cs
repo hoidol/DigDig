@@ -11,7 +11,8 @@ public class MeleeEnemy : NormalEnemy
     DamageData damageData = new DamageData();
     public override void Spawn(Vector2Int[,] indexArr)
     {
-        base.Spawn( indexArr);
+
+        base.Spawn(indexArr);
         meleeAttackIndicator.gameObject.SetActive(false);
         damageData.damage = enemyData.GetAttackPower();
     }

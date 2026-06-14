@@ -25,11 +25,4 @@ public class InstakillBehavior : IBulletBehavior
         return true;
     }
 
-    public void OnMove(BulletObject bullet) { }
-
-    public void Merge(IBulletBehavior other)
-    {
-        float otherChance = ((InstakillBehavior)other).chance;
-        if (otherChance > chance) chance = otherChance;
-    }
 }

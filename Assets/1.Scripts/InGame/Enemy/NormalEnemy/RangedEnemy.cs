@@ -4,6 +4,7 @@ public class RangedEnemy : NormalEnemy
     public Transform attackPoint;
     protected override void StartAttack()
     {
+
         base.StartAttack();
         EnemyBullet enemyBullet = EnemyBullet.Instantiate();
         enemyBullet.transform.position = transform.position;

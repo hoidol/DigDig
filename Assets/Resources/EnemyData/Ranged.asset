@@ -12,14 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bda2368e9f954f18b0c76e35cec534b, type: 3}
   m_Name: Ranged
   m_EditorClassIdentifier: 
-  grade: 0
   type: 1
   attackSpeed: 3
   attackRange: 7
   moveRange: 8
   exp: 1
-  prefab: {fileID: 3778664763791200787, guid: 194dbc45c65d642dda037c3e4f97c241, type: 3}
-  size: {x: 2, y: 2}
+  size: {x: 1, y: 1}
   breakTileWhenSpawn: 0
   hpMultiplier: 0.6
-  attackPowerMultiplier: 1
+  attackPowerMultiplier: 3

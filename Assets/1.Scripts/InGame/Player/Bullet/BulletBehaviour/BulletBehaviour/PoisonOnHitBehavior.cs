@@ -18,12 +18,4 @@ public class PoisonOnHitBehavior : IBulletBehavior
         return true;
     }
 
-    public void OnMove(BulletObject bullet) { }
-
-    public void Merge(IBulletBehavior other)
-    {
-        PoisonOnHitBehavior o = (PoisonOnHitBehavior)other;
-        if (o.damagePerTick > damagePerTick) damagePerTick = o.damagePerTick;
-        if (o.duration > duration) duration = o.duration;
-    }
 }

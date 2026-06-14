@@ -19,12 +19,15 @@ public class GameManager : MonoSingleton<GameManager>
     protected void Awake()
     {
         GameEventBus.Clear();
+        // Debug.Log($"Start Stage {UserManager.stageKey}");
         StageData stageDataPrefab = Resources.Load<StageData>($"StageData/{UserManager.stageKey}");
+
         stageData = Instantiate(stageDataPrefab);
         MapManager.Instance.SpawnMap();
     }
 
-    [field:SerializeField] public float gameTimer
+    [field: SerializeField]
+    public float gameTimer
     {
         get;
         private set;
@@ -37,7 +40,7 @@ public class GameManager : MonoSingleton<GameManager>
         Joystick joystick = FindFirstObjectByType<Joystick>();
         joystick.gameObject.SetActive(false);
         FadeCanvs.Instance.FadeIn(stageData.Title, () =>
-        { 
+        {
             joystick.gameObject.SetActive(true);
             StartGame();
         });
@@ -49,7 +52,7 @@ public class GameManager : MonoSingleton<GameManager>
         gameTimer = 0;
         isPlaying = true;
 
-         enemySpawner = new EnemySpawner();
+        enemySpawner = new EnemySpawner();
         StartPhase(phase);
 
         isClear = false;
@@ -60,6 +63,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         PhaseData phaseData = stageData.GetPhaseData(phase);
         Debug.Log($"GameManager StartPhase {phase}");
+
         enemySpawner.StartPattern(phaseData.enemyPatternData);
 
         if (phaseData.isBoss)
@@ -68,7 +72,7 @@ public class GameManager : MonoSingleton<GameManager>
         }
         else
         {
-            WaitPhase(phaseData.time).Forget();    
+            WaitPhase(phaseData.time).Forget();
         }
     }
 
@@ -81,6 +85,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void EndPhase()
     {
         phase++;
+        enemySpawner.EndPattern();
         StartPhase(phase);
     }
 
@@ -88,8 +93,8 @@ public class GameManager : MonoSingleton<GameManager>
     {
         GameEventBus.Publish<BossEvent>(new BossEvent());
         Boss boss = Instantiate(stageData.boss);
-        
-        Vector2Int tileIndex = MapManager.PositionToTileIndex( Player.Instance.transform.position);
+
+        Vector2Int tileIndex = MapManager.PositionToTileIndex(Player.Instance.transform.position);
         Vector2Int[,] tileIndexArr = MapManager.GetIndexArray(tileIndex, boss.Size);
 
         boss.Spawn(tileIndexArr);

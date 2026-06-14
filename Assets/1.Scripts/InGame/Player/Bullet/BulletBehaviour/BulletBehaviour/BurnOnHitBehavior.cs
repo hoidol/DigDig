@@ -18,12 +18,4 @@ public class BurnOnHitBehavior : IBulletBehavior
         return true;
     }
 
-    public void OnMove(BulletObject bullet) { }
-
-    public void Merge(IBulletBehavior other)
-    {
-        BurnOnHitBehavior o = (BurnOnHitBehavior)other;
-        if (o.dps > dps) dps = o.dps;
-        if (o.duration > duration) duration = o.duration;
-    }
 }

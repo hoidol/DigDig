@@ -19,13 +19,14 @@ public class MapManager : MonoSingleton<MapManager>
 
     public void SpawnMap()
     {
+
         weights = new float[weightCurves.Length];
         emptyTileArray = new bool[MAX_RANGE_RADIUS * 2, MAX_RANGE_RADIUS * 2];
         tilePositionArray = new Vector2[MAX_RANGE_RADIUS * 2, MAX_RANGE_RADIUS * 2];
-        SpawnTile( MAX_RANGE_RADIUS, MIN_RANGE_RADIUS);
+        SpawnTile(MAX_RANGE_RADIUS, MIN_RANGE_RADIUS);
     }
 
-    public const int MIN_RANGE_RADIUS = 6;
+    public const int MIN_RANGE_RADIUS = 5;
     public const int MAX_RANGE_RADIUS = 40;
 
 
@@ -47,19 +48,19 @@ public class MapManager : MonoSingleton<MapManager>
     public static Vector2Int PositionToTileIndex(Vector2 pos)
     {
         Vector2 spappedPos = SnappedPosition(pos);
-       
-        
+
+
         int x = Mathf.RoundToInt(spappedPos.x / TILE_SIZE) + MAX_RANGE_RADIUS;
         int y = Mathf.RoundToInt(spappedPos.y / TILE_SIZE) + MAX_RANGE_RADIUS;
-        return new Vector2Int(x,y);
+        return new Vector2Int(x, y);
     }
 
     public static Vector2 TileIndexToCenterPosition(Vector2Int[,] idxArr)
     {
         Vector2 sum = Vector2.zero;
-        foreach(Vector2Int idx in idxArr)
+        foreach (Vector2Int idx in idxArr)
         {
-            sum += tilePositionArray[idx.x,idx.y];
+            sum += tilePositionArray[idx.x, idx.y];
         }
         Vector2 center = sum / (idxArr.GetLength(0) * idxArr.GetLength(1));
         return center;
@@ -74,7 +75,8 @@ public class MapManager : MonoSingleton<MapManager>
 
     public static void ReleaseTile(Vector2Int index)
     {
-        emptyTileArray[index.x + MAX_RANGE_RADIUS, index.y + MAX_RANGE_RADIUS] = true;
+        // Debug.Log($"MapMgr ReleaseTile x {index.x + MAX_RANGE_RADIUS} y {index.y + MAX_RANGE_RADIUS}");
+        emptyTileArray[index.x, index.y] = true;
     }
     public static void RegisterTile(Vector2Int[,] indexArr)
     {
@@ -83,7 +85,7 @@ public class MapManager : MonoSingleton<MapManager>
     }
     public static void RegisterTile(Vector2Int index)
     {
-        emptyTileArray[index.x + MAX_RANGE_RADIUS, index.y + MAX_RANGE_RADIUS] = false;
+        emptyTileArray[index.x, index.y] = false;
     }
 
     public static bool CheckEmpty(Vector2Int index)
@@ -102,11 +104,11 @@ public class MapManager : MonoSingleton<MapManager>
 
         var spawnList = new List<(OreStone ore, float dist)>();
 
-        for (int cx =  -cellRadius; cx <= cellRadius; cx++)
+        for (int cx = -cellRadius; cx <= cellRadius; cx++)
         {
             for (int cy = -cellRadius; cy <= cellRadius; cy++)
-            {   
-                Vector2Int index = new Vector2Int(MAX_RANGE_RADIUS+cx, MAX_RANGE_RADIUS+cy); 
+            {
+                Vector2Int index = new Vector2Int(MAX_RANGE_RADIUS + cx, MAX_RANGE_RADIUS + cy);
                 Vector2 cellPos = new(cx * TILE_SIZE, cy * TILE_SIZE);
                 tilePositionArray[index.x, index.y] = cellPos;
 
@@ -115,17 +117,17 @@ public class MapManager : MonoSingleton<MapManager>
 
                 if (dist < exclueRadius)
                 {
-                    var emptyIdx = new Vector2Int(cx, cy);
-                    ReleaseTile(emptyIdx);
+                    // var emptyIdx = new Vector2Int(cx, cy);
+                    ReleaseTile(index);
                     continue;
                 }
 
                 int colorIdx = PickColorIndex(dist);
                 OreStone ore = OreStone.Get(oreStonePrefab, cellPos, transform);
-                Vector2Int[,] indexArr = new Vector2Int[1,1];
-                indexArr[0,0] = index;
+                Vector2Int[,] indexArr = new Vector2Int[1, 1];
+                indexArr[0, 0] = index;
                 ore.Init(colorIdx, fillColors[colorIdx], indexArr);
-   
+
                 spawnList.Add((ore, dist));
             }
         }
@@ -189,8 +191,8 @@ public class MapManager : MonoSingleton<MapManager>
             Vector2Int next = idx + dir;
             if (currentSet.Contains(next)) continue; // 자신이 이미 점유 중인 타일은 통과
 
-            int ax = next.x + MAX_RANGE_RADIUS;
-            int ay = next.y + MAX_RANGE_RADIUS;
+            int ax = next.x;
+            int ay = next.y;
             if (ax < 0 || ay < 0 ||
                 ax >= emptyTileArray.GetLength(0) || ay >= emptyTileArray.GetLength(1))
                 return false;
@@ -204,16 +206,16 @@ public class MapManager : MonoSingleton<MapManager>
 
     public static Vector2Int[,] GetIndexArray(Vector2Int[,] idxArr, Vector2Int dir) //dir방향으로 갈 수 있는지 확인
     {
-        Vector2Int[,] array = new Vector2Int[idxArr.GetLength(0),idxArr.GetLength(1)];
+        Vector2Int[,] array = new Vector2Int[idxArr.GetLength(0), idxArr.GetLength(1)];
         var currentSet = new HashSet<Vector2Int>();
         foreach (var idx in idxArr)
             currentSet.Add(idx);
 
-        for (int x =0;x<idxArr.GetLength(0);x++)
+        for (int x = 0; x < idxArr.GetLength(0); x++)
         {
             for (int y = 0; y < idxArr.GetLength(1); y++)
             {
-                array[x,y] = idxArr[x,y] + dir;
+                array[x, y] = idxArr[x, y] + dir;
             }
         }
         return array;
@@ -221,14 +223,14 @@ public class MapManager : MonoSingleton<MapManager>
 
 
     //idxArr를 중심으로 
-    public static Vector2Int[,] GetIndexArray(Vector2Int idxArr, Vector2Int size) 
+    public static Vector2Int[,] GetIndexArray(Vector2Int idxArr, Vector2Int size)
     {
-        Vector2Int[,] tileIndexs = new  Vector2Int[size.x,size.y];
+        Vector2Int[,] tileIndexs = new Vector2Int[size.x, size.y];
         int startX = Mathf.Clamp(idxArr.x - size.x / 2, 0, MAX_RANGE_RADIUS * 2 - size.x);
         int startY = Mathf.Clamp(idxArr.y - size.y / 2, 0, MAX_RANGE_RADIUS * 2 - size.y);
-        for(int x = startX; x < startX + size.x; x++)
+        for (int x = startX; x < startX + size.x; x++)
         {
-            for(int y = startY; y < startY + size.y; y++)
+            for (int y = startY; y < startY + size.y; y++)
             {
                 tileIndexs[x - startX, y - startY] = new Vector2Int(x, y);
             }

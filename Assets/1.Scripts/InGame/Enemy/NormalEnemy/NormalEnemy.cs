@@ -2,16 +2,16 @@ using DG.Tweening;
 using UnityEngine;
 
 public class NormalEnemy : Enemy, IHpUI
-{ 
-    float IHpUI.MaxHp => MaxHp;
-    float IHpUI.CurHp => CurHp;
-    Vector3 IHpUI.HpUIPosition => hpPoint.position;
-
+{
+    public float MaxHp => maxHp;
+    public float CurHp => curHp;
+    public Vector3 HpUIPosition => hpPoint.position;
 
     HpUI hpUI;
 
-      public override void UpdateAttack()
+    public override void UpdateAttack()
     {
+
         Vector2 vec = Player.Instance.transform.position - transform.position;
         SetFacing(vec.x);
         rg2d.linearVelocity = Vector2.zero;
@@ -31,8 +31,8 @@ public class NormalEnemy : Enemy, IHpUI
     public override void OnDead()
     {
         base.OnDead();
-        
+
         hpUI?.Release();
-        
+
     }
 }

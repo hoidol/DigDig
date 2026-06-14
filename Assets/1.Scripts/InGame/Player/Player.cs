@@ -28,7 +28,7 @@ public class Player : MonoSingleton<Player>, IPicker
     public int bounce;
     [SerializeField] Transform hpPoint;
 
-    public StatInventory statInventory;
+    // public StatInventory statInventory;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
     public TileChecker[] tileCheckers;
     public PlayerHealth health;
@@ -65,7 +65,7 @@ public class Player : MonoSingleton<Player>, IPicker
         itemInventory = GetComponentInChildren<ItemInventory>();
         // abilityInventory = GetComponentInChildren<AbilityInventory>();
 
-        statInventory = GetComponentInChildren<StatInventory>();
+        // statInventory = GetComponentInChildren<StatInventory>();
 
         health = GetComponentInChildren<PlayerHealth>();
         movement = GetComponentInChildren<PlayerMovement>();
@@ -95,7 +95,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
         bounce = 0;
         destroyCount = 0;
-        distanceMaxDistanceDestroiedStone = 0f;
+        distanceMaxDistanceDestroiedStone = MapManager.MIN_RANGE_RADIUS;
         distanceMinDistanceDestroiedStone = float.MaxValue;
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
@@ -203,7 +203,7 @@ public class Player : MonoSingleton<Player>, IPicker
         if (l == -1) l = lv;
         if (maxExp == 0 || levelUped)
         {
-            maxExp = 3 + l * 5;
+            maxExp = 3 + l * 2;
             levelUped = false;
         }
         return maxExp;
@@ -270,19 +270,9 @@ StatType.AmmoDuration //총알 지속시간
             statDic.Add(ps.statType, ps);
         }
 
-        Init();
-    }
-
-    void Init()
-    {
-        for (int i = 0; i < usingStatTypes.Length; i++)
-        {
-            StatType statType = usingStatTypes[i];
-            statDic[statType].value = playerData.GetPlayerStat(statType).value;
-        }
-
         for (int i = 0; i < UserManager.Instance.userData.equiptedBullets.Length; i++)
         {
+            // Debug.Log($"Player StatManager Init() {UserManager.Instance.userData.equiptedBullets[i].key}");
             bulletStatDic.Add(UserManager.Instance.userData.equiptedBullets[i].key,
             new PlayerBulletStat()
             {
@@ -291,21 +281,33 @@ StatType.AmmoDuration //총알 지속시간
             });
         }
 
+        Reset();
+    }
+
+    void Reset()
+    {
+        for (int i = 0; i < usingStatTypes.Length; i++)
+        {
+            StatType statType = usingStatTypes[i];
+            statDic[statType].value = playerData.GetPlayerStat(statType).value;
+        }
+
+
 
     }
 
     public void UpdateStat()
     {
-        Init();
-        for (int i = 0; i < player.statInventory.ownStats.Count; i++)
-        {
-            Stat stat = player.statInventory.ownStats[i];
-            if (stat.lv <= 0) continue;
-            StatData statData = StatData.GetStatData(stat.statType.ToString());
+        Reset();
+        // for (int i = 0; i < player.statInventory.ownStats.Count; i++)
+        // {
+        //     Stat stat = player.statInventory.ownStats[i];
+        //     if (stat.lv <= 0) continue;
+        //     StatData statData = StatData.GetStatData(stat.statType.ToString());
 
-            var playerStat = statDic[stat.statType];
-            playerStat.value = statData.Apply(playerStat.value, stat.lv);
-        }
+        //     var playerStat = statDic[stat.statType];
+        //     playerStat.value = statData.Apply(playerStat.value, stat.lv);
+        // }
 
 
 
@@ -324,14 +326,6 @@ StatType.AmmoDuration //총알 지속시간
     }
     public void LevelUpBullet(string key)
     {
-        if (!bulletStatDic.ContainsKey(key))
-        {
-            bulletStatDic.Add(key, new PlayerBulletStat()
-            {
-                key = key,
-                lv = 0
-            });
-        }
         bulletStatDic[key].lv++;
     }
     public void LevelUpItem(string key)

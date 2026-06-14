@@ -13,7 +13,7 @@ public abstract class Boss : Enemy
     DamageData damageData = new DamageData();
 
     IBossMovement movement;
-    
+
 
     protected override void Awake()
     {
@@ -39,14 +39,14 @@ public abstract class Boss : Enemy
 
     public override void Update()
     {
-        if(bossState == BossState.IntroAnim)
+        if (bossState == BossState.IntroAnim)
             return;
 
         base.Update();
     }
     public override void UpdateAttack()
     {
-        
+
     }
     protected override void OnHpChanged()
     {
@@ -63,7 +63,7 @@ public abstract class Boss : Enemy
 
     void CheckPhaseTransition()
     {
-        float hpRate = CurHp / MaxHp;
+        float hpRate = curHp / maxHp;
         int newPhase = 0;
         for (int i = 0; i < phases.Length; i++)
         {

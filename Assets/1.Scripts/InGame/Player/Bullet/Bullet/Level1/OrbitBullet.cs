@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class OrbitBullet : Bullet
 {
+    public OrbitBullet()
+    {
+        key = "Orbit";
+    }
     const float ORBIT_RADIUS = 1.5f;
     const float ANGULAR_SPEED = 360f; // 도/초 → 1회전에 1초
 

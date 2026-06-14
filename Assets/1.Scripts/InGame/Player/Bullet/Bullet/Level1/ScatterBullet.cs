@@ -5,7 +5,10 @@ using UnityEngine;
 public class ScatterBullet : Bullet, IPreAttack
 {
     const int EXTRA_SPREAD = 2; // 좌우 각 1발씩 추가
-
+    public ScatterBullet()
+    {
+        key = "Scatter";
+    }
     public void OnPreAttack(Player player, Vector2 dir, int shotOrder)
     {
         // player.weapon.RequestSpread(EXTRA_SPREAD);
@@ -22,5 +25,5 @@ public class ScatterBullet : Bullet, IPreAttack
     public override string GetDescription(bool detail = false)
         => "3방향 발사, 탄당 데미지 0.5×";
 
-    
+
 }

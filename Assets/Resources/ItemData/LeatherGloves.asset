@@ -14,15 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: LeatherGloves
   itemName: "\uAC00\uC8FD \uC7A5\uAC11"
-  desc: "\uACF5\uACA9\uC18D\uB3C4 \uC99D\uAC00 10%"
-  level: 1
-  maxOwnCount: 1
+  desc: "\uACF5\uACA9\uC18D\uB3C4 \uC99D\uAC00 25%"
   hideDisplay: 0
   acquireMethod: 3
   thumbnail: {fileID: 21300000, guid: 29da66738eea640189a4d094d5211cdf, type: 3}
-  grade: 0
-  itemPrefab: {fileID: 218516877765496598, guid: 526b26ab48c784ff5b8fe20916e1b738, type: 3}
-  addEffectUnlockConditions: []
+  valueInfo: 
+  itemPrefab: {fileID: 7912424457993990899, guid: 91b43d6e0336c4908844f2f113f166c8,
+    type: 3}
+  unlockConditions: []
   applyOrder: 0
-  mergeItemKeys: []
-  IncludingItems: []

@@ -19,12 +19,12 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
         // GameEventBus.Unsubscribe<RemovedBulletEvent>(OnRemovedBulletEvent);
     }
 
-    public void AddedBullet(Bullet bullet)
+    public void AddedBullet(string bulletKey)
     {
         UpdateContainer();
     }
 
-    public void FiredBullet(Bullet bullet, int shotOrder)
+    public void FiredBullet(string bulletKey, int shotOrder)
     {
 
         loadedBulletUIs[loadedBulletUIs.Count - 1].transform.SetParent(transform, true);
@@ -36,7 +36,7 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
     {
         UpdateContainer();
     }
-    public void RemovedBullet(Bullet bullet)
+    public void RemovedBullet(string bulletKey)
     {
         UpdateContainer();
     }
@@ -60,8 +60,7 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
 
     void UpdateContainer()
     {
-
-        List<Bullet> curLoadedBullets = Player.Instance.weapon.loadedBullets;
+        List<string> curLoadedBullets = Player.Instance.weapon.loadedBullets;
 
         foreach (var ui in pool)
         {
@@ -71,7 +70,8 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
         for (int i = 0; i < curLoadedBullets.Count; i++)
         {
             BulletUI bulletUI = GetOrCreate();
-            bulletUI.SetBulletData(curLoadedBullets[i].bulletData);
+            // Debug.Log($"curLoadedBullets[i] {curLoadedBullets[i]}");
+            bulletUI.SetBulletData(BulletManager.bullets[curLoadedBullets[i]].bulletData);
             loadedBulletUIs.Add(bulletUI);
         }
     }

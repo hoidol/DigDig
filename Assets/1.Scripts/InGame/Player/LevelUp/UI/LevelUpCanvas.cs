@@ -10,7 +10,7 @@ public class LevelUpCanvas : CanvasUI<LevelUpCanvas>
     public LevelUpBonusPanel addNormalBulletPanel;
     public LevelUpBonusPanel addBouncePanel;
     public AddSpecialBulletPanel addSpecialBulletPanel;
-    public MergeBulletPanel mergeBulletPanel;
+    public MergeBulletBonusPanel mergeBulletBonusPanel;
 
     public override void OpenCanvas(Action closeCallback = null)
     {
@@ -20,12 +20,12 @@ public class LevelUpCanvas : CanvasUI<LevelUpCanvas>
         //     levelUpBonusPanels = GetComponentsInChildren<LevelUpBonusPanel>();
         // }
 
-        Bullet normal = Player.Instance.weapon.bulletInventory.curBullets.Where(e => e.key == "Normal").FirstOrDefault();
+        string normal = Player.Instance.weapon.bulletInventory.curBullets.Where(e => e == "Normal").FirstOrDefault();
         addSpecialBulletPanel.CanSelect(normal != null);
 
 
         List<MergeBulletData> canMergeBulletDatas = Player.Instance.weapon.bulletInventory.GetCanMergeBulletData();
-        mergeBulletPanel.gameObject.SetActive(canMergeBulletDatas.Count <= 0);
+        mergeBulletBonusPanel.gameObject.SetActive(canMergeBulletDatas.Count <= 0);
 
     }
 }

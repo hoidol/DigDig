@@ -27,11 +27,11 @@ public class ConditionData
         // }
         // else
 
-        if (conditionType == ConditionType.TotalStatCount)
-        {
-            if (Player.Instance.statInventory.statTotalCount < count)
-                return false;
-        }
+        // if (conditionType == ConditionType.TotalStatCount)
+        // {
+        //     if (Player.Instance.statInventory.statTotalCount < count)
+        //         return false;
+        // }
         return true;
     }
 }

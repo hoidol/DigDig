@@ -3,14 +3,13 @@ using UnityEngine;
 [System.Flags]
 public enum AcquireMethod
 {
-    Purchase = 1 << 0,
     Select = 1 << 1,
     Merge = 1 << 2,
 
 }
 
 [CreateAssetMenu]
-public class ItemData : ScriptableObject,IReinforceData
+public class ItemData : ScriptableObject, IReinforceData
 {
     public static readonly int MAX_LEVEL = 3;
     public string key;
@@ -22,6 +21,7 @@ public class ItemData : ScriptableObject,IReinforceData
     public bool hideDisplay; // true면 보유 현황 UI에 표시 안 함 - 물약용
     public AcquireMethod acquireMethod;
     public Sprite thumbnail;
+    public string valueInfo;
     //[SerializeField] int price;
 
     // public int GetPrice()
@@ -38,6 +38,9 @@ public class ItemData : ScriptableObject,IReinforceData
     public bool CheckUnlock()
     {
         bool unlocked = true;
+        if (unlockConditions == null)
+            return unlocked;
+
         for (int i = 0; i < unlockConditions.Length; i++)
         {
             if (!unlockConditions[i].Check())
@@ -95,10 +98,11 @@ public class ItemData : ScriptableObject,IReinforceData
         int iKey = System.Array.IndexOf(headers, "Key");
         int iName = System.Array.IndexOf(headers, "Name");
         int iDesc = System.Array.IndexOf(headers, "Desc");
-        int iAcquire = System.Array.IndexOf(headers, "Purchase,Select");
+        int iAcquire = System.Array.IndexOf(headers, "Purchase,Select,Merge");
+        int iValueInfo = System.Array.IndexOf(headers, "ValueInfo");
         // int iGrade = System.Array.IndexOf(headers, "Grade");
         // int iLevel = System.Array.IndexOf(headers, "Level");
-        int iHide = System.Array.IndexOf(headers, "hideDisplay");
+        //int iHide = System.Array.IndexOf(headers, "hideDisplay");
         // int iOwn = System.Array.IndexOf(headers, "OwnCount");
         // int iIncluding = System.Array.IndexOf(headers, "IncludingItems");
         // int iMerge = System.Array.IndexOf(headers, "MergeItems");
@@ -125,12 +129,14 @@ public class ItemData : ScriptableObject,IReinforceData
                         acquireMethod |= am;
                 }
             }
+            if (iValueInfo >= 0 && iValueInfo < cols.Length)
+                valueInfo = cols[iValueInfo].Trim();
             // if (iGrade >= 0 && iGrade < cols.Length && System.Enum.TryParse<Grade>(cols[iGrade].Trim(), out var g))
             //     grade = g;
             // if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
             //     level = lv;
-            if (iHide >= 0 && iHide < cols.Length)
-                hideDisplay = cols[iHide].Trim().ToUpper() == "TRUE";
+            // if (iHide >= 0 && iHide < cols.Length)
+            //     hideDisplay = cols[iHide].Trim().ToUpper() == "TRUE";
             // if (iOwn >= 0 && iOwn < cols.Length && int.TryParse(cols[iOwn].Trim(), out int own))
             //     maxOwnCount = own;
             // if (iIncluding >= 0 && iIncluding < cols.Length)
@@ -217,8 +223,8 @@ public class ItemData : ScriptableObject,IReinforceData
             return;
         }
 
-        // string newPath = $"{gradeFolder}/{key}Item.prefab";
-        var newPrefab = UnityEditor.PrefabUtility.SaveAsPrefabAsset(go, prefabRootFolder);
+        string newPath = $"{prefabRootFolder}/{key}.prefab";
+        var newPrefab = UnityEditor.PrefabUtility.SaveAsPrefabAsset(go, newPath);
         DestroyImmediate(go);
 
         itemPrefab = newPrefab.GetComponent<Item>();

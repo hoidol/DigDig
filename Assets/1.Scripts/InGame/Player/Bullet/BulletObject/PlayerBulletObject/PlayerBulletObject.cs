@@ -8,6 +8,27 @@ public class PlayerBulletObject : BulletObject
     // private static PlayerBulletObject prefab;
     public string key;
     public PlayerDamageData damageData = new PlayerDamageData();
+    public override void Shoot(Vector2 dir, float damage)
+    {
+        base.Shoot(dir, damage);
+        lifetimeTimer = Player.Instance.statMgr.AmmoDuration;
+        // Debug.Log($"PlayerBulletObject Shoot {lifetimeTimer}");
+    }
+
+    public override void Update()
+    {
+        // Debug.Log($"PlayerBulletObject Shoot {lifetimeTimer}");
+        lifetimeTimer -= Time.deltaTime;
+        if (lifetimeTimer <= 0)
+        {
+            // Debug.Log($"PlayerBulletObject Shoot {lifetimeTimer}");
+            Release();
+            return;
+        }
+
+        Move();
+        CheckHit();
+    }
     public override void Hit(RaycastHit2D hit2D)
     {
         IHittable hit = hit2D.collider.GetComponent<IHittable>();
@@ -16,6 +37,7 @@ public class PlayerBulletObject : BulletObject
 
         if (preTarget == hit)
             return;
+
 
         preTarget = hit;
         damageData.Init();
@@ -27,7 +49,7 @@ public class PlayerBulletObject : BulletObject
         for (int i = 0; i < forces.Count; i++)
         {
             // Debug.Log($"playerBullet Hit forces [{i}] {forces[i].GetType().Name} finalDamage {finalDamage}");
-            finalDamage += forces[i].GetMultiDamage(this, hit, hit2D,direction);
+            finalDamage += forces[i].GetMultiDamage(this, hit, hit2D, direction);
         }
         if (finalDamage < 1f)
             finalDamage = 1f;
@@ -37,25 +59,18 @@ public class PlayerBulletObject : BulletObject
         bool shouldRelease = true;
         foreach (var b in behaviors)
         {
-            shouldRelease = b.OnHit(this, hit, hit2D,direction); //입사 벡터, 법선 벡터, 전달 필요 
+            shouldRelease = b.OnHit(this, hit, hit2D, direction); //입사 벡터, 법선 벡터, 전달 필요 
             if (!shouldRelease)
                 return;
         }
 
         if (shouldRelease) Release();
     }
-    public override void Move()
-    {
-        foreach (var b in behaviors)
-            b.OnMove(this);
-        base.Move();
-    }
-
     public override void Release()
     {
+        // Debug.Log("PlayerBulletObject Release()");
         gameObject.SetActive(false);
         BulletManager.Instance.ReturnPlayerBulletObject(key, this);
-        //pool.Enqueue(this);
     }
     public override void Bounce(RaycastHit2D hit2D)
     {

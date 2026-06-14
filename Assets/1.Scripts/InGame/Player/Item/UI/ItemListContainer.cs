@@ -6,10 +6,18 @@ public class ItemListContainer : MonoBehaviour
     public ItemNotifyEffectPanel[] itemNotifyEffectPanels;
     void Start()
     {
+        for (int i = 0; i < itemNotifyEffectPanels.Length; i++)
+        {
+            itemNotifyEffectPanels[i].gameObject.SetActive(false);
+        }
         GameEventBus.Subscribe<AddedItemEvent>(AddedItemEvent);
+        GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
+    }
+    void OnStartGameEvent(StartGameEvent e)
+    {
+
         UpdateContainer();
     }
-
     void AddedItemEvent(AddedItemEvent e)
     {
         UpdateContainer();

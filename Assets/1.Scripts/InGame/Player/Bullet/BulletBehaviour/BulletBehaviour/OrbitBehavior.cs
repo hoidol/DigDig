@@ -36,13 +36,11 @@ public class OrbitBehavior : IBulletBehavior
     {
         if (!isOrbiting) return;
 
-        bullet.skipDefaultMove = true;
         orbitTimer += Time.deltaTime;
 
         if (orbitTimer >= orbitDuration)
         {
             isOrbiting = false;
-            bullet.skipDefaultMove = false;
             if (remaining <= 0) { bullet.Release(); return; }
             return;
         }

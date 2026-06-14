@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5192649572897311665}
   - component: {fileID: 8694930963259621282}
   - component: {fileID: 315343644922543393}
-  - component: {fileID: 9044135171896120952}
+  - component: {fileID: 6613311289890675529}
   m_Layer: 0
   m_Name: Spark
   m_TagString: Untagged
@@ -4913,7 +4913,7 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &9044135171896120952
+--- !u!114 &6613311289890675529
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4922,7 +4922,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7415661775729910329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8d81ab4f85cf4897b09944d82aa515f, type: 3}
+  m_Script: {fileID: 11500000, guid: 0bba54f556d1d427fa757af8e39dca7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   effectType: 4
+  particleSystems: []
+  duration: 0
+  timer: 0

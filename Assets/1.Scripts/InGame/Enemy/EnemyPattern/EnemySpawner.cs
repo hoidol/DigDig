@@ -14,6 +14,7 @@ public class EnemySpawner
 
     public virtual void StartPattern(EnemyPatternData enemyPatternData)
     {
+
         EndPattern();
         Debug.Log("EnemyPattern StartPattern");
         this.enemyPatternData = enemyPatternData;
@@ -29,7 +30,7 @@ public class EnemySpawner
             float wait = Random.Range(spawnData.intervalRange.x, spawnData.intervalRange.y);
             await UniTask.Delay(TimeSpan.FromSeconds(wait), cancellationToken: token);
 
-            Debug.Log("EnemyPattern SpawnLoop 적 생성하기");
+            //Debug.Log("EnemyPattern SpawnLoop 적 생성하기");
             if (EnemyManager.Instance.ActiveEnemyCount >= StageData.MAX_ENEMY_COUNT) continue;
 
             int count = Random.Range(spawnData.countRange.x, spawnData.countRange.y);
@@ -45,7 +46,7 @@ public class EnemySpawner
 
     public void Spawn(EnemyType type)
     {
-        Debug.Log($"EnemyPattern Spawn 적 생성하기 {type}");
+        //Debug.Log($"EnemyPattern Spawn 적 생성하기 {type}");
         EnemyData enemyData = EnemyManager.GetEnemyData(type);
         var sorted = Player.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
         var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
@@ -60,16 +61,18 @@ public class EnemySpawner
 
 
         Vector2Int[,] spawnTileArray = null;
-        bool canSpawn =true;
-        if (enemyData.size == Vector2Int.one && bestChecker.tile != null && Random.Range(0f, 100f) < 70)
+        bool canSpawn = true;
+        if (bestChecker.tile != null && Random.Range(0f, 100f) < 70)
         {
             Debug.Log($"best Checker 생성 시도 {bestChecker.name}");
+
             Vector2Int startTileArr = MapManager.PositionToTileIndex(bestChecker.tile.Transform.position);
-            if(!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
+            Debug.Log($"bestChecker.tile.Transform.position {bestChecker.tile.Transform.position} startTileArr {startTileArr}");
+            if (!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
             {
-                if(!FindEmptyInDir(startTileArr,enemyData.size, dir, 4, out spawnTileArray))
+                if (!FindEmptyInDir(startTileArr, enemyData.size, dir, 4, out spawnTileArray))
                 {
-                    if(!FindEmptyInDir(startTileArr, enemyData.size, -dir, 4, out spawnTileArray))
+                    if (!FindEmptyInDir(startTileArr, enemyData.size, -dir, 4, out spawnTileArray))
                     {
                         canSpawn = false;
                     }
@@ -79,31 +82,34 @@ public class EnemySpawner
         else
         {
             Vector2Int startTileArr = MapManager.PositionToTileIndex(rPoint);
-            if(!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
+            if (!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
             {
                 canSpawn = false;
             }
+
         }
+
         if (canSpawn)
         {
+
             Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type);
             Enemy enemy = EnemyManager.Instance.Instantiate(enemyPrefab);
-            enemy?.Spawn(spawnTileArray);    
+            enemy?.Spawn(spawnTileArray);
         }
-        
+
     }
 
     bool FindEmpty(Vector2Int tileIndex)
     {
         return MapManager.CheckEmpty(tileIndex);
     }
-    bool FindEmptyInDir(Vector2Int startIdx,Vector2Int size ,Vector2Int dir, int steps, out Vector2Int[,] spawnTileArray)
+    bool FindEmptyInDir(Vector2Int startIdx, Vector2Int size, Vector2Int dir, int steps, out Vector2Int[,] spawnTileArray)
     {
-        spawnTileArray = new Vector2Int[size.x,size.y];
+        spawnTileArray = new Vector2Int[size.x, size.y];
         for (int i = 1; i <= steps; i++)
         {
             Vector2Int candidate = startIdx + dir * i;
-            if(MapManager.GetTileArray(candidate, size, out spawnTileArray)) return true;
+            if (MapManager.GetTileArray(candidate, size, out spawnTileArray)) return true;
         }
         return false;
     }

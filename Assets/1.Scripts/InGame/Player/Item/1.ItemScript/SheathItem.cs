@@ -6,13 +6,14 @@ public class SheathItem : TriggerItem
     StatusEffectHandler shieldHandler;
     public GameObject effect;
 
+
     public override void OnEquip(Player player)
     {
         shieldHandler = player.GetComponent<StatusEffectHandler>();
         transform.parent = player.bodyCenterTr;
         transform.position = player.bodyCenterTr.position;
         effect.SetActive(false);
-        coolTime = 40f;
+        coolTime = 50f;
         base.OnEquip(player);
     }
 
@@ -29,6 +30,6 @@ public class SheathItem : TriggerItem
 
     public override string GetDescription(bool detail = false)
     {
-        return "40초마다 피해 1회 차단";
+        return "50초마다 피해 1회 차단";
     }
 }

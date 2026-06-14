@@ -24,6 +24,7 @@ public class WayPointer : MonoBehaviour
     public void Show(IWayPointerTarget target, bool effect = false, float delay = 0)
     {
         wayPointerTarget = target;
+        rootTr.SetActive(false);
         if (effect)
             PlayEffect(delay).Forget();
     }
@@ -85,7 +86,7 @@ public class WayPointer : MonoBehaviour
 
         if (isPlayingEffect) return;
 
-        float borderSize = 150f;
+        float borderSize = 0; //-150f;
         Vector3 targetPosScreenPoint = mainCamera.WorldToScreenPoint(wayPointerTarget.Transform.position);
         bool isOffScreen = targetPosScreenPoint.x <= borderSize ||
             targetPosScreenPoint.x >= Screen.width - borderSize ||

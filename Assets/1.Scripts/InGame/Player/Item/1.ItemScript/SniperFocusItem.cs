@@ -1,10 +1,10 @@
 using UnityEngine;
 
-// 예민함 유지 - 2초 이상 정지 시 크리티컬 확률 40% 증가
+// 예민함 유지 - 2초 이상 정지 시 크리티컬 확률 25% 증가
 public class SniperFocusItem : Item
 {
     const float WAIT_TIME = 2f;
-    const float CRIT_BONUS = 40f;
+    const float CRIT_BONUS = 25;
 
     Buff buff;
     bool buffApplied;

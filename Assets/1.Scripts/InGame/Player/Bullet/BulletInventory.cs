@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BulletInventory : MonoBehaviour
 {
-    public List<Bullet> curBullets = new List<Bullet>();
+    public List<string> curBullets = new List<string>();
     //public List<BulletStat
     // public List<MergeBulletData> canMergeBulletDatas = new List<MergeBulletData>();
     //public readonly int MAX_ITEM_COUNT = 8;
@@ -28,7 +28,7 @@ public class BulletInventory : MonoBehaviour
 
     public bool CheckHave(string key)
     {
-        return curBullets.Any(b => b.key == key);
+        return curBullets.Any(b => b == key);
     }
 
 
@@ -43,7 +43,7 @@ public class BulletInventory : MonoBehaviour
         bulletSkillKeys.Clear();
         for (int i = 0; i < Player.Instance.weapon.bulletInventory.curBullets.Count; i++)
         {
-            bulletSkillKeys.Add(Player.Instance.weapon.bulletInventory.curBullets[i].key);
+            bulletSkillKeys.Add(Player.Instance.weapon.bulletInventory.curBullets[i]);
         }
         return bulletSkillKeys;
     }
@@ -51,9 +51,9 @@ public class BulletInventory : MonoBehaviour
     {
         return curBullets.Count;
     }
-    public Bullet AddBullet(string key)
+    public void AddBullet(string key)
     {
-        return AddBullet(BulletData.GetBulletData(key));
+        AddBullet(BulletData.GetBulletData(key));
     }
 
     /// <summary>
@@ -61,41 +61,37 @@ public class BulletInventory : MonoBehaviour
     /// </summary>
     /// <param name="bulletData"></param>
     /// <param name="openChangeBullet"> 아이템 더이상 획득 못하면 교체창 열기</param>
-    public Bullet AddBullet(BulletData bulletData)
+    public void AddBullet(BulletData bulletData)
     {
-        Bullet bullet = BulletManager.Create(bulletData.key);
-        curBullets.Add(bullet);
+        //Bullet bullet = BulletManager.Create(bulletData.key);
+        curBullets.Add(bulletData.key);
         Player.Instance.UpdatePlayer();
         RefreshCache();
-        return bullet;
     }
 
-
-    public Bullet ReleaseBullet(string key)
+    public void ReleaseBullet(string key)
     {
-        Bullet bullet = curBullets.FirstOrDefault(e => e.key == key);
 
-        curBullets.Remove(bullet);
+        curBullets.Remove(key);
 
         RefreshCache(); // RefreshCache 포함
-        return bullet;
     }
 
 
 
-    public Bullet GetBullet(int bulletIdx)
-    {
-        return curBullets[bulletIdx];
-    }
+    // public Bullet GetBullet(int bulletIdx)
+    // {
+    //     return curBullets[bulletIdx];
+    // }
 
     public void CheckMerge()
     {
         // canMergeBulletDatas.Clear();
         MergeBulletData[] mergeBulletDatas = BulletManager.Instance.mergeBulletDatas;
 
-        var mergeableBulletKeys = new HashSet<string>(
-            curBullets.Where(bulletSkill => bulletSkill.CanMerge()).Select(bulletSkill => bulletSkill.key)
-        );
+        // var mergeableBulletKeys = new HashSet<string>(
+        //     curBullets.Where(bKey => BulletManager.bullets[bKey].CanMerge()).Select(bulletSkill => bulletSkill.key)
+        // );
 
         // var ownedSkillKeys = new HashSet<string>(
         //     Player.Instance.abilityInventory.equippedAbilitys.Select(s => s.key)
@@ -118,7 +114,7 @@ public class BulletInventory : MonoBehaviour
         for (int i = 0; i < BulletManager.Instance.mergeBulletDatas.Length; i++)
         {
             MergeBulletData mergeBulletData = BulletManager.Instance.mergeBulletDatas[i];
-            if (mergeBulletData.resourceBulletKeys.All(k => Player.Instance.weapon.bulletInventory.curBullets.Any(b => b.key == k)))
+            if (mergeBulletData.resourceBulletKeys.All(k => Player.Instance.weapon.bulletInventory.curBullets.Any(b => b == k)))
                 canMergeBulletDatas.Add(mergeBulletData);
         }
         return canMergeBulletDatas;

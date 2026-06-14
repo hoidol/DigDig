@@ -13,13 +13,14 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     [field: SerializeField]
     public StatusEffectHandler statusEffectHandler
     {
-        get; set;
+
+        get; private set;
     }
     [Header("생성 시 타일을 부수면서 등장함")]
     public bool breakTileWhenSpawn;
     #region 
-    [SerializeField] public float MaxHp;//{ get; private set; }
-    public float CurHp { get; private set; }
+    [SerializeField] public float maxHp;//{ get; private set; }
+    [field: SerializeField] public float curHp;// { get; private set; }
 
     [SerializeField] Transform root;
     [SerializeField] protected Transform hpPoint;
@@ -33,13 +34,15 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
 
     public Transform Transform => transform;
 
-   
-
     public Vector2Int[,] TileIndexArr => tileIndexArr;
     public Vector2Int Size => enemyData.size;
 
     public bool BreakTileWhenSpawn => breakTileWhenSpawn;
-    public Vector2Int[,]  tileIndexArr;
+    public Vector2Int[,] tileIndexArr;
+
+#if UNITY_EDITOR
+    List<Vector2Int> tileIndexList = new List<Vector2Int>();
+#endif
     public float apearTime = 2; //떨어지면서 등장하는 시간
     public const float MOVE_SPEED = 2; //떨어지면서 등장하는 시간
 
@@ -61,23 +64,32 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     }
     //적 생성 시 호출
     public virtual void Spawn(Vector2Int[,] idxArr)
-    {   
+    {
         moveTimer = MOVE_SPEED;
         //apearTime 초 후에 등장
-        tileIndexArr = new Vector2Int[enemyData.size.x,enemyData.size.y];
+        moving = false;
+        tileIndexArr = new Vector2Int[enemyData.size.x, enemyData.size.y];
+
+#if UNITY_EDITOR
+        foreach (var tileIndex in idxArr)
+        {
+            tileIndexList.Add(tileIndex);
+        }
+
+#endif
         RegisterTile(idxArr);
 
         gameObject.SetActive(false);
         Vector2 pos = MapManager.TileIndexToCenterPosition(idxArr);
 
         EnemySpawnIndicator.Get(pos, null).PlayIndicator(tileIndexArr, apearTime, () =>
-        {   
+        {
             Apear();
         });
 
         transform.position = pos;
-        MaxHp = enemyData.GetHp();
-        CurHp = MaxHp;
+        maxHp = enemyData.GetHp();
+        curHp = maxHp;
         ChangeState(EnemyState.Waiting);
 
         attackTimer = 0;
@@ -106,7 +118,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
             return;
         }
 
-        if(moveTimer>0)
+        if (moveTimer > 0)
             moveTimer -= Time.deltaTime;
 
         if (isPushed)
@@ -119,7 +131,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
             return;
 
         if (state == EnemyState.Waiting) UpdateWaiting();
-        else if (state == EnemyState.Attack) UpdateMoving();
+        else if (state == EnemyState.Moving) UpdateMoving();
         else if (state == EnemyState.Attack) UpdateAttack();
 
     }
@@ -160,9 +172,9 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     //상태가 Waiting 인 경우 처리
     public virtual void UpdateWaiting()
     {
-       Vector2 vec = Player.Instance.transform.position - transform.position;
+        Vector2 vec = Player.Instance.transform.position - transform.position;
 
-        if (vec.magnitude > enemyData.moveRange && moveTimer <=0)
+        if (vec.magnitude > enemyData.moveRange && moveTimer <= 0)
         {
             ChangeState(EnemyState.Moving);
             return;
@@ -177,9 +189,9 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     }
     public virtual void UpdateMoving()
     {
-        if(moving)
+        if (moving)
             return;
-        
+        // Debug.Log("ENemy 이동 시도");
         Vector2 vec = Player.Instance.transform.position - transform.position;
         Vector2Int[] dirs = new Vector2Int[2];
         if (Mathf.Abs(vec.normalized.x) > Mathf.Abs(vec.normalized.y))
@@ -195,12 +207,17 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
 
         for (int i = 0; i < dirs.Length; i++)
         {
-            if(!MapManager.CheckMoveTo(tileIndexArr, dirs[i]))
+            // Debug.Log($"현 위치 {tileIndexArr[0, 0]} 방향 {dirs[i]}");
+            if (!MapManager.CheckMoveTo(tileIndexArr, dirs[i]))
                 continue;
-            
+
             MoveTo(dirs[i]).Forget();
             return;
         }
+
+        //이동 못하는 경우
+        ChangeState(EnemyState.Waiting);
+        moveTimer = MOVE_SPEED;
     }
 
     public async virtual UniTaskVoid MoveTo(Vector2Int dir)
@@ -213,17 +230,17 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
 
         Vector2 dest = MapManager.TileIndexToCenterPosition(newTiles);
         SetFacing(dir.x);
-        await UniTask.Delay(3000);
+        // await UniTask.Delay(3000);
         transform.DOMove(dest, 0.3f)
             .SetEase(Ease.Linear)
             .OnComplete(() =>
             {
-                MapManager.ReleaseTile(tileIndexArr);
-                RegisterTile(newTiles);
+                MapManager.ReleaseTile(tileIndexArr);//현재 위치 해제
+                RegisterTile(newTiles); //이동한 위치 등록
             });
 
         await UniTask.Delay(500);
-        
+
         moving = false;
         moveTimer = MOVE_SPEED;
         ChangeState(EnemyState.Waiting);
@@ -251,13 +268,13 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
         if (state == EnemyState.Dead)
             return;
         damage.Applyed(hpPoint.transform.position);
-        CurHp = Mathf.Max(0, CurHp - damage.damage);
+        curHp = Mathf.Max(0, curHp - damage.damage);
         OnHpChanged();
-        if (CurHp <= 0)
+        if (curHp <= 0)
         {
             Reward();
             OnDead();
-        } 
+        }
     }
 
     public void SetFacing(float dirX)
@@ -267,7 +284,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
 
     protected virtual void OnHpChanged()
     {
-        
+
     }
     public void Reward()
     {
@@ -276,6 +293,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     }
     public virtual void OnDead()
     {
+        transform.DOKill();
         ReleaseTile();
         ChangeState(EnemyState.Dead);
         gameObject.SetActive(false);
@@ -284,7 +302,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     }
     public bool CanHit()
     {
-        return CurHp > 0;
+        return curHp > 0;
     }
 
     public void RegisterTile(Vector2Int[,] idxArr)

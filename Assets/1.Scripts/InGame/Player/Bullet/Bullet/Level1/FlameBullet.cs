@@ -7,6 +7,10 @@ public class FlameBullet : Bullet
     const float BURN_CHANCE = 0.3f;
     const float BURN_DURATION = 3f;
     const float BURN_DPS = 3f;
+    public FlameBullet()
+    {
+        key = "Flame";
+    }
 
     public override void OnBulletFired(PlayerBulletObject bullet)
     {

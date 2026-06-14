@@ -8,6 +8,9 @@ public abstract class Item : MonoBehaviour, IReinforce
 
     public virtual string GetDescription(bool detail = false)
     {
+        if (itemData == null)
+            Debug.Log($"GetDescription if(itemData== null) {key}");
+
         return itemData.desc;
     }
     public ItemData itemData => ItemManager.Instance.GetItemData(key);
@@ -25,7 +28,7 @@ public abstract class Item : MonoBehaviour, IReinforce
 
     public virtual void OnUnequip(Player player)
     {
-         equipped = false;
+        equipped = false;
     }
 
     public virtual void UpdateItem() { }

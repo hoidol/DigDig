@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: BloodFrenzy
+  m_EditorClassIdentifier: 
+  key: BloodFrenzy
+  itemName: "\uD53C\uC758 \uD56D\uC544\uB9AC"
+  desc: "HP 50% \uC774\uD558 \uC2DC \uACF5\uACA9\uB825 +30%"
+  hideDisplay: 0
+  acquireMethod: 3
+  thumbnail: {fileID: 21300000, guid: 3795023cb67f04d0a81e0bdf923ab645, type: 3}
+  valueInfo: 
+  itemPrefab: {fileID: 2330295761782474082, guid: ea55d910e594840fe841911a8fd87dfe,
+    type: 3}
+  unlockConditions: []
+  applyOrder: 0

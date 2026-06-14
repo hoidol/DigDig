@@ -21,12 +21,4 @@ public class FreezeOnHitBehavior : IBulletBehavior
         return true;
     }
 
-    public void OnMove(BulletObject bullet) { }
-
-    public void Merge(IBulletBehavior other)
-    {
-        FreezeOnHitBehavior o = (FreezeOnHitBehavior)other;
-        if (o.chance > chance) chance = o.chance;
-        if (o.duration > duration) duration = o.duration;
-    }
 }

@@ -14,9 +14,4 @@ public class BounceBehavior : IBulletBehavior
         bullet.Bounce(hit2D);
         return false;
     }
-    public void OnMove(BulletObject bullet) { }
-    public void Merge(IBulletBehavior other)
-    {
-        remaining += ((BounceBehavior)other).remaining;
-    }
 }

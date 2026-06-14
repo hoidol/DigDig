@@ -6,7 +6,6 @@ public abstract class BulletObject : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
     protected Vector3 direction;
-    public bool skipDefaultMove;
 
     public void SetDirection(Vector2 dir)
     {
@@ -27,7 +26,7 @@ public abstract class BulletObject : MonoBehaviour
     protected List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
     protected List<IBulletForce> forces = new List<IBulletForce>();
     const float LIFETIME = 5f;
-    float lifetimeTimer;
+    protected float lifetimeTimer;
 
     public virtual void Shoot(Vector2 dir, float damage)
     {
@@ -36,14 +35,13 @@ public abstract class BulletObject : MonoBehaviour
         this.damage = damage;
         damageMultiplier = 1f;
         preTarget = null;
-        lifetimeTimer = 0f;
-        skipDefaultMove = false;
+        lifetimeTimer = LIFETIME;
     }
 
     public virtual void Update()
     {
-        lifetimeTimer += Time.deltaTime;
-        if (lifetimeTimer >= LIFETIME)
+        lifetimeTimer -= Time.deltaTime;
+        if (lifetimeTimer <= 0)
         {
             Release();
             return;
@@ -54,8 +52,7 @@ public abstract class BulletObject : MonoBehaviour
     }
     public virtual void Move()
     {
-        if (!skipDefaultMove)
-            transform.position += direction * moveSpeed * Time.deltaTime;
+        transform.position += direction * moveSpeed * Time.deltaTime;
     }
 
     public virtual void CheckHit()
@@ -75,11 +72,11 @@ public abstract class BulletObject : MonoBehaviour
 
     public void AddBehavior(IBulletBehavior b)
     {
-        var existing = behaviors.Find(x => x.GetType() == b.GetType());
-        if (existing != null)
-            existing.Merge(b);
-        else
-            behaviors.Add(b);
+        behaviors.Add(b);
+        // var existing = behaviors.Find(x => x.GetType() == b.GetType());
+        // if (existing != null)
+        //     existing.Merge(b);
+        // else
     }
     public void ClearBehaviors() => behaviors.Clear();
     public void AddBulletForce(IBulletForce b)

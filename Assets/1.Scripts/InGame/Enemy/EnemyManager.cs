@@ -9,7 +9,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>
     readonly Dictionary<EnemyType, Stack<Enemy>> pool = new(); // 적 종류 별 풀링
     readonly HashSet<Enemy> activeEnemies = new();
     static readonly Dictionary<EnemyType, EnemyData> enemyDataDic = new(); //적 종류 별 게임 데이터
-    
+
     [field: SerializeField] public int ActiveEnemyCount { get; private set; }
 
     void Awake()
@@ -34,7 +34,8 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
         Enemy enemy = pool[prefab.enemyType].Count > 0
             ? pool[prefab.enemyType].Pop()
-            : Instantiate(prefab);
+            : GameObject.Instantiate(prefab);
+
 
         enemy.gameObject.SetActive(true);
         enemy.Init(data);

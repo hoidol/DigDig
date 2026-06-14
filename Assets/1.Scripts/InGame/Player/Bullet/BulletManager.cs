@@ -4,31 +4,19 @@ using UnityEngine;
 
 public class BulletManager : MonoSingleton<BulletManager>
 {
+    public Dictionary<string, BulletData> bulletDataDic;
     public BulletData[] bulletDatas;
     //public List<BulletData> mergedBulletData = new List<BulletData>();
     public MergeBulletData[] mergeBulletDatas;
 
-    static readonly Dictionary<string, Func<Bullet>> registry = new()
-    {
-        { "Normal",   () => new NormalBullet() },
-        { "Pierce",   () => new PierceBullet() },
-        { "Condense", () => new CondenseBullet() },
-        { "Giant",    () => new GiantBullet() },
-        { "Iron",     () => new IronBullet() },
-        { "Flame",    () => new FlameBullet() },
-        { "Orbit",    () => new OrbitBullet() },
-        { "Thunder",  () => new ThunderBullet() },
-        { "Vampire",  () => new VampireBullet() },
-        { "Split",    () => new SplitBullet() },
-        { "Scatter",  () => new ScatterBullet() },
-    };
+    public static Dictionary<string, Bullet> bullets;
     Dictionary<string, Stack<PlayerBulletObject>> bulletPool = new();
     Dictionary<string, PlayerBulletObject> bulletPrefabDic = new();
 
     public PlayerBulletObject GetPlayerBulletObject(string key)
     {
         if (!bulletPrefabDic.ContainsKey(key))
-            bulletPrefabDic[key] = Resources.Load<PlayerBulletObject>("PlayerBulletObject");
+            bulletPrefabDic[key] = Resources.Load<PlayerBulletObject>($"PlayerBulletObject/{key}");
 
         if (bulletPool.TryGetValue(key, out var stack) && stack.Count > 0)
         {
@@ -51,20 +39,39 @@ public class BulletManager : MonoSingleton<BulletManager>
 
     public static Bullet Create(string key)
     {
-        if (!registry.TryGetValue(key, out var factory))
+        if (!bullets.TryGetValue(key, out var b))
             throw new ArgumentException($"BulletManager: 등록되지 않은 키 '{key}'");
 
-        var bullet = factory();
-        bullet.key = key;
-        return bullet;
+        b.key = key;
+        return b;
     }
 
-    public static void Register(string key, Func<Bullet> factory) => registry[key] = factory;
 
     private void Awake()
     {
         bulletDatas = Resources.LoadAll<BulletData>("BulletData");
+        bulletDataDic = new Dictionary<string, BulletData>();
+        for (int i = 0; i < bulletDatas.Length; i++)
+        {
+            bulletDataDic.Add(bulletDatas[i].key, bulletDatas[i]);
+        }
+
         mergeBulletDatas = Resources.LoadAll<MergeBulletData>("MergeBulletData");
+
+        bullets = new()
+        {
+            { "Normal",    new NormalBullet() },
+            { "Pierce",   new PierceBullet() },
+            { "Condense", new CondenseBullet() },
+            { "Giant",    new GiantBullet() },
+            { "Iron",     new IronBullet() },
+            { "Flame",    new FlameBullet() },
+            { "Orbit",     new OrbitBullet() },
+            { "Thunder",  new ThunderBullet() },
+            { "Vampire",  new VampireBullet() },
+            { "Split",   new SplitBullet() },
+            { "Scatter",   new ScatterBullet() },
+        };
     }
 
     float apearMergeBulletChance = 10f;
@@ -81,6 +88,7 @@ public class BulletManager : MonoSingleton<BulletManager>
     {
         return BulletData.GetBulletData(UserManager.Instance.userData.equiptedBullets[UnityEngine.Random.Range(0, 5)].key);
     }
+
     public List<BulletData> GetBulletDatas(int count)
     {
 
@@ -93,8 +101,9 @@ public class BulletManager : MonoSingleton<BulletManager>
         var ownedMergeIngredientKeys = new HashSet<string>();
         if (apearMergeBullet)
         {
-            foreach (var bullet in Player.Instance.weapon.bulletInventory.curBullets)
+            foreach (var bulletKey in Player.Instance.weapon.bulletInventory.curBullets)
             {
+                Bullet bullet = bullets[bulletKey];
                 if (bullet.bulletData == null || bullet.bulletData.mergeKeys == null) continue;
                 foreach (var key in bullet.bulletData.mergeKeys)
                     ownedMergeIngredientKeys.Add(key);
@@ -104,7 +113,7 @@ public class BulletManager : MonoSingleton<BulletManager>
         // 가중치 풀 구성
         canPickBulletDatas.Clear();
         var pool = new List<BulletPickChance>();
-        foreach (var data in bulletDatas)
+        foreach (var data in bulletDataDic.Values)
         {
             float weight;
             if (apearMergeBullet)
@@ -188,12 +197,7 @@ public class BulletManager : MonoSingleton<BulletManager>
 
     public BulletData GetBulletData(string key)
     {
-        foreach (var data in bulletDatas)
-        {
-            if (data.key == key)
-                return data;
-        }
-        return null;
+        return bulletDataDic[key];
     }
 
     public MergeBulletData GetMergeBulletData(string resultKey)

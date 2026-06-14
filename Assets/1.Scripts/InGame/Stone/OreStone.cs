@@ -13,6 +13,9 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
     public Vector2Int[,] tileIndexArr;
     public Vector2Int Size => Vector2Int.one;
 
+#if UNITY_EDITOR
+    [SerializeField] Vector2Int tileIndex;
+#endif
     public bool BreakTileWhenSpawn => false;
 
 
@@ -51,9 +54,13 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
         this.level = level;
 
         RegisterTile(idxArr);
-        
+
+#if UNITY_EDITOR
+        tileIndex = idxArr[0, 0];
+#endif
+
         float distance = Vector2.Distance(Vector2.zero, transform.position);
-        float disMulti = distance / 6f;
+        float disMulti = distance / 10f;
         if (disMulti <= 1)
             disMulti = 1;
 

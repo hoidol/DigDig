@@ -13,16 +13,13 @@ MonoBehaviour:
   m_Name: HustleArmor
   m_EditorClassIdentifier: 
   key: HustleArmor
-  itemName: "\uAC11\uC637"
-  desc: "\uCCB4\uB825 +50"
-  level: 1
-  maxOwnCount: 2
+  itemName: "\uB0A1\uC740 \uC544\uBA38"
+  desc: "\uCCB4\uB825+80"
   hideDisplay: 0
   acquireMethod: 3
   thumbnail: {fileID: 21300000, guid: a8feb20481d354ffb8779ea234fa1d58, type: 3}
-  grade: 0
-  itemPrefab: {fileID: 8120756264768930290, guid: 786ec0cffea504be89767363e2018f06, type: 3}
-  addEffectUnlockConditions: []
+  valueInfo: 
+  itemPrefab: {fileID: 2123721133513968691, guid: ca37d1fdb6ddf4ae788c803b4e5c927e,
+    type: 3}
+  unlockConditions: []
   applyOrder: 0
-  mergeItemKeys: []
-  IncludingItems: []

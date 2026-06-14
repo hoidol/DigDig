@@ -36,7 +36,7 @@ public class ThunderBulletItem : TriggerItem
         foreach (var col in cols)
         {
             float distSq = ((Vector2)col.transform.position - playerPos).sqrMagnitude;
-            if (col.TryGetComponent(out Enemy enemy) && enemy.CurHp > 0)
+            if (col.TryGetComponent(out Enemy enemy) && enemy.curHp > 0)
             {
                 if (distSq < enemyDistSq) { enemyDistSq = distSq; nearestEnemy = enemy; }
             }

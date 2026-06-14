@@ -15,14 +15,14 @@ public class BossCanvas : CanvasUI<BossCanvas>
 
     void Update()
     {
-        if(boss == null)
-        return;
+        if (boss == null)
+            return;
         UpdateBoss();
     }
 
     void UpdateBoss()
     {
-        hpImage.fillAmount = boss.CurHp / boss.MaxHp;
-        hpText.text = $"{(int)boss.CurHp}/{(int)boss.MaxHp}";
+        hpImage.fillAmount = boss.curHp / boss.maxHp;
+        hpText.text = $"{(int)boss.curHp}/{(int)boss.maxHp}";
     }
 }

@@ -4,7 +4,10 @@
 public class PierceBullet : Bullet
 {
     public int pierceCount = 2;
-
+    public PierceBullet()
+    {
+        key = "Pierce";
+    }
     public override void OnBulletFired(PlayerBulletObject bullet)
     {
         base.OnBulletFired(bullet);
@@ -16,5 +19,5 @@ public class PierceBullet : Bullet
         return $"탄 모두 튕긴 후 관통 +{pierceCount}";
     }
 
-    
+
 }
