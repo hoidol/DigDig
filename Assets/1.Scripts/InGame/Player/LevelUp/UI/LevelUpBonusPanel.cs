@@ -5,7 +5,7 @@ using TMPro;
 public class LevelUpBonusPanel : MonoBehaviour
 {
 
-    public Image thumImage;
+    // public Image thumImage;
     public Image frameImage;
     public TMP_Text titleText;
     public TMP_Text descriptionText;
@@ -35,10 +35,11 @@ public class LevelUpBonusPanel : MonoBehaviour
                 Player.Instance.AddBounce(1);
                 break;
             case LevelUpBonusType.AddSpecialBullet:
-                Time.timeScale = 0;
+                // Time.timeScale = 0;
                 BulletData pickedBulletData = BulletManager.Instance.DrawRandomBullet();
                 BulletShortInfoPanel.Instance.AddShortInfo(pickedBulletData, true);
-
+                Player.Instance.weapon.ReleaseBullet("Normal");
+                Player.Instance.weapon.AddBullet(pickedBulletData.key);
 
                 // pickedBulletPanel.SetBulletData(pickedBulletData);
                 // if (!alreadyPicked.Contains(pickedBulletData.key))

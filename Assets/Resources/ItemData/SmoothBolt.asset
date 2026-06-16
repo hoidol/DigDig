@@ -14,15 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: SmoothBolt
   itemName: "\uB9E4\uB048\uD55C \uB178\uB9AC\uC1E0"
-  desc: "\uC7A5\uC804 \uC18D\uB3C4 \uAC10\uC18C 20%"
-  level: 1
-  maxOwnCount: 1
+  desc: "\uC7A5\uC804 \uC18D\uB3C4 30% \uAC10\uC18C"
   hideDisplay: 0
   acquireMethod: 3
   thumbnail: {fileID: 0}
-  grade: 0
-  itemPrefab: {fileID: 621160526828663881, guid: 59e5ed1c8d75d4480ac71ddd75462a10, type: 3}
-  addEffectUnlockConditions: []
+  valueInfo: 
+  itemPrefab: {fileID: 2665232907175616430, guid: c2b04cf3cef0941dba2755206e85eb0a,
+    type: 3}
+  unlockConditions: []
   applyOrder: 0
-  mergeItemKeys: []
-  IncludingItems: []

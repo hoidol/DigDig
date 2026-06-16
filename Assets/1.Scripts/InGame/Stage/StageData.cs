@@ -30,7 +30,7 @@ public class StageData : MonoBehaviour
     void Awake()
     {
         specialEnemySpawners = GetComponentsInChildren<SpecialEnemySpawner>();
-        for(int i =0;i < enemyPrefabs.Length; i++)
+        for (int i = 0; i < enemyPrefabs.Length; i++)
         {
             enemyPrefabDic.Add(enemyPrefabs[i].enemyType, enemyPrefabs[i]);
         }
@@ -136,7 +136,7 @@ public class StageData : MonoBehaviour
 
     EnemyPatternData FindEnemyPatternData(int phase)
     {
-        Debug.Log($"FindEnemyPatternData {phase}");
+        // Debug.Log($"FindEnemyPatternData {phase}");
         string path = Path.Combine(Application.dataPath, "Json/EnemyPatternData.csv");
         if (!File.Exists(path)) { Debug.LogWarning($"[StageData] EnemyPatternData CSV 없음: {path}"); return null; }
 
@@ -170,8 +170,8 @@ public class StageData : MonoBehaviour
             if (!int.TryParse(Col(cols, iPhase), out int ph) || ph != phase) continue;
 
             var e = new EnemySpawnPatternData { phase = ph };
-            if (float.TryParse(Col(cols, iTrigger), NumberStyles.Float, CultureInfo.InvariantCulture, out float tr)) e.triggerTime = tr;
-            if (float.TryParse(Col(cols, iEnd), NumberStyles.Float, CultureInfo.InvariantCulture, out float en)) e.endTime = en;
+            // if (float.TryParse(Col(cols, iTrigger), NumberStyles.Float, CultureInfo.InvariantCulture, out float tr)) e.triggerTime = tr;
+            // if (float.TryParse(Col(cols, iEnd), NumberStyles.Float, CultureInfo.InvariantCulture, out float en)) e.endTime = en;
             if (System.Enum.TryParse(Col(cols, iEnemy), out EnemyType et)) e.enemyType = et;
             if (int.TryParse(Col(cols, iMinCount), out int minC) && int.TryParse(Col(cols, iMaxCount), out int maxC))
                 e.countRange = new Vector2Int(minC, maxC);
@@ -277,8 +277,6 @@ public class EnemyPatternData
 public class EnemySpawnPatternData
 {
     public int phase;
-    public float triggerTime;
-    public float endTime;
     public EnemyType enemyType;
     public Vector2Int countRange;
     public Vector2 intervalRange;

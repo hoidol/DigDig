@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Normal
   m_EditorClassIdentifier: 
   key: Normal
-  specialBullet: 0
   itemName: "\uC77C\uBC18\uD0C4"
+  specialBullet: 0
+  mergedBullet: 0
   desc: "\uD0C4\uC774 \uD295\uAE41\uB2C8\uB2E4."
-  level: 0
-  acquireMethod: 0
   thumbnail: {fileID: 0}
   grade: 0
   addEffectUnlockConditions: []
   applyOrder: 0
   mergeKeys: []
   multiplyATK: 0
+  prefab: {fileID: 0}

@@ -25,12 +25,4 @@ public class HammerExplosionBehavior : IBulletBehavior
         return true;
     }
 
-    public void OnMove(BulletObject bullet) { }
-
-    public void Merge(IBulletBehavior other)
-    {
-        HammerExplosionBehavior o = (HammerExplosionBehavior)other;
-        if (o.chance > chance) chance = o.chance;
-        if (o.damage > damage) damage = o.damage;
-    }
 }

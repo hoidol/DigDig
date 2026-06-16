@@ -12,14 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bda2368e9f954f18b0c76e35cec534b, type: 3}
   m_Name: Melee
   m_EditorClassIdentifier: 
-  grade: 0
   type: 0
   attackSpeed: 3
   attackRange: 1.5
   moveRange: 2
   exp: 1
-  prefab: {fileID: 4842033995043222643, guid: 418f469a0893c4d3ebbc1c5d63d55c48, type: 3}
   size: {x: 1, y: 1}
   breakTileWhenSpawn: 0
   hpMultiplier: 1
-  attackPowerMultiplier: 1
+  attackPowerMultiplier: 2

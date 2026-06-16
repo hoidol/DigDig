@@ -19,6 +19,4 @@ public class ExplosionBehaviour : IBulletBehavior
         return true;
     }
 
-    public void OnMove(BulletObject bullet) { }
-    public void Merge(IBulletBehavior other) { }
 }

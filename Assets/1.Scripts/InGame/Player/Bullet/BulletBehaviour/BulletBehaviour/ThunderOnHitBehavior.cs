@@ -52,6 +52,4 @@ public class ThunderOnHitBehavior : IBulletBehavior
     //     return playerPos + Random.insideUnitCircle.normalized * (searchRadius * Random.Range(0.3f, 1f));
     // }
 
-    public void OnMove(BulletObject bullet) { }
-    public void Merge(IBulletBehavior other) { }
 }

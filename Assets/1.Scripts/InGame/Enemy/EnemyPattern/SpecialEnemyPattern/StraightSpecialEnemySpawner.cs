@@ -6,45 +6,46 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 public class StraightSpecialEnemySpawner : SpecialEnemySpawner
-{ 
+{
     public int includeSize;
-    public int excludeSize;  
+    public int excludeSize;
     [SerializeField] EnemySpawnCountChance[] enemySpawnCountChances; //참고용 - Chance 총합이 100이 안될 수도 있음, 한번에 Count이상 소환 못함 
     EnemySpawnCountChance[] currentEnemySpawnState;//확률 및 개수 카운딩용
-    
+
     public override void Spawn()
     {
+
         List<Vector2Int> indies = new List<Vector2Int>();
         //임시의 한점
-        
+
         Vector2 dirToPlayer = Vector2.zero - (Vector2)Player.Instance.transform.position;
         Vector2 dir = Vector2.zero;
-        dir.x = dirToPlayer.x > 0? 1 : -1;
-        dir.y = dirToPlayer.y > 0? 1 : -1;
-        Vector2Int oppDir = new Vector2Int(-(int)dir.x,-(int)dir.y);
+        dir.x = dirToPlayer.x > 0 ? 1 : -1;
+        dir.y = dirToPlayer.y > 0 ? 1 : -1;
+        Vector2Int oppDir = new Vector2Int(-(int)dir.x, -(int)dir.y);
 
 
         //대각선 찾으려고
-        dir = dir.normalized * Mathf.Sqrt(Mathf.Pow(MapManager.TILE_SIZE,2) +  Mathf.Pow(MapManager.TILE_SIZE,2));
-        
+        dir = dir.normalized * Mathf.Sqrt(Mathf.Pow(MapManager.TILE_SIZE, 2) + Mathf.Pow(MapManager.TILE_SIZE, 2));
+
         currentEnemySpawnState = System.Array.ConvertAll(enemySpawnCountChances, e => new EnemySpawnCountChance
         {
             key = e.key,
             chance = e.chance,
             count = e.count
         });
-        
+
         Vector2Int startIndex = MapManager.PositionToTileIndex((Vector2)Player.Instance.transform.position + dir * includeSize);
         Vector2Int tempIndex = startIndex;
-        for(int i = 0; i < includeSize; i++)
+        for (int i = 0; i < includeSize; i++)
         {
-            
-            for(int j = 0; j < includeSize; j++)
+
+            for (int j = 0; j < includeSize; j++)
             {
-                if(MapManager.CheckEmpty(tempIndex))
+                if (MapManager.CheckEmpty(tempIndex))
                     indies.Add(tempIndex);
 
-                tempIndex.y += oppDir.y;    
+                tempIndex.y += oppDir.y;
             }
             tempIndex.x += oppDir.x;
             tempIndex.y = startIndex.y;
@@ -86,7 +87,7 @@ public class StraightSpecialEnemySpawner : SpecialEnemySpawner
 
     public override void EndSpawn()
     {
-        
+
     }
 
 

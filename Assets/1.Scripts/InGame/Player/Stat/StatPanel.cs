@@ -37,7 +37,7 @@ public class StatPanel : MonoBehaviour
 
     public void OnClickedSelect()
     {
-        Player.Instance.statInventory.AddStat(this.statData, this.lv);
+        // Player.Instance.statInventory.AddStat(this.statData, this.lv);
         StatCanvas.Instance.CloseCanvas();
     }
 }

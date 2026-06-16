@@ -12,10 +12,4 @@ public class IronBounceBehavior : IBulletBehavior
         return false;
     }
 
-    public void OnMove(BulletObject bullet) { }
-
-    public void Merge(IBulletBehavior other)
-    {
-        remaining += ((IronBounceBehavior)other).remaining;
-    }
 }

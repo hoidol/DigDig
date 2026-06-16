@@ -4,7 +4,10 @@ using UnityEngine;
 // 탄 크기 2배, 데미지 1.5× (multiplyATK=1.5 → boost=+0.5×)
 public class GiantBullet : Bullet
 {
-
+    public GiantBullet()
+    {
+        key = "Giant";
+    }
     public override void OnBulletFired(PlayerBulletObject bullet)
     {
         base.OnBulletFired(bullet); // scale → 1 리셋 후 다시 설정

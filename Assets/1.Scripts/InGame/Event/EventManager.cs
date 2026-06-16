@@ -14,8 +14,6 @@ public class EventManager : MonoSingleton<EventManager>
         public EventTrigger[] triggers;
 
         public int phaseIdx;
-
-
     }
 
 
@@ -40,6 +38,7 @@ public class EventManager : MonoSingleton<EventManager>
         GameEventBus.Subscribe<PhaseEndEvent>(OnPhaseEndEvent);
         GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
 
+
     }
 
     private void OnDestroy()
@@ -47,25 +46,31 @@ public class EventManager : MonoSingleton<EventManager>
         GameEventBus.Unsubscribe<PhaseEndEvent>(OnPhaseEndEvent);
         GameEventBus.Unsubscribe<StartGameEvent>(OnStartGameEvent);
     }
-
+    List<EventRepeatSpawner> eventRepeatSpawners = new();
     private void OnStartGameEvent(StartGameEvent e)
     {
-        conditionStates.Clear();
-        //EventData[] eventDatas = Resources.LoadAll<EventData>("EventData");
-        foreach (var eventData in e.stageData.eventDatas)
-        {
-            EventType? resolved = ResolveEventType(eventData);
-            if (resolved == null) continue;
+        //EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, Random.Range(20, 30), 10, 5);
+        EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, Random.Range(0, 1), 2, 5);
+        eventRepeatSpawners.Add(itemBoxSpawner);
+        EventRepeatSpawner statStoneSpawner = new EventRepeatSpawner(EventType.StatStone, Random.Range(50, 60), 20, 5);
+        eventRepeatSpawners.Add(statStoneSpawner);
 
-            conditionStates.Add(new ConditionState
-            {
-                eventType = resolved.Value,
-                triggers = eventData.triggers,
+        // conditionStates.Clear();
 
-                phaseIdx = eventData.phaseIdx,
+        // foreach (var eventData in e.stageData.eventDatas)
+        // {
+        //     EventType? resolved = ResolveEventType(eventData);
+        //     if (resolved == null) continue;
 
-            });
-        }
+        //     conditionStates.Add(new ConditionState
+        //     {
+        //         eventType = resolved.Value,
+        //         triggers = eventData.triggers,
+
+        //         phaseIdx = eventData.phaseIdx,
+
+        //     });
+        // }
     }
 
     // eventTypes가 여럿이면 chances 가중치로 하나 선택,
@@ -101,7 +106,7 @@ public class EventManager : MonoSingleton<EventManager>
         foreach (var state in conditionStates)
         {
             if (AllTriggersSatisfied(state, e))
-                TrySpawn(state);
+                Spawn(state.eventType);
         }
     }
 
@@ -120,39 +125,34 @@ public class EventManager : MonoSingleton<EventManager>
     }
 
 
-#if UNITY_EDITOR
     private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.N))
-        //     Spawn(EventType.NormalMerchant);
+        for (int i = 0; i < eventRepeatSpawners.Count; i++)
+        {
+            eventRepeatSpawners[i].Update();
+        }
     }
-#endif
 
 
-
-    private void TrySpawn(ConditionState state)
-    {
-        Spawn(state);
-    }
 
     // EventObjectType에 해당하는 NPC를 계산된 위치에 스폰
-    public EventObject Spawn(ConditionState state)
+    public EventObject Spawn(EventType eventType)
     {
-        if (!prefabMap.TryGetValue(state.eventType, out EventObject prefab))
+        if (!prefabMap.TryGetValue(eventType, out EventObject prefab))
         {
-            Debug.LogWarning($"EventObjectManager: {state.eventType} 프리팹이 등록되지 않았습니다.");
+            Debug.LogWarning($"EventObjectManager: {eventType} 프리팹이 등록되지 않았습니다.");
+            return null;
+        }
+        //if (!TryGetValidSpawnPosition(new Vector2(8f, 9f), out Vector2 pos))
+        if (!TryGetValidSpawnPosition(new Vector2(4f, 5f), out Vector2 pos))
+        {
+            Debug.LogWarning($"설치할 위치없음");
             return null;
         }
 
-        // if (!TryGetValidSpawnPosition(state.distanceFromPlayer, out Vector2 spawnPos))
-        // {
-        //     Debug.Log($"EventObjectManager: {state.eventType} 스폰 취소 - 유효한 위치를 찾지 못했습니다.");
-        //     return null;
-        // }
-
-        EventObject eventObject = Instantiate(prefab, Vector2.zero, Quaternion.identity);
+        EventObject eventObject = Instantiate(prefab, pos, Quaternion.identity);
         activeEventObjects.Add(eventObject);
-        eventObject.Appear(Vector2.zero);
+        eventObject.Appear(pos);
         return eventObject;
     }
 
@@ -192,7 +192,71 @@ public class EventManager : MonoSingleton<EventManager>
 
     public Vector2 CalcSpawnPosition(Vector2 howFarRange)
     {
+        float farDistance = Player.Instance.distanceMaxDistanceDestroiedStone + Random.Range(howFarRange.x, howFarRange.y);
+        Debug.Log($"EventManager CalcSpawnPosition farDistance {farDistance}");
+        Debug.Log($"EventManager distanceMaxDistanceDestroiedStone {Player.Instance.distanceMaxDistanceDestroiedStone}");
         Vector2 playerPos = Player.Instance.transform.position;
-        return MapManager.SnappedPosition(playerPos + Random.insideUnitCircle.normalized * Random.Range(howFarRange.x, howFarRange.y));
+        return MapManager.SnappedPosition(playerPos + Random.insideUnitCircle.normalized * farDistance);
+    }
+}
+
+public enum EventType
+{
+    FallenAngel,    // 타락 천사 - 추가 능력치, 패널티
+    Snake,          // 뱀 - 추가 능력치, 패널티
+    LifeFountain,   // 생명 분수 - 체력 증가
+    ItemBox,
+    StatStone
+}
+
+public class EventRepeatSpawner
+{
+    public EventType eventType;
+    public EventObject eventObject;
+    public float repeatTime;
+    public float afterDestroyTime;
+    public float repeatTimer;
+    public float afterDestroyTimer;
+    public float startTimer;
+    public EventRepeatSpawner(EventType type, float sTime, float rTime, float aDTime)
+    {
+        eventType = type;
+        repeatTime = rTime;
+        repeatTimer = rTime;
+        afterDestroyTime = aDTime;
+        startTimer = sTime;
+    }
+
+    public void Update()
+    {
+        if (startTimer > 0)
+        {
+            startTimer -= Time.deltaTime;
+
+            if (startTimer <= 0)
+            {
+                repeatTimer = repeatTime;
+            }
+            return;
+        }
+
+        if (repeatTimer > 0)
+            repeatTimer -= Time.deltaTime;
+
+
+        if (repeatTimer <= 0 && eventObject == null)
+        {
+            Spawn();
+        }
+
+
+
+
+
+    }
+    public void Spawn()
+    {
+        Debug.Log($"EventRepeatSpawner Spawn() {eventType}");
+        eventObject = EventManager.Instance.Spawn(eventType);
     }
 }

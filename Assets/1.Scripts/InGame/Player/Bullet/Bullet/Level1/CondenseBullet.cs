@@ -3,6 +3,11 @@
 // (bounce=10 → 5회, 감소 5 × 0.5 = 2.5× 추가 → 총 3.5×)
 public class CondenseBullet : Bullet
 {
+    public CondenseBullet()
+    {
+        key = "Condense";
+    }
+
     public override void OnBulletFired(PlayerBulletObject bullet)
     {
         base.OnBulletFired(bullet); // scale 리셋 포함

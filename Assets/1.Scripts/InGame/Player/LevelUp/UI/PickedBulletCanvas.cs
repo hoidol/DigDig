@@ -16,6 +16,7 @@ public class PickedBulletCanvas : CanvasUI<PickedBulletCanvas>
         init = true;
         alreadyPicked.Clear();
 
+
     }
     public override void OpenCanvas(Action closeCallback = null)
     {

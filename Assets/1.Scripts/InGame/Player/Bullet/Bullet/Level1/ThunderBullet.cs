@@ -6,6 +6,10 @@ public class ThunderBullet : Bullet
     const float STRIKE_RADIUS = 1f;
     const float DAMAGE_RATE = 1f; // 공격력의 100%
 
+    public ThunderBullet()
+    {
+        key = "Thunder";
+    }
     public override void OnBulletFired(PlayerBulletObject bullet)
     {
         base.OnBulletFired(bullet);

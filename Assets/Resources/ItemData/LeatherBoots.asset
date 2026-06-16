@@ -14,15 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: LeatherBoots
   itemName: "\uAC00\uC8FD \uC7A5\uD654"
-  desc: "\uC774\uB3D9\uC18D\uB3C4 \uC99D\uAC00 10%"
-  level: 1
-  maxOwnCount: 1
+  desc: "\uC774\uB3D9\uC18D\uB3C4 \uC99D\uAC00 25%"
   hideDisplay: 0
   acquireMethod: 3
   thumbnail: {fileID: 21300000, guid: d9534a58acc914056b80e0e72c42ef75, type: 3}
-  grade: 0
-  itemPrefab: {fileID: 1169697226542389174, guid: eccd52919707d49c6ba0cd8579847756, type: 3}
-  addEffectUnlockConditions: []
+  valueInfo: 
+  itemPrefab: {fileID: 6796395888102997579, guid: 8361e610f541b46d695a77b88aa0f114,
+    type: 3}
+  unlockConditions: []
   applyOrder: 0
-  mergeItemKeys: []
-  IncludingItems: []

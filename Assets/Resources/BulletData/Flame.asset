@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Flame
   m_EditorClassIdentifier: 
   key: Flame
-  specialBullet: 1
   itemName: "\uBD88\uD0C4"
+  specialBullet: 1
+  mergedBullet: 0
   desc: "30% \uD655\uB960\uB85C \uBD88 \uBD99\uC74C"
-  level: 1
-  acquireMethod: 2
   thumbnail: {fileID: 0}
   grade: 0
   addEffectUnlockConditions: []
   applyOrder: 0
   mergeKeys: []
   multiplyATK: 1
+  prefab: {fileID: 0}

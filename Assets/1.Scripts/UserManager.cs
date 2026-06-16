@@ -7,7 +7,7 @@ public class UserManager : MonoSingleton<UserManager>
 #if UNITY_EDITOR
     string[] bulletKeys = new string[]
    {
-      "Thunder","Vampire","Split","Scatter","Iron"
+      "Pierce","Flame","Giant","Thunder","Iron"
    };
 #endif
     [field: SerializeField]
@@ -15,7 +15,7 @@ public class UserManager : MonoSingleton<UserManager>
     {
         get; private set;
     }
-    void Start()
+    void Awake()
     {
         Application.targetFrameRate = 60;
 
@@ -33,7 +33,6 @@ public class UserManager : MonoSingleton<UserManager>
             }
 
         }
-
     }
 }
 

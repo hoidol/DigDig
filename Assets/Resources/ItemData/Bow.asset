@@ -14,16 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Bow
   itemName: "\uD65C"
-  desc: "\uC801 \uCC98\uCE58 \uC2DC \uB2E4\uC74C \uACF5\uACA9 1\uD68C \uCD94\uAC00
-    \uBC1C\uC0AC"
-  level: 2
-  maxOwnCount: 2
+  desc: "\uACF5\uACA9\uB825 25% \uC99D\uAC00"
   hideDisplay: 0
   acquireMethod: 3
   thumbnail: {fileID: 21300000, guid: 1785ad2f3cf9b42959b3e543f13d91ca, type: 3}
-  grade: 0
-  itemPrefab: {fileID: 8190125396680824235, guid: c818208c949ff40e3900c8f6e4217be2, type: 3}
-  addEffectUnlockConditions: []
+  valueInfo: 
+  itemPrefab: {fileID: 6979940628758814180, guid: ac2cf3803024340639277884f156d6c1,
+    type: 3}
+  unlockConditions: []
   applyOrder: 0
-  mergeItemKeys: []
-  IncludingItems: []

@@ -20,7 +20,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
     [SerializeField] protected float curTimer;
 
-    Vector2Int[,] indexArr ;
+    Vector2Int[,] indexArr;
 
     public bool BreakTileWhenSpawn => true;
 
@@ -57,7 +57,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
     public void RegisterTile(Vector2Int[,] idxArr)
     {
-        indexArr  = idxArr;
+        indexArr = idxArr;
         MapManager.RegisterTile(idxArr);
 
     }

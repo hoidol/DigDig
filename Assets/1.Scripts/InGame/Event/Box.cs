@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Box : EventObject
 {
-    public Grade grade;
+
 
     public void OnTriggerEnter2D(Collider2D collision)
     {

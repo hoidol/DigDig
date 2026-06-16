@@ -23,6 +23,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     public Vector2 LastAttackDir { get; private set; }
 
     public bool IsReloading { get; private set; }
+    public List<string> loadedBullets = new List<string>();
 
     // public int CurBulletOrder => curBulletOrder;
 
@@ -49,38 +50,35 @@ public abstract class BaseGun : MonoBehaviour, IGun
 
     void OnStartGame(StartGameEvent e)
     {
+        // Debug.Log("OnStartGame BaseGun");
         for (int i = 0; i < initBulletCount; i++)
         {
-            AddBullet("Thunder");
+            AddBullet("Normal");
         }
-
-
 
     }
 
-    public List<Bullet> loadedBullets = new List<Bullet>();
 
     public void AddBullet(string key)
     {
+        // Debug.Log($"OnStartGame AddBullet {key}");
         AddBullet(BulletData.GetBulletData(key));
     }
 
     public void AddBullet(BulletData bulletData)
     {
-        Bullet bullet = bulletInventory.AddBullet(bulletData);
+        bulletInventory.AddBullet(bulletData);
 
-
-
-        LoadBullet(bullet);
-        BulletInventoryUI.Instance.AddedBullet(bullet);
+        LoadBullet(bulletData.key);
+        BulletInventoryUI.Instance.AddedBullet(bulletData.key);
         GameEventBus.Publish(new AddedBulletEvent(bulletData));
 
     }
     public void ReleaseBullet(string key)
     {
-        Bullet bullet = bulletInventory.ReleaseBullet(key);
-        BulletInventoryUI.Instance.RemovedBullet(bullet);
-        GameEventBus.Publish(new RemovedBulletEvent(bullet.bulletData));
+        bulletInventory.ReleaseBullet(key);
+        BulletInventoryUI.Instance.RemovedBullet(key);
+        GameEventBus.Publish(new RemovedBulletEvent(BulletData.GetBulletData(key)));
 
     }
 
@@ -165,6 +163,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
             return;
         if (loadedBullets.Count <= 0)
             return;
+
         LastAttackDir = dir;
         // pendingMultiShot = 1;
         // pendingSpread = 0;
@@ -215,7 +214,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         bulletFiredEvent.bullet = bullet;
         bulletFiredEvent.dir = dir;
 
-        BulletInventoryUI.Instance.FiredBullet(bullet, shotOrder);
+        BulletInventoryUI.Instance.FiredBullet(bullet.key, shotOrder);
         GameEventBus.Publish(bulletFiredEvent);
     }
 
@@ -224,6 +223,8 @@ public abstract class BaseGun : MonoBehaviour, IGun
     {
         if (pos == Vector2.zero)
             pos = attackPoint.position;
+        if (dir == Vector2.zero)
+            dir = Player.Instance.attackJoystick.Direction.normalized;
 
 
         var playerBullet = bullet.GetBulletObject();//bullet.GetBulletObject();
@@ -272,20 +273,21 @@ public abstract class BaseGun : MonoBehaviour, IGun
     {
         if (loadedBullets.Count <= 0)
             return (null, 0);
-        int shotOrder = bulletInventory.bullets.Count - loadedBullets.Count;
-        Bullet bullet = loadedBullets[loadedBullets.Count - 1];
 
-        Debug.Log($"Shoot {bullet.key} shot Ordre {shotOrder}");
+        int shotOrder = bulletInventory.bullets.Count - loadedBullets.Count;
+        Bullet bullet = BulletManager.bullets[loadedBullets[loadedBullets.Count - 1]];
+
+        // Debug.Log($"Shoot {bullet.key} shot Ordre {shotOrder}");
         loadedBullets.RemoveAt(loadedBullets.Count - 1);
         return (bullet, shotOrder);
     }
 
-    public void LoadBullet(Bullet bullet)
+    public void LoadBullet(string bulletKey)
     {
         if (IsReloading)
             return;
 
-        loadedBullets.Insert(0, bullet);
+        loadedBullets.Insert(0, bulletKey);
     }
 
     // 탄약 소진 시 한 발씩 충전하는 장전 처리
@@ -295,7 +297,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         GameEventBus.Publish(new ReloadStartEvent(reloadTime, statMgr.ReloadSpeed));
         //float maxCount = bulletInventory.GetMaxBulletCount();
         // float sec = reloadTime / maxCount;
-        Debug.Log("재장전 시작 ");
+        // Debug.Log("재장전 시작 ");
 
         var token = this.GetCancellationTokenOnDestroy();
 
@@ -310,7 +312,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
 
         }
         IsReloading = false;
-        Debug.Log("재장전 끝");
+        // Debug.Log("재장전 끝");
 
         for (int i = 0; i < bulletInventory.curBullets.Count; i++)
         {

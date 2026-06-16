@@ -35,7 +35,7 @@ public class ItemManager : MonoSingleton<ItemManager>
         var result = new List<ItemData>();
         for (int i = 0; i < itemDatas.Length; i++)
         {
-            if (itemDatas[i].CheckUnlock())
+            if (!itemDatas[i].CheckUnlock())
                 continue;
             //현재 보유중
             if (Player.Instance.itemInventory.curItems.Any(e => e.key == itemDatas[i].key))
@@ -52,7 +52,7 @@ public class ItemManager : MonoSingleton<ItemManager>
         }
         return result.OrderBy(i => Random.value).Take(count).ToList();
     }
-  
+
     public ItemData GetItemData(string key)
     {
         if (!itemDataDic.ContainsKey(key))

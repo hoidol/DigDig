@@ -7,11 +7,9 @@ public class VampireOnKillBehavior : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        if (hit is Enemy enemy && enemy.CurHp <= 0)
+        if (hit is Enemy enemy && enemy.curHp <= 0)
             Player.Instance.AddHp(Player.Instance.statMgr.MaxHp * healRate);
         return true;
     }
 
-    public void OnMove(BulletObject bullet) { }
-    public void Merge(IBulletBehavior other) { }
 }

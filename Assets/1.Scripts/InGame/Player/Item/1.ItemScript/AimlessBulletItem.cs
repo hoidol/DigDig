@@ -1,9 +1,9 @@
 using UnityEngine;
 
-// 오발탄 - 40% 확률로 랜덤 방향 추가 총알 발사
+// 오발탄 - 25% 확률로 랜덤 방향 추가 총알 발사
 public class AimlessBulletItem : Item, IBullet
 {
-    const float PROB = 0.40f;
+    const float PROB = 0.25f;
 
     bool isFiring;
 

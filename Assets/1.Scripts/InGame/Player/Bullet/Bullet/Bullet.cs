@@ -11,21 +11,6 @@ public abstract class Bullet : IBullet, IReinforce
         bullet.AddBehavior(new BounceBehavior(Player.Instance.bounce));
     }
 
-    public virtual bool CanMerge()
-    {
-        Player.Instance.weapon.bulletInventory.curBullets.Any(x =>
-        {
-            if (!x.bulletData.specialBullet)
-                return false;
-            if (x == this)
-                return false;
-
-
-            return bulletData.mergeKeys.Contains(x.key);
-        });
-
-        return false;
-    }
 
     public virtual PlayerBulletObject GetBulletObject()
     {
