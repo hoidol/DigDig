@@ -24,7 +24,7 @@ public class FixedGunItem : TriggerItem
         }
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"공격 방향으로 {coolTime}초마다 {SHOT_COUNT}발 추가 발사";
     }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public abstract class BulletObject : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
-    protected Vector3 direction;
+    public Vector3 direction;
 
     public void SetDirection(Vector2 dir)
     {

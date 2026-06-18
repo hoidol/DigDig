@@ -6,6 +6,8 @@ public abstract class Bullet : IBullet, IReinforce
     public string key;
     public BulletData bulletData => BulletManager.Instance.GetBulletData(key);
 
+    public ReinforceType ReinforceType => ReinforceType.Bullet;
+
     public virtual void OnBulletFired(PlayerBulletObject bullet)
     {
         bullet.AddBehavior(new BounceBehavior(Player.Instance.bounce));
@@ -16,7 +18,7 @@ public abstract class Bullet : IBullet, IReinforce
     {
         return BulletManager.Instance.GetPlayerBulletObject(key);
     }
-    public virtual string GetDescription(bool detail = false)
+    public virtual string GetDescription(int lv = 1, bool detail = false)
     {
         return $"탄 설명";
     }

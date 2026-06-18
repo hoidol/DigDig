@@ -26,7 +26,7 @@ public class SpearItem : TriggerItem
         spear.Init(dir, damage, PIERCE_COUNT);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"랜덤 방향으로 창 소환, {PIERCE_COUNT}회 관통 후 소멸 (마력의 {DAMAGE_RATE * 100:0}%)";
     }

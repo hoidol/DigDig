@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public static class AOEUtil
+public static class InGameUtil
 {
     public static void DamageEnemies(Vector2 center, float radius, float damage, LayerMask enemyLayer, int maxCount = 4)
     {
@@ -20,5 +20,15 @@ public static class AOEUtil
             }
 
         }
+    }
+
+    public static bool CheckBackAttack(Transform target, int face, Vector2 targetPoint)
+    {
+        float x = targetPoint.x - target.position.x ; //x 0보면 크면 오론쪽, 작으면 왼쪽 
+        if ((face > 0 && x <0) || (face < 0 && x > 0)) 
+        {
+            return true;
+        }
+        return false;
     }
 }

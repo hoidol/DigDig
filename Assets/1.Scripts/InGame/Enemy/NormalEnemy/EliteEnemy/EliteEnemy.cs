@@ -7,7 +7,7 @@ public class EliteEnemy : NormalEnemy
     List<Enemy> enemies = new List<Enemy>();
     public override void Spawn(Vector2Int[,] idxArr)
     {
-
+        
         //이 자리에 있는 적들 미리 잡아두기
         enemies.Clear();
         for (int x = 0; x < idxArr.GetLength(0); x++)

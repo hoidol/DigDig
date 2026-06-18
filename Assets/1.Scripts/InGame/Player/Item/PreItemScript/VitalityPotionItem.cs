@@ -24,6 +24,6 @@ public class VitalityPotionItem : Item
         player.RemoveBuff(buff);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
         => $"체력 +{BONUS_PER_STACK * GetLevel()}";
 }

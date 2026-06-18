@@ -8,17 +8,19 @@ public class OrbitBullet : Bullet
     {
         key = "Orbit";
     }
-    const float ORBIT_RADIUS = 1.5f;
-    const float ANGULAR_SPEED = 360f; // 도/초 → 1회전에 1초
-
+    static float[] ORBIT_MULTI_DAMAGES = {1.2f,1.3f,1.5f};
+    
     public override void OnBulletFired(PlayerBulletObject bullet)
     {
         Orbit orbit = Player.Instance.GetBulletSubTool("Orbit") as Orbit;
         orbit.AddOrbitBullet(this);
         //bullet.AddBehavior(new OrbitBehavior(Player.Instance.bounce, ORBIT_RADIUS, ANGULAR_SPEED));
     }
-
-    public override string GetDescription(bool detail = false)
-        => $"적중마다 반경 {ORBIT_RADIUS} 공전, {Player.Instance.bounce}회 후 소멸";
+    public float GetDamage()
+    {
+        return Player.Instance.statMgr.AttackPower * ORBIT_MULTI_DAMAGES[GetLevel()-1];
+    }
+    public override string GetDescription(int lv = 1, bool detail = false)
+        => $"적 타격 시 피해 {(ORBIT_MULTI_DAMAGES[lv]-1) *100}% 증가";
 
 }

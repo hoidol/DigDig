@@ -11,9 +11,10 @@ public class LevelUpBonusPanel : MonoBehaviour
     public TMP_Text descriptionText;
     public LevelUpBonusType levelUpBonusType;
 
-    public void SetBonusPanel()//
+    public virtual void SetBonusPanel()
     {
-        //this.bonusLv = bonusLv;
+        titleText.text= TranslateManager.GetText($"{levelUpBonusType}_title");
+        descriptionText.text= TranslateManager.GetText($"{levelUpBonusType}_description");
     }
 
     public void OnClickedSelect()
@@ -22,11 +23,6 @@ public class LevelUpBonusPanel : MonoBehaviour
         switch (levelUpBonusType)
         {
             case LevelUpBonusType.AddNormalBullet:
-                // int count = bonusLv * 2;
-                // for (int i = 0; i < count; i++)
-                // {
-                //     Player.Instance.bulletInventory.AddBullet("Normal");
-                // }
                 Player.Instance.weapon.AddBullet("Normal");
                 Player.Instance.weapon.AddBullet("Normal");
 
@@ -40,17 +36,6 @@ public class LevelUpBonusPanel : MonoBehaviour
                 BulletShortInfoPanel.Instance.AddShortInfo(pickedBulletData, true);
                 Player.Instance.weapon.ReleaseBullet("Normal");
                 Player.Instance.weapon.AddBullet(pickedBulletData.key);
-
-                // pickedBulletPanel.SetBulletData(pickedBulletData);
-                // if (!alreadyPicked.Contains(pickedBulletData.key))
-                // {
-                //     alreadyPicked.Add(pickedBulletData.key);
-                // }
-                // Player.Instance.weapon.AddBullet(pickedBulletData);
-                // PickedBulletCanvas.Instance.OpenCanvas(() =>
-                // {
-                //     Time.timeScale = 1;
-                // });
                 break;
             case LevelUpBonusType.MergeBullet:
                 Time.timeScale = 0;

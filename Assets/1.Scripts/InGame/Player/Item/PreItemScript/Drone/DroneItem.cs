@@ -32,7 +32,7 @@ public class DroneItem : TriggerCycleItem
         drone.gameObject.SetActive(false);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"{coolTime}초 마다 드론을 소환합니다. 15초 동안 공격합니다.";
     }

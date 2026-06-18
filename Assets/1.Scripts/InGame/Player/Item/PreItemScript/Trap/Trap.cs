@@ -43,7 +43,7 @@ public class Trap : Ally
         if (other.tag == "Player") return;
 
         EffectManager.Instance.Play(EffectType.SmallExplosion, transform.position);
-        AOEUtil.DamageEnemies(transform.position, explosionRadius, damage, enemyLayer);
+        InGameUtil.DamageEnemies(transform.position, explosionRadius, damage, enemyLayer);
 
         Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, explosionRadius, enemyLayer);
         foreach (var col in cols)

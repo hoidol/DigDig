@@ -1,20 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AllyBullet : PlayerBulletObject
+public class MiniNormalBulletObject : PlayerBulletObject
 {
-    static readonly Queue<AllyBullet> pool = new();
-    static AllyBullet prefab;
+    static readonly Queue<MiniNormalBulletObject> pool = new();
+    static MiniNormalBulletObject prefab;
 
+    public override void Shoot(Vector2 dir, float damage)
+    {
+        base.Shoot(dir, damage);
+        lifetimeTimer = 2;
 
-    public static AllyBullet Instantiate()
+        damageData.Init(this);
+    }
+    public static MiniNormalBulletObject Instantiate()
     {
         if (prefab == null)
-            prefab = Resources.Load<AllyBullet>("Bullet/AllyBullet");
+            prefab = Resources.Load<MiniNormalBulletObject>("Bullet/MiniNormalBulletObject");
 
         if (pool.Count > 0)
         {
-            AllyBullet bullet = pool.Dequeue();
+            MiniNormalBulletObject bullet = pool.Dequeue();
             bullet.gameObject.SetActive(true);
             return bullet;
         }

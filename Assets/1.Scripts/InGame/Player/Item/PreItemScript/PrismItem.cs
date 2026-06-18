@@ -18,7 +18,7 @@ public class PrismItem : OrbitItemBase
         }
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"주변 프리즘이 총알을 좌우로 분열시킵니다. (분열 데미지 {DAMAGE_RATE * 100:0}%)";
     }

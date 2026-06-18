@@ -19,13 +19,13 @@ public class EventManager : MonoSingleton<EventManager>
 
     //StatStone - 
 
-    float eventObjectMinDistance = 7f;
+    float eventObjectMinDistance = 5f; //EventObject 간 떨어진 거리
     [SerializeField] private int maxAttempts = 5;
 
     private Dictionary<EventType, EventObject> prefabMap;
     private List<ConditionState> conditionStates = new List<ConditionState>();
     private readonly List<EventObject> activeEventObjects = new();
-
+    public int spawnCount;
     private void Awake()
     {
         prefabMap = new Dictionary<EventType, EventObject>();
@@ -49,11 +49,10 @@ public class EventManager : MonoSingleton<EventManager>
     List<EventRepeatSpawner> eventRepeatSpawners = new();
     private void OnStartGameEvent(StartGameEvent e)
     {
-        //EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, Random.Range(20, 30), 10, 5);
+        spawnCount=0;
+        
         EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, Random.Range(0, 1), 2, 5);
         eventRepeatSpawners.Add(itemBoxSpawner);
-        EventRepeatSpawner statStoneSpawner = new EventRepeatSpawner(EventType.StatStone, Random.Range(50, 60), 20, 5);
-        eventRepeatSpawners.Add(statStoneSpawner);
 
         // conditionStates.Clear();
 
@@ -143,8 +142,7 @@ public class EventManager : MonoSingleton<EventManager>
             Debug.LogWarning($"EventObjectManager: {eventType} 프리팹이 등록되지 않았습니다.");
             return null;
         }
-        //if (!TryGetValidSpawnPosition(new Vector2(8f, 9f), out Vector2 pos))
-        if (!TryGetValidSpawnPosition(new Vector2(4f, 5f), out Vector2 pos))
+        if (!TryGetValidSpawnPosition(out Vector2 pos))
         {
             Debug.LogWarning($"설치할 위치없음");
             return null;
@@ -153,6 +151,7 @@ public class EventManager : MonoSingleton<EventManager>
         EventObject eventObject = Instantiate(prefab, pos, Quaternion.identity);
         activeEventObjects.Add(eventObject);
         eventObject.Appear(pos);
+        spawnCount++;
         return eventObject;
     }
 
@@ -161,11 +160,11 @@ public class EventManager : MonoSingleton<EventManager>
         activeEventObjects.Remove(eventObject);
     }
 
-    private bool TryGetValidSpawnPosition(Vector2 howFarRange, out Vector2 result)
+    private bool TryGetValidSpawnPosition(out Vector2 result)
     {
         for (int i = 0; i < maxAttempts; i++)
         {
-            Vector2 pos = CalcSpawnPosition(howFarRange);
+            Vector2 pos = CalcSpawnPosition();
             if (IsFarFromAllEventObjects(pos))
             {
                 result = pos;
@@ -182,7 +181,6 @@ public class EventManager : MonoSingleton<EventManager>
         {
             if (Vector2.Distance(pos, eventObject.transform.position) < eventObjectMinDistance)
             {
-                // Debug.Log($"IsFarFromAllEventObjects pos {pos} 위치에 뭐 있음");
                 return false;
             }
         }
@@ -190,11 +188,9 @@ public class EventManager : MonoSingleton<EventManager>
         return true;
     }
 
-    public Vector2 CalcSpawnPosition(Vector2 howFarRange)
+    public Vector2 CalcSpawnPosition()
     {
-        float farDistance = Player.Instance.distanceMaxDistanceDestroiedStone + Random.Range(howFarRange.x, howFarRange.y);
-        Debug.Log($"EventManager CalcSpawnPosition farDistance {farDistance}");
-        Debug.Log($"EventManager distanceMaxDistanceDestroiedStone {Player.Instance.distanceMaxDistanceDestroiedStone}");
+        float farDistance = Player.Instance.distanceMaxDistanceDestroiedStone + Random.Range(4, 5) + spawnCount + 1.5f;
         Vector2 playerPos = Player.Instance.transform.position;
         return MapManager.SnappedPosition(playerPos + Random.insideUnitCircle.normalized * farDistance);
     }

@@ -25,7 +25,7 @@ public class BrokenDroneItem : Item
         drone.gameObject.SetActive(false);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"총알이 드론에 닿으면 랜덤 방향으로 {BULLET_COUNT}발 동시 발사 (데미지 {DAMAGE_RATE * 100:0}%)";
     }

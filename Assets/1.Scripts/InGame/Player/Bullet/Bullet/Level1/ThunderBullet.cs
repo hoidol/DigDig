@@ -3,7 +3,7 @@
 public class ThunderBullet : Bullet
 {
     const float SEARCH_RADIUS = 3f;
-    const float STRIKE_RADIUS = 1f;
+    int[] STRIKE_COUNTS = {2,3,4};
     const float DAMAGE_RATE = 1f; // 공격력의 100%
 
     public ThunderBullet()
@@ -13,10 +13,10 @@ public class ThunderBullet : Bullet
     public override void OnBulletFired(PlayerBulletObject bullet)
     {
         base.OnBulletFired(bullet);
-        bullet.AddBehavior(new ThunderOnHitBehavior(SEARCH_RADIUS, STRIKE_RADIUS, DAMAGE_RATE));
+        bullet.AddBehavior(new ThunderOnHitBehavior(SEARCH_RADIUS, STRIKE_COUNTS[GetLevel()-1], DAMAGE_RATE));
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1, bool detail = false)
         => $"적중 시 낙뢰 (공격력 {DAMAGE_RATE * 100:0}% 데미지, 주변 {SEARCH_RADIUS}m 내 타격)";
 
 }

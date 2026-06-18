@@ -4,7 +4,6 @@ public class DamageData
 {
     public float damage;
     public bool isCrt;
-    public Transform cause;//데미지 전달자 또는 원인자
     public void Applyed(Vector2 pos)
     {
         if (damage < 1)
@@ -22,13 +21,15 @@ public class DamageData
     }
 }
 
-public class PlayerDamageData : DamageData
+public class PlayerBulletDamageData : DamageData
 {
-    public void Init()
+    public  RaycastHit2D hit2D; 
+    public PlayerBulletObject playerBulletObject;
+    public void Init(PlayerBulletObject pBObj)
     {
+        playerBulletObject = pBObj;
         isCrt = false;
         mustCrit = false;
-        cause = null;
     }
     public bool mustCrit;
     public void Calculate()

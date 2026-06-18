@@ -2,11 +2,14 @@
 public class HustleArmorItem : Item
 {
     Buff buff;
-
-    public override void OnEquip(Player player)
+    float[] bonusHps = {80f, 110f,150f};
+    public override void UpdateItem()
     {
-        buff = new Buff(StatType.MaxHp, 80f, StatOpType.Add);
-        player.AddBuff(buff);
+        if(buff != null)
+            Player.Instance.RemoveBuff(buff);
+            
+        buff = new Buff(StatType.MaxHp, bonusHps[GetLevel()-1], StatOpType.Add);
+        Player.Instance.AddBuff(buff);
     }
 
     public override void OnUnequip(Player player)
@@ -14,8 +17,8 @@ public class HustleArmorItem : Item
         player.RemoveBuff(buff);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
-        return "최대 체력 +80";
+        return $"최대 체력 +{bonusHps[lv-1]}";
     }
 }

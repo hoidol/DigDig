@@ -19,7 +19,7 @@ public class KillExplosionBehavior : IBulletBehavior
         if (hit is Enemy enemy && enemy.curHp <= 0)
         {
             Debug.Log($"KillExplosionBehavior OnHit {damage}");
-            AOEUtil.DamageEnemies(enemy.transform.position, radius, damage, enemyLayer);
+            InGameUtil.DamageEnemies(enemy.transform.position, radius, damage, enemyLayer);
         }
 
         return true;

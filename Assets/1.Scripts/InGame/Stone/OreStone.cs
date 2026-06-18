@@ -98,7 +98,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
         }
     }
 
-    int Exp => level + 1;
+    int exp => 3 + level * 2;
 
 
 
@@ -108,12 +108,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 
         if (reward)
         {
-            ExpText.SetText(transform.position, Exp.ToString());
-            Player.Instance.AddExp(Exp);
-
-            // if (isGoldStone)
-            //     Gold.Dropped(transform.position);
-
+            Exp.Instantiate(transform.position, exp, 1);
             EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
             GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
         }

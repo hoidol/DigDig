@@ -24,6 +24,6 @@ public class WisdomPotionItem : Item
         player.RemoveBuff(buff);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
         => $"마력 +{BONUS_PER_STACK * GetLevel()}";
 }

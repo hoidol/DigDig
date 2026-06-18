@@ -15,7 +15,7 @@ public class ExplosionBehaviour : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        AOEUtil.DamageEnemies(bullet.transform.position, radius, damage, layer);
+        InGameUtil.DamageEnemies(bullet.transform.position, radius, damage, layer);
         return true;
     }
 

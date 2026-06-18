@@ -20,16 +20,16 @@ public class VeinBlastAbility : SynergyAbility
 
     void OnOreDestroyed(DestroyedStoneEvent e)
     {
-        if (e.lastDamage.cause == null)
-            return;
+        // if (e.lastDamage.cause == null)
+        //     return;
 
-        if (e.lastDamage.cause.TryGetComponent<PlayerBulletObject>(out var bullet))
-        {
-            // Debug.Log("VeinBlastAbility OnOreDestroyed");
-            float dmg = Player.Instance.statMgr.AttackPower; //* ratios[count - 1];
-            AOEUtil.DamageEnemies(e.oreStone.transform.position, radii, dmg, enemyLayer);
-            EffectManager.Instance.Play(EffectType.SmallExplosion, e.oreStone.transform.position);
-        }
+        // if (e.lastDamage.cause.TryGetComponent<PlayerBulletObject>(out var bullet))
+        // {
+        //     // Debug.Log("VeinBlastAbility OnOreDestroyed");
+        //     float dmg = Player.Instance.statMgr.AttackPower; //* ratios[count - 1];
+        //     InGameUtil.DamageEnemies(e.oreStone.transform.position, radii, dmg, enemyLayer);
+        //     EffectManager.Instance.Play(EffectType.SmallExplosion, e.oreStone.transform.position);
+        // }
 
 
     }

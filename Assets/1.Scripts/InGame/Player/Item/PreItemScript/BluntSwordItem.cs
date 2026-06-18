@@ -10,7 +10,7 @@ public class BluntSwordItem : TriggerItem
     public ParticleEffect effect;
     DamageData damageData = new DamageData();
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return "전방으로 검을 휘두릅니다.";
     }

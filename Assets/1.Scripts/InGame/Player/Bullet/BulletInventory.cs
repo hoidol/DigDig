@@ -37,16 +37,16 @@ public class BulletInventory : MonoBehaviour
 
     }
 
-    List<string> bulletSkillKeys = new List<string>();
-    public List<string> GetBulletKeys()
-    {
-        bulletSkillKeys.Clear();
-        for (int i = 0; i < Player.Instance.weapon.bulletInventory.curBullets.Count; i++)
-        {
-            bulletSkillKeys.Add(Player.Instance.weapon.bulletInventory.curBullets[i]);
-        }
-        return bulletSkillKeys;
-    }
+    // List<string> bulletSkillKeys = new List<string>();
+    // public List<string> GetBulletKeys()
+    // {
+    //     bulletSkillKeys.Clear();
+    //     for (int i = 0; i < Player.Instance.weapon.bulletInventory.curBullets.Count; i++)
+    //     {
+    //         bulletSkillKeys.Add(Player.Instance.weapon.bulletInventory.curBullets[i]);
+    //     }
+    //     return bulletSkillKeys;
+    // }
     public int GetMaxBulletCount()
     {
         return curBullets.Count;

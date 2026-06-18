@@ -1,31 +1,43 @@
 // 혈투 - HP 30% 이하 시 공격력 +30%
 public class BloodFrenzyItem : Item
 {
-    const float HP_THRESHOLD = 0.5f;
-    const float BONUS = 0.3f;
+    float[] HP_THRESHOLDS = {0.4f,0.5f,0.6f};
+    float[] BONUSES = {0.3f,0.4f,0.5f};
 
     Buff buff;
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
-        return $"HP {HP_THRESHOLD * 100}% 이하 시 공격력 {BONUS * 100}% 증가";
+        return $"HP {HP_THRESHOLDS[lv-1] * 100}% 이하 시 공격력 {BONUSES[lv-1] * 100}% 증가";
+    }
+    public override void UpdateItem()
+    {
+        if(buff != null)
+            Player.Instance.RemoveBuff(buff);
+
+        buff = new Buff(StatType.AttackPower, 1f + BONUSES[GetLevel()], StatOpType.Multiply);
     }
 
     public override void OnEquip(Player player)
-    {
-        buff = new Buff(StatType.AttackPower, 1f + BONUS, StatOpType.Multiply);
+    {   
+        base.OnEquip(player);
         GameEventBus.Subscribe<PlayerHpChangedEvent>(OnHpChanged);
     }
 
     public override void OnUnequip(Player player)
-    {
-        player.RemoveBuff(buff);
+    {   
+        if(buff != null)
+        {
+            player.RemoveBuff(buff);
+            buff = null;
+        }
+            
         GameEventBus.Unsubscribe<PlayerHpChangedEvent>(OnHpChanged);
     }
 
     void OnHpChanged(PlayerHpChangedEvent e)
     {
-        bool isLowHp = Player.Instance.curHp / Player.Instance.statMgr.MaxHp <= HP_THRESHOLD;
+        bool isLowHp = Player.Instance.curHp / Player.Instance.statMgr.MaxHp <= HP_THRESHOLDS[GetLevel()-1];
         if (isLowHp)
             Player.Instance.AddBuff(buff);
         else

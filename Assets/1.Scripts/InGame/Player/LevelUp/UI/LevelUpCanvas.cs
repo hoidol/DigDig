@@ -15,10 +15,6 @@ public class LevelUpCanvas : CanvasUI<LevelUpCanvas>
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
-        // if (levelUpBonusPanels == null || levelUpBonusPanels.Length <= 0)
-        // {
-        //     levelUpBonusPanels = GetComponentsInChildren<LevelUpBonusPanel>();
-        // }
 
         string normal = Player.Instance.weapon.bulletInventory.curBullets.Where(e => e == "Normal").FirstOrDefault();
         addSpecialBulletPanel.CanSelect(normal != null);

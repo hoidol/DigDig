@@ -2,16 +2,24 @@
 public class SmoothBoltItem : Item
 {
     Buff buff;
-    const float buffValue =1.3f; 
-
-    public override void OnEquip(Player player)
+    float[] buffValues ={1.3f,1.4f,1.5f}; 
+    public override void UpdateItem()
     {
-        buff = new Buff(StatType.ReloadSpeed, buffValue, StatOpType.Multiply);
-        player.AddBuff(buff);
-    }
+        if(buff != null)
+            Player.Instance.RemoveBuff(buff);
+            
+        buff = new Buff(StatType.ReloadSpeed, buffValues[GetLevel()-1], StatOpType.Multiply);
+        Player.Instance.AddBuff(buff);
+    }    
+
 
     public override void OnUnequip(Player player)
     {
         player.RemoveBuff(buff);
+    }
+
+    public override string GetDescription(int lv = 1,bool detail = false)
+    {
+        return $"장전 속도 {(buffValues[lv-1]-1) * 100}% 증가";
     }
 }

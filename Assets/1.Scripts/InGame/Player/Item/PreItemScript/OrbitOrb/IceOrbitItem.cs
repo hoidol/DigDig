@@ -13,7 +13,7 @@ public class IceOrbitItem : OrbitItemBase
 
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"얼음구 {GetLevel()}개가 주변을 회전하며 적에게 피해 및 빙결 적용";
     }

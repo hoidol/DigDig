@@ -2,7 +2,7 @@
 // 적 처치 시 최대 체력의 0.5% 회복
 public class VampireBullet : Bullet
 {
-    const float HEAL_RATE = 0.005f;
+    float[] HEAL_RATES = {0.005f,0.01f,0.015f};
     public VampireBullet()
     {
         key = "Vampire";
@@ -11,10 +11,10 @@ public class VampireBullet : Bullet
     public override void OnBulletFired(PlayerBulletObject bullet)
     {
         base.OnBulletFired(bullet);
-        bullet.AddBehavior(new VampireOnKillBehavior(HEAL_RATE));
+        bullet.AddBehavior(new VampireOnKillBehavior(HEAL_RATES[GetLevel()-1]));
     }
 
-    public override string GetDescription(bool detail = false)
-        => $"처치 시 최대 체력의 {HEAL_RATE * 100:0.#}% 회복";
+    public override string GetDescription(int lv = 1, bool detail = false)
+        => $"처치 시 최대 체력의 {HEAL_RATES[GetLevel()-1] * 100:0.#}% 회복";
 
 }

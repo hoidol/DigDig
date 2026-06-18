@@ -25,7 +25,7 @@ public class BladeOrbitItem : OrbitItemBase
             orb.damage = damage;
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"칼날 2개가 주변을 회전하며 적에게 피해 (마력의 {DAMAGE_RATE * 100:0}%)";
     }

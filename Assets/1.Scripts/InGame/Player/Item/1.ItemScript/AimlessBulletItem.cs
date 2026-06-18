@@ -3,22 +3,21 @@ using UnityEngine;
 // 오발탄 - 25% 확률로 랜덤 방향 추가 총알 발사
 public class AimlessBulletItem : Item, IBullet
 {
-    const float PROB = 0.25f;
+    float[] PROBS = {0.25f,0.3f,0.35f};
 
     bool isFiring;
 
-    public override void OnEquip(Player player) { }
-    public override void OnUnequip(Player player) { }
 
-    public override string GetDescription(bool detail = false)
+    
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
-        return $"{PROB * 100:0}% 확률로 오발탄 추가 발사";
+        return $"{PROBS[lv-1] * 100:0}% 확률로 오발탄 추가 발사";
     }
 
     public void OnBulletFired(PlayerBulletObject bullet)
     {
         if (isFiring) return;
-        if (Random.value >= PROB) return;
+        if (Random.value >= PROBS[GetLevel()-1]) return;
 
         isFiring = true;
         Vector2 randomDir = Random.insideUnitCircle.normalized;

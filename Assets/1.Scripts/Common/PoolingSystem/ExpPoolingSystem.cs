@@ -8,7 +8,9 @@ public class ExpPoolingSystem : StackPoolingSystem<Exp>
     public override Exp Get(Vector3 pos, Transform parent = null)
     {
         if (prefab == null)
-            SetPrefab("BlessingStone");
-        return base.Get(pos, parent);
+            SetPrefab("Exp");
+        Exp exp = base.Get(pos, parent);
+        exp.Droped(pos);
+        return exp;
     }
 }

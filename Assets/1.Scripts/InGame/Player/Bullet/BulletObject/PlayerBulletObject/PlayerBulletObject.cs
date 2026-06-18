@@ -7,12 +7,13 @@ public class PlayerBulletObject : BulletObject
     // private static Queue<PlayerBulletObject> pool = new Queue<PlayerBulletObject>();
     // private static PlayerBulletObject prefab;
     public string key;
-    public PlayerDamageData damageData = new PlayerDamageData();
+    public PlayerBulletDamageData damageData = new PlayerBulletDamageData();
     public override void Shoot(Vector2 dir, float damage)
     {
         base.Shoot(dir, damage);
         lifetimeTimer = Player.Instance.statMgr.AmmoDuration;
-        // Debug.Log($"PlayerBulletObject Shoot {lifetimeTimer}");
+
+        damageData.Init(this);
     }
 
     public override void Update()
@@ -40,8 +41,6 @@ public class PlayerBulletObject : BulletObject
 
 
         preTarget = hit;
-        damageData.Init();
-        damageData.cause = transform;
 
         float finalDamage = damage * damageMultiplier;
 
@@ -55,6 +54,8 @@ public class PlayerBulletObject : BulletObject
             finalDamage = 1f;
 
         damageData.Calculate(finalDamage);
+        damageData.hit2D = hit2D;
+
         hit.TakeDamage(damageData);
         bool shouldRelease = true;
         foreach (var b in behaviors)

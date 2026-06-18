@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Box : EventObject
+public class ItemBox : EventObject
 {
 
 
@@ -8,11 +8,11 @@ public class Box : EventObject
     {
         if (collision.CompareTag("Player"))
         {
+            interacting= true;
             Time.timeScale = 0;
             SelectItemCanvas.Instance.OpenCanvas(() =>
             {
                 Time.timeScale = 1;
-                Player.Instance.UpdatePlayer();
                 Destroy();
             });
         }

@@ -1,22 +1,23 @@
-// 붉은 눈: 크리티컬 확률 +15%
+// 붉은 눈: 크리티컬 확률 +10%
 public class RedEyeItem : Item
 {
     Buff buff;
-    const float buffValue =15f; 
-
-    public override void OnEquip(Player player)
+    float[] buffValues ={10f,15,20f}; 
+    public override void UpdateItem()
     {
-        buff = new Buff(StatType.CritChance, buffValue, StatOpType.Add);
-        player.AddBuff(buff);
+        if(buff != null)
+            Player.Instance.RemoveBuff(buff);
+            
+        buff = new Buff(StatType.CritChance, buffValues[GetLevel()-1], StatOpType.Add);
+        Player.Instance.AddBuff(buff);
     }
-
     public override void OnUnequip(Player player)
     {
         player.RemoveBuff(buff);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
-        return "크리티컬 확률 +15%";
+        return $"크리티컬 확률 +{buffValues[lv-1]}%";
     }
 }

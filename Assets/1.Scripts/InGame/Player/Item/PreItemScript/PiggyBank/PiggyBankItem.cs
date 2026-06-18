@@ -24,7 +24,7 @@ public class PiggyBankItem : Item
         }
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return "주변 골드를 자동으로 수집합니다.";
     }

@@ -13,7 +13,7 @@ public class TrapItem : TriggerItem
     int maxTrapCount = 3;
 
     int tripCount;
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return "랜덤 방향으로 덫을 던집니다.\n적이 밟으면 폭발 데미지와 스턴을 줍니다.";
     }

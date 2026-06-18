@@ -157,7 +157,8 @@ public class Player : MonoSingleton<Player>, IPicker
 
     public void LevelUpItem(string key)
     {
-        statMgr.LevelUpBullet(key);
+        statMgr.LevelUpItem(key);
+        itemInventory.GetItem(key).UpdateItem();
         UpdatePlayer();
     }
 
@@ -277,7 +278,7 @@ StatType.AmmoDuration //총알 지속시간
             new PlayerBulletStat()
             {
                 key = UserManager.Instance.userData.equiptedBullets[i].key,
-                lv = 0
+                lv = 1
             });
         }
 
@@ -335,7 +336,7 @@ StatType.AmmoDuration //총알 지속시간
             itemStatDic.Add(key, new PlayerItemStat()
             {
                 key = key,
-                lv = 0
+                lv = 1
             });
         }
         bulletStatDic[key].lv++;

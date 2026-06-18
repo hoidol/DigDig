@@ -4,17 +4,24 @@ using UnityEngine;
 public class BowItem : Item
 {
     Buff buff;
-    const float buffValue =1.3f; 
+    float[] buffValues ={1.3f,1.45f,1.6f}; 
 
-    public override void OnEquip(Player player)
+
+    public override void UpdateItem()
     {
-        buff = new Buff(StatType.AttackPower, buffValue, StatOpType.Multiply);
-        player.AddBuff(buff);
-    }
+        if(buff != null)
+            Player.Instance.RemoveBuff(buff);
 
+        buff = new Buff(StatType.AttackPower, buffValues[GetLevel()-1], StatOpType.Multiply);
+    }
     public override void OnUnequip(Player player)
     {
         player.RemoveBuff(buff);
+    }
+
+    public override string GetDescription(int lv = 1,bool detail = false)
+    {
+        return $"공격력 {(buffValues[lv-1] -1 )* 100}% 증가";
     }
 
 }

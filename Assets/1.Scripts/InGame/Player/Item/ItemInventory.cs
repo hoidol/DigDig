@@ -70,6 +70,8 @@ public class ItemInventory : MonoBehaviour
         return true;
     }
 
+    
+
     public void AddItem(string key)
     {
         AddItem(ItemData.GetItemData(key));
@@ -87,7 +89,7 @@ public class ItemInventory : MonoBehaviour
         item.key = itemData.key;
         item.OnEquip(Player.Instance);
         curItems.Add(item);
-
+        Player.Instance.UpdatePlayer();
         GameEventBus.Publish(new AddedItemEvent(itemData));
         SortingItem();
     }

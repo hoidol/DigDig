@@ -2,23 +2,19 @@ using UnityEngine;
 
 public class OrbitBulletObject : MonoBehaviour
 {
-    const float HIT_RADIUS = 0.5f;
-    const float HIT_COOLDOWN = 0.5f;
 
-    readonly PlayerDamageData damageData = new();
+    readonly DamageData damageData = new();
     float timer;
 
     public LayerMask hittableLayer;
     int hitCount;
-
+    float damage;
     public void SetOrbitBullet(OrbitBullet orbitBullet)
     {
         //orbitBullet.
         hitCount = 1 + Player.Instance.bounce;
 
-        damageData.Init();
-        damageData.cause = transform;
-        damageData.Calculate();
+        damage = orbitBullet.GetDamage();
         timer = 5;
     }
 
@@ -40,6 +36,7 @@ public class OrbitBulletObject : MonoBehaviour
 
         if (collision.TryGetComponent(out IHittable hit))
         {
+            damageData.damage = damage;
 
             hit.TakeDamage(damageData);
             hitCount--;

@@ -20,7 +20,7 @@ public class HammerExplosionBehavior : IBulletBehavior
     {
         if (hit is OreStone && Random.value <= chance)
         {
-            AOEUtil.DamageEnemies(bullet.transform.position, radius, damage, enemyLayer);
+            InGameUtil.DamageEnemies(bullet.transform.position, radius, damage, enemyLayer);
         }
         return true;
     }

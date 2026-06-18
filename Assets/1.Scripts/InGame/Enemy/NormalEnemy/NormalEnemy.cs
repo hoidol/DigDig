@@ -33,6 +33,7 @@ public class NormalEnemy : Enemy, IHpUI
         base.OnDead();
 
         hpUI?.Release();
+        Exp.Instantiate(transform.position, enemyData.exp, Size.x);
 
     }
 }

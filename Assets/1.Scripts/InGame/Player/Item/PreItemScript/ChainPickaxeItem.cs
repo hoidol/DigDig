@@ -20,15 +20,15 @@ public class ChainPickaxeItem : Item
         GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"총알로 광석 파괴 시 {CHANCE}% 확률로 주변 광석 {CHAIN_COUNT}개 연쇄 타격";
     }
 
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
-        if (e.lastDamage == null || e.lastDamage.cause == null) return;
-        if (e.lastDamage.cause.GetComponent<PlayerBulletObject>() == null) return;
+        // if (e.lastDamage == null || e.lastDamage.cause == null) return;
+        // if (e.lastDamage.cause.GetComponent<PlayerBulletObject>() == null) return;
         if (Random.Range(0f, 100f) > CHANCE) return;
 
         Collider2D[] cols = Physics2D.OverlapCircleAll(

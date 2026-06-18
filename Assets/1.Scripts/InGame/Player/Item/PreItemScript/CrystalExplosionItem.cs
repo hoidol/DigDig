@@ -18,7 +18,7 @@ public class CrystalExplosionItem : Item
 
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
-        AOEUtil.DamageEnemies(
+        InGameUtil.DamageEnemies(
             e.oreStone.transform.position,
             explosionRadius * GetLevel(),
             explosionDamage * GetLevel(),

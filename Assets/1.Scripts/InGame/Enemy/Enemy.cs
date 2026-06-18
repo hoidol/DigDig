@@ -263,7 +263,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     }
 
     // IHittable 인터페이스 구현 부
-    public void TakeDamage(DamageData damage)
+    public virtual void TakeDamage(DamageData damage)
     {
         if (state == EnemyState.Dead)
             return;
@@ -276,10 +276,11 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
             OnDead();
         }
     }
-
+    public int face;
     public void SetFacing(float dirX)
     {
-        root.localScale = new Vector3(dirX >= 0 ? 1 : -1, 1, 1);
+        face = dirX >= 0 ? 1 : -1;
+        root.localScale = new Vector3(face, 1, 1);
     }
 
     protected virtual void OnHpChanged()

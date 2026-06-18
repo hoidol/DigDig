@@ -13,7 +13,7 @@ public class BandageItem : TriggerItem
         Player.Instance.AddHp(5f);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"{coolTime}초 마다 5만큼 체력 회복";
     }

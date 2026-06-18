@@ -5,8 +5,8 @@ public abstract class Item : MonoBehaviour, IReinforce
 {
     public string key;
     public bool equipped;
-
-    public virtual string GetDescription(bool detail = false)
+public ReinforceType ReinforceType => ReinforceType.Item;
+    public virtual string GetDescription(int lv = 1, bool detail = false)
     {
         if (itemData == null)
             Debug.Log($"GetDescription if(itemData== null) {key}");
@@ -33,7 +33,6 @@ public abstract class Item : MonoBehaviour, IReinforce
 
     public virtual void UpdateItem() { }
 
-    public virtual void UpdateEnhancement() => UpdateItem();
 
     public int GetLevel()
     {

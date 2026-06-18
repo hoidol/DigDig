@@ -22,7 +22,7 @@ public class BulletData : ScriptableObject,IReinforceData
     public ConditionData[] addEffectUnlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
     public int applyOrder; // 아이템 적용 순서
     public string[] mergeKeys; // 해당 총알과 머지가 가능한 총알키 
-    public float multiplyATK; // 공격력 배율 (예: 1.2f는 20% 증가)
+    // public float multiplyATK; // 공격력 배율 (예: 1.2f는 20% 증가)
     public PlayerBulletObject prefab;
 
     public int GetLevel()
@@ -30,9 +30,9 @@ public class BulletData : ScriptableObject,IReinforceData
         return Player.Instance.statMgr.bulletStatDic[key].lv;
     }
 
-    public string GetDescription(bool detail = false)
+    public string GetDescription(int lv = 1, bool detail = false)
     {
-        return BulletManager.Create(key).GetDescription(detail);
+        return BulletManager.Create(key).GetDescription(lv,detail);
     }
 
     public static BulletData GetBulletData(string key)
@@ -56,7 +56,7 @@ public class BulletData : ScriptableObject,IReinforceData
         int iName = System.Array.IndexOf(headers, "Name");
         int iSpecial = System.Array.IndexOf(headers, "specialBullet");
         int iDesc = System.Array.IndexOf(headers, "Desc");
-        int iMultiplyATK = System.Array.IndexOf(headers, "multiplyATK");
+        // int iMultiplyATK = System.Array.IndexOf(headers, "multiplyATK");
         int iMergeKeys = System.Array.IndexOf(headers, "mergeKeys");
         int iCondTypes = System.Array.IndexOf(headers, "conditionTypes");
         int iCondValues = System.Array.IndexOf(headers, "conditionValues");
@@ -72,7 +72,7 @@ public class BulletData : ScriptableObject,IReinforceData
             desc = Col(cols, iDesc);
             specialBullet = Col(cols, iSpecial).ToUpper() == "TRUE";
 
-            if (float.TryParse(Col(cols, iMultiplyATK), NumberStyles.Float, CultureInfo.InvariantCulture, out float atk)) multiplyATK = atk;
+            // if (float.TryParse(Col(cols, iMultiplyATK), NumberStyles.Float, CultureInfo.InvariantCulture, out float atk)) multiplyATK = atk;
 
             string mergeRaw = Col(cols, iMergeKeys);
             mergeKeys = string.IsNullOrEmpty(mergeRaw) ? new string[0] : mergeRaw.Split('/');

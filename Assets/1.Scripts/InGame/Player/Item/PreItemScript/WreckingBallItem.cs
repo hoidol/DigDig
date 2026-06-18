@@ -38,7 +38,7 @@ public class WreckingBallItem : TriggerCycleItem
         if (ball != null) { Destroy(ball.gameObject); ball = null; }
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return "활성화 시 도탄하며 광석과 적에게 피해를 줍니다.";
     }

@@ -19,7 +19,7 @@ public class BlackBombItem : TriggerItem
         bomb.Shoot(randomDir, damage);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"랜덤 방향으로 폭탄 투척, 멈추면 폭발 (마력의 {DAMAGE_RATE * 100:0}% 데미지)";
     }

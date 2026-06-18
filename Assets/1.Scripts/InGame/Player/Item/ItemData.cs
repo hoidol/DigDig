@@ -63,9 +63,9 @@ public class ItemData : ScriptableObject, IReinforceData
         };
     }
 
-    public string GetDescription(bool detail = false)
+    public string GetDescription(int lv = 1,bool detail = false)
     {
-        return itemPrefab.GetDescription(detail);
+        return itemPrefab.GetDescription(lv,detail);
     }
 
     public static ItemData GetItemData(string key)

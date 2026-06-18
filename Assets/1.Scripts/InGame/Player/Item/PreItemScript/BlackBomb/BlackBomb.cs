@@ -43,7 +43,7 @@ public class BlackBomb : MonoBehaviour
         if (exploded) return;
         exploded = true;
         EffectManager.Instance.Play(EffectType.SmallExplosion, transform.position);
-        AOEUtil.DamageEnemies(transform.position, explosionRadius, damage, enemyLayer);
+        InGameUtil.DamageEnemies(transform.position, explosionRadius, damage, enemyLayer);
         Destroy(gameObject);
     }
 

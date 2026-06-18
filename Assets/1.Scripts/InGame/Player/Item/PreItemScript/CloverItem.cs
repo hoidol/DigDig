@@ -21,7 +21,7 @@ public class CloverItem : Item
             Gold.Dropped(e.oreStone.transform.position);
     }
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"광석 파괴 시 {CHANCE * 100:0}% 확률로 골드 드랍";
     }

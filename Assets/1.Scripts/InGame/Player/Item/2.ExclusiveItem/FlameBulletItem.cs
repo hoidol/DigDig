@@ -7,12 +7,12 @@ public class FlameBulletItem : Item, IBullet
     static readonly float chance = 20f;
 
 
-    public override string GetDescription(bool detail = false)
+    public override string GetDescription(int lv = 1,bool detail = false)
     {
         return $"{chance}% 확률로 불꽃탄 발사";
     }
 
-    public override void OnEquip(Player player) { UpdateEnhancement(); }
+    public override void OnEquip(Player player) {  }
     public override void OnUnequip(Player player) { }
 
 
