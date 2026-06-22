@@ -12,10 +12,10 @@ public class Player : MonoSingleton<Player>, IPicker
     public Joystick moveJoystick;
     public Joystick attackJoystick;
     public PlayerStatManager statMgr;
-    public Color originColor = new Color(0.1921569f, 1f, 0.4705882f, 1f);
-    public Color angerColor = new Color(1f, 0.1921569f, 0.1921569f, 1f);
+    // public Color originColor = new Color(0.1921569f, 1f, 0.4705882f, 1f);
+    // public Color angerColor = new Color(1f, 0.1921569f, 0.1921569f, 1f);
     [SerializeField] Animator animator;
-    public SpriteRenderer[] bodySprites;
+    // public SpriteRenderer[] bodySprites;
     public Transform bodyRootTr;
     public Transform bodyCenterTr;
     public CameraShake cameraShake;
@@ -64,9 +64,7 @@ public class Player : MonoSingleton<Player>, IPicker
         rg = GetComponentInChildren<Rigidbody2D>();
         itemInventory = GetComponentInChildren<ItemInventory>();
         // abilityInventory = GetComponentInChildren<AbilityInventory>();
-
         // statInventory = GetComponentInChildren<StatInventory>();
-
         health = GetComponentInChildren<PlayerHealth>();
         movement = GetComponentInChildren<PlayerMovement>();
         weapon = GetComponentInChildren<BaseGun>();

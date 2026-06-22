@@ -23,7 +23,8 @@ public class BulletUI : MonoBehaviour
     {
         Vector2 startPos = rt.anchoredPosition;
         float startRot = rt.localEulerAngles.z;
-
+        transform.SetParent(GetComponentInParent<Canvas>().transform);
+        
         float dirX = Random.Range(25f, 55f) * (Random.value > 0.3f ? 1f : -1f);
         float peakY = Random.Range(40f, 70f);
         float spinDir = Random.value > 0.5f ? 1f : -1f;

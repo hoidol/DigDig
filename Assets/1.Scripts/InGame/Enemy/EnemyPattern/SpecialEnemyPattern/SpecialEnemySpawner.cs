@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 public abstract class SpecialEnemySpawner : MonoBehaviour
 {
 
-
     public abstract void Spawn();
     public abstract void EndSpawn();
 }

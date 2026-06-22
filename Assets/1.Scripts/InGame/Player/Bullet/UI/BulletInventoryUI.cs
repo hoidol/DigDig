@@ -48,6 +48,7 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
         if (inactive != null)
         {
             inactive.gameObject.SetActive(true);
+            inactive.transform.SetParent(parentTr);
             return inactive;
         }
 

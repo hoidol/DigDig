@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class FenceEnemySpawner : SpecialEnemySpawner
 {
-    [SerializeField] OreStoneUnbreakable oreStonePrefab;
+    // [SerializeField] OreStoneUnbreakable oreStonePrefab;
     [SerializeField] float radius = 15f;
     [SerializeField] float spacing = 1f;
 
-    readonly List<OreStoneUnbreakable> oreStoneUnbreakables = new();
+    // readonly List<OreStoneUnbreakable> oreStoneUnbreakables = new();
 
     public override void Spawn()
     {
@@ -23,15 +23,15 @@ public class FenceEnemySpawner : SpecialEnemySpawner
                 center.y + radius * Mathf.Sin(angle),
                 0f
             );
-            oreStoneUnbreakables.Add(OreStoneUnbreakable.Get(oreStonePrefab, pos, null));
+            // oreStoneUnbreakables.Add(OreStoneUnbreakable.Get(oreStonePrefab, pos, null));
         }
     }
 
     public override void EndSpawn()
     {
-        foreach (var ore in oreStoneUnbreakables)
-            if (ore != null) ore.Return();
-        oreStoneUnbreakables.Clear();
+        // foreach (var ore in oreStoneUnbreakables)
+        //     if (ore != null) ore.Return();
+        // oreStoneUnbreakables.Clear();
     }
 
 }

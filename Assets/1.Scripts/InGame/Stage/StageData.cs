@@ -10,6 +10,7 @@ using UnityEditor;
 public class StageData : MonoBehaviour
 {
     public SpecialEnemySpawner[] specialEnemySpawners;
+    public BossSpawner bossSpawner;
     public static readonly int MAX_ENEMY_COUNT = 50;
     public string key;
     public string Title => key;

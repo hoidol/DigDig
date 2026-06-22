@@ -19,7 +19,6 @@ public class GameManager : MonoSingleton<GameManager>
     protected void Awake()
     {
         GameEventBus.Clear();
-        // Debug.Log($"Start Stage {UserManager.stageKey}");
         StageData stageDataPrefab = Resources.Load<StageData>($"StageData/{UserManager.stageKey}");
 
         stageData = Instantiate(stageDataPrefab);
@@ -91,14 +90,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     void StartBoss()
     {
-        GameEventBus.Publish<BossEvent>(new BossEvent());
-        Boss boss = Instantiate(stageData.boss);
-
-        Vector2Int tileIndex = MapManager.PositionToTileIndex(Player.Instance.transform.position);
-        Vector2Int[,] tileIndexArr = MapManager.GetIndexArray(tileIndex, boss.Size);
-
-        boss.Spawn(tileIndexArr);
-        BossCanvas.Instance.SetBoss(boss);
+        stageData.bossSpawner.Spawn();
     }
 
 
@@ -148,7 +140,7 @@ public class StartGameEvent
         stageData = data;
     }
 }
-public class BossEvent
+public class StartBossEvent
 {
 
 }

@@ -62,7 +62,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
     public void RegisterTile(Vector2Int[,] idxArr)
     {
         indexArr = idxArr;
-        MapManager.RegisterTile(idxArr);
+        MapManager.RegisterTile(idxArr,this);
 
     }
 

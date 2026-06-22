@@ -8,9 +8,9 @@ public class MapManager : MonoSingleton<MapManager>
 
     public const float TILE_SIZE = 1.46f;
     //public static List<Vector2Int> emptyIndexs = new List<Vector2Int>();
-    public static bool[,] emptyTileArray;
+    public static ITile[,] tileArray;
     public static Vector2[,] tilePositionArray;
-    public OreStone oreStonePrefab;
+    // public OreStone oreStonePrefab;
     public Color[] fillColors;
     // 각 색상별로 거리(x축) → 가중치(y축) 커브를 Inspector에서 그래프로 설정
     public float[] fixWeights;
@@ -21,7 +21,7 @@ public class MapManager : MonoSingleton<MapManager>
     {
 
         weights = new float[weightCurves.Length];
-        emptyTileArray = new bool[MAX_RANGE_RADIUS * 2, MAX_RANGE_RADIUS * 2];
+        tileArray = new ITile[MAX_RANGE_RADIUS * 2, MAX_RANGE_RADIUS * 2];
         tilePositionArray = new Vector2[MAX_RANGE_RADIUS * 2, MAX_RANGE_RADIUS * 2];
         SpawnTile(MAX_RANGE_RADIUS, MIN_RANGE_RADIUS);
     }
@@ -76,21 +76,21 @@ public class MapManager : MonoSingleton<MapManager>
     public static void ReleaseTile(Vector2Int index)
     {
         // Debug.Log($"MapMgr ReleaseTile x {index.x + MAX_RANGE_RADIUS} y {index.y + MAX_RANGE_RADIUS}");
-        emptyTileArray[index.x, index.y] = true;
+        tileArray[index.x, index.y] = null;
     }
-    public static void RegisterTile(Vector2Int[,] indexArr)
+    public static void RegisterTile(Vector2Int[,] indexArr, ITile tile)
     {
         foreach (var index in indexArr)
-            RegisterTile(index);
+            RegisterTile(index,tile);
     }
-    public static void RegisterTile(Vector2Int index)
+    public static void RegisterTile(Vector2Int index, ITile tile)
     {
-        emptyTileArray[index.x, index.y] = false;
+        tileArray[index.x, index.y] = tile;
     }
 
     public static bool CheckEmpty(Vector2Int index)
     {
-        return emptyTileArray[index.x, index.y];
+        return tileArray[index.x, index.y] == null;
     }
 
 
@@ -123,7 +123,7 @@ public class MapManager : MonoSingleton<MapManager>
                 }
 
                 int colorIdx = PickColorIndex(dist);
-                OreStone ore = OreStone.Get(oreStonePrefab, cellPos, transform);
+                OreStone ore = OreStone.Get( cellPos, transform);
                 Vector2Int[,] indexArr = new Vector2Int[1, 1];
                 indexArr[0, 0] = index;
                 ore.Init(colorIdx, fillColors[colorIdx], indexArr);
@@ -194,10 +194,10 @@ public class MapManager : MonoSingleton<MapManager>
             int ax = next.x;
             int ay = next.y;
             if (ax < 0 || ay < 0 ||
-                ax >= emptyTileArray.GetLength(0) || ay >= emptyTileArray.GetLength(1))
+                ax >= tileArray.GetLength(0) || ay >= tileArray.GetLength(1))
                 return false;
 
-            if (!emptyTileArray[ax, ay])
+            if (!CheckEmpty(new Vector2Int(ax, ay)))
                 return false;
         }
         return true;
@@ -248,10 +248,46 @@ public class MapManager : MonoSingleton<MapManager>
             {
                 Vector2Int tileIndex = startTileIndex + new Vector2Int(x, y);
                 tileArrays[x, y] = tileIndex;
-                if (!emptyTileArray[tileIndex.x, tileIndex.y])
+
+                if (!CheckEmpty(new Vector2Int(tileIndex.x, tileIndex.y)))
                     empty = false;
             }
         }
         return empty;
+    }
+    Vector2Int unbreakableCenterTileIndex;
+    int unbreakableXCount = 60;
+    int unbreakableYCount =40;
+    public List<UnbreakableStone> MakeUnbreakableStone(Vector2Int centerTileIndex, int xCount = 60, int yCount =40)
+    {
+        List<UnbreakableStone> list = new List<UnbreakableStone>();
+        int leftX = centerTileIndex.x - xCount/2;
+        int bottomY = centerTileIndex.y - yCount/2;
+
+        unbreakableCenterTileIndex = centerTileIndex;
+        unbreakableXCount = xCount;
+        unbreakableYCount = yCount;
+
+        for(int x = leftX;x < leftX+xCount; x++)
+        {
+            for(int y = bottomY; y < bottomY+ yCount; y++)
+            {
+                if(!CheckEmpty(new Vector2Int(x, y)))
+                {
+                    //이 자리에있는 것들 제거하기
+                    tileArray[x,y].ReleaseTile();
+                }
+                UnbreakableStone unbreakableStone = UnbreakableStone.Get(TileIndexToPosition(new Vector2Int(x, y)), transform ); 
+                list.Add(unbreakableStone);
+            }   
+        }
+        return list;
+    }
+    public bool CheckUnbreakableArea(Vector2Int tileIndex)
+    {
+        int leftX = unbreakableCenterTileIndex.x - unbreakableXCount / 2;
+        int bottomY = unbreakableCenterTileIndex.y - unbreakableYCount / 2;
+        return tileIndex.x >= leftX && tileIndex.x < leftX + unbreakableXCount &&
+               tileIndex.y >= bottomY && tileIndex.y < bottomY + unbreakableYCount;
     }
 }

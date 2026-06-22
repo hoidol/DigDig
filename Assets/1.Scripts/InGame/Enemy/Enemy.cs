@@ -49,12 +49,14 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
 
     protected bool moving;
     protected float moveTimer;
+    public Animator animator;
     #endregion
 
     protected virtual void Awake()
     {
         rg2d = GetComponent<Rigidbody2D>();
         statusEffectHandler = GetComponent<StatusEffectHandler>();
+        animator = GetComponentInChildren<Animator>();
     }
     //Enemy 게임 데이터 설정
     public virtual void Init(EnemyData data)
@@ -226,7 +228,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
 
         moving = true;
         Vector2Int[,] newTiles = MapManager.GetIndexArray(tileIndexArr, dir);
-        MapManager.RegisterTile(newTiles); // 이동 중 다른 오브젝트가 점유 못하게 선점
+        MapManager.RegisterTile(newTiles,this); // 이동 중 다른 오브젝트가 점유 못하게 선점
 
         Vector2 dest = MapManager.TileIndexToCenterPosition(newTiles);
         SetFacing(dir.x);
@@ -294,12 +296,8 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     }
     public virtual void OnDead()
     {
-        transform.DOKill();
         ReleaseTile();
         ChangeState(EnemyState.Dead);
-        gameObject.SetActive(false);
-        // 이벤트 발행 → 각 시스템이 알아서 처리
-        GameEventBus.Publish(new EnemyDeadEvent(this));
     }
     public bool CanHit()
     {
@@ -309,13 +307,16 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     public void RegisterTile(Vector2Int[,] idxArr)
     {
         tileIndexArr = idxArr;
-        MapManager.RegisterTile(idxArr);
+        MapManager.RegisterTile(idxArr,this);
 
     }
 
     public void ReleaseTile()
     {
+        transform.DOKill();
         MapManager.ReleaseTile(tileIndexArr);
+        gameObject.SetActive(false);
+        GameEventBus.Publish(new EnemyDeadEvent(this));
     }
 
 

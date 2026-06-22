@@ -18,17 +18,18 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 #endif
     public bool BreakTileWhenSpawn => false;
 
-
-    public static OreStone Get(OreStone prefab, Vector3 pos, Transform parent)
+    static OreStone oreStonePrefab;
+    public static OreStone Get(Vector3 pos, Transform parent)
     {
-        OreStone ore = pool.Count > 0 ? pool.Pop() : Instantiate(prefab, parent);
-        ore.transform.SetParent(parent);
+        if(oreStonePrefab == null)
+                oreStonePrefab =Resources.Load<OreStone>("Stone/OreStone");
+        OreStone ore = pool.Count > 0 ? pool.Pop() : Instantiate(oreStonePrefab, parent);
         ore.transform.position = pos;
         ore.gameObject.SetActive(true);
         return ore;
     }
 
-    public void Return()
+    public virtual void Return()
     {
         if (!gameObject.activeSelf) return;
         hpUI?.Release();
@@ -76,7 +77,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 
     DamageData lastDamage;
 
-    public void TakeDamage(DamageData damage)
+    public virtual void TakeDamage(DamageData damage)
     {
         lastDamage = damage;
         curHp -= damage.damage;
@@ -102,9 +103,8 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 
 
 
-    public void Destroyed(bool reward)
+    public virtual void Destroyed(bool reward)
     {
-        ReleaseTile();
 
         if (reward)
         {
@@ -112,28 +112,30 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
             EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
             GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
         }
+        ReleaseTile();
 
-        Return();
+        
     }
 
-    public bool CanHit()
+    public  virtual bool CanHit()
     {
         return curHp > 0;
     }
 
 
-    public void RegisterTile(Vector2Int[,] idxArr)
+    public virtual void RegisterTile(Vector2Int[,] idxArr)
     {
         tileIndexArr = idxArr;
     }
 
-    public void ReleaseTile()
+    public virtual void ReleaseTile()
     {
         MapManager.ReleaseTile(tileIndexArr);
+        Return();
 
     }
     StatusEffectHandler statusEffectHandler;
-    public void ApplyStatusEffect(StatusEffect effect)
+    public virtual void ApplyStatusEffect(StatusEffect effect)
     {
         if (statusEffectHandler == null)
         {

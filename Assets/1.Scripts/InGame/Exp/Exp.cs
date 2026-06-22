@@ -42,8 +42,12 @@ public class Exp : MonoBehaviour, IPickable
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (IsTaken)
+            return;
+
         if (collision.CompareTag("Player"))
         {
+            Take(Player.Instance);
 
         }
     }

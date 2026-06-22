@@ -4,10 +4,10 @@ public class BossManager : MonoBehaviour
 {
     public void Awake()
     {
-        GameEventBus.Subscribe<BossEvent>(OnBossEvent);
+        GameEventBus.Subscribe<StartBossEvent>(OnStartBossEvent);
     }
 
-    void OnBossEvent(BossEvent e)
+    void OnStartBossEvent(StartBossEvent e)
     {
         //보스 연출 시 
 

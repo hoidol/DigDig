@@ -25,6 +25,10 @@ public abstract class Boss : Enemy
     {
         base.Init(data);
         //bossData = data as BossData;
+        for(int i = 0; i < phases.Length; i++)
+        {
+            phases[i].Init(this);
+        }
     }
 
     public override void Spawn(Vector2Int[,] idxArr)

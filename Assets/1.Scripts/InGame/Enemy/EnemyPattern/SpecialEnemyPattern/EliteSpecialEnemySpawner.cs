@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -7,25 +8,48 @@ using Random = UnityEngine.Random;
 
 public class EliteSpecialEnemySpawner : SpecialEnemySpawner
 {
+    List<UnbreakableStone> unbreakableStones;
+    EliteEnemy eliteEnemy;
+    void Start()
+    {
+        GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
+    }
+   
     public override void Spawn()
     {
+        Vector2Int center = MapManager.PositionToTileIndex(Player.Instance.transform.position); 
+        unbreakableStones = MapManager.Instance.MakeUnbreakableStone(center,60,40);
+
 
         Enemy eliteEnemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Elite);
         EnemyData enemyData = EnemyManager.GetEnemyData(eliteEnemyPrefab.enemyType);
         var sorted = Player.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
         var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
-        Vector2 center = bestChecker.transform.position;
-        Vector2 rPoint = center + Random.insideUnitCircle * 5f;
+        Vector2 bestCheckerCenter = bestChecker.transform.position;
+        Vector2 rPoint = bestCheckerCenter + Random.insideUnitCircle * 5f;
 
         Vector2Int startTileArr = MapManager.PositionToTileIndex(rPoint);
         MapManager.GetTileArray(startTileArr, enemyData.size, out Vector2Int[,] spawnTileArray);
 
-        EliteEnemy enemy = EnemyManager.Instance.Instantiate(eliteEnemyPrefab) as EliteEnemy;
-        enemy?.Spawn(spawnTileArray);
+        eliteEnemy = EnemyManager.Instance.Instantiate(eliteEnemyPrefab) as EliteEnemy;
+        eliteEnemy?.Spawn(spawnTileArray);
     }
+
+     void OnEnemyDeadEvent(EnemyDeadEvent e)
+    {
+        if(e.enemy == eliteEnemy)
+        {
+            EndSpawn();
+        }
+    }
+
+
 
     public override void EndSpawn()
     {
-
+        for(int i = 0; i < unbreakableStones.Count; i++)
+        {
+            unbreakableStones[i].Destroyed(false);
+        }
     }
 }

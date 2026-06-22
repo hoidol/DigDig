@@ -27,7 +27,7 @@ public class PlayerHpStateCanvas : MonoBehaviour
     {
 
         hpBar.fillAmount = Player.Instance.curHp / Player.Instance.statMgr.MaxHp;
-        hpText.text = $"{(int)Player.Instance.curHp}/{(int)Player.Instance.statMgr.MaxHp}";
+        hpText.text = $"{(int)Player.Instance.curHp}";
     }
 
 }
