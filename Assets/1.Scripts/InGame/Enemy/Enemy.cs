@@ -271,6 +271,10 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
             return;
         damage.Applyed(hpPoint.transform.position);
         curHp = Mathf.Max(0, curHp - damage.damage);
+
+        //Hit Effect
+        
+
         OnHpChanged();
         if (curHp <= 0)
         {

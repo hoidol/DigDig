@@ -10,6 +10,7 @@ public class BulletData : ScriptableObject,IReinforceData
 {
     public static readonly int MAX_LEVEL = 3;
     public string key;
+    public int order;
     public string Title => itemName;
     public string itemName;
 

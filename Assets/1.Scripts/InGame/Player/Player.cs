@@ -269,13 +269,13 @@ StatType.AmmoDuration //총알 지속시간
             statDic.Add(ps.statType, ps);
         }
 
-        for (int i = 0; i < UserManager.Instance.userData.equiptedBullets.Length; i++)
+        for (int i = 0; i < UserManager.Instance.userBulletManager.userBulletData.equiptedBullets.Length; i++)
         {
             // Debug.Log($"Player StatManager Init() {UserManager.Instance.userData.equiptedBullets[i].key}");
-            bulletStatDic.Add(UserManager.Instance.userData.equiptedBullets[i].key,
+            bulletStatDic.Add(UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[i].key,
             new PlayerBulletStat()
             {
-                key = UserManager.Instance.userData.equiptedBullets[i].key,
+                key = UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[i].key,
                 lv = 1
             });
         }

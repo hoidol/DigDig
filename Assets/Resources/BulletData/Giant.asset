@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Giant
   m_EditorClassIdentifier: 
   key: Giant
+  order: 0
   itemName: "\uAC70\uB300\uD0C4"
   specialBullet: 1
   mergedBullet: 0
@@ -22,5 +23,4 @@ MonoBehaviour:
   addEffectUnlockConditions: []
   applyOrder: 0
   mergeKeys: []
-  multiplyATK: 1.5
   prefab: {fileID: 0}

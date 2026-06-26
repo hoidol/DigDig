@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BulletManager : MonoSingleton<BulletManager>
@@ -55,6 +56,7 @@ public class BulletManager : MonoSingleton<BulletManager>
         {
             bulletDataDic.Add(bulletDatas[i].key, bulletDatas[i]);
         }
+        bulletDatas = bulletDatas.OrderBy(e=>e.order).ToArray();
 
         mergeBulletDatas = Resources.LoadAll<MergeBulletData>("MergeBulletData");
 
@@ -86,7 +88,7 @@ public class BulletManager : MonoSingleton<BulletManager>
     [SerializeField] List<BulletData> canPickBulletDatas = new List<BulletData>();
     public BulletData DrawRandomBullet()
     {
-        return BulletData.GetBulletData(UserManager.Instance.userData.equiptedBullets[UnityEngine.Random.Range(0, 5)].key);
+        return BulletData.GetBulletData(UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[UnityEngine.Random.Range(0, 5)].key);
     }
 
     public List<BulletData> GetBulletDatas(int count)

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Normal
   m_EditorClassIdentifier: 
   key: Normal
+  order: 0
   itemName: "\uC77C\uBC18\uD0C4"
   specialBullet: 0
   mergedBullet: 0
@@ -22,5 +23,4 @@ MonoBehaviour:
   addEffectUnlockConditions: []
   applyOrder: 0
   mergeKeys: []
-  multiplyATK: 0
   prefab: {fileID: 0}

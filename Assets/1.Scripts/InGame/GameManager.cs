@@ -19,9 +19,11 @@ public class GameManager : MonoSingleton<GameManager>
     protected void Awake()
     {
         GameEventBus.Clear();
-        StageData stageDataPrefab = Resources.Load<StageData>($"StageData/{UserManager.stageKey}");
+        stageData = StageManager.Instance.GetStageData(UserManager.STAGE_KEY);
 
-        stageData = Instantiate(stageDataPrefab);
+        stageData.Init();
+        Instantiate(stageData.enemySpawnerContainerPrefab);
+        
         MapManager.Instance.SpawnMap();
     }
 
@@ -44,26 +46,23 @@ public class GameManager : MonoSingleton<GameManager>
             StartGame();
         });
     }
-    EnemySpawner enemySpawner;
     void StartGame()
     {
         phase = 0;
         gameTimer = 0;
         isPlaying = true;
 
-        enemySpawner = new EnemySpawner();
-        StartPhase(phase);
 
         isClear = false;
         GameEventBus.Publish(new StartGameEvent(stageData));
+
+        StartPhase(phase);
     }
 
     public void StartPhase(int phase)
     {
         PhaseData phaseData = stageData.GetPhaseData(phase);
         Debug.Log($"GameManager StartPhase {phase}");
-
-        enemySpawner.StartPattern(phaseData.enemyPatternData);
 
         if (phaseData.isBoss)
         {
@@ -73,6 +72,8 @@ public class GameManager : MonoSingleton<GameManager>
         {
             WaitPhase(phaseData.time).Forget();
         }
+
+        GameEventBus.Publish(new PhaseStartEvent(phase));
     }
 
     async UniTaskVoid WaitPhase(float t)
@@ -84,7 +85,6 @@ public class GameManager : MonoSingleton<GameManager>
     public void EndPhase()
     {
         phase++;
-        enemySpawner.EndPattern();
         StartPhase(phase);
     }
 
@@ -98,18 +98,7 @@ public class GameManager : MonoSingleton<GameManager>
     void Update()
     {
         gameTimer += Time.deltaTime;
-
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-
-            EnemySpawner spawner = new EnemySpawner();
-            spawner.Spawn(EnemyType.Melee);
-        }
-#endif
     }
-
-
 
 
     public void EndGame(bool clear)

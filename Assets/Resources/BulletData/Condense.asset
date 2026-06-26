@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Condense
   m_EditorClassIdentifier: 
   key: Condense
+  order: 0
   itemName: "\uC751\uCD95\uD0C4"
   specialBullet: 1
   mergedBullet: 0
@@ -24,5 +25,4 @@ MonoBehaviour:
   addEffectUnlockConditions: []
   applyOrder: 0
   mergeKeys: []
-  multiplyATK: 0.5
   prefab: {fileID: 0}
