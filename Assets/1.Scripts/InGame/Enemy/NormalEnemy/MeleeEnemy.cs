@@ -8,21 +8,18 @@ public class MeleeEnemy : NormalEnemy
         base.Awake();
         meleeAttackIndicator = GetComponentInChildren<MeleeAttackIndicator>(true);
     }
-    DamageData damageData = new DamageData();
     public override void Spawn(Vector2Int[,] indexArr)
     {
-
         base.Spawn(indexArr);
         meleeAttackIndicator.gameObject.SetActive(false);
-        damageData.damage = enemyData.GetAttackPower();
     }
     protected override void StartAttack()
     {
         base.StartAttack();
         meleeAttackIndicator.transform.right = Player.Instance.transform.position - transform.position;
-        meleeAttackIndicator.PlayIndicator(0.7f, () =>
+        meleeAttackIndicator.PlayIndicator(1.5f, () =>
         {
-            Collider2D[] cols = Physics2D.OverlapCircleAll(attackPoint.position, 1, LayerMask.GetMask("PlayerSide"));
+            Collider2D[] cols = Physics2D.OverlapCircleAll(attackPoint.position, enemyData.attackRange, LayerMask.GetMask("PlayerSide"));
             for (int i = 0; i < cols.Length; i++)
             {
                 if (cols[i].TryGetComponent<IHittable>(out var hittable))

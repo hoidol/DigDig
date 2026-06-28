@@ -16,14 +16,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     public bool isClear;
     public bool isPlaying;
+    EnemySpawnerContainer enemySpawnerContainer;
     protected void Awake()
     {
         GameEventBus.Clear();
+        Debug.Log($"UserManager.STAGE_KEY {UserManager.STAGE_KEY}");
         stageData = StageManager.Instance.GetStageData(UserManager.STAGE_KEY);
 
         stageData.Init();
-        Instantiate(stageData.enemySpawnerContainerPrefab);
-        
+        enemySpawnerContainer = Instantiate(stageData.enemySpawnerContainerPrefab);
+
         MapManager.Instance.SpawnMap();
     }
 
@@ -61,17 +63,15 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void StartPhase(int phase)
     {
+        phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
         PhaseData phaseData = stageData.GetPhaseData(phase);
         Debug.Log($"GameManager StartPhase {phase}");
-
         if (phaseData.isBoss)
         {
             StartBoss();
         }
-        else
-        {
-            WaitPhase(phaseData.time).Forget();
-        }
+
+        WaitPhase(phaseData.time).Forget();
 
         GameEventBus.Publish(new PhaseStartEvent(phase));
     }
@@ -90,7 +90,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     void StartBoss()
     {
-        stageData.bossSpawner.Spawn();
+        enemySpawnerContainer.bossSpawner.Spawn();
     }
 
 

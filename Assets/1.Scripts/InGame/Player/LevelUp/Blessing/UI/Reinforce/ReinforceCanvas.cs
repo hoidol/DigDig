@@ -19,14 +19,14 @@ public class ReinforceCanvas : CanvasUI<ReinforceCanvas>
             {
                 continue;
             }
-            
+
             candidates.Add(BulletManager.bullets[bulletStat.key]);
         }
 
 
         for (int i = 0; i < Player.Instance.itemInventory.curItems.Count; i++)
         {
-            if (Player.Instance.statMgr.itemStatDic[Player.Instance.itemInventory.curItems[i].key].lv >= ItemData.MAX_LEVEL)
+            if (Player.Instance.statMgr.GetPlayerItemStat(Player.Instance.itemInventory.curItems[i].key).lv >= ItemData.MAX_LEVEL)
             {
                 continue;
             }
@@ -34,9 +34,9 @@ public class ReinforceCanvas : CanvasUI<ReinforceCanvas>
         }
 
         int totalCanDrawCount = candidates.Count;
-        IReinforce[] reinforces = candidates.OrderBy(e=>UnityEngine.Random.value).Take(3).ToArray();
-        
-        int reinForceCount= Mathf.Clamp(UnityEngine.Random.Range(1,5),1,totalCanDrawCount);
+        IReinforce[] reinforces = candidates.OrderBy(e => UnityEngine.Random.value).Take(3).ToArray();
+
+        int reinForceCount = Mathf.Clamp(UnityEngine.Random.Range(1, 5), 1, totalCanDrawCount);
     }
 }
 

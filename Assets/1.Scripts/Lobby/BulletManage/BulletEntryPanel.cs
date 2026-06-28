@@ -1,10 +1,12 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BulletEntryPanel : MonoBehaviour 
+public class BulletEntryPanel : MonoBehaviour
 {
     [SerializeField] Image thumImage;
-    BulletData bulletData ;
+    [SerializeField] TMP_Text titleText;
+    BulletData bulletData;
     UserBullet userBullet;
     [SerializeField] Button equiptButton; //장착하기
     [SerializeField] GameObject equipingPanel; //장착중 보여줌
@@ -12,9 +14,10 @@ public class BulletEntryPanel : MonoBehaviour
     public void SetBullet(string key)
     {
         bulletData = BulletData.GetBulletData(key);
+        titleText.text = bulletData.Title;
         userBullet = UserManager.Instance.userBulletManager.GetUserBullet(key);
 
-        thumImage.sprite= bulletData.thumbnail;
+        thumImage.sprite = bulletData.thumbnail;
         UpdatePanel();
     }
     public void UpdatePanel()
@@ -25,13 +28,13 @@ public class BulletEntryPanel : MonoBehaviour
 
         if (!userBullet.own) //비보유
         {
-            thumImage.color= new Color(0.1f,0.1f,0.1f);
+            thumImage.color = new Color(0.1f, 0.1f, 0.1f);
             unownPanel.SetActive(true);
         }
         else
-        {  
-            thumImage.color = Color.white; 
-            if(userBullet.equipedIdx == -1)
+        {
+            thumImage.color = Color.white;
+            if (userBullet.equipedIdx == -1)
             {
                 equiptButton.gameObject.SetActive(true);
             }
@@ -44,10 +47,13 @@ public class BulletEntryPanel : MonoBehaviour
 
     public void OnClickedEntry()
     {
-        BulletChangeCanvas.Instance.OpenCanvas(() =>
-        { 
+        BulletChangeCanvas.Instance.OpenCanvas(userBullet, () =>
+        {
             GetComponentInParent<BulletManageCanvas>().UpdateCanvas();
         });
     }
-    
+    public void OnClickedDetailInfo()
+    {
+
+    }
 }

@@ -22,13 +22,13 @@ public class BlessingCanvas : CanvasUI<BlessingCanvas>
         List<string> itemKeys = new List<string>();
         for (int i = 0; i < Player.Instance.itemInventory.curItems.Count; i++)
         {
-            if (Player.Instance.statMgr.itemStatDic[Player.Instance.itemInventory.curItems[i].key].lv >= ItemData.MAX_LEVEL)
+            if (Player.Instance.statMgr.GetPlayerItemStat(Player.Instance.itemInventory.curItems[i].key).lv >= ItemData.MAX_LEVEL)
             {
                 continue;
             }
             itemKeys.Add(Player.Instance.itemInventory.curItems[i].key);
         }
-        int totalCanDrawCount =  bulletDataKeys.Count + itemKeys.Count;
+        int totalCanDrawCount = bulletDataKeys.Count + itemKeys.Count;
         selectReinforceButton.gameObject.SetActive(totalCanDrawCount > 0);
 
 

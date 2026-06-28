@@ -1,4 +1,5 @@
-using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -10,9 +11,13 @@ public class Exp : MonoBehaviour, IPickable
     public bool IsTaken { get; set; }
     public Transform Transform => transform;
 
+    Tween autoAttractTween;
+    CancellationTokenSource moveCts;
+    const float MOVE_SPEED = 20f;
+
     public static void Instantiate(Vector2 pos, int count, float size)
     {
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             Vector2 position = pos + Random.insideUnitCircle * size;
             poolingSystem.Get(position);
@@ -23,6 +28,9 @@ public class Exp : MonoBehaviour, IPickable
     {
         transform.position = pos;
         IsTaken = false;
+        autoAttractTween?.Kill();
+        moveCts?.Cancel();
+        autoAttractTween = DOVirtual.DelayedCall(5f, () => Take(Player.Instance));
     }
 
     public void PickedUp()
@@ -33,11 +41,30 @@ public class Exp : MonoBehaviour, IPickable
 
     public void Take(IPicker picker)
     {
+        if (IsTaken) return;
         IsTaken = true;
-        transform.DOMove(picker.Transform.position, 0.1f).OnComplete(() =>
+        autoAttractTween?.Kill();
+
+        moveCts?.Cancel();
+        moveCts = new CancellationTokenSource();
+        MoveToPickerAsync(picker, moveCts.Token).Forget();
+    }
+
+    async UniTaskVoid MoveToPickerAsync(IPicker picker, CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
         {
-            picker.PickUp(this);
-        });
+            Vector2 target = picker.Transform.position;
+            transform.position = Vector2.MoveTowards(transform.position, target, MOVE_SPEED * Time.deltaTime);
+
+            if (Vector2.Distance(transform.position, target) < 0.05f)
+            {
+                picker.PickUp(this);
+                return;
+            }
+
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
+        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -48,7 +75,6 @@ public class Exp : MonoBehaviour, IPickable
         if (collision.CompareTag("Player"))
         {
             Take(Player.Instance);
-
         }
     }
 }

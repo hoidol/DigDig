@@ -9,12 +9,11 @@ using Random = UnityEngine.Random;
 public class BossSpawner : SpecialEnemySpawner
 {
     List<UnbreakableStone> unbreakableStones;
-    EliteEnemy eliteEnemy;
     void Start()
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
     }
-   
+    Boss boss;
     public override void Spawn()
     {
         Boss boss = Instantiate(GameManager.Instance.stageData.boss);
@@ -22,17 +21,13 @@ public class BossSpawner : SpecialEnemySpawner
         Vector2Int tileIndex = MapManager.PositionToTileIndex(Player.Instance.transform.position);
         Vector2Int[,] tileIndexArr = MapManager.GetIndexArray(tileIndex, boss.Size);
 
-
-
         var bestChecker = Player.Instance.tileCheckers.OrderBy(c => c.TileCount()).First();
         Vector2 bestCheckerCenter = bestChecker.transform.position;
 
-
         Vector2 rPoint = bestCheckerCenter + Random.insideUnitCircle * 5f;
 
-
-        Vector2Int center = MapManager.PositionToTileIndex(rPoint); 
-        unbreakableStones = MapManager.Instance.MakeUnbreakableStone(center,60,40);
+        Vector2Int center = MapManager.PositionToTileIndex(rPoint);
+        unbreakableStones = MapManager.Instance.MakeUnbreakableStone(center, 30, 20);
 
         MapManager.GetTileArray(center, boss.enemyData.size, out Vector2Int[,] spawnTileArray);
 
@@ -40,9 +35,9 @@ public class BossSpawner : SpecialEnemySpawner
         BossCanvas.Instance.SetBoss(boss);
     }
 
-     void OnEnemyDeadEvent(EnemyDeadEvent e)
+    void OnEnemyDeadEvent(EnemyDeadEvent e)
     {
-        if(e.enemy == eliteEnemy)
+        if (e.enemy == boss)
         {
             EndSpawn();
         }
@@ -52,7 +47,7 @@ public class BossSpawner : SpecialEnemySpawner
 
     public override void EndSpawn()
     {
-        for(int i = 0; i < unbreakableStones.Count; i++)
+        for (int i = 0; i < unbreakableStones.Count; i++)
         {
             unbreakableStones[i].Destroyed(false);
         }

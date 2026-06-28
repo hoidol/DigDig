@@ -9,7 +9,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
 {
     public EnemyType enemyType; // 적 종류 구분
     public EnemyState state { get; private set; } // 적 상태 - FSM 패턴
-    public EnemyData enemyData { get; private set; } //게임 데이터
+    public EnemyData enemyData; //게임 데이터
     [field: SerializeField]
     public StatusEffectHandler statusEffectHandler
     {
@@ -50,19 +50,17 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     protected bool moving;
     protected float moveTimer;
     public Animator animator;
+
+    protected DamageData damageData = new DamageData();
+
     #endregion
 
     protected virtual void Awake()
     {
         rg2d = GetComponent<Rigidbody2D>();
         statusEffectHandler = GetComponent<StatusEffectHandler>();
+        statusEffectHandler?.Init();
         animator = GetComponentInChildren<Animator>();
-    }
-    //Enemy 게임 데이터 설정
-    public virtual void Init(EnemyData data)
-    {
-        enemyData = data;
-        statusEffectHandler.Init();
     }
     //적 생성 시 호출
     public virtual void Spawn(Vector2Int[,] idxArr)
@@ -92,6 +90,9 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
         transform.position = pos;
         maxHp = enemyData.GetHp();
         curHp = maxHp;
+
+        damageData.damage = enemyData.GetAttackPower();
+
         ChangeState(EnemyState.Waiting);
 
         attackTimer = 0;
@@ -228,7 +229,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
 
         moving = true;
         Vector2Int[,] newTiles = MapManager.GetIndexArray(tileIndexArr, dir);
-        MapManager.RegisterTile(newTiles,this); // 이동 중 다른 오브젝트가 점유 못하게 선점
+        MapManager.RegisterTile(newTiles, this); // 이동 중 다른 오브젝트가 점유 못하게 선점
 
         Vector2 dest = MapManager.TileIndexToCenterPosition(newTiles);
         SetFacing(dir.x);
@@ -273,7 +274,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
         curHp = Mathf.Max(0, curHp - damage.damage);
 
         //Hit Effect
-        
+
 
         OnHpChanged();
         if (curHp <= 0)
@@ -295,8 +296,11 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     }
     public void Reward()
     {
-        ExpText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.3f, "1");
-        Player.Instance.AddExp(1);
+        // ExpText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.3f, "1");
+        // Player.Instance.AddExp(1);
+
+        Exp.Instantiate(transform.position, enemyData.exp, 1);
+        EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
     }
     public virtual void OnDead()
     {
@@ -311,7 +315,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     public void RegisterTile(Vector2Int[,] idxArr)
     {
         tileIndexArr = idxArr;
-        MapManager.RegisterTile(idxArr,this);
+        MapManager.RegisterTile(idxArr, this);
 
     }
 
@@ -331,7 +335,5 @@ public enum EnemyState
     Waiting,
     Moving,
     Attack,
-    PhaseTransition,
-    Dash,
     Dead
 }

@@ -12,17 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2677472b295174418a45f20740ecd3b3, type: 3}
   m_Name: BossData
   m_EditorClassIdentifier: 
-  grade: 0
   type: 0
-  initHp: 0
-  increaseHp: 0
-  initAttackPower: 0
-  increaseAttackPower: 0
   attackSpeed: 0
   attackRange: 0
-  moveSpeed: 0
+  moveRange: 0
   exp: 0
-  prefab: {fileID: 0}
-  phaseThresholds:
-  - 0.7
-  - 0.4
+  size: {x: 4, y: 4}
+  breakTileWhenSpawn: 0
+  hpMultiplier: 0
+  attackPowerMultiplier: 0
+  key: 

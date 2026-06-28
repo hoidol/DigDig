@@ -26,10 +26,11 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
 
     public void FiredBullet(string bulletKey, int shotOrder)
     {
-
-        loadedBulletUIs[loadedBulletUIs.Count - 1].transform.SetParent(transform, true);
-        loadedBulletUIs[loadedBulletUIs.Count - 1].Fired();
+        var firedUI = loadedBulletUIs[^1];
         loadedBulletUIs.RemoveAt(loadedBulletUIs.Count - 1);
+        pool.Remove(firedUI);
+        // firedUI.transform.SetParent(transform, true);
+        firedUI.Fired(() => pool.Add(firedUI));
         UpdateContainer();
     }
     public void EndReload()

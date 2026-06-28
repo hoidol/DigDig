@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletManageCanvas :  CanvasUI<BulletManageCanvas>
+public class BulletManageCanvas : CanvasUI<BulletManageCanvas>
 {
     [SerializeField] BulletEquiptPanel[] equiptPanels;
 
@@ -10,7 +10,15 @@ public class BulletManageCanvas :  CanvasUI<BulletManageCanvas>
     [SerializeField] RectTransform parentTr;
     [SerializeField] List<BulletEntryPanel> bulletEntryPanels = new();
 
+    bool init;
+    void Init()
+    {
+        if (init)
+            return;
+        init = true;
 
+        equiptPanels = GetComponentsInChildren<BulletEquiptPanel>();
+    }
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
@@ -18,32 +26,33 @@ public class BulletManageCanvas :  CanvasUI<BulletManageCanvas>
     }
     public void UpdateCanvas()
     {
-        for(int i = 0; i < UserManager.Instance.userBulletManager.userBulletData.equiptedBullets.Length; i++)
+        Init();
+        for (int i = 0; i < UserManager.Instance.userBulletManager.userBulletData.equiptedBullets.Length; i++)
         {
             string key = UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[i].key;
-            equiptPanels[i].SetBullet(key,i);
+            equiptPanels[i].SetBullet(key, i);
         }
 
-        for(int i = 0; i < bulletEntryPanels.Count; i++)
+        for (int i = 0; i < bulletEntryPanels.Count; i++)
             bulletEntryPanels[i].gameObject.SetActive(false);
-        
-        for(int i = 0; i < BulletManager.Instance.bulletDatas.Length; i++)
+
+        for (int i = 0; i < BulletManager.Instance.bulletDatas.Length; i++)
         {
             BulletEntryPanel entryPanel = GetBulletEntryPanel();
-            entryPanel.SetBullet(BulletManager.Instance.bulletDatas[i].key);            
+            entryPanel.SetBullet(BulletManager.Instance.bulletDatas[i].key);
         }
     }
 
     BulletEntryPanel GetBulletEntryPanel()
     {
-        for(int i = 0; i < bulletEntryPanels.Count; i++)
+        for (int i = 0; i < bulletEntryPanels.Count; i++)
         {
-            if(bulletEntryPanels[i].gameObject.activeSelf)
+            if (bulletEntryPanels[i].gameObject.activeSelf)
                 continue;
             bulletEntryPanels[i].gameObject.SetActive(true);
             return bulletEntryPanels[i];
         }
-        BulletEntryPanel bulletEntryPanel = Instantiate(bulletEntryPanelPrefab,parentTr);
+        BulletEntryPanel bulletEntryPanel = Instantiate(bulletEntryPanelPrefab, parentTr);
         bulletEntryPanels.Add(bulletEntryPanel);
         return bulletEntryPanel;
     }

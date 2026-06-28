@@ -32,8 +32,12 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
     public virtual void Appear(Vector2 spawnPos)
     {
         curTimer = maxTime;
+        indexArr = new Vector2Int[Size.x, Size.y];
+        indexArr[0, 0] = MapManager.PositionToTileIndex(spawnPos);
+        RegisterTile(indexArr);
+
         Debug.Log("EventObject OnAppear");
-        interacting= false;
+        interacting = false;
         WayPointerCanvas.Instance.AddWayPoint(this);
         ClearArea(transform.position);
     }
@@ -47,8 +51,8 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
     }
     void Update()
     {
-        if(interacting)
-        return;
+        if (interacting)
+            return;
 
         if (curTimer > 0)
             curTimer -= Time.deltaTime;
@@ -62,7 +66,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
     public void RegisterTile(Vector2Int[,] idxArr)
     {
         indexArr = idxArr;
-        MapManager.RegisterTile(idxArr,this);
+        MapManager.RegisterTile(idxArr, this);
 
     }
 

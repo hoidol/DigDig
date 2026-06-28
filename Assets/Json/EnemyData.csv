@@ -1,3 +1,3 @@
 grade	type	attackSpeed	attackRange	moveRange	exp	hpMultiplier	attackPowerMultiplier	size	breakTileWhenSpawn
-Normal	Melee	3	1.5	2	1	1	2	1	FALSE
-Normal	Ranged	3	7	8	1	0.6	3	1	FALSE
+Normal	Melee	6	1.5	2	1	1	2	1	FALSE
+Normal	Ranged	6	7	8	1	0.6	3	1	FALSE

@@ -30,7 +30,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 
     public void Selected(ItemData itemData)
     {
-        Player.Instance.itemInventory.AddItem(itemData);
+        Player.Instance.AddItem(itemData.key);
         CloseCanvas();
     }
 

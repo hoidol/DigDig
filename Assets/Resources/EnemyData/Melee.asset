@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Melee
   m_EditorClassIdentifier: 
   type: 0
-  attackSpeed: 3
+  attackSpeed: 6
   attackRange: 1.5
   moveRange: 2
   exp: 1

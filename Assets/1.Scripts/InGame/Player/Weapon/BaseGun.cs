@@ -313,12 +313,14 @@ public abstract class BaseGun : MonoBehaviour, IGun
         }
         IsReloading = false;
         // Debug.Log("재장전 끝");
-
+        // await UniTask.Yield(cancellationToken: token);
         for (int i = 0; i < bulletInventory.curBullets.Count; i++)
         {
             LoadBullet(bulletInventory.curBullets[i]);
         }
         BulletInventoryUI.Instance.EndReload();
+
+        await UniTask.Yield(cancellationToken: token);
         attackTimer = statMgr.AttackSpeed;
         GameEventBus.Publish(new ReloadEndEvent());
     }

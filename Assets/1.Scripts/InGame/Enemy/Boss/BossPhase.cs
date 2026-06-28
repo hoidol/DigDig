@@ -8,8 +8,8 @@ using Random = UnityEngine.Random;
 public class BossPhase : MonoBehaviour
 {
     public float phaseThreshold;
-    public AttackPatternInfo[]  attackPatternInfos;
-    Boss boss;
+    public AttackPatternInfo[] attackPatternInfos;
+    public Boss boss;
     CancellationTokenSource cts;
 
     public void Init(Boss boss)
@@ -28,7 +28,7 @@ public class BossPhase : MonoBehaviour
         {
             int index = Random.Range(0, attackPatternInfos.Length);
 
-            boss.animator.Play(attackPatternInfos[index].readyAnimName);
+            boss.PlayAnim(attackPatternInfos[index].readyAnimName);
             await UniTask.WaitForSeconds(attackPatternInfos[index].readyTime, cancellationToken: ct);
 
             attackPatternInfos[index].attackPattern.Execute(boss, () =>
