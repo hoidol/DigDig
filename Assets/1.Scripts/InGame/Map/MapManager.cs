@@ -17,6 +17,27 @@ public class MapManager : MonoSingleton<MapManager>
     public AnimationCurve[] weightCurves;
     [SerializeField] private float[] weights;
 
+    public static List<Vector2Int> GetEmptyTileIndexesInRange(Vector2 playerPos, int includeSize, int excludeSize = 0)
+    {
+        List<Vector2Int> indies = new();
+        Vector2Int centerIdx = PositionToTileIndex(playerPos);
+
+        for (int x = -includeSize; x <= includeSize; x++)
+        {
+            for (int y = -includeSize; y <= includeSize; y++)
+            {
+                if (Mathf.Abs(x) <= excludeSize && Mathf.Abs(y) <= excludeSize)
+                    continue;
+                Vector2Int idx = centerIdx + new Vector2Int(x, y);
+                if (idx.x < 0 || idx.y < 0 || idx.x >= tileArray.GetLength(0) || idx.y >= tileArray.GetLength(1))
+                    continue;
+                if (CheckEmpty(idx))
+                    indies.Add(idx);
+            }
+        }
+        return indies;
+    }
+
     public void SpawnMap()
     {
 
@@ -75,13 +96,12 @@ public class MapManager : MonoSingleton<MapManager>
 
     public static void ReleaseTile(Vector2Int index)
     {
-        // Debug.Log($"MapMgr ReleaseTile x {index.x + MAX_RANGE_RADIUS} y {index.y + MAX_RANGE_RADIUS}");
         tileArray[index.x, index.y] = null;
     }
     public static void RegisterTile(Vector2Int[,] indexArr, ITile tile)
     {
         foreach (var index in indexArr)
-            RegisterTile(index,tile);
+            RegisterTile(index, tile);
     }
     public static void RegisterTile(Vector2Int index, ITile tile)
     {
@@ -123,7 +143,7 @@ public class MapManager : MonoSingleton<MapManager>
                 }
 
                 int colorIdx = PickColorIndex(dist);
-                OreStone ore = OreStone.Get( cellPos, transform);
+                OreStone ore = OreStone.Get(cellPos, transform);
                 Vector2Int[,] indexArr = new Vector2Int[1, 1];
                 indexArr[0, 0] = index;
                 ore.Init(colorIdx, fillColors[colorIdx], indexArr);
@@ -171,14 +191,12 @@ public class MapManager : MonoSingleton<MapManager>
             : Physics2D.OverlapBoxAll(center, new Vector2(width, height), 0f, mask);
         foreach (var col in cols)
         {
-            if (col.tag == "OreStone")
-            {
-                col.GetComponent<OreStone>()?.Destroyed(false);
-            }
-
+            col.GetComponent<OreStone>()?.OnDestroy();
         }
-
     }
+
+
+
     //이동 가능한지 체크
     public static bool CheckMoveTo(Vector2Int[,] idxArr, Vector2Int dir) //dir방향으로 갈 수 있는지 확인
     {
@@ -257,29 +275,36 @@ public class MapManager : MonoSingleton<MapManager>
     }
     Vector2Int unbreakableCenterTileIndex;
     int unbreakableXCount = 60;
-    int unbreakableYCount =40;
-    public List<UnbreakableStone> MakeUnbreakableStone(Vector2Int centerTileIndex, int xCount = 60, int yCount =40)
+    int unbreakableYCount = 40;
+    public List<UnbreakableStone> MakeUnbreakableStone(Vector2Int centerTileIndex, int xCount = 60, int yCount = 40)
     {
         List<UnbreakableStone> list = new List<UnbreakableStone>();
-        int leftX = centerTileIndex.x - xCount/2;
-        int bottomY = centerTileIndex.y - yCount/2;
+        int leftX = centerTileIndex.x - xCount / 2;
+        int bottomY = centerTileIndex.y - yCount / 2;
 
         unbreakableCenterTileIndex = centerTileIndex;
         unbreakableXCount = xCount;
         unbreakableYCount = yCount;
 
-        for(int x = leftX;x < leftX+xCount; x++)
+        for (int x = leftX; x < leftX + xCount; x++)
         {
-            for(int y = bottomY; y < bottomY+ yCount; y++)
+
+            for (int y = bottomY; y < bottomY + yCount; y++)
             {
-                if(!CheckEmpty(new Vector2Int(x, y)))
+                if (x == leftX || x == leftX + xCount - 1 || y == bottomY || y == bottomY + yCount - 1)
                 {
-                    //이 자리에있는 것들 제거하기
-                    tileArray[x,y].ReleaseTile();
+                    if (!CheckEmpty(new Vector2Int(x, y)))
+                    {
+                        //이 자리에있는 것들 제거하기
+                        tileArray[x, y].ReleaseTile();
+                    }
+                    UnbreakableStone unbreakableStone = UnbreakableStone.Get(TileIndexToPosition(new Vector2Int(x, y)), transform);
+                    unbreakableStone.Init(0, Color.white, new Vector2Int[,] { { new Vector2Int(x, y) } });
+                    list.Add(unbreakableStone);
                 }
-                UnbreakableStone unbreakableStone = UnbreakableStone.Get(TileIndexToPosition(new Vector2Int(x, y)), transform ); 
-                list.Add(unbreakableStone);
-            }   
+
+
+            }
         }
         return list;
     }

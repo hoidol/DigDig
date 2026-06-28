@@ -28,7 +28,6 @@ public class ItemInventory : MonoBehaviour
 
     void Start()
     {
-        GameEventBus.Subscribe<TryAddItemEvent>(TryAddItemEvent);
 #if UNITY_EDITOR
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
 #endif
@@ -45,36 +44,13 @@ public class ItemInventory : MonoBehaviour
     }
 #endif
 
-    void TryAddItemEvent(TryAddItemEvent e)
-    {
-        AddItem(e.itemData);
-    }
 
-    public bool CanAddItem(ItemData itemData, bool openRemoveItem = true)
-    {
-        Item item = GetItem(itemData.key);
-        int totalCount = 0;
-        for (int i = 0; i < curItems.Count; i++)
-        {
-            // totalCount += curItems[i].count;
-        }
 
-        if (item == null)
-        {
-            if (openRemoveItem)
-            {
-                ChangeItemCanvas.Instance.OpenCanvas(itemData, () => { });
-            }
-            return false;
-        }
-        return true;
-    }
-
-    
-
-    public void AddItem(string key)
+    public void AddItem(string key)  //**Player로 부터 호출받기
     {
         AddItem(ItemData.GetItemData(key));
+
+
     }
 
     /// <summary>
@@ -82,16 +58,18 @@ public class ItemInventory : MonoBehaviour
     /// </summary>
     /// <param name="itemData"></param>
     /// <param name="openChangeItem"> 아이템 더이상 획득 못하면 교체창 열기</param>
-    public void AddItem(ItemData itemData)
+    public void AddItem(ItemData itemData) //**Player로 부터 호출받기
     {
-        // Debug.Log($"{itemData.key} 아이템 장착하기");
         Item item = Instantiate(itemData.itemPrefab, transform);
         item.key = itemData.key;
-        item.OnEquip(Player.Instance);
         curItems.Add(item);
-        Player.Instance.UpdatePlayer();
+
+
+
+        item.OnEquip(Player.Instance);
         GameEventBus.Publish(new AddedItemEvent(itemData));
         SortingItem();
+
     }
 
     public void SortingItem()
@@ -113,6 +91,18 @@ public class ItemInventory : MonoBehaviour
     {
         return curItems.FirstOrDefault(e => e.key == key);
     }
+
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            Debug.Log("아이템 랜덤 얻기");
+            Player.Instance.AddItem(ItemManager.Instance.GetDrawItems(1)[0].key);
+        }
+
+    }
+#endif
 
 }
 

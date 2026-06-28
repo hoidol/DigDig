@@ -12,19 +12,23 @@ public class BulletUI : MonoBehaviour
 
     public void SetBulletData(BulletData bulletData)
     {
-        if (bulletData == null)
-        {
-            Debug.Log(" public void SetBulletData(BulletData bulletData)  == null");
-        }
+        // if (bulletData == null)
+        // {
+        //     Debug.Log(" public void SetBulletData(BulletData bulletData)  == null");
+        // }
         thum.sprite = bulletData.thumbnail;
     }
 
-    public void Fired()
+    public void Fired(System.Action onComplete = null)
     {
-        Vector2 startPos = rt.anchoredPosition;
+        // Debug.Log("BUllet UI Fired");
+        Canvas canvas = GetComponentInParent<Canvas>();
+        Vector3 worldPos = rt.position;
         float startRot = rt.localEulerAngles.z;
-        transform.SetParent(GetComponentInParent<Canvas>().transform);
-        
+        transform.SetParent(canvas.transform);
+        rt.position = worldPos;
+        Vector2 startPos = rt.anchoredPosition;
+
         float dirX = Random.Range(25f, 55f) * (Random.value > 0.3f ? 1f : -1f);
         float peakY = Random.Range(40f, 70f);
         float spinDir = Random.value > 0.5f ? 1f : -1f;
@@ -41,6 +45,7 @@ public class BulletUI : MonoBehaviour
             rt.localEulerAngles = new Vector3(0, 0, startRot);
             thum.color = new Color(thum.color.r, thum.color.g, thum.color.b, 1f);
             gameObject.SetActive(false);
+            onComplete?.Invoke();
         });
     }
 }

@@ -1,0 +1,15 @@
+﻿<Solution>
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="spine-unity-examples.csproj" />
+  <Project Path="spine-unity-editor.csproj" />
+  <Project Path="LayerLab.ArtMakerUnity.csproj" />
+  <Project Path="spine-csharp.csproj" />
+  <Project Path="spine-unity.csproj" />
+  <Project Path="Google.Play.Common.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Google.Play.Core.csproj" />
+  <Project Path="Google.Play.Review.csproj" />
+  <Project Path="spine-unity-examples-editor.csproj" />
+  <Project Path="LayerLab.ArtMakerUnity.Editor.csproj" />
+</Solution>

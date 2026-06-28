@@ -63,9 +63,9 @@ public class ItemData : ScriptableObject, IReinforceData
         };
     }
 
-    public string GetDescription(int lv = 1,bool detail = false)
+    public string GetDescription(int lv = 1, bool detail = false)
     {
-        return itemPrefab.GetDescription(lv,detail);
+        return itemPrefab.GetDescription(lv, detail);
     }
 
     public static ItemData GetItemData(string key)
@@ -74,7 +74,7 @@ public class ItemData : ScriptableObject, IReinforceData
     }
     public int GetLevel()
     {
-        return Player.Instance.statMgr.itemStatDic[key].lv;
+        return Player.Instance.statMgr.GetPlayerItemStat(key).lv;
     }
 
 

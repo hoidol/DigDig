@@ -18,7 +18,7 @@ MonoBehaviour:
   specialBullet: 0
   mergedBullet: 0
   desc: "\uD0C4\uC774 \uD295\uAE41\uB2C8\uB2E4."
-  thumbnail: {fileID: 0}
+  thumbnail: {fileID: 21300000, guid: 08ad3632b02694ced9f78ec21faf577a, type: 3}
   grade: 0
   addEffectUnlockConditions: []
   applyOrder: 0

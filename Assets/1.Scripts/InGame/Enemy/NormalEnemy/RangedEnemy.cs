@@ -2,7 +2,7 @@ using UnityEngine;
 public class RangedEnemy : NormalEnemy
 {
     public Transform attackPoint;
-    protected override void StartAttack()
+    public override void StartAttack()
     {
 
         base.StartAttack();

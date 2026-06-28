@@ -64,7 +64,7 @@ public class BulletInventory : MonoBehaviour
     public void AddBullet(BulletData bulletData)
     {
         //Bullet bullet = BulletManager.Create(bulletData.key);
-        curBullets.Add(bulletData.key);
+        curBullets.Insert(0, bulletData.key);
         Player.Instance.UpdatePlayer();
         RefreshCache();
     }

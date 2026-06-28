@@ -8,7 +8,8 @@ public class MeleeAttackIndicator : AreaIndicator
     {
         gameObject.SetActive(true);
         warningTr.localScale = Vector2.zero;
-        warningTr.DOScale(1f, 0.4f).SetEase(Ease.InCubic).OnComplete(() =>
+        warningTr.DOKill();
+        warningTr.DOScale(1f, sec).SetEase(Ease.InCubic).OnComplete(() =>
         {
             end.Invoke();
             gameObject.SetActive(false);

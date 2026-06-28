@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d68eef31f674aceb2670508d91813f, type: 3}
   m_Name: Gateway1
   m_EditorClassIdentifier: 
-  enemySpawnerContainerPrefab: {fileID: 0}
+  enemySpawnerContainerPrefab: {fileID: 700800661684834404, guid: 5374e2a20be1b476087b81a9ea6e5478,
+    type: 3}
   bossSpawner: {fileID: 0}
   key: Gateway1
   order: 0

@@ -1,67 +1,97 @@
 using UnityEngine;
 using System;
+using Cysharp.Threading.Tasks;
 
 
-public abstract class Boss : Enemy
+public abstract class Boss : Enemy, IEnemySpecialAttackPattern
 {
     public BossState bossState;
     protected int currentPhase;
     public int CurrentPhase => currentPhase;
 
     [SerializeField] BossPhase[] phases;
-    BossPhase curBossPhase;
-    DamageData damageData = new DamageData();
+    public BossPhase curBossPhase;
+    public float waitingTime = 5f;
 
-    IBossMovement movement;
+    [SerializeField] BossBehaviour[] bossBehaviours;
+    public BossBehaviour curBossBehaviour;
 
-
-    protected override void Awake()
+    public override void Awake()
     {
         base.Awake();
-        movement = GetComponent<IBossMovement>();
+        bossBehaviours = GetComponentsInChildren<BossBehaviour>();
     }
 
-    public override void Init(EnemyData data)
-    {
-        base.Init(data);
-        //bossData = data as BossData;
-        for(int i = 0; i < phases.Length; i++)
-        {
-            phases[i].Init(this);
-        }
-    }
 
     public override void Spawn(Vector2Int[,] idxArr)
     {
-        bossState = BossState.IntroAnim;
+        for (int i = 0; i < phases.Length; i++)
+        {
+            phases[i].Init(this);
+        }
+        EnterBossState(BossState.Intro);
         currentPhase = 0;
         base.Spawn(idxArr);
-        OnEnterPhase(0);
-        damageData.damage = enemyData.GetAttackPower();
         GameEventBus.Publish(new BossSpawnEvent(this));
     }
 
+    public override void Apear()
+    {
+        base.Apear();
+        OnEnterPhase(0);
+        StartIntro().Forget();
+
+    }
+    async UniTask StartIntro()
+    {
+        await UniTask.Delay(2000);
+        EnterBossState(BossState.Beviouring);
+    }
+
+    public void EnterBossState(BossState bossState)
+    {
+        this.bossState = bossState;
+        if (bossState == BossState.Waiting)
+        {
+            StartWait().Forget();
+        }
+        else if (bossState == BossState.Beviouring)
+        {
+            StartBehaviour().Forget();
+        }
+    }
+
+    async UniTask StartBehaviour()
+    {
+        curBossBehaviour = bossBehaviours[UnityEngine.Random.Range(0, bossBehaviours.Length)];
+        await curBossBehaviour.StartBehaviour();
+        EnterBossState(BossState.Waiting);
+    }
+    async UniTask StartWait()
+    {
+        await UniTask.Delay(TimeSpan.FromSeconds(waitingTime));
+        EnterBossState(BossState.Beviouring);
+    }
+
+
     public override void Update()
     {
-        if (bossState == BossState.IntroAnim)
+        if (bossState == BossState.Intro)
             return;
-
-        base.Update();
     }
-    public override void UpdateAttack()
-    {
 
-    }
     protected override void OnHpChanged()
     {
         base.OnHpChanged();
         CheckPhaseTransition();
     }
 
-    public override void OnDead()
+    public override void OnDestroy()
     {
-        movement?.Cancel();
-        base.OnDead();
+        if (curBossPhase != null)
+            curBossPhase.EndPhase();
+
+        base.OnDestroy();
         GameEventBus.Publish(new BossDeadEvent(this));
     }
 
@@ -78,78 +108,60 @@ public abstract class Boss : Enemy
         if (newPhase != currentPhase)
         {
             currentPhase = newPhase;
-            ChangeState(EnemyState.PhaseTransition);
             GameEventBus.Publish(new BossPhaseChangedEvent(this, currentPhase));
             OnEnterPhase(currentPhase);
         }
     }
+
     protected virtual void OnEnterPhase(int phase)
     {
+        if (curBossPhase != null)
+            curBossPhase.EndPhase();
+
         curBossPhase = phases[phase];
         curBossPhase.StartPhase();
-        ChangeState(EnemyState.Waiting);
     }
 
-    protected override void StartAttack()
+    public virtual float PlayAnim(string animName)
     {
-        base.StartAttack();
-
+        return 0;
     }
 
-    // 공격 완료 후 → Dash → EndAttack 순서
-    void AfterAttack()
-    {
-        if (movement == null) { EndAttack(); return; }
-
-        ChangeState(EnemyState.Dash);
-        movement.StartMove(this, EndAttack);
-    }
 
     public override void CancelAttack()
     {
         if (phases != null && currentPhase < phases.Length)
             phases[currentPhase].EndPhase();
 
-        movement?.Cancel();
-        EndAttack();
     }
-    // Dash 중 플레이어와 접촉 시 데미지
-    void OnTriggerEnter2D(Collider2D other)
+
+    //부수면서 이동하기
+    public async override UniTask MoveTo(Vector2Int dir, float delaySec = 2)
     {
-        if (state != EnemyState.Dash) return;
-        if (other.CompareTag("Player"))
-            Player.Instance.TakeDamage(damageData);
+        Vector2Int[,] newTiles = MapManager.GetIndexArray(tileIndexArr, dir);
+
+        for (int i = 0; i < newTiles.GetLength(0); i++)
+        {
+            for (int j = 0; j < newTiles.GetLength(1); j++)
+            {
+                if (!MapManager.CheckEmpty(newTiles[i, j]))
+                {
+                    if (MapManager.tileArray[newTiles[i, j].x, newTiles[i, j].y] == this)
+                    {
+                        continue;
+                    }
+                    MapManager.tileArray[newTiles[i, j].x, newTiles[i, j].y].OnDestroy();
+                }
+            }
+        }
+        await base.MoveTo(dir, delaySec);
     }
 
 }
 
-// [Serializable]
-// public class BossPhase
-// {
-//     public BossAttackPattern[] patterns;
-
-//     int patternIndex;
-
-//     public BossAttackPattern GetNextPattern()
-//     {
-//         if (patterns == null || patterns.Length == 0) return null;
-
-//         BossAttackPattern pattern = patterns[patternIndex];
-//         patternIndex = (patternIndex + 1) % patterns.Length;
-//         return pattern;
-//     }
-
-//     public void CancelCurrent()
-//     {
-//         if (patterns == null || patterns.Length == 0) return;
-
-//         int cur = (patternIndex - 1 + patterns.Length) % patterns.Length;
-//         patterns[cur]?.Cancel();
-//     }
-
-//     public void Reset() => patternIndex = 0;
-// }
 public enum BossState
 {
-    IntroAnim//등장 연출
+    Intro,//등장 연출
+    Beviouring,//행동
+    Waiting// 공격 대기 + 휴식
 }

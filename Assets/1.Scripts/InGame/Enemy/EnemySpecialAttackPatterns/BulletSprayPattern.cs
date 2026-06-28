@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using Cysharp.Threading.Tasks;
 
 // 투사체 난사 패턴
 // 원형 + 랜덤 spread 발사
@@ -15,13 +16,14 @@ public class BulletSprayPattern : EnemySpecialAttackPattern
 
     Coroutine coroutine;
 
-    public override void Execute(Enemy enemy, Action onEnd)
+    public async override UniTask Execute(IEnemySpecialAttackPattern enemy, Action onEnd)
     {
-        float damage = enemy.enemyData.GetAttackPower();
+        await base.Execute(enemy, onEnd);
+        float damage = enemy.Transform.GetComponent<Enemy>().enemyData.GetAttackPower();
         coroutine = StartCoroutine(DoBurst(enemy, count, damage, onEnd));
     }
 
-    IEnumerator DoBurst(Enemy enemy, int count, float damage, Action onEnd)
+    IEnumerator DoBurst(IEnemySpecialAttackPattern enemy, int count, float damage, Action onEnd)
     {
         float angleStep = 360f / count;
 
@@ -33,7 +35,7 @@ public class BulletSprayPattern : EnemySpecialAttackPattern
             // 속도 랜덤 - EnemyBullet의 moveSpeed는 내부 값이므로 direction 스케일로 대신 표현
             // (BulletBase.Move가 direction * moveSpeed 이므로 dir 크기는 의미 없음)
             var bullet = EnemyBullet.Instantiate();
-            bullet.transform.position = enemy.transform.position;
+            bullet.transform.position = enemy.Transform.position;
             bullet.Shoot(dir, damage);
 
             yield return new WaitForSeconds(burstInterval);

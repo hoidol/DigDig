@@ -5,27 +5,24 @@ using System.Threading;
 using DG.Tweening;
 using UnityEngine;
 
-public class EliteEnemy : NormalEnemy
+public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
 {
-    [SerializeField] AttackPatternInfo attackPatternInfo;
+    [SerializeField] EnemySpecialAttackPattern enemySpecialAttackPattern;
     CancellationTokenSource cts;
-    protected override void StartAttack()
+    public override void StartAttack()
     {
         base.StartAttack();
 
         cts = new CancellationTokenSource();
         ProcessAttack(cts.Token).Forget();
     }
-    async UniTaskVoid ProcessAttack(CancellationToken ct)
+    async UniTask ProcessAttack(CancellationToken ct)
     {
-        animator.Play(attackPatternInfo.readyAnimName);
-        await UniTask.WaitForSeconds(attackPatternInfo.readyTime, cancellationToken: ct);
-        
-        attackPatternInfo.attackPattern.Execute(this, () =>
+        await enemySpecialAttackPattern.Execute(this, () =>
         {
-            
+
         });
-        await UniTask.WaitForSeconds(attackPatternInfo.attackPattern.duration, cancellationToken: ct);
+        await UniTask.WaitForSeconds(enemySpecialAttackPattern.duration, cancellationToken: ct);
         EndAttack();
     }
 
@@ -60,13 +57,24 @@ public class EliteEnemy : NormalEnemy
         //현재 위치에 있는 모든 적들을 제거
         for (int i = 0; i < enemies.Count; i++)
         {
-            enemies[i].OnDead();
+            enemies[i].OnDestroy();
         }
     }
 
-    public override void OnDead()
+    public override void OnDestroy()
     {
-        base.OnDead();
+        base.OnDestroy();
         BlessingStone.Instantiate(transform.position);
+    }
+
+    public float PlayAnim(string animName)
+    {
+        if (animator == null)
+            return 0f;
+
+        animator.Play(animName, -1, 0);
+        float duration = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
+        return duration;
+
     }
 }

@@ -37,10 +37,28 @@ public class EventManager : MonoSingleton<EventManager>
     {
         GameEventBus.Subscribe<PhaseEndEvent>(OnPhaseEndEvent);
         GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
+        GameEventBus.Subscribe<BossSpawnEvent>(OnBossSpawnEvent);
+        GameEventBus.Subscribe<EliteSpawnEvent>(OnEliteSpawnEvent);
+        GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
 
 
     }
-
+    Enemy bossOrElite;
+    void OnBossSpawnEvent(BossSpawnEvent e)
+    {
+        bossOrElite = e.boss;
+    }
+    void OnEliteSpawnEvent(EliteSpawnEvent e)
+    {
+        bossOrElite = e.eliteEnemy;
+    }
+    void OnEnemyDeadEvent(EnemyDeadEvent e)
+    {
+        if (e.enemy == bossOrElite)
+        {
+            bossOrElite = null;
+        }
+    }
     private void OnDestroy()
     {
         GameEventBus.Unsubscribe<PhaseEndEvent>(OnPhaseEndEvent);
@@ -49,8 +67,8 @@ public class EventManager : MonoSingleton<EventManager>
     List<EventRepeatSpawner> eventRepeatSpawners = new();
     private void OnStartGameEvent(StartGameEvent e)
     {
-        spawnCount=0;
-        
+        spawnCount = 0;
+
         EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, Random.Range(0, 1), 2, 5);
         eventRepeatSpawners.Add(itemBoxSpawner);
 
@@ -148,6 +166,11 @@ public class EventManager : MonoSingleton<EventManager>
             return null;
         }
 
+        //보스나 엘리트 상황에서 생성안됨
+        if (bossOrElite != null)
+            return null;
+
+
         EventObject eventObject = Instantiate(prefab, pos, Quaternion.identity);
         activeEventObjects.Add(eventObject);
         eventObject.Appear(pos);
@@ -244,15 +267,11 @@ public class EventRepeatSpawner
         {
             Spawn();
         }
-
-
-
-
-
     }
     public void Spawn()
     {
-        Debug.Log($"EventRepeatSpawner Spawn() {eventType}");
+        // Debug.Log($"EventRepeatSpawner Spawn() {eventType}");
         eventObject = EventManager.Instance.Spawn(eventType);
+        repeatTimer = repeatTime;
     }
 }

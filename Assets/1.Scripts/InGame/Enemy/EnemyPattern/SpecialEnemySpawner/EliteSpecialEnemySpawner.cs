@@ -14,11 +14,12 @@ public class EliteSpecialEnemySpawner : SpecialEnemySpawner
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
     }
-   
+
     public override void Spawn()
     {
-        Vector2Int center = MapManager.PositionToTileIndex(Player.Instance.transform.position); 
-        unbreakableStones = MapManager.Instance.MakeUnbreakableStone(center,60,40);
+        Vector2Int center = MapManager.PositionToTileIndex(Player.Instance.transform.position);
+
+        unbreakableStones = MapManager.Instance.MakeUnbreakableStone(center, 20, 10);
 
 
         Enemy eliteEnemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Elite);
@@ -33,11 +34,12 @@ public class EliteSpecialEnemySpawner : SpecialEnemySpawner
 
         eliteEnemy = EnemyManager.Instance.Instantiate(eliteEnemyPrefab) as EliteEnemy;
         eliteEnemy?.Spawn(spawnTileArray);
+        GameEventBus.Publish(new EliteSpawnEvent(eliteEnemy));
     }
 
-     void OnEnemyDeadEvent(EnemyDeadEvent e)
+    void OnEnemyDeadEvent(EnemyDeadEvent e)
     {
-        if(e.enemy == eliteEnemy)
+        if (e.enemy == eliteEnemy)
         {
             EndSpawn();
         }
@@ -47,9 +49,18 @@ public class EliteSpecialEnemySpawner : SpecialEnemySpawner
 
     public override void EndSpawn()
     {
-        for(int i = 0; i < unbreakableStones.Count; i++)
+        for (int i = 0; i < unbreakableStones.Count; i++)
         {
-            unbreakableStones[i].Destroyed(false);
+            unbreakableStones[i].OnDestroy();
         }
+    }
+}
+
+public class EliteSpawnEvent
+{
+    public EliteEnemy eliteEnemy;
+    public EliteSpawnEvent(EliteEnemy eliteEnemy)
+    {
+        this.eliteEnemy = eliteEnemy;
     }
 }

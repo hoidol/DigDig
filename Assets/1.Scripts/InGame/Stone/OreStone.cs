@@ -21,22 +21,14 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
     static OreStone oreStonePrefab;
     public static OreStone Get(Vector3 pos, Transform parent)
     {
-        if(oreStonePrefab == null)
-                oreStonePrefab =Resources.Load<OreStone>("Stone/OreStone");
+        if (oreStonePrefab == null)
+            oreStonePrefab = Resources.Load<OreStone>("Stone/OreStone");
         OreStone ore = pool.Count > 0 ? pool.Pop() : Instantiate(oreStonePrefab, parent);
         ore.transform.position = pos;
         ore.gameObject.SetActive(true);
         return ore;
     }
 
-    public virtual void Return()
-    {
-        if (!gameObject.activeSelf) return;
-        hpUI?.Release();
-        hpUI = null;
-        gameObject.SetActive(false);
-        pool.Push(this);
-    }
 
     public Transform hpPoint;
     HpUI hpUI = null;
@@ -50,7 +42,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
     // public Vector2Int gridPos;
     // public GameObject gold;
     // bool isGoldStone;
-    public void Init(int level, Color color, Vector2Int[,] idxArr)//, Vector2Int gridPos
+    public virtual void Init(int level, Color color, Vector2Int[,] idxArr)//, Vector2Int gridPos
     {
         this.level = level;
 
@@ -69,10 +61,8 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 
         curHp = maxHp;
         hpUI = null;
+
         GetComponentInChildren<SpriteRenderer>().color = color;
-
-        // isGoldStone = Random.Range(0, 3) == 0;
-
     }
 
     DamageData lastDamage;
@@ -95,29 +85,27 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
 
         if (curHp <= 0)
         {
-            Destroyed(true);
+            Reward();
+            OnDestroy();
         }
     }
 
-    int exp => 3 + level * 2;
+    int exp => 2 + (int)(level * 1.5f);
 
 
-
-    public virtual void Destroyed(bool reward)
+    public void Reward()
     {
-
-        if (reward)
-        {
-            Exp.Instantiate(transform.position, exp, 1);
-            EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
-            GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
-        }
-        ReleaseTile();
-
-        
+        Exp.Instantiate(transform.position, exp, 1);
     }
 
-    public  virtual bool CanHit()
+    public virtual void OnDestroy()
+    {
+        EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
+        GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
+        ReleaseTile();
+    }
+
+    public virtual bool CanHit()
     {
         return curHp > 0;
     }
@@ -126,14 +114,20 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
     public virtual void RegisterTile(Vector2Int[,] idxArr)
     {
         tileIndexArr = idxArr;
+        MapManager.RegisterTile(tileIndexArr, this);
     }
 
     public virtual void ReleaseTile()
     {
         MapManager.ReleaseTile(tileIndexArr);
-        Return();
 
+        if (!gameObject.activeSelf) return;
+        hpUI?.Release();
+        hpUI = null;
+        gameObject.SetActive(false);
+        pool.Push(this);
     }
+
     StatusEffectHandler statusEffectHandler;
     public virtual void ApplyStatusEffect(StatusEffect effect)
     {

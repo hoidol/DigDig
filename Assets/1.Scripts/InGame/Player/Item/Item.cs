@@ -5,7 +5,7 @@ public abstract class Item : MonoBehaviour, IReinforce
 {
     public string key;
     public bool equipped;
-public ReinforceType ReinforceType => ReinforceType.Item;
+    public ReinforceType ReinforceType => ReinforceType.Item;
     public virtual string GetDescription(int lv = 1, bool detail = false)
     {
         if (itemData == null)
@@ -36,6 +36,6 @@ public ReinforceType ReinforceType => ReinforceType.Item;
 
     public int GetLevel()
     {
-        return Player.Instance.statMgr.itemStatDic[key].lv;
+        return Player.Instance.statMgr.GetPlayerItemStat(key).lv;
     }
 }

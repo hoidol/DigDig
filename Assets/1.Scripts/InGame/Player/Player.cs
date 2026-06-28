@@ -71,13 +71,15 @@ public class Player : MonoSingleton<Player>, IPicker
 
 
         tileCheckers = GetComponentsInChildren<TileChecker>();
-        statMgr = new PlayerStatManager(this, key);
+
 
     }
 
 
     void Start()
     {
+        statMgr = new PlayerStatManager(this, key);
+
         var statusEffectHandler = GetComponentInChildren<StatusEffectHandler>();
         health.Init(this, hpPoint, statusEffectHandler);
         movement.Init(this, rg, animator, bodyRootTr, moveJoystick);
@@ -210,6 +212,12 @@ public class Player : MonoSingleton<Player>, IPicker
 
 
 
+    public void AddItem(string key)
+    {
+        statMgr.AddItem(key);
+        itemInventory.AddItem(key);
+        UpdatePlayer();
+    }
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
     public void AddHp(float hp) => health.AddHp(hp);
 
@@ -228,7 +236,7 @@ public class PlayerStatManager
     [SerializeField] List<PlayerStat> statList = new();
     public Dictionary<StatType, PlayerStat> statDic = new Dictionary<StatType, PlayerStat>();
     public Dictionary<string, PlayerBulletStat> bulletStatDic = new Dictionary<string, PlayerBulletStat>();
-    public Dictionary<string, PlayerItemStat> itemStatDic = new Dictionary<string, PlayerItemStat>();
+    [SerializeField] Dictionary<string, PlayerItemStat> itemStatDic = new Dictionary<string, PlayerItemStat>();
     public List<Buff> activeBuffs = new List<Buff>();
 
     public float MaxHp => statDic[StatType.MaxHp].value;
@@ -290,11 +298,7 @@ StatType.AmmoDuration //총알 지속시간
             StatType statType = usingStatTypes[i];
             statDic[statType].value = playerData.GetPlayerStat(statType).value;
         }
-
-
-
     }
-
     public void UpdateStat()
     {
         Reset();
@@ -323,11 +327,7 @@ StatType.AmmoDuration //총알 지속시간
             return playerStatType;
         return StatType.Count;
     }
-    public void LevelUpBullet(string key)
-    {
-        bulletStatDic[key].lv++;
-    }
-    public void LevelUpItem(string key)
+    public void AddItem(string key)
     {
         if (!itemStatDic.ContainsKey(key))
         {
@@ -337,7 +337,18 @@ StatType.AmmoDuration //총알 지속시간
                 lv = 1
             });
         }
+    }
+    public void LevelUpBullet(string key)
+    {
         bulletStatDic[key].lv++;
+    }
+    public PlayerItemStat GetPlayerItemStat(string key)
+    {
+        return itemStatDic[key];
+    }
+    public void LevelUpItem(string key)
+    {
+        itemStatDic[key].lv++;
     }
 }
 

@@ -8,12 +8,12 @@ public class ItemBox : EventObject
     {
         if (collision.CompareTag("Player"))
         {
-            interacting= true;
+            interacting = true;
             Time.timeScale = 0;
             SelectItemCanvas.Instance.OpenCanvas(() =>
             {
                 Time.timeScale = 1;
-                Destroy();
+                OnDestroy();
             });
         }
     }

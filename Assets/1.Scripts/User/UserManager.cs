@@ -5,7 +5,7 @@ using System.Linq;
 public class UserManager : MonoSingleton<UserManager>
 {
     public const string UserDataFileName = "UserData";
-    public static string STAGE_KEY = "Greed";
+    public static string STAGE_KEY = GameSetting.FIRST_STAGE_KEY;// "Gateway1";
     public static int STAGE_LEVEL = 0;
     [field: SerializeField]
     public UserData userData
@@ -23,14 +23,14 @@ public class UserManager : MonoSingleton<UserManager>
         {
             userData = new UserData();
         }
-
-        userBulletManager= new UserBulletManager();
+        Debug.Log("UserManager Awake()");
+        userBulletManager = new UserBulletManager();
         userStageManager = new UserStageManager();
-        
+
 
         userBulletManager.LoadData();
         userStageManager.LoadData();
-        
+
     }
 }
 

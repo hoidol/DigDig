@@ -6,12 +6,12 @@ using System.IO;
 using UnityEditor;
 #endif
 
-[CreateAssetMenu(fileName ="StageData", menuName ="StageData")]
+[CreateAssetMenu(fileName = "StageData", menuName = "StageData")]
 public class StageData : ScriptableObject
 {
     public EnemySpawnerContainer enemySpawnerContainerPrefab;
-    
-    public BossSpawner bossSpawner;
+
+    // public BossSpawner bossSpawner;
     public string key;
     public int order;
     public string Title => key;
@@ -44,9 +44,9 @@ public class StageData : ScriptableObject
 
     public static StageData GetStageData(string key)
     {
-        if(StageManager.Instance != null)
+        if (StageManager.Instance != null)
         {
-            return  StageManager.Instance.GetStageData(key);
+            return StageManager.Instance.GetStageData(key);
         }
         return Resources.Load<StageData>($"StageData/{key}");
     }

@@ -1,44 +1,46 @@
 using UnityEngine;
 using System;
+using Cysharp.Threading.Tasks;
 
 // 크게 휘두르기 패턴
 // 플레이어 방향으로 부채꼴 범위 공격
 // 페이즈가 높을수록 범위와 피해 증가
+// 가까워졌을때 발동되야 재밌는데.. 
 public class SweepPattern : EnemySpecialAttackPattern
 {
-    [SerializeField] AreaIndicator sweepIndicator;
-    [SerializeField] float radius = 3.5f;
-    [SerializeField] float sweepAngle = 120f;           // 부채꼴 각도
+    [SerializeField] SweepWarningIndicator sweepIndicator;
     [SerializeField] float damageMultiplier = 1.5f;
+    [SerializeField] float sweepSize = 5;
     DamageData damageData = new DamageData();
-    public override void Execute(Enemy enemy, Action onEnd)
+    public async override UniTask Execute(IEnemySpecialAttackPattern enemy, Action onEnd)
     {
-        
-        float damage = enemy.enemyData.GetAttackPower() * damageMultiplier;
-        Vector2 aimDir = (Player.Instance.transform.position - enemy.transform.position).normalized;
+        await base.Execute(enemy, onEnd);
+
+        float damage = enemy.Transform.GetComponent<Enemy>().enemyData.GetAttackPower() * damageMultiplier;
+
         damageData.damage = damage;
-        sweepIndicator.PlayIndicator(3, () =>
+        sweepIndicator.gameObject.SetActive(true);
+        sweepIndicator.Play(3, () =>
         {
-            DealDamage(enemy.transform.position, aimDir, radius);
+            DealDamage(sweepIndicator.transform.position, new Vector2(sweepSize, sweepSize));
             onEnd?.Invoke();
         });
     }
 
-    void DealDamage(Vector2 origin, Vector2 aimDir, float radius)
+    void DealDamage(Vector2 origin, Vector2 size)
     {
-        Collider2D[] cols = Physics2D.OverlapCircleAll(origin, radius);
+        Collider2D[] cols = Physics2D.OverlapBoxAll(origin, size, 0);
         foreach (var col in cols)
         {
             if (!col.CompareTag("Player")) continue;
 
-            Vector2 toTarget = ((Vector2)col.transform.position - origin).normalized;
-            if (Vector2.Angle(aimDir, toTarget) <= sweepAngle * 0.5f)
-                Player.Instance.TakeDamage(damageData);
+            Player.Instance.TakeDamage(damageData);
         }
     }
 
     public override void Cancel()
     {
-        sweepIndicator.StopIndicator();
+        sweepIndicator.gameObject.SetActive(false);
+        sweepIndicator.Cancel();
     }
 }

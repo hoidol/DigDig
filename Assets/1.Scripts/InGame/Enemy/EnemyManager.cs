@@ -38,7 +38,6 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
 
         enemy.gameObject.SetActive(true);
-        enemy.Init(data);
         activeEnemies.Add(enemy);
         ActiveEnemyCount++;
         return enemy;

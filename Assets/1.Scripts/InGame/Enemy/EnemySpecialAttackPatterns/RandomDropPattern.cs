@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 
 // 낙하 공격 패턴
 // 플레이어 주변 랜덤 위치에 경고 표시 → 일정 시간 후 충격
@@ -19,9 +20,10 @@ public class RandomDropPattern : EnemySpecialAttackPattern
     Coroutine coroutine;
     readonly List<DropWarning> activeWarnings = new();
 
-    public override void Execute(Enemy boss, Action onEnd)
+    public async override UniTask Execute(IEnemySpecialAttackPattern enemy, Action onEnd)
     {
-        float baseDamage = boss.enemyData.GetAttackPower() * 0.8f;
+        await base.Execute(enemy, onEnd);
+        float baseDamage = enemy.Transform.GetComponent<Enemy>().enemyData.GetAttackPower() * 0.8f;
         coroutine = StartCoroutine(DoDrops(dropCount, baseDamage, onEnd));
     }
 

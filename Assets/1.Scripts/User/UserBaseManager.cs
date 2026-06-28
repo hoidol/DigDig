@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-
+[System.Serializable]
 public abstract class UserBaseManager
 {
     public abstract void LoadData();

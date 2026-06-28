@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+[System.Serializable]
 public class UserMemoryFragmentManager : UserBaseManager
 {
     public const string UserDataFileName = "UserMemoryFragmentData";
-    
+
     [field: SerializeField]
     public UserMemoryFragmentData userMemoryFragmentData
     {
@@ -19,7 +19,7 @@ public class UserMemoryFragmentManager : UserBaseManager
         {
             userMemoryFragmentData = new UserMemoryFragmentData();
             userMemoryFragmentData.userMemoryFragmentGroups = new UserMemoryFragmentGroup[4];
-            for(int i = 0; i < userMemoryFragmentData.userMemoryFragmentGroups.Length; i++)
+            for (int i = 0; i < userMemoryFragmentData.userMemoryFragmentGroups.Length; i++)
             {
                 userMemoryFragmentData.userMemoryFragmentGroups[i] = new UserMemoryFragmentGroup();
                 userMemoryFragmentData.userMemoryFragmentGroups[i].groupLevel = i;
@@ -36,7 +36,7 @@ public class UserMemoryFragmentManager : UserBaseManager
     {
         UserMemoryFragment userMemoryFragment = GetUserMemoryFragment(key);
         MemoryFragmentAbilityData abilityData = MemoryFragmentManager.Instance.GetMemoryFragmentAbilityData(key);
-        UserMemoryFragmentGroup group =  GetUserMemoryFragmentGroup(abilityData.level);
+        UserMemoryFragmentGroup group = GetUserMemoryFragmentGroup(abilityData.level);
         group.point++;
         userMemoryFragment.point++;
 
@@ -46,7 +46,7 @@ public class UserMemoryFragmentManager : UserBaseManager
     UserMemoryFragment GetUserMemoryFragment(string key)
     {
         UserMemoryFragment uMF = userMemoryFragmentData.userMemoryFragments.Where(e => e.key == key).FirstOrDefault();
-        if(uMF == null)
+        if (uMF == null)
         {
             uMF = new UserMemoryFragment();
             uMF.key = key;
@@ -57,7 +57,7 @@ public class UserMemoryFragmentManager : UserBaseManager
 
     UserMemoryFragmentGroup GetUserMemoryFragmentGroup(int lv)
     {
-        return userMemoryFragmentData.userMemoryFragmentGroups.Where(e=>e.groupLevel ==lv).FirstOrDefault();
+        return userMemoryFragmentData.userMemoryFragmentGroups.Where(e => e.groupLevel == lv).FirstOrDefault();
     }
 }
 public class UserMemoryFragmentData
@@ -70,7 +70,7 @@ public class UserMemoryFragmentData
 public class UserMemoryFragmentGroup
 {
     public int groupLevel;
-    public int point;    
+    public int point;
 }
 
 public class UserMemoryFragment

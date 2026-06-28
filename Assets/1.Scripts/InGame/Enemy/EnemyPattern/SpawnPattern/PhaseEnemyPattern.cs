@@ -19,9 +19,9 @@ public class PhaseEnemyPattern : SpawnPattern
 
     void OnPhaseStartEvent(PhaseStartEvent e)
     {
-         EndPattern();
+        EndPattern();
         Debug.Log("EnemyPattern StartPattern");
-        
+
         this.enemyPatternData = GameManager.Instance.stageData.phaseDatas[e.phaseIdx].enemyPatternData;
         cts = new CancellationTokenSource();
         foreach (var spawnData in enemyPatternData.enemySpawnPatternDatas)
@@ -35,7 +35,7 @@ public class PhaseEnemyPattern : SpawnPattern
         {
             float wait = Random.Range(spawnData.intervalRange.x, spawnData.intervalRange.y);
             await UniTask.Delay(TimeSpan.FromSeconds(wait), cancellationToken: token);
-            
+
             int count = Random.Range(spawnData.countRange.x, spawnData.countRange.y);
             for (int i = 0; i < count; i++)
             {
@@ -47,7 +47,6 @@ public class PhaseEnemyPattern : SpawnPattern
 
     public void Spawn(EnemyType type)
     {
-        //Debug.Log($"EnemyPattern Spawn 적 생성하기 {type}");
         EnemyData enemyData = EnemyManager.GetEnemyData(type);
         var sorted = Player.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
         var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
@@ -65,10 +64,8 @@ public class PhaseEnemyPattern : SpawnPattern
         bool canSpawn = true;
         if (bestChecker.tile != null && Random.Range(0f, 100f) < 70)
         {
-            Debug.Log($"best Checker 생성 시도 {bestChecker.name}");
 
             Vector2Int startTileArr = MapManager.PositionToTileIndex(bestChecker.tile.Transform.position);
-            Debug.Log($"bestChecker.tile.Transform.position {bestChecker.tile.Transform.position} startTileArr {startTileArr}");
             if (!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
             {
                 if (!FindEmptyInDir(startTileArr, enemyData.size, dir, 4, out spawnTileArray))

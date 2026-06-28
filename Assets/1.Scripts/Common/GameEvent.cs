@@ -19,7 +19,7 @@ public class PlayerDamagedEvent
 
 public class ChangedMemoryFragmentEvent
 {
-    
+
     public int curValue; //현재량
     public int changeValue; //변화량
     public ChangedMemoryFragmentEvent(int cV, int chV)
@@ -49,12 +49,6 @@ public class ReloadStartEvent
 }
 
 public class ReloadEndEvent { }
-
-public class BossSpawnEvent
-{
-    public Boss boss;
-    public BossSpawnEvent(Boss boss) { this.boss = boss; }
-}
 
 public class BossPhaseChangedEvent
 {
