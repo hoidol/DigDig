@@ -84,9 +84,13 @@ public abstract class BulletObject : MonoBehaviour
         forces.Add(b);
 
     }
+    public void RemoveBulletForce(IBulletForce b)
+    {
+        forces.Remove(b);
+    }
     public void ClearBulletForce() => forces.Clear();
 
-    public abstract void Hit(RaycastHit2D hit2D);
+    public abstract IHittable Hit(RaycastHit2D hit2D);
     public virtual void Release()
     {
         gameObject.SetActive(false);

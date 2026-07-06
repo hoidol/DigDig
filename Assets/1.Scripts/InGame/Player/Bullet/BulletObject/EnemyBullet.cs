@@ -21,9 +21,9 @@ public class EnemyBullet : BulletObject
             return Instantiate(prefab);
         }
     }
-    public override void Hit(RaycastHit2D hit2D)
+    public override IHittable Hit(RaycastHit2D hit2D)
     {
-
+        return null;
     }
 
     public override void Release()

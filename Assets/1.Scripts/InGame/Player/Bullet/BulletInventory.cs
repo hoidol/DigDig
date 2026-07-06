@@ -37,16 +37,6 @@ public class BulletInventory : MonoBehaviour
 
     }
 
-    // List<string> bulletSkillKeys = new List<string>();
-    // public List<string> GetBulletKeys()
-    // {
-    //     bulletSkillKeys.Clear();
-    //     for (int i = 0; i < Player.Instance.weapon.bulletInventory.curBullets.Count; i++)
-    //     {
-    //         bulletSkillKeys.Add(Player.Instance.weapon.bulletInventory.curBullets[i]);
-    //     }
-    //     return bulletSkillKeys;
-    // }
     public int GetMaxBulletCount()
     {
         return curBullets.Count;
@@ -71,42 +61,10 @@ public class BulletInventory : MonoBehaviour
 
     public void ReleaseBullet(string key)
     {
-
         curBullets.Remove(key);
-
         RefreshCache(); // RefreshCache 포함
     }
 
-
-
-    // public Bullet GetBullet(int bulletIdx)
-    // {
-    //     return curBullets[bulletIdx];
-    // }
-
-    public void CheckMerge()
-    {
-        // canMergeBulletDatas.Clear();
-        MergeBulletData[] mergeBulletDatas = BulletManager.Instance.mergeBulletDatas;
-
-        // var mergeableBulletKeys = new HashSet<string>(
-        //     curBullets.Where(bKey => BulletManager.bullets[bKey].CanMerge()).Select(bulletSkill => bulletSkill.key)
-        // );
-
-        // var ownedSkillKeys = new HashSet<string>(
-        //     Player.Instance.abilityInventory.equippedAbilitys.Select(s => s.key)
-        // );
-
-        // foreach (var m in mergeBulletDatas)
-        // {
-        //     bool bulletSkillsOk = m.resourceBulletKeys.All(k => mergeableBulletKeys.Contains(k));
-        //     bool abilityOk = m.resourceAbilityKeys == null || m.resourceAbilityKeys.All(k => ownedSkillKeys.Contains(k));
-        //     if (bulletSkillsOk && abilityOk)
-        //         canMergeBulletDatas.Add(m);
-        // }
-
-        // GameEventBus.Publish(new UpdaterMergeRecommendBulletEvent(canMergeBulletDatas));
-    }
 
     public List<MergeBulletData> GetCanMergeBulletData()
     {

@@ -30,14 +30,14 @@ public class PlayerBulletObject : BulletObject
         Move();
         CheckHit();
     }
-    public override void Hit(RaycastHit2D hit2D)
+    public override IHittable Hit(RaycastHit2D hit2D)
     {
         IHittable hit = hit2D.collider.GetComponent<IHittable>();
         if (hit == null)
-            return;
+            return null;
 
         if (preTarget == hit)
-            return;
+            return null;
 
 
         preTarget = hit;
@@ -55,21 +55,21 @@ public class PlayerBulletObject : BulletObject
 
         damageData.Calculate(finalDamage);
         damageData.hit2D = hit2D;
-
-        hit.TakeDamage(damageData);
+        hit.TakeDamage(damageData);    
+        
         bool shouldRelease = true;
         foreach (var b in behaviors)
         {
             shouldRelease = b.OnHit(this, hit, hit2D, direction); //입사 벡터, 법선 벡터, 전달 필요 
             if (!shouldRelease)
-                return;
+                break;
         }
 
         if (shouldRelease) Release();
+        return hit;
     }
     public override void Release()
     {
-        // Debug.Log("PlayerBulletObject Release()");
         gameObject.SetActive(false);
         BulletManager.Instance.ReturnPlayerBulletObject(key, this);
     }

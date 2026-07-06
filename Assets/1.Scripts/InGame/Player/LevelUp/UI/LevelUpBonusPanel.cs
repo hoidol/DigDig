@@ -37,13 +37,6 @@ public class LevelUpBonusPanel : MonoBehaviour
                 Player.Instance.weapon.ReleaseBullet("Normal");
                 Player.Instance.weapon.AddBullet(pickedBulletData.key);
                 break;
-            case LevelUpBonusType.MergeBullet:
-                Time.timeScale = 0;
-                MergeBulletCanvas.Instance.OpenCanvas(() =>
-                {
-                    Time.timeScale = 1;
-                });
-                break;
         }
 
 
@@ -54,5 +47,5 @@ public enum LevelUpBonusType
     AddNormalBullet,
     AddBounce,
     AddSpecialBullet,
-    MergeBullet
+    // MergeBullet
 }

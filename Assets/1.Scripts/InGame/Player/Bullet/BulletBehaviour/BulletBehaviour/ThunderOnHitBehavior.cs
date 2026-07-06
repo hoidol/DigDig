@@ -19,7 +19,6 @@ public class ThunderOnHitBehavior : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        //Vector2 target = (Vector2)bullet.transform.position + Random.insideUnitCircle * searchRadius;
         Collider2D[] targets = FindTarget(hit2D.point, bullet.hitLayerMask);
         float damage = Player.Instance.statMgr.AttackPower * damageRate;
         DamageData damageData = new DamageData();
@@ -29,23 +28,19 @@ public class ThunderOnHitBehavior : IBulletBehavior
             EffectManager.Instance.Play(EffectType.Spark, targets[i].transform.position);    
             targets[i].GetComponent<IHittable>().TakeDamage(damageData);
         }
-
-        
-        // AOEUtil.DamageEnemies(target, strikeRadius, damage, bullet.hitLayerMask);
-        
         return true;
     }
 
 
     Collider2D[] FindTarget(Vector2 pos, LayerMask layer)
-    {   
+    {
         Collider2D[] cols = Physics2D.OverlapCircleAll(pos, searchRadius, layer);
-
-        // Enemy nearestEnemy = null;
-        // OreStone nearestOre = null;
-        // float enemyDistSq = float.MaxValue;
-        // float oreDistSq = float.MaxValue;
-        return cols.OrderBy(i => Random.value).Take(strikeCount).ToArray();
+        // 피뢰침 표식(LightningRodMark)이 있는 적 우선 타격
+        return cols
+            .OrderByDescending(c => c.GetComponent<LightningRodMark>() != null ? 1 : 0)
+            .ThenBy(_ => Random.value)
+            .Take(strikeCount)
+            .ToArray();
     }
 
 }

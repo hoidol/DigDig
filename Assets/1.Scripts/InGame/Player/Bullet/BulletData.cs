@@ -22,7 +22,9 @@ public class BulletData : ScriptableObject,IReinforceData
     public Grade grade;      // 등급별 필터링용
     public ConditionData[] addEffectUnlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
     public int applyOrder; // 아이템 적용 순서
-    public string[] mergeKeys; // 해당 총알과 머지가 가능한 총알키 
+    public string[] canMergeBulletKeys; // 해당 총알과 머지가 가능한 총알키 
+    public string[] mergeBulletKeys; // 상위 총알들
+    
     // public float multiplyATK; // 공격력 배율 (예: 1.2f는 20% 증가)
     public PlayerBulletObject prefab;
 
@@ -76,7 +78,7 @@ public class BulletData : ScriptableObject,IReinforceData
             // if (float.TryParse(Col(cols, iMultiplyATK), NumberStyles.Float, CultureInfo.InvariantCulture, out float atk)) multiplyATK = atk;
 
             string mergeRaw = Col(cols, iMergeKeys);
-            mergeKeys = string.IsNullOrEmpty(mergeRaw) ? new string[0] : mergeRaw.Split('/');
+            canMergeBulletKeys = string.IsNullOrEmpty(mergeRaw) ? new string[0] : mergeRaw.Split('/');
 
             string condTypesRaw = Col(cols, iCondTypes);
             string condValuesRaw = Col(cols, iCondValues);

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class Item : MonoBehaviour, IReinforce
 {
+    public string Key => key;
     public string key;
     public bool equipped;
     public ReinforceType ReinforceType => ReinforceType.Item;
@@ -37,5 +38,9 @@ public abstract class Item : MonoBehaviour, IReinforce
     public int GetLevel()
     {
         return Player.Instance.statMgr.GetPlayerItemStat(key).lv;
+    }
+    public bool IsMaxLevel()
+    {
+        return Player.Instance.statMgr.GetPlayerItemStat(key).lv == ItemData.MAX_LEVEL;
     }
 }
