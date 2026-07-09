@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public abstract class Bullet : IBullet, IReinforce
 {
+    public string Key => key;
     public string key;
     public BulletData bulletData => BulletManager.Instance.GetBulletData(key);
 
@@ -26,5 +27,10 @@ public abstract class Bullet : IBullet, IReinforce
     public int GetLevel()
     {
         return Player.Instance.statMgr.bulletStatDic[key].lv;
+    }
+
+    public bool IsMaxLevel()
+    {
+        return Player.Instance.statMgr.bulletStatDic[key].lv == BulletData.MAX_LEVEL;
     }
 }

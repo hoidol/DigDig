@@ -28,17 +28,18 @@ public class MiniNormalBulletObject : PlayerBulletObject
         return Instantiate(prefab);
     }
 
-    public override void Hit(RaycastHit2D hit2D)
+    public override IHittable Hit(RaycastHit2D hit2D)
     {
         IHittable hit = hit2D.collider.GetComponent<IHittable>();
-        if (hit == null) return;
-        if (preTarget == hit) return;
+        if (hit == null) return null;
+        if (preTarget == hit) return null;
 
         preTarget = hit;
         damageData.Init(this);
         damageData.damage = damage;
         hit.TakeDamage(damageData);
         Release();
+        return hit;
     }
 
     public override void Release()

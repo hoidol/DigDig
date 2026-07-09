@@ -22,8 +22,14 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     public void UpdateCanvas()
     {
         List<ItemData> items = ItemManager.Instance.GetDrawItems(3);
-        for (int i = 0; i < selectItemPanels.Length; i++)
+        for(int i = 0; i < selectItemPanels.Length; i++)
         {
+            selectItemPanels[i].gameObject.SetActive(false);
+        }
+        
+        for (int i = 0; i < items.Count; i++)
+        {
+            selectItemPanels[i].gameObject.SetActive(true);
             selectItemPanels[i].SetItemData(items[i]);
         }
     }

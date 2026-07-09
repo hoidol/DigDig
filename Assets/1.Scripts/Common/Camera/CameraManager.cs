@@ -5,9 +5,14 @@ using UnityEngine;
 public class CameraManager : MonoSingleton<CameraManager>
 {
     [SerializeField] private CinemachineCamera cinemachineCamera;
+    public Camera mainCamera;
 
     private CinemachineBasicMultiChannelPerlin perlin;
     private float shakeTimer;
+    void Awake()
+    {
+        mainCamera= Camera.main;
+    }
 
     private void Start()
     {

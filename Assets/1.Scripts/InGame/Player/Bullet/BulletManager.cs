@@ -7,7 +7,6 @@ public class BulletManager : MonoSingleton<BulletManager>
 {
     public Dictionary<string, BulletData> bulletDataDic;
     public BulletData[] bulletDatas;
-    //public List<BulletData> mergedBulletData = new List<BulletData>();
     public MergeBulletData[] mergeBulletDatas;
 
     public static Dictionary<string, Bullet> bullets;
@@ -62,6 +61,7 @@ public class BulletManager : MonoSingleton<BulletManager>
 
         bullets = new()
         {
+             //Level1 ------------------------
             { "Normal",    new NormalBullet() },
             { "Pierce",   new PierceBullet() },
             { "Condense", new CondenseBullet() },
@@ -71,8 +71,15 @@ public class BulletManager : MonoSingleton<BulletManager>
             { "Orbit",     new OrbitBullet() },
             { "Thunder",  new ThunderBullet() },
             { "Vampire",  new VampireBullet() },
-            { "Split",   new SplitBullet() },
-            { "Scatter",   new ScatterBullet() },
+            { "Split",        new SplitBullet() },
+            { "Scatter",      new ScatterBullet() },
+            { "CuttingRay",   new CuttingRayBullet() },
+            { "Titan",        new TitanBullet() },
+            { "SteelSphere",  new SteelSphereBullet() },
+            { "LightningRod", new LightningRodBullet() },
+            { "LavaShell",    new LavaShellBullet() },
+
+            //------------------------
         };
     }
 
@@ -106,8 +113,8 @@ public class BulletManager : MonoSingleton<BulletManager>
             foreach (var bulletKey in Player.Instance.weapon.bulletInventory.curBullets)
             {
                 Bullet bullet = bullets[bulletKey];
-                if (bullet.bulletData == null || bullet.bulletData.mergeKeys == null) continue;
-                foreach (var key in bullet.bulletData.mergeKeys)
+                if (bullet.bulletData == null || bullet.bulletData.canMergeBulletKeys == null) continue;
+                foreach (var key in bullet.bulletData.canMergeBulletKeys)
                     ownedMergeIngredientKeys.Add(key);
             }
         }
@@ -189,18 +196,12 @@ public class BulletManager : MonoSingleton<BulletManager>
         public float chance;
     }
 
-    public void Merge(MergeBulletData mergeBulletData)
-    {
-        Player.Instance.weapon.ReleaseBullet(mergeBulletData.resourceBulletKeys[0]);
-        Player.Instance.weapon.ReleaseBullet(mergeBulletData.resourceBulletKeys[1]);
-
-        Player.Instance.weapon.AddBullet(mergeBulletData.resultBulletKey);
-    }
 
     public BulletData GetBulletData(string key)
     {
         return bulletDataDic[key];
     }
+
 
     public MergeBulletData GetMergeBulletData(string resultKey)
     {

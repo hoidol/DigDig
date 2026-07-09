@@ -70,10 +70,8 @@ public class GameManager : MonoSingleton<GameManager>
         {
             StartBoss();
         }
-        else
-        {
-            WaitPhase(phaseData.time).Forget();
-        }
+
+        WaitPhase(phaseData.time).Forget();
 
 
 

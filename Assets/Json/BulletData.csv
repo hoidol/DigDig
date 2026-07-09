@@ -1,4 +1,4 @@
-key	Name	specialBullet	Level	Desc	multiplyATK	acquireMethod	mergeKeys	conditionTypes	conditionValues	Level	TotalAbilityCount
+key	Name	specialBullet	Level	Desc	multiplyATK	acquireMethod	canMergeBulletKeys	conditionTypes	conditionValues	Level	TotalAbilityCount
 Normal	일반탄	FALSE	0	탄이 튕깁니다.							
 Pierce	관통탄	TRUE	1	탄이 모두 튕긴 후 관통합니다.	1						
 Condense	응축탄	TRUE	1	튕기는 횟수 절반, 감소된 만큼 데미지 증가(튕기는 횟수 10 → 5가됨 5* 50%, 2.5배)	0.5						

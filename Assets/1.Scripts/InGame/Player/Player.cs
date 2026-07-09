@@ -162,6 +162,14 @@ public class Player : MonoSingleton<Player>, IPicker
         UpdatePlayer();
     }
 
+    public void MergeBullet(MergeBulletData mergeBulletData)
+    {
+        weapon.ReleaseBullet(mergeBulletData.resourceBulletKeys[0]);
+        weapon.ReleaseBullet(mergeBulletData.resourceBulletKeys[1]);
+        weapon.AddBullet(mergeBulletData.resultBulletKey);
+        UpdatePlayer();
+    }
+
 
     public void AddBuff(Buff buff)
     {

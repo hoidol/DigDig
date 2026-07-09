@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0eea40994c4643dd85b248e1041599c, type: 3}
+  m_Name: SteelSphere
+  m_EditorClassIdentifier: 
+  key: SteelSphere
+  order: 0
+  itemName: "\uB099\uB8B0"
+  specialBullet: 1
+  mergedBullet: 0
+  desc: "\uC8FC\uBCC0 \uB79C\uB364\uC73C\uB85C \uB099\uB8B0 \uB5A8\uC5B4\uC9D0"
+  thumbnail: {fileID: 21300000, guid: 131d9e2dcc9a14be69966c6efa04869c, type: 3}
+  grade: 0
+  addEffectUnlockConditions: []
+  applyOrder: -1
+  canMergeBulletKeys: []
+  mergeBulletKeys: []
+  prefab: {fileID: 0}

@@ -32,7 +32,9 @@ public class ItemData : ScriptableObject, IReinforceData
     public Item itemPrefab;
     public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
     public int applyOrder; // 아이템 적용 순서
-    // public string[] mergeItemKeys; // 재료가 될 수 있는 상위 아이템
+    
+    
+    
     // public string[] IncludingItems; // 보유 시 보유처리되는 아이템 리스트
     // 실제 효과는 Item 컴포넌트(or Strategy)로 분리
     public bool CheckUnlock()
