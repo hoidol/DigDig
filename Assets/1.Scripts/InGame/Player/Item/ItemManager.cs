@@ -1,26 +1,33 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class ItemManager : MonoSingleton<ItemManager>
 {
     public Dictionary<string, ItemData> itemDataDic = new Dictionary<string, ItemData>();
-    public MergeItemData[] mergeItemDatas;
+    // public MergeItemData[] mergeItemDatas;
     public Dictionary<string, MergeItemData> mergeItemDataDic = new Dictionary<string, MergeItemData>();
     public ItemData[] itemDatas;
-    void Awake()
+    public async UniTask Awake()
     {
-        itemDatas = Resources.LoadAll<ItemData>("ItemData");
-        foreach (ItemData itemData in itemDatas)
+        await AddressableMgr.LoadAllByLabel<ItemData>("ItemData", (dates) =>
         {
-            itemDataDic[itemData.key] = itemData;
-        }
+            itemDatas =dates;
+            foreach (ItemData itemData in itemDatas)
+            {
+                itemDataDic[itemData.key] = itemData;
+            }
 
-        mergeItemDatas = Resources.LoadAll<MergeItemData>("MergeItemData");
-        for (int i = 0; i < mergeItemDatas.Length; i++)
-        {
-            mergeItemDataDic.Add(mergeItemDatas[i].resultItemKey, mergeItemDatas[i]);
-        }
+        });
+        // itemDatas = Resources.LoadAll<ItemData>("ItemData");
+       
+
+        // mergeItemDatas = Resources.LoadAll<MergeItemData>("MergeItemData");
+        // for (int i = 0; i < mergeItemDatas.Length; i++)
+        // {
+        //     mergeItemDataDic.Add(mergeItemDatas[i].resultItemKey, mergeItemDatas[i]);
+        // }
     }
     public MergeItemData GetMergeItemData(string key)
     {
@@ -63,12 +70,12 @@ public class ItemManager : MonoSingleton<ItemManager>
         return itemDataDic[key];
     }
 
-    public MergeItemData GetMergeItemData(params string[] itemKeys)
-    {
-        return mergeItemDatas.FirstOrDefault(d =>
-            itemKeys.All(key => d.resourceItemKeys.Contains(key)) &&
-            d.resourceItemKeys.Length == itemKeys.Length);
-    }
+    // public MergeItemData GetMergeItemData(params string[] itemKeys)
+    // {
+    //     return mergeItemDatas.FirstOrDefault(d =>
+    //         itemKeys.All(key => d.resourceItemKeys.Contains(key)) &&
+    //         d.resourceItemKeys.Length == itemKeys.Length);
+    // }
 
 
 }

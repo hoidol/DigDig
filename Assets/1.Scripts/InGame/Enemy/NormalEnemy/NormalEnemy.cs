@@ -5,8 +5,6 @@ using UnityEngine;
 public class NormalEnemy : Enemy, IHpUI
 {
     public NormalEnemyState state { get; private set; } // 적 상태 - FSM 패턴
-    public float MaxHp => maxHp;
-    public float CurHp => curHp;
     public Vector3 HpUIPosition => hpPoint.position;
 
     protected float attackTimer;
@@ -128,10 +126,6 @@ public class NormalEnemy : Enemy, IHpUI
         if (attackTimer >= enemyData.attackSpeed)
             StartAttack();
     }
-
-
-
-
 
     protected override void OnHpChanged()
     {

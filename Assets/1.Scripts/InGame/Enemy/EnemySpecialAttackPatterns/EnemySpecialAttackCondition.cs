@@ -1,17 +1,17 @@
 using UnityEngine;
 
 [System.Serializable]
-public class EnemySpecialAttackCondition
+public class EnemyAttackCondition
 {
-    public EnemySpecialAttackConditionType conditionType;
+    public EnemyAttackConditionType conditionType;
     public int value;
     public bool CheckCondition(IEnemySpecialAttackPattern enemy)
     {
         switch (conditionType)
         {
-            case EnemySpecialAttackConditionType.NearPlayer:
+            case EnemyAttackConditionType.NearPlayer:
                 return Vector2.Distance(enemy.Transform.position, Player.Instance.transform.position) < value;
-            case EnemySpecialAttackConditionType.None:
+            case EnemyAttackConditionType.None:
                 return true;
             default:
                 return false;
@@ -19,7 +19,7 @@ public class EnemySpecialAttackCondition
     }
 }
 
-public enum EnemySpecialAttackConditionType
+public enum EnemyAttackConditionType
 {
     NearPlayer,
     None,

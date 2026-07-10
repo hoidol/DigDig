@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 
 // 보스 개별 공격 패턴 기본 클래스
 // 각 패턴은 MonoBehaviour로 보스 프리팹의 자식 오브젝트에 붙여서 사용
-public class EnemySpecialAttackPattern : MonoBehaviour
+public class EnemyAttackPattern : MonoBehaviour
 {
     public string key;
     // 패턴 실행 - 끝나면 onEnd 호출
@@ -12,7 +12,7 @@ public class EnemySpecialAttackPattern : MonoBehaviour
     [SerializeField] public float duration;
     [SerializeField] public float readyTime;
     [SerializeField] public string readyAnimName;
-    public EnemySpecialAttackCondition condition;
+    public EnemyAttackCondition condition;
 
     public virtual async UniTask Execute(IEnemySpecialAttackPattern enemy, Action onEnd)
     {

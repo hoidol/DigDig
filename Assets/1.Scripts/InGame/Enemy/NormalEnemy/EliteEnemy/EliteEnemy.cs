@@ -4,10 +4,12 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using DG.Tweening;
 using UnityEngine;
+using System;
 
 public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
 {
-    [SerializeField] EnemySpecialAttackPattern enemySpecialAttackPattern;
+    [SerializeField] float patternCoolTime;
+    [SerializeField] EnemyAttackPattern enemyAttackPattern;
     CancellationTokenSource cts;
     public override void StartAttack()
     {
@@ -18,11 +20,13 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
     }
     async UniTask ProcessAttack(CancellationToken ct)
     {
-        await enemySpecialAttackPattern.Execute(this, () =>
+        await enemyAttackPattern.Execute(this, () =>
         {
 
         });
-        await UniTask.WaitForSeconds(enemySpecialAttackPattern.duration, cancellationToken: ct);
+
+        await UniTask.Delay(TimeSpan.FromSeconds(patternCoolTime));
+        
         EndAttack();
     }
 
@@ -36,6 +40,7 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
     {
         base.Apear();
 
+        //출현했을때 해당 자리에 있는 Enemy 제거
         List<Enemy> enemies = new List<Enemy>();
 
         enemies.Clear();
@@ -47,10 +52,12 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
                 if (!MapManager.CheckEmpty(tileIndex))
                 {
                     Enemy e = EnemyManager.Instance.GetEnemyInTileIndex(tileIndex);
+                    if(e == this)
+                        continue;
+                        
                     if (!enemies.Contains(e))
-                    {
                         enemies.Add(e);
-                    }
+                    
                 }
             }
         }

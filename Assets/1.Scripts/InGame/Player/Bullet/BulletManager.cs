@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class BulletManager : MonoSingleton<BulletManager>
@@ -47,17 +49,15 @@ public class BulletManager : MonoSingleton<BulletManager>
     }
 
 
-    private void Awake()
+    public async UniTask Awake()
     {
-        bulletDatas = Resources.LoadAll<BulletData>("BulletData");
-        bulletDataDic = new Dictionary<string, BulletData>();
-        for (int i = 0; i < bulletDatas.Length; i++)
-        {
-            bulletDataDic.Add(bulletDatas[i].key, bulletDatas[i]);
-        }
-        bulletDatas = bulletDatas.OrderBy(e=>e.order).ToArray();
-
-        mergeBulletDatas = Resources.LoadAll<MergeBulletData>("MergeBulletData");
+        // bulletDatas = Resources.LoadAll<BulletData>("BulletData");
+        // bulletDataDic = new Dictionary<string, BulletData>();
+        // for (int i = 0; i < bulletDatas.Length; i++)
+        // {
+        //     bulletDataDic.Add(bulletDatas[i].key, bulletDatas[i]);
+        // }
+        // bulletDatas = bulletDatas.OrderBy(e=>e.order).ToArray();
 
         bullets = new()
         {
@@ -73,14 +73,34 @@ public class BulletManager : MonoSingleton<BulletManager>
             { "Vampire",  new VampireBullet() },
             { "Split",        new SplitBullet() },
             { "Scatter",      new ScatterBullet() },
+
+            //Level2 ------------------------
+
             { "CuttingRay",   new CuttingRayBullet() },
             { "Titan",        new TitanBullet() },
             { "SteelSphere",  new SteelSphereBullet() },
             { "LightningRod", new LightningRodBullet() },
             { "LavaShell",    new LavaShellBullet() },
-
-            //------------------------
         };
+
+        await AddressableMgr.LoadAllByLabel<BulletData>("BulletData", (dates) =>
+        {
+            bulletDatas =dates;
+            bulletDatas = bulletDatas.OrderBy(e=>e.order).ToArray();
+
+            bulletDataDic = new Dictionary<string, BulletData>();
+            for (int i = 0; i < bulletDatas.Length; i++)
+            {
+                bulletDataDic.Add(bulletDatas[i].key, bulletDatas[i]);
+            }
+
+        });
+
+        await AddressableMgr.LoadAllByLabel<MergeBulletData>("MergeBulletData", (dates) =>
+        {
+            mergeBulletDatas =dates;
+
+        });
     }
 
     float apearMergeBulletChance = 10f;

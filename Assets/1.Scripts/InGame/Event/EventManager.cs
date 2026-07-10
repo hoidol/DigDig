@@ -16,9 +16,6 @@ public class EventManager : MonoSingleton<EventManager>
         public int phaseIdx;
     }
 
-
-    //StatStone - 
-
     float eventObjectMinDistance = 5f; //EventObject 간 떨어진 거리
     [SerializeField] private int maxAttempts = 5;
 

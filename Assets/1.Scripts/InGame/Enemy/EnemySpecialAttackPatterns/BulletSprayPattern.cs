@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 // 투사체 난사 패턴
 // 원형 + 랜덤 spread 발사
 // 페이즈가 높을수록 발수 증가
-public class BulletSprayPattern : EnemySpecialAttackPattern
+public class BulletSprayPattern : EnemyAttackPattern
 {
     [SerializeField] int count = 8;
     [SerializeField] float spreadAngle = 25f;        // 랜덤 흔들림 각도

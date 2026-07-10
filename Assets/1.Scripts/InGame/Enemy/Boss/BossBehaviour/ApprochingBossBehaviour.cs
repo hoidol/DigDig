@@ -17,7 +17,7 @@ public class ApprochingBossBehaviour : BossBehaviour
             await boss.MoveTo(dirs[0], 1f);
         }
 
-        var pattern = boss.curBossPhase.GetEnemySpecialAttackPattern(patternName);
+        var pattern = boss.curBossPhase.GetEnemyAttackPattern(patternName);
         if (pattern != null)
             await pattern.Execute(boss, () => { });
     }

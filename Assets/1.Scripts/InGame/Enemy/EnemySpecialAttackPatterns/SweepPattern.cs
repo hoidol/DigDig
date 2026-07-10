@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 // 플레이어 방향으로 부채꼴 범위 공격
 // 페이즈가 높을수록 범위와 피해 증가
 // 가까워졌을때 발동되야 재밌는데.. 
-public class SweepPattern : EnemySpecialAttackPattern
+public class SweepPattern : EnemyAttackPattern
 {
     [SerializeField] SweepWarningIndicator sweepIndicator;
     [SerializeField] float damageMultiplier = 1.5f;

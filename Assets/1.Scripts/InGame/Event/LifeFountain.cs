@@ -6,10 +6,11 @@ public class LifeFountain : EventObject
     {
         if (collision.CompareTag("Player"))
         {
-            // ItemStoreCanvas.Instance.OpenCanvas(transform, maxGrade, () =>
-            // {
-            //     Player.Instance.UpdatePlayer();
-            // });
+            Time.timeScale= 0;
+            LifeFountainCanvas.Instance.OpenCanvas(this, () =>
+            {
+                Time.timeScale= 1;
+            });
         }
     }
 }

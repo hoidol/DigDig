@@ -7,9 +7,8 @@ public class LobbyManager : MonoSingleton<LobbyManager>
     void Awake()
     {
         GameEventBus.Clear();
-        
-        
     }
+    
     private void Start() 
     {
         

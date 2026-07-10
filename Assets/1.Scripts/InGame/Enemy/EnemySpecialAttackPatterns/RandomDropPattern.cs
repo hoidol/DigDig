@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 // 낙하 공격 패턴
 // 플레이어 주변 랜덤 위치에 경고 표시 → 일정 시간 후 충격
 // 페이즈가 높을수록 낙하 수 증가
-public class RandomDropPattern : EnemySpecialAttackPattern
+public class RandomDropPattern : EnemyAttackPattern
 {
     [SerializeField] DropWarning warningPrefab;
     [SerializeField] int dropCount = 3;

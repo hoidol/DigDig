@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: MergeBulletData
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: MergeBulletData
+  m_GUID: 0eebf7c559e6e46f098ee0abff78a1b7
+  m_SerializeEntries:
+  - m_GUID: 0b8f8470d7f754794aa2285d39f177e2
+    m_Address: MergeBulletData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MergeBulletData
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 7aadc449270984ef0ace796ef1270c88, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: b6975c05a876d453e8a10a681e8782d3, type: 2}
+    - {fileID: 11400000, guid: de0a808e9d64c474ab2a750a8fabd7ca, type: 2}
