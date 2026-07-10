@@ -5,8 +5,8 @@ using UnityEngine;
 public class BlessingCanvas : CanvasUI<BlessingCanvas>
 {
 
-    public SelectReinforceButton selectReinforceButton;
-    public SelectDrawItemButton selectDrawItemButton;
+    public ReinforceButton reinforceButton;
+    public DrawItemButton drawItemButton;
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
@@ -29,17 +29,17 @@ public class BlessingCanvas : CanvasUI<BlessingCanvas>
             itemKeys.Add(Player.Instance.itemInventory.curItems[i].key);
         }
         int totalCanDrawCount = bulletDataKeys.Count + itemKeys.Count;
-        selectReinforceButton.gameObject.SetActive(totalCanDrawCount > 0);
+        reinforceButton.gameObject.SetActive(totalCanDrawCount > 0);
 
 
         #region  SelectItem
         if (Player.Instance.itemInventory.curItems.Count >= 5)
         {
-            selectDrawItemButton.gameObject.SetActive(false);
+            drawItemButton.gameObject.SetActive(false);
         }
         else
         {
-            selectDrawItemButton.gameObject.SetActive(false);
+            drawItemButton.gameObject.SetActive(false);
         }
         //List<ItemData> itemDatas = ItemManager.Instance.GetDrawItems(3);
         #endregion

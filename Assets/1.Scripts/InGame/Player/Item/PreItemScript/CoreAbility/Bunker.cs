@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // 벙커 구조물 - IronNestAbility로 소환되는 방어 구조물
-public class Bunker : MonoBehaviour, IHittable
+public class Bunker : MonoBehaviour//, IHittable
 {
     public Transform Transform => transform;
     public Action onDestroyed;

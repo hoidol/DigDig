@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
+using System.Linq;
 
 
 public abstract class Boss : Enemy, IEnemySpecialAttackPattern
@@ -14,7 +15,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     public float waitingTime = 5f;
 
     [SerializeField] BossBehaviour[] bossBehaviours;
-    public BossBehaviour curBossBehaviour;
+    // public BossBehaviour curBossBehaviour;
 
     public override void Awake()
     {
@@ -51,34 +52,20 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     public void EnterBossState(BossState bossState)
     {
         this.bossState = bossState;
-        if (bossState == BossState.Waiting)
-        {
-            StartWait().Forget();
-        }
-        else if (bossState == BossState.Beviouring)
+        if (bossState == BossState.Beviouring)
         {
             StartBehaviour().Forget();
         }
     }
 
-    async UniTask StartBehaviour()
-    {
-        curBossBehaviour = bossBehaviours[UnityEngine.Random.Range(0, bossBehaviours.Length)];
-        await curBossBehaviour.StartBehaviour();
-        EnterBossState(BossState.Waiting);
-    }
-    async UniTask StartWait()
+    public abstract UniTask StartBehaviour();
+
+    public virtual async UniTask StartWait()
     {
         await UniTask.Delay(TimeSpan.FromSeconds(waitingTime));
         EnterBossState(BossState.Beviouring);
     }
 
-
-    public override void Update()
-    {
-        if (bossState == BossState.Intro)
-            return;
-    }
 
     protected override void OnHpChanged()
     {
@@ -157,11 +144,14 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
         await base.MoveTo(dir, delaySec);
     }
 
+    public BossBehaviour GetBossBehaviour(string name)
+    {
+        return bossBehaviours.Where(e=>e.behaviourName == name).FirstOrDefault();
+    }
 }
 
 public enum BossState
 {
     Intro,//등장 연출
     Beviouring,//행동
-    Waiting// 공격 대기 + 휴식
 }

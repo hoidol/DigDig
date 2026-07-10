@@ -18,7 +18,9 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     [Header("생성 시 타일을 부수면서 등장함")]
     public bool breakTileWhenSpawn;
     #region 
+    public float MaxHp => maxHp;
     [SerializeField] public float maxHp;//{ get; private set; }
+    public float CurHp =>curHp;
     [field: SerializeField] public float curHp;// { get; private set; }
 
     [SerializeField] Transform root;

@@ -1,8 +1,12 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public class ApprochingAttackBossBehaviour : BossBehaviour
+public class ApprochingBossBehaviour : BossBehaviour
 {
+    public ApprochingBossBehaviour()
+    {
+        behaviourName = "Approching";
+    }
     public string patternName;
     public async override UniTask StartBehaviour()
     {
@@ -13,9 +17,9 @@ public class ApprochingAttackBossBehaviour : BossBehaviour
             await boss.MoveTo(dirs[0], 1f);
         }
 
-        var sweepPattern = boss.curBossPhase.GetEnemySpecialAttackPattern(patternName);
-        if (sweepPattern != null)
-            await sweepPattern.Execute(boss, () => { });
+        var pattern = boss.curBossPhase.GetEnemySpecialAttackPattern(patternName);
+        if (pattern != null)
+            await pattern.Execute(boss, () => { });
     }
 
 }

@@ -20,16 +20,9 @@ public class TitanBulletObject : PlayerBulletObject
         if(result == null)
             return null;
 
-        if(hit2D.transform.TryGetComponent(out Enemy enemy))
+        if(hit2D.transform.TryGetComponent(out IHittable enemy))
         {
-            if(enemy.state== EnemyState.Dead)
-            {
-                killCount++;
-            }
-        }
-        else if(hit2D.transform.TryGetComponent(out OreStone oreStone))
-        {
-            if(oreStone.curHp <=0)
+            if(enemy.CurHp <=0)
             {
                 killCount++;
             }

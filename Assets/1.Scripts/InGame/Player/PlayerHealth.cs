@@ -4,6 +4,9 @@ using Cysharp.Threading.Tasks;
 
 public class PlayerHealth : MonoBehaviour, IHittable
 {
+
+    public float MaxHp => player.statMgr.MaxHp;
+    public float CurHp => curHp;
     public float curHp;
     public float healMultiplier = 1f;
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 
+
 public class StatStone : EventObject, IHittable, IWayPointerTarget
 {
     static readonly Stack<StatStone> pool = new();
@@ -35,6 +36,8 @@ public class StatStone : EventObject, IHittable, IWayPointerTarget
 
 
 
+    public float MaxHp => float.MaxValue;
+    public float CurHp =>float.MaxValue;
     // public float curHp;
     // public float maxHp;
     public Transform maskTr;

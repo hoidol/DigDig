@@ -35,8 +35,8 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
     public float curHp;
     public float maxHp;
 
-    float IHpUI.MaxHp => maxHp;
-    float IHpUI.CurHp => curHp;
+    public float MaxHp => maxHp;
+    public float CurHp => curHp;
     Vector3 IHpUI.HpUIPosition => hpPoint.position;
     public int level;
     // public Vector2Int gridPos;
