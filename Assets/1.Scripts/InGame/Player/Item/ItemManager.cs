@@ -3,32 +3,32 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class ItemManager : MonoSingleton<ItemManager>
+public class ItemManager : MonoSingleton<ItemManager>, ILoadData
 {
     public Dictionary<string, ItemData> itemDataDic = new Dictionary<string, ItemData>();
     // public MergeItemData[] mergeItemDatas;
     public Dictionary<string, MergeItemData> mergeItemDataDic = new Dictionary<string, MergeItemData>();
     public ItemData[] itemDatas;
-    public async UniTask Awake()
+    public UniTask LoadTask { get; private set; }
+
+    void Awake()
+    {
+        LoadTask = LoadDataAsync();
+    }
+
+    async UniTask LoadDataAsync()
     {
         await AddressableMgr.LoadAllByLabel<ItemData>("ItemData", (dates) =>
         {
-            itemDatas =dates;
+            itemDatas = dates;
             foreach (ItemData itemData in itemDatas)
             {
                 itemDataDic[itemData.key] = itemData;
             }
 
         });
-        // itemDatas = Resources.LoadAll<ItemData>("ItemData");
-       
-
-        // mergeItemDatas = Resources.LoadAll<MergeItemData>("MergeItemData");
-        // for (int i = 0; i < mergeItemDatas.Length; i++)
-        // {
-        //     mergeItemDataDic.Add(mergeItemDatas[i].resultItemKey, mergeItemDatas[i]);
-        // }
     }
+
     public MergeItemData GetMergeItemData(string key)
     {
         if (!itemDataDic.ContainsKey(key))

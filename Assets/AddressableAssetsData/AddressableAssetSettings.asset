@@ -60,7 +60,9 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
-  - {fileID: 11400000, guid: 008bbf7dd2e9641ba86a7ada87b5f83e, type: 2}
+  - {fileID: 11400000, guid: a45f383a479964bd2a5da4f3b27c4298, type: 2}
+  - {fileID: 11400000, guid: 3a31f81abc7f946409f20392376285a9, type: 2}
+  - {fileID: 11400000, guid: 46cbd5bfd320340d6abd4d228a7ca94e, type: 2}
   - {fileID: 11400000, guid: 8a9174a5e089f4a37b169d7f5f230d90, type: 2}
   - {fileID: 11400000, guid: 061188c5c880a47b098a011c546a4347, type: 2}
   m_BuildSettings:
@@ -105,6 +107,10 @@ MonoBehaviour:
     - BulletData
     - MergeBulletData
     - ItemData
+    - StageData
+    - StatData
+    - EnemyData
+    - PlayerBulletObject
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 79b846eb2dce14c8dadbbe237bc03090, type: 2}

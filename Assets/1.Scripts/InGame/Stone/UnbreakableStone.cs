@@ -24,7 +24,7 @@ public class UnbreakableStone : OreStone, IHittable, ITile
     public static UnbreakableStone Get(Vector3 pos, Transform parent)
     {
         if (unbreakableStonePrefab == null)
-            unbreakableStonePrefab = Resources.Load<UnbreakableStone>("Stone/UnbreakableStone");
+            unbreakableStonePrefab = Resources.Load<UnbreakableStone>("Prefabs/UnbreakableStone");
 
         UnbreakableStone ore = pool.Count > 0 ? pool.Pop() : Instantiate(unbreakableStonePrefab, parent);
         ore.transform.position = pos;

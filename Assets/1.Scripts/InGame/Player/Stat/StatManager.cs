@@ -1,17 +1,29 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-public class StatManager : MonoSingleton<StatManager>
+public class StatManager : MonoSingleton<StatManager>, ILoadData
 {
     private Dictionary<string, StatData> statDataDic = new Dictionary<string, StatData>();
+    public StatData[] statDatas;
+    public UniTask LoadTask { get; private set; }
 
-    public void Awake()
+    void Awake()
     {
-        var dataArray = Resources.LoadAll<StatData>("StatData");
-        foreach (var data in dataArray)
+        LoadTask = LoadDataAsync();
+    }
+
+    async UniTask LoadDataAsync()
+    {
+        Debug.Log("StageManager Awake ()호출되는지 확인");
+        await AddressableMgr.LoadAllByLabel<StatData>("StatData", (dates) =>
         {
-            statDataDic.Add(data.statType.ToString(), data);
-        }
+            statDatas = dates;
+            foreach (var data in dates)
+            {
+                statDataDic.Add(data.statType.ToString(), data);
+            }
+        });
     }
     float minDistance;
     void Start()

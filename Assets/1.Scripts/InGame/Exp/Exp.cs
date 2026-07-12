@@ -11,7 +11,7 @@ public class Exp : MonoBehaviour, IPickable
     public bool IsTaken { get; set; }
     public Transform Transform => transform;
 
-    Tween autoAttractTween;
+    // Tween autoAttractTween;
     CancellationTokenSource moveCts;
     const float MOVE_SPEED = 20f;
 
@@ -28,9 +28,9 @@ public class Exp : MonoBehaviour, IPickable
     {
         transform.position = pos;
         IsTaken = false;
-        autoAttractTween?.Kill();
+        // autoAttractTween?.Kill();
         moveCts?.Cancel();
-        autoAttractTween = DOVirtual.DelayedCall(5f, () => Take(Player.Instance));
+        // autoAttractTween = DOVirtual.DelayedCall(5f, () => Take(Player.Instance));
     }
 
     public void PickedUp()
@@ -43,7 +43,7 @@ public class Exp : MonoBehaviour, IPickable
     {
         if (IsTaken) return;
         IsTaken = true;
-        autoAttractTween?.Kill();
+        // autoAttractTween?.Kill();
 
         moveCts?.Cancel();
         moveCts = new CancellationTokenSource();

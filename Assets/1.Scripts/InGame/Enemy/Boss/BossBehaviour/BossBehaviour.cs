@@ -4,12 +4,12 @@ using Cysharp.Threading.Tasks;
 using System;
 public abstract class BossBehaviour : MonoBehaviour
 {
-    
+
     public string behaviourName;
-    public Boss boss;
+    [HideInInspector] public Boss boss;
     void Awake()
     {
-        boss = GetComponent<Boss>();
+        boss = GetComponentInParent<Boss>();
     }
-    public  abstract UniTask StartBehaviour();
+    public abstract UniTask StartBehaviour();
 }

@@ -20,7 +20,11 @@ public class BulletSprayPattern : EnemyAttackPattern
     {
         await base.Execute(enemy, onEnd);
         float damage = enemy.Transform.GetComponent<Enemy>().enemyData.GetAttackPower();
+
+        // enemy.PlayAnim(readyAnimName);
         coroutine = StartCoroutine(DoBurst(enemy, count, damage, onEnd));
+
+        await UniTask.Delay(TimeSpan.FromSeconds(duration));
     }
 
     IEnumerator DoBurst(IEnemySpecialAttackPattern enemy, int count, float damage, Action onEnd)
@@ -29,6 +33,7 @@ public class BulletSprayPattern : EnemyAttackPattern
 
         for (int i = 0; i < count; i++)
         {
+            enemy.PlayAnim(readyAnimName);
             float angle = angleStep * i + UnityEngine.Random.Range(-spreadAngle, spreadAngle);
             Vector2 dir = (Quaternion.Euler(0, 0, angle) * Vector2.right).normalized;
 

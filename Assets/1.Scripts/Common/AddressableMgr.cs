@@ -7,7 +7,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using System.IO;
 
-public class AddressableMgr 
+public class AddressableMgr
 {
     private static List<AsyncOperationHandle> handles = new List<AsyncOperationHandle>();
     public static async UniTask<T> Load<T>(string address)
@@ -63,14 +63,14 @@ public class AddressableMgr
     }
 
 
-    public static async UniTask LoadAll<T>(string path ,string[] addresses, Action<T[]> result)
+    public static async UniTask LoadAll<T>(string path, string[] addresses, Action<T[]> result)
     {
         T[] data = Array.Empty<T>();
-        for(int i = 0; i < addresses.Length; i++)
+        for (int i = 0; i < addresses.Length; i++)
         {
-            addresses[i] =Path.Combine(path,addresses[i]);
+            addresses[i] = Path.Combine(path, addresses[i]);
         }
-        
+
         try
         {
             var handle = Addressables.LoadAssetsAsync<T>(addresses, null, Addressables.MergeMode.Union);
@@ -95,12 +95,13 @@ public class AddressableMgr
     }
     public static async UniTask LoadAllByLabel<T>(string label, Action<T[]> result)
     {
+        // Debug.Log("LoadAllByLabel 1");
         T[] data = Array.Empty<T>();
         try
         {
             var handle = Addressables.LoadAssetsAsync<T>(label, null, Addressables.MergeMode.Union);
             handles.Add(handle);
-
+            // Debug.Log("LoadAllByLabel 1");
             await handle.Task;
 
             if (handle.Status != AsyncOperationStatus.Succeeded)
@@ -115,9 +116,9 @@ public class AddressableMgr
         {
             Debug.LogWarning($"Addressables.LoadAssetsAsync<>() is failed({ex.Message}) for label '{label}'");
         }
-
+        // Debug.Log($"LoadAllByLabel555 {data.Length}");
         result(data);
     }
-    
-    
+
+
 }

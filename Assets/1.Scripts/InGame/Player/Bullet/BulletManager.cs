@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class BulletManager : MonoSingleton<BulletManager>
+public class BulletManager : MonoSingleton<BulletManager>, ILoadData
 {
     public Dictionary<string, BulletData> bulletDataDic;
     public BulletData[] bulletDatas;
@@ -15,10 +15,77 @@ public class BulletManager : MonoSingleton<BulletManager>
     Dictionary<string, Stack<PlayerBulletObject>> bulletPool = new();
     Dictionary<string, PlayerBulletObject> bulletPrefabDic = new();
 
+
+    public UniTask LoadTask { get; private set; }
+
+    void Awake()
+    {
+        bullets = new()
+        {
+             //Level1 ------------------------
+            { "Normal",    new NormalBullet() },
+            { "Pierce",   new PierceBullet() },
+            { "Condense", new CondenseBullet() },
+            { "Giant",    new GiantBullet() },
+            { "Iron",     new IronBullet() },
+            { "Flame",    new FlameBullet() },
+            { "Orbit",     new OrbitBullet() },
+            { "Thunder",  new ThunderBullet() },
+            { "Vampire",  new VampireBullet() },
+            { "Split",        new SplitBullet() },
+            { "Scatter",      new ScatterBullet() },
+
+            //Level2 ------------------------
+
+            { "CuttingRay",   new CuttingRayBullet() },
+            { "Titan",        new TitanBullet() },
+            { "SteelSphere",  new SteelSphereBullet() },
+            { "LightningRod", new LightningRodBullet() },
+            { "LavaShell",    new LavaShellBullet() },
+        };
+        LoadTask = LoadDataAsync();
+    }
+
+    async UniTask LoadDataAsync()
+    {
+        await AddressableMgr.LoadAllByLabel<BulletData>("BulletData", (dates) =>
+        {
+            bulletDatas = dates;
+            bulletDatas = bulletDatas.OrderBy(e => e.order).ToArray();
+
+            bulletDataDic = new Dictionary<string, BulletData>();
+            for (int i = 0; i < bulletDatas.Length; i++)
+            {
+                bulletDataDic.Add(bulletDatas[i].key, bulletDatas[i]);
+            }
+
+        });
+
+        await AddressableMgr.LoadAllByLabel<MergeBulletData>("MergeBulletData", (dates) =>
+        {
+            mergeBulletDatas = dates;
+
+        });
+
+        await AddressableMgr.LoadAllByLabel<GameObject>("PlayerBulletObject", (dates) =>
+        {
+            for (int i = 0; i < dates.Length; i++)
+            {
+                var pbo = dates[i].GetComponent<PlayerBulletObject>();
+                bulletPrefabDic.Add(pbo.key, pbo);
+            }
+
+        });
+    }
+
+    float apearMergeBulletChance = 10f;
+
+
+
     public PlayerBulletObject GetPlayerBulletObject(string key)
     {
-        if (!bulletPrefabDic.ContainsKey(key))
-            bulletPrefabDic[key] = Resources.Load<PlayerBulletObject>($"PlayerBulletObject/{key}");
+        // if (!bulletPrefabDic.ContainsKey(key))
+        //     bulletPrefabDic[key] = Resources.Load<PlayerBulletObject>($"PlayerBulletObject/{key}");
 
         if (bulletPool.TryGetValue(key, out var stack) && stack.Count > 0)
         {
@@ -47,70 +114,6 @@ public class BulletManager : MonoSingleton<BulletManager>
         b.key = key;
         return b;
     }
-
-
-    public async UniTask Awake()
-    {
-        // bulletDatas = Resources.LoadAll<BulletData>("BulletData");
-        // bulletDataDic = new Dictionary<string, BulletData>();
-        // for (int i = 0; i < bulletDatas.Length; i++)
-        // {
-        //     bulletDataDic.Add(bulletDatas[i].key, bulletDatas[i]);
-        // }
-        // bulletDatas = bulletDatas.OrderBy(e=>e.order).ToArray();
-
-        bullets = new()
-        {
-             //Level1 ------------------------
-            { "Normal",    new NormalBullet() },
-            { "Pierce",   new PierceBullet() },
-            { "Condense", new CondenseBullet() },
-            { "Giant",    new GiantBullet() },
-            { "Iron",     new IronBullet() },
-            { "Flame",    new FlameBullet() },
-            { "Orbit",     new OrbitBullet() },
-            { "Thunder",  new ThunderBullet() },
-            { "Vampire",  new VampireBullet() },
-            { "Split",        new SplitBullet() },
-            { "Scatter",      new ScatterBullet() },
-
-            //Level2 ------------------------
-
-            { "CuttingRay",   new CuttingRayBullet() },
-            { "Titan",        new TitanBullet() },
-            { "SteelSphere",  new SteelSphereBullet() },
-            { "LightningRod", new LightningRodBullet() },
-            { "LavaShell",    new LavaShellBullet() },
-        };
-
-        await AddressableMgr.LoadAllByLabel<BulletData>("BulletData", (dates) =>
-        {
-            bulletDatas =dates;
-            bulletDatas = bulletDatas.OrderBy(e=>e.order).ToArray();
-
-            bulletDataDic = new Dictionary<string, BulletData>();
-            for (int i = 0; i < bulletDatas.Length; i++)
-            {
-                bulletDataDic.Add(bulletDatas[i].key, bulletDatas[i]);
-            }
-
-        });
-
-        await AddressableMgr.LoadAllByLabel<MergeBulletData>("MergeBulletData", (dates) =>
-        {
-            mergeBulletDatas =dates;
-
-        });
-    }
-
-    float apearMergeBulletChance = 10f;
-
-    // Grade별 누적 가중치 (GetBulletDatas 호출마다 누적)
-
-    const float normalDrawChange = 70;
-    const float rareDrawChange = 25;
-    const float uniqueDrawChange = 5;
-
 
     [SerializeField] List<BulletData> canPickBulletDatas = new List<BulletData>();
     public BulletData DrawRandomBullet()

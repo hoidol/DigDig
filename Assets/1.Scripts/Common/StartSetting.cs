@@ -9,33 +9,39 @@ using UnityEditor;
 #endif
 public class StartSetting
 {
-        // Definition
-    
+    // Definition
+
 
     // Methods
 #if UNITY_EDITOR
     [InitializeOnLoadMethod]
 #endif
     public static void InitializeOnLoadMethod()
-{
-    
-}
+    {
+
+    }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
-        string[] singletonTargets=
+        string[] singletonTargets =
         {
             "ItemManager",
-            "BulletManager"  
+            "BulletManager",
+            "UserManager",
+            "StageManager",
+
+//UI --------
+            "FadeCanvas"
+
         };
 
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        for(int i = 0; i < singletonTargets.Length; i++)
+        for (int i = 0; i < singletonTargets.Length; i++)
         {
-             createSingleton(singletonTargets[i]);
+            createSingleton($"Init/{singletonTargets[i]}");
         }
-       
+
 
 #if !UNITY_EDITOR
         InitializeOnLoadMethod();
@@ -55,7 +61,7 @@ public class StartSetting
 
     // Functions
     private static void createSingleton(string path)
-    {        
+    {
         var pb = Resources.Load<GameObject>(path);
         var go = GameObject.Instantiate(pb);
         GameObject.DontDestroyOnLoad(go);

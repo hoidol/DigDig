@@ -20,7 +20,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     #region 
     public float MaxHp => maxHp;
     [SerializeField] public float maxHp;//{ get; private set; }
-    public float CurHp =>curHp;
+    public float CurHp => curHp;
     [field: SerializeField] public float curHp;// { get; private set; }
 
     [SerializeField] Transform root;
@@ -141,9 +141,9 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     }
 
     public int face;
-    public void SetFacing(float dirX)
+    public void UpdateFacing(Vector2 vec)
     {
-        face = dirX >= 0 ? 1 : -1;
+        face = vec.x >= 0 ? 1 : -1;
         root.localScale = new Vector3(face, 1, 1);
     }
 
@@ -153,7 +153,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
         MapManager.RegisterTile(newTiles, this); // 이동 중 다른 오브젝트가 점유 못하게 선점
 
         Vector2 dest = MapManager.TileIndexToCenterPosition(newTiles);
-        SetFacing(dir.x);
+        UpdateFacing(dir);
         // await UniTask.Delay(3000);
         transform.DOMove(dest, 0.3f)
             .SetEase(Ease.Linear)

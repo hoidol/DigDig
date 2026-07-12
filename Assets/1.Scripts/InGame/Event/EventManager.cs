@@ -6,7 +6,6 @@ using Random = UnityEngine.Random;
 
 public class EventManager : MonoSingleton<EventManager>
 {
-
     public EventObject[] prefabs;
     public class ConditionState
     {
@@ -37,9 +36,8 @@ public class EventManager : MonoSingleton<EventManager>
         GameEventBus.Subscribe<BossSpawnEvent>(OnBossSpawnEvent);
         GameEventBus.Subscribe<EliteSpawnEvent>(OnEliteSpawnEvent);
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
-
-
     }
+
     Enemy bossOrElite;
     void OnBossSpawnEvent(BossSpawnEvent e)
     {

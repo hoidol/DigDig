@@ -1,19 +1,33 @@
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
-public class StageManager : MonoSingleton<StageManager>
+using Cysharp.Threading.Tasks;
+public class StageManager : MonoSingleton<StageManager>, ILoadData
 {
     public StageData[] stageDatas;
     public Dictionary<string, StageData> stageDict = new Dictionary<string, StageData>();
+
+    public UniTask LoadTask { get; private set; }
+
     void Awake()
     {
-        stageDatas = Resources.LoadAll<StageData>("StageData");
-        stageDatas = stageDatas.OrderBy(e => e.order).ToArray();
+        LoadTask = LoadDataAsync();
+    }
 
-        for (int i = 0; i < stageDatas.Length; i++)
+    async UniTask LoadDataAsync()
+    {
+        Debug.Log("StageManager Awake ()호출되는지 확인");
+        await AddressableMgr.LoadAllByLabel<StageData>("StageData", (dates) =>
         {
-            stageDict.Add(stageDatas[i].key, stageDatas[i]);
-        }
+            stageDatas = dates;
+            stageDatas = stageDatas.OrderBy(e => e.order).ToArray();
+
+            for (int i = 0; i < stageDatas.Length; i++)
+            {
+                stageDict.Add(stageDatas[i].key, stageDatas[i]);
+            }
+
+        });
     }
 
     public StageData GetStageData(string key)

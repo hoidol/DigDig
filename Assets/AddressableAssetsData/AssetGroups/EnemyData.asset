@@ -10,32 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: BulletData
+  m_Name: EnemyData
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: BulletData
-  m_GUID: c70b05342caf14c448ee64e6346a3bd3
+  m_GroupName: EnemyData
+  m_GUID: a66e516ca42704dbea0bf15a232c246f
   m_SerializeEntries:
-  - m_GUID: 0b8f8470d7f754794aa2285d39f177e2
-    m_Address: MergeBulletData
+  - m_GUID: 627b089b6d07e40bc8357163fb7e4fae
+    m_Address: EnemyData
     m_ReadOnly: 0
     m_SerializedLabels:
-    - MergeBulletData
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 31ad9c2b0946e402c91137bdbe31e7c6
-    m_Address: PlayerBulletObject
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PlayerBulletObject
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: a6271b713b6d045bb963b6fcdd585352
-    m_Address: BulletData
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BulletData
+    - EnemyData
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7aadc449270984ef0ace796ef1270c88, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 3d0e7d492b29446239c9d16d2da67e09, type: 2}
-    - {fileID: 11400000, guid: ebd39412f10294352b4f2072314987b3, type: 2}
+    - {fileID: 11400000, guid: ce809c8d3633848a78892c0c266a7abb, type: 2}
+    - {fileID: 11400000, guid: 6c6458313259449ab80ba5c7616a7a3e, type: 2}

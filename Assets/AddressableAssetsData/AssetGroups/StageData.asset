@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: MergeBulletData
+  m_Name: StageData
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: MergeBulletData
-  m_GUID: 0eebf7c559e6e46f098ee0abff78a1b7
+  m_GroupName: StageData
+  m_GUID: 8450447a5df1a4f39994cad9ea280ab0
   m_SerializeEntries:
-  - m_GUID: 0b8f8470d7f754794aa2285d39f177e2
-    m_Address: MergeBulletData
+  - m_GUID: 5993e33ff5f5e4c2e9a400978ad56c52
+    m_Address: StageData
     m_ReadOnly: 0
     m_SerializedLabels:
-    - MergeBulletData
+    - StageData
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7aadc449270984ef0ace796ef1270c88, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: b6975c05a876d453e8a10a681e8782d3, type: 2}
-    - {fileID: 11400000, guid: de0a808e9d64c474ab2a750a8fabd7ca, type: 2}
+    - {fileID: 11400000, guid: c14714663926341bdb0be358d4ab9063, type: 2}
+    - {fileID: 11400000, guid: 3d3b7e7fe3251496d9cf1cd26d57185e, type: 2}

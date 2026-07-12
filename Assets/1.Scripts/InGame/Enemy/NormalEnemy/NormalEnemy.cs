@@ -89,8 +89,8 @@ public class NormalEnemy : Enemy, IHpUI
             ChangeState(NormalEnemyState.Attack).Forget();
             return;
         }
-        SetFacing(vec.x);
 
+        UpdateFacing(vec);
     }
     public virtual async UniTask StartMoving()
     {
@@ -120,7 +120,8 @@ public class NormalEnemy : Enemy, IHpUI
     public virtual void UpdateAttack()
     {
         Vector2 vec = Player.Instance.transform.position - transform.position;
-        SetFacing(vec.x);
+
+        UpdateFacing(vec);
         rg2d.linearVelocity = Vector2.zero;
 
         if (attackTimer >= enemyData.attackSpeed)

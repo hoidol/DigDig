@@ -71,8 +71,6 @@ public class Player : MonoSingleton<Player>, IPicker
 
 
         tileCheckers = GetComponentsInChildren<TileChecker>();
-
-
     }
 
 
@@ -270,6 +268,7 @@ StatType.ReloadSpeed,
 StatType.AmmoDuration //총알 지속시간
 ,StatType.AmmoEfficiency
     };
+
     public PlayerStatManager(Player p, string key)
     {
         player = p;

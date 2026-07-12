@@ -8,7 +8,8 @@ using Cysharp.Threading.Tasks;
 // 가까워졌을때 발동되야 재밌는데.. 
 public class SweepPattern : EnemyAttackPattern
 {
-    [SerializeField] SweepWarningIndicator sweepIndicator;
+    // [SerializeField] WarningIndicator warningIndicator;
+    WarningIndicator warningIndicator;
     [SerializeField] float damageMultiplier = 1.5f;
     [SerializeField] float sweepSize = 5;
     DamageData damageData = new DamageData();
@@ -16,15 +17,24 @@ public class SweepPattern : EnemyAttackPattern
     {
         await base.Execute(enemy, onEnd);
 
+        Debug.Log("SweepPattern Execute 1");
+        Vector2 dir = (Player.Instance.transform.position - transform.position).normalized;
+        warningIndicator = WarningIndicator.Instantiate((Vector2)transform.position + (5.5f * dir), sweepSize);
         float damage = enemy.Transform.GetComponent<Enemy>().enemyData.GetAttackPower() * damageMultiplier;
-
         damageData.damage = damage;
-        sweepIndicator.gameObject.SetActive(true);
-        sweepIndicator.Play(3, () =>
+        warningIndicator.gameObject.SetActive(true);
+        warningIndicator.Play(3, (indicator) =>
         {
-            DealDamage(sweepIndicator.transform.position, new Vector2(sweepSize, sweepSize));
+            enemy.PlayAnim(readyAnimName);
+            DealDamage(warningIndicator.transform.position, new Vector2(sweepSize, sweepSize));
+            warningIndicator.gameObject.SetActive(false);
             onEnd?.Invoke();
         });
+
+        await UniTask.Delay(TimeSpan.FromSeconds(duration));
+
+        Debug.Log("SweepPattern Execute End");
+
     }
 
     void DealDamage(Vector2 origin, Vector2 size)
@@ -40,7 +50,10 @@ public class SweepPattern : EnemyAttackPattern
 
     public override void Cancel()
     {
-        sweepIndicator.gameObject.SetActive(false);
-        sweepIndicator.Cancel();
+        if (warningIndicator != null)
+        {
+            warningIndicator.Cancel();
+        }
+
     }
 }

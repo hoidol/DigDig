@@ -9,42 +9,46 @@ using Cysharp.Threading.Tasks;
 // 페이즈가 높을수록 낙하 수 증가
 public class RandomDropPattern : EnemyAttackPattern
 {
-    [SerializeField] DropWarning warningPrefab;
-    [SerializeField] int dropCount = 3;
-    [SerializeField] float spawnRadius = 8f;    // 플레이어 기준 반경
-    [SerializeField] float spawnInterval = 0.1f;// 개별 낙하 간격
-    [SerializeField] float warningDuration = 0.5f;
-    [SerializeField] float hitRadius = 1.5f;
-    [SerializeField] float damage = 15f;
+    [SerializeField] int dropCount = 2;
+    [SerializeField] float dropSize = 3.5f;
+    [SerializeField] float spawnRadius = 3f;    // 플레이어 기준 반경
+    [SerializeField] float spawnInterval = 0.5f;// 개별 낙하 간격
+    [SerializeField] float warningDuration = 2.5f;
 
-    Coroutine coroutine;
-    readonly List<DropWarning> activeWarnings = new();
+    readonly List<WarningIndicator> activeWarnings = new();
 
     public async override UniTask Execute(IEnemySpecialAttackPattern enemy, Action onEnd)
     {
         await base.Execute(enemy, onEnd);
         float baseDamage = enemy.Transform.GetComponent<Enemy>().enemyData.GetAttackPower() * 0.8f;
-        coroutine = StartCoroutine(DoDrops(dropCount, baseDamage, onEnd));
-    }
 
-    IEnumerator DoDrops(int count, float baseDamage, Action onEnd)
-    {
         activeWarnings.Clear();
-        int remaining = count;
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < dropCount; i++)
         {
             Vector2 pos = GetRandomPos();
-            DropWarning warning = Instantiate(warningPrefab, pos, Quaternion.identity);
+            WarningIndicator warning = WarningIndicator.Instantiate(pos, dropSize);
             activeWarnings.Add(warning);
-            warning.Play(warningDuration, hitRadius, baseDamage, () => remaining--);
-            yield return new WaitForSeconds(spawnInterval);
+            warning.Play(warningDuration, (indicator) =>
+            {
+                enemy.PlayAnim(readyAnimName);
+                Collider2D[] cols = Physics2D.OverlapBoxAll(indicator.transform.position, new Vector2(dropSize, dropSize), 0);
+                foreach (var col in cols)
+                {
+                    if (col.CompareTag("Player"))
+                    {
+                        Player.Instance.TakeDamage(new DamageData() { damage = baseDamage });
+                        break;
+                    }
+                }
+                indicator.Cancel();
+            });
+            await UniTask.Delay(TimeSpan.FromSeconds(spawnInterval));
         }
 
         // 모든 낙하 완료 대기
-        yield return new WaitUntil(() => remaining <= 0);
-        activeWarnings.Clear();
-        coroutine = null;
+        await UniTask.Delay(TimeSpan.FromSeconds(duration));
+
         onEnd?.Invoke();
     }
 
@@ -57,11 +61,6 @@ public class RandomDropPattern : EnemyAttackPattern
 
     public override void Cancel()
     {
-        if (coroutine != null)
-        {
-            StopCoroutine(coroutine);
-            coroutine = null;
-        }
         foreach (var w in activeWarnings)
             if (w != null) w.Cancel();
         activeWarnings.Clear();

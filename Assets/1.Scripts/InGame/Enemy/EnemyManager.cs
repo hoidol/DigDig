@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Mono.Cecil;
 using UnityEngine;
 
-public class EnemyManager : MonoSingleton<EnemyManager>
+public class EnemyManager : MonoSingleton<EnemyManager>, ILoadData
 {
     readonly Dictionary<EnemyType, Stack<Enemy>> pool = new(); // 적 종류 별 풀링
     readonly HashSet<Enemy> activeEnemies = new();
@@ -12,12 +13,22 @@ public class EnemyManager : MonoSingleton<EnemyManager>
 
     [field: SerializeField] public int ActiveEnemyCount { get; private set; }
 
+    public UniTask LoadTask { get; private set; }
+
     void Awake()
     {
-        EnemyData[] enemyDatas = Resources.LoadAll<EnemyData>("EnemyData");
-        foreach (EnemyData enemyData in enemyDatas)
-            enemyDataDic[enemyData.type] = enemyData;
-        GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
+        LoadTask = LoadDataAsync();
+    }
+
+    async UniTask LoadDataAsync()
+    {
+        await AddressableMgr.LoadAllByLabel<EnemyData>("EnemyData", (dates) =>
+       {
+           EnemyData[] enemyDatas = dates;
+           foreach (EnemyData enemyData in enemyDatas)
+               enemyDataDic[enemyData.type] = enemyData;
+           GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
+       });
     }
 
     public static EnemyData GetEnemyData(EnemyType type)

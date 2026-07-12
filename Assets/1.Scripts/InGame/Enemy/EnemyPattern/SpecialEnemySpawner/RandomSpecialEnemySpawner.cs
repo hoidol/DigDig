@@ -73,7 +73,7 @@ public class RandomSpecialEnemySpawner : SpecialEnemySpawner
                 if (roll < cumulative)
                 {
 
-                    Debug.Log($"RandomSpecialEnemySpawner 적 소환해야됌  {state.enemyType}");
+                    // Debug.Log($"RandomSpecialEnemySpawner 적 소환해야됌  {state.enemyType}");
                     if (MapManager.GetTileArray(idx, EnemyManager.GetEnemyData(state.enemyType).size, out spawnTileArray))
                     {
                         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(state.enemyType);

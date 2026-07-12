@@ -12,11 +12,11 @@ public class EnemyAttackPattern : MonoBehaviour
     [SerializeField] public float duration;
     [SerializeField] public float readyTime;
     [SerializeField] public string readyAnimName;
-    public EnemyAttackCondition condition;
 
     public virtual async UniTask Execute(IEnemySpecialAttackPattern enemy, Action onEnd)
     {
-        enemy.PlayAnim(readyAnimName);
+        Vector2 vec = Player.Instance.transform.position - transform.position;
+        GetComponentInParent<Enemy>().UpdateFacing(vec);
         await UniTask.WaitForSeconds(readyTime);
     }
 

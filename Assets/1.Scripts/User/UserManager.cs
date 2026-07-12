@@ -32,6 +32,8 @@ public class UserManager : MonoSingleton<UserManager>
         userStageManager.LoadData();
 
     }
+
+
 }
 
 [System.Serializable]

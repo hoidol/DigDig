@@ -22,7 +22,7 @@ public class OreStone : MonoBehaviour, IHittable, IHpUI, ITile
     public static OreStone Get(Vector3 pos, Transform parent)
     {
         if (oreStonePrefab == null)
-            oreStonePrefab = Resources.Load<OreStone>("Stone/OreStone");
+            oreStonePrefab = Resources.Load<OreStone>("Prefabs/OreStone");
         OreStone ore = pool.Count > 0 ? pool.Pop() : Instantiate(oreStonePrefab, parent);
         ore.transform.position = pos;
         ore.gameObject.SetActive(true);
