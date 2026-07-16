@@ -13,13 +13,13 @@ public class MiningDrone : MiningMachine
 
     void FindAndMove()
     {
-        if (targetOre == null) return;
+        if (targetStone == null) return;
 
-        Vector2 dir = (targetOre.transform.position - transform.position).normalized;
+        Vector2 dir = (targetStone.transform.position - transform.position).normalized;
         transform.position += (Vector3)(dir * moveSpeed * Time.deltaTime);
     }
 
-    protected override void Attack(OreStone ore)
+    protected override void Attack(Stone ore)
     {
         float dist = Vector2.Distance(transform.position, ore.transform.position);
         if (dist > attackDist) return;

@@ -30,7 +30,7 @@ public class TrapItem : TriggerItem
 
 
         RaycastHit2D hit = Physics2D.Raycast(Player.Instance.transform.position, dir, throwDistance, LayerMask.GetMask("Hittable"));
-        if (hit.collider != null && hit.collider.GetComponent<OreStone>() != null)
+        if (hit.collider != null && hit.collider.GetComponent<Stone>() != null)
             spawnPos = Player.Instance.transform.position + (Vector3)(dir * (hit.distance - 0.5f));
 
         var trap = Instantiate(trapPrefab, spawnPos, Quaternion.identity);

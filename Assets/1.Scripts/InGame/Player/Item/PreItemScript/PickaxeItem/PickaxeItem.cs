@@ -7,7 +7,7 @@ public class PickaxeItem : Item
     [SerializeField] Pickaxe pickaxePrefab;
 
     readonly List<Pickaxe> pickaxes = new();
-    readonly HashSet<OreStone> claimedTargets = new();
+    readonly HashSet<Stone> claimedTargets = new();
 
     public override void OnUnequip(Player player)
     {

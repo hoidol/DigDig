@@ -8,47 +8,47 @@ public abstract class MiningMachine : MonoBehaviour
     public LayerMask oreLayer;
 
     protected float attackTimer;
-    protected OreStone targetOre;
+    protected Stone targetStone;
 
     protected virtual void Update()
     {
         FindTarget();
 
-        if (targetOre == null) return;
+        if (targetStone == null) return;
 
         attackTimer += Time.deltaTime;
         if (attackTimer >= attackInterval)
         {
             attackTimer = 0;
-            Attack(targetOre);
+            Attack(targetStone);
         }
     }
 
     void FindTarget()
     {
         // 현재 타겟이 유효하면 유지
-        if (targetOre != null && targetOre.gameObject.activeSelf)
+        if (targetStone != null && targetStone.gameObject.activeSelf)
         {
-            float dist = Vector2.Distance(transform.position, targetOre.transform.position);
+            float dist = Vector2.Distance(transform.position, targetStone.transform.position);
             if (dist <= attackRange) return;
         }
 
-        targetOre = null;
+        targetStone = null;
 
         Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, attackRange, oreLayer);
         float minDist = float.MaxValue;
 
         foreach (var col in cols)
         {
-            if (!col.TryGetComponent(out OreStone ore)) continue;
+            if (!col.TryGetComponent(out Stone ore)) continue;
             float dist = Vector2.Distance(transform.position, ore.transform.position);
             if (dist < minDist)
             {
                 minDist  = dist;
-                targetOre = ore;
+                targetStone = ore;
             }
         }
     }
 
-    protected abstract void Attack(OreStone ore);
+    protected abstract void Attack(Stone ore);
 }

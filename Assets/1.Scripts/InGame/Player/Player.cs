@@ -106,7 +106,7 @@ public class Player : MonoSingleton<Player>, IPicker
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
         destroyCount++;
-        float dist = Vector2.Distance(transform.position, e.oreStone.transform.position);
+        float dist = Vector2.Distance(transform.position, e.stone.transform.position);
         if (dist > distanceMaxDistanceDestroiedStone) distanceMaxDistanceDestroiedStone = dist;
         if (dist < distanceMinDistanceDestroiedStone) distanceMinDistanceDestroiedStone = dist;
     }

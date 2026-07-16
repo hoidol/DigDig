@@ -18,7 +18,7 @@ public class CloverItem : Item
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
         if (Random.value < CHANCE)
-            Gold.Dropped(e.oreStone.transform.position);
+            Gold.Dropped(e.stone.transform.position);
     }
 
     public override string GetDescription(int lv = 1,bool detail = false)

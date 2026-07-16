@@ -74,7 +74,7 @@ public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
 
 public enum EffectType
 {
-    Hit, Explosion, OreStoneBreak, SmallExplosion, Spark
+    Hit, Explosion, StoneBreak, SmallExplosion, Spark
 }
 public enum Icon
 {

@@ -13,10 +13,10 @@ public class Pickaxe : Ally
 
     readonly DamageData damageData = new();
     CancellationTokenSource cts;
-    public OreStone target;
-    HashSet<OreStone> claimedTargets;
+    public Stone target;
+    HashSet<Stone> claimedTargets;
 
-    public void Init(HashSet<OreStone> shared)
+    public void Init(HashSet<Stone> shared)
     {
         claimedTargets = shared;
     }
@@ -36,7 +36,7 @@ public class Pickaxe : Ally
         cts = null;
     }
 
-    void ClaimTarget(OreStone ore)
+    void ClaimTarget(Stone ore)
     {
         ReleaseTarget();
         target = ore;
@@ -88,17 +88,17 @@ public class Pickaxe : Ally
         }
     }
 
-    OreStone FindNearestOre()
+    Stone FindNearestOre()
     {
         Collider2D[] cols = Physics2D.OverlapCircleAll(
             Player.Instance.transform.position, SEARCH_RADIUS, LayerMask.GetMask("Hittable"));
 
-        OreStone nearest = null;
+        Stone nearest = null;
         float minDist = float.MaxValue;
 
         foreach (var col in cols)
         {
-            OreStone ore = col.GetComponent<OreStone>();
+            Stone ore = col.GetComponent<Stone>();
             if (ore == null || ore.curHp <= 0) continue;
             if (claimedTargets != null && claimedTargets.Contains(ore)) continue;
 

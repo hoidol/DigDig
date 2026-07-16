@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnbreakableStone : OreStone, IHittable, ITile
+public class UnbreakableStone : Stone, IHittable, ITile
 {
     public override void Init(int level, Color color, Vector2Int[,] idxArr)//, Vector2Int gridPos
     {

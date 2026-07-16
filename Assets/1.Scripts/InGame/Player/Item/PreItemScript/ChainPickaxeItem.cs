@@ -32,14 +32,14 @@ public class ChainPickaxeItem : Item
         if (Random.Range(0f, 100f) > CHANCE) return;
 
         Collider2D[] cols = Physics2D.OverlapCircleAll(
-            e.oreStone.transform.position, chainRadius, oreLayer);
+            e.stone.transform.position, chainRadius, oreLayer);
 
-        var candidates = new System.Collections.Generic.List<(OreStone ore, float dist)>();
+        var candidates = new System.Collections.Generic.List<(Stone ore, float dist)>();
         foreach (var col in cols)
         {
-            if (!col.TryGetComponent(out OreStone ore)) continue;
-            if (ore == e.oreStone) continue;
-            float dist = Vector2.Distance(e.oreStone.transform.position, ore.transform.position);
+            if (!col.TryGetComponent(out Stone ore)) continue;
+            if (ore == e.stone) continue;
+            float dist = Vector2.Distance(e.stone.transform.position, ore.transform.position);
             candidates.Add((ore, dist));
         }
         candidates.Sort((a, b) => a.dist.CompareTo(b.dist));

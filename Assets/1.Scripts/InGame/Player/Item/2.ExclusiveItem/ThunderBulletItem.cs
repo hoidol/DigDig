@@ -29,7 +29,7 @@ public class ThunderBulletItem : TriggerItem
         Collider2D[] cols = Physics2D.OverlapCircleAll(playerPos, searchRadius, hittableLayer);
 
         Enemy nearestEnemy = null;
-        OreStone nearestOre = null;
+        Stone nearestOre = null;
         float enemyDistSq = float.MaxValue;
         float oreDistSq = float.MaxValue;
 
@@ -40,7 +40,7 @@ public class ThunderBulletItem : TriggerItem
             {
                 if (distSq < enemyDistSq) { enemyDistSq = distSq; nearestEnemy = enemy; }
             }
-            else if (col.TryGetComponent(out OreStone ore) && ore.curHp > 0)
+            else if (col.TryGetComponent(out Stone ore) && ore.curHp > 0)
             {
                 if (distSq < oreDistSq) { oreDistSq = distSq; nearestOre = ore; }
             }

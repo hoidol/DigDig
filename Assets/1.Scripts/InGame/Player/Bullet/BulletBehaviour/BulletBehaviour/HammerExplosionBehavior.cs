@@ -18,7 +18,7 @@ public class HammerExplosionBehavior : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        if (hit is OreStone && Random.value <= chance)
+        if (hit is Stone && Random.value <= chance)
         {
             InGameUtil.DamageEnemies(bullet.transform.position, radius, damage, enemyLayer);
         }

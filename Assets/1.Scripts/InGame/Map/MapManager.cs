@@ -122,7 +122,7 @@ public class MapManager : MonoSingleton<MapManager>
 
         int cellRadius = Mathf.CeilToInt(radius / TILE_SIZE);
 
-        var spawnList = new List<(OreStone ore, float dist)>();
+        var spawnList = new List<(Stone ore, float dist)>();
 
         for (int cx = -cellRadius; cx <= cellRadius; cx++)
         {
@@ -143,7 +143,7 @@ public class MapManager : MonoSingleton<MapManager>
                 }
 
                 int colorIdx = PickColorIndex(dist);
-                OreStone ore = OreStone.Get(cellPos, transform);
+                Stone ore = Stone.Get(cellPos, transform);
                 Vector2Int[,] indexArr = new Vector2Int[1, 1];
                 indexArr[0, 0] = index;
                 ore.Init(colorIdx, fillColors[colorIdx], indexArr);
@@ -191,7 +191,7 @@ public class MapManager : MonoSingleton<MapManager>
             : Physics2D.OverlapBoxAll(center, new Vector2(width, height), 0f, mask);
         foreach (var col in cols)
         {
-            col.GetComponent<OreStone>()?.OnDestroy();
+            col.GetComponent<Stone>()?.OnDestroy();
         }
     }
 

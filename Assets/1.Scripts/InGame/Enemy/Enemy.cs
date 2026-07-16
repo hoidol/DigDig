@@ -173,7 +173,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     public void Reward()
     {
         Exp.Instantiate(transform.position, enemyData.exp, 1);
-        EffectManager.Instance.Play(EffectType.OreStoneBreak, transform.position);
+        EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
     }
     public virtual void OnDestroy()
     {

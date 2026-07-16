@@ -19,7 +19,7 @@ public class CrystalExplosionItem : Item
     void OnDestroyedStone(DestroyedStoneEvent e)
     {
         InGameUtil.DamageEnemies(
-            e.oreStone.transform.position,
+            e.stone.transform.position,
             explosionRadius * GetLevel(),
             explosionDamage * GetLevel(),
             enemyLayer
