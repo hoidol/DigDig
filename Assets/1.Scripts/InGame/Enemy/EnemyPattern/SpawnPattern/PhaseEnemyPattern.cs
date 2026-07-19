@@ -64,7 +64,6 @@ public class PhaseEnemyPattern : SpawnPattern
         bool canSpawn = true;
         if (bestChecker.tile != null && Random.Range(0f, 100f) < 70)
         {
-
             Vector2Int startTileArr = MapManager.PositionToTileIndex(bestChecker.tile.Transform.position);
             if (!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
             {

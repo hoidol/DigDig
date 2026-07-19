@@ -11,7 +11,7 @@ public class EmergencyFireAbility : Ability, IAttack, IPreAttack
         return $"모든 총알 소비 후 방사형으로 {BULLET_COUNT}탄 난사";
     }
 
-    public void OnPreAttack(Player player, Vector2 dir, int shotOrder)
+    public void OnPreAttack(Player player, Vector2 dir)
     {
 
     }

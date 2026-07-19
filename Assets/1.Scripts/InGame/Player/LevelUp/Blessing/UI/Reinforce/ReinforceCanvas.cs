@@ -15,10 +15,10 @@ public class ReinforceCanvas : CanvasUI<ReinforceCanvas>
         List<IReinforce> candidates = new List<IReinforce>();
         foreach (var bulletStat in Player.Instance.statMgr.bulletStatDic.Values)
         {
-            if (Player.Instance.weapon.bulletInventory.CheckHave(bulletStat.key) && bulletStat.lv >= BulletData.MAX_LEVEL)
-            {
-                continue;
-            }
+            // if (Player.Instance.weapon.bulletInventory.CheckHave(bulletStat.key) && bulletStat.lv >= BulletData.MAX_LEVEL)
+            // {
+            //     continue;
+            // }
 
             candidates.Add(BulletManager.bullets[bulletStat.key]);
         }

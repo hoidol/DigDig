@@ -26,7 +26,7 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
         });
 
         await UniTask.Delay(TimeSpan.FromSeconds(patternCoolTime));
-        
+
         EndAttack();
     }
 
@@ -52,25 +52,25 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
                 if (!MapManager.CheckEmpty(tileIndex))
                 {
                     Enemy e = EnemyManager.Instance.GetEnemyInTileIndex(tileIndex);
-                    if(e == this)
+                    if (e == this)
                         continue;
-                        
+
                     if (!enemies.Contains(e))
                         enemies.Add(e);
-                    
+
                 }
             }
         }
         //현재 위치에 있는 모든 적들을 제거
         for (int i = 0; i < enemies.Count; i++)
         {
-            enemies[i].OnDestroy();
+            enemies[i].Destroy();
         }
     }
 
-    public override void OnDestroy()
+    public override void Destroy()
     {
-        base.OnDestroy();
+        base.Destroy();
         BlessingStone.Instantiate(transform.position);
     }
 

@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using TMPro;
 public abstract class Enemy : MonoBehaviour, IHittable, ITile
 {
     public EnemyType enemyType; // 적 종류 구분
@@ -17,7 +18,6 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     }
     [Header("생성 시 타일을 부수면서 등장함")]
     public bool breakTileWhenSpawn;
-    #region 
     public float MaxHp => maxHp;
     [SerializeField] public float maxHp;//{ get; private set; }
     public float CurHp => curHp;
@@ -27,25 +27,27 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     [SerializeField] protected Transform hpPoint;
     protected Rigidbody2D rg2d;
     public Rigidbody2D Rigidbody2D => rg2d;
+    protected Collider2D col2d;
 
 
     public Transform Transform => transform;
 
     public Vector2Int[,] TileIndexArr => tileIndexArr;
+    protected Vector2Int[,] tileIndexArr; //현재 차지하고 있는 위치
     public Vector2Int Size => enemyData.size;
 
     public bool BreakTileWhenSpawn => breakTileWhenSpawn;
-    public Vector2Int[,] tileIndexArr;
+
     public float apearTime = 2; //떨어지면서 등장하는 시간
     public const float MOVE_SPEED = 2; //떨어지면서 등장하는 시간
 
     public DamageData damageData = new DamageData();
-
-    #endregion
+    public TMP_Text hpText;
 
     public virtual void Awake()
     {
         rg2d = GetComponent<Rigidbody2D>();
+        col2d = GetComponent<Collider2D>();
         statusEffectHandler = GetComponent<StatusEffectHandler>();
         statusEffectHandler?.Init();
     }
@@ -57,6 +59,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
         RegisterTile(idxArr);
 
         gameObject.SetActive(false);
+
         Vector2 pos = MapManager.TileIndexToCenterPosition(idxArr);
 
         EnemySpawnIndicator.Get(pos, null).PlayIndicator(tileIndexArr, apearTime, () =>
@@ -67,13 +70,26 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
         transform.position = pos;
         maxHp = enemyData.GetHp();
         curHp = maxHp;
+        hpText.text = ((int)curHp).ToString();
 
         damageData.damage = enemyData.GetAttackPower();
     }
 
+    const float APEAR_POP_DURATION = 0.15f;
     public virtual void Apear()
     {
         gameObject.SetActive(true);
+
+        if (col2d != null)
+            col2d.enabled = false;
+
+        transform.localScale = Vector3.zero;
+        transform.DOScale(1f, APEAR_POP_DURATION).SetEase(Ease.OutBack)
+            .OnComplete(() =>
+            {
+                if (col2d != null)
+                    col2d.enabled = true;
+            });
     }
 
 
@@ -128,15 +144,16 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
 
         damage.Applyed(hpPoint.transform.position);
         curHp = Mathf.Max(0, curHp - damage.damage);
-
-        //Hit Effect
-
+        if (curHp > 1)
+            hpText.text = ((int)curHp).ToString();
+        else if (0 < curHp && curHp <= 1)
+            hpText.text = "1";
 
         OnHpChanged();
-        if (curHp <= 0)
+        if (curHp < 1)
         {
             Reward();
-            OnDestroy();
+            Destroy();
         }
     }
 
@@ -170,12 +187,13 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     {
 
     }
-    public void Reward()
+    public virtual void Reward()
     {
+
         Exp.Instantiate(transform.position, enemyData.exp, 1);
         EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
     }
-    public virtual void OnDestroy()
+    public virtual void Destroy()
     {
         ReleaseTile();
     }

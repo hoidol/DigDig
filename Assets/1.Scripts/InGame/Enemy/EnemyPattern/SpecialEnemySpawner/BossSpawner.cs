@@ -50,7 +50,7 @@ public class BossSpawner : SpecialEnemySpawner
     {
         for (int i = 0; i < unbreakableStones.Count; i++)
         {
-            unbreakableStones[i].OnDestroy();
+            unbreakableStones[i].Destroy();
         }
     }
 }

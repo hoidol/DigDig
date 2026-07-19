@@ -5,15 +5,15 @@ public class ReinforceButton : BlessingButton
 {
     public override void UpdateButton()
     {
-        titleText.text= TranslateManager.GetText($"Reinforce_Title");
+        titleText.text = TranslateManager.GetText($"Reinforce_Title");
 
         bool active = false;
         foreach (var bulletStat in Player.Instance.statMgr.bulletStatDic.Values)
         {
-            if (Player.Instance.weapon.bulletInventory.CheckHave(bulletStat.key) && bulletStat.lv < BulletData.MAX_LEVEL)
-            {
-                continue;
-            }
+            // if (Player.Instance.weapon.bulletInventory.CheckHave(bulletStat.key) && bulletStat.lv < BulletData.MAX_LEVEL)
+            // {
+            //     continue;
+            // }
             active = true;
             break;
         }

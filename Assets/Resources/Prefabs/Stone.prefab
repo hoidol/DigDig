@@ -191,7 +191,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8822653418144025290}
   - component: {fileID: 4497035003349055784}
-  - component: {fileID: 2914283252699772530}
   m_Layer: 9
   m_Name: InnerBox
   m_TagString: Untagged
@@ -264,7 +263,7 @@ SpriteRenderer:
   m_SortingOrder: 6
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 54dc27b7a6e524ffb914acda6c594789, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.2924528, g: 0.0758722, b: 0.0758722, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -273,52 +272,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!61 &2914283252699772530
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1713543967324675697}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.1377778, y: 1.1377778}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1.4, y: 1.4}
-  m_EdgeRadius: 0
 --- !u!1 &3342182484805523930
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,7 +424,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.4, y: 1.4}
+  m_Size: {x: 1.42, y: 1.42}
   m_EdgeRadius: 0
 --- !u!1 &5116598350353138223
 GameObject:
@@ -522,9 +475,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileIndex: {x: 0, y: 0}
   hpPoint: {fileID: 7845404896225075103}
+  hpText: {fileID: 2969275751179037376}
   curHp: 0
   maxHp: 0
   level: 0
+  innerSpriteRdr: {fileID: 4497035003349055784}
 --- !u!61 &3075222085040685649
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -569,7 +524,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.38, y: 1.38}
+  m_Size: {x: 1.42, y: 1.42}
   m_EdgeRadius: 0
 --- !u!1 &8814495760050537930
 GameObject:

@@ -14,6 +14,11 @@ public class PoolingSystem<T> where T : MonoBehaviour
 
     }
 
+    public void SetPrefab(T prefab)
+    {
+        this.prefab = prefab;
+    }
+
     public T GetObject<T>() where T : Component
     {
         GameObject obj = GetObject();

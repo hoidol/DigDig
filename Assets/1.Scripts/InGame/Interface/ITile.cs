@@ -7,7 +7,7 @@ public interface ITile
         get;
     }
     void RegisterTile(Vector2Int[,] idxArr);
-    void OnDestroy();
+    void Destroy();
     void ReleaseTile();
     Transform Transform
     {

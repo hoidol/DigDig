@@ -10,7 +10,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     public int initBulletCount;//초기 개수
     public float reloadTime;
 
-    public BulletInventory bulletInventory;
+    // public BulletInventory bulletInventory;
     [SerializeField] public Transform attackPoint;
     [SerializeField] public Transform dirTr;
 
@@ -23,77 +23,41 @@ public abstract class BaseGun : MonoBehaviour, IGun
     public Vector2 LastAttackDir { get; private set; }
 
     public bool IsReloading { get; private set; }
-    public List<string> loadedBullets = new List<string>();
-
-    // public int CurBulletOrder => curBulletOrder;
-
-    // private int curBulletOrder;
-
-    // int pendingMultiShot = 1;
-    // int pendingSpread;
-    // int extraShotCount;
-    // bool processingExtraShots;
-
+    // public List<string> loadedBullets = new List<string>();
     readonly BulletFiredEvent bulletFiredEvent = new();
+
+    public Bullet curBullet;
 
     // Player 및 의존 컴포넌트 참조 초기화
     public void Init(Player player)
     {
         this.player = player;
-        bulletInventory = GetComponentInChildren<BulletInventory>();
+        // bulletInventory = GetComponentInChildren<BulletInventory>();
         statMgr = player.statMgr;
         cameraShake = player.cameraShake;
         mainCamera = Camera.main;
-
+        curBullet = BulletManager.Create("Normal");
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
     }
 
     void OnStartGame(StartGameEvent e)
     {
-        // Debug.Log("OnStartGame BaseGun");
-        for (int i = 0; i < initBulletCount; i++)
-        {
-            AddBullet("Normal");
-        }
+        SetBullet("Normal");
 
     }
 
 
-    public void AddBullet(string key)
+    public void SetBullet(string key)
     {
-        // Debug.Log($"OnStartGame AddBullet {key}");
-        AddBullet(BulletData.GetBulletData(key));
+        SetBullet(BulletData.GetBulletData(key));
     }
 
-    public void AddBullet(BulletData bulletData)
+    public void SetBullet(BulletData bulletData)
     {
-        bulletInventory.AddBullet(bulletData);
-
-        LoadBullet(bulletData.key);
-        BulletInventoryUI.Instance.AddedBullet(bulletData.key);
         GameEventBus.Publish(new AddedBulletEvent(bulletData));
 
     }
-    public void ReleaseBullet(string key)
-    {
-        bulletInventory.ReleaseBullet(key);
-        BulletInventoryUI.Instance.RemovedBullet(key);
-        GameEventBus.Publish(new RemovedBulletEvent(BulletData.GetBulletData(key)));
 
-    }
-
-
-    // 시련 진입 시 무기 상태 초기화
-    public void ResetOnUndergroundStart()
-    {
-        IsReloading = false;
-        // CurBulletCount = statMgr.BulletCount;
-        // extraShotCount = 0;
-        // processingExtraShots = false;
-        // pendingMultiShot = 1;
-        // pendingSpread = 0;
-        GameEventBus.Publish(new ReloadEndEvent());
-    }
 
     // 마우스(PC) 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
@@ -109,7 +73,6 @@ public abstract class BaseGun : MonoBehaviour, IGun
     {
         dirTr.up = GetAttackDirection();
         if (IsReloading) return;
-
 
 #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         if (Input.GetMouseButton(0))
@@ -161,21 +124,19 @@ public abstract class BaseGun : MonoBehaviour, IGun
     {
         if (IsReloading)
             return;
-        if (loadedBullets.Count <= 0)
-            return;
+
+        Player.Instance.AddHp(-curBullet.bulletData.consumeHp, false);
 
         LastAttackDir = dir;
         // pendingMultiShot = 1;
         // pendingSpread = 0;
-        var (bullet, shotOrder) = SpendBullet();
+        // var (bullet, shotOrder) = SpendBullet();
 
         foreach (var e in player.itemInventory.preAttacks)
-            e.OnPreAttack(player, dir, shotOrder);
-        foreach (var e in bulletInventory.preAttacks)
-            e.OnPreAttack(player, dir, shotOrder);
+            e.OnPreAttack(player, dir);
 
 
-        Shoot(bullet, dir, (Vector2)attackPoint.position);
+        Shoot(curBullet, dir, (Vector2)attackPoint.position);
 
 
         // 멀티샷: 발사 방향에 수직으로 간격을 두어 여러 발 생성
@@ -200,21 +161,19 @@ public abstract class BaseGun : MonoBehaviour, IGun
 
         foreach (var e in player.itemInventory.attacks)
             e.OnAttack(player, dir);
-        foreach (var e in bulletInventory.attacks)
-            e.OnAttack(player, dir);
 
         RunComboAttacks(dir).Forget();
         cameraShake.Shake(0.15f);
 
         attackTimer = 0f;
 
-        if (loadedBullets.Count <= 0)
-            CoReload().Forget();
+        // if (loadedBullets.Count <= 0)
+        //     CoReload().Forget();
 
-        bulletFiredEvent.bullet = bullet;
+        bulletFiredEvent.bullet = curBullet;
         bulletFiredEvent.dir = dir;
 
-        BulletInventoryUI.Instance.FiredBullet(bullet.key, shotOrder);
+        // BulletInventoryUI.Instance.FiredBullet(bullet.key, shotOrder);
         GameEventBus.Publish(bulletFiredEvent);
     }
 
@@ -224,7 +183,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         if (pos == Vector2.zero)
             pos = attackPoint.position;
         if (dir == Vector2.zero)
-            dir = Player.Instance.attackJoystick.Direction.normalized;
+            dir = Player.Instance.weapon.dirTr.up;
 
 
         var playerBullet = bullet.GetBulletObject();//bullet.GetBulletObject();
@@ -265,68 +224,9 @@ public abstract class BaseGun : MonoBehaviour, IGun
         foreach (var e in player.itemInventory.comboAttacks)
             await e.OnAttack(player, dir);
 
-        foreach (var e in bulletInventory.comboAttacks)
-            await e.OnAttack(player, dir);
     }
 
-    public (Bullet bullet, int shotOrder) SpendBullet()
-    {
-        if (loadedBullets.Count <= 0)
-            return (null, 0);
 
-        int shotOrder = bulletInventory.bullets.Count - loadedBullets.Count;
-        Bullet bullet = BulletManager.bullets[loadedBullets[loadedBullets.Count - 1]];
 
-        // Debug.Log($"Shoot {bullet.key} shot Ordre {shotOrder}");
-        loadedBullets.RemoveAt(loadedBullets.Count - 1);
-        return (bullet, shotOrder);
-    }
 
-    public void LoadBullet(string bulletKey)
-    {
-        if (IsReloading)
-            return;
-
-        loadedBullets.Insert(0, bulletKey);
-    }
-
-    // 탄약 소진 시 한 발씩 충전하는 장전 처리
-    async UniTaskVoid CoReload()
-    {
-        IsReloading = true;
-        GameEventBus.Publish(new ReloadStartEvent(reloadTime, statMgr.ReloadSpeed));
-        //float maxCount = bulletInventory.GetMaxBulletCount();
-        // float sec = reloadTime / maxCount;
-        // Debug.Log("재장전 시작 ");
-
-        var token = this.GetCancellationTokenOnDestroy();
-
-        float timer = 0;
-        while (true)
-        {
-            if (timer > reloadTime)
-                break;
-
-            await UniTask.Yield(cancellationToken: token);
-            timer += Time.deltaTime * statMgr.ReloadSpeed;
-
-        }
-        IsReloading = false;
-        // Debug.Log("재장전 끝");
-        // await UniTask.Yield(cancellationToken: token);
-        for (int i = 0; i < bulletInventory.curBullets.Count; i++)
-        {
-            LoadBullet(bulletInventory.curBullets[i]);
-        }
-        BulletInventoryUI.Instance.EndReload();
-
-        await UniTask.Yield(cancellationToken: token);
-        attackTimer = statMgr.AttackSpeed;
-        GameEventBus.Publish(new ReloadEndEvent());
-    }
-
-    public void OnAddedBulletEvent(AddedBulletEvent e)
-    {
-
-    }
 }

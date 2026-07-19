@@ -9,6 +9,7 @@ public class PlayerHealth : MonoBehaviour, IHittable
     public float CurHp => curHp;
     public float curHp;
     public float healMultiplier = 1f;
+    public PlayerHealthCanvas healthCanvas;
 
     Player player;
     StatusEffectHandler statusEffectHandler;
@@ -20,7 +21,11 @@ public class PlayerHealth : MonoBehaviour, IHittable
     {
         this.player = player;
         this.hpPoint = hpPoint;
+
+        curHp = player.statMgr.MaxHp;
+        RunRecover().Forget();
         statusEffectHandler = seh;
+        healthCanvas.UpdateCanvas();
     }
 
     public void TakeDamage(DamageData damageData)
@@ -28,17 +33,25 @@ public class PlayerHealth : MonoBehaviour, IHittable
         if (statusEffectHandler != null && statusEffectHandler.TryBlock()) return;
         PlayerTakeDamageText.SetText(hpPoint.position, $"-{(int)damageData.damage}");
         curHp -= damageData.damage;
+        if (curHp <= 0)
+            curHp = 0;
+
         GameEventBus.Publish(new PlayerHpChangedEvent(curHp, player.statMgr.MaxHp));
-        if (curHp < 0)
-            GameManager.Instance.EndGame(false);
     }
 
-    public void AddHp(float hp)
+    public void AddHp(float hp, bool showDmg = true)
     {
         if (hp > 0) hp *= healMultiplier;
         curHp += hp;
-        if (hp > 0)
-            HealText.SetText(hpPoint.position, ((int)hp).ToString());
+        if (showDmg)
+        {
+            if (hp > 0)
+                HealText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, ((int)hp).ToString());
+            else if (hp <= 1)
+                DamageText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, $"{(int)hp}");
+        }
+
+
         if (curHp > player.statMgr.MaxHp)
             curHp = player.statMgr.MaxHp;
         GameEventBus.Publish(new PlayerHpChangedEvent(curHp, player.statMgr.MaxHp));

@@ -16,6 +16,8 @@ public class WayPointer : MonoBehaviour
 
     bool isPlayingEffect;
 
+    [SerializeField] float screenEdgeMargin = 150f;
+
     void Awake()
     {
         mainCamera = Camera.main;
@@ -58,12 +60,11 @@ public class WayPointer : MonoBehaviour
 
     Vector3 CalcPointerWorldPos()
     {
-        float borderSize = 100f;
         Vector3 screenPos = mainCamera.WorldToScreenPoint(wayPointerTarget.Transform.position);
-        if (screenPos.x <= borderSize) screenPos.x = borderSize;
-        if (screenPos.x >= Screen.width - borderSize) screenPos.x = Screen.width - borderSize;
-        if (screenPos.y <= borderSize) screenPos.y = borderSize;
-        if (screenPos.y >= Screen.height - borderSize) screenPos.y = Screen.height - borderSize;
+        if (screenPos.x <= screenEdgeMargin) screenPos.x = screenEdgeMargin;
+        if (screenPos.x >= Screen.width - screenEdgeMargin) screenPos.x = Screen.width - screenEdgeMargin;
+        if (screenPos.y <= screenEdgeMargin) screenPos.y = screenEdgeMargin;
+        if (screenPos.y >= Screen.height - screenEdgeMargin) screenPos.y = Screen.height - screenEdgeMargin;
         Vector3 world = mainCamera.ScreenToWorldPoint(screenPos);
         world.z = 0f;
         return world;

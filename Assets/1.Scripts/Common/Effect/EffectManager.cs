@@ -12,12 +12,10 @@ public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
         effectPrefabs = Resources.LoadAll<Effect>("Effect");
     }
 
-
     public Effect Instantiate(EffectType type)
     {
         return GetEffect(type);
     }
-
 
     public Effect GetEffect(EffectType type)
     {

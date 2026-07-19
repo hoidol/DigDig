@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BulletUI : MonoBehaviour
 {
     public Image thum;
-    RectTransform rt;
+    public RectTransform rt;
 
     void Awake() => rt = GetComponent<RectTransform>();
 

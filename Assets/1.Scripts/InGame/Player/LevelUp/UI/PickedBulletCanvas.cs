@@ -28,7 +28,7 @@ public class PickedBulletCanvas : CanvasUI<PickedBulletCanvas>
         {
             alreadyPicked.Add(pickedBulletData.key);
         }
-        Player.Instance.weapon.AddBullet(pickedBulletData);
+        // Player.Instance.weapon.AddBullet(pickedBulletData);
 
     }
 }

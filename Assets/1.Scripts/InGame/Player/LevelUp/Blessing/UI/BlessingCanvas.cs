@@ -13,10 +13,10 @@ public class BlessingCanvas : CanvasUI<BlessingCanvas>
         List<string> bulletDataKeys = new List<string>();
         foreach (var bulletStat in Player.Instance.statMgr.bulletStatDic.Values)
         {
-            if (Player.Instance.weapon.bulletInventory.CheckHave(bulletStat.key) && bulletStat.lv < BulletData.MAX_LEVEL)
-            {
-                bulletDataKeys.Add(bulletStat.key);
-            }
+            // if (Player.Instance.weapon.bulletInventory.CheckHave(bulletStat.key) && bulletStat.lv < BulletData.MAX_LEVEL)
+            // {
+            //     bulletDataKeys.Add(bulletStat.key);
+            // }
         }
 
         List<string> itemKeys = new List<string>();

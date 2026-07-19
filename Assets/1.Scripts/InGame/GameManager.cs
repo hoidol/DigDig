@@ -11,11 +11,10 @@ public class GameManager : MonoSingleton<GameManager>
 {
     List<ILoadData> loadDatas = new List<ILoadData>();
     public int phase;
-    public int destroyOreCount { get; private set; }
+    public int destroyStoneCount { get; private set; }
     public int killEnemyCount { get; private set; }
     public StageData stageData;
 
-    public bool isClear;
     public bool isPlaying;
     EnemySpawnerContainer enemySpawnerContainer;
     protected void Awake()
@@ -41,6 +40,9 @@ public class GameManager : MonoSingleton<GameManager>
 
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
+        GameEventBus.Subscribe<BossDeadEvent>(OnBossDeadEvent);
+
+        GameEventBus.Subscribe<PlayerHpChangedEvent>(OnPlayerHpChangedEvent);
 
         Debug.Log($"UserManager.STAGE_KEY {UserManager.STAGE_KEY}");
         stageData = StageManager.Instance.GetStageData(UserManager.STAGE_KEY);
@@ -63,7 +65,6 @@ public class GameManager : MonoSingleton<GameManager>
         isPlaying = true;
 
 
-        isClear = false;
         GameEventBus.Publish(new StartGameEvent(stageData));
 
         StartPhase(phase);
@@ -71,9 +72,7 @@ public class GameManager : MonoSingleton<GameManager>
     PhaseData phaseData;
     public void StartPhase(int phase)
     {
-
-        phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
-        // this.phase = phase;
+        // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
         phaseData = stageData.GetPhaseData(phase);
         Debug.Log($"GameManager StartPhase {phase}");
         if (phaseData.isBoss)
@@ -107,17 +106,46 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
 
-
     void Update()
     {
         gameTimer += Time.deltaTime;
     }
 
-
+    void OnBossDeadEvent(BossDeadEvent e)
+    {
+        if (Player.Instance.curHp <= 0)
+            return;
+        EndGame(true);
+    }
     public void EndGame(bool clear)
     {
-        string msg = clear ? "승리" : "패배";
-        FadeCanvs.Instance.FadeIn($"msg", () => { SceneManager.LoadScene("InGame"); });
+        if (!isPlaying)
+            return;
+
+        isPlaying = false;
+        if (!clear)
+        {
+            FailCanvas.Instance.OpenCanvas();
+        }
+        else
+        {
+            ResultCanvas.Instance.OpenCanvas();
+        }
+        // string msg = clear ? "승리" : "패배";
+        // FadeCanvs.Instance.FadeIn($"msg", () => { SceneManager.LoadScene("InGame"); });
+    }
+
+    public void Recure()
+    {
+        Player.Instance.AddHp(Player.Instance.health.MaxHp);
+        isPlaying = true;
+    }
+    void OnPlayerHpChangedEvent(PlayerHpChangedEvent e)
+    {
+        if (e.curHp <= 0)
+        {
+            EndGame(false);
+        }
     }
 
     void EnemyDeadEventListener(EnemyDeadEvent e)
@@ -126,7 +154,7 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public void OnDestroyedStoneEvent(DestroyedStoneEvent e)
     {
-        destroyOreCount++;
+        destroyStoneCount++;
 
         // 필요하면 여기서 UI 업데이트, 세이브, 업적 체크 등도 같이 처리
     }

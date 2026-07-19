@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
-public class NormalEnemy : Enemy, IHpUI
+public class NormalEnemy : Enemy
 {
     public NormalEnemyState state { get; private set; } // 적 상태 - FSM 패턴
     public Vector3 HpUIPosition => hpPoint.position;
@@ -10,7 +10,6 @@ public class NormalEnemy : Enemy, IHpUI
     protected float attackTimer;
     protected bool attacking;
 
-    HpUI hpUI;
 
     [SerializeField] protected bool moving;
     protected float moveTimer;
@@ -50,6 +49,9 @@ public class NormalEnemy : Enemy, IHpUI
 
     public override void Update()
     {
+        if (!GameManager.Instance.isPlaying)
+            return;
+
         if (statusEffectHandler.IsStunned)
         {
             if (attacking)
@@ -128,17 +130,18 @@ public class NormalEnemy : Enemy, IHpUI
             StartAttack();
     }
 
-    protected override void OnHpChanged()
-    {
-        if (hpUI == null || !hpUI.IsOwn(this))
-            hpUI = HpUI.Get(this);
-        hpUI.UpdateTime();
-    }
 
     public virtual void StartAttack()
     {
         attacking = true;
         attackTimer = 0;
+    }
+    public override void Reward()
+    {
+        if (Random.value < 0.25)
+            HealItem.Instantiate(transform.position);
+
+        base.Reward();
     }
 
     public virtual void EndAttack()
@@ -147,12 +150,11 @@ public class NormalEnemy : Enemy, IHpUI
         ChangeState(NormalEnemyState.Waiting).Forget();
     }
 
-    public override void OnDestroy()
+    public override void Destroy()
     {
-        base.OnDestroy();
-
+        base.Destroy();
+        CancelAttack();
         ChangeState(NormalEnemyState.Dead).Forget();
-        hpUI?.Release();
 
     }
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public abstract class BulletObject : MonoBehaviour
 {
     [SerializeField] float moveSpeed;
+    [SerializeField] float bulletRadius = 0.1f;
     public Vector3 direction;
 
     public void SetDirection(Vector2 dir)
@@ -31,7 +32,6 @@ public abstract class BulletObject : MonoBehaviour
     public virtual void Shoot(Vector2 dir, float damage)
     {
         direction = dir;
-        transform.right = dir;
         this.damage = damage;
         damageMultiplier = 1f;
         preTarget = null;
@@ -66,17 +66,13 @@ public abstract class BulletObject : MonoBehaviour
 
     public virtual RaycastHit2D GetRaycastHit2D()
     {
-        return Physics2D.Raycast(transform.position, direction, moveSpeed * Time.deltaTime, hitLayerMask);
+        return Physics2D.CircleCast(transform.position, bulletRadius, direction, moveSpeed * Time.deltaTime, hitLayerMask);
     }
 
 
     public void AddBehavior(IBulletBehavior b)
     {
         behaviors.Add(b);
-        // var existing = behaviors.Find(x => x.GetType() == b.GetType());
-        // if (existing != null)
-        //     existing.Merge(b);
-        // else
     }
     public void ClearBehaviors() => behaviors.Clear();
     public void AddBulletForce(IBulletForce b)

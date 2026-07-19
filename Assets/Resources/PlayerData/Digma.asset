@@ -15,7 +15,7 @@ MonoBehaviour:
   key: Digma
   playerStats:
   - statType: 0
-    value: 30
+    value: 7
   - statType: 1
     value: 50
   - statType: 2

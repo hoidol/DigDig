@@ -73,17 +73,19 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
         CheckPhaseTransition();
     }
 
-    public override void OnDestroy()
+    public override void Destroy()
     {
         if (curBossPhase != null)
             curBossPhase.EndPhase();
 
-        base.OnDestroy();
+        base.Destroy();
         GameEventBus.Publish(new BossDeadEvent(this));
     }
 
     void CheckPhaseTransition()
     {
+        if (currentPhase == phases.Length - 1)
+            return;
         float hpRate = curHp / maxHp;
         int newPhase = 0;
         for (int i = 0; i < phases.Length; i++)
@@ -137,7 +139,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
                     {
                         continue;
                     }
-                    MapManager.tileArray[newTiles[i, j].x, newTiles[i, j].y].OnDestroy();
+                    MapManager.tileArray[newTiles[i, j].x, newTiles[i, j].y].Destroy();
                 }
             }
         }
@@ -146,7 +148,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
 
     public BossBehaviour GetBossBehaviour(string name)
     {
-        return bossBehaviours.Where(e=>e.behaviourName == name).FirstOrDefault();
+        return bossBehaviours.Where(e => e.behaviourName == name).FirstOrDefault();
     }
 }
 

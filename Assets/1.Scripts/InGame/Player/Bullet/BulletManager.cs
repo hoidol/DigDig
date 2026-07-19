@@ -133,13 +133,13 @@ public class BulletManager : MonoSingleton<BulletManager>, ILoadData
         var ownedMergeIngredientKeys = new HashSet<string>();
         if (apearMergeBullet)
         {
-            foreach (var bulletKey in Player.Instance.weapon.bulletInventory.curBullets)
-            {
-                Bullet bullet = bullets[bulletKey];
-                if (bullet.bulletData == null || bullet.bulletData.canMergeBulletKeys == null) continue;
-                foreach (var key in bullet.bulletData.canMergeBulletKeys)
-                    ownedMergeIngredientKeys.Add(key);
-            }
+            // foreach (var bulletKey in Player.Instance.weapon.bulletInventory.curBullets)
+            // {
+            //     Bullet bullet = bullets[bulletKey];
+            //     if (bullet.bulletData == null || bullet.bulletData.canMergeBulletKeys == null) continue;
+            //     foreach (var key in bullet.bulletData.canMergeBulletKeys)
+            //         ownedMergeIngredientKeys.Add(key);
+            // }
         }
 
         // 가중치 풀 구성

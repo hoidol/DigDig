@@ -8,7 +8,8 @@ public class DamageData
     {
         if (damage < 1)
             damage = 0;
-        string dText = ((int)damage).ToString();
+        string dText = $"-{(int)damage}";
+
         if (!isCrt)
         {
             DamageText.SetText(pos, dText);
@@ -23,7 +24,7 @@ public class DamageData
 
 public class PlayerBulletDamageData : DamageData
 {
-    public  RaycastHit2D hit2D; 
+    public RaycastHit2D hit2D;
     public PlayerBulletObject playerBulletObject;
     public void Init(PlayerBulletObject pBObj)
     {

@@ -12,7 +12,7 @@ public class ExcutePatternBossBehaviour : BossBehaviour
     {
         var pattern = boss.curBossPhase.GetEnemyAttackPattern(patternName);
         if (pattern != null)
-            await pattern.Execute(boss, () => { });
+            await pattern.Execute(boss,null);
     }
 
 }

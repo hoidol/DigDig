@@ -74,7 +74,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>, ILoadData
     {
         foreach (Enemy enemy in activeEnemies)
         {
-            foreach (Vector2Int idx in enemy.tileIndexArr)
+            foreach (Vector2Int idx in enemy.TileIndexArr)
             {
                 if (idx == tileIdx) return enemy;
             }

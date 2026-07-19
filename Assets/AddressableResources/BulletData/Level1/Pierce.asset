@@ -15,6 +15,7 @@ MonoBehaviour:
   key: Pierce
   order: 0
   itemName: "\uAD00\uD1B5\uD0C4"
+  consumeHp: 2
   specialBullet: 1
   mergedBullet: 0
   desc: "\uD0C4\uC774 \uBAA8\uB450 \uD295\uAE34 \uD6C4 \uAD00\uD1B5\uD569\uB2C8\uB2E4."

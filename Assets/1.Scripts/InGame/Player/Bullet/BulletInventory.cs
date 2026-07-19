@@ -54,7 +54,7 @@ public class BulletInventory : MonoBehaviour
     public void AddBullet(BulletData bulletData)
     {
         //Bullet bullet = BulletManager.Create(bulletData.key);
-        curBullets.Insert(0, bulletData.key);
+        curBullets.Insert(0, bulletData.key);//맨 앞으로
         Player.Instance.UpdatePlayer();
         RefreshCache();
     }
@@ -71,9 +71,9 @@ public class BulletInventory : MonoBehaviour
         List<MergeBulletData> canMergeBulletDatas = new List<MergeBulletData>();
         for (int i = 0; i < BulletManager.Instance.mergeBulletDatas.Length; i++)
         {
-            MergeBulletData mergeBulletData = BulletManager.Instance.mergeBulletDatas[i];
-            if (mergeBulletData.resourceBulletKeys.All(k => Player.Instance.weapon.bulletInventory.curBullets.Any(b => b == k)))
-                canMergeBulletDatas.Add(mergeBulletData);
+            // MergeBulletData mergeBulletData = BulletManager.Instance.mergeBulletDatas[i];
+            // if (mergeBulletData.resourceBulletKeys.All(k => Player.Instance.weapon.bulletInventory.curBullets.Any(b => b == k)))
+            //     canMergeBulletDatas.Add(mergeBulletData);
         }
         return canMergeBulletDatas;
     }

@@ -6,15 +6,15 @@ public class LevelUpBonusPanel : MonoBehaviour
 {
 
     // public Image thumImage;
-    public Image frameImage;
+
     public TMP_Text titleText;
     public TMP_Text descriptionText;
     public LevelUpBonusType levelUpBonusType;
 
     public virtual void SetBonusPanel()
     {
-        titleText.text= TranslateManager.GetText($"{levelUpBonusType}_title");
-        descriptionText.text= TranslateManager.GetText($"{levelUpBonusType}_description");
+        // titleText.text = TranslateManager.GetText($"{levelUpBonusType}_title");
+        // descriptionText.text = TranslateManager.GetText($"{levelUpBonusType}_description");
     }
 
     public void OnClickedSelect()
@@ -22,20 +22,22 @@ public class LevelUpBonusPanel : MonoBehaviour
         LevelUpCanvas.Instance.CloseCanvas();
         switch (levelUpBonusType)
         {
-            case LevelUpBonusType.AddNormalBullet:
-                Player.Instance.weapon.AddBullet("Normal");
-                Player.Instance.weapon.AddBullet("Normal");
+            case LevelUpBonusType.MaxHp:
+                Player.Instance.AddBuff(new Buff(StatType.MaxHp, 10, StatOpType.Add));
+                break;
+            case LevelUpBonusType.FullHeal:
+                Player.Instance.AddHp(Player.Instance.health.MaxHp);
+                break;
 
+            case LevelUpBonusType.AttackPower:
+                Player.Instance.AddBuff(new Buff(StatType.AttackPower, 1f, StatOpType.Add));
                 break;
-            case LevelUpBonusType.AddBounce:
+            case LevelUpBonusType.RecoveryHp:
+                Player.Instance.AddBuff(new Buff(StatType.RecoveryHp, 0.1f, StatOpType.Add));
+                break;
+
+            case LevelUpBonusType.Bounce:
                 Player.Instance.AddBounce(1);
-                break;
-            case LevelUpBonusType.AddSpecialBullet:
-                // Time.timeScale = 0;
-                BulletData pickedBulletData = BulletManager.Instance.DrawRandomBullet();
-                BulletShortInfoPanel.Instance.AddShortInfo(pickedBulletData, true);
-                Player.Instance.weapon.ReleaseBullet("Normal");
-                Player.Instance.weapon.AddBullet(pickedBulletData.key);
                 break;
         }
 
@@ -44,8 +46,11 @@ public class LevelUpBonusPanel : MonoBehaviour
 }
 public enum LevelUpBonusType
 {
-    AddNormalBullet,
-    AddBounce,
-    AddSpecialBullet,
+    MaxHp,
+    FullHeal, //체력 완전 회복
+    Bounce,
+    AttackPower,
+    RecoveryHp
+    // AddSpecialBullet,
     // MergeBullet
 }

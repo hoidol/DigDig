@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Stone : MonoBehaviour, IHittable, IHpUI, ITile
+public class Stone : MonoBehaviour, IHittable, ITile
 {
     public Transform Transform => transform;
 
@@ -31,17 +32,17 @@ public class Stone : MonoBehaviour, IHittable, IHpUI, ITile
 
 
     public Transform hpPoint;
-    HpUI hpUI = null;
+    public TMP_Text hpText;
     public float curHp;
     public float maxHp;
 
     public float MaxHp => maxHp;
     public float CurHp => curHp;
-    Vector3 IHpUI.HpUIPosition => hpPoint.position;
     public int level;
     // public Vector2Int gridPos;
     // public GameObject gold;
     // bool isGoldStone;
+    public SpriteRenderer innerSpriteRdr;
     public virtual void Init(int level, Color color, Vector2Int[,] idxArr)//, Vector2Int gridPos
     {
         this.level = level;
@@ -53,16 +54,16 @@ public class Stone : MonoBehaviour, IHittable, IHpUI, ITile
 #endif
 
         float distance = Vector2.Distance(Vector2.zero, transform.position);
-        float disMulti = distance / 10f;
+        float disMulti = distance / 7.5f;
         if (disMulti <= 1)
             disMulti = 1;
-
-        this.maxHp = GameManager.Instance.stageData.oreHp * disMulti;
+        float defaultHp = GameManager.Instance.stageData.oreHp * disMulti;
+        this.maxHp = defaultHp + defaultHp * level * 0.5f;
 
         curHp = maxHp;
-        hpUI = null;
 
-        GetComponentInChildren<SpriteRenderer>().color = color;
+        hpText.text = ((int)curHp).ToString();
+        innerSpriteRdr.color = color;
     }
 
     DamageData lastDamage;
@@ -74,19 +75,15 @@ public class Stone : MonoBehaviour, IHittable, IHpUI, ITile
         damage.Applyed(hpPoint.transform.position);
 
 
-        if (hpUI == null || !hpUI.IsOwn(this))
-        {
-            hpUI = HpUI.Get(this);
-            hpUI.transform.position = hpPoint.position;
-        }
-
-
-        hpUI.UpdateTime();
+        if (curHp > 1)
+            hpText.text = ((int)curHp).ToString();
+        else if (0 < curHp && curHp <= 1)
+            hpText.text = "1";
 
         if (curHp <= 0)
         {
             Reward();
-            OnDestroy();
+            Destroy();
         }
     }
 
@@ -95,10 +92,12 @@ public class Stone : MonoBehaviour, IHittable, IHpUI, ITile
 
     public void Reward()
     {
+        if (Random.value < 0.25)
+            HealItem.Instantiate(transform.position);
         Exp.Instantiate(transform.position, exp, 1);
     }
 
-    public virtual void OnDestroy()
+    public virtual void Destroy()
     {
         EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
         GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
@@ -122,8 +121,6 @@ public class Stone : MonoBehaviour, IHittable, IHpUI, ITile
         MapManager.ReleaseTile(tileIndexArr);
 
         if (!gameObject.activeSelf) return;
-        hpUI?.Release();
-        hpUI = null;
         gameObject.SetActive(false);
         pool.Push(this);
     }
@@ -144,9 +141,9 @@ public class DestroyedStoneEvent
 {
     public Stone stone;
     public DamageData lastDamage;
-    public DestroyedStoneEvent(Stone stone, DamageData lastDamage)
+    public DestroyedStoneEvent(Stone s, DamageData lastDamage)
     {
-        stone = stone;
+        this.stone = s;
         this.lastDamage = lastDamage;
     }
 }

@@ -48,6 +48,7 @@ public class Player : MonoSingleton<Player>, IPicker
     public float distanceMaxDistanceDestroiedStone;
     public float distanceMinDistanceDestroiedStone;
     public Vector2 LastAttackDir => weapon.LastAttackDir;
+    public Vector2 CurAttackDir => weapon.LastAttackDir;
 
     public Transform Transform => transform;
     public BulletSubTool[] bulletSubTools;
@@ -80,16 +81,13 @@ public class Player : MonoSingleton<Player>, IPicker
 
         var statusEffectHandler = GetComponentInChildren<StatusEffectHandler>();
         health.Init(this, hpPoint, statusEffectHandler);
-        movement.Init(this, rg, animator, bodyRootTr, moveJoystick);
+        movement.Init(this, rg, animator, bodyRootTr);
         weapon.Init(this);
 
         UpdatePlayer();
 
-        health.curHp = statMgr.MaxHp;
-        health.RunRecover().Forget();
 
-        movement.ResetOnUndergroundStart();
-        weapon.ResetOnUndergroundStart();
+        movement.Restart();
 
         bounce = 0;
         destroyCount = 0;
@@ -113,7 +111,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
     void Update()
     {
-        if (GameManager.Instance.isClear) return;
+        if (!GameManager.Instance.isPlaying) return;
 
         movement.Move();
         weapon.UpdateWeapon();
@@ -162,9 +160,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
     public void MergeBullet(MergeBulletData mergeBulletData)
     {
-        weapon.ReleaseBullet(mergeBulletData.resourceBulletKeys[0]);
-        weapon.ReleaseBullet(mergeBulletData.resourceBulletKeys[1]);
-        weapon.AddBullet(mergeBulletData.resultBulletKey);
+        //weapon.SetBullet(mergeBulletData.resultBulletKey);
         UpdatePlayer();
     }
 
@@ -210,7 +206,7 @@ public class Player : MonoSingleton<Player>, IPicker
         if (l == -1) l = lv;
         if (maxExp == 0 || levelUped)
         {
-            maxExp = 3 + l * 2;
+            maxExp = 5 + l * 3;
             levelUped = false;
         }
         return maxExp;
@@ -225,7 +221,7 @@ public class Player : MonoSingleton<Player>, IPicker
         UpdatePlayer();
     }
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
-    public void AddHp(float hp) => health.AddHp(hp);
+    public void AddHp(float hp, bool showDmg = true) => health.AddHp(hp, showDmg);
 
 
     //플레이어에 의한 공격 Only

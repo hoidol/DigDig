@@ -15,6 +15,7 @@ MonoBehaviour:
   key: Orbit
   order: 0
   itemName: "\uD68C\uC804\uD0C4"
+  consumeHp: 2
   specialBullet: 1
   mergedBullet: 0
   desc: "\uD295\uAE30\uB294 \uD69F\uC218\uB9CC\uD07C \uBD80\uB52A\uD788\uACE0 \uD68C\uC804\uD558\uACE0

@@ -18,11 +18,9 @@ public class PlayerBulletObject : BulletObject
 
     public override void Update()
     {
-        // Debug.Log($"PlayerBulletObject Shoot {lifetimeTimer}");
         lifetimeTimer -= Time.deltaTime;
         if (lifetimeTimer <= 0)
         {
-            // Debug.Log($"PlayerBulletObject Shoot {lifetimeTimer}");
             Release();
             return;
         }
@@ -30,6 +28,7 @@ public class PlayerBulletObject : BulletObject
         Move();
         CheckHit();
     }
+
     public override IHittable Hit(RaycastHit2D hit2D)
     {
         IHittable hit = hit2D.collider.GetComponent<IHittable>();
@@ -38,7 +37,6 @@ public class PlayerBulletObject : BulletObject
 
         if (preTarget == hit)
             return null;
-
 
         preTarget = hit;
 
@@ -55,8 +53,8 @@ public class PlayerBulletObject : BulletObject
 
         damageData.Calculate(finalDamage);
         damageData.hit2D = hit2D;
-        hit.TakeDamage(damageData);    
-        
+        hit.TakeDamage(damageData);
+
         bool shouldRelease = true;
         foreach (var b in behaviors)
         {
@@ -73,9 +71,19 @@ public class PlayerBulletObject : BulletObject
         gameObject.SetActive(false);
         BulletManager.Instance.ReturnPlayerBulletObject(key, this);
     }
+
+    // public void OiggerEnter2D(Collider2D collision)
+    // {
+    //     //collision 레이어가 Hittable
+    //     // 맞으면 Hit(hit2d); 호출하자
+    // }
+
     public override void Bounce(RaycastHit2D hit2D)
     {
-        direction = Vector2.Reflect(direction, hit2D.normal);
+        Vector2 dir = Vector2.Reflect(direction, hit2D.normal);
+        if (dir != Vector2.zero)
+            direction = dir;
+
         transform.right = direction;
     }
 

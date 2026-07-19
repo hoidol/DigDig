@@ -9,6 +9,10 @@ public class FadeCanvs : CanvasUI<FadeCanvs>
     public float fadeInSec = 0.7f; //어두워지는 시간  
     public float fadeOutSec = 0.5f; //밝아지는 시간  
     public TMP_Text text;
+    void Awake()
+    {
+        text.text = null;
+    }
     public void FadeIn(string msg = null, Action endFadeIn = null)
     {
         canvasGroup.alpha = 1;

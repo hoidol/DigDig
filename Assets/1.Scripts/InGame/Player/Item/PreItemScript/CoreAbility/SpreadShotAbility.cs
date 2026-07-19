@@ -12,7 +12,7 @@ public class SpreadShotAbility : Ability, IPreAttack
 
     public override void OnUnequip(Player player) { }
 
-    public void OnPreAttack(Player player, Vector2 dir, int shotOrder)
+    public void OnPreAttack(Player player, Vector2 dir)
     {
         // if (Random.value < PROB)
         // player.weapon.RequestSpread(1);

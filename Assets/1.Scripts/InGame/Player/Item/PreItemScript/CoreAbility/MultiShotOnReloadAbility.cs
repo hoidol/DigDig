@@ -23,7 +23,7 @@ public class MultiShotOnReloadAbility : Ability, IPreAttack
 
     void OnReloadEnd(ReloadEndEvent e) => firstShot = true;
 
-    public void OnPreAttack(Player player, Vector2 dir, int shotOrder)
+    public void OnPreAttack(Player player, Vector2 dir)
     {
         if (!firstShot) return;
         firstShot = false;

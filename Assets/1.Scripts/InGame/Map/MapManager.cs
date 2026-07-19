@@ -144,6 +144,7 @@ public class MapManager : MonoSingleton<MapManager>
 
                 int colorIdx = PickColorIndex(dist);
                 Stone ore = Stone.Get(cellPos, transform);
+                ore.gameObject.name = $"Stone {index.x} {index.y}";
                 Vector2Int[,] indexArr = new Vector2Int[1, 1];
                 indexArr[0, 0] = index;
                 ore.Init(colorIdx, fillColors[colorIdx], indexArr);
@@ -191,7 +192,7 @@ public class MapManager : MonoSingleton<MapManager>
             : Physics2D.OverlapBoxAll(center, new Vector2(width, height), 0f, mask);
         foreach (var col in cols)
         {
-            col.GetComponent<Stone>()?.OnDestroy();
+            col.GetComponent<Stone>()?.Destroy();
         }
     }
 

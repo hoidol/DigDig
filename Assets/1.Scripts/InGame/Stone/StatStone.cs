@@ -37,7 +37,7 @@ public class StatStone : EventObject, IHittable, IWayPointerTarget
 
 
     public float MaxHp => float.MaxValue;
-    public float CurHp =>float.MaxValue;
+    public float CurHp => float.MaxValue;
     // public float curHp;
     // public float maxHp;
     public Transform maskTr;
@@ -76,7 +76,7 @@ public class StatStone : EventObject, IHittable, IWayPointerTarget
             if (curGauge >= maxGauge)
             {
                 curGauge = maxGauge;
-                OnDestroy();
+                Destroy();
             }
         }
         else
@@ -104,7 +104,7 @@ public class StatStone : EventObject, IHittable, IWayPointerTarget
         if (curTimer > 0)
             curTimer -= Time.deltaTime;
         else
-            OnDestroy();
+            Destroy();
     }
     public bool CanHit()
     {
@@ -118,7 +118,7 @@ public class StatStone : EventObject, IHittable, IWayPointerTarget
 
     }
     bool destroying = false;
-    public override void OnDestroy()
+    public override void Destroy()
     {
         destroying = true;
         Debug.Log("StatStone Destroy()");

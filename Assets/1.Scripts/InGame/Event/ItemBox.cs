@@ -13,7 +13,7 @@ public class ItemBox : EventObject
             SelectItemCanvas.Instance.OpenCanvas(() =>
             {
                 Time.timeScale = 1;
-                OnDestroy();
+                Destroy();
             });
         }
     }

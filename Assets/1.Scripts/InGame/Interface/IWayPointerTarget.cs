@@ -7,7 +7,7 @@ public interface IWayPointerTarget
     float MaxTime { get; }
     float CurTimer { get; }
     void Appear(Vector2 spawnPos);
-    void OnDestroy();
+    void Destroy();
 
     void ClearArea(Vector2 pos);
 }

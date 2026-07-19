@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    Joystick moveJoystick;
     Rigidbody2D rg;
     Animator animator;
     Transform bodyRootTr;
@@ -12,16 +11,15 @@ public class PlayerMovement : MonoBehaviour
     public float maxDistance { get; private set; }
     float maxDistanceSqr;
 
-    public void Init(Player player, Rigidbody2D rg, Animator animator, Transform bodyRootTr, Joystick moveJoystick)
+    public void Init(Player player, Rigidbody2D rg, Animator animator, Transform bodyRootTr)
     {
         this.player = player;
         this.rg = rg;
         this.animator = animator;
         this.bodyRootTr = bodyRootTr;
-        this.moveJoystick = moveJoystick;
     }
 
-    public void ResetOnUndergroundStart()
+    public void Restart()
     {
         maxDistance = 0;
         maxDistanceSqr = 0f;

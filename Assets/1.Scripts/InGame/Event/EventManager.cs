@@ -15,7 +15,7 @@ public class EventManager : MonoSingleton<EventManager>
         public int phaseIdx;
     }
 
-    float eventObjectMinDistance = 5f; //EventObject 간 떨어진 거리
+    float eventObjectMinDistance = 4.5f; //EventObject 간 떨어진 거리
     [SerializeField] private int maxAttempts = 5;
 
     private Dictionary<EventType, EventObject> prefabMap;
@@ -65,6 +65,8 @@ public class EventManager : MonoSingleton<EventManager>
         spawnCount = 0;
 
         EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, Random.Range(0, 1), 2, 5);
+        eventRepeatSpawners.Add(itemBoxSpawner);
+        itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, Random.Range(0, 1), 2, 5);
         eventRepeatSpawners.Add(itemBoxSpawner);
 
         // conditionStates.Clear();
@@ -208,7 +210,7 @@ public class EventManager : MonoSingleton<EventManager>
 
     public Vector2 CalcSpawnPosition()
     {
-        float farDistance = Player.Instance.distanceMaxDistanceDestroiedStone + Random.Range(4, 5) + spawnCount + 1.5f;
+        float farDistance = Player.Instance.distanceMaxDistanceDestroiedStone + Random.Range(3, 4);
         Vector2 playerPos = Player.Instance.transform.position;
         return MapManager.SnappedPosition(playerPos + Random.insideUnitCircle.normalized * farDistance);
     }
@@ -265,7 +267,6 @@ public class EventRepeatSpawner
     }
     public void Spawn()
     {
-        // Debug.Log($"EventRepeatSpawner Spawn() {eventType}");
         eventObject = EventManager.Instance.Spawn(eventType);
         repeatTimer = repeatTime;
     }

@@ -4,5 +4,5 @@ using UnityEngine;
 // Player.Attack()에서 Shoot() 호출 전에 처리됨
 public interface IPreAttack
 {
-    void OnPreAttack(Player player, Vector2 dir, int shotOrder);
+    void OnPreAttack(Player player, Vector2 dir);
 }

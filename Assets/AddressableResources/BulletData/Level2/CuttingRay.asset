@@ -15,6 +15,7 @@ MonoBehaviour:
   key: CuttingRay
   order: 0
   itemName: "\uB099\uB8B0"
+  consumeHp: 3
   specialBullet: 1
   mergedBullet: 0
   desc: "\uC8FC\uBCC0 \uB79C\uB364\uC73C\uB85C \uB099\uB8B0 \uB5A8\uC5B4\uC9D0"

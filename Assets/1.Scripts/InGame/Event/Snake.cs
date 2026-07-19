@@ -40,7 +40,7 @@ public class Snake : EventObject
             SnakeCanvas.Instance.OpenCanvas(snakeSuggest, () =>
             {
                 Time.timeScale = 1;
-                OnDestroy();
+                Destroy();
             });
         }
     }

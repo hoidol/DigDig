@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   attackSpeed: 6
-  attackRange: 1.5
+  attackRange: 2
   moveRange: 2
   exp: 1
   size: {x: 1, y: 1}

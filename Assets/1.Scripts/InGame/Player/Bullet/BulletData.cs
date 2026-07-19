@@ -6,13 +6,14 @@ using UnityEditor;
 #endif
 
 [CreateAssetMenu(menuName = "Data/BulletData", fileName = "BulletData")]
-public class BulletData : ScriptableObject,IReinforceData
+public class BulletData : ScriptableObject, IReinforceData
 {
     public static readonly int MAX_LEVEL = 3;
     public string key;
     public int order;
     public string Title => itemName;
     public string itemName;
+    public int consumeHp;
 
     public bool specialBullet;// 일반을 제외하고 모두 특수 
     public bool mergedBullet; // 머지 횟수 
@@ -24,7 +25,7 @@ public class BulletData : ScriptableObject,IReinforceData
     public int applyOrder; // 아이템 적용 순서
     public string[] canMergeBulletKeys; // 해당 총알과 머지가 가능한 총알키 
     public string[] mergeBulletKeys; // 상위 총알들
-    
+
     // public float multiplyATK; // 공격력 배율 (예: 1.2f는 20% 증가)
     public PlayerBulletObject prefab;
 
@@ -35,7 +36,7 @@ public class BulletData : ScriptableObject,IReinforceData
 
     public string GetDescription(int lv = 1, bool detail = false)
     {
-        return BulletManager.Create(key).GetDescription(lv,detail);
+        return BulletManager.Create(key).GetDescription(lv, detail);
     }
 
     public static BulletData GetBulletData(string key)

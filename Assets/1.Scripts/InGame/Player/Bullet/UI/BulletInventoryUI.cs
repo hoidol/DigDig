@@ -11,8 +11,8 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
     readonly List<BulletUI> pool = new();
     [SerializeField] RectTransform parentTr;
 
-    [SerializeField] List<BulletUI> loadedBulletUIs = new List<BulletUI>();//현재 상태
-
+    [SerializeField] List<BulletUI> bulletUIs = new List<BulletUI>();//현재 상태
+    [SerializeField] RectTransform curBulletOrderIndicatorRectTr;
 
     void OnDestroy()
     {
@@ -21,28 +21,34 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
 
     public void AddedBullet(string bulletKey)
     {
-        UpdateContainer();
+        UpdateContainer().Forget();
     }
 
     public void FiredBullet(string bulletKey, int shotOrder)
     {
-        var firedUI = loadedBulletUIs[^1];
-        loadedBulletUIs.RemoveAt(loadedBulletUIs.Count - 1);
-        pool.Remove(firedUI);
-        // firedUI.transform.SetParent(transform, true);
-        firedUI.Fired(() => pool.Add(firedUI));
-        UpdateContainer();
+        // if (Player.Instance.weapon.loadedBullets.Count > 0)
+        // {
+        //     // curBulletOrderIndicatorRectTr.gameObject.SetActive(true);
+        //     BulletUI bUI = bulletUIs[Player.Instance.weapon.loadedBullets.Count - 1];
+        //     curBulletOrderIndicatorRectTr.position =
+        //     new Vector2(curBulletOrderIndicatorRectTr.position.x, bUI.rt.position.y);
+        // }
+        // else
+        // {
+        //     BulletUI bUI = bulletUIs[bulletUIs.Count - 1];
+        //     curBulletOrderIndicatorRectTr.position =
+        //     new Vector2(curBulletOrderIndicatorRectTr.position.x, bUI.rt.position.y);
+        // }
+
     }
     public void EndReload()
     {
-        UpdateContainer();
+        UpdateContainer().Forget();
     }
     public void RemovedBullet(string bulletKey)
     {
-        UpdateContainer();
+        UpdateContainer().Forget();
     }
-
-
     BulletUI GetOrCreate()
     {
         BulletUI inactive = pool.Find(ui => !ui.gameObject.activeSelf);
@@ -60,21 +66,35 @@ public class BulletInventoryUI : MonoSingleton<BulletInventoryUI>
         return ui;
     }
 
-    void UpdateContainer()
+    async UniTask UpdateContainer()
     {
-        List<string> curLoadedBullets = Player.Instance.weapon.loadedBullets;
+        // List<string> curBullets = Player.Instance.weapon.bulletInventory.curBullets;
 
-        foreach (var ui in pool)
-        {
-            ui.gameObject.SetActive(false);
-        }
-        loadedBulletUIs.Clear();
-        for (int i = 0; i < curLoadedBullets.Count; i++)
-        {
-            BulletUI bulletUI = GetOrCreate();
-            // Debug.Log($"curLoadedBullets[i] {curLoadedBullets[i]}");
-            bulletUI.SetBulletData(BulletManager.bullets[curLoadedBullets[i]].bulletData);
-            loadedBulletUIs.Add(bulletUI);
-        }
+        // foreach (var ui in pool)
+        // {
+        //     ui.gameObject.SetActive(false);
+        // }
+        // bulletUIs.Clear();
+        // for (int i = 0; i < curBullets.Count; i++)
+        // {
+        //     BulletUI bulletUI = GetOrCreate();
+        //     bulletUI.SetBulletData(BulletManager.bullets[curBullets[i]].bulletData);
+        //     bulletUIs.Add(bulletUI);
+        // }
+
+        await UniTask.Yield();
+        // if (Player.Instance.weapon.loadedBullets.Count > 0)
+        // {
+        //     // curBulletOrderIndicatorRectTr.gameObject.SetActive(true);
+        //     BulletUI bUI = bulletUIs[Player.Instance.weapon.loadedBullets.Count - 1];
+        //     curBulletOrderIndicatorRectTr.position =
+        //     new Vector2(curBulletOrderIndicatorRectTr.position.x, bUI.rt.position.y);
+        // }
+        // else
+        // {
+        //     BulletUI bUI = bulletUIs[bulletUIs.Count - 1];
+        //     curBulletOrderIndicatorRectTr.position =
+        //     new Vector2(curBulletOrderIndicatorRectTr.position.x, bUI.rt.position.y);
+        // }
     }
 }

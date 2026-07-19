@@ -15,6 +15,7 @@ MonoBehaviour:
   key: Giant
   order: 0
   itemName: "\uAC70\uB300\uD0C4"
+  consumeHp: 2
   specialBullet: 1
   mergedBullet: 0
   desc: "\uD0C4\uC774 \uCEE4\uC9C0\uACE0 \uB370\uBBF8\uC9C0\uAC00 1.5\uBC30 \uC99D\uAC00"
