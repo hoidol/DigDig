@@ -8,15 +8,13 @@ public class HammerItem : Item, IBullet
     public float explosionDamage = 15f;
     public LayerMask enemyLayer;
 
-    public override void OnEquip(Player player) { }
-    public override void OnUnequip(Player player) { }
 
     public void OnBulletFired(PlayerBulletObject bullet)
     {
         bullet.AddBehavior(new HammerExplosionBehavior(
             explosionChance,
-            explosionRadius * GetLevel(),
-            explosionDamage * GetLevel(),
+            explosionRadius * count,
+            explosionDamage * count,
             enemyLayer
         ));
     }

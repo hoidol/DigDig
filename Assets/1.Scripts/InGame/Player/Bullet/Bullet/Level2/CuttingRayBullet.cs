@@ -7,14 +7,14 @@ public class CuttingRayBullet : Bullet
 
     public CuttingRayBullet() { key = "CuttingRay"; }
 
-    public override void OnBulletFired(PlayerBulletObject bullet)
-    {
-        base.OnBulletFired(bullet);
-        bullet.AddBehavior(new CuttingRayBehavior(LASER_DAMAGE_RATES[GetLevel() - 1]));
-    }
+    // public override void OnBulletFired(PlayerBulletObject bullet)
+    // {
+    //     base.OnBulletFired(bullet);
+    //     bullet.AddBehavior(new CuttingRayBehavior(LASER_DAMAGE_RATES[GetLevel() - 1]));
+    // }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
-    {
-        return $"적 적중 시 진행 방향으로 레이저 발사\n레이저 데미지 공격력의 {LASER_DAMAGE_RATES[lv - 1] * 100:0}%";
-    }
+    // public override string GetDescription(int lv = 1, bool detail = false)
+    // {
+    //     return $"적 적중 시 진행 방향으로 레이저 발사\n레이저 데미지 공격력의 {LASER_DAMAGE_RATES[lv - 1] * 100:0}%";
+    // }
 }

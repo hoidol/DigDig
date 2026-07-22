@@ -9,5 +9,5 @@ public interface IGun : IWeapon
     // void RequestSpread(int count);
     //void RequestRadialShot(int count);
     // int CurBulletOrder { get; }
-    bool IsReloading { get; }
+    // bool IsReloading { get; }
 }

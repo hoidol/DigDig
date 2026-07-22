@@ -15,20 +15,20 @@ public class AdrenalineItem : Item
         if (buff != null)
             Player.Instance.RemoveBuff(buff);
 
-        buff = new Buff(StatType.AttackPower, 1f + BONUSES[GetLevel()], StatOpType.Multiply);
+        buff = new Buff(StatType.AttackPower, 1f + BONUSES[count], StatOpType.Multiply);
     }
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
-        base.OnEquip(player);
+        base.OnEquip();
         GameEventBus.Subscribe<PlayerHpChangedEvent>(OnHpChanged);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         if (buff != null)
         {
-            player.RemoveBuff(buff);
+            Player.Instance.RemoveBuff(buff);
             buff = null;
         }
 
@@ -37,7 +37,7 @@ public class AdrenalineItem : Item
 
     void OnHpChanged(PlayerHpChangedEvent e)
     {
-        bool isLowHp = Player.Instance.curHp / Player.Instance.statMgr.MaxHp <= HP_THRESHOLDS[GetLevel() - 1];
+        bool isLowHp = Player.Instance.curHp / Player.Instance.statMgr.MaxHp <= HP_THRESHOLDS[count - 1];
         if (isLowHp)
             Player.Instance.AddBuff(buff);
         else

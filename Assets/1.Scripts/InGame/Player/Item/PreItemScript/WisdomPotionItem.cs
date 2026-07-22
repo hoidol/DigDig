@@ -4,11 +4,6 @@ public class WisdomPotionItem : Item
     const float BONUS_PER_STACK = 1f;
     Buff buff;
 
-    public override void OnEquip(Player player)
-    {
-        UpdateItem();
-    }
-
     public override void UpdateItem()
     {
         Player player = Player.Instance;
@@ -19,11 +14,11 @@ public class WisdomPotionItem : Item
         player.AddBuff(buff);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        player.RemoveBuff(buff);
+        Player.Instance.RemoveBuff(buff);
     }
 
     public override string GetDescription(int lv = 1,bool detail = false)
-        => $"마력 +{BONUS_PER_STACK * GetLevel()}";
+        => $"마력 +{BONUS_PER_STACK * count}";
 }

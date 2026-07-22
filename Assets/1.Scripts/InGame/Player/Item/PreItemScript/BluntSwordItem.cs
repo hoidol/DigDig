@@ -15,9 +15,9 @@ public class BluntSwordItem : TriggerItem
         return "전방으로 검을 휘두릅니다.";
     }
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
-        base.OnEquip(player);
+        base.OnEquip();
         coolTime = 5;
         transform.parent = Player.Instance.bodyRootTr;
         transform.position = Player.Instance.bodyCenterTr.position;

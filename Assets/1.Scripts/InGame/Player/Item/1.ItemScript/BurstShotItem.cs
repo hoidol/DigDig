@@ -16,7 +16,7 @@ public class BurstShotItem : Item, IBullet
     {
         //if (!e.fromPlayer) return;
         shotCount++;
-        if (shotCount < TRIGGER_COUNTS[GetLevel()-1]) return;
+        if (shotCount < TRIGGER_COUNTS[count-1]) return;
         shotCount = 0;
         bulletKey = bullet.key;
         // Player.Instance.QueueExtraShot(1);
@@ -27,7 +27,7 @@ public class BurstShotItem : Item, IBullet
     async UniTaskVoid Shoot()
     {
         await UniTask.Delay(BaseGun.COMBO_ATTACK_INTERVAL_MS);
-        Player.Instance.weapon.Shoot(BulletManager.bullets[bulletKey], Vector2.zero, Vector2.zero);
+        // Player.Instance.weapon.Shoot(BulletManager.bullets[bulletKey], Vector2.zero, Vector2.zero);
 
     }
 

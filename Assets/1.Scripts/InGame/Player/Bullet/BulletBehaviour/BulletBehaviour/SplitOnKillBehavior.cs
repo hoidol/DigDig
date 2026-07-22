@@ -28,7 +28,8 @@ public class SplitOnKillBehavior : IBulletBehavior
                 splitBullet.ClearBehaviors();
                 splitBullet.ClearBulletForce();
                 splitBullet.transform.position = enemy.transform.position;
-                splitBullet.Shoot(dir, splitDamage);
+                splitBullet.Shoot(dir);
+                splitBullet.damage = splitDamage;
             }
         }
         return true;

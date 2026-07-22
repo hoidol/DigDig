@@ -5,13 +5,13 @@ public class SteelSphereBullet : Bullet
 {
     public SteelSphereBullet() { key = "SteelSphere"; }
 
-    public override void OnBulletFired(PlayerBulletObject bullet)
-    {
-        // 튕김 로직은 SteelSphereBulletObject에서 처리
-    }
+    // public override void OnBulletFired(PlayerBulletObject bullet)
+    // {
+    //     // 튕김 로직은 SteelSphereBulletObject에서 처리
+    // }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
-    {
-        return "벽에 닿아야만 튕김 판정\n튕김 횟수 50% 감소, 적 직격 시 즉시 소멸";
-    }
+    // public override string GetDescription(int lv = 1, bool detail = false)
+    // {
+    //     return "벽에 닿아야만 튕김 판정\n튕김 횟수 50% 감소, 적 직격 시 즉시 소멸";
+    // }
 }

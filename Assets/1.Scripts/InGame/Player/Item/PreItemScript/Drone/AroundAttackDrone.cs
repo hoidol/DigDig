@@ -54,6 +54,7 @@ public class AroundAttackDrone : Drone
         Vector2 dir = dirTr.up;
         AllyBullet b = AllyBullet.Instantiate();
         b.transform.position = transform.position;
-        b.Shoot(dir, damage);
+        b.Shoot(dir);
+        b.damage = damage;
     }
 }

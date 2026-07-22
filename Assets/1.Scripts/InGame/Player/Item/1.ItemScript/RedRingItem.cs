@@ -8,13 +8,13 @@ public class RedRingItem : Item
         if(buff != null)
             Player.Instance.RemoveBuff(buff);
             
-        buff = new Buff(StatType.CritPower, buffValues[GetLevel()-1], StatOpType.Add);
+        buff = new Buff(StatType.CritPower, buffValues[count-1], StatOpType.Add);
         Player.Instance.AddBuff(buff);
     }    
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        player.RemoveBuff(buff);
+        Player.Instance.RemoveBuff(buff);
     }
 
     public override string GetDescription(int lv = 1,bool detail = false)

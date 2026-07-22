@@ -26,7 +26,8 @@ public class Prism : OrbitOrb
             Vector2 splitDir = Quaternion.Euler(0, 0, spreadAngle * i) * dir;
             var splitBullet = AllyBullet.Instantiate();
             splitBullet.transform.position = bullet.transform.position;
-            splitBullet.Shoot(splitDir, splitDamage);
+            splitBullet.Shoot(splitDir);
+            splitBullet.damage = splitDamage;
         }
 
         bullet.Release();

@@ -15,6 +15,6 @@ public class FlameOrbitItem : OrbitItemBase
 
     public override string GetDescription(int lv = 1,bool detail = false)
     {
-        return $"화염구 {GetLevel()}개가 주변을 회전하며 적에게 피해 및 화상 적용";
+        return $"화염구 {count}개가 주변을 회전하며 적에게 피해 및 화상 적용";
     }
 }

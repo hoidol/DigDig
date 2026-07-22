@@ -1,11 +1,12 @@
 using System;
 using UnityEngine;
 
-public abstract class Item : MonoBehaviour, IReinforce
+public abstract class Item : MonoBehaviour
 {
     public string Key=>key;
     public string key;
-    public bool equipped;
+    // public bool equipped;
+    public int count;
     public ReinforceType ReinforceType => ReinforceType.Item;
     public virtual string GetDescription(int lv = 1, bool detail = false)
     {
@@ -20,28 +21,29 @@ public abstract class Item : MonoBehaviour, IReinforce
     {
         return true;
     }
-
-    public virtual void OnEquip(Player player)
+    
+    public virtual void OnEquip()
     {
-        equipped = true;
         UpdateItem();
     }
 
-    public virtual void OnUnequip(Player player)
+    public virtual void OnUnequip()
     {
-        equipped = false;
     }
 
-    public virtual void UpdateItem() { }
-
-
-    public int GetLevel()
+    public virtual void UpdateItem()
     {
-        return Player.Instance.statMgr.GetPlayerItemStat(key).lv;
+        count = Player.Instance.statMgr.itemStatDic[key].count;
+    }
+
+
+    public int GetCount()
+    {
+        return Player.Instance.statMgr.GetPlayerItemStat(key).count;
     }
 
     public bool IsMaxLevel()
     {
-        return ItemData.MAX_LEVEL == GetLevel();
+        return ItemData.MAX_LEVEL == count;
     }
 }

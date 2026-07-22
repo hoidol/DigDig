@@ -9,7 +9,7 @@ public class PickaxeItem : Item
     readonly List<Pickaxe> pickaxes = new();
     readonly HashSet<Stone> claimedTargets = new();
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         foreach (var p in pickaxes)
             if (p != null) Destroy(p.gameObject);
@@ -22,7 +22,7 @@ public class PickaxeItem : Item
         //float mul = multiples[Mathf.Clamp(count - 1, 0, multiples.Length - 1)];
 
         // count보다 많으면 제거
-        while (pickaxes.Count > GetLevel())
+        while (pickaxes.Count > count)
         {
             int last = pickaxes.Count - 1;
             if (pickaxes[last] != null)
@@ -34,7 +34,7 @@ public class PickaxeItem : Item
         }
 
         // count보다 적으면 추가
-        while (pickaxes.Count < GetLevel())
+        while (pickaxes.Count < count)
         {
             var p = Instantiate(pickaxePrefab, Player.Instance.transform.position, Quaternion.identity);
             p.Init(claimedTargets);

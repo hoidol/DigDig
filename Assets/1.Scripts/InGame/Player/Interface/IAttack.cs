@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface IAttack
+public interface IFired
 {
-    void OnAttack(Player player, Vector2 dir);
+    void OnFired(Vector2 dir);
 }

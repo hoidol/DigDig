@@ -10,15 +10,15 @@ public class BulletInventory : MonoBehaviour
     //public readonly int MAX_ITEM_COUNT = 8;
 
     // 인터페이스별 캐시 - 장착/해제 시점에만 갱신
-    public List<IPreAttack> preAttacks = new List<IPreAttack>();
-    public List<IAttack> attacks = new List<IAttack>();
-    public List<IComboAttack> comboAttacks = new List<IComboAttack>();
+    public List<IPreFire> preFires = new List<IPreFire>();
+    public List<IFired> fireds = new List<IFired>();
+    // public List<IComboAttack> comboAttacks = new List<IComboAttack>();
     public List<IBullet> bullets = new List<IBullet>();
     void RefreshCache()
     {
-        preAttacks = curBullets.OfType<IPreAttack>().ToList();
-        attacks = curBullets.OfType<IAttack>().ToList();
-        comboAttacks = curBullets.OfType<IComboAttack>().ToList();
+        preFires = curBullets.OfType<IPreFire>().ToList();
+        fireds = curBullets.OfType<IFired>().ToList();
+        // comboAttacks = curBullets.OfType<IComboAttack>().ToList();
         bullets = curBullets.OfType<IBullet>().ToList();
     }
 

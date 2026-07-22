@@ -68,7 +68,8 @@ public class BrokenDrone : Drone
     {
         var bullet = AllyBullet.Instantiate();
         bullet.transform.position = transform.position;
-        bullet.Shoot(dir, damage);
+        bullet.Shoot(dir);
+        bullet.damage = damage;
     }
 
     void OnDestroy()

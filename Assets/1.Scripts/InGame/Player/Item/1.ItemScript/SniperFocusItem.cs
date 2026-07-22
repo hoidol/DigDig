@@ -15,7 +15,7 @@ public class SniperFocusItem : Item
         return $"{WAIT_TIMES[lv-1]}초 이상 이동하지 않으면 크리티컬 확률 {CRIT_BONUSES[lv-1]}% 증가";
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         RemoveBuff();
         stillTimer = 0;
@@ -27,7 +27,7 @@ public class SniperFocusItem : Item
         if (stopped)
         {
             stillTimer += Time.deltaTime;
-            if (!buffApplied && stillTimer >= WAIT_TIMES[GetLevel()-1])
+            if (!buffApplied && stillTimer >= WAIT_TIMES[count-1])
                 ApplyBuff();
         }
         else
@@ -39,7 +39,7 @@ public class SniperFocusItem : Item
 
     void ApplyBuff()
     {
-        buff = new Buff(StatType.AttackPower, CRIT_BONUSES[GetLevel()-1], StatOpType.Multiply);
+        buff = new Buff(StatType.AttackPower, CRIT_BONUSES[count-1], StatOpType.Multiply);
         Player.Instance.AddBuff(buff);
         buffApplied = true;
     }

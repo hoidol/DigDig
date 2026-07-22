@@ -13,16 +13,16 @@ public abstract class TriggerItem : Item
     CancellationTokenSource cts;
     public Action triggerListener;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
-        base.OnEquip(player);
+        base.OnEquip();
         cts = new CancellationTokenSource();
         Loop(cts.Token).Forget();
 
         triggerListener = null;
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         cts?.Cancel();
         cts?.Dispose();

@@ -17,7 +17,7 @@ public class AimlessBulletItem : Item, IBullet
     public void OnBulletFired(PlayerBulletObject bullet)
     {
         if (isFiring) return;
-        if (Random.value >= PROBS[GetLevel()-1]) return;
+        if (Random.value >= PROBS[count-1]) return;
 
         isFiring = true;
         Vector2 randomDir = Random.insideUnitCircle.normalized;

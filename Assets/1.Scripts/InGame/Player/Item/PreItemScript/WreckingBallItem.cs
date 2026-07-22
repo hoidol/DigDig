@@ -12,9 +12,9 @@ public class WreckingBallItem : TriggerCycleItem
 
     WreckingBall ball;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
-        base.OnEquip(player);
+        base.OnEquip();
         activeTime = ACTIVE_TIME;
     }
 
@@ -32,9 +32,9 @@ public class WreckingBallItem : TriggerCycleItem
         ball = null;
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        base.OnUnequip(player);
+        base.OnUnequip();
         if (ball != null) { Destroy(ball.gameObject); ball = null; }
     }
 

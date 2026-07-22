@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 
 // 속사 - 연속 발사
-public class RapidFireAbility : SynergyAbility, IComboAttack
+public class RapidFireAbility : SynergyAbility//, IComboAttack
 {
     public int rapidCount = 1;
 

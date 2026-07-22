@@ -9,13 +9,13 @@ public class PiggyBankItem : Item
 
     PiggyBank spawnedBank;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
-        spawnedBank = Instantiate(piggyBankPrefab, player.transform.position, Quaternion.identity);
+        spawnedBank = Instantiate(piggyBankPrefab, Player.Instance.transform.position, Quaternion.identity);
         spawnedBank.Init(MOVE_SPEED);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         if (spawnedBank != null)
         {

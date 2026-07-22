@@ -5,12 +5,12 @@ public class CloverItem : Item
 {
     const float CHANCE = 0.30f;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }

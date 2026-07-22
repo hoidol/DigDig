@@ -8,7 +8,7 @@ public class BrokenDroneItem : Item
 
     public BrokenDrone drone;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         drone.gameObject.SetActive(true);
         drone.transform.parent = null;
@@ -18,7 +18,7 @@ public class BrokenDroneItem : Item
         drone.StartShooting();
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         drone.StopShooting();
         drone.transform.parent = transform;

@@ -6,12 +6,12 @@ public class CrystalExplosionItem : Item
     public float explosionDamage = 20f;
     public LayerMask enemyLayer;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
@@ -20,8 +20,8 @@ public class CrystalExplosionItem : Item
     {
         InGameUtil.DamageEnemies(
             e.stone.transform.position,
-            explosionRadius * GetLevel(),
-            explosionDamage * GetLevel(),
+            explosionRadius * count,
+            explosionDamage * count,
             enemyLayer
         );
     }

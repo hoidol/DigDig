@@ -4,26 +4,21 @@ public class VitalityPotionItem : Item
     const float BONUS_PER_STACK = 20f;
     Buff buff;
 
-    public override void OnEquip(Player player)
-    {
-        UpdateItem();
-    }
-
     public override void UpdateItem()
     {
         Player player = Player.Instance;
 
         if (buff != null) player.RemoveBuff(buff);
 
-        buff = new Buff(StatType.MaxHp, BONUS_PER_STACK * GetLevel(), StatOpType.Add);
+        buff = new Buff(StatType.MaxHp, BONUS_PER_STACK * count, StatOpType.Add);
         player.AddBuff(buff);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        player.RemoveBuff(buff);
+        Player.Instance.RemoveBuff(buff);
     }
 
     public override string GetDescription(int lv = 1,bool detail = false)
-        => $"체력 +{BONUS_PER_STACK * GetLevel()}";
+        => $"체력 +{BONUS_PER_STACK * count}";
 }

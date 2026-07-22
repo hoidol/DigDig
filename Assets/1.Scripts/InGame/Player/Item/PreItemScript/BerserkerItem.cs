@@ -6,12 +6,12 @@ public class BerserkerItem : Item, IToggle
     Buff buff;
     bool isOn;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         buff = new Buff(StatType.AttackPower, 1f + ATTACK_BONUS, StatOpType.Multiply);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         if (isOn) OnTurnOff();
     }

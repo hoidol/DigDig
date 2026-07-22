@@ -10,13 +10,13 @@ public class SplitBullet : Bullet
     {
         key = "Split";
     }
-    public override void OnBulletFired(PlayerBulletObject bullet)
-    {
-        base.OnBulletFired(bullet);
-        bullet.AddBehavior(new SplitOnKillBehavior(SPLIT_COUNT, DAMAGE_RATIO));
-    }
+    // public override void OnBulletFired(PlayerBulletObject bullet)
+    // {
+    //     base.OnBulletFired(bullet);
+    //     bullet.AddBehavior(new SplitOnKillBehavior(SPLIT_COUNT, DAMAGE_RATIO));
+    // }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
-        => $"처치 시 {SPLIT_COUNT}방향 분열탄 (데미지 {DAMAGE_RATIO * 100:0}%)";
+    // public override string GetDescription(int lv = 1, bool detail = false)
+    //     => $"처치 시 {SPLIT_COUNT}방향 분열탄 (데미지 {DAMAGE_RATIO * 100:0}%)";
 
 }

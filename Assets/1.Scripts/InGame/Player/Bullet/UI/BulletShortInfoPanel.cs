@@ -62,6 +62,6 @@ public class BulletShortInfoPanel : MonoSingleton<BulletShortInfoPanel>
 
     public void OnClickedSelect()
     {
-        PickedBulletCanvas.Instance.CloseCanvas();
+        // PickedBulletCanvas.Instance.CloseCanvas();
     }
 }

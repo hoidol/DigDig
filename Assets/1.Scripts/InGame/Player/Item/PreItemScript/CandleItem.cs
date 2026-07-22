@@ -8,7 +8,7 @@ public class CandleItem : Item
 
     CinemachineCamera cinemachineCamera;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         cinemachineCamera = FindFirstObjectByType<CinemachineCamera>();
         ApplySize();
@@ -19,7 +19,7 @@ public class CandleItem : Item
         ApplySize();
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         if (cinemachineCamera != null)
             cinemachineCamera.Lens.OrthographicSize = BASE_SIZE;
@@ -28,7 +28,7 @@ public class CandleItem : Item
     void ApplySize()
     {
         if (cinemachineCamera == null) return;
-        cinemachineCamera.Lens.OrthographicSize = BASE_SIZE + sizeIncrease * GetLevel();
+        cinemachineCamera.Lens.OrthographicSize = BASE_SIZE + sizeIncrease * count;
     }
 
     public override string GetDescription(int lv = 1,bool detail = false)

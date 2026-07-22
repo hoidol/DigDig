@@ -12,8 +12,6 @@ public class FlameBulletItem : Item, IBullet
         return $"{chance}% 확률로 불꽃탄 발사";
     }
 
-    public override void OnEquip(Player player) {  }
-    public override void OnUnequip(Player player) { }
 
 
     public void OnBulletFired(PlayerBulletObject bullet)

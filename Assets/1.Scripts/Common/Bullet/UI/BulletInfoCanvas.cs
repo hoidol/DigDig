@@ -59,7 +59,7 @@ public class BulletInfoCanvas : CanvasUI<BulletInfoCanvas>
 
     public void UpdateCanvas()
     {
-        descText.text = bulletData.GetDescription(lv);
+        // descText.text = bulletData.GetDescription(lv);
         preLvButton.SetActive(false);
         nextLvButton.SetActive(false);
         if(lv > 1)

@@ -6,7 +6,6 @@ public class SnowflakeItem : Item, IBullet
     const float CHANCE = 0.30f;
     const float DURATION = 2f;
 
-    public override void OnUnequip(Player player) { }
 
     public void OnBulletFired(PlayerBulletObject bullet)
     {

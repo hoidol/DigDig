@@ -10,8 +10,6 @@ public class DaggerItem : Item, IBulletForce
         return $"뒤로 공격 시 {BONUSValues[lv-1] * 100}% 추가 데미지";
     }
 
-    public override void OnEquip(Player player) { }
-    public override void OnUnequip(Player player) { }
 
     public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {      
@@ -23,12 +21,12 @@ public class DaggerItem : Item, IBulletForce
             float x = hit2D.point.x - e.transform.position.x ; //x 0보면 크면 오론쪽, 작으면 왼쪽 
             if ((e.face > 0 && x <0) || (e.face < 0 && x > 0)) //오른쪽 봄 
             {
-                return BONUSValues[GetLevel()-1];
+                return BONUSValues[count-1];
             }
 
             if(InGameUtil.CheckBackAttack(e.transform, e.face, hit2D.point))
             {
-                return BONUSValues[GetLevel()-1];
+                return BONUSValues[count-1];
             }
 
             // Vector2 dir = (Player.Instance.transform.position - hit.Transform.position).normalized;

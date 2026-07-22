@@ -4,7 +4,7 @@ public class FocusPotionItem : Item
     const float BONUS_PER_STACK = 3f;
     Buff buff;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         //count++;
         UpdateItem();
@@ -20,9 +20,9 @@ public class FocusPotionItem : Item
         player.AddBuff(buff);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        player.RemoveBuff(buff);
+        Player.Instance.RemoveBuff(buff);
     }
 
     public override string GetDescription(int lv = 1,bool detail = false)

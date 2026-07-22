@@ -22,11 +22,10 @@ public abstract class BaseGun : MonoBehaviour, IGun
     public Transform AttackPoint => attackPoint;
     public Vector2 LastAttackDir { get; private set; }
 
-    public bool IsReloading { get; private set; }
+    // public bool IsReloading { get; private set; }
     // public List<string> loadedBullets = new List<string>();
     readonly BulletFiredEvent bulletFiredEvent = new();
 
-    public Bullet curBullet;
 
     // Player 및 의존 컴포넌트 참조 초기화
     public void Init(Player player)
@@ -36,7 +35,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         statMgr = player.statMgr;
         cameraShake = player.cameraShake;
         mainCamera = Camera.main;
-        curBullet = BulletManager.Create("Normal");
+
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
     }
 
@@ -72,7 +71,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     public void UpdateWeapon()
     {
         dirTr.up = GetAttackDirection();
-        if (IsReloading) return;
+        // if (IsReloading) return;
 
 #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         if (Input.GetMouseButton(0))
@@ -122,22 +121,20 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // 실제 발사 처리: preAttack 콜백 → 멀티/확산 Shoot → postAttack 콜백 → 장전 판정
     public void Attack(Vector2 dir) //Player한테서만 불려야함
     {
-        if (IsReloading)
-            return;
-
-        Player.Instance.AddHp(-curBullet.bulletData.consumeHp, false);
+        // if (IsReloading)
+        //     return;
 
         LastAttackDir = dir;
         // pendingMultiShot = 1;
         // pendingSpread = 0;
         // var (bullet, shotOrder) = SpendBullet();
 
-        foreach (var e in player.itemInventory.preAttacks)
-            e.OnPreAttack(player, dir);
+        Bullet bullet = null;
 
+        foreach (var e in player.itemInventory.preFires)
+            e.OnPreFire(ref bullet, dir);
 
-        Shoot(curBullet, dir, (Vector2)attackPoint.position);
-
+        Shoot(bullet, dir, (Vector2)attackPoint.position);
 
         // 멀티샷: 발사 방향에 수직으로 간격을 두어 여러 발 생성
         // Vector2 perp = new(-dir.y, dir.x);
@@ -159,8 +156,8 @@ public abstract class BaseGun : MonoBehaviour, IGun
         //     Shoot(bullet, new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)), attackPoint.position);
         // }
 
-        foreach (var e in player.itemInventory.attacks)
-            e.OnAttack(player, dir);
+        foreach (var e in player.itemInventory.fireds)
+            e.OnFired( dir);
 
         RunComboAttacks(dir).Forget();
         cameraShake.Shake(0.15f);
@@ -170,7 +167,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         // if (loadedBullets.Count <= 0)
         //     CoReload().Forget();
 
-        bulletFiredEvent.bullet = curBullet;
+        bulletFiredEvent.bullet = bullet;
         bulletFiredEvent.dir = dir;
 
         // BulletInventoryUI.Instance.FiredBullet(bullet.key, shotOrder);
@@ -184,19 +181,22 @@ public abstract class BaseGun : MonoBehaviour, IGun
             pos = attackPoint.position;
         if (dir == Vector2.zero)
             dir = Player.Instance.weapon.dirTr.up;
+            
+        if(bullet == null)
+            bullet = new NormalBullet();
 
-
-        var playerBullet = bullet.GetBulletObject();//bullet.GetBulletObject();
+        var playerBullet = bullet.GetBulletObject();
+        
         playerBullet.ClearBehaviors();
         playerBullet.ClearBulletForce();
         playerBullet.transform.position = pos;
 
         foreach (var e in player.itemInventory.bullets)
             e.OnBulletFired(playerBullet);
-
-        bullet.OnBulletFired(playerBullet);
-
-        playerBullet.Shoot(dir, statMgr.AttackPower);
+            
+        Player.Instance.AddHp(-bullet.bulletData.consumeHp, false);
+        
+        playerBullet.Shoot(dir);
         return playerBullet;
     }
 
@@ -221,8 +221,8 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // 아이템/어빌리티의 콤보 공격을 순서대로 실행
     async UniTaskVoid RunComboAttacks(Vector2 dir)
     {
-        foreach (var e in player.itemInventory.comboAttacks)
-            await e.OnAttack(player, dir);
+        foreach (var e in player.itemInventory.comboFires)
+            await e.OnComboFire( dir);
 
     }
 

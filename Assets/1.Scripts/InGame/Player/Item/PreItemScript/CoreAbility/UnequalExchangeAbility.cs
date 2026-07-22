@@ -23,7 +23,7 @@ public class UnequalExchangeAbility : Ability
         if (e.addGold < 0) return;
 
         Player player = Player.Instance;
-        if (player.isReloading) return;
+        // if (player.isReloading) return;
 
         // int max = (int)player.statMgr.BulletCount;
         // if (player.curBulletCount >= max) return;

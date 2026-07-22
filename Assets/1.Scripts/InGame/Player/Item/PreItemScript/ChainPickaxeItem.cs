@@ -10,12 +10,12 @@ public class ChainPickaxeItem : Item
     public float chainRadius = 5f;
     public LayerMask oreLayer;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }

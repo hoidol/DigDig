@@ -1,36 +1,18 @@
 using System.Linq;
 using UnityEngine;
 [System.Serializable]
-public abstract class Bullet : IBullet, IReinforce
+public abstract class Bullet 
 {
     public string Key => key;
     public string key;
     public BulletData bulletData => BulletManager.Instance.GetBulletData(key);
 
-    public ReinforceType ReinforceType => ReinforceType.Bullet;
-
-    public virtual void OnBulletFired(PlayerBulletObject bullet)
-    {
-        bullet.AddBehavior(new BounceBehavior(Player.Instance.bounce));
-    }
-
-
     public virtual PlayerBulletObject GetBulletObject()
     {
-        return BulletManager.Instance.GetPlayerBulletObject(key);
-    }
-    public virtual string GetDescription(int lv = 1, bool detail = false)
-    {
-        return $"탄 설명";
+        PlayerBulletObject playerBulletObject = BulletManager.Instance.GetPlayerBulletObject(key);
+        playerBulletObject.SetBullet(this);
+        return playerBulletObject;
     }
 
-    public int GetLevel()
-    {
-        return Player.Instance.statMgr.bulletStatDic[key].lv;
-    }
 
-    public bool IsMaxLevel()
-    {
-        return Player.Instance.statMgr.bulletStatDic[key].lv == BulletData.MAX_LEVEL;
-    }
 }

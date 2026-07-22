@@ -7,12 +7,12 @@ public class IronBullet : Bullet
         key = "Iron";
     }
     int[] ignoreBouncEfficiency = {4,6,7};
-    public override void OnBulletFired(PlayerBulletObject bullet)
-    {
-        bullet.transform.localScale = UnityEngine.Vector3.one;
-        bullet.AddBehavior(new IronBounceBehavior(Player.Instance.bounce, ignoreBouncEfficiency[GetLevel()-1]));
-    }
+    // public override void OnBulletFired(PlayerBulletObject bullet)
+    // {
+    //     bullet.transform.localScale = UnityEngine.Vector3.one;
+    //     bullet.AddBehavior(new IronBounceBehavior(Player.Instance.bounce, ignoreBouncEfficiency[GetLevel()-1]));
+    // }
 
-    public override string GetDescription(int lv = 1, bool detail = false) => "튕겨도 데미지 감소 없음";
+    // public override string GetDescription(int lv = 1, bool detail = false) => "튕겨도 데미지 감소 없음";
 
 }

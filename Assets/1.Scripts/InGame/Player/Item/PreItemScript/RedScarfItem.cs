@@ -3,14 +3,14 @@ public class RedScarfItem : Item
     Buff critBuff;
     bool pendingCrit;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         critBuff = new Buff(StatType.CritChance, 1f, StatOpType.Add); // CritChance 100% 추가
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDead);
         GameEventBus.Subscribe<BulletFiredEvent>(OnBulletFired);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDead);
         GameEventBus.Unsubscribe<BulletFiredEvent>(OnBulletFired);

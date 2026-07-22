@@ -51,7 +51,7 @@ public class OrbitBehavior : IBulletBehavior
 
         // 탄이 공전 접선 방향을 향하도록
         float tangentRad = rad + Mathf.PI * 0.5f;
-        bullet.SetDirection(new Vector2(Mathf.Cos(tangentRad), Mathf.Sin(tangentRad)));
+        // bullet.SetDirection(new Vector2(Mathf.Cos(tangentRad), Mathf.Sin(tangentRad)));
     }
 
     public void Merge(IBulletBehavior other)

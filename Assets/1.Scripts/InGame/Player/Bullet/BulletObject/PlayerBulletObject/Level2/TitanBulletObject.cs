@@ -5,11 +5,11 @@ public class TitanBulletObject : PlayerBulletObject
     int killCount;
      int lv;
      DamageBoostForce damageBoostForce;
-     public override void Shoot(Vector2 dir, float damage)
+     public override void Shoot(Vector2 dir)
     {
-        base.Shoot(dir, damage);
+        base.Shoot(dir);
 
-        lv = Player.Instance.statMgr.bulletStatDic[key].lv;
+        // lv = Player.Instance.statMgr.bulletStatDic[key].lv;
     }
 
     public override IHittable Hit(RaycastHit2D hit2D)

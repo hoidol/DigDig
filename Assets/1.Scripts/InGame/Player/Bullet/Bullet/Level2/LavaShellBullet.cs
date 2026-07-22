@@ -9,19 +9,19 @@ public class LavaShellBullet : Bullet
 
     public LavaShellBullet() { key = "LavaShell"; }
 
-    public override void OnBulletFired(PlayerBulletObject bullet)
-    {
-        int lv = GetLevel();
-        bullet.AddBehavior(new LavaShellBehavior(
-            Player.Instance.bounce,
-            LAVA_RADIUS,
-            LAVA_DAMAGE_RATES[lv - 1],
-            LAVA_DURATIONS[lv - 1]
-        ));
-    }
+    // public override void OnBulletFired(PlayerBulletObject bullet)
+    // {
+    //     int lv = GetLevel();
+    //     bullet.AddBehavior(new LavaShellBehavior(
+    //         Player.Instance.bounce,
+    //         LAVA_RADIUS,
+    //         LAVA_DAMAGE_RATES[lv - 1],
+    //         LAVA_DURATIONS[lv - 1]
+    //     ));
+    // }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
-    {
-        return $"마지막 튕김 지점에 용암 지대 생성\n범위 {LAVA_RADIUS}타일, {LAVA_DURATIONS[lv - 1]}초간 공격력 {LAVA_DAMAGE_RATES[lv - 1] * 100:0}% 피해/0.5초";
-    }
+    // public override string GetDescription(int lv = 1, bool detail = false)
+    // {
+    //     return $"마지막 튕김 지점에 용암 지대 생성\n범위 {LAVA_RADIUS}타일, {LAVA_DURATIONS[lv - 1]}초간 공격력 {LAVA_DAMAGE_RATES[lv - 1] * 100:0}% 피해/0.5초";
+    // }
 }

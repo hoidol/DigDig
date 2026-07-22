@@ -23,9 +23,9 @@ public class EnemyBullet : BulletObject
         }
     }
 
-    public override void Shoot(Vector2 dir, float damage)
+    public override void Shoot(Vector2 dir)
     {
-        base.Shoot(dir, damage);
+        base.Shoot(dir);
 
         transform.right = dir;
     }

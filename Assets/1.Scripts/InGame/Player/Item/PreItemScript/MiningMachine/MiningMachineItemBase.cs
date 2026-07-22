@@ -12,7 +12,7 @@ public abstract class MiningMachineItemBase : Item
         foreach (var m in machines) Destroy(m.gameObject);
         machines.Clear();
 
-        for (int i = 0; i < GetLevel(); i++)
+        for (int i = 0; i < count; i++)
         {
             var machine = Instantiate(machinePrefab);
             machine.attackPower = GetAttackPower();
@@ -20,7 +20,7 @@ public abstract class MiningMachineItemBase : Item
         }
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         foreach (var m in machines) Destroy(m.gameObject);
         machines.Clear();

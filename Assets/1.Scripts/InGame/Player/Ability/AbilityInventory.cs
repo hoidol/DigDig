@@ -6,9 +6,9 @@ public class AbilityInventory : MonoBehaviour
 {
     public List<Ability> equippedAbilitys = new List<Ability>();
     public List<SynergyData> currentSynergyDatas = new List<SynergyData>();
-    public List<IPreAttack> preAttacks = new List<IPreAttack>();
-    public List<IAttack> attacks = new List<IAttack>();
-    public List<IComboAttack> comboAttacks = new List<IComboAttack>();
+    public List<IPreFire> preFires = new List<IPreFire>();
+    public List<IFired> fireds = new List<IFired>();
+    public List<IComboFire> comboFires = new List<IComboFire>();
     public List<IBullet> bullets = new List<IBullet>();
 
     public int abilityCount
@@ -39,9 +39,9 @@ public class AbilityInventory : MonoBehaviour
 
     void RefreshCache()
     {
-        preAttacks = equippedAbilitys.OfType<IPreAttack>().ToList();
-        attacks = equippedAbilitys.OfType<IAttack>().ToList();
-        comboAttacks = equippedAbilitys.OfType<IComboAttack>().ToList();
+        preFires = equippedAbilitys.OfType<IPreFire>().ToList();
+        fireds = equippedAbilitys.OfType<IFired>().ToList();
+        comboFires = equippedAbilitys.OfType<IComboFire>().ToList();
         bullets = equippedAbilitys.OfType<IBullet>().ToList();
     }
 

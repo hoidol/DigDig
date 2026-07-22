@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 과적재 - 장전 완료 후 첫 발은 멀티샷
-public class MultiShotOnReloadAbility : Ability, IPreAttack
+public class MultiShotOnReloadAbility : Ability//, IPreAttack
 {
     bool firstShot;
 
@@ -23,7 +23,7 @@ public class MultiShotOnReloadAbility : Ability, IPreAttack
 
     void OnReloadEnd(ReloadEndEvent e) => firstShot = true;
 
-    public void OnPreAttack(Player player, Vector2 dir)
+    public void OnPreAttack(ref Bullet bullet, Vector2 dir)
     {
         if (!firstShot) return;
         firstShot = false;

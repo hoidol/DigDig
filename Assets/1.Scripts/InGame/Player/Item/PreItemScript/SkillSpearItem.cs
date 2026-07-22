@@ -5,8 +5,6 @@ public class SkillSpearItem : Item, IBullet
 {
     const float INSTAKILL_CHANCE = 0.01f;
 
-    public override void OnEquip(Player player) { }
-    public override void OnUnequip(Player player) { }
 
     public void OnBulletFired(PlayerBulletObject bullet)
     {

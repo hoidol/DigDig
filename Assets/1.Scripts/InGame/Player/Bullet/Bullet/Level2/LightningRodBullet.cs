@@ -11,15 +11,15 @@ public class LightningRodBullet : Bullet
 
     public LightningRodBullet() { key = "LightningRod"; }
 
-    public override void OnBulletFired(PlayerBulletObject bullet)
-    {
-        base.OnBulletFired(bullet);
-        bullet.AddBehavior(new LightningRodBehavior(MARK_DURATIONS[GetLevel() - 1]));
-        bullet.AddBehavior(new ThunderOnHitBehavior(THUNDER_RANGES[GetLevel() - 1], THUNDER_COUNT[GetLevel() - 1], THUNDER_DAMAGES[GetLevel() - 1]));
-    }
+    // public override void OnBulletFired(PlayerBulletObject bullet)
+    // {
+    //     base.OnBulletFired(bullet);
+    //     bullet.AddBehavior(new LightningRodBehavior(MARK_DURATIONS[GetLevel() - 1]));
+    //     bullet.AddBehavior(new ThunderOnHitBehavior(THUNDER_RANGES[GetLevel() - 1], THUNDER_COUNT[GetLevel() - 1], THUNDER_DAMAGES[GetLevel() - 1]));
+    // }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
-    {
-        return $"적중 적에게 피뢰침 표식 부여 ({MARK_DURATIONS[lv - 1]}초)\n표식된 적은 모든 낙뢰의 우선 타격 대상";
-    }
+    // public override string GetDescription(int lv = 1, bool detail = false)
+    // {
+    //     return $"적중 적에게 피뢰침 표식 부여 ({MARK_DURATIONS[lv - 1]}초)\n표식된 적은 모든 낙뢰의 우선 타격 대상";
+    // }
 }

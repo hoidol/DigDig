@@ -8,18 +8,17 @@ public class SheathItem : TriggerItem
 
     float[] coolTimes = {50,45,40};
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
-        base.OnEquip(player);
-        shieldHandler = player.GetComponent<StatusEffectHandler>();
-        transform.parent = player.bodyCenterTr;
-        transform.position = player.bodyCenterTr.position;
+        shieldHandler = Player.Instance.GetComponent<StatusEffectHandler>();
+        transform.parent = Player.Instance.bodyCenterTr;
+        transform.position = Player.Instance.bodyCenterTr.position;
         effect.SetActive(false);
-        base.OnEquip(player);
+        base.OnEquip();
     }
     public override void UpdateItem()
     {
-        coolTime = coolTimes[GetLevel()-1];
+        coolTime = coolTimes[count-1];
     }
 
     public override void OnTrigger()

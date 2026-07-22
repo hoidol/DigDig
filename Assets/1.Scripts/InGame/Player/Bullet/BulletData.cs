@@ -6,7 +6,7 @@ using UnityEditor;
 #endif
 
 [CreateAssetMenu(menuName = "Data/BulletData", fileName = "BulletData")]
-public class BulletData : ScriptableObject, IReinforceData
+public class BulletData : ScriptableObject
 {
     public static readonly int MAX_LEVEL = 3;
     public string key;
@@ -29,15 +29,7 @@ public class BulletData : ScriptableObject, IReinforceData
     // public float multiplyATK; // 공격력 배율 (예: 1.2f는 20% 증가)
     public PlayerBulletObject prefab;
 
-    public int GetLevel()
-    {
-        return Player.Instance.statMgr.bulletStatDic[key].lv;
-    }
 
-    public string GetDescription(int lv = 1, bool detail = false)
-    {
-        return BulletManager.Create(key).GetDescription(lv, detail);
-    }
 
     public static BulletData GetBulletData(string key)
     {

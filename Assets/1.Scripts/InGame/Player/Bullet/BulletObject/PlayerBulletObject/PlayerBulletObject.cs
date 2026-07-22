@@ -8,12 +8,21 @@ public class PlayerBulletObject : BulletObject
     // private static PlayerBulletObject prefab;
     public string key;
     public PlayerBulletDamageData damageData = new PlayerBulletDamageData();
-    public override void Shoot(Vector2 dir, float damage)
+
+    protected List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
+    protected List<IBulletForce> forces = new List<IBulletForce>();
+
+    public override void Shoot(Vector2 dir)
     {
-        base.Shoot(dir, damage);
+        base.Shoot(dir);
+        damage = Player.Instance.statMgr.AttackPower;
         lifetimeTimer = Player.Instance.statMgr.AmmoDuration;
 
         damageData.Init(this);
+    }
+    public virtual void SetBullet(Bullet bullet)
+    {
+        
     }
 
     public override void Update()
@@ -72,11 +81,22 @@ public class PlayerBulletObject : BulletObject
         BulletManager.Instance.ReturnPlayerBulletObject(key, this);
     }
 
-    // public void OiggerEnter2D(Collider2D collision)
-    // {
-    //     //collision 레이어가 Hittable
-    //     // 맞으면 Hit(hit2d); 호출하자
-    // }
+    
+    public void AddBehavior(IBulletBehavior b)
+    {
+        behaviors.Add(b);
+    }
+    public void ClearBehaviors() => behaviors.Clear();
+    public void AddBulletForce(IBulletForce b)
+    {
+        forces.Add(b);
+
+    }
+    public void RemoveBulletForce(IBulletForce b)
+    {
+        forces.Remove(b);
+    }
+    public void ClearBulletForce() => forces.Clear();
 
     public override void Bounce(RaycastHit2D hit2D)
     {

@@ -5,19 +5,19 @@ public class DroneItem : TriggerCycleItem
 {
     public AroundAttackDrone drone;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
-        base.OnEquip(player);
+        base.OnEquip();
         activeTime = 15f;
         drone.gameObject.SetActive(false);
         drone.transform.parent = null;
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         drone.gameObject.SetActive(false);
         drone.transform.parent = transform;
-        base.OnUnequip(player);
+        base.OnUnequip();
     }
 
     public override void OnActivate()

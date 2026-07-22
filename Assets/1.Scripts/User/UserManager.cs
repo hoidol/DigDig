@@ -12,7 +12,7 @@ public class UserManager : MonoSingleton<UserManager>
     {
         get; private set;
     }
-    public UserBulletManager userBulletManager;
+    // public UserBulletManager userBulletManager;
     public UserStageManager userStageManager;
     void Awake()
     {
@@ -24,11 +24,11 @@ public class UserManager : MonoSingleton<UserManager>
             userData = new UserData();
         }
         Debug.Log("UserManager Awake()");
-        userBulletManager = new UserBulletManager();
+        // userBulletManager = new UserBulletManager();
         userStageManager = new UserStageManager();
 
 
-        userBulletManager.LoadData();
+        // userBulletManager.LoadData();
         userStageManager.LoadData();
 
     }

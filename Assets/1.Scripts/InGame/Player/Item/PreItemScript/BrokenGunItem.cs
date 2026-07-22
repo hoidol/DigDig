@@ -3,10 +3,10 @@ using UnityEngine;
 // 고장난 총: 1초마다 랜덤 방향으로 총 발사 (데미지 100%)
 public class BrokenGunItem : TriggerItem
 {
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         coolTime = 1f;
-        base.OnEquip(player);
+        base.OnEquip();
     }
 
     public override void OnTrigger()

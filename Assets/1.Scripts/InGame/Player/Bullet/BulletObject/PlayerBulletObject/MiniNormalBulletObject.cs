@@ -6,9 +6,9 @@ public class MiniNormalBulletObject : PlayerBulletObject
     static readonly Queue<MiniNormalBulletObject> pool = new();
     static MiniNormalBulletObject prefab;
 
-    public override void Shoot(Vector2 dir, float damage)
+    public override void Shoot(Vector2 dir)
     {
-        base.Shoot(dir, damage);
+        base.Shoot(dir);
         lifetimeTimer = 2;
 
         damageData.Init(this);

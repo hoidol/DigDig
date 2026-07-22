@@ -11,7 +11,7 @@ public class BulletManager : MonoSingleton<BulletManager>, ILoadData
     public BulletData[] bulletDatas;
     public MergeBulletData[] mergeBulletDatas;
 
-    public static Dictionary<string, Bullet> bullets;
+    // public static Dictionary<string, Bullet> bullets;
     Dictionary<string, Stack<PlayerBulletObject>> bulletPool = new();
     Dictionary<string, PlayerBulletObject> bulletPrefabDic = new();
 
@@ -20,29 +20,29 @@ public class BulletManager : MonoSingleton<BulletManager>, ILoadData
 
     void Awake()
     {
-        bullets = new()
-        {
-             //Level1 ------------------------
-            { "Normal",    new NormalBullet() },
-            { "Pierce",   new PierceBullet() },
-            { "Condense", new CondenseBullet() },
-            { "Giant",    new GiantBullet() },
-            { "Iron",     new IronBullet() },
-            { "Flame",    new FlameBullet() },
-            { "Orbit",     new OrbitBullet() },
-            { "Thunder",  new ThunderBullet() },
-            { "Vampire",  new VampireBullet() },
-            { "Split",        new SplitBullet() },
-            { "Scatter",      new ScatterBullet() },
+        // bullets = new()
+        // {
+        //      //Level1 ------------------------
+        //     { "Normal",    new NormalBullet() },
+        //     { "Pierce",   new PierceBullet() },
+        //     { "Condense", new CondenseBullet() },
+        //     { "Giant",    new GiantBullet() },
+        //     { "Iron",     new IronBullet() },
+        //     { "Flame",    new FlameBullet() },
+        //     { "Orbit",     new OrbitBullet() },
+        //     { "Thunder",  new ThunderBullet() },
+        //     { "Vampire",  new VampireBullet() },
+        //     { "Split",        new SplitBullet() },
+        //     { "Scatter",      new ScatterBullet() },
 
-            //Level2 ------------------------
+        //     //Level2 ------------------------
 
-            { "CuttingRay",   new CuttingRayBullet() },
-            { "Titan",        new TitanBullet() },
-            { "SteelSphere",  new SteelSphereBullet() },
-            { "LightningRod", new LightningRodBullet() },
-            { "LavaShell",    new LavaShellBullet() },
-        };
+        //     { "CuttingRay",   new CuttingRayBullet() },
+        //     { "Titan",        new TitanBullet() },
+        //     { "SteelSphere",  new SteelSphereBullet() },
+        //     { "LightningRod", new LightningRodBullet() },
+        //     { "LavaShell",    new LavaShellBullet() },
+        // };
         LoadTask = LoadDataAsync();
     }
 
@@ -106,112 +106,78 @@ public class BulletManager : MonoSingleton<BulletManager>, ILoadData
         bulletPool[key].Push(obj);
     }
 
-    public static Bullet Create(string key)
-    {
-        if (!bullets.TryGetValue(key, out var b))
-            throw new ArgumentException($"BulletManager: 등록되지 않은 키 '{key}'");
+    // public static Bullet Create(string key)
+    // {
+    //     if (!bullets.TryGetValue(key, out var b))
+    //         throw new ArgumentException($"BulletManager: 등록되지 않은 키 '{key}'");
 
-        b.key = key;
-        return b;
-    }
+    //     b.key = key;
+    //     return b;
+    // }
 
-    [SerializeField] List<BulletData> canPickBulletDatas = new List<BulletData>();
-    public BulletData DrawRandomBullet()
-    {
-        return BulletData.GetBulletData(UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[UnityEngine.Random.Range(0, 5)].key);
-    }
+    // [SerializeField] List<BulletData> canPickBulletDatas = new List<BulletData>();
+    // public BulletData DrawRandomBullet()
+    // {
+    //     return BulletData.GetBulletData(UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[UnityEngine.Random.Range(0, 5)].key);
+    // }
 
-    public List<BulletData> GetBulletDatas(int count)
-    {
+    // public List<BulletData> GetBulletDatas(int count)
+    // {
 
-        bool apearMergeBullet = UnityEngine.Random.Range(0f, 100f) < apearMergeBulletChance;
-        if (apearMergeBullet)
-            apearMergeBulletChance = 10f;
-        else
-            apearMergeBulletChance += 10f;
+    //     bool apearMergeBullet = UnityEngine.Random.Range(0f, 100f) < apearMergeBulletChance;
+    //     if (apearMergeBullet)
+    //         apearMergeBulletChance = 10f;
+    //     else
+    //         apearMergeBulletChance += 10f;
 
-        var ownedMergeIngredientKeys = new HashSet<string>();
-        if (apearMergeBullet)
-        {
-            // foreach (var bulletKey in Player.Instance.weapon.bulletInventory.curBullets)
-            // {
-            //     Bullet bullet = bullets[bulletKey];
-            //     if (bullet.bulletData == null || bullet.bulletData.canMergeBulletKeys == null) continue;
-            //     foreach (var key in bullet.bulletData.canMergeBulletKeys)
-            //         ownedMergeIngredientKeys.Add(key);
-            // }
-        }
+    //     var ownedMergeIngredientKeys = new HashSet<string>();
 
-        // 가중치 풀 구성
-        canPickBulletDatas.Clear();
-        var pool = new List<BulletPickChance>();
-        foreach (var data in bulletDataDic.Values)
-        {
-            float weight;
-            if (apearMergeBullet)
-            {
-                weight = ownedMergeIngredientKeys.Contains(data.key) ? 100f : 10f;
-            }
-            else
-            {
-                weight = 10;
-                // weight = data.grade switch
-                // {
-                //     Grade.Normal => curNormalDrawChance + normalDrawBonus,
-                //     Grade.Rare => curRareDrawChance + rareDrawBonus,
-                //     Grade.Unique => curUniqueDrawChance + uniqueDrawBonus,
-                //     _ => 10f
-                // };
-            }
-            pool.Add(new BulletPickChance { bulletData = data, chance = weight });
-            canPickBulletDatas.Add(data);
-        }
+    //     // 가중치 풀 구성
+    //     canPickBulletDatas.Clear();
+    //     var pool = new List<BulletPickChance>();
+    //     foreach (var data in bulletDataDic.Values)
+    //     {
+    //         float weight;
+    //         if (apearMergeBullet)
+    //         {
+    //             weight = ownedMergeIngredientKeys.Contains(data.key) ? 100f : 10f;
+    //         }
+    //         else
+    //         {
+    //             weight = 10;
+    //         }
+    //         pool.Add(new BulletPickChance { bulletData = data, chance = weight });
+    //         canPickBulletDatas.Add(data);
+    //     }
 
-        // 가중치 기반 비복원 추출
-        var result = new List<BulletData>();
-        int pickCount = Mathf.Min(count, pool.Count);
-        bool hasUnique = false;
-        for (int i = 0; i < pickCount; i++)
-        {
-            float total = 0f;
-            for (int k = 0; k < pool.Count; k++) total += pool[k].chance;
+    //     // 가중치 기반 비복원 추출
+    //     var result = new List<BulletData>();
+    //     int pickCount = Mathf.Min(count, pool.Count);
+    //     bool hasUnique = false;
+    //     for (int i = 0; i < pickCount; i++)
+    //     {
+    //         float total = 0f;
+    //         for (int k = 0; k < pool.Count; k++) total += pool[k].chance;
 
-            float roll = UnityEngine.Random.Range(0f, total);
-            float cumulative = 0f;
-            for (int j = 0; j < pool.Count; j++)
-            {
-                cumulative += pool[j].chance;
-                if (roll < cumulative)
-                {
-                    result.Add(pool[j].bulletData);
-                    pool.RemoveAt(j);
-                    if (pool[j].bulletData.grade == Grade.Unique)
-                        hasUnique = true;
-                    break;
-                }
-            }
-        }
+    //         float roll = UnityEngine.Random.Range(0f, total);
+    //         float cumulative = 0f;
+    //         for (int j = 0; j < pool.Count; j++)
+    //         {
+    //             cumulative += pool[j].chance;
+    //             if (roll < cumulative)
+    //             {
+    //                 result.Add(pool[j].bulletData);
+    //                 pool.RemoveAt(j);
+    //                 if (pool[j].bulletData.grade == Grade.Unique)
+    //                     hasUnique = true;
+    //                 break;
+    //             }
+    //         }
+    //     }
 
-        // if (hasUnique)
-        // {
-        //     normalDrawBonus -= 10f;
-        //     rareDrawBonus -= 2f;
-        //     uniqueDrawBonus += 1;
 
-        //     if (normalDrawBonus < 30)
-        //         normalDrawBonus = 30;
-        //     if (rareDrawBonus < 5)
-        //         rareDrawBonus = 5;
-        // }
-        // else
-        // {
-        //     normalDrawBonus = 0f;
-        //     rareDrawBonus = 0f;
-        //     uniqueDrawBonus = 0;
-        // }
-
-        return result;
-    }
+    //     return result;
+    // }
 
     public struct BulletPickChance
     {

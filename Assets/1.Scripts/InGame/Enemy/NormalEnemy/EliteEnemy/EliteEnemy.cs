@@ -71,7 +71,7 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
     public override void Destroy()
     {
         base.Destroy();
-        BlessingStone.Instantiate(transform.position);
+        
     }
 
     public float PlayAnim(string animName)

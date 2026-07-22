@@ -39,7 +39,6 @@ public class Player : MonoSingleton<Player>, IPicker
     public float curHp => health.curHp;
     public float healMultiplier { get => health.healMultiplier; set => health.healMultiplier = value; }
 
-    public bool isReloading => weapon.IsReloading;
 
     public Transform attackPoint => weapon.AttackPoint;
     public Vector2 MoveDirection => movement.MoveDirection;
@@ -136,27 +135,24 @@ public class Player : MonoSingleton<Player>, IPicker
 
     public void UpdatePlayer()
     {
+        itemInventory.UpdateInventory();
+
         float preMaxHp = statMgr.MaxHp;
         statMgr.UpdateStat();
         float curMaxHp = statMgr.MaxHp;
         float diffMaxHp = curMaxHp - preMaxHp;
         if (diffMaxHp > 0)
             AddHp(diffMaxHp);
+            
         GameEventBus.Publish(new PlayerUpdateEvent(this));
     }
 
-    public void LevelUpBullet(string key)
-    {
-        statMgr.LevelUpBullet(key);
-        UpdatePlayer();
-    }
+    // public void LevelUpBullet(string key)
+    // {
+    //     statMgr.LevelUpBullet(key);
+    //     UpdatePlayer();
+    // }
 
-    public void LevelUpItem(string key)
-    {
-        statMgr.LevelUpItem(key);
-        itemInventory.GetItem(key).UpdateItem();
-        UpdatePlayer();
-    }
 
     public void MergeBullet(MergeBulletData mergeBulletData)
     {
@@ -214,18 +210,19 @@ public class Player : MonoSingleton<Player>, IPicker
 
 
 
-    public void AddItem(string key)
+    public void AddItem(string key,int count=1)
     {
-        statMgr.AddItem(key);
-        itemInventory.AddItem(key);
+        statMgr.AddItem(key,count);
+        
         UpdatePlayer();
     }
+
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
     public void AddHp(float hp, bool showDmg = true) => health.AddHp(hp, showDmg);
 
 
     //플레이어에 의한 공격 Only
-    public void Attack(Vector2 dir) => weapon.Attack(dir);
+    // public void Attack(Vector2 dir) => weapon.Attack(dir);
     public PlayerBulletObject Shoot(Bullet b, Vector2 dir, Vector2 pos) => weapon.Shoot(b, dir, pos);
 
     // public void QueueExtraShot(int count = 1) => weapon.QueueExtraShot(count);
@@ -237,8 +234,8 @@ public class PlayerStatManager
 {
     [SerializeField] List<PlayerStat> statList = new();
     public Dictionary<StatType, PlayerStat> statDic = new Dictionary<StatType, PlayerStat>();
-    public Dictionary<string, PlayerBulletStat> bulletStatDic = new Dictionary<string, PlayerBulletStat>();
-    [SerializeField] Dictionary<string, PlayerItemStat> itemStatDic = new Dictionary<string, PlayerItemStat>();
+    // public Dictionary<string, PlayerBulletStat> bulletStatDic = new Dictionary<string, PlayerBulletStat>();
+    public Dictionary<string, PlayerItemStat> itemStatDic = new Dictionary<string, PlayerItemStat>();
     public List<Buff> activeBuffs = new List<Buff>();
 
     public float MaxHp => statDic[StatType.MaxHp].value;
@@ -280,16 +277,16 @@ StatType.AmmoDuration //총알 지속시간
             statDic.Add(ps.statType, ps);
         }
 
-        for (int i = 0; i < UserManager.Instance.userBulletManager.userBulletData.equiptedBullets.Length; i++)
-        {
-            // Debug.Log($"Player StatManager Init() {UserManager.Instance.userData.equiptedBullets[i].key}");
-            bulletStatDic.Add(UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[i].key,
-            new PlayerBulletStat()
-            {
-                key = UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[i].key,
-                lv = 1
-            });
-        }
+        // for (int i = 0; i < UserManager.Instance.userBulletManager.userBulletData.equiptedBullets.Length; i++)
+        // {
+        //     // Debug.Log($"Player StatManager Init() {UserManager.Instance.userData.equiptedBullets[i].key}");
+        //     bulletStatDic.Add(UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[i].key,
+        //     new PlayerBulletStat()
+        //     {
+        //         key = UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[i].key,
+        //         lv = 1
+        //     });
+        // }
 
         Reset();
     }
@@ -330,29 +327,35 @@ StatType.AmmoDuration //총알 지속시간
             return playerStatType;
         return StatType.Count;
     }
-    public void AddItem(string key)
+    public void AddItem(string key,int count)
     {
         if (!itemStatDic.ContainsKey(key))
         {
             itemStatDic.Add(key, new PlayerItemStat()
             {
                 key = key,
-                lv = 1
+                count = 0
             });
         }
+        itemStatDic[key].count += count;
+        if(itemStatDic[key].count <= 0)
+        {
+            //아이템 제거하기
+        }
     }
-    public void LevelUpBullet(string key)
-    {
-        bulletStatDic[key].lv++;
-    }
+
+    // public void LevelUpBullet(string key)
+    // {
+    //     bulletStatDic[key].lv++;
+    // }
     public PlayerItemStat GetPlayerItemStat(string key)
     {
         return itemStatDic[key];
     }
-    public void LevelUpItem(string key)
-    {
-        itemStatDic[key].lv++;
-    }
+    // public void LevelUpItem(string key)
+    // {
+    //     itemStatDic[key].count++;
+    // }
 }
 
 [System.Serializable]
@@ -373,7 +376,7 @@ public class PlayerBulletStat
 public class PlayerItemStat
 {
     public string key;
-    public int lv;
+    public int count;
 }
 
 public enum StatType

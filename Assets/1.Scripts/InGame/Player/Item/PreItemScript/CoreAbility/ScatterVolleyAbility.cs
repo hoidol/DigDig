@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 산탄 연사 - 일반 공격 시 확률로 방사형(360도) 탄 발사
-public class ScatterVolleyAbility : SynergyAbility, IAttack
+public class ScatterVolleyAbility : SynergyAbility//, IAttack
 {
     static readonly float prob = 0.3f;
     static readonly int bulletCount = 5;
@@ -10,11 +10,11 @@ public class ScatterVolleyAbility : SynergyAbility, IAttack
     public override void OnEquip(Player player) { }
     public override void OnUnequip(Player player) { }
 
-    public void OnAttack(Player player, Vector2 dir)
+    public void OnAttack(Vector2 dir)
     {
         if (Random.value > prob) return;
 
-        float dmg = player.statMgr.AttackPower * ratio;
+        float dmg = Player.Instance.statMgr.AttackPower * ratio;
         float angleStep = 360f / bulletCount;
         for (int i = 0; i < bulletCount; i++)
         {

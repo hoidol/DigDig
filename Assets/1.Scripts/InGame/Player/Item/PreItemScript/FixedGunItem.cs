@@ -6,11 +6,6 @@ public class FixedGunItem : TriggerItem
 {
     const int SHOT_COUNT = 4;
 
-    public override void OnEquip(Player player)
-    {
-        base.OnEquip(player);
-    }
-
     public override void OnTrigger()
     {
         base.OnTrigger();

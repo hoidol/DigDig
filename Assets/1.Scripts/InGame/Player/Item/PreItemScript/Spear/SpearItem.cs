@@ -10,10 +10,6 @@ public class SpearItem : TriggerItem
 
     public Spear spearPrefab;
 
-    public override void OnEquip(Player player)
-    {
-        base.OnEquip(player);
-    }
 
     public override void OnTrigger()
     {

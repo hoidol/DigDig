@@ -1,22 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShadowItem : Item, IAttack
+public class ShadowItem : Item//, IAttack
 {
     public Shadow shadowPrefab;
     public float damageRate = 0.3f;
 
     List<Shadow> shadows = new();
 
-    public override void OnEquip(Player player) => UpdateItem();
 
     public override void UpdateItem()
     {
         foreach (var s in shadows) Destroy(s.gameObject);
         shadows.Clear();
 
-        float angleStep = 360f / GetLevel();
-        for (int i = 0; i < GetLevel(); i++)
+        float angleStep = 360f / count;
+        for (int i = 0; i < count; i++)
         {
             Shadow shadow = Instantiate(shadowPrefab);
             // count가 늘면 주위를 원형으로 배치
@@ -26,15 +25,15 @@ public class ShadowItem : Item, IAttack
         }
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
         foreach (var s in shadows) Destroy(s.gameObject);
         shadows.Clear();
     }
 
-    public void OnAttack(Player player, Vector2 dir)
+    public void OnAttack(Vector2 dir)
     {
-        float damage = player.statMgr.AttackPower * damageRate;
+        float damage = Player.Instance.statMgr.AttackPower * damageRate;
         foreach (var s in shadows)
             s.Shoot(dir, damage);
     }

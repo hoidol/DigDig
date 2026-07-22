@@ -13,8 +13,8 @@ public class TitanBullet : Bullet
 
     
 
-    public override string GetDescription(int lv = 1, bool detail = false)
-    {
-        return $"처치 시 크기 +{SIZE_PER_KILL[lv - 1] * 100:0}%, 데미지 +{DAMAGE_PER_KILL[lv - 1] * 100:0}% 증가";
-    }
+    // public override string GetDescription(int lv = 1, bool detail = false)
+    // {
+    //     return $"처치 시 크기 +{SIZE_PER_KILL[lv - 1] * 100:0}%, 데미지 +{DAMAGE_PER_KILL[lv - 1] * 100:0}% 증가";
+    // }
 }

@@ -11,12 +11,12 @@ public abstract class OrbitItemBase : TriggerCycleItem
 
     protected List<OrbitOrb> orbs = new();
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
-        base.OnEquip(player);
-        transform.SetParent(player.bodyCenterTr);
+        base.OnEquip();
+        transform.SetParent(Player.Instance.bodyCenterTr);
         transform.localRotation = Quaternion.identity;
-        transform.position = player.bodyCenterTr.position;
+        transform.position = Player.Instance.bodyCenterTr.position;
         //transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         RebuildOrbs();
         UpdateItem();
@@ -27,7 +27,7 @@ public abstract class OrbitItemBase : TriggerCycleItem
         RebuildOrbs();
     }
 
-    protected virtual int OrbCount => GetLevel();
+    protected virtual int OrbCount => count;
 
     protected void RebuildOrbs()
     {
@@ -54,9 +54,9 @@ public abstract class OrbitItemBase : TriggerCycleItem
         transform.Rotate(Vector3.forward, orbitSpeed * Time.deltaTime);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        base.OnUnequip(player);
+        base.OnUnequip();
         foreach (var orb in orbs) Destroy(orb.gameObject);
         orbs.Clear();
     }

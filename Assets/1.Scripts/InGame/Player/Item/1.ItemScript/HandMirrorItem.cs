@@ -6,13 +6,13 @@ public class HandMirrorItem : Item
 {
     int[] bounceCounts = {3,4,5};
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
-        Player.Instance.AddBounce(bounceCounts[GetLevel()-1]);
+        Player.Instance.AddBounce(bounceCounts[count-1]);
     }
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        Player.Instance.AddBounce(-bounceCounts[GetLevel()-1]);
+        Player.Instance.AddBounce(-bounceCounts[count-1]);
     }
 
     public override string GetDescription(int lv = 1, bool detail = false)

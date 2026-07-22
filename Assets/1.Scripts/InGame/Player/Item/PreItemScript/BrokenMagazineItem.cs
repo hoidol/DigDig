@@ -3,14 +3,14 @@ public class BrokenMagazineItem : Item
 {
     Buff buff;
 
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         // buff = new Buff(StatType.BulletCount, -5, StatOpType.Add);
-        player.AddBuff(buff);
+        Player.Instance.AddBuff(buff);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        player.RemoveBuff(buff);
+        Player.Instance.RemoveBuff(buff);
     }
 }

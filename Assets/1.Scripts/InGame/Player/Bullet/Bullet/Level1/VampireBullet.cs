@@ -8,13 +8,13 @@ public class VampireBullet : Bullet
         key = "Vampire";
     }
 
-    public override void OnBulletFired(PlayerBulletObject bullet)
-    {
-        base.OnBulletFired(bullet);
-        bullet.AddBehavior(new VampireOnKillBehavior(HEAL_RATES[GetLevel()-1]));
-    }
+    // public override void OnBulletFired(PlayerBulletObject bullet)
+    // {
+    //     base.OnBulletFired(bullet);
+    //     bullet.AddBehavior(new VampireOnKillBehavior(HEAL_RATES[GetLevel()-1]));
+    // }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
-        => $"처치 시 최대 체력의 {HEAL_RATES[GetLevel()-1] * 100:0.#}% 회복";
+    // public override string GetDescription(int lv = 1, bool detail = false)
+    //     => $"처치 시 최대 체력의 {HEAL_RATES[GetLevel()-1] * 100:0.#}% 회복";
 
 }

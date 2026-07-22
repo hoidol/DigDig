@@ -41,7 +41,8 @@ public class BulletSprayPattern : EnemyAttackPattern
             // (BulletBase.Move가 direction * moveSpeed 이므로 dir 크기는 의미 없음)
             var bullet = EnemyBullet.Instantiate();
             bullet.transform.position = enemy.Transform.position;
-            bullet.Shoot(dir, damage);
+            bullet.Shoot(dir);
+            bullet.damage= damage;
 
             yield return new WaitForSeconds(burstInterval);
         }

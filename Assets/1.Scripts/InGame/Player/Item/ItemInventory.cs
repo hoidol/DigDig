@@ -9,16 +9,16 @@ public class ItemInventory : MonoBehaviour
     //public readonly int MAX_ITEM_COUNT = 8;
 
     // 인터페이스별 캐시 - 장착/해제 시점에만 갱신
-    public List<IPreAttack> preAttacks = new List<IPreAttack>();
-    public List<IAttack> attacks = new List<IAttack>();
-    public List<IComboAttack> comboAttacks = new List<IComboAttack>();
+    public List<IPreFire> preFires = new List<IPreFire>();
+    public List<IFired> fireds = new List<IFired>();
+    public List<IComboFire> comboFires = new List<IComboFire>();
     public List<IBullet> bullets = new List<IBullet>();
 
     void RefreshCache()
     {
-        preAttacks = curItems.OfType<IPreAttack>().ToList();
-        attacks = curItems.OfType<IAttack>().ToList();
-        comboAttacks = curItems.OfType<IComboAttack>().ToList();
+        preFires = curItems.OfType<IPreFire>().ToList();
+        fireds = curItems.OfType<IFired>().ToList();
+        comboFires = curItems.OfType<IComboFire>().ToList();
         bullets = curItems.OfType<IBullet>().ToList();
     }
 
@@ -45,32 +45,36 @@ public class ItemInventory : MonoBehaviour
 #endif
 
 
-
-    public void AddItem(string key)  //**Player로 부터 호출받기
+    public void UpdateInventory()
     {
-        AddItem(ItemData.GetItemData(key));
+        foreach ( var data in Player.Instance.statMgr.itemStatDic)
+        {
+            Item item = GetItem(data.Value.key); 
+            if(item == null && data.Value.count > 0)
+            {
+                ItemData itemData = ItemData.GetItemData(data.Value.key);
+                item = Instantiate(itemData.itemPrefab, transform);
+                item.key = itemData.key;
+                curItems.Add(item);
 
+                item.OnEquip();
+                GameEventBus.Publish(new AddedItemEvent(itemData));
+            }
+            else if(item != null && data.Value.count == 0)
+            {
+                item.OnUnequip();
+                Destroy(item.gameObject);
+                curItems.Remove(item);
+            }
 
-    }
+            if(item != null)
+                item.UpdateItem();
+        }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="itemData"></param>
-    /// <param name="openChangeItem"> 아이템 더이상 획득 못하면 교체창 열기</param>
-    public void AddItem(ItemData itemData) //**Player로 부터 호출받기
-    {
-        Item item = Instantiate(itemData.itemPrefab, transform);
-        item.key = itemData.key;
-        curItems.Add(item);
-
-
-
-        item.OnEquip(Player.Instance);
-        GameEventBus.Publish(new AddedItemEvent(itemData));
         SortingItem();
-
     }
+
+
 
     public void SortingItem()
     {
@@ -78,14 +82,6 @@ public class ItemInventory : MonoBehaviour
         RefreshCache();
     }
 
-    public void ReleaseItem(string key)
-    {
-        Item item = curItems.FirstOrDefault(e => e.key == key);
-        item.OnUnequip(Player.Instance);
-        curItems.Remove(item);
-        Destroy(item.gameObject);
-        SortingItem(); // RefreshCache 포함
-    }
 
     public Item GetItem(string key)
     {
@@ -98,7 +94,7 @@ public class ItemInventory : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             Debug.Log("아이템 랜덤 얻기");
-            Player.Instance.AddItem(ItemManager.Instance.GetDrawItems(1)[0].key);
+            // Player.Instance.AddItem(ItemManager.Instance.GetDrawItems(1)[0].key);
         }
 
     }

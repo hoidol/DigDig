@@ -1,10 +1,10 @@
 // 붕대: 30초마다 체력 5 회복
 public class BandageItem : TriggerItem
 {
-    public override void OnEquip(Player player)
+    public override void OnEquip()
     {
         coolTime = 30f;
-        base.OnEquip(player);
+        base.OnEquip();
     }
 
     public override void OnTrigger()

@@ -12,11 +12,11 @@ public class BowItem : Item
         if(buff != null)
             Player.Instance.RemoveBuff(buff);
 
-        buff = new Buff(StatType.AttackPower, buffValues[GetLevel()-1], StatOpType.Multiply);
+        buff = new Buff(StatType.AttackPower, buffValues[count-1], StatOpType.Multiply);
     }
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        player.RemoveBuff(buff);
+        Player.Instance.RemoveBuff(buff);
     }
 
     public override string GetDescription(int lv = 1,bool detail = false)

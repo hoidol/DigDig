@@ -14,7 +14,7 @@ public class OrbitBulletObject : MonoBehaviour
         //orbitBullet.
         hitCount = 1 + Player.Instance.bounce;
 
-        damage = orbitBullet.GetDamage();
+        // damage = orbitBullet.GetDamage();
         timer = 5;
     }
 

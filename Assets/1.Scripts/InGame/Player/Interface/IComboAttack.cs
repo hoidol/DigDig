@@ -1,7 +1,7 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public interface IComboAttack
+public interface IComboFire
 {
-    UniTask OnAttack(Player player, Vector2 dir);
+    UniTask OnComboFire(Vector2 dir);
 }

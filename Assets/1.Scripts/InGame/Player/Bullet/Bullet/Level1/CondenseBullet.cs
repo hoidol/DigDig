@@ -9,27 +9,27 @@ public class CondenseBullet : Bullet
     }
     float[] boostMultiDamages = {0.5f,0.6f,0.7f};
 
-    public override void OnBulletFired(PlayerBulletObject bullet)
-    {
-        base.OnBulletFired(bullet); // scale 리셋 포함
+    // public override void OnBulletFired(PlayerBulletObject bullet)
+    // {
+    //     base.OnBulletFired(bullet); // scale 리셋 포함
 
-        int bounce = Player.Instance.bounce;
-        int halfBounce = bounce / 2;
-        int reduced = bounce - halfBounce;
-        float boost = reduced * boostMultiDamages[GetLevel()-1]; // 감소분 × 0.5
+    //     int bounce = Player.Instance.bounce;
+    //     int halfBounce = bounce / 2;
+    //     int reduced = bounce - halfBounce;
+    //     float boost = reduced * boostMultiDamages[GetLevel()-1]; // 감소분 × 0.5
 
-        // BounceBehavior를 절반 횟수로 교체
-        bullet.ClearBehaviors();
-        bullet.AddBehavior(new BounceBehavior(halfBounce));
-        bullet.AddBulletForce(new DamageBoostForce(boost));
-    }
+    //     // BounceBehavior를 절반 횟수로 교체
+    //     bullet.ClearBehaviors();
+    //     bullet.AddBehavior(new BounceBehavior(halfBounce));
+    //     bullet.AddBulletForce(new DamageBoostForce(boost));
+    // }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
-    {
-        int bounce = Player.Instance.bounce;
-        int half = bounce / 2;
-        float boost = (bounce - half) * boostMultiDamages[lv-1];
-        return $"튕김 {bounce} → {half}회 줄고, 데미지 {1f + boost:0.##}배 상승";
-    }
+    // public override string GetDescription(int lv = 1, bool detail = false)
+    // {
+    //     int bounce = Player.Instance.bounce;
+    //     int half = bounce / 2;
+    //     float boost = (bounce - half) * boostMultiDamages[lv-1];
+    //     return $"튕김 {bounce} → {half}회 줄고, 데미지 {1f + boost:0.##}배 상승";
+    // }
 
 }

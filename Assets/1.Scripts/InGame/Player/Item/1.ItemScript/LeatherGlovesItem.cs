@@ -10,13 +10,13 @@ public class LeatherGlovesItem : Item
         if(buff != null)
             Player.Instance.RemoveBuff(buff);
             
-        buff = new Buff(StatType.AttackSpeed,buffValues[GetLevel()-1] , StatOpType.Multiply);
+        buff = new Buff(StatType.AttackSpeed,buffValues[count-1] , StatOpType.Multiply);
         Player.Instance.AddBuff(buff);
     }
 
-    public override void OnUnequip(Player player)
+    public override void OnUnequip()
     {
-        player.RemoveBuff(buff);
+        Player.Instance.RemoveBuff(buff);
     }
 
     public override string GetDescription(int lv = 1,bool detail = false)

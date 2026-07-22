@@ -9,7 +9,7 @@ public enum AcquireMethod
 }
 
 [CreateAssetMenu]
-public class ItemData : ScriptableObject, IReinforceData
+public class ItemData : ScriptableObject
 {
     public static readonly int MAX_LEVEL = 3;
     public string key;
@@ -73,10 +73,6 @@ public class ItemData : ScriptableObject, IReinforceData
     public static ItemData GetItemData(string key)
     {
         return ItemManager.Instance.GetItemData(key);
-    }
-    public int GetLevel()
-    {
-        return Player.Instance.statMgr.GetPlayerItemStat(key).lv;
     }
 
 

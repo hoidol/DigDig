@@ -4,24 +4,24 @@ using UnityEngine;
 // 적중 시 30% 확률로 화상 적용
 public class FlameBullet : Bullet
 {
-    float BURN_CHANCE = 0.3f;
-    float[] BURN_DURATIONS = {3f, 4f, 5f};
-    float[] BURN_DPS = {3f,4f,5f};
+    public float burnDuration;
+    public float burnDPS;
+
     public FlameBullet()
     {
         key = "Flame";
     }
 
-    public override void OnBulletFired(PlayerBulletObject bullet)
-    {
+    // public override void OnBulletFired(PlayerBulletObject bullet)
+    // {
 
-        base.OnBulletFired(bullet);
-        bullet.AddBehavior(new ChanceBurnBehavior(BURN_CHANCE, BURN_DURATIONS[GetLevel()-1], BURN_DPS[GetLevel()-1]));
+    //     base.OnBulletFired(bullet);
+    //     bullet.AddBehavior(new ChanceBurnBehavior(BURN_CHANCE, BURN_DURATIONS[GetLevel()-1], BURN_DPS[GetLevel()-1]));
 
-    }
+    // }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
-        => $"{BURN_CHANCE * 100:0}% 확률로 화상 ({BURN_DURATIONS[lv-1]}초 {BURN_DPS[lv-1]} DPS)";
+    // public override string GetDescription(int lv = 1, bool detail = false)
+    //     => $"{BURN_CHANCE * 100:0}% 확률로 화상 ({BURN_DURATIONS[lv-1]}초 {BURN_DPS[lv-1]} DPS)";
 
 }
 
