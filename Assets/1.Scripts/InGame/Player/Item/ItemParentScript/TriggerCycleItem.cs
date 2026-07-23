@@ -9,8 +9,8 @@ public abstract class TriggerCycleItem : Item
     public float coolTime;
     public float activeTime;
 
-    public float CoolTimer { get; private set; }
-    public bool IsActive { get; private set; }
+    public float CoolTimer { get; protected set; }
+    public bool IsActive { get; protected set; }
 
     CancellationTokenSource cts;
 

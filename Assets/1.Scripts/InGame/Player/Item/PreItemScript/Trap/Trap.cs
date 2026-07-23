@@ -11,9 +11,9 @@ public class Trap : Ally
     public LayerMask enemyLayer;
     bool readyToBomb; // 폭발 준비 완료
 
-    public override void Spawn(Vector2 pos, int lv)
+    public override void Spawn(Vector2 pos)
     {
-        base.Spawn(pos, lv);
+        base.Spawn(pos);
         transform.position = Player.Instance.transform.position;
         damage = Player.Instance.statMgr.AttackPower;
         readyToBomb = false;

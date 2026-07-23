@@ -7,6 +7,8 @@ public class FlameItem : Item, IFired
     public int[] burnDPSs = {2,3,4};
     public int[] triggerCounts = {4,4,4};
 
+    
+
     int triggerCounter;
     public override void OnEquip()
     {
@@ -16,7 +18,7 @@ public class FlameItem : Item, IFired
 
     public override string GetDescription(int lv = 1,bool detail = false)
     {
-        return $"{triggerCounts[lv-1] * 100:0} 공격마다 화염탄 랜덤 방향으로 발사";
+        return $"{triggerCounts[lv-1]} 공격마다 화염탄 랜덤 방향으로 추가 발사";
     }
 
     public void OnFired(Vector2 dir)
@@ -29,7 +31,8 @@ public class FlameItem : Item, IFired
             flameBullet.burnDPS  = burnDPSs[count -1];
 
             Vector2 randomDir = Random.insideUnitCircle.normalized;
-            Player.Instance.Shoot(flameBullet, randomDir, Player.Instance.attackPoint.position);
+            Player.Instance.Shoot(flameBullet, randomDir);
+            Player.Instance.AddHp(-itemData.consumeHp);
 
             triggerCounter=0;
         }

@@ -16,6 +16,6 @@ public class BrokenGunItem : TriggerItem
         Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
         // Player player = Player.Instance;
         // player.Shoot(dir, player.transform.position);
-        Player.Instance.weapon.Shoot(new NormalBullet(), dir, Vector2.zero);
+        Player.Instance.weapon.Shoot(new NormalBullet(), dir);
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 public interface IGun : IWeapon
 {
 
-    PlayerBulletObject Shoot(Bullet bullet, Vector2 dir, Vector2 pos);
+    PlayerBulletObject Shoot(Bullet bullet, Vector2 dir);
     // void QueueExtraShot(int count = 1);
     // void RequestMulti(int count);
     // 다음 Attack에서 발사할 확산탄 수 누적

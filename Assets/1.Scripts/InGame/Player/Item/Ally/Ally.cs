@@ -3,10 +3,14 @@ using UnityEngine;
 public class Ally : MonoBehaviour
 {
     public int level;
-    public virtual void Spawn(Vector2 pos, int lv)
+    public virtual void Spawn(Vector2 pos)
     {
         transform.position = pos;
-        level = lv;
+    }
+
+    public virtual void SetLevel(int lv)
+    {
+        
     }
 
 }

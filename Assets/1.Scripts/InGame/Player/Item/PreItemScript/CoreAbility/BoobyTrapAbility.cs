@@ -54,7 +54,8 @@ public class BoobyTrapAbility : Ability
 
         Vector2 pos = Player.Instance.transform.position;
         var trap = Instantiate(trapPrefab, pos, Quaternion.identity);
-        trap.Spawn(pos, 1);
+        trap.Spawn(pos);
+        trap.SetLevel(1);
         activeTrapCount++;
         trap.onReleased += () => activeTrapCount--;
     }

@@ -21,7 +21,7 @@ public class ItemInfoCanvas : CanvasUI<ItemInfoCanvas>
         itemData = ItemData.GetItemData(key);
         
         titleText.text = itemData.Title;
-        thumImage.sprite = itemData.thumbnail;
+        // thumImage.sprite = itemData.thumbnail;
         lv =1;
         UpdateCanvas();
     }
@@ -35,7 +35,7 @@ public class ItemInfoCanvas : CanvasUI<ItemInfoCanvas>
         {
             preLvButton.SetActive(true);
         }
-        if(lv < ItemData.MAX_LEVEL)
+        if(lv < ItemData.MAX_COUNT)
         {
             nextLvButton.SetActive(true);
         }

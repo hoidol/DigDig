@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Orbit
+  m_EditorClassIdentifier: 
+  key: Orbit
+  itemName: "\uADA4\uB3C4"
+  desc: "\uD68C\uC804 \uACF5\uACA9 (3\uCD08\uB9C8\uB2E4 1\uCCB4\uB825 \uC18C\uBAA8)"
+  consumeHp: 1
+  level: 1
+  childItem1: 
+  childItem2: 
+  valueInfo: 
+  itemPrefab: {fileID: 8994733529560611651, guid: 0a1fdacee6f9945c08bbd1b27a034751,
+    type: 3}
+  unlockConditions: []
+  applyOrder: 0

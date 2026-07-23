@@ -29,7 +29,7 @@ public class DroppedItem : MonoBehaviour
     public void Drop(ItemData iData)
     {
         itemData = iData;
-        GetComponentInChildren<SpriteRenderer>().sprite = itemData.thumbnail;
+        // GetComponentInChildren<SpriteRenderer>().sprite = itemData.thumbnail;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

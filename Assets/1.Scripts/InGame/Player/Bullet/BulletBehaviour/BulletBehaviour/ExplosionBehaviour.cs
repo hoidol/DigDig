@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class ExplosionBehaviour : IBulletBehavior
+public class BoomBehaviour : IBulletBehavior
 {
     readonly float radius;
     readonly float damage;
     readonly LayerMask layer;
 
-    public ExplosionBehaviour(float radius, float damage, LayerMask layer)
+    public BoomBehaviour(float radius, float damage, LayerMask layer)
     {
         this.radius = radius;
         this.damage = damage;

@@ -134,8 +134,9 @@ public abstract class BaseGun : MonoBehaviour, IGun
         foreach (var e in player.itemInventory.preFires)
             e.OnPreFire(ref bullet, dir);
 
-        Shoot(bullet, dir, (Vector2)attackPoint.position);
-
+        Shoot(bullet, dir);
+        Player.Instance.AddHp(-bullet.bulletData.consumeHp);
+        
         // 멀티샷: 발사 방향에 수직으로 간격을 두어 여러 발 생성
         // Vector2 perp = new(-dir.y, dir.x);
         // const float MULTI_SPACING = 0.2f;
@@ -175,10 +176,8 @@ public abstract class BaseGun : MonoBehaviour, IGun
     }
 
     // 총알 인스턴스 생성 후 아이템/어빌리티 효과 적용하여 발사
-    public PlayerBulletObject Shoot(Bullet bullet, Vector2 dir, Vector2 pos)
+    public PlayerBulletObject Shoot(Bullet bullet, Vector2 dir)
     {
-        if (pos == Vector2.zero)
-            pos = attackPoint.position;
         if (dir == Vector2.zero)
             dir = Player.Instance.weapon.dirTr.up;
             
@@ -189,12 +188,12 @@ public abstract class BaseGun : MonoBehaviour, IGun
         
         playerBullet.ClearBehaviors();
         playerBullet.ClearBulletForce();
-        playerBullet.transform.position = pos;
+        playerBullet.transform.position = attackPoint.position;
 
-        foreach (var e in player.itemInventory.bullets)
-            e.OnBulletFired(playerBullet);
+        // foreach (var e in player.itemInventory.bullets)
+        //     e.OnBulletFired(playerBullet);
             
-        Player.Instance.AddHp(-bullet.bulletData.consumeHp, false);
+        
         
         playerBullet.Shoot(dir);
         return playerBullet;
@@ -223,7 +222,6 @@ public abstract class BaseGun : MonoBehaviour, IGun
     {
         foreach (var e in player.itemInventory.comboFires)
             await e.OnComboFire( dir);
-
     }
 
 

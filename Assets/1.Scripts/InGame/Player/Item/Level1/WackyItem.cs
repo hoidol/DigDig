@@ -15,6 +15,7 @@ public class WackyItem : Item, IFired
          if (Random.value >= PROBS[count-1]) return;
 
         Vector2 randomDir = Random.insideUnitCircle.normalized;
-        Player.Instance.Shoot(new NormalBullet(), randomDir, Player.Instance.attackPoint.position);
+        Player.Instance.Shoot(new NormalBullet(), randomDir);
+        Player.Instance.AddHp(-itemData.consumeHp);
     }
 }

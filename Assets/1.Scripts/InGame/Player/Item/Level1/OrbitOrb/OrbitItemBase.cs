@@ -10,6 +10,7 @@ public abstract class OrbitItemBase : TriggerCycleItem
     public float orbitSpeed = 90f;
 
     protected List<OrbitOrb> orbs = new();
+    protected virtual int OrbCount => count;
 
     public override void OnEquip()
     {
@@ -27,7 +28,6 @@ public abstract class OrbitItemBase : TriggerCycleItem
         RebuildOrbs();
     }
 
-    protected virtual int OrbCount => count;
 
     protected void RebuildOrbs()
     {

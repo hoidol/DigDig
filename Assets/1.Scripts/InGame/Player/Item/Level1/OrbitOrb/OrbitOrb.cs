@@ -4,7 +4,7 @@ using System.Collections.Generic;
 // 회전 오브젝트 베이스: 회전은 OrbitItemBase의 컨테이너가 담당, 여기선 피해 처리만
 public class OrbitOrb : MonoBehaviour
 {
-    public float damage = 10f;
+    public float damage ;
 
     List<HitCooldown> hitCooldowns = new();
     const float HIT_COOLDOWN = 0.5f;

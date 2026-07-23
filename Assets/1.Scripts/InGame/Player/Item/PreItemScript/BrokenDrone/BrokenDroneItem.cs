@@ -14,7 +14,8 @@ public class BrokenDroneItem : Item
         drone.transform.parent = null;
         drone.transform.localPosition = Vector3.zero;
         drone.Init(DAMAGE_RATE, BULLET_COUNT);
-        drone.Spawn(transform.position, BULLET_COUNT);
+        drone.Spawn(transform.position);
+        drone.SetLevel(BULLET_COUNT);
         drone.StartShooting();
     }
 

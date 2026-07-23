@@ -11,32 +11,21 @@ public enum AcquireMethod
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
-    public static readonly int MAX_LEVEL = 3;
+    public static readonly int MAX_COUNT = 3;
     public string key;
     public string Title => itemName;
     public string itemName;
     public string desc;
-    //public int level;//무기의 레벨 1부터 ->10까지
-    // public int maxOwnCount; //최대 소유 개수 
-    public bool hideDisplay; // true면 보유 현황 UI에 표시 안 함 - 물약용
-    public AcquireMethod acquireMethod;
-    public Sprite thumbnail;
-    public string valueInfo;
-    //[SerializeField] int price;
+    public int consumeHp;
+    public int level;
+    public string childItem1;
+    public string childItem2;
 
-    // public int GetPrice()
-    // {
-    //     return prices[level - 1];
-    // }
-    // public Grade grade;      // 등급별 필터링용
+    public string valueInfo;
     public Item itemPrefab;
     public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
     public int applyOrder; // 아이템 적용 순서
-    
-    
-    
-    // public string[] IncludingItems; // 보유 시 보유처리되는 아이템 리스트
-    // 실제 효과는 Item 컴포넌트(or Strategy)로 분리
+
     public bool CheckUnlock()
     {
         bool unlocked = true;
@@ -93,17 +82,13 @@ public class ItemData : ScriptableObject
         for (int i = 0; i < headers.Length; i++)
             headers[i] = headers[i].Trim();
 
-        int iKey = System.Array.IndexOf(headers, "Key");
-        int iName = System.Array.IndexOf(headers, "Name");
-        int iDesc = System.Array.IndexOf(headers, "Desc");
-        int iAcquire = System.Array.IndexOf(headers, "Purchase,Select,Merge");
-        int iValueInfo = System.Array.IndexOf(headers, "ValueInfo");
-        // int iGrade = System.Array.IndexOf(headers, "Grade");
-        // int iLevel = System.Array.IndexOf(headers, "Level");
-        //int iHide = System.Array.IndexOf(headers, "hideDisplay");
-        // int iOwn = System.Array.IndexOf(headers, "OwnCount");
-        // int iIncluding = System.Array.IndexOf(headers, "IncludingItems");
-        // int iMerge = System.Array.IndexOf(headers, "MergeItems");
+        int iKey = System.Array.IndexOf(headers, "key");
+        int iName = System.Array.IndexOf(headers, "name");
+        int iChildItem1 = System.Array.IndexOf(headers, "childItem1");
+        int iChildItem2 = System.Array.IndexOf(headers, "childItem2");
+        int iDesc = System.Array.IndexOf(headers, "desc");
+        int iConsumeHp = System.Array.IndexOf(headers, "consumeHp");
+        int iLevel = System.Array.IndexOf(headers, "level");
 
         for (int i = 1; i < lines.Length; i++)
         {
@@ -115,38 +100,16 @@ public class ItemData : ScriptableObject
 
             if (iName >= 0 && iName < cols.Length)
                 itemName = cols[iName].Trim();
+            if (iChildItem1 >= 0 && iChildItem1 < cols.Length)
+                childItem1 = ResolveKeyByName(lines, iKey, iName, cols[iChildItem1].Trim());
+            if (iChildItem2 >= 0 && iChildItem2 < cols.Length)
+                childItem2 = ResolveKeyByName(lines, iKey, iName, cols[iChildItem2].Trim());
             if (iDesc >= 0 && iDesc < cols.Length)
                 desc = cols[iDesc].Trim();
-            if (iAcquire >= 0 && iAcquire < cols.Length)
-            {
-                acquireMethod = 0;
-                string[] methods = cols[iAcquire].Split(',');
-                foreach (var m in methods)
-                {
-                    if (System.Enum.TryParse<AcquireMethod>(m.Trim(), out var am))
-                        acquireMethod |= am;
-                }
-            }
-            if (iValueInfo >= 0 && iValueInfo < cols.Length)
-                valueInfo = cols[iValueInfo].Trim();
-            // if (iGrade >= 0 && iGrade < cols.Length && System.Enum.TryParse<Grade>(cols[iGrade].Trim(), out var g))
-            //     grade = g;
-            // if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
-            //     level = lv;
-            // if (iHide >= 0 && iHide < cols.Length)
-            //     hideDisplay = cols[iHide].Trim().ToUpper() == "TRUE";
-            // if (iOwn >= 0 && iOwn < cols.Length && int.TryParse(cols[iOwn].Trim(), out int own))
-            //     maxOwnCount = own;
-            // if (iIncluding >= 0 && iIncluding < cols.Length)
-            // {
-            //     string raw = cols[iIncluding].Trim();
-            //     IncludingItems = string.IsNullOrEmpty(raw) ? new string[0] : raw.Split(';');
-            // }
-            // if (iMerge >= 0 && iMerge < cols.Length)
-            // {
-            //     string raw = cols[iMerge].Trim();
-            //     mergeItemKeys = string.IsNullOrEmpty(raw) ? new string[0] : raw.Split(';');
-            // }
+            if (iConsumeHp >= 0 && iConsumeHp < cols.Length && int.TryParse(cols[iConsumeHp].Trim(), out int hp))
+                consumeHp = hp;
+            if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
+                level = lv;
 
             UnityEditor.EditorUtility.SetDirty(this);
             Debug.Log($"[ItemData] {key} LoadData 완료");
@@ -154,6 +117,22 @@ public class ItemData : ScriptableObject
         }
 
         Debug.LogWarning($"[ItemData] CSV에서 '{key}' 를 찾지 못함");
+    }
+
+    // CSV의 childItem 컬럼은 Key가 아닌 표시 이름(Name)으로 적혀 있어 역으로 Key를 찾는다.
+    static string ResolveKeyByName(string[] lines, int iKey, int iName, string name)
+    {
+        if (string.IsNullOrEmpty(name)) return "";
+        for (int i = 1; i < lines.Length; i++)
+        {
+            if (string.IsNullOrWhiteSpace(lines[i])) continue;
+            string[] cols = ParseCsvLine(lines[i]);
+            if (iName < 0 || iName >= cols.Length) continue;
+            if (cols[iName].Trim() != name) continue;
+            return iKey >= 0 && iKey < cols.Length ? cols[iKey].Trim() : "";
+        }
+        Debug.LogWarning($"[ItemData] childItem 이름 '{name}' 에 해당하는 Key를 찾지 못함");
+        return name;
     }
 
     static string[] ParseCsvLine(string line)
@@ -177,7 +156,7 @@ public class ItemData : ScriptableObject
         if (string.IsNullOrEmpty(key) || key != name)
             key = name;
 
-        string prefabRootFolder = "Assets/3.Prefabs/Item";
+        string prefabRootFolder = $"Assets/3.Prefabs/Item/Level{level}";
 
         // 기존 프리팹 탐색 (grade 폴더 → 루트 폴더 순)
         string[] searchFolders = new[] { prefabRootFolder };
@@ -233,7 +212,7 @@ public class ItemData : ScriptableObject
 
     string CreateItemScript(string className)
     {
-        string scriptFolder = "Assets/1.Scripts/InGame/Player/Item/";
+        string scriptFolder = $"Assets/1.Scripts/InGame/Player/Item/Level{level}";
         string filePath = $"{scriptFolder}/{className}.cs";
 
         if (System.IO.File.Exists(filePath))
@@ -262,6 +241,4 @@ public class {className} : Item
         return filePath;
     }
 #endif
-    // int[] prices = { 10, 25, 45, 70, 100, 135, 175, 220, 270, 325 };
-
 }

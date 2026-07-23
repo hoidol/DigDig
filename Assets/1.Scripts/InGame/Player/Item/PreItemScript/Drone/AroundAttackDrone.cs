@@ -9,9 +9,9 @@ public class AroundAttackDrone : Drone
     public float damage;
     public Transform dirTr;
 
-    public override void Spawn(Vector2 pos, int lv)
+    public override void Spawn(Vector2 pos)
     {
-        base.Spawn(pos, lv);
+        base.Spawn(pos);
         StopAllCoroutines();
         StartCoroutine(CoRotate());
         StartCoroutine(AttackLoop());

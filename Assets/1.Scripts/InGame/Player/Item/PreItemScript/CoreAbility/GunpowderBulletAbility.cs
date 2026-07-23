@@ -19,6 +19,6 @@ public class GunpowderBulletAbility : Ability, IBullet
     {
         if (Random.value > PROB) return;
         float dmg = Player.Instance.statMgr.AttackPower * DAMAGE_RATIO;
-        bullet.AddBehavior(new ExplosionBehaviour(RADIUS, dmg, LayerMask.GetMask("Hittable")));
+        bullet.AddBehavior(new BoomBehaviour(RADIUS, dmg, LayerMask.GetMask("Hittable")));
     }
 }

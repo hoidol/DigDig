@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Luck
+  m_EditorClassIdentifier: 
+  key: Luck
+  itemName: "\uD589\uC6B4"
+  desc: "40\uCD08\uB9C8\uB2E4 1\uD68C \uD68C\uD53C"
+  consumeHp: 0
+  level: 1
+  childItem1: 
+  childItem2: 
+  valueInfo: 
+  itemPrefab: {fileID: 85503244666341645, guid: bd2b15320bcc7413496406c8f2bf45b9,
+    type: 3}
+  unlockConditions: []
+  applyOrder: 0

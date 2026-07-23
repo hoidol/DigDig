@@ -31,7 +31,7 @@ public class MinerReflexItem : Item//, IComboAttack
         {
             await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS);
             // Player.Instance.Attack(dir, false);
-            Player.Instance.weapon.Shoot(new NormalBullet(), dir, Vector2.zero);
+            Player.Instance.weapon.Shoot(new NormalBullet(), dir);
         }
     }
 }

@@ -5,9 +5,9 @@ public class Drone : Ally
 {
     public DroneMovement movement;
 
-    public override void Spawn(Vector2 pos, int lv)
+    public override void Spawn(Vector2 pos)
     {
-        base.Spawn(pos, lv);
+        base.Spawn(pos);
         movement.Spawn(pos);
     }
 

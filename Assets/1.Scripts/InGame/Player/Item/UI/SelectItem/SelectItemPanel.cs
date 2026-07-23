@@ -13,7 +13,7 @@ public class SelectItemPanel : MonoBehaviour
     public void SetItemData(ItemData itemData)
     {
         this.itemData = itemData;
-        thumImage.sprite = itemData.thumbnail;
+        // thumImage.sprite = itemData.thumbnail;
         titleText.text = itemData.Title;
         descText.text = itemData.GetDescription();
     }

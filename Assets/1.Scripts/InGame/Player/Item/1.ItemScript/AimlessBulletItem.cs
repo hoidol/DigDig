@@ -21,7 +21,7 @@ public class AimlessBulletItem : Item, IBullet
 
         isFiring = true;
         Vector2 randomDir = Random.insideUnitCircle.normalized;
-        Player.Instance.Shoot(new NormalBullet(), randomDir, Player.Instance.attackPoint.position);
+        Player.Instance.Shoot(new NormalBullet(), randomDir);
         isFiring = false;
     }
 }

@@ -223,7 +223,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
     //플레이어에 의한 공격 Only
     // public void Attack(Vector2 dir) => weapon.Attack(dir);
-    public PlayerBulletObject Shoot(Bullet b, Vector2 dir, Vector2 pos) => weapon.Shoot(b, dir, pos);
+    public PlayerBulletObject Shoot(Bullet b, Vector2 dir) => weapon.Shoot(b, dir);
 
     // public void QueueExtraShot(int count = 1) => weapon.QueueExtraShot(count);
 

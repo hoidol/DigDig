@@ -7,6 +7,6 @@ public class ItemPanelOnlyImage : MonoBehaviour
     public virtual void SetItemData(ItemData itemData)
     {
         // bgImage.color = ItemData.GetGradeColor(itemData.grade);
-        thumImage.sprite = itemData.thumbnail;
+        // thumImage.sprite = itemData.thumbnail;
     }
 }

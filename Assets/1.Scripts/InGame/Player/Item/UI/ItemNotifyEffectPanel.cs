@@ -11,7 +11,7 @@ public class ItemNotifyEffectPanel : MonoBehaviour
 
     public void SetItem(Item item)
     {
-        thumImage.sprite = item.itemData.thumbnail;
+        // thumImage.sprite = item.itemData.thumbnail;
         // item.notifyListener = null;
         // item.notifyListener += Notify;
     }

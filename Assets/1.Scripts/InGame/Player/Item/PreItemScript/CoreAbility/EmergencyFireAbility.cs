@@ -31,7 +31,7 @@ public class EmergencyFireAbility : Ability, IFired, IPreFire
         {
             float rad = (baseAngle + angleStep * i) * Mathf.Deg2Rad;
             Vector2 shootDir = new(Mathf.Cos(rad), Mathf.Sin(rad));
-            Player.Instance.weapon.Shoot(new NormalBullet(), shootDir, Vector2.zero);
+            Player.Instance.weapon.Shoot(new NormalBullet(), shootDir);
             await UniTask.Delay(30);
         }
     }
