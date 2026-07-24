@@ -28,7 +28,7 @@ public class BoomItem : Item, IFired, IComboFire
         triggerCounter=0;
     }
 
-    public void OnFired(Vector2 dir)
+    public void OnFired(ref Bullet bullet, ref PlayerBulletObject playerBulletObject, Vector2 dir)
     {
         triggerCounter++;       
        

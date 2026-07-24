@@ -10,7 +10,7 @@ public class WackyItem : Item, IFired
         return $"{PROBS[lv-1] * 100:0}% 확률로 랜덤 방향으로 탄 발사";
     }
 
-    public void OnFired(Vector2 dir)
+    public void OnFired(ref Bullet bullet, ref PlayerBulletObject playerBulletObject, Vector2 dir)
     {
          if (Random.value >= PROBS[count-1]) return;
 

@@ -11,8 +11,8 @@ public class  FlameBulletObject : PlayerBulletObject
 
     public override void SetBullet(Bullet bullet)
     {
-        FlameBullet flameBullet = bullet as FlameBullet;
-                
+        base.SetBullet(bullet);
+        FlameBullet flameBullet = bullet as FlameBullet;        
         
         AddBehavior(new FlameOnHitBehavior(flameBullet.burnDuration, flameBullet.burnDPS));
         AddBehavior(new BounceBehavior(Player.Instance.bounce));

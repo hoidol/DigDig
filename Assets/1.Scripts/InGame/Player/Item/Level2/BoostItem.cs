@@ -1,17 +1,14 @@
 using UnityEngine;
 
-//미니미 2개 소환 및 {durations[lv-1]}동안 플레이어 + 플레이어 공격 속도 증가\n쿨타임 : {coolTimes[lv-1]}초, 발사 당 체력 -{itemData.consumeHp}
-public class BoostItem : TriggerCycleItem 
+//미니미 2개 소환 및 처치 시 미니미 추가탄 발사 \n쿨타임 : {coolTimes[lv-1]}초, 발사 당 체력 -{itemData.consumeHp}
+public class BoostItem : Item 
 {
     public BoostMiniMe boostMiniMePrefab;
     public BoostMiniMe[] boostMiniMes = new BoostMiniMe[2];
 
     public float consumeTime = 5;
 
-    float[] coolTimes = {10,8,6};
-    float[] attackSpeeds = {1.4f,1.6f,1.8f};
-    float[] durations = {4f,5f,6f};
-    Buff attackSpeedBuff;
+    float[] coolTimes = {2,2,2};
 
     public override void OnEquip()
     {
@@ -38,8 +35,6 @@ public class BoostItem : TriggerCycleItem
             }
             boostMiniMes[i]=null;
         }
-
-        OnDeactivate();
     }
 
     public override void UpdateItem()
@@ -48,10 +43,8 @@ public class BoostItem : TriggerCycleItem
         for(int i =0;i<boostMiniMes.Length; i++)
         {
             boostMiniMes[i]?.SetLevel(count); 
+            boostMiniMes[i].coolTime =coolTimes[count-1];
         }
-
-        coolTime = coolTimes[count-1];
-        activeTime = durations[count-1];
     }
 
 
@@ -66,27 +59,12 @@ public class BoostItem : TriggerCycleItem
     }
 
 
-     public override void OnActivate()
-    {
-        IsActive =true;
-        attackSpeedBuff = new Buff( StatType.AttackSpeed,attackSpeeds[count-1], StatOpType.Multiply);
-        Player.Instance.AddBuff(attackSpeedBuff);
-        
-    }
 
     public override string GetDescription(int lv = 1,bool detail = false)
     {
-        return $"미니미 2개 소환 및 {durations[lv-1]}동안 플레이어 + 플레이어 공격 속도 증가\n쿨타임 : {coolTimes[lv-1]}초, 발사 당 체력 -{itemData.consumeHp}";
+        return $"미니미 2개 소환, 처지 시 {count}개 추가 탄 발사\n쿨타임 : {coolTimes[lv-1]}초, {consumeTime}초 당 체력 -{itemData.consumeHp}";
     }
 
-    public override void OnDeactivate()
-    {
-        if(attackSpeedBuff != null)
-            Player.Instance.RemoveBuff(attackSpeedBuff);
-            
-        attackSpeedBuff = null;
-        IsActive =false;
-    }
 
     
     

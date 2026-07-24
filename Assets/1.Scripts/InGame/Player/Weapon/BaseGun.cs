@@ -108,6 +108,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // 다음 Attack에서 발사할 멀티샷 수 누적 (아이템/어빌리티에서 호출)
     // public void RequestMulti(int count) => pendingMultiShot += count;
     // 다음 Attack에서 발사할 확산탄 수 누적
+    // int pendingSpread;
     // public void RequestSpread(int count) => pendingSpread += count;
 
     // 추가 발사 요청 누적 후 순차 처리 시작 (중복 실행 방지) - 뒤따라 발사함
@@ -134,7 +135,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         foreach (var e in player.itemInventory.preFires)
             e.OnPreFire(ref bullet, dir);
 
-        Shoot(bullet, dir);
+        PlayerBulletObject playerBulletObject = Shoot(bullet, dir);
         Player.Instance.AddHp(-bullet.bulletData.consumeHp);
         
         // 멀티샷: 발사 방향에 수직으로 간격을 두어 여러 발 생성
@@ -156,9 +157,10 @@ public abstract class BaseGun : MonoBehaviour, IGun
         //     float rad = (baseAngle + sign * offset) * Mathf.Deg2Rad;
         //     Shoot(bullet, new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)), attackPoint.position);
         // }
+        // pendingSpread=0;
 
         foreach (var e in player.itemInventory.fireds)
-            e.OnFired( dir);
+            e.OnFired(ref bullet, ref playerBulletObject, dir);
 
         RunComboAttacks(dir).Forget();
         cameraShake.Shake(0.15f);
@@ -193,8 +195,6 @@ public abstract class BaseGun : MonoBehaviour, IGun
         // foreach (var e in player.itemInventory.bullets)
         //     e.OnBulletFired(playerBullet);
             
-        
-        
         playerBullet.Shoot(dir);
         return playerBullet;
     }

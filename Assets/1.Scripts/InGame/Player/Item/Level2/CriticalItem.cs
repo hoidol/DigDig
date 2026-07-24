@@ -1,29 +1,37 @@
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-//플레이어가 공격하면 같이 방향으로 쏨
-//충돌 안하게 하자
-public class BoostMiniMe : MiniMe
+//적 저치 시 관통탄발사 (관통만)
+//관통	아드레날린
+public class CriticalItem : Item 
 {
-    CancellationTokenSource cts;
-    public float coolTime;
-    public float coolTimer;
-
-    public override void OnEnable()
+    public int[] pierceCounts = {5,6,7};
+    public float coolTime =2;
+    public float coolTimer =0;
+    void OnEnable()
     {
-        base.OnEnable();
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
-
-        cts = new CancellationTokenSource();
     }
-    public override void OnDisable()
+    void Osable()
     {
-        base.OnDisable();
+        
         GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
+    }
+    CancellationTokenSource cts;
 
+    public override void OnEquip()
+    {
+        base.OnEquip();
+        cts = new CancellationTokenSource();
+    }
+
+
+    public override void OnUnequip()
+    {
         cts?.Cancel();
         cts?.Dispose();
     }
@@ -48,11 +56,15 @@ public class BoostMiniMe : MiniMe
         if(coolTimer > 0)
             return;
 
-        for(int i = 0; i < level; i++)
+        PierceBullet pierceBullet = new PierceBullet();
+        pierceBullet.multiplyAtk =1;
+        pierceBullet.pierceCount = pierceCounts[count-1];
+        for(int i = 0; i < count; i++)
         {
-            Fire();
+            Player.Instance.weapon.Shoot(pierceBullet, Player.Instance.weapon.GetAttackDirection());
             await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
         }
+        Player.Instance.AddHp(-(count * itemData.consumeHp));
         coolTimer =coolTime;
     }
 
@@ -62,6 +74,11 @@ public class BoostMiniMe : MiniMe
         {
             coolTimer -= Time.deltaTime;
         }
+    }
+
+    public override string GetDescription(int lv = 1,bool detail = false)
+    {
+        return $"적 처치 시 관통탄 추가 발사 쿨타임 {coolTime}초\n발사 당 체력 {itemData.consumeHp} 감소";
     }
 
 }

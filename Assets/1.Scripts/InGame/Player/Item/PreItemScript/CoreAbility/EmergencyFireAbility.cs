@@ -15,7 +15,7 @@ public class EmergencyFireAbility : Ability, IFired, IPreFire
     {
 
     }
-    public void OnFired(Vector2 dir)
+    public void OnFired(ref Bullet bullet, ref PlayerBulletObject playerBulletObject, Vector2 dir)
     {
         // if (Player.Instance.weapon.IsReloading) return;
         //if (player.curBulletCount != 1) return; //마지막 탄인지 확인

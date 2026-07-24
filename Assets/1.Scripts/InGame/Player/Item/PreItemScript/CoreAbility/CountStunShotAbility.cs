@@ -18,7 +18,7 @@ public class CountStunShotAbility : Ability, IFired, IBullet
         applyNext = false;
     }
 
-    public void OnFired(Vector2 dir)
+    public void OnFired(ref Bullet bullet, ref PlayerBulletObject playerBulletObject, Vector2 dir)
     {
         shotCount++;
         if (shotCount < TRIGGER_COUNT) return;

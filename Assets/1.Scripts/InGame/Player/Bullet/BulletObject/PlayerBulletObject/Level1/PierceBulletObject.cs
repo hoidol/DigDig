@@ -6,6 +6,7 @@ public class  PierceBulletObject : PlayerBulletObject
     
     public override void SetBullet(Bullet bullet)
     {
+        base.SetBullet(bullet);
         PierceBullet pierceBullet = bullet as PierceBullet;
         damageMultiplier = pierceBullet.multiplyAtk;
         

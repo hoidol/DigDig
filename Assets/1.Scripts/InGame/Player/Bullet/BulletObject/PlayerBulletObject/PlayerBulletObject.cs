@@ -22,7 +22,7 @@ public class PlayerBulletObject : BulletObject
     }
     public virtual void SetBullet(Bullet bullet)
     {
-        
+        damageData.mustCrit = bullet.mustCrit;
     }
 
     public override void Update()

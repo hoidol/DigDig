@@ -1,9 +1,9 @@
 using UnityEngine;
 
-//7초마다 360도 발사 5발 체력-2
+//적 처치 시 7초마다 360도 발사 5발 체력-2
 public class SprayItem : TriggerItem 
 {
-    float[] coolTimes = {10,8,6};
+    float[] coolTimes = {7,7,7};
     int[] bulletCounts = {4,6,8};
     public override void UpdateItem()
     {

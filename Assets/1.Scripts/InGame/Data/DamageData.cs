@@ -30,7 +30,6 @@ public class PlayerBulletDamageData : DamageData
     {
         playerBulletObject = pBObj;
         isCrt = false;
-        mustCrit = false;
     }
     public bool mustCrit;
     public void Calculate()
