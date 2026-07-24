@@ -50,10 +50,10 @@ public class Player : MonoSingleton<Player>, IPicker
     public Vector2 CurAttackDir => weapon.LastAttackDir;
 
     public Transform Transform => transform;
-    public BulletSubTool[] bulletSubTools;
-    public BulletSubTool GetBulletSubTool(string key)
+    public SubMachine[] subMachines;
+    public SubMachine GetSubMechine(string key)
     {
-        return bulletSubTools.FirstOrDefault(t => t.key == key);
+        return subMachines.FirstOrDefault(t => t.key == key);
     }
 
     private void Awake()
@@ -71,6 +71,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
 
         tileCheckers = GetComponentsInChildren<TileChecker>();
+        subMachines = GetComponentsInChildren<SubMachine>();
     }
 
 

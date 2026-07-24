@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3579235692523142079}
   - component: {fileID: 6555938412696219393}
   m_Layer: 0
-  m_Name: Mini
+  m_Name: MiniMe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97f3e219568684fa880aa3fa689b0604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniItem
-  key: 
+  key: MiniMe
   count: 0
   miniMePrefab: {fileID: 0}
   miniMe: {fileID: 0}

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BulletSubTool : MonoBehaviour
+public class SubMachine : MonoBehaviour
 {
     public string key;
 }

@@ -1,14 +1,17 @@
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-
-public class OrbitItem : Item 
+//2개 되고 빨라지고 커짐
+public class ShieldItem : Item 
 {
-    public float[] damages = {3,3,3};
-    public OrbitOrb orbPrefab;
-    public float orbitRadius = 2f;
-    public float orbitSpeed = 90f;
+    public float[] damages = {4,4,4};
+    public ShieldOrbitOrb  shieldOrbitOrbPrefab;
+    public float orbitRadius = 2.5f; //괘적이 넓음 
+    public float orbitSpeed = 110f;
 
-    protected List<OrbitOrb> orbs = new();
+    protected List<ShieldOrbitOrb> orbs = new();
+    // protected virtual int OrbCount => count;
     
     public override void OnEquip()
     {
@@ -31,19 +34,19 @@ public class OrbitItem : Item
         base.UpdateItem();
         RebuildOrbs();
     }
-
+    
     protected void RebuildOrbs()
     {
         foreach (var orb in orbs) Destroy(orb.gameObject);
         orbs.Clear();
-
-        float angleStep = 360f / count;
-        for (int i = 0; i < count; i++)
+        int orbCount = count+1;
+        float angleStep = 360f / orbCount;
+        for (int i = 0; i < orbCount; i++)
         {
             float rad = angleStep * i * Mathf.Deg2Rad;
             Vector3 localPos = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad)) * orbitRadius;
 
-            OrbitOrb orb = Instantiate(orbPrefab, transform);
+            ShieldOrbitOrb orb = Instantiate(shieldOrbitOrbPrefab, transform);
             orb.damage= damages[count-1];
             orb.transform.localPosition = localPos;
             orb.transform.up = transform.position - orb.transform.position;

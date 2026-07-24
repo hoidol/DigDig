@@ -6,16 +6,16 @@ public class OrbitOrb : MonoBehaviour
 {
     public float damage ;
 
-    List<HitCooldown> hitCooldowns = new();
-    const float HIT_COOLDOWN = 0.5f;
+    public List<HitCooldown> hitCooldowns = new ();
+    protected const float HIT_COOLDOWN = 0.5f;
 
-    class HitCooldown
+    public class HitCooldown
     {
         public IHittable hittable;
         public float cooltime;
     }
 
-    void Update()
+    public virtual void Update()
     {
         for (int i = hitCooldowns.Count - 1; i >= 0; i--)
         {
@@ -25,16 +25,16 @@ public class OrbitOrb : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    public virtual void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.TryGetComponent(out IHittable hittable)) return;
         if (hitCooldowns.Exists(h => h.hittable == hittable)) return;
 
         hitCooldowns.Add(new HitCooldown { hittable = hittable, cooltime = HIT_COOLDOWN });
-        OnHit(hittable);
+        OnHit(other,hittable);
     }
 
-    protected virtual void OnHit(IHittable hittable)
+    public virtual void OnHit(Collider2D other, IHittable hittable)
     {
         hittable.TakeDamage(new DamageData { damage = damage });
     }

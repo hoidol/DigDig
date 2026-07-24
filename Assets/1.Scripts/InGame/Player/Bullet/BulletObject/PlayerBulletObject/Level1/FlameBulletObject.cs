@@ -14,7 +14,7 @@ public class  FlameBulletObject : PlayerBulletObject
         FlameBullet flameBullet = bullet as FlameBullet;
                 
         
-        AddBehavior(new BurnOnHitBehavior(flameBullet.burnDuration, flameBullet.burnDPS));
+        AddBehavior(new FlameOnHitBehavior(flameBullet.burnDuration, flameBullet.burnDPS));
         AddBehavior(new BounceBehavior(Player.Instance.bounce));
 
     }

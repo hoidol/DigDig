@@ -23,7 +23,7 @@ public class OrbitBulletObject : MonoBehaviour
         if (timer <= 0)
         {
 
-            GetComponentInParent<Orbit>().RemoveOrbitBullet(this);
+            // GetComponentInParent<Orbit>().RemoveOrbitBullet(this);
             return;
         }
 
@@ -42,7 +42,7 @@ public class OrbitBulletObject : MonoBehaviour
             hitCount--;
             if (hitCount <= 0)
             {
-                GetComponentInParent<Orbit>().RemoveOrbitBullet(this);
+                // GetComponentInParent<Orbit>().RemoveOrbitBullet(this);
                 return;
             }
 

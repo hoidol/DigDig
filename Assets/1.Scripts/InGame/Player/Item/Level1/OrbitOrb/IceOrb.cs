@@ -1,10 +1,12 @@
+using UnityEngine;
+
 public class IceOrb : OrbitOrb
 {
     public float freezeDuration = 2f;
 
-    protected override void OnHit(IHittable hittable)
+    public override void OnHit(Collider2D other, IHittable hittable)
     {
-        base.OnHit(hittable);
+        base.OnHit(other, hittable);
         var handler = (hittable as UnityEngine.Component)?.GetComponent<StatusEffectHandler>();
         handler?.Apply(new FreezeEffect(freezeDuration));
     }

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
-  m_Name: Mini
+  m_Name: MiniMe
   m_EditorClassIdentifier: 
-  key: Mini
+  key: MiniMe
   itemName: "\uBBF8\uB2C8\uBBF8"
   desc: "\uC77C\uC815\uD55C \uD68C\uC804\uC744 \uAC00\uC9C0\uACE0 \uBC14\uB77C\uBCF4\uB294
     \uBC29\uD5A5\uC73C\uB85C \uACF5\uACA9\uD558\uB294 \uBBF8\uB2C8\uBBF8 \uC18C\uD658

@@ -17,6 +17,6 @@ public class FlameBulletItem : Item, IBullet
     public void OnBulletFired(PlayerBulletObject bullet)
     {
         if (Random.Range(0f, 100f) < chance)
-            bullet.AddBehavior(new BurnOnHitBehavior(duration, dpsValue));
+            bullet.AddBehavior(new FlameOnHitBehavior(duration, dpsValue));
     }
 }

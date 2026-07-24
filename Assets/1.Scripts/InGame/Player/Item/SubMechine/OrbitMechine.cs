@@ -1,45 +1,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Orbit : BulletSubTool
+public class OrbitMachine : SubMachine
 {
-    public OrbitBulletObject orbitBulletObjectPrefab;
+    public OrbitOrb orbitOrbPrefab;
     public float radius = 2f;
-    public float rotationSpeed = 90f;
+    public float rotationSpeed = 80f; //충분히느리게 
 
-    readonly List<OrbitBulletObject> orbitBulletObjects = new();
-    readonly Queue<OrbitBulletObject> pool = new();
+    public readonly List<OrbitOrb> orbitOrbs = new();
+    readonly Queue<OrbitOrb> pool = new();
 
     // ── 풀링 ──────────────────────────────────────────────
-    OrbitBulletObject GetFromPool()
+    OrbitOrb GetFromPool()
     {
         if (pool.Count > 0)
         {
-            OrbitBulletObject pooled = pool.Dequeue();
+            OrbitOrb pooled = pool.Dequeue();
             pooled.gameObject.SetActive(true);
             return pooled;
         }
-        return Instantiate(orbitBulletObjectPrefab, transform);
+        return Instantiate(orbitOrbPrefab, transform);
     }
 
-    void ReturnToPool(OrbitBulletObject obj)
+    void ReturnToPool(OrbitOrb obj)
     {
         obj.gameObject.SetActive(false);
         pool.Enqueue(obj);
     }
 
     // ── 추가 / 제거 ────────────────────────────────────────
-    public void AddOrbitBullet(OrbitBullet orbitBullet)
+    public OrbitOrb AddOrbit()
     {
-        OrbitBulletObject obj = GetFromPool();
-        orbitBulletObjects.Add(obj);
-        obj.SetOrbitBullet(orbitBullet);
+        OrbitOrb obj = GetFromPool();
+        orbitOrbs.Add(obj);
         Sorting();
+        return obj;
     }
 
-    public void RemoveOrbitBullet(OrbitBulletObject obj)
+    public void RemoveOrbitBullet(OrbitOrb obj)
     {
-        orbitBulletObjects.Remove(obj);
+        orbitOrbs.Remove(obj);
         ReturnToPool(obj);
         Sorting();
     }
@@ -48,14 +48,14 @@ public class Orbit : BulletSubTool
     // 첫 번째 인덱스의 현재 회전 기준으로 나머지를 localPosition 균등 배치
     void Sorting()
     {
-        int count = orbitBulletObjects.Count;
+        int count = orbitOrbs.Count;
         if (count == 0) return;
 
         float angleBetween = 360f / count;
         for (int i = 0; i < count; i++)
         {
             float rad = angleBetween * i * Mathf.Deg2Rad;
-            orbitBulletObjects[i].transform.localPosition =
+            orbitOrbs[i].transform.localPosition =
                 new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * radius;
         }
     }
