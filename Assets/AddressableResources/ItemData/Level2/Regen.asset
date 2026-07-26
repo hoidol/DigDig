@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Regen
+  m_EditorClassIdentifier: 
+  key: Regen
+  itemName: "\uD68C\uBCF5"
+  desc: "\uCCB4\uB825 \uD68C\uBCF5\uB825 \uCD08\uB2F9 1"
+  consumeHp: 0
+  level: 2
+  childItem1: Nature
+  childItem2: Luck
+  valueInfo: 
+  itemPrefab: {fileID: 735942375501147543, guid: d432bf17a9b8c4e0fa5b2bee6dedd1a2,
+    type: 3}
+  unlockConditions: []
+  applyOrder: 0

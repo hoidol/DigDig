@@ -22,11 +22,11 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     public void UpdateCanvas()
     {
         List<ItemData> items = ItemManager.Instance.GetDrawItems(3);
-        for(int i = 0; i < selectItemPanels.Length; i++)
+        for (int i = 0; i < selectItemPanels.Length; i++)
         {
             selectItemPanels[i].gameObject.SetActive(false);
         }
-        
+
         for (int i = 0; i < items.Count; i++)
         {
             selectItemPanels[i].gameObject.SetActive(true);
@@ -36,7 +36,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 
     public void Selected(ItemData itemData)
     {
-        Player.Instance.AddItem(itemData.key,1);
+        Player.Instance.AddItem(itemData.key, 1);
         CloseCanvas();
     }
 

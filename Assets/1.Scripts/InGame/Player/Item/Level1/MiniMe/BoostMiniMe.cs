@@ -18,6 +18,7 @@ public class BoostMiniMe : MiniMe
 
         cts = new CancellationTokenSource();
     }
+
     public override void OnDisable()
     {
         base.OnDisable();
@@ -30,35 +31,36 @@ public class BoostMiniMe : MiniMe
 
     void OnDestroyedStoneEvent(DestroyedStoneEvent e)
     {
-        if(coolTimer > 0)
+        if (coolTimer > 0)
             return;
 
         Shoot().Forget();
     }
     void OnEnemyDeadEvent(EnemyDeadEvent e)
     {
-        if(coolTimer > 0)
+        if (coolTimer > 0)
             return;
         Shoot().Forget();
     }
-    
+
 
     public async UniTask Shoot()
     {
-        if(coolTimer > 0)
+        if (coolTimer > 0)
             return;
 
-        for(int i = 0; i < level; i++)
+        for (int i = 0; i < level; i++)
         {
             Fire();
             await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
         }
-        coolTimer =coolTime;
+        coolTimer = coolTime;
     }
 
-    void Update()
+    public override void Update()
     {
-        if(coolTimer > 0)
+        base.Update();
+        if (coolTimer > 0)
         {
             coolTimer -= Time.deltaTime;
         }

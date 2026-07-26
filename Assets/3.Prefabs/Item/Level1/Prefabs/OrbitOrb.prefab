@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1161724893128664713}
-  - component: {fileID: 5500708175405590790}
   - component: {fileID: 7860255550381579477}
+  - component: {fileID: 1014642124279639471}
   m_Layer: 0
-  m_Name: Orbit
+  m_Name: OrbitOrb
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,25 +34,6 @@ Transform:
   - {fileID: 8248126827002005989}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5500708175405590790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198334406686638309}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f38ebc005fd4c4c90bfa349a410eb85b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 10
-  bulletRadius: 0.4
-  direction: {x: 0, y: 0, z: 0}
-  hitLayerMask:
-    serializedVersion: 2
-    m_Bits: 8
-  key: Orbit
 --- !u!58 &7860255550381579477
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -88,7 +69,23 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.25
+  m_Radius: 0.31
+--- !u!114 &1014642124279639471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 198334406686638309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38828b1067a8949e88f9c3256d82c5eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrbitOrb
+  damage: 0
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &6038000613544866773
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,7 +113,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1161724893128664713}
@@ -170,8 +167,8 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 669738021227a40d79f031a25f424581, type: 3}
-  m_Color: {r: 0.3915094, g: 0.85538775, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 177ffde22ffdf4a91ba25a129541b511, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

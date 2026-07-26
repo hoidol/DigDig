@@ -437,6 +437,7 @@ GameObject:
   - component: {fileID: 6916358569181959113}
   - component: {fileID: 1849610818069235455}
   - component: {fileID: 3075222085040685649}
+  - component: {fileID: 1921136893172995010}
   m_Layer: 3
   m_Name: Stone
   m_TagString: OreStone
@@ -526,6 +527,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.42, y: 1.42}
   m_EdgeRadius: 0
+--- !u!114 &1921136893172995010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5116598350353138223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c65d0d46a4b6436cb4f70984c168354, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8814495760050537930
 GameObject:
   m_ObjectHideFlags: 0

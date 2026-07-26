@@ -46,6 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MiniItem
   key: MiniMe
   count: 0
-  miniMePrefab: {fileID: 0}
+  miniMePrefab: {fileID: 6342480285194732467, guid: 6d1966787a2b24e05ac00d3f489c1193,
+    type: 3}
   miniMe: {fileID: 0}
   consumeTime: 5
+  attackPowers:
+  - 3
+  - 6
+  - 9

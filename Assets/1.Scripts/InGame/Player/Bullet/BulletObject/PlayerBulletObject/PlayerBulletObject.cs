@@ -15,9 +15,9 @@ public class PlayerBulletObject : BulletObject
     public override void Shoot(Vector2 dir)
     {
         base.Shoot(dir);
+        damageMultiplier = Player.Instance.statMgr.AmmoEfficiency;
         damage = Player.Instance.statMgr.AttackPower;
         lifetimeTimer = Player.Instance.statMgr.AmmoDuration;
-
         damageData.Init(this);
     }
     public virtual void SetBullet(Bullet bullet)
@@ -51,10 +51,8 @@ public class PlayerBulletObject : BulletObject
 
         float finalDamage = damage * damageMultiplier;
 
-        // Debug.Log($"playerBullet Hit 1 finalDamage {finalDamage}");
         for (int i = 0; i < forces.Count; i++)
         {
-            // Debug.Log($"playerBullet Hit forces [{i}] {forces[i].GetType().Name} finalDamage {finalDamage}");
             finalDamage += forces[i].GetMultiDamage(this, hit, hit2D, direction);
         }
         if (finalDamage < 1f)
@@ -72,7 +70,11 @@ public class PlayerBulletObject : BulletObject
                 break;
         }
 
-        if (shouldRelease) Release();
+        if (shouldRelease)
+        {
+            Debug.Log("PlayerBUlletObject Hit ShouldRelease");
+            Release();
+        }
         return hit;
     }
     public override void Release()
@@ -81,7 +83,7 @@ public class PlayerBulletObject : BulletObject
         BulletManager.Instance.ReturnPlayerBulletObject(key, this);
     }
 
-    
+
     public void AddBehavior(IBulletBehavior b)
     {
         behaviors.Add(b);

@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 
 public abstract class BaseGun : MonoBehaviour, IGun
 {
-    public const int COMBO_ATTACK_INTERVAL_MS = 70;
+    public const int COMBO_ATTACK_INTERVAL_MS = 100;
     public int initBulletCount;//초기 개수
     public float reloadTime;
 
@@ -70,6 +70,8 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // 매 프레임 호출: 조준 방향 갱신 + 자동 발사 판정
     public void UpdateWeapon()
     {
+        if (!GameManager.Instance.isPlaying) return;
+
         dirTr.up = GetAttackDirection();
         // if (IsReloading) return;
 
@@ -135,9 +137,12 @@ public abstract class BaseGun : MonoBehaviour, IGun
         foreach (var e in player.itemInventory.preFires)
             e.OnPreFire(ref bullet, dir);
 
+        if (bullet == null)
+            bullet = new NormalBullet();
+
         PlayerBulletObject playerBulletObject = Shoot(bullet, dir);
         Player.Instance.AddHp(-bullet.bulletData.consumeHp);
-        
+
         // 멀티샷: 발사 방향에 수직으로 간격을 두어 여러 발 생성
         // Vector2 perp = new(-dir.y, dir.x);
         // const float MULTI_SPACING = 0.2f;
@@ -182,19 +187,23 @@ public abstract class BaseGun : MonoBehaviour, IGun
     {
         if (dir == Vector2.zero)
             dir = Player.Instance.weapon.dirTr.up;
-            
-        if(bullet == null)
+
+        if (bullet == null)
+        {
+            Debug.Log("BaseGun Shoot if(bullet == null)");
             bullet = new NormalBullet();
+        }
+
 
         var playerBullet = bullet.GetBulletObject();
-        
-        playerBullet.ClearBehaviors();
-        playerBullet.ClearBulletForce();
+
+        // playerBullet.ClearBehaviors();
+        // playerBullet.ClearBulletForce();
         playerBullet.transform.position = attackPoint.position;
 
         // foreach (var e in player.itemInventory.bullets)
         //     e.OnBulletFired(playerBullet);
-            
+
         playerBullet.Shoot(dir);
         return playerBullet;
     }
@@ -221,7 +230,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     async UniTaskVoid RunComboAttacks(Vector2 dir)
     {
         foreach (var e in player.itemInventory.comboFires)
-            await e.OnComboFire( dir);
+            await e.OnComboFire(dir);
     }
 
 

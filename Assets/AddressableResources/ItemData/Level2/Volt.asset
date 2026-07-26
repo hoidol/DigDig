@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Volt
+  m_EditorClassIdentifier: 
+  key: Volt
+  itemName: "\uC804\uAE30"
+  desc: "\uADA4\uB3C4\uAC00 2\uAC1C\uB418\uACE0 \uC804\uAE30\uB85C \uBC14\uB01C,
+    \uC804\uAE30 \uACF5\uACA9 \uBC1B\uC73C\uBA74 \uC8FC\uBCC0\uC5D0\uC11C \uC804\uAE30
+    \uB5A8\uC5B4\uC9D0"
+  consumeHp: 2
+  level: 2
+  childItem1: Luck
+  childItem2: Orbit
+  valueInfo: 
+  itemPrefab: {fileID: 5256288561441140790, guid: c2ea475d708f8455e81355fec1efc253,
+    type: 3}
+  unlockConditions: []
+  applyOrder: 0

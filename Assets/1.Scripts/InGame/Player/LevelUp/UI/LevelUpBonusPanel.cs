@@ -23,7 +23,7 @@ public class LevelUpBonusPanel : MonoBehaviour
         switch (levelUpBonusType)
         {
             case LevelUpBonusType.MaxHp:
-                Player.Instance.AddBuff(new Buff(StatType.MaxHp, 10, StatOpType.Add));
+                Player.Instance.AddBuff(new Buff(StatType.MaxHp, 5, StatOpType.Add));
                 break;
             case LevelUpBonusType.FullHeal:
                 Player.Instance.AddHp(Player.Instance.health.MaxHp);

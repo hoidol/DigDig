@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Hover
+  m_EditorClassIdentifier: 
+  key: Hover
+  itemName: "\uBE44\uD589"
+  desc: "\uB4DC\uB860\uC5D0 \uADA4\uB3C4\uAC00 \uB2EC\uB9BC, \uC774\uB3D9 \uBC94\uC704
+    \uC790\uC720\uB85C\uC6CC\uC9D0"
+  consumeHp: 2
+  level: 2
+  childItem1: "\uC0DD\uC131"
+  childItem2: Orbit
+  valueInfo: 
+  itemPrefab: {fileID: 5765403749097734499, guid: 6a832cf7d79d74286a317719f5f91a7c,
+    type: 3}
+  unlockConditions: []
+  applyOrder: 0

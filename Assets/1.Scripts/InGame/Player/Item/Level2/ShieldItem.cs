@@ -15,10 +15,10 @@ public class ShieldItem : Item
     
     public override void OnEquip()
     {
-        transform.SetParent(Player.Instance.bodyCenterTr);
+        transform.SetParent(Player.Instance.transform);
         transform.localRotation = Quaternion.identity;
-        transform.position = Player.Instance.bodyCenterTr.position;
-        
+        transform.position = Player.Instance.transform.position;
+
         base.OnEquip();
     }
 

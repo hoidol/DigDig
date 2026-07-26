@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class LuckItem : TriggerItem 
+public class LuckItem : TriggerItem
 {
-    
+
     StatusEffectHandler shieldHandler;
     public GameObject effect;
 
-    float[] coolTimes = {40,35,30};
+    float[] coolTimes = { 40, 35, 30 };
 
     public override void OnEquip()
     {
@@ -19,9 +19,10 @@ public class LuckItem : TriggerItem
 
     public override void UpdateItem()
     {
-        coolTime = coolTimes[count-1];
+        base.UpdateItem();
+        coolTime = coolTimes[count - 1];
     }
-    
+
     public override void OnTrigger()
     {
         base.OnTrigger();
@@ -33,8 +34,8 @@ public class LuckItem : TriggerItem
         }));
     }
 
-    public override string GetDescription(int lv = 1,bool detail = false)
+    public override string GetDescription(int lv = 1, bool detail = false)
     {
-        return $"{coolTimes[lv-1]}초마다 피해 1회 차단";
+        return $"{coolTimes[lv - 1]}초마다 피해 1회 차단";
     }
 }

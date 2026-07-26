@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class  FlameBulletObject : PlayerBulletObject
-{    
+public class FlameBulletObject : PlayerBulletObject
+{
 
     public override void Shoot(Vector2 dir)
     {
@@ -12,11 +12,9 @@ public class  FlameBulletObject : PlayerBulletObject
     public override void SetBullet(Bullet bullet)
     {
         base.SetBullet(bullet);
-        FlameBullet flameBullet = bullet as FlameBullet;        
-        
-        AddBehavior(new FlameOnHitBehavior(flameBullet.burnDuration, flameBullet.burnDPS));
-        AddBehavior(new BounceBehavior(Player.Instance.bounce));
+        FlameBullet flameBullet = bullet as FlameBullet;
 
+        AddBehavior(new FlameOnHitBehavior(flameBullet.burnDuration, flameBullet.burnDPS));
     }
 }
 

@@ -6,32 +6,38 @@ public class MiniMe : Ally
 {
     public MiniMeMovement miniMeMovement;
     public float attackPower;
-    
+    public Transform rootTr;
+    public float attackSpeed;
+    public float attackTimer;
     public virtual void Awake()
     {
-        
+
     }
-   public virtual void OnEnable()
+    public virtual void OnEnable()
     {
-        GameEventBus.Subscribe<BulletFiredEvent>(OnBulletFiredEvent);
-        
+
     }
     public virtual void OnDisable()
     {
-        GameEventBus.Unsubscribe<BulletFiredEvent>(OnBulletFiredEvent);
     }
 
-    //플레이어가 공격하면 같이 쏨
-    public virtual void OnBulletFiredEvent(BulletFiredEvent e)
+    public virtual void Update()
     {
-     Fire();         
+        rootTr.localScale = new Vector3(Player.Instance.MoveDirection.x >= 0 ? 1 : -1, 1, 1);
+        attackTimer += Time.deltaTime;
+        if (attackTimer > attackSpeed)
+        {
+            Fire();
+        }
     }
+
     public virtual void Fire()
     {
         AllyBullet allyBullet = AllyBullet.Instantiate();
         allyBullet.transform.position = transform.position;
         allyBullet.Shoot(Player.Instance.weapon.GetAttackDirection());
-        allyBullet.damage = attackPower;  
+        allyBullet.damage = attackPower;
+        attackTimer = 0;
     }
 
 

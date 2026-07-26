@@ -86,7 +86,16 @@ public class GameManager : MonoSingleton<GameManager>
 
     async UniTaskVoid WaitPhase(float t)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(t));
+        float elapsed = 0f;
+        while (elapsed < t)
+        {
+            await UniTask.Yield();
+
+            if (!isPlaying)
+                continue;
+
+            elapsed += Time.deltaTime;
+        }
         EndPhase();
     }
 

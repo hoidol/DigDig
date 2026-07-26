@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d84406cfa135143c3923be6fe3793776, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlameItem
-  key: 
+  key: Flame
   count: 0
   burnDurations: 050000000600000007000000
   burnDPSs: 020000000300000004000000

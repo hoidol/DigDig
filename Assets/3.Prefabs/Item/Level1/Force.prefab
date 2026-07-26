@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0911a762915c84504984c210e1c9c5e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ForceItem
-  key: 
+  key: Force
   count: 0

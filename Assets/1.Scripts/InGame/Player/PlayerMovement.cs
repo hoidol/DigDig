@@ -27,6 +27,13 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move()
     {
+
+        if (!GameManager.Instance.isPlaying)
+        {
+            rg.linearVelocity = Vector2.zero;
+            return;
+        }
+
 #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
@@ -50,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
         {
             animator.SetBool("Running", false);
         }
+
 
         rg.linearVelocity = MoveDirection * player.statMgr.MoveSpeed;
     }

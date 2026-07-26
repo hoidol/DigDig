@@ -15,11 +15,19 @@ MonoBehaviour:
   m_GroupName: ItemData
   m_GUID: e3bbc266543ae4fe989f7c9a3b033e54
   m_SerializeEntries:
-  - m_GUID: 72c18deac330b4f72820b4f6cefdefd7
-    m_Address: ItemData
+  - m_GUID: 03252cc7b6d4b4f3c88bd6b9ea3e4835
+    m_Address: ItemData/Level2
     m_ReadOnly: 0
     m_SerializedLabels:
     - ItemData
+    - Level2ItemData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 104c381a270b946afb6da7f46d032566
+    m_Address: ItemData/Level1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ItemData
+    - Level1ItemData
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7aadc449270984ef0ace796ef1270c88, type: 2}

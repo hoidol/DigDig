@@ -10,11 +10,11 @@ public abstract class WorldTextBase<T> : MonoBehaviour where T : WorldTextBase<T
     static readonly Stack<T> pool = new();
     static T prefab;
 
-    protected static void Show(Vector2 point, string text, string prefabPath)
+    protected static void Show(Vector2 point, string text, Color color, string prefabPath)
     {
         T dText = Get(prefabPath);
         dText.transform.position = point + Random.insideUnitCircle * 0.2f;
-        dText.SetText(text);
+        dText.SetText(text, color);
     }
 
     static T Get(string prefabPath)
@@ -43,7 +43,7 @@ public abstract class WorldTextBase<T> : MonoBehaviour where T : WorldTextBase<T
         pool.Clear();
     }
 
-    public virtual void SetText(string text)
+    public virtual void SetText(string text, Color color)
     {
         damageText.text = text;
         transform.localScale = Vector3.zero;

@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Boss
   - Elite
+  - Bullet
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - OnlyHittable
   - PhysicArea
   - PlayerSide
-  - 
+  - GroundMiniMeBody
   - 
   - 
   - 

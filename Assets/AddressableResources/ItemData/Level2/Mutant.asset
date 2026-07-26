@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Mutant
+  m_EditorClassIdentifier: 
+  key: Mutant
+  itemName: "\uB3CC\uC5F0\uBCC0\uC774"
+  desc: "\uBBF8\uB2C8\uBBF8\uC5D0 \uADFC\uCC98\uC5D0\uC11C \uACF5\uACA9 \uC2DC 20%\uD655\uB960\uB85C
+    \uCCB4\uB825 +1"
+  consumeHp: 1
+  level: 2
+  childItem1: Luck
+  childItem2: "\uC0DD\uC131"
+  valueInfo: 
+  itemPrefab: {fileID: 7052181432605751903, guid: fc4bc6348d1f44781bbf2bd07119de2a,
+    type: 3}
+  unlockConditions: []
+  applyOrder: 0

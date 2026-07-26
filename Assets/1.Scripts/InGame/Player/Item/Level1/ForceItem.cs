@@ -1,38 +1,39 @@
 using UnityEngine;
 
-public class ForceItem : Item 
+public class ForceItem : Item
 {
     //공격력 +5, 탄 효율 30%
-    float[] attackPowers ={5,8,11};
-    float[] ammoEfficiencies ={0.7f,0.6f,0.5f};
+    float[] attackPowers = { 5, 8, 11 };
+    float[] ammoEfficiencies = { 0.7f, 0.6f, 0.5f };
     Buff atkPowerBuff;
     Buff ammoEfficiencyBuff;
     public override void UpdateItem()
-    {   
+    {
+        base.UpdateItem();
         Release();
 
         //공격력
-        atkPowerBuff = new Buff(StatType.AttackPower,attackPowers[count-1],StatOpType.Add);
+        atkPowerBuff = new Buff(StatType.AttackPower, attackPowers[count - 1], StatOpType.Add);
         Player.Instance.AddBuff(atkPowerBuff);
 
 
         //탄 효율
-        ammoEfficiencyBuff = new Buff(StatType.AmmoEfficiency,ammoEfficiencies[count-1],StatOpType.Multiply);
+        ammoEfficiencyBuff = new Buff(StatType.AmmoEfficiency, ammoEfficiencies[count - 1], StatOpType.Multiply);
         Player.Instance.AddBuff(ammoEfficiencyBuff);
     }
     void Release()
     {
-        
-        if(atkPowerBuff != null)
+
+        if (atkPowerBuff != null)
             Player.Instance.RemoveBuff(atkPowerBuff);
 
-        if(ammoEfficiencyBuff != null)
+        if (ammoEfficiencyBuff != null)
             Player.Instance.RemoveBuff(ammoEfficiencyBuff);
     }
 
 
-    public override string GetDescription(int lv = 1,bool detail = false)
+    public override string GetDescription(int lv = 1, bool detail = false)
     {
-        return $"공격력 +{attackPowers[lv-1]} 탄 효율 +{(1 - ammoEfficiencies[lv-1]) *100}%";
+        return $"공격력 +{attackPowers[lv - 1]} 탄 효율 +{(1 - ammoEfficiencies[lv - 1]) * 100}%";
     }
 }

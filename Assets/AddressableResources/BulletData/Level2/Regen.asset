@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a0eea40994c4643dd85b248e1041599c, type: 3}
-  m_Name: CuttingRay
+  m_Name: Regen
   m_EditorClassIdentifier: 
-  key: CuttingRay
+  key: Regen
   order: 0
   itemName: "\uB099\uB8B0"
   consumeHp: 3

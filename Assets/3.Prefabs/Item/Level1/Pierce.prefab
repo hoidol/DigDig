@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f808db6ce43d44f0e88e8a2d941ef369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PierceItem
-  key: 
+  key: Pierce
   count: 0
   pierceCounts: 050000000600000007000000
   triggerCounts: 040000000400000004000000

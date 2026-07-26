@@ -82,7 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ff42018877e546d99a8bee4f926f70e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PierceBulletObject
-  moveSpeed: 10
+  moveSpeed: 8
   bulletRadius: 0.4
   direction: {x: 0, y: 0, z: 0}
   hitLayerMask:

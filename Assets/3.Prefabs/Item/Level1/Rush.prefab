@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff1324f9064d24cfe89f9db31e89bc67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RushItem
-  key: 
+  key: Rush
   count: 0
-  coolTime: 0
-  activeTime: 0
+  coolTime: 3
+  coolTimer: 0

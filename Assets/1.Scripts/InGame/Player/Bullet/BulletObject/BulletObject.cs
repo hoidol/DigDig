@@ -12,7 +12,7 @@ public abstract class BulletObject : MonoBehaviour
         get;
         set;
     }
-    public float damageMultiplier { get; set; } = 1f;
+    [field: SerializeField] public float damageMultiplier { get; set; } = 1f;
 
     public LayerMask hitLayerMask;
 

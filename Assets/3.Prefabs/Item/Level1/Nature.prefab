@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dca4789a4dc90404a8666884f91dbb69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NatureItem
-  key: 
+  key: Nature
   count: 0

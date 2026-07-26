@@ -50,11 +50,11 @@ public class Player : MonoSingleton<Player>, IPicker
     public Vector2 CurAttackDir => weapon.LastAttackDir;
 
     public Transform Transform => transform;
-    public SubMachine[] subMachines;
-    public SubMachine GetSubMechine(string key)
-    {
-        return subMachines.FirstOrDefault(t => t.key == key);
-    }
+    // public SubMachine[] subMachines;
+    // public SubMachine GetSubMechine(string key)
+    // {
+    //     return subMachines.FirstOrDefault(t => t.key == key);
+    // }
 
     private void Awake()
     {
@@ -71,7 +71,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
 
         tileCheckers = GetComponentsInChildren<TileChecker>();
-        subMachines = GetComponentsInChildren<SubMachine>();
+        // subMachines = GetComponentsInChildren<SubMachine>();
     }
 
 
@@ -111,7 +111,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
     void Update()
     {
-        if (!GameManager.Instance.isPlaying) return;
+        // if (!GameManager.Instance.isPlaying) return;
 
         movement.Move();
         weapon.UpdateWeapon();
@@ -136,7 +136,6 @@ public class Player : MonoSingleton<Player>, IPicker
 
     public void UpdatePlayer()
     {
-        itemInventory.UpdateInventory();
 
         float preMaxHp = statMgr.MaxHp;
         statMgr.UpdateStat();
@@ -144,7 +143,7 @@ public class Player : MonoSingleton<Player>, IPicker
         float diffMaxHp = curMaxHp - preMaxHp;
         if (diffMaxHp > 0)
             AddHp(diffMaxHp);
-            
+
         GameEventBus.Publish(new PlayerUpdateEvent(this));
     }
 
@@ -211,11 +210,13 @@ public class Player : MonoSingleton<Player>, IPicker
 
 
 
-    public void AddItem(string key,int count=1)
+    public void AddItem(string key, int count = 1)
     {
-        statMgr.AddItem(key,count);
-        
+        statMgr.AddItem(key, count);
+        itemInventory.UpdateInventory();
         UpdatePlayer();
+
+
     }
 
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
@@ -328,7 +329,7 @@ StatType.AmmoDuration //총알 지속시간
             return playerStatType;
         return StatType.Count;
     }
-    public void AddItem(string key,int count)
+    public void AddItem(string key, int count)
     {
         if (!itemStatDic.ContainsKey(key))
         {
@@ -339,9 +340,10 @@ StatType.AmmoDuration //총알 지속시간
             });
         }
         itemStatDic[key].count += count;
-        if(itemStatDic[key].count <= 0)
+        if (itemStatDic[key].count <= 0)
         {
             //아이템 제거하기
+            itemStatDic.Remove(key);
         }
     }
 

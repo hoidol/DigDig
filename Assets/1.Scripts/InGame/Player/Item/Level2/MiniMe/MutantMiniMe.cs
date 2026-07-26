@@ -6,16 +6,23 @@ public class MutantMiniMe : MiniMe
 {
     public float healRange;
     public float healChance;
-    public override void OnBulletFiredEvent(BulletFiredEvent e)
+    public override void OnEnable()
     {
-        base.OnBulletFiredEvent(e);
-        float dis = Vector2.Distance(Player.Instance.transform.position,transform.position);
-        if(dis <= healRange)
+        GameEventBus.Subscribe<BulletFiredEvent>(OnBulletFiredEvent);
+    }
+    public override void OnDisable()
+    {
+        GameEventBus.Unsubscribe<BulletFiredEvent>(OnBulletFiredEvent);
+    }
+    public void OnBulletFiredEvent(BulletFiredEvent e)
+    {
+        float dis = Vector2.Distance(Player.Instance.transform.position, transform.position);
+        if (dis <= healRange)
         {
-            if(Random.value <= healChance)
+            if (Random.value <= healChance)
             {
                 Player.Instance.AddHp(1);
             }
-        } 
+        }
     }
 }

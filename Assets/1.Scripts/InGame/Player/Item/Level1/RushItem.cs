@@ -3,18 +3,18 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 //적 처치 시 즉시 발사 - 쿨타임 2초
-public class RushItem : Item 
+public class RushItem : Item
 {
-    public float coolTime =3;
-    public float coolTimer =0;
+    public float coolTime = 3;
+    public float coolTimer = 0;
     void OnEnable()
     {
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
     }
-    void Osable()
+    void OnDisable()
     {
-        
+
         GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
     }
@@ -24,6 +24,7 @@ public class RushItem : Item
     {
         base.OnEquip();
         cts = new CancellationTokenSource();
+        coolTimer = 0;
     }
 
 
@@ -35,42 +36,42 @@ public class RushItem : Item
 
     void OnDestroyedStoneEvent(DestroyedStoneEvent e)
     {
-        if(coolTimer > 0)
+        if (coolTimer > 0)
             return;
 
         Shoot().Forget();
     }
     void OnEnemyDeadEvent(EnemyDeadEvent e)
     {
-        if(coolTimer > 0)
+        if (coolTimer > 0)
             return;
         Shoot().Forget();
     }
-    
+
 
     public async UniTask Shoot()
     {
-        if(coolTimer > 0)
+        if (coolTimer > 0)
             return;
 
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             Player.Instance.weapon.Shoot(null, Player.Instance.weapon.GetAttackDirection());
             await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
         }
         Player.Instance.AddHp(-count);
-        coolTimer =coolTime;
+        coolTimer = coolTime;
     }
 
     void Update()
     {
-        if(coolTimer > 0)
+        if (coolTimer > 0)
         {
             coolTimer -= Time.deltaTime;
         }
     }
 
-    public override string GetDescription(int lv = 1,bool detail = false)
+    public override string GetDescription(int lv = 1, bool detail = false)
     {
         return $"적 처치 시 즉시 탄 발사 쿨타임 {coolTime}초\n발사 당 체력 {itemData.consumeHp} 감소";
     }
@@ -90,14 +91,14 @@ public class RushItem : Item
 //         activeTime = durations[count-1];
 //         coolTime = coolTimes[count-1];
 //     }
-    
+
 //     public override void OnUnequip()
 //     {
 //         base.OnUnequip();
 
 //         if(attackSpeedBuff != null)
 //             Player.Instance.RemoveBuff(attackSpeedBuff);
-            
+
 //         attackSpeedBuff = null;
 //     }
 

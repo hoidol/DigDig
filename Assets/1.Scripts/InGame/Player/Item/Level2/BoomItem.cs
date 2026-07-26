@@ -7,9 +7,10 @@ using UnityEngine;
 public class BoomItem : Item, IFired, IComboFire
 {
     public int triggerCount = 5;
-    
+
     int triggerCounter;
     CancellationTokenSource cts;
+    float[] boomRanges = { 1.5f, 2f, 2.5f };
     public override void OnEquip()
     {
         base.OnEquip();
@@ -18,31 +19,32 @@ public class BoomItem : Item, IFired, IComboFire
 
     public override string GetDescription(int lv, bool detail = false)
     {
-        return $"{triggerCount}발사마다 폭탄 발사";
+        return $"{triggerCount}발사마다 폭탄 발사 (최대 2번 튕김)";
     }
 
     public override void OnUnequip()
     {
         cts?.Cancel();
         cts?.Dispose();
-        triggerCounter=0;
+        triggerCounter = 0;
     }
 
     public void OnFired(ref Bullet bullet, ref PlayerBulletObject playerBulletObject, Vector2 dir)
     {
-        triggerCounter++;       
-       
+        triggerCounter++;
+
     }
 
     public async UniTask OnComboFire(Vector2 dir)
     {
-        
-        if(triggerCounter < triggerCount)
+
+        if (triggerCounter < triggerCount)
             return;
-            
+
         await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
 
         BoomBullet boomBullet = new BoomBullet();
+        boomBullet.boomRange = boomRanges[count - 1];
         float angleOffset = Random.Range(-10f, 10f) * Mathf.Deg2Rad;
         Vector2 shootDir = new Vector2(
             dir.x * Mathf.Cos(angleOffset) - dir.y * Mathf.Sin(angleOffset),
@@ -51,6 +53,6 @@ public class BoomItem : Item, IFired, IComboFire
 
         Player.Instance.AddHp(-itemData.consumeHp);
 
-        triggerCounter=0;
+        triggerCounter = 0;
     }
 }

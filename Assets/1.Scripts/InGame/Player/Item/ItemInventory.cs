@@ -35,11 +35,30 @@ public class ItemInventory : MonoBehaviour
 #if UNITY_EDITOR
     void OnStartGame(StartGameEvent e)
     {
-        // AddItem("BladeOrbit");
-        // AddItem("BladeOrbit");
-        // AddItem("BrokenDrone");
-        // AddItem("BrokenDrone");
-        // AddItem("Shell");
+
+
+        // Player.Instance.AddItem("Boost");
+        Player.Instance.AddItem("Mutant");
+        Player.Instance.AddItem("Mountain");
+        Player.Instance.AddItem("Boom");
+
+
+        // Player.Instance.AddItem("Firework");
+        // Player.Instance.AddItem("Spray");
+        // Player.Instance.AddItem("Chain");
+
+
+        //Level1 완료
+        // Player.Instance.AddItem("Rush");
+        // Player.Instance.AddItem("Pierce");
+
+        //Player.Instance.AddItem("MiniMe");
+        // Player.Instance.AddItem("Nature");
+        // Player.Instance.AddItem("Wacky");
+        // Player.Instance.AddItem("Force");
+        // Player.Instance.AddItem("Luck");
+        // Player.Instance.AddItem("Orbit");
+
 
     }
 #endif
@@ -47,10 +66,18 @@ public class ItemInventory : MonoBehaviour
 
     public void UpdateInventory()
     {
-        foreach ( var data in Player.Instance.statMgr.itemStatDic)
+        // itemStatDic에는 없는데 curItems에 있는 아이템 Destroy
+        foreach (var item in curItems.Where(i => !Player.Instance.statMgr.itemStatDic.ContainsKey(i.key)).ToList())
         {
-            Item item = GetItem(data.Value.key); 
-            if(item == null && data.Value.count > 0)
+            item.OnUnequip();
+            Destroy(item.gameObject);
+            curItems.Remove(item);
+        }
+
+        foreach (var data in Player.Instance.statMgr.itemStatDic)
+        {
+            Item item = GetItem(data.Value.key);
+            if (item == null && data.Value.count > 0)
             {
                 ItemData itemData = ItemData.GetItemData(data.Value.key);
                 item = Instantiate(itemData.itemPrefab, transform);
@@ -60,14 +87,14 @@ public class ItemInventory : MonoBehaviour
                 item.OnEquip();
                 GameEventBus.Publish(new AddedItemEvent(itemData));
             }
-            else if(item != null && data.Value.count == 0)
+            else if (item != null && data.Value.count == 0)
             {
                 item.OnUnequip();
                 Destroy(item.gameObject);
                 curItems.Remove(item);
             }
 
-            if(item != null)
+            if (item != null)
                 item.UpdateItem();
         }
 

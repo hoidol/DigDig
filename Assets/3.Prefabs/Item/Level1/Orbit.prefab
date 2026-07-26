@@ -44,12 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9699a1eb98e0b414c9aa2bc0376bfead, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrbitItem
-  key: 
+  key: Orbit
   count: 0
   damages:
   - 3
   - 4
   - 5
-  orbPrefab: {fileID: 0}
+  orbPrefab: {fileID: 1014642124279639471, guid: 6d8efdce398ac4ccf99d7ac31504da50,
+    type: 3}
   orbitRadius: 2
   orbitSpeed: 90

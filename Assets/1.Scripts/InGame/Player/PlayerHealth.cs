@@ -41,14 +41,15 @@ public class PlayerHealth : MonoBehaviour, IHittable
 
     public void AddHp(float hp, bool showDmg = true)
     {
+        Debug.Log($"PlayerHealth Add {hp}");
         if (hp > 0) hp *= healMultiplier;
         curHp += hp;
         if (showDmg)
         {
             if (hp > 0)
-                HealText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, ((int)hp).ToString());
-            else if (hp <= 1)
-                DamageText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, $"{(int)hp}");
+                HealText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, ((int)hp).ToString(), GameSetting.healColor);
+            else if (hp < 0)
+                DamageText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, $"{(int)hp}", GameSetting.enemyDamageColor);
         }
 
 

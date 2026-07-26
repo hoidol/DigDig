@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Momentum
+  m_EditorClassIdentifier: 
+  key: Momentum
+  itemName: "\uAD00\uC131"
+  desc: "2\uAC1C \uB418\uACE0 \uBE68\uB77C\uC9C0\uACE0 \uCEE4\uC9D0"
+  consumeHp: 2
+  level: 2
+  childItem1: Orbit
+  childItem2: Force
+  valueInfo: 
+  itemPrefab: {fileID: 5965051364179608237, guid: 65c52337706a240ac8248c08b111ef60,
+    type: 3}
+  unlockConditions: []
+  applyOrder: 0

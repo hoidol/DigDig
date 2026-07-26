@@ -1,21 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OrbitItem : Item 
+public class OrbitItem : Item
 {
-    public float[] damages = {3,3,3};
+    public float[] damages = { 3, 3, 3 };
     public OrbitOrb orbPrefab;
     public float orbitRadius = 2f;
     public float orbitSpeed = 90f;
 
     protected List<OrbitOrb> orbs = new();
-    
+
     public override void OnEquip()
     {
-        transform.SetParent(Player.Instance.bodyCenterTr);
+        transform.SetParent(Player.Instance.transform);
         transform.localRotation = Quaternion.identity;
-        transform.position = Player.Instance.bodyCenterTr.position;
-        
+        transform.position = Player.Instance.transform.position;
+
         base.OnEquip();
     }
 
@@ -44,7 +44,7 @@ public class OrbitItem : Item
             Vector3 localPos = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad)) * orbitRadius;
 
             OrbitOrb orb = Instantiate(orbPrefab, transform);
-            orb.damage= damages[count-1];
+            orb.damage = damages[count - 1];
             orb.transform.localPosition = localPos;
             orb.transform.up = transform.position - orb.transform.position;
             orbs.Add(orb);
@@ -56,5 +56,5 @@ public class OrbitItem : Item
         transform.Rotate(Vector3.forward, orbitSpeed * Time.deltaTime);
     }
 
-    
+
 }
