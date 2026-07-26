@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-//7초마다  타이밍->없어지는게 문제야 
+//7초마다 속도 빨라지고 랜덤 방향으로 화염탄 발사
 public class FireworkItem : TriggerCycleItem, IFired
 {
 

@@ -44,8 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3a003d0b55ae40daaf723ec0739f1b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VoltItem
-  key: 
+  key: Volt
   count: 0
+  coolTime: 0
+  activeTime: 0
   damages:
   - 5
   - 5
@@ -62,6 +64,7 @@ MonoBehaviour:
   - 2
   - 2
   - 2
-  voltOrbitOrbPrefab: {fileID: 0}
+  voltOrbitOrbPrefab: {fileID: 6959438314453121357, guid: 5817b2bc64a514bc9a134c1e07842f7f,
+    type: 3}
   orbitRadius: 2.2
   orbitSpeed: 170

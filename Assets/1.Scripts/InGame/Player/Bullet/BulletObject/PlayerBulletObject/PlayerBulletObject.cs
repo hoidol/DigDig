@@ -15,13 +15,14 @@ public class PlayerBulletObject : BulletObject
     public override void Shoot(Vector2 dir)
     {
         base.Shoot(dir);
-        damageMultiplier = Player.Instance.statMgr.AmmoEfficiency;
+        damageMultiplier = 1;
         damage = Player.Instance.statMgr.AttackPower;
         lifetimeTimer = Player.Instance.statMgr.AmmoDuration;
         damageData.Init(this);
     }
     public virtual void SetBullet(Bullet bullet)
     {
+        damageMultiplier = 1;
         damageData.mustCrit = bullet.mustCrit;
     }
 

@@ -8,9 +8,9 @@ public class FirelanceItem : Item, IFired, IComboFire
     public Firelance firelancePrefab;
     int triggerCounter;
     CancellationTokenSource cts;
-    public float damage;
-    public float[] durations ={5,5,5};
-    public float[] dps = {5,6,7};
+    // public float damage;
+    float[] durations = { 5, 5, 5 };
+    float[] dps = { 4, 5, 6 };
     public override void OnEquip()
     {
         base.OnEquip();
@@ -26,28 +26,29 @@ public class FirelanceItem : Item, IFired, IComboFire
     {
         cts?.Cancel();
         cts?.Dispose();
-        triggerCounter=0;
+        triggerCounter = 0;
     }
 
     public void OnFired(ref Bullet bullet, ref PlayerBulletObject playerBulletObject, Vector2 dir)
     {
-        triggerCounter++;       
+        triggerCounter++;
     }
 
     public async UniTask OnComboFire(Vector2 dir)
     {
-        if(triggerCounter < triggerCount)
+        if (triggerCounter < triggerCount)
             return;
-            
+
         await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
 
         Firelance firelance = Instantiate(firelancePrefab);
+        firelance.transform.position = Player.Instance.transform.position;
         firelance.damage = Player.Instance.statMgr.AttackPower;
-        firelance.duration = durations[count-1];
-        firelance.dps = dps[count-1];
+        firelance.duration = durations[count - 1];
+        firelance.dps = dps[count - 1];
         firelance.Shoot(dir);
 
         Player.Instance.AddHp(-itemData.consumeHp);
-        triggerCounter=0;
+        triggerCounter = 0;
     }
 }

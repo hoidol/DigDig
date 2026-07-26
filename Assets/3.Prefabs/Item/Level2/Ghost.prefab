@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 824367d84341d42c8aa9f8e5d7f660d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GhostItem
-  key: 
+  key: Ghost
   count: 0
   triggerCounts: 040000000400000004000000
+  ghostPrefab: {fileID: 6371069695573832817, guid: 76e82ba99e2904923a52c05c87a9a92a,
+    type: 3}

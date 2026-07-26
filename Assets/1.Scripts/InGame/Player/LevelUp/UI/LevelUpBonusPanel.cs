@@ -32,9 +32,9 @@ public class LevelUpBonusPanel : MonoBehaviour
             case LevelUpBonusType.AttackPower:
                 Player.Instance.AddBuff(new Buff(StatType.AttackPower, 1f, StatOpType.Add));
                 break;
-            case LevelUpBonusType.RecoveryHp:
-                Player.Instance.AddBuff(new Buff(StatType.RecoveryHp, 0.1f, StatOpType.Add));
-                break;
+            // case LevelUpBonusType.RecoveryHp:
+            //     Player.Instance.AddBuff(new Buff(StatType.RecoveryHp, 0.1f, StatOpType.Add));
+            //     break;
 
             case LevelUpBonusType.Bounce:
                 Player.Instance.AddBounce(1);
@@ -50,7 +50,7 @@ public enum LevelUpBonusType
     FullHeal, //체력 완전 회복
     Bounce,
     AttackPower,
-    RecoveryHp
+    // RecoveryHp
     // AddSpecialBullet,
     // MergeBullet
 }

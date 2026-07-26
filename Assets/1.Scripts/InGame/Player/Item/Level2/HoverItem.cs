@@ -7,21 +7,25 @@ using UnityEngine;
 public class HoverItem : Item
 {
     //자유롭게 돌아다님
-    public float[] orbitDamages = { 3f, 6f, 9f };
-    public float[] attackPowers = { 6, 11, 20 };
+    float[] orbitDamages = { 1f, 2f, 3f };
+    float[] attackPowers = { 6, 11, 20 };
+    float[] attackSpeeds = { 2.5f, 2.5f, 2.5f };
 
     public HoverMiniMe miniMePrefab;
     public HoverMiniMe miniMe;
     public float consumeTime = 5;
     public override void OnEquip()
     {
+        base.OnEquip();
         if (miniMe == null)
         {
             miniMe = Instantiate(miniMePrefab);
             Vector2 pos = (Vector2)Player.Instance.transform.position + Random.insideUnitCircle.normalized;
+            miniMe.attackPower = attackPowers[count - 1];
+            miniMe.attackSpeed = attackSpeeds[count - 1];
+            miniMe.orbitDamage = orbitDamages[count - 1];
             miniMe.Spawn(pos);
         }
-        base.OnEquip();
     }
     public override void OnUnequip()
     {
@@ -41,6 +45,7 @@ public class HoverItem : Item
             miniMe.SetLevel(count);
             miniMe.attackPower = attackPowers[count - 1];
             miniMe.orbitDamage = orbitDamages[count - 1];
+            miniMe.attackSpeed = attackSpeeds[count - 1];
         }
     }
 
@@ -51,6 +56,7 @@ public class HoverItem : Item
         if (timer >= consumeTime)
         {
             Player.Instance.AddHp(-itemData.consumeHp);
+            timer = 0;
         }
     }
 

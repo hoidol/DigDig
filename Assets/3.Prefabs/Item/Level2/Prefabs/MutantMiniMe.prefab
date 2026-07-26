@@ -432,7 +432,7 @@ GameObject:
   - component: {fileID: 4387785099441759839}
   - component: {fileID: 5083801342293613876}
   - component: {fileID: 2609518298714836310}
-  - component: {fileID: 3581780995188513001}
+  - component: {fileID: 1377844681462696362}
   m_Layer: 10
   m_Name: MutantMiniMe
   m_TagString: Untagged
@@ -534,14 +534,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MutantMiniMe
   level: 0
-  miniMeMovement: {fileID: 3581780995188513001}
+  miniMeMovement: {fileID: 1377844681462696362}
   attackPower: 0
   rootTr: {fileID: 2548647848656943781}
   attackSpeed: 0
   attackTimer: 0
   healRange: 2
   healChance: 0
---- !u!114 &3581780995188513001
+--- !u!114 &1377844681462696362
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -550,22 +550,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 6535246889038207549}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed6e060ad9da6415fa845ce484fbcdfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 05fdce4e2f22b4e12a31790a07b152ee, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FreeMiniMeMovement
-  rg2D: {fileID: 4387785099441759839}
-  inRange: 5
-  moveSpeed: 0
+  m_EditorClassIdentifier: Assembly-CSharp::MiniMeMovement
+  rg2D: {fileID: 0}
+  inRange: 6
+  moveSpeed: 3
   hittableLayer:
     serializedVersion: 2
     m_Bits: 8
-  dir: {x: 0, y: 0}
-  clock: 0
-  leashRange: 7
-  rotateSpeed: 40
-  minSpeed: 1
-  maxSpeed: 2
-  speedChangeSpeed: 2
 --- !u!1 &6650720408307346317
 GameObject:
   m_ObjectHideFlags: 0

@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 089a016dca5f44266b33cff82635f947, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CriticalItem
-  key: 
+  key: Critical
   count: 0
   pierceCounts: 050000000600000007000000
   coolTime: 2

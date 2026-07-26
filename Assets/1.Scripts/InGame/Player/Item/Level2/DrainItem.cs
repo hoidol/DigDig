@@ -3,8 +3,8 @@ using UnityEngine;
 // 처치 시 5% 확률로 체력 회복 +2
 public class DrainItem : Item
 {
-    float[] healChances = { 0.05f, 0.08f, 0.12f };
-    int[] healAmounts = { 2, 3, 4 };
+    float[] healChances = { 0.2f, 0.3f, 0.4f };
+    int[] healAmounts = { 3, 4, 5 };
 
     void OnEnable()
     {

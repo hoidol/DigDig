@@ -54,6 +54,7 @@ MonoBehaviour:
   - 6
   - 11
   - 20
-  miniMePrefab: {fileID: 0}
+  miniMePrefab: {fileID: 4656618547971450879, guid: dfe8c56d66fa54f4ab01017ea25857bb,
+    type: 3}
   miniMe: {fileID: 0}
   consumeTime: 5

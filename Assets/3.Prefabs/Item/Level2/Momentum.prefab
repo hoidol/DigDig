@@ -44,13 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07c6cb0358c814fde889b7dd4d41b8a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MomentumItem
-  key: 
+  key: Momentum
   count: 0
   damages:
-  - 5
-  - 5
-  - 5
-  orbPrefab: {fileID: 0}
+  - 4
+  - 4
+  - 4
+  orbPrefab: {fileID: 3154609164965090195, guid: b12b31f13de784acd8e01cf8daf23dbc,
+    type: 3}
   orbitRadius: 3.5
-  orbitSpeed: 200
   consumeTime: 5

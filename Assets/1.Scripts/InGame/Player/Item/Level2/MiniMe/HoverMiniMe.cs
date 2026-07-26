@@ -10,13 +10,14 @@ public class HoverMiniMe : MiniMe
     public override void Spawn(Vector2 pos)
     {
         base.Spawn(pos);
+        orbitMachine.damage = orbitDamage;
         orbitMachine.AddOrbit();
         orbitMachine.AddOrbit();
     }
 
     public void UpdateMiniMe()
     {
-        for(int i = 0; i < orbitMachine.orbitOrbs.Count; i++)
+        for (int i = 0; i < orbitMachine.orbitOrbs.Count; i++)
         {
             orbitMachine.orbitOrbs[i].damage = orbitDamage;
         }

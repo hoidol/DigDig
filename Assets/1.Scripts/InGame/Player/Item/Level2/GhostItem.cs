@@ -7,8 +7,7 @@ using UnityEngine;
 //통과 : 관통 힘
 public class GhostItem : Item, IPreFire, IComboFire
 {
-    // public int[] pierceCounts = {8,11,15};
-    public int[] triggerCounts = { 4, 4, 4 };
+    public int[] triggerCounts = { 8, 8, 8 };
     int triggerCounter;
 
     //공격력 +5, 탄 효율 30%
@@ -18,7 +17,7 @@ public class GhostItem : Item, IPreFire, IComboFire
     Buff ammoEfficiencyBuff;
 
 
-    Ghost ghostPrefab;
+    public Ghost ghostPrefab;
 
     CancellationTokenSource cts;
 
@@ -72,22 +71,6 @@ public class GhostItem : Item, IPreFire, IComboFire
             triggerCounter = 0;
         }
     }
-
-    //발사된 탄이 Pierce면 Ghost로 변경
-    public void OnFired(ref Bullet bullet, ref PlayerBulletObject playerBulletObject, Vector2 dir)
-    {
-        if (!active)
-            return;
-
-        if (bullet.key == "Pierce")
-        {
-            Ghost ghost = Instantiate(ghostPrefab);
-            ghost.Shoot(dir);
-            ghost.damage = Player.Instance.statMgr.AttackPower;
-            playerBulletObject.Release();
-        }
-    }
-
     public async UniTask OnComboFire(Vector2 dir)
     {
         if (!active)
@@ -95,8 +78,11 @@ public class GhostItem : Item, IPreFire, IComboFire
 
         await UniTask.Delay(Player.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
         Ghost ghost = Instantiate(ghostPrefab);
-        ghost.Shoot(dir);
+        ghost.transform.position = Player.Instance.transform.position;
         ghost.damage = Player.Instance.statMgr.AttackPower;
+        ghost.Shoot(dir);
+        triggerCounter = 0;
+        active = false;
     }
 }
 

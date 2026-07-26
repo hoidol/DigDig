@@ -1,14 +1,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OrbitItem : Item
+public class OrbitItem : TriggerCycleItem
 {
-    public float[] damages = { 3, 3, 3 };
+    float[] damages = { 2, 2, 2 };
+    float[] cooltimes = { 5, 5, 5 };
+    float[] activeTimes = { 8, 8, 8 };
+
     public OrbitOrb orbPrefab;
     public float orbitRadius = 2f;
     public float orbitSpeed = 90f;
 
     protected List<OrbitOrb> orbs = new();
+
+    public override void OnActivate()
+    {
+        Player.Instance.AddHp(-itemData.consumeHp);
+        RebuildOrbs();
+    }
+
+    public override void OnDeactivate()
+    {
+        foreach (var orb in orbs) Destroy(orb.gameObject);
+        orbs.Clear();
+    }
 
     public override void OnEquip()
     {
@@ -30,6 +45,8 @@ public class OrbitItem : Item
     {
         base.UpdateItem();
         RebuildOrbs();
+        coolTime = cooltimes[count - 1];
+        activeTime = activeTimes[count - 1];
     }
 
     protected void RebuildOrbs()

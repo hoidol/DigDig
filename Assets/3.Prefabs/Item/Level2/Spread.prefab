@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1048963ec05474ac48cc1ee65ea54c9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpreadItem
-  key: 
+  key: Spread
   count: 0

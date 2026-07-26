@@ -7,7 +7,7 @@ using UnityEngine;
 // 자연	행운
 public class RegenItem : Item
 {
-    float[] recoverHps = { 1, 2, 3 };
+    float[] recoverHps = { 0.5f, 1, 1.5f };
     Buff recoveryHpBuff;
 
 

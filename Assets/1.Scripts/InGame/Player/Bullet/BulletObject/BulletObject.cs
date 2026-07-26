@@ -17,7 +17,7 @@ public abstract class BulletObject : MonoBehaviour
     public LayerMask hitLayerMask;
 
     protected IHittable preTarget;
-    const float LIFETIME = 5f;
+    const float LIFETIME = 15f;
     protected float lifetimeTimer;
 
     public virtual void Shoot(Vector2 dir)

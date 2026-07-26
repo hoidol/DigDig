@@ -6,6 +6,7 @@ public class OrbitMachine : SubMachine
     public OrbitOrb orbitOrbPrefab;
     public float radius = 2f;
     public float rotationSpeed = 80f; //충분히느리게 
+    public float damage;
 
     public readonly List<OrbitOrb> orbitOrbs = new();
     readonly Queue<OrbitOrb> pool = new();
@@ -32,6 +33,7 @@ public class OrbitMachine : SubMachine
     public OrbitOrb AddOrbit()
     {
         OrbitOrb obj = GetFromPool();
+        obj.damage = damage;
         orbitOrbs.Add(obj);
         Sorting();
         return obj;

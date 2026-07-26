@@ -67,7 +67,7 @@ public class PlayerHealth : MonoBehaviour, IHittable
         {
             if (player.statMgr.RecoveryHp > 0)
                 AddHp(player.statMgr.RecoveryHp);
-            await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: token);
+            await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
         }
     }
     public void ApplyStatusEffect(StatusEffect effect)

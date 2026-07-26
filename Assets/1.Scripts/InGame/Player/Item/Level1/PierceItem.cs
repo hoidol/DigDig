@@ -15,7 +15,7 @@ public class PierceItem : Item, IPreFire
             {
                 PierceBullet pierceBullet = new PierceBullet();
                 pierceBullet.pierceCount = Player.Instance.bounce + pierceCounts[count - 1];
-                pierceBullet.multiplyAtk = 1;
+                // pierceBullet.multiplyAtk = 1;
                 bullet = pierceBullet;
             }
             triggerCounter = 0;

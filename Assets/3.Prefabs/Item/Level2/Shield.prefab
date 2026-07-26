@@ -44,12 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334f183489cac43e1a1c441a48e2e47c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShieldItem
-  key: 
+  key: Shield
   count: 0
-  damages:
-  - 4
-  - 4
-  - 4
-  shieldOrbitOrbPrefab: {fileID: 0}
+  coolTime: 0
+  activeTime: 0
+  shieldOrbitOrbPrefab: {fileID: 5155653652632894333, guid: 6401d10a26ca147d9b0654f54aab8720,
+    type: 3}
   orbitRadius: 2.5
   orbitSpeed: 110

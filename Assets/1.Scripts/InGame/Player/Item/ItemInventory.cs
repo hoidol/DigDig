@@ -37,12 +37,26 @@ public class ItemInventory : MonoBehaviour
     {
 
 
+
+        Player.Instance.AddItem("Drain");
+        // Player.Instance.AddItem("Regen");
+        // Player.Instance.AddItem("Hover"); // 수정 필요 : 너무 약함
+
+
+        // Player.Instance.AddItem("Volt");
+
+        // Player.Instance.AddItem("Shield");
+        // Player.Instance.AddItem("Spread");
+        // Player.Instance.AddItem("Critical");
+        // Player.Instance.AddItem("Ghost");
+
+        // Player.Instance.AddItem("Firelance");
+        // Player.Instance.AddItem("Misfire");
+        // Player.Instance.AddItem("Momentum");
         // Player.Instance.AddItem("Boost");
-        Player.Instance.AddItem("Mutant");
-        Player.Instance.AddItem("Mountain");
-        Player.Instance.AddItem("Boom");
-
-
+        // Player.Instance.AddItem("Mutant");
+        // Player.Instance.AddItem("Mountain");
+        // Player.Instance.AddItem("Boom");
         // Player.Instance.AddItem("Firework");
         // Player.Instance.AddItem("Spray");
         // Player.Instance.AddItem("Chain");

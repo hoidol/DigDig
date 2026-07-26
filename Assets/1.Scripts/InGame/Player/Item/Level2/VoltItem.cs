@@ -3,17 +3,20 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 //2개 되고 빨라지고 커짐
-public class VoltItem : Item
+public class VoltItem : TriggerCycleItem
 {
-    public float[] damages = { 5, 5, 5 };
+    float[] damages = { 2, 2, 2 };
 
-    public float[] voltDamages = { 4f, 5f, 6f };
-    public float[] voltChances = { 0.3f, 0.5f, 0.7f };
-    public float[] voltRadiuses = { 2f, 2f, 2f };
+    float[] cooltimes = { 5, 5, 5 };
+    float[] activeTimes = { 8, 8, 8 };
+
+    float[] voltDamages = { 2f, 3f, 4f };
+    float[] voltChances = { 0.2f, 0.3f, 0.4f };
+    float[] voltRadiuses = { 1.5f, 2f, 2.5f };
 
     public VoltOrbitOrb voltOrbitOrbPrefab;
-    public float orbitRadius = 2.2f;
-    public float orbitSpeed = 170f;
+    float orbitRadius = 2.2f;
+    float orbitSpeed = 60f;
 
     protected List<VoltOrbitOrb> orbs = new();
     // protected virtual int OrbCount => count;
@@ -34,10 +37,13 @@ public class VoltItem : Item
         orbs.Clear();
     }
 
+
     public override void UpdateItem()
     {
         base.UpdateItem();
         RebuildOrbs();
+        coolTime = cooltimes[count - 1];
+        activeTime = activeTimes[count - 1];
     }
 
     protected void RebuildOrbs()
@@ -69,5 +75,17 @@ public class VoltItem : Item
         transform.Rotate(Vector3.forward, orbitSpeed * Time.deltaTime);
     }
 
+
+    public override void OnActivate()
+    {
+        Player.Instance.AddHp(-itemData.consumeHp);
+        RebuildOrbs();
+    }
+
+    public override void OnDeactivate()
+    {
+        foreach (var orb in orbs) Destroy(orb.gameObject);
+        orbs.Clear();
+    }
 
 }

@@ -142,7 +142,10 @@ public class Player : MonoSingleton<Player>, IPicker
         float curMaxHp = statMgr.MaxHp;
         float diffMaxHp = curMaxHp - preMaxHp;
         if (diffMaxHp > 0)
-            AddHp(diffMaxHp);
+        {
+            AddHp(diffMaxHp, false);
+        }
+
 
         GameEventBus.Publish(new PlayerUpdateEvent(this));
     }

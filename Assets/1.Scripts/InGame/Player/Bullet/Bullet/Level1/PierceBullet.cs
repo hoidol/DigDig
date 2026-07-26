@@ -5,8 +5,8 @@ public class PierceBullet : Bullet
 {
     // public int[] pierceCounts = {2,3,4};
     // public float[] multiplyATKs = {1.3f,1.4f,1.5f};
-    
-    public float multiplyAtk;
+
+    // public float multiplyAtk;
     public int pierceCount;
     public PierceBullet()
     {

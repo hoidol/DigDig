@@ -1,6 +1,6 @@
 using UnityEngine;
 //화면 끝까지 감
-public class Firelance : MonoBehaviour 
+public class Firelance : MonoBehaviour
 {
     public float moveSpeed = 12f;
 
@@ -37,7 +37,7 @@ public class Firelance : MonoBehaviour
     {
         Vector3 vp = cam.WorldToViewportPoint(transform.position);
 
-        if (vp.x <= 0f || vp.x >= 1f||vp.y <= 0f || vp.y >= 1f)
+        if (vp.x <= 0f || vp.x >= 1f || vp.y <= 0f || vp.y >= 1f)
         {
             Destroy();
         }
@@ -52,10 +52,6 @@ public class Firelance : MonoBehaviour
 
         StatusEffectHandler handler = (hittable as Component)?.GetComponent<StatusEffectHandler>();
         handler?.Apply(new FlameEffect(duration, dps));
-
-        // pierceCount--;
-        // if (pierceCount <= 0)
-        //     Destroy(gameObject);
     }
 
     void Destroy()
