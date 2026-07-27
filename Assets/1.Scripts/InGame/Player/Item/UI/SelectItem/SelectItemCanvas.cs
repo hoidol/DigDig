@@ -34,12 +34,6 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
         }
     }
 
-    public void Selected(ItemData itemData)
-    {
-        Player.Instance.AddItem(itemData.key, 1);
-        CloseCanvas();
-    }
-
     public override void CloseCanvas()
     {
         base.CloseCanvas();

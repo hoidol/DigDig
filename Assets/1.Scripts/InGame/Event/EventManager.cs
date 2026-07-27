@@ -210,7 +210,7 @@ public class EventManager : MonoSingleton<EventManager>
 
     public Vector2 CalcSpawnPosition()
     {
-        float farDistance = Player.Instance.distanceMaxDistanceDestroiedStone + Random.Range(3, 4);
+        float farDistance = Player.Instance.distanceMaxDistanceDestroiedStone + Random.Range(4f, 5f) + spawnCount * 1.5f;
         Vector2 playerPos = Player.Instance.transform.position;
         return MapManager.SnappedPosition(playerPos + Random.insideUnitCircle.normalized * farDistance);
     }

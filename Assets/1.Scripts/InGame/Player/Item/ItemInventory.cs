@@ -5,7 +5,7 @@ using System.Linq;
 public class ItemInventory : MonoBehaviour
 {
     public List<Item> curItems = new List<Item>();
-    public List<MergeItemData> canMergeItemDatas = new List<MergeItemData>();
+    // public List<MergeItemData> canMergeItemDatas = new List<MergeItemData>();
     public readonly int MAX_ITEM_COUNT = 7; // 최대 보유 아이템 개수 
 
     // 인터페이스별 캐시 - 장착/해제 시점에만 갱신

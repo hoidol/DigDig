@@ -25,6 +25,7 @@ public class ItemData : ScriptableObject
     public Item itemPrefab;
     public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
     public int applyOrder; // 아이템 적용 순서
+    public Sprite thum;
 
     public bool CheckUnlock()
     {
@@ -111,10 +112,15 @@ public class ItemData : ScriptableObject
             if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
                 level = lv;
 
+            string thumPath = $"Assets/2.Sprites/Item/Thum/Level{level}.png";
+            thum = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(thumPath);
             UnityEditor.EditorUtility.SetDirty(this);
             Debug.Log($"[ItemData] {key} LoadData 완료");
             return;
         }
+
+        //
+
 
         Debug.LogWarning($"[ItemData] CSV에서 '{key}' 를 찾지 못함");
     }

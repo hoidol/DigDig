@@ -92,8 +92,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
 
     public void Reward()
     {
-        if (Random.value < 0.25)
-            HealItem.Instantiate(transform.position);
+        HealItem.Instantiate(transform.position);    
         Exp.Instantiate(transform.position, exp, 1);
     }
 

@@ -16,6 +16,9 @@ public class HealItem : MonoBehaviour, IPickable
 
     public static void Instantiate(Vector2 pos)
     {
+        if (Random.value > 0.25)//HealItem 드랍 확률
+            return;
+
         Vector2 position = pos + Random.insideUnitCircle;
         poolingSystem.Get(position);
     }
@@ -25,9 +28,7 @@ public class HealItem : MonoBehaviour, IPickable
         transform.position = pos;
         IsTaken = false;
         transform.localRotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
-        // autoAttractTween?.Kill();
         moveCts?.Cancel();
-        // autoAttractTween = DOVirtual.DelayedCall(5f, () => Take(Player.Instance));
     }
 
     public void PickedUp()

@@ -12,10 +12,7 @@ public class Player : MonoSingleton<Player>, IPicker
     public Joystick moveJoystick;
     public Joystick attackJoystick;
     public PlayerStatManager statMgr;
-    // public Color originColor = new Color(0.1921569f, 1f, 0.4705882f, 1f);
-    // public Color angerColor = new Color(1f, 0.1921569f, 0.1921569f, 1f);
     [SerializeField] Animator animator;
-    // public SpriteRenderer[] bodySprites;
     public Transform bodyRootTr;
     public Transform bodyCenterTr;
     public CameraShake cameraShake;
@@ -27,8 +24,6 @@ public class Player : MonoSingleton<Player>, IPicker
     [SerializeField] int maxExp;
     public int bounce;
     [SerializeField] Transform hpPoint;
-
-    // public StatInventory statInventory;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
     public TileChecker[] tileCheckers;
     public PlayerHealth health;
@@ -50,11 +45,6 @@ public class Player : MonoSingleton<Player>, IPicker
     public Vector2 CurAttackDir => weapon.LastAttackDir;
 
     public Transform Transform => transform;
-    // public SubMachine[] subMachines;
-    // public SubMachine GetSubMechine(string key)
-    // {
-    //     return subMachines.FirstOrDefault(t => t.key == key);
-    // }
 
     private void Awake()
     {
@@ -150,20 +140,6 @@ public class Player : MonoSingleton<Player>, IPicker
         GameEventBus.Publish(new PlayerUpdateEvent(this));
     }
 
-    // public void LevelUpBullet(string key)
-    // {
-    //     statMgr.LevelUpBullet(key);
-    //     UpdatePlayer();
-    // }
-
-
-    public void MergeBullet(MergeBulletData mergeBulletData)
-    {
-        //weapon.SetBullet(mergeBulletData.resultBulletKey);
-        UpdatePlayer();
-    }
-
-
     public void AddBuff(Buff buff)
     {
         statMgr.activeBuffs.Add(buff);
@@ -218,8 +194,6 @@ public class Player : MonoSingleton<Player>, IPicker
         statMgr.AddItem(key, count);
         itemInventory.UpdateInventory();
         UpdatePlayer();
-
-
     }
 
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
@@ -282,17 +256,6 @@ StatType.AmmoDuration //총알 지속시간
             statDic.Add(ps.statType, ps);
         }
 
-        // for (int i = 0; i < UserManager.Instance.userBulletManager.userBulletData.equiptedBullets.Length; i++)
-        // {
-        //     // Debug.Log($"Player StatManager Init() {UserManager.Instance.userData.equiptedBullets[i].key}");
-        //     bulletStatDic.Add(UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[i].key,
-        //     new PlayerBulletStat()
-        //     {
-        //         key = UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[i].key,
-        //         lv = 1
-        //     });
-        // }
-
         Reset();
     }
 
@@ -350,18 +313,10 @@ StatType.AmmoDuration //총알 지속시간
         }
     }
 
-    // public void LevelUpBullet(string key)
-    // {
-    //     bulletStatDic[key].lv++;
-    // }
     public PlayerItemStat GetPlayerItemStat(string key)
     {
         return itemStatDic[key];
     }
-    // public void LevelUpItem(string key)
-    // {
-    //     itemStatDic[key].count++;
-    // }
 }
 
 [System.Serializable]
@@ -416,3 +371,9 @@ public class PlayerUpdateEvent
     public Player player;
     public PlayerUpdateEvent(Player player) { this.player = player; }
 }
+
+/*
+존재 -> 조작 -> 전투 -> 행운 -> 강화 -> 조작 -> 전투 -> 행운 -> 강화 (반복)
+박스를 4개 먹었을때 [새로운 경험 - 트위스트 - 중간 보스, 화면 전환, 새로운 기회 ]
+다음 단계로 자동으로 넘어가자 마지막 박스는 
+*/

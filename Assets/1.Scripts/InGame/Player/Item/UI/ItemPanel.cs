@@ -14,7 +14,6 @@ public class ItemPanel : ItemPanelOnlyImage
     {
         base.SetItemData(itemData);
         this.itemData = itemData;
-        // thumImage.sprite = itemData.thumbnail;
         titleText.text = itemData.Title;
         descText.text = itemData.GetDescription();
     }

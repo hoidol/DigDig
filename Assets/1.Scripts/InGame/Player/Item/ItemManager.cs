@@ -6,7 +6,7 @@ using UnityEngine;
 public class ItemManager : MonoSingleton<ItemManager>, ILoadData
 {
     public Dictionary<string, ItemData> itemDataDic = new Dictionary<string, ItemData>();
-    // public MergeItemData[] mergeItemDatas;
+    public MergeItemData[] mergeItemDatas;
     public Dictionary<string, MergeItemData> mergeItemDataDic = new Dictionary<string, MergeItemData>();
     public ItemData[] allItemDatas;
 
@@ -83,12 +83,38 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
         return itemDataDic[key];
     }
 
-    // public MergeItemData GetMergeItemData(params string[] itemKeys)
-    // {
-    //     return mergeItemDatas.FirstOrDefault(d =>
-    //         itemKeys.All(key => d.resourceItemKeys.Contains(key)) &&
-    //         d.resourceItemKeys.Length == itemKeys.Length);
-    // }
+
+    public bool CheckCanMerge(string itemKey)
+    {
+        List<MergeItemData> mergeItemList = mergeItemDatas.Where(e=> e.childItemKeys.Contains(itemKey)).ToList();
+        for(int i = 0; i < mergeItemList.Count; i++)
+        {
+            Item child1 = Player.Instance.itemInventory.GetItem(mergeItemList[i].childItemKeys[0]);
+            Item child2 = Player.Instance.itemInventory.GetItem(mergeItemList[i].childItemKeys[1]);
+            
+            if(child1 != null&& child2 != null)
+                return true;
+        }
+        return false;
+
+    }
+
+
+    public List<MergeItemData> GetMergeItemDataList(string itemKey)
+    {  
+        List<MergeItemData> mergeItemDataList = mergeItemDatas.Where(e=> e.childItemKeys.Contains(itemKey)).ToList();
+        List<MergeItemData> curMergeItemDataList  = new List<MergeItemData>();
+        for(int i = 0; i < mergeItemDataList.Count; i++)
+        {
+            Item child1 = Player.Instance.itemInventory.GetItem(mergeItemDataList[i].childItemKeys[0]);
+            Item child2 = Player.Instance.itemInventory.GetItem(mergeItemDataList[i].childItemKeys[1]);
+            
+            if(child1 != null&& child2 != null)
+                curMergeItemDataList.Add(mergeItemDataList[i]);
+        }
+
+        return curMergeItemDataList;
+    }
 
 
 }

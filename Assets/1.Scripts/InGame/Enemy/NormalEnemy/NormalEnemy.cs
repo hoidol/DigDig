@@ -138,8 +138,8 @@ public class NormalEnemy : Enemy
     }
     public override void Reward()
     {
-        if (Random.value < 0.25)
             HealItem.Instantiate(transform.position);
+        
 
         base.Reward();
     }
