@@ -8,11 +8,11 @@ public class HandMirrorItem : Item
 
     public override void OnEquip()
     {
-        Player.Instance.AddBounce(bounceCounts[count-1]);
+        // Player.Instance.AddBounce(bounceCounts[count-1]);
     }
     public override void OnUnequip()
     {
-        Player.Instance.AddBounce(-bounceCounts[count-1]);
+        // Player.Instance.AddBounce(-bounceCounts[count-1]);
     }
 
     public override string GetDescription(int lv = 1, bool detail = false)

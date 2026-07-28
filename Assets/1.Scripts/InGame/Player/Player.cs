@@ -22,7 +22,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
     bool levelUped;
     [SerializeField] int maxExp;
-    public int bounce;
+    // public int bounce;
     [SerializeField] Transform hpPoint;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
     public TileChecker[] tileCheckers;
@@ -79,7 +79,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
         movement.Restart();
 
-        bounce = 0;
+        // bounce = 0;
         destroyCount = 0;
         distanceMaxDistanceDestroiedStone = MapManager.MIN_RANGE_RADIUS;
         distanceMinDistanceDestroiedStone = float.MaxValue;
@@ -118,11 +118,11 @@ public class Player : MonoSingleton<Player>, IPicker
         pickable.PickedUp();
     }
 
-    public void AddBounce(int c)
-    {
-        this.bounce += c;
+    // public void AddBounce(int c)
+    // {
+    //     this.bounce += c;
 
-    }
+    // }
 
     public void UpdatePlayer()
     {
@@ -199,7 +199,20 @@ public class Player : MonoSingleton<Player>, IPicker
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
     public void AddHp(float hp, bool showDmg = true) => health.AddHp(hp, showDmg);
 
+    public void AddLevelUpState(LevelUpStatType levelUpStatType, int lv)
+    {
+        statMgr.AddLevelUpState(levelUpStatType,lv);
 
+        switch (levelUpStatType)
+        {
+            case LevelUpStatType.FullHeal:
+                AddHp(health.MaxHp);
+                break;
+        }
+
+        UpdatePlayer();
+
+    }
     //플레이어에 의한 공격 Only
     // public void Attack(Vector2 dir) => weapon.Attack(dir);
     public PlayerBulletObject Shoot(Bullet b, Vector2 dir) => weapon.Shoot(b, dir);
@@ -213,7 +226,8 @@ public class PlayerStatManager
 {
     [SerializeField] List<PlayerStat> statList = new();
     public Dictionary<StatType, PlayerStat> statDic = new Dictionary<StatType, PlayerStat>();
-    // public Dictionary<string, PlayerBulletStat> bulletStatDic = new Dictionary<string, PlayerBulletStat>();
+
+    public Dictionary<LevelUpStatType, PlayerLevelUpStat> levelUpStatDic = new Dictionary<LevelUpStatType, PlayerLevelUpStat>();
     public Dictionary<string, PlayerItemStat> itemStatDic = new Dictionary<string, PlayerItemStat>();
     public List<Buff> activeBuffs = new List<Buff>();
 
@@ -227,8 +241,9 @@ public class PlayerStatManager
     public float ReloadSpeed => statDic[StatType.ReloadSpeed].value;
     public float AmmoDuration => statDic[StatType.AmmoDuration].value;
     public float AmmoEfficiency => statDic[StatType.AmmoEfficiency].value;
+    public int Bounce => (int)statDic[StatType.Bounce].value;
 
-    PlayerData playerData;
+    public PlayerData playerData;
     Player player;
 
     StatType[] usingStatTypes =
@@ -270,6 +285,17 @@ StatType.AmmoDuration //총알 지속시간
     public void UpdateStat()
     {
         Reset();
+
+        #region levelUpStat
+        MaxHpLevelUpStatData maxHpLevelUpStatData =  LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.MaxHp) as MaxHpLevelUpStatData;
+        BounceLevelUpStatData bounceLevelUpStatData =  LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.Bounce) as BounceLevelUpStatData;
+        AttackPowerLevelUpStatData attackPowerLevelUpStatData =  LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.AttackPower) as AttackPowerLevelUpStatData;
+        
+        statDic[StatType.MaxHp].value += maxHpLevelUpStatData.GetValue();
+        statDic[StatType.Bounce].value += bounceLevelUpStatData.GetValue();
+        statDic[StatType.AttackPower].value += attackPowerLevelUpStatData.GetValue();
+
+        #endregion
         // for (int i = 0; i < player.statInventory.ownStats.Count; i++)
         // {
         //     Stat stat = player.statInventory.ownStats[i];
@@ -289,11 +315,17 @@ StatType.AmmoDuration //총알 지속시간
         }
     }
 
-    public static StatType UpgradeTypeToStatType(UpgradeType upgradeType)
+    public void AddLevelUpState(LevelUpStatType type, int lv)
     {
-        if (Enum.TryParse<StatType>(upgradeType.ToString(), out StatType playerStatType))
-            return playerStatType;
-        return StatType.Count;
+        if (!levelUpStatDic.ContainsKey(type))
+        {
+            levelUpStatDic.Add(type, new PlayerLevelUpStat()
+            {
+                type = type,
+                lv = 0
+            });
+        }
+        levelUpStatDic[type].lv += lv;
     }
     public void AddItem(string key, int count)
     {
@@ -334,6 +366,12 @@ public class PlayerBulletStat
 }
 
 [System.Serializable]
+public class PlayerLevelUpStat
+{
+    public LevelUpStatType type;
+    public int lv;
+}
+[System.Serializable]
 public class PlayerItemStat
 {
     public string key;
@@ -354,7 +392,7 @@ public enum StatType
     // ReloadTime,
     AmmoDuration,
     AmmoEfficiency, //튕기는 때 데미지 감소량을 줄어듦
-
+    Bounce,
     Count
 }
 
@@ -376,4 +414,16 @@ public class PlayerUpdateEvent
 존재 -> 조작 -> 전투 -> 행운 -> 강화 -> 조작 -> 전투 -> 행운 -> 강화 (반복)
 박스를 4개 먹었을때 [새로운 경험 - 트위스트 - 중간 보스, 화면 전환, 새로운 기회 ]
 다음 단계로 자동으로 넘어가자 마지막 박스는 
+[캐릭터 강화 요소]
+- Level Up Bonus
+- 현재 문제 Item에 대한 썸네일 - 내가 할 수 있는 범위에서 생각하자
+- 기억 조각 
+
+[캐릭터 방해 요소]
+- Stone
+- Enemy (Boss)
+
+[리프레쉬 용]
+- 캐릭터
+- 
 */

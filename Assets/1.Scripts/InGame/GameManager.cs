@@ -32,7 +32,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         await UniTask.WhenAll(
             StageManager.Instance.LoadTask,
-            StatManager.Instance.LoadTask,
             BulletManager.Instance.LoadTask,
             ItemManager.Instance.LoadTask,
             EnemyManager.Instance.LoadTask

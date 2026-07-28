@@ -12,8 +12,8 @@ public class NormalBulletObject : PlayerBulletObject
     public override void SetBullet(Bullet bullet)
     {
         base.SetBullet(bullet);
-        AddBehavior(new BounceBehavior(Player.Instance.bounce));
-        Debug.Log($"NormalBulletObject 튕기는 횟수 : {Player.Instance.bounce}");
+        AddBehavior(new BounceBehavior(Player.Instance.statMgr.Bounce));
+        Debug.Log($"NormalBulletObject 튕기는 횟수 : {Player.Instance.statMgr.Bounce}");
     }
 
 }

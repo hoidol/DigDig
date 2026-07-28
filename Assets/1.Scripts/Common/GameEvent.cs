@@ -17,17 +17,6 @@ public class PlayerDamagedEvent
     public PlayerDamagedEvent(float damage) { Damage = damage; }
 }
 
-public class ChangedMemoryFragmentEvent
-{
-
-    public int curValue; //현재량
-    public int changeValue; //변화량
-    public ChangedMemoryFragmentEvent(int cV, int chV)
-    {
-        curValue = cV;
-        changeValue = chV;
-    }
-}
 
 // public class ApproachingOrdealStartEvent
 // {

@@ -10,27 +10,27 @@ public class UnequalExchangeAbility : Ability
 
     public override void OnEquip(Player player)
     {
-        GameEventBus.Subscribe<GoldChangedEvent>(OnGoldChanged);
+        // GameEventBus.Subscribe<GoldChangedEvent>(OnGoldChanged);
     }
 
     public override void OnUnequip(Player player)
     {
-        GameEventBus.Unsubscribe<GoldChangedEvent>(OnGoldChanged);
+        // GameEventBus.Unsubscribe<GoldChangedEvent>(OnGoldChanged);
     }
 
-    void OnGoldChanged(GoldChangedEvent e)
-    {
-        if (e.addGold < 0) return;
+    // void OnGoldChanged(GoldChangedEvent e)
+    // {
+    //     if (e.addGold < 0) return;
 
-        Player player = Player.Instance;
-        // if (player.isReloading) return;
+    //     Player player = Player.Instance;
+    //     // if (player.isReloading) return;
 
-        // int max = (int)player.statMgr.BulletCount;
-        // if (player.curBulletCount >= max) return;
+    //     // int max = (int)player.statMgr.BulletCount;
+    //     // if (player.curBulletCount >= max) return;
 
-        if (UnityEngine.Random.Range(0f, 100f) > CHANCE) return;
+    //     if (UnityEngine.Random.Range(0f, 100f) > CHANCE) return;
 
-        // player.weapon.AddBullet();
-        // GameEventBus.Publish(new BulletChargedEvent(player.curBulletCount, max));
-    }
+    //     // player.weapon.AddBullet();
+    //     // GameEventBus.Publish(new BulletChargedEvent(player.curBulletCount, max));
+    // }
 }

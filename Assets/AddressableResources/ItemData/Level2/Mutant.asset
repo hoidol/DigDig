@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Mutant
   itemName: "\uB3CC\uC5F0\uBCC0\uC774"
-  desc: "\uBBF8\uB2C8\uBBF8\uC5D0 \uADFC\uCC98\uC5D0\uC11C \uACF5\uACA9 \uC2DC 20%\uD655\uB960\uB85C
-    \uCCB4\uB825 +1"
+  desc: "\uBBF8\uB2C8\uBBF8\uC5D0 \uB2FF\uC73C\uBA74 50%\uD655\uB960\uB85C \uCCB4\uB825
+    1 \uD68C\uBCF5\uB428"
   consumeHp: 1
   level: 2
   childItem1: Luck
@@ -25,3 +25,4 @@ MonoBehaviour:
     type: 3}
   unlockConditions: []
   applyOrder: 0
+  thum: {fileID: 21300000, guid: cf79792c883284724bc4bb2123b777a9, type: 3}

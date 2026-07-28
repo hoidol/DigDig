@@ -14,7 +14,7 @@ public class PierceItem : Item, IPreFire
             if (bullet == null || bullet.bulletData.order < BulletData.GetBulletData("Pierce").order)
             {
                 PierceBullet pierceBullet = new PierceBullet();
-                pierceBullet.pierceCount = Player.Instance.bounce + pierceCounts[count - 1];
+                pierceBullet.pierceCount = Player.Instance.statMgr.Bounce + pierceCounts[count - 1];
                 // pierceBullet.multiplyAtk = 1;
                 bullet = pierceBullet;
             }

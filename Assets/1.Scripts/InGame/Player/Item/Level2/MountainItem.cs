@@ -11,7 +11,7 @@ public class MountainItem : Item
     Buff maxHpBuff;
     Buff attackPowerBuff;
     Buff recoveryHpBuff;
-    int bounce;
+    Buff bounceBuff;
     public override void OnUnequip()
     {
         base.OnUnequip();
@@ -29,8 +29,8 @@ public class MountainItem : Item
         if (attackPowerBuff != null)
             Player.Instance.RemoveBuff(attackPowerBuff);
 
-        if (bounce != 0)
-            Player.Instance.AddBounce(-bounce);
+        if (bounceBuff != null)
+            Player.Instance.RemoveBuff(bounceBuff);
     }
     public override void UpdateItem()
     {
@@ -49,8 +49,8 @@ public class MountainItem : Item
         Player.Instance.AddBuff(recoveryHpBuff);
 
         //튕김 수 
-        bounce = bounces[count - 1];
-        Player.Instance.AddBounce(bounce);
+        bounceBuff = new Buff(StatType.Bounce, bounces[count - 1], StatOpType.Add);
+        Player.Instance.AddBuff(bounceBuff);        
     }
 
 

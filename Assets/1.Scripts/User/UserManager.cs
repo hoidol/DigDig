@@ -32,12 +32,20 @@ public class UserManager : MonoSingleton<UserManager>
         userStageManager.LoadData();
 
     }
-
+    void Save()
+    {
+        SaveManager.SaveData(UserDataFileName, userData); 
+    }
+    public void AddMemoryPiece(int count)
+    {
+        userData.memoryPieceCount += count;
+        Save();
+    }
 
 }
 
 [System.Serializable]
 public class UserData
 {
-    public int memoryFragmentCount; //기억의 파편 개수
+    public int memoryPieceCount; //기억의 조각 개수
 }

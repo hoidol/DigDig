@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AddSpecialBulletPanel : LevelUpBonusPanel
+public class AddSpecialBulletPanel : LevelUpStatPanel
 {
     public GameObject selectButton;
     public GameObject noEnoghButton;

@@ -10,7 +10,7 @@ public class SteelSphereBulletObject : PlayerBulletObject
     {
         base.Shoot(dir);
 
-        int bounce = Player.Instance.bounce;
+        int bounce = Player.Instance.statMgr.Bounce;
         remaining = Mathf.FloorToInt(bounce * 0.5f);
 
         // int lv = Player.Instance.statMgr.bulletStatDic[key].lv;

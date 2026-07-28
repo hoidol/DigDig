@@ -32,7 +32,7 @@ public class StatStone : EventObject, IHittable, IWayPointerTarget
 
 
 
-    public override Sprite GetThum() => statData.thum;
+    // public override Sprite GetThum() => statData.thum;
 
 
 
@@ -44,27 +44,27 @@ public class StatStone : EventObject, IHittable, IWayPointerTarget
     public Image groundGuageImage;
     // public TMP_Text statInfoText;
     // public Transform damageTextPoint;
-    StatData statData;
-    public void Spawn(Vector2 pos, StatData statData, int lv, Vector2Int[,] index)
-    {
-        RegisterTile(index);
-        this.statData = statData;
-        destroying = false;
-        transform.position = pos;
-        float distance = Vector2.Distance(Vector2.zero, transform.position);
-        float disMulti = distance / 4.5f;
-        if (disMulti <= 1)
-            disMulti = 1;
+    // StatData statData;
+    // public void Spawn(Vector2 pos, StatData statData, int lv, Vector2Int[,] index)
+    // {
+    //     RegisterTile(index);
+    //     this.statData = statData;
+    //     destroying = false;
+    //     transform.position = pos;
+    //     float distance = Vector2.Distance(Vector2.zero, transform.position);
+    //     float disMulti = distance / 4.5f;
+    //     if (disMulti <= 1)
+    //         disMulti = 1;
 
-        // this.maxHp = GameManager.Instance.stageData.oreHp * disMulti * 3;
-        // curHp = maxHp;
-        maskTr.localScale = new Vector3(1, 0, 1);
-        groundGuageImage.fillAmount = 0;
-        curTimer = MaxTime;
-        // statInfoText.text = statData.GetDescription(lv);
+    //     // this.maxHp = GameManager.Instance.stageData.oreHp * disMulti * 3;
+    //     // curHp = maxHp;
+    //     maskTr.localScale = new Vector3(1, 0, 1);
+    //     groundGuageImage.fillAmount = 0;
+    //     curTimer = MaxTime;
+    //     // statInfoText.text = statData.GetDescription(lv);
 
-        Appear(pos);
-    }
+    //     Appear(pos);
+    // }
     [SerializeField] float maxGauge = 10;
     [SerializeField] float curGauge = 0;
 
@@ -122,7 +122,7 @@ public class StatStone : EventObject, IHittable, IWayPointerTarget
     {
         destroying = true;
         Debug.Log("StatStone Destroy()");
-        StatCanvas.Instance.OpenCanvas();
+        // StatCanvas.Instance.OpenCanvas();
         WayPointerCanvas.Instance?.Remove(this);
         Return();
     }

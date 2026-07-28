@@ -11,7 +11,7 @@ public class BoomBulletObject : PlayerBulletObject
         BoomBullet boomBullet = bullet as BoomBullet;
         radius = boomBullet.boomRange;
         damage = Player.Instance.statMgr.AttackPower;
-        AddBehavior(new BounceBehavior(Mathf.Clamp(Player.Instance.bounce, 0, 2)));
+        AddBehavior(new BounceBehavior(Mathf.Clamp(Player.Instance.statMgr.Bounce, 0, 2)));
     }
     public override IHittable Hit(RaycastHit2D hit2D)
     {
