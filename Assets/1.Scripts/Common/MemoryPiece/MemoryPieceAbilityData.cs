@@ -9,6 +9,7 @@ public class MemoryPieceAbilityData : ScriptableObject
     public int level;
 }
 
+//[업데이트 후]
 // 공 / 방어 / 기타
 // Step1 : 공격력 +0.5 / 체력 +3 / 공격속도 4% / 분산 투자 - 개당 30
 // Step2 : 바운드 효율 +2% / 초당 회복 +0.1 / 경험치 +3%(MaxExp에 빼기로 구현) / 분산 투자 - 개당 30
