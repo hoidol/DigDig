@@ -40,7 +40,6 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Subscribe<BossDeadEvent>(OnBossDeadEvent);
-
         GameEventBus.Subscribe<PlayerHpChangedEvent>(OnPlayerHpChangedEvent);
 
         Debug.Log($"UserManager.STAGE_KEY {UserManager.STAGE_KEY}");
@@ -62,7 +61,6 @@ public class GameManager : MonoSingleton<GameManager>
         phase = 0;
         gameTimer = 0;
         isPlaying = true;
-
 
         GameEventBus.Publish(new StartGameEvent(stageData));
 
@@ -115,7 +113,10 @@ public class GameManager : MonoSingleton<GameManager>
 
 
     void Update()
-    {
+    {  
+        if (!isPlaying)
+            return;
+
         gameTimer += Time.deltaTime;
     }
 
@@ -143,11 +144,12 @@ public class GameManager : MonoSingleton<GameManager>
         // FadeCanvs.Instance.FadeIn($"msg", () => { SceneManager.LoadScene("InGame"); });
     }
 
-    public void Recure()
+    public void Resume()
     {
         Player.Instance.AddHp(Player.Instance.health.MaxHp);
         isPlaying = true;
     }
+
     void OnPlayerHpChangedEvent(PlayerHpChangedEvent e)
     {
         if (e.curHp <= 0)

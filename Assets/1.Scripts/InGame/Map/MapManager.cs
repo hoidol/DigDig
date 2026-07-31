@@ -40,7 +40,6 @@ public class MapManager : MonoSingleton<MapManager>
 
     public void SpawnMap()
     {
-
         weights = new float[weightCurves.Length];
         tileArray = new ITile[MAX_RANGE_RADIUS * 2, MAX_RANGE_RADIUS * 2];
         tilePositionArray = new Vector2[MAX_RANGE_RADIUS * 2, MAX_RANGE_RADIUS * 2];

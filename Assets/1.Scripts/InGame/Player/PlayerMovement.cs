@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
         this.rg = rg;
         this.animator = animator;
         this.bodyRootTr = bodyRootTr;
+        Restart();
     }
 
     public void Restart()

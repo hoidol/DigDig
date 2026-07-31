@@ -8,11 +8,7 @@ public class FailCanvas : CanvasUI<FailCanvas>
     string DAILY_RESURRECTION_COUNT_KEY = "DAILY_RESURRECTION_COUNT";
     int MAX_DAILY_RESURRECTION_COUNT = 5;
     public TMP_Text leftResurrectionText;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
+    public GameObject resumeButton;
 
     public override void OpenCanvas(Action closeCallback = null)
     {
@@ -23,10 +19,11 @@ public class FailCanvas : CanvasUI<FailCanvas>
     {
         int count = PlayerPrefs.GetInt(DAILY_RESURRECTION_COUNT_KEY, MAX_DAILY_RESURRECTION_COUNT);
         leftResurrectionText.text = $"일일 부활 {MAX_DAILY_RESURRECTION_COUNT - count / MAX_DAILY_RESURRECTION_COUNT}";
+        resumeButton.SetActive(count > 0); 
     }
-    public void OnClickedResure()
+    public void OnClickeResume()
     {
-        //Player.Instance.
+        GameManager.Instance.Resume();
     }
     public void OnClickedCancel()
     {

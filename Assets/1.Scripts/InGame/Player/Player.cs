@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using Unity.VisualScripting;
 
 public class Player : MonoSingleton<Player>, IPicker
 {
@@ -75,9 +76,6 @@ public class Player : MonoSingleton<Player>, IPicker
         weapon.Init(this);
 
         UpdatePlayer();
-
-
-        movement.Restart();
 
         // bounce = 0;
         destroyCount = 0;
@@ -338,6 +336,7 @@ StatType.AmmoDuration //총알 지속시간
             });
         }
         itemStatDic[key].count += count;
+        itemStatDic[key].sum += count;
         if (itemStatDic[key].count <= 0)
         {
             //아이템 제거하기
@@ -375,7 +374,8 @@ public class PlayerLevelUpStat
 public class PlayerItemStat
 {
     public string key;
-    public int count;
+    public int count; //현재
+    public int sum;//누적
 }
 
 public enum StatType
@@ -411,6 +411,7 @@ public class PlayerUpdateEvent
 }
 
 /*
+어떤 컨셉도 넣지마....
 존재 -> 조작 -> 전투 -> 행운 -> 강화 -> 조작 -> 전투 -> 행운 -> 강화 (반복)
 박스를 4개 먹었을때 [새로운 경험 - 트위스트 - 중간 보스, 화면 전환, 새로운 기회 ]
 다음 단계로 자동으로 넘어가자 마지막 박스는 

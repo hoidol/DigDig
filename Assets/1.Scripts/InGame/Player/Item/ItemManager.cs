@@ -57,16 +57,17 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
         {
             if (!level1ItemDatas[i].CheckUnlock())
                 continue;
-            //현재 보유중
-            if (Player.Instance.itemInventory.curItems.Any(e => e.key == level1ItemDatas[i].key))
-            {
+            // //현재 보유중
+            // if (Player.Instance.itemInventory.curItems.Any(e => e.key == level1ItemDatas[i].key))
+            // {
+            //     continue;
+            // }
+            if(Player.Instance.statMgr.itemStatDic[level1ItemDatas[i].key].sum  == ItemData.MAX_COUNT)
                 continue;
-            }
+            
             //이미 Result안에 있음
             if (result.Any(e => e.key == level1ItemDatas[i].key))
-            {
                 continue;
-            }
 
             result.Add(level1ItemDatas[i]);
         }

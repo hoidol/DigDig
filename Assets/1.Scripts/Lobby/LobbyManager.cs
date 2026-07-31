@@ -1,4 +1,5 @@
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class LobbyManager : MonoSingleton<LobbyManager>
@@ -9,9 +10,14 @@ public class LobbyManager : MonoSingleton<LobbyManager>
         GameEventBus.Clear();
     }
     
-    private void Start() 
+    async void Start()
     {
-        
+        await UniTask.WhenAll(
+            StageManager.Instance.LoadTask,
+            BulletManager.Instance.LoadTask,
+            ItemManager.Instance.LoadTask,
+            EnemyManager.Instance.LoadTask
+        );
     }
    
 }
