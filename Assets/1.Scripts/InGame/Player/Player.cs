@@ -199,7 +199,7 @@ public class Player : MonoSingleton<Player>, IPicker
 
     public void AddLevelUpState(LevelUpStatType levelUpStatType, int lv)
     {
-        statMgr.AddLevelUpState(levelUpStatType,lv);
+        statMgr.AddLevelUpState(levelUpStatType, lv);
 
         switch (levelUpStatType)
         {
@@ -252,6 +252,7 @@ StatType.CritPower,
 StatType.ReloadSpeed,
 StatType.AmmoDuration //총알 지속시간
 ,StatType.AmmoEfficiency
+,StatType.Bounce
     };
 
     public PlayerStatManager(Player p, string key)
@@ -268,6 +269,13 @@ StatType.AmmoDuration //총알 지속시간
             statList.Add(ps);
             statDic.Add(ps.statType, ps);
         }
+        for (int i = 0; i < LevelUpStatManager.Instance.levelUpStatDatas.Length; i++)
+        {
+            var pl = new PlayerLevelUpStat { type = LevelUpStatManager.Instance.levelUpStatDatas[i].type };
+
+            levelUpStatDic.Add(pl.type, pl);
+        }
+
 
         Reset();
     }
@@ -285,10 +293,10 @@ StatType.AmmoDuration //총알 지속시간
         Reset();
 
         #region levelUpStat
-        MaxHpLevelUpStatData maxHpLevelUpStatData =  LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.MaxHp) as MaxHpLevelUpStatData;
-        BounceLevelUpStatData bounceLevelUpStatData =  LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.Bounce) as BounceLevelUpStatData;
-        AttackPowerLevelUpStatData attackPowerLevelUpStatData =  LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.AttackPower) as AttackPowerLevelUpStatData;
-        
+        MaxHpLevelUpStatData maxHpLevelUpStatData = LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.MaxHp) as MaxHpLevelUpStatData;
+        BounceLevelUpStatData bounceLevelUpStatData = LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.Bounce) as BounceLevelUpStatData;
+        AttackPowerLevelUpStatData attackPowerLevelUpStatData = LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.AttackPower) as AttackPowerLevelUpStatData;
+
         statDic[StatType.MaxHp].value += maxHpLevelUpStatData.GetValue();
         statDic[StatType.Bounce].value += bounceLevelUpStatData.GetValue();
         statDic[StatType.AttackPower].value += attackPowerLevelUpStatData.GetValue();

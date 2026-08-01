@@ -1,24 +1,24 @@
 using UnityEngine;
 [System.Serializable]
-public class BounceLevelUpStatData  :LevelUpStatData
+public class BounceLevelUpStatData : LevelUpStatData
 {
-    int increaseValue= 1;
+    int increaseValue = 1;
     public BounceLevelUpStatData()
     {
-        levelUpStatType= LevelUpStatType.Bounce;
+        type = LevelUpStatType.Bounce;
     }
 
     public override string GetDescription()
     {
-        int curLv =Player.Instance.statMgr.levelUpStatDic[levelUpStatType].lv    ;
-        int nextLv = curLv+1;
-        return string.Format(TranslateManager.GetText($"{levelUpStatType}_description"),GetValue(curLv),GetValue(nextLv));
+        int curLv = Player.Instance.statMgr.levelUpStatDic[type].lv;
+        int nextLv = curLv + 1;
+        return string.Format(TranslateManager.GetText($"{type}_description"), GetValue(curLv), GetValue(nextLv));
     }
 
-    public int GetValue(int lv =-1)
+    public int GetValue(int lv = -1)
     {
-        if(lv <0)
-            lv = Player.Instance.statMgr.levelUpStatDic[levelUpStatType].lv;
-        return increaseValue *lv;    
+        if (lv < 0)
+            lv = Player.Instance.statMgr.levelUpStatDic[type].lv;
+        return increaseValue * lv;
     }
 }

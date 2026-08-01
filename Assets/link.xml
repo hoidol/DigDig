@@ -1,0 +1,10 @@
+<linker>
+  <!-- LevelUpStatManager가 System.Type.GetType(...)으로 리플렉션 생성하는 타입들.
+       코드에서 직접 참조되지 않아 스트리핑 대상이 될 수 있으므로 보존 -->
+  <assembly fullname="Assembly-CSharp">
+    <type fullname="MaxHpLevelUpStatData" preserve="all"/>
+    <type fullname="FullHealLevelUStatData" preserve="all"/>
+    <type fullname="BounceLevelUpStatData" preserve="all"/>
+    <type fullname="AttackPowerLevelUpStatData" preserve="all"/>
+  </assembly>
+</linker>

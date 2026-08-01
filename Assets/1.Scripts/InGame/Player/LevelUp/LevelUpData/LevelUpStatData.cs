@@ -1,9 +1,9 @@
 
 [System.Serializable]
-public abstract class LevelUpStatData 
+public abstract class LevelUpStatData
 {
-    public LevelUpStatType levelUpStatType;   
+    public LevelUpStatType type;
 
-    public string Title => TranslateManager.GetText($"{levelUpStatType}_title");
+    public string Title => TranslateManager.GetText($"{type}_title");
     public abstract string GetDescription();
 }
