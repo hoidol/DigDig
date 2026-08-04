@@ -62,9 +62,14 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
             // {
             //     continue;
             // }
-            if(Player.Instance.statMgr.itemStatDic[level1ItemDatas[i].key].sum  == ItemData.MAX_COUNT)
-                continue;
-            
+
+            if (Player.Instance.statMgr.itemStatDic.ContainsKey(level1ItemDatas[i].key))
+            {
+                if (Player.Instance.statMgr.itemStatDic[level1ItemDatas[i].key].sum == ItemData.MAX_COUNT)
+                    continue;
+            }
+
+
             //이미 Result안에 있음
             if (result.Any(e => e.key == level1ItemDatas[i].key))
                 continue;
@@ -87,13 +92,13 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
 
     public bool CheckCanMerge(string itemKey)
     {
-        List<MergeItemData> mergeItemList = mergeItemDatas.Where(e=> e.childItemKeys.Contains(itemKey)).ToList();
-        for(int i = 0; i < mergeItemList.Count; i++)
+        List<MergeItemData> mergeItemList = mergeItemDatas.Where(e => e.childItemKeys.Contains(itemKey)).ToList();
+        for (int i = 0; i < mergeItemList.Count; i++)
         {
             Item child1 = Player.Instance.itemInventory.GetItem(mergeItemList[i].childItemKeys[0]);
             Item child2 = Player.Instance.itemInventory.GetItem(mergeItemList[i].childItemKeys[1]);
-            
-            if(child1 != null&& child2 != null)
+
+            if (child1 != null && child2 != null)
                 return true;
         }
         return false;
@@ -102,15 +107,15 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
 
 
     public List<MergeItemData> GetMergeItemDataList(string itemKey)
-    {  
-        List<MergeItemData> mergeItemDataList = mergeItemDatas.Where(e=> e.childItemKeys.Contains(itemKey)).ToList();
-        List<MergeItemData> curMergeItemDataList  = new List<MergeItemData>();
-        for(int i = 0; i < mergeItemDataList.Count; i++)
+    {
+        List<MergeItemData> mergeItemDataList = mergeItemDatas.Where(e => e.childItemKeys.Contains(itemKey)).ToList();
+        List<MergeItemData> curMergeItemDataList = new List<MergeItemData>();
+        for (int i = 0; i < mergeItemDataList.Count; i++)
         {
             Item child1 = Player.Instance.itemInventory.GetItem(mergeItemDataList[i].childItemKeys[0]);
             Item child2 = Player.Instance.itemInventory.GetItem(mergeItemDataList[i].childItemKeys[1]);
-            
-            if(child1 != null&& child2 != null)
+
+            if (child1 != null && child2 != null)
                 curMergeItemDataList.Add(mergeItemDataList[i]);
         }
 

@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Boost
   itemName: "\uC99D\uD3ED"
-  desc: "\uBBF8\uB2C8\uBBF8 2\uB9C8\uB9AC + \uC544\uB4DC\uB808\uB0A0\uB9B0 \uC2DC
-    \uBE68\uB77C\uC9C0\uBA74 \uCDA9\uB3CC\uD574\uC11C \uACF5\uACA9\uD568 + \uBE60\uB974\uAC8C
-    \uBC1C\uC0AC"
-  consumeHp: 2
+  desc: "\uBBF8\uB2C8\uBBF8 2\uAC1C \uC18C\uD658, \uCC98\uC9C0 \uC2DC {count}\uAC1C
+    \uCD94\uAC00 \uD0C4 \uBC1C\uC0AC\\n\uCFE8\uD0C0\uC784 : {coolTimes[lv-1]}\uCD08"
+  consumeHp: 3
   level: 2
   childItem1: Rush
-  childItem2: "\uC0DD\uC131"
+  childItem2: MiniMe
   valueInfo: 
   itemPrefab: {fileID: 5549044573393443954, guid: 88f7ef367ce3d4a2f80990ded3fde4a0,
     type: 3}
   unlockConditions: []
   applyOrder: 0
-  thum: {fileID: 21300000, guid: cf79792c883284724bc4bb2123b777a9, type: 3}
+  thum: {fileID: 21300000, guid: 9a1489f0d46b5435d9800b18434a684c, type: 3}
+  color: {r: 1, g: 0.39607844, b: 0.54901963, a: 1}

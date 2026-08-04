@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Spray
   itemName: "\uB09C\uC0AC"
-  desc: "\uC544\uB4DC\uB808\uB0A0\uB9B0 \uD0C0\uC774\uBC0D \uC2DC\uC791 \uC2DC 360\uB3C4
-    \uBC1C\uC0AC 5\uBC1C"
+  desc: "4\uD0AC \uCC98\uCE58 \uC2DC 360\xB0 5\uBC1C \uBC1C\uC0AC (\uCFE8\uD0C0\uC784
+    2\uCD08, \uCCB4\uB825 -2)"
   consumeHp: 2
   level: 2
   childItem1: Wacky
@@ -25,4 +25,5 @@ MonoBehaviour:
     type: 3}
   unlockConditions: []
   applyOrder: 0
-  thum: {fileID: 21300000, guid: cf79792c883284724bc4bb2123b777a9, type: 3}
+  thum: {fileID: 21300000, guid: 9a1489f0d46b5435d9800b18434a684c, type: 3}
+  color: {r: 0.83137256, g: 0.3529412, b: 0.65882355, a: 1}

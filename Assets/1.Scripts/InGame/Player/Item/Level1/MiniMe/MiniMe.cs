@@ -23,7 +23,7 @@ public class MiniMe : Ally
 
     public virtual void Update()
     {
-        rootTr.localScale = new Vector3(Player.Instance.MoveDirection.x >= 0 ? 1 : -1, 1, 1);
+        rootTr.localScale = new Vector3(Player.Instance.weapon.GetAttackDirection().x >= 0 ? 1 : -1, 1, 1);
         attackTimer += Time.deltaTime;
         if (attackTimer > attackSpeed)
         {

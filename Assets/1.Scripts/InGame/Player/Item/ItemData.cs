@@ -27,6 +27,8 @@ public class ItemData : ScriptableObject
     public int applyOrder; // 아이템 적용 순서
     public Sprite thum;
 
+    public Color color;
+
     public bool CheckUnlock()
     {
         bool unlocked = true;
@@ -90,6 +92,7 @@ public class ItemData : ScriptableObject
         int iDesc = System.Array.IndexOf(headers, "desc");
         int iConsumeHp = System.Array.IndexOf(headers, "consumeHp");
         int iLevel = System.Array.IndexOf(headers, "level");
+        int iColor = System.Array.IndexOf(headers, "color");
 
         for (int i = 1; i < lines.Length; i++)
         {
@@ -111,6 +114,8 @@ public class ItemData : ScriptableObject
                 consumeHp = hp;
             if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
                 level = lv;
+            if (iColor >= 0 && iColor < cols.Length && ColorUtility.TryParseHtmlString(cols[iColor].Trim(), out Color parsedColor))
+                color = parsedColor;
 
             string thumPath = $"Assets/2.Sprites/Item/Thum/Level{level}.png";
             thum = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(thumPath);

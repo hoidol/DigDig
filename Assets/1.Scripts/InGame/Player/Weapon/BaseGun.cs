@@ -168,7 +168,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
             e.OnFired(ref bullet, ref playerBulletObject, dir);
 
         RunComboAttacks(dir).Forget();
-        cameraShake.Shake(0.15f);
+        // cameraShake.Shake(0.15f);
 
         attackTimer = 0f;
 

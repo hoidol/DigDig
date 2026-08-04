@@ -19,5 +19,5 @@ MonoBehaviour:
   exp: 1
   size: {x: 1, y: 1}
   breakTileWhenSpawn: 0
-  hpMultiplier: 0.6
-  attackPowerMultiplier: 3
+  hpMultiplier: 0.7
+  attackPowerMultiplier: 0.5

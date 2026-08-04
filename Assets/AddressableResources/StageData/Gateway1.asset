@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpawnerContainerPrefab: {fileID: 700800661684834404, guid: 5374e2a20be1b476087b81a9ea6e5478,
     type: 3}
-  bossSpawner: {fileID: 0}
   key: Gateway1
   order: 0
   level: 0
@@ -29,97 +28,65 @@ MonoBehaviour:
     ordealLevel: 1
     enemyHp: 11
     enemyAttackPower: 3
-    time: 30
+    time: 60
     enemyPatternData:
       enemySpawnPatternDatas:
       - phase: 0
         enemyType: 0
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 9}
-      - phase: 0
-        enemyType: 1
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 10, y: 15}
-      - phase: 0
-        enemyType: 0
         countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
+        intervalRange: {x: 5, y: 6}
       - phase: 0
         enemyType: 1
         countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 12}
+        intervalRange: {x: 7, y: 8}
   - phase: 1
     isBoss: 0
     ordealLevel: 2
     enemyHp: 18
     enemyAttackPower: 5
-    time: 40
+    time: 60
     enemyPatternData:
       enemySpawnPatternDatas:
       - phase: 1
         enemyType: 0
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 9}
-      - phase: 1
-        enemyType: 1
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 10, y: 15}
-      - phase: 1
-        enemyType: 0
         countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
+        intervalRange: {x: 5, y: 6}
       - phase: 1
         enemyType: 1
         countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 12}
+        intervalRange: {x: 7, y: 8}
   - phase: 2
     isBoss: 0
     ordealLevel: 4
     enemyHp: 25
     enemyAttackPower: 7
-    time: 90
+    time: 60
     enemyPatternData:
       enemySpawnPatternDatas:
       - phase: 2
         enemyType: 0
         countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
+        intervalRange: {x: 5, y: 6}
       - phase: 2
         enemyType: 1
         countRange: {x: 1, y: 1}
-        intervalRange: {x: 10, y: 15}
-      - phase: 2
-        enemyType: 0
-        countRange: {x: 1, y: 3}
-        intervalRange: {x: 6, y: 9}
-      - phase: 2
-        enemyType: 1
-        countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 11}
+        intervalRange: {x: 7, y: 8}
   - phase: 3
     isBoss: 0
     ordealLevel: 1
     enemyHp: 32
     enemyAttackPower: 9
-    time: 40
+    time: 60
     enemyPatternData:
       enemySpawnPatternDatas:
       - phase: 3
         enemyType: 0
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 9}
-      - phase: 3
-        enemyType: 1
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 10, y: 15}
-      - phase: 3
-        enemyType: 0
         countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
+        intervalRange: {x: 5, y: 6}
       - phase: 3
         enemyType: 1
         countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 12}
+        intervalRange: {x: 7, y: 8}
   - phase: 4
     isBoss: 0
     ordealLevel: 2
@@ -131,19 +98,11 @@ MonoBehaviour:
       - phase: 4
         enemyType: 0
         countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
+        intervalRange: {x: 5, y: 6}
       - phase: 4
         enemyType: 1
         countRange: {x: 1, y: 1}
-        intervalRange: {x: 10, y: 15}
-      - phase: 4
-        enemyType: 0
-        countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
-      - phase: 4
-        enemyType: 1
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 11}
+        intervalRange: {x: 7, y: 8}
   - phase: 5
     isBoss: 0
     ordealLevel: 4
@@ -155,19 +114,11 @@ MonoBehaviour:
       - phase: 5
         enemyType: 0
         countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
+        intervalRange: {x: 5, y: 6}
       - phase: 5
         enemyType: 1
         countRange: {x: 1, y: 1}
-        intervalRange: {x: 10, y: 15}
-      - phase: 5
-        enemyType: 0
-        countRange: {x: 1, y: 3}
-        intervalRange: {x: 6, y: 9}
-      - phase: 5
-        enemyType: 1
-        countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 11}
+        intervalRange: {x: 7, y: 8}
   - phase: 6
     isBoss: 0
     ordealLevel: 1
@@ -179,67 +130,43 @@ MonoBehaviour:
       - phase: 6
         enemyType: 0
         countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
+        intervalRange: {x: 5, y: 6}
       - phase: 6
         enemyType: 1
         countRange: {x: 1, y: 1}
-        intervalRange: {x: 10, y: 15}
-      - phase: 6
-        enemyType: 0
-        countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
-      - phase: 6
-        enemyType: 1
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 11}
+        intervalRange: {x: 7, y: 8}
   - phase: 7
     isBoss: 0
     ordealLevel: 2
     enemyHp: 60
     enemyAttackPower: 17
-    time: 90
+    time: 60
     enemyPatternData:
       enemySpawnPatternDatas:
       - phase: 7
         enemyType: 0
         countRange: {x: 1, y: 2}
-        intervalRange: {x: 6, y: 8}
+        intervalRange: {x: 5, y: 6}
       - phase: 7
         enemyType: 1
-        countRange: {x: 1, y: 2}
-        intervalRange: {x: 8, y: 12}
-      - phase: 7
-        enemyType: 0
-        countRange: {x: 1, y: 3}
-        intervalRange: {x: 6, y: 8}
-      - phase: 7
-        enemyType: 1
-        countRange: {x: 1, y: 2}
-        intervalRange: {x: 6, y: 10}
+        countRange: {x: 1, y: 1}
+        intervalRange: {x: 7, y: 8}
   - phase: 8
     isBoss: 0
     ordealLevel: 4
     enemyHp: 67
     enemyAttackPower: 19
-    time: 50
+    time: 60
     enemyPatternData:
       enemySpawnPatternDatas:
       - phase: 8
         enemyType: 0
         countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
+        intervalRange: {x: 5, y: 6}
       - phase: 8
         enemyType: 1
         countRange: {x: 1, y: 1}
-        intervalRange: {x: 10, y: 15}
-      - phase: 8
-        enemyType: 0
-        countRange: {x: 1, y: 2}
-        intervalRange: {x: 7, y: 9}
-      - phase: 8
-        enemyType: 1
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 11}
+        intervalRange: {x: 7, y: 8}
   - phase: 9
     isBoss: 1
     ordealLevel: 1
@@ -250,12 +177,12 @@ MonoBehaviour:
       enemySpawnPatternDatas:
       - phase: 9
         enemyType: 0
-        countRange: {x: 1, y: 1}
-        intervalRange: {x: 8, y: 9}
+        countRange: {x: 1, y: 2}
+        intervalRange: {x: 5, y: 6}
       - phase: 9
         enemyType: 1
         countRange: {x: 1, y: 1}
-        intervalRange: {x: 10, y: 15}
+        intervalRange: {x: 7, y: 8}
   eventDatas:
   - eventTypes: 
     triggers: 00000000

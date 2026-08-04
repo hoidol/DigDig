@@ -160,7 +160,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.4
+  m_Radius: 0.25
 --- !u!114 &-212533494506657897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,6 +176,7 @@ MonoBehaviour:
   moveSpeed: 10
   bulletRadius: 0.1
   direction: {x: 0, y: 0, z: 0}
+  <damageMultiplier>k__BackingField: 1
   hitLayerMask:
     serializedVersion: 2
     m_Bits: 8

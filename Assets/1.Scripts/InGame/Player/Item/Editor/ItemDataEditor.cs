@@ -27,10 +27,14 @@ public static class ItemDataMenuItems
     [MenuItem("Tools/Load All ItemData")]
     static void LoadAllItemData()
     {
-        var allData = Resources.LoadAll<ItemData>("ItemData");
-        foreach (var data in allData)
+        string[] guids = AssetDatabase.FindAssets("t:ItemData", new[] { "Assets/AddressableResources/ItemData" });
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            ItemData data = AssetDatabase.LoadAssetAtPath<ItemData>(path);
             data.LoadData();
+        }
         AssetDatabase.SaveAssets();
-        Debug.Log($"[ItemData] {allData.Length}개 ItemData LoadData 완료");
+        Debug.Log($"[ItemData] {guids.Length}개 ItemData LoadData 완료");
     }
 }

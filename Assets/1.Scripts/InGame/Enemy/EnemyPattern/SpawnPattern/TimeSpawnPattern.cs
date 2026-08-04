@@ -5,7 +5,7 @@ public class TimeSpawnPattern : SpawnPattern
 
     int spawnCount = 0;
     public float[] times;
-    public SpecialEnemySpawner[] specialEnemySpawners;
+    public SpecialEnemySpawner specialEnemySpawner;
 
     public override void StartGame()
     {
@@ -14,13 +14,13 @@ public class TimeSpawnPattern : SpawnPattern
 
     public void Update()
     {
-        if (spawnCount >= times.Length)
+        if (!GameManager.Instance.isPlaying)
             return;
 
         if (GameManager.Instance.gameTimer >= times[spawnCount])
         {
             Debug.Log("TimeSpawnPattern Spawn");
-            specialEnemySpawners[spawnCount].Spawn();
+            specialEnemySpawner.Spawn();
             spawnCount++;
         }
     }

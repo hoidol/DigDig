@@ -17,11 +17,13 @@ public class PlayerBulletObject : BulletObject
         base.Shoot(dir);
         damageMultiplier = 1;
         damage = Player.Instance.statMgr.AttackPower;
-        lifetimeTimer = Player.Instance.statMgr.AmmoDuration;
+        lifetimeTimer = 20; //Player.Instance.statMgr.AmmoDuration;
         damageData.Init(this);
     }
     public virtual void SetBullet(Bullet bullet)
     {
+        ClearBehaviors();
+        ClearBulletForce();
         damageMultiplier = 1;
         damageData.mustCrit = bullet.mustCrit;
     }
@@ -73,7 +75,7 @@ public class PlayerBulletObject : BulletObject
 
         if (shouldRelease)
         {
-            Debug.Log("PlayerBUlletObject Hit ShouldRelease");
+            // Debug.Log("PlayerBUlletObject Hit ShouldRelease");
             Release();
         }
         return hit;

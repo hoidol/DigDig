@@ -24,4 +24,5 @@ MonoBehaviour:
     type: 3}
   unlockConditions: []
   applyOrder: 0
-  thum: {fileID: 21300000, guid: cf79792c883284724bc4bb2123b777a9, type: 3}
+  thum: {fileID: 21300000, guid: 9a1489f0d46b5435d9800b18434a684c, type: 3}
+  color: {r: 1, g: 0.5568628, b: 0.3882353, a: 1}

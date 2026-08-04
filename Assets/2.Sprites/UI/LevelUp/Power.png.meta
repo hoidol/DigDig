@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: f35bccad9c5254dc1bf2ed21f1aca5b7
+guid: 132af0a5ead2d4e2fab8fa0fc11f52de
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5353044912308144358
-    second: Gemini_Generated_Image_8lo1bs8lo1bs8lo1_0
+      213: -1344053862893166480
+    second: Power_0
+  - first:
+      213: -1557728303925710087
+    second: Power_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,17 +112,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gemini_Generated_Image_8lo1bs8lo1bs8lo1_0
+      name: Power_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 1024
-        height: 1024
+        y: 38
+        width: 483
+        height: 452
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +144,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6e8c6d07cf5d94a40800000000000000
-      internalID: 5353044912308144358
+      spriteID: 070e24ff126f85de0800000000000000
+      internalID: -1344053862893166480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Power_1
+      rect:
+        serializedVersion: 2
+        x: 400
+        y: 472
+        width: 33
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f2bfeb5c56d16ae0800000000000000
+      internalID: -1557728303925710087
       vertices: []
       indices: 
       edges: []
@@ -148,7 +186,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Gemini_Generated_Image_8lo1bs8lo1bs8lo1_0: 5353044912308144358
+      Power_0: -1344053862893166480
+      Power_1: -1557728303925710087
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

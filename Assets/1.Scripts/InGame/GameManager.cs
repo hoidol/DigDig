@@ -66,7 +66,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         StartPhase(phase);
     }
-    PhaseData phaseData;
+    public PhaseData phaseData;
     public void StartPhase(int phase)
     {
         // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
@@ -81,17 +81,18 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Publish(new PhaseStartEvent(phase));
     }
 
+    public float phaseTimer = 0f;
     async UniTaskVoid WaitPhase(float t)
     {
-        float elapsed = 0f;
-        while (elapsed < t)
+        phaseTimer = 0f;
+        while (phaseTimer < t)
         {
             await UniTask.Yield();
 
             if (!isPlaying)
                 continue;
 
-            elapsed += Time.deltaTime;
+            phaseTimer += Time.deltaTime;
         }
         EndPhase();
     }
@@ -102,7 +103,11 @@ public class GameManager : MonoSingleton<GameManager>
             return;
 
         phase++;
-
+        Time.timeScale = 0;
+        SelectItemCanvas.Instance.OpenCanvas(() =>
+        {
+            Time.timeScale = 1;
+        });
         StartPhase(phase);
     }
 
@@ -113,7 +118,7 @@ public class GameManager : MonoSingleton<GameManager>
 
 
     void Update()
-    {  
+    {
         if (!isPlaying)
             return;
 

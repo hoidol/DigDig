@@ -201,10 +201,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileIndex: {x: 0, y: 0}
-  hpPoint: {fileID: 0}
+  spriteRootTr: {fileID: 3761256942094254351}
+  hpPoint: {fileID: 9151480532306200085}
+  hpText: {fileID: 0}
   curHp: 0
   maxHp: 0
   level: 0
+  innerSpriteRdr: {fileID: 6063149625413738599}
 --- !u!61 &2065513925772860874
 BoxCollider2D:
   m_ObjectHideFlags: 0

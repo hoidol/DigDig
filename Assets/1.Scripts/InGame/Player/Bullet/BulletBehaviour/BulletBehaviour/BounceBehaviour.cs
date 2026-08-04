@@ -6,8 +6,9 @@ public class BounceBehavior : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        Debug.Log($"BounceBehavior OnHit {remaining}");
+        // Debug.Log($"BounceBehavior OnHit {remaining}");
         bullet.damageMultiplier *= Player.Instance.statMgr.AmmoEfficiency;
+        // Debug.Log($"BounceBehavior bullet.damageMultiplier {bullet.damageMultiplier}");
         if (remaining-- <= 0)
             return true;
 

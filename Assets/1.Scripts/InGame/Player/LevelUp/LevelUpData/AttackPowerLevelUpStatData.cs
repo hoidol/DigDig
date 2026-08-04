@@ -12,7 +12,7 @@ public class AttackPowerLevelUpStatData : LevelUpStatData
     {
         int curLv = Player.Instance.statMgr.levelUpStatDic[type].lv;
         int nextLv = curLv + 1;
-        return string.Format(TranslateManager.GetText($"{type}_description"), GetValue(curLv), GetValue(nextLv));
+        return ""; //return string.Format(TranslateManager.GetText($"{type}_description"), GetValue(curLv), GetValue(nextLv));
     }
 
     public float GetValue(int lv = -1)

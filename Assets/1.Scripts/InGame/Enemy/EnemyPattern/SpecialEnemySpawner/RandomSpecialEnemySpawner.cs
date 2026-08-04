@@ -20,17 +20,6 @@ public class RandomSpecialEnemySpawner : SpecialEnemySpawner
         //임시의 한점
         List<Vector2Int> indies = MapManager.GetEmptyTileIndexesInRange(Player.Instance.transform.position, includeSize, excludeSize);
 
-        // Debug.Log($"RandomSpecialEnemySpawner indies {indies.Count}");
-        // Vector2 dirToPlayer = Vector2.zero - (Vector2)Player.Instance.transform.position;
-        // Vector2 dir = Vector2.zero;
-        // dir.x = dirToPlayer.x > 0 ? 1 : -1;
-        // dir.y = dirToPlayer.y > 0 ? 1 : -1;
-        // Vector2Int oppDir = new Vector2Int(-(int)dir.x, -(int)dir.y);
-
-
-        // //대각선 찾으려고
-        // dir = dir.normalized * Mathf.Sqrt(Mathf.Pow(MapManager.TILE_SIZE, 2) + Mathf.Pow(MapManager.TILE_SIZE, 2));
-
         currentEnemySpawnState = System.Array.ConvertAll(enemySpawnCountChances, e => new EnemySpawnCountChance
         {
             enemyType = e.enemyType,
@@ -38,20 +27,6 @@ public class RandomSpecialEnemySpawner : SpecialEnemySpawner
             count = e.count
         });
 
-        // Vector2Int startIndex = MapManager.PositionToTileIndex((Vector2)Player.Instance.transform.position + dir * includeSize);
-        // Vector2Int tempIndex = startIndex;
-        // for (int i = 0; i < includeSize; i++)
-        // {
-        //     for (int j = 0; j < includeSize; j++)
-        //     {
-        //         if (MapManager.CheckEmpty(tempIndex))
-        //             indies.Add(tempIndex);
-
-        //         tempIndex.y += oppDir.y;
-        //     }
-        //     tempIndex.x += oppDir.x;
-        //     tempIndex.y = startIndex.y;
-        // }
 
         // // 랜덤 배치를 위해 indies 셔플
         for (int i = indies.Count - 1; i > 0; i--)

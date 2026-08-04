@@ -8,23 +8,25 @@ public class LevelUpStatPanel : MonoBehaviour
     public TMP_Text titleText;
     public TMP_Text descriptionText;
     public LevelUpStatType levelUpStatType;
-    public LevelUpStatData levelUpStatData;
+    LevelUpStatData levelUpStatData;
 
-    public virtual void SetBonusPanel()
+    public virtual void SetLevelUpStatPanel()
     {
+        if (levelUpStatData == null)
+            levelUpStatData = LevelUpStatManager.Instance.GetLevelUpStatData(levelUpStatType);
 
         titleText.text = levelUpStatData.Title;
-        descriptionText.text =levelUpStatData.GetDescription();
+        descriptionText.text = levelUpStatData.GetDescription();
     }
 
     public void OnClickedSelect()
     {
         LevelUpCanvas.Instance.CloseCanvas();
-        Player.Instance.AddLevelUpState(levelUpStatType,1);
+        Player.Instance.AddLevelUpState(levelUpStatType, 1);
 
     }
 }
-public enum LevelUpStatType :int
+public enum LevelUpStatType : int
 {
     MaxHp,
     FullHeal, //체력 완전 회복

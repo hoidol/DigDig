@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -18,6 +19,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
     [SerializeField] Vector2Int tileIndex;
 #endif
     public bool BreakTileWhenSpawn => false;
+    public Transform spriteRootTr;
 
     static Stone stonePrefab;
     public static Stone Get(Vector3 pos, Transform parent)
@@ -52,9 +54,9 @@ public class Stone : MonoBehaviour, IHittable, ITile
 #if UNITY_EDITOR
         tileIndex = idxArr[0, 0];
 #endif
-
+        spriteRootTr.localRotation = Quaternion.identity;
         float distance = Vector2.Distance(Vector2.zero, transform.position);
-        float disMulti = distance / 7.5f;
+        float disMulti = distance / 10.5f;
         if (disMulti <= 1)
             disMulti = 1;
         float defaultHp = GameManager.Instance.stageData.oreHp * disMulti;
@@ -74,6 +76,11 @@ public class Stone : MonoBehaviour, IHittable, ITile
         curHp -= damage.damage;
         damage.Applyed(hpPoint.transform.position);
 
+        spriteRootTr.DOKill();
+        spriteRootTr.DOShakeRotation(0.2f, new Vector3(0f, 0f, 5f), 100, 90f, false).OnComplete(() =>
+        {
+            spriteRootTr.localRotation = Quaternion.identity;
+        });
 
         if (curHp > 1)
             hpText.text = ((int)curHp).ToString();
@@ -92,7 +99,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
 
     public void Reward()
     {
-        HealItem.Instantiate(transform.position);    
+        HealItem.Instantiate(transform.position);
         Exp.Instantiate(transform.position, exp, 1);
     }
 

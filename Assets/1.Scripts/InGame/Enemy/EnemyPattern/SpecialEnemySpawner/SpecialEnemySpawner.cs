@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public abstract class SpecialEnemySpawner : MonoBehaviour
 {
     //조건에 따라서 Spawn() 실행하기
-    
+
 
     public abstract void Spawn();
     public abstract void EndSpawn();

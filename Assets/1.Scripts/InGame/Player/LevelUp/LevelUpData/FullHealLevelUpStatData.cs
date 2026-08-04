@@ -10,6 +10,6 @@ public class FullHealLevelUpStatData : LevelUpStatData
 
     public override string GetDescription()
     {
-        return TranslateManager.GetText($"{type}_description");
+        return ""; //TranslateManager.GetText($"{type}_description");
     }
 }

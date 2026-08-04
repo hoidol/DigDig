@@ -41,7 +41,7 @@ public class PlayerHealth : MonoBehaviour, IHittable
 
     public void AddHp(float hp, bool showDmg = true)
     {
-        Debug.Log($"PlayerHealth Add {hp}");
+        // Debug.Log($"PlayerHealth Add {hp}");
         if (hp > 0) hp *= healMultiplier;
         curHp += hp;
         if (showDmg)

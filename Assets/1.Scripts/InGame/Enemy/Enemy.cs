@@ -23,7 +23,7 @@ public abstract class Enemy : MonoBehaviour, IHittable, ITile
     public float CurHp => curHp;
     [field: SerializeField] public float curHp;// { get; private set; }
 
-    [SerializeField] Transform root;
+    [SerializeField] protected Transform root;
     [SerializeField] protected Transform hpPoint;
     protected Rigidbody2D rg2d;
     public Rigidbody2D Rigidbody2D => rg2d;

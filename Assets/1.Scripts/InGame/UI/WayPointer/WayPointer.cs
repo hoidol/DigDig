@@ -17,6 +17,8 @@ public class WayPointer : MonoBehaviour
     bool isPlayingEffect;
 
     [SerializeField] float screenEdgeMargin = 150f;
+    [SerializeField] float minScaleDistance = 5f;
+    [SerializeField] float maxScaleDistance = 20f;
 
     void Awake()
     {
@@ -76,7 +78,11 @@ public class WayPointer : MonoBehaviour
 
         timerImage.fillAmount = wayPointerTarget.CurTimer / wayPointerTarget.MaxTime;
         thumImage.sprite = wayPointerTarget.GetThum();
-        distanceText.text = $"{Vector2.Distance(Player.Instance.bodyCenterTr.position, wayPointerTarget.Transform.position):F1}M";
+        float distance = Vector2.Distance(Vector2.zero, wayPointerTarget.Transform.position);
+        distanceText.text = $"{distance:F1}M";
+
+        float scaleT = Mathf.InverseLerp(minScaleDistance, maxScaleDistance, distance);
+        transform.localScale = Vector3.one * Mathf.Lerp(1f, 0.2f, scaleT);
 
         Vector3 toPos = wayPointerTarget.Transform.position;
         Vector3 fromPos = mainCamera.transform.position;

@@ -20,4 +20,4 @@ MonoBehaviour:
   size: {x: 1, y: 1}
   breakTileWhenSpawn: 0
   hpMultiplier: 1
-  attackPowerMultiplier: 2
+  attackPowerMultiplier: 1

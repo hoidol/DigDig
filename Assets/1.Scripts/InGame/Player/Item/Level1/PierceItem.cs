@@ -3,8 +3,8 @@ using UnityEngine;
 //탄 4번 쏠때마다 관통탄 추가 발사 (랜덤 방향)튕김 횟수 +2 > +4 > +6
 public class PierceItem : Item, IPreFire
 {
-    public int[] pierceCounts = { 3, 5, 7 };
-    public int[] triggerCounts = { 4, 4, 4 };
+    int[] pierceCounts = { 3, 5, 7 };
+    int[] triggerCounts = { 5, 5, 5 };
     int triggerCounter;
     public void OnPreFire(ref Bullet bullet, Vector2 dir)
     {
@@ -14,8 +14,7 @@ public class PierceItem : Item, IPreFire
             if (bullet == null || bullet.bulletData.order < BulletData.GetBulletData("Pierce").order)
             {
                 PierceBullet pierceBullet = new PierceBullet();
-                pierceBullet.pierceCount = Player.Instance.statMgr.Bounce + pierceCounts[count - 1];
-                // pierceBullet.multiplyAtk = 1;
+                pierceBullet.pierceCount = pierceCounts[count - 1];
                 bullet = pierceBullet;
             }
             triggerCounter = 0;

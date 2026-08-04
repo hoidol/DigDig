@@ -25,7 +25,7 @@ public class LevelUpCanvas : CanvasUI<LevelUpCanvas>
             panel.gameObject.SetActive(isSelected);
             if (isSelected)
             {
-                panel.SetBonusPanel();
+                panel.SetLevelUpStatPanel();
                 RectTransform rTr = panel.GetComponent<RectTransform>();
                 rTr.DOKill();
                 rTr.localScale = new Vector3(0, 0, 0);

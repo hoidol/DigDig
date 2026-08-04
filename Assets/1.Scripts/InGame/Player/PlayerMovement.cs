@@ -44,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
 #endif
         if (MoveDirection.magnitude > 0.1f)
         {
-            bodyRootTr.localScale = new Vector3(MoveDirection.x >= 0 ? 1 : -1, 1, 1);
+            bodyRootTr.localScale = new Vector3(player.weapon.GetAttackDirection().x >= 0 ? 1 : -1, 1, 1);
             animator.SetBool("Running", true);
 
             float sqrDist = ((Vector2)transform.position - Vector2.zero).sqrMagnitude;

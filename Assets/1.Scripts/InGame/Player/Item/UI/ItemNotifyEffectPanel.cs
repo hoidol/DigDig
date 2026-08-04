@@ -11,14 +11,15 @@ public class ItemNotifyEffectPanel : MonoBehaviour
 
     public void SetItem(Item item)
     {
-        // thumImage.sprite = item.itemData.thumbnail;
+        thumImage.sprite = item.itemData.thum;
+        thumImage.color = item.itemData.color;
         // item.notifyListener = null;
         // item.notifyListener += Notify;
     }
 
     // void Notify()
     // {
-        
+
     // }
 
     // bool wasActive;

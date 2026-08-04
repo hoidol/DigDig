@@ -22,6 +22,7 @@ public class EventManager : MonoSingleton<EventManager>
     private List<ConditionState> conditionStates = new List<ConditionState>();
     private readonly List<EventObject> activeEventObjects = new();
     public int spawnCount;
+    public Vector2 initDirection;
     private void Awake()
     {
         prefabMap = new Dictionary<EventType, EventObject>();
@@ -31,6 +32,7 @@ public class EventManager : MonoSingleton<EventManager>
 
     private void Start()
     {
+        initDirection = Random.insideUnitCircle;
         GameEventBus.Subscribe<PhaseEndEvent>(OnPhaseEndEvent);
         GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
         GameEventBus.Subscribe<BossSpawnEvent>(OnBossSpawnEvent);
@@ -64,31 +66,13 @@ public class EventManager : MonoSingleton<EventManager>
     {
         spawnCount = 0;
 
-        EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, Random.Range(0, 1), 2, 5);
+        EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
         eventRepeatSpawners.Add(itemBoxSpawner);
-        itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, Random.Range(0, 1), 2, 5);
+        itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
         eventRepeatSpawners.Add(itemBoxSpawner);
 
-        // conditionStates.Clear();
-
-        // foreach (var eventData in e.stageData.eventDatas)
-        // {
-        //     EventType? resolved = ResolveEventType(eventData);
-        //     if (resolved == null) continue;
-
-        //     conditionStates.Add(new ConditionState
-        //     {
-        //         eventType = resolved.Value,
-        //         triggers = eventData.triggers,
-
-        //         phaseIdx = eventData.phaseIdx,
-
-        //     });
-        // }
     }
 
-    // eventTypes가 여럿이면 chances 가중치로 하나 선택,
-    // eventTypes가 하나이고 chances[0]이 있으면 그 확률로 등장 여부 결정
     private EventType? ResolveEventType(EventData data)
     {
         if (data.eventTypes == null || data.eventTypes.Length == 0) return null;
@@ -144,6 +128,10 @@ public class EventManager : MonoSingleton<EventManager>
         for (int i = 0; i < eventRepeatSpawners.Count; i++)
         {
             eventRepeatSpawners[i].Update();
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Spawn(EventType.ItemBox);
         }
     }
 
@@ -210,9 +198,14 @@ public class EventManager : MonoSingleton<EventManager>
 
     public Vector2 CalcSpawnPosition()
     {
-        float farDistance = Player.Instance.distanceMaxDistanceDestroiedStone + Random.Range(4f, 5f) + spawnCount * 1.5f;
-        Vector2 playerPos = Player.Instance.transform.position;
-        return MapManager.SnappedPosition(playerPos + Random.insideUnitCircle.normalized * farDistance);
+        // Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Player.Instance.distanceMaxDistanceDestroiedStone}");
+
+
+        float farDistance = (MapManager.MIN_RANGE_RADIUS + 5) + spawnCount * 2.3f;
+        Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Player.Instance.distanceMaxDistanceDestroiedStone} farDistance {farDistance}");
+        // Vector2 playerPos = Player.Instance.transform.position;
+        Vector2 direction = Quaternion.Euler(0f, 0f, -100f * spawnCount) * initDirection.normalized;
+        return MapManager.SnappedPosition(Vector2.zero + direction * farDistance);
     }
 }
 
@@ -233,31 +226,23 @@ public class EventRepeatSpawner
     public float afterDestroyTime;
     public float repeatTimer;
     public float afterDestroyTimer;
-    public float startTimer;
     public EventRepeatSpawner(EventType type, float sTime, float rTime, float aDTime)
     {
         eventType = type;
-        repeatTime = rTime;
-        repeatTimer = rTime;
+        repeatTime = sTime;
+        repeatTimer = sTime;
         afterDestroyTime = aDTime;
-        startTimer = sTime;
+        Debug.Log($"if (startTimer <= 0) sTime {sTime}");
     }
 
     public void Update()
     {
-        if (startTimer > 0)
-        {
-            startTimer -= Time.deltaTime;
-
-            if (startTimer <= 0)
-            {
-                repeatTimer = repeatTime;
-            }
-            return;
-        }
 
         if (repeatTimer > 0)
+        {
             repeatTimer -= Time.deltaTime;
+        }
+
 
 
         if (repeatTimer <= 0 && eventObject == null)

@@ -5,24 +5,36 @@ using System.Collections.Generic;
 using TMPro;
 using Cysharp.Threading.Tasks;
 using System;
+using UnityEngine.UI;
 
 
 public class WaveTimerPanel : MonoBehaviour
 {
-    public TMP_Text titleText;
-    public TMP_Text timeText;
+    public TMP_Text waveText;
+    public Image timeBar;
 
-    public GameObject waitingIcon;
-    public GameObject normalWaveIcon;
-    public GameObject hardWaveIcon;
 
     void Start()
     {
+        timeBar.fillAmount = 0;
+        waveText.text = "";
+        // GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
+        GameEventBus.Subscribe<PhaseStartEvent>(OnPhaseStartEvent);
+    }
 
-        waitingIcon.SetActive(true);
-        normalWaveIcon.SetActive(false);
-        hardWaveIcon.SetActive(false);
-        timeText.text = "";
+    void OnPhaseStartEvent(PhaseStartEvent e)
+    {
+        waveText.text = $"웨이브 {e.phaseIdx + 1}";
+    }
+
+    void Update()
+    {
+        if (!GameManager.Instance.isPlaying)
+        {
+            return;
+        }
+
+        timeBar.fillAmount = GameManager.Instance.phaseTimer / GameManager.Instance.phaseData.time;
     }
     // public void StartWave(WaveStartEvent e)
     // {

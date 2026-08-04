@@ -38,7 +38,7 @@ public class ItemInventory : MonoBehaviour
 
 
 
-        Player.Instance.AddItem("Drain");
+        // Player.Instance.AddItem("Pierce");
         // Player.Instance.AddItem("Regen");
         // Player.Instance.AddItem("Hover"); // 수정 필요 : 너무 약함
 

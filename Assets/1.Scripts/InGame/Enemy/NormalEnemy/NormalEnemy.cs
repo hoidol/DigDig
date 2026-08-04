@@ -29,7 +29,7 @@ public class NormalEnemy : Enemy
         //apearTime 초 후에 등장
         moving = false;
 
-
+        root.localRotation = Quaternion.identity;
         damageData.damage = enemyData.GetAttackPower();
 
         ChangeState(NormalEnemyState.Waiting);
@@ -138,12 +138,21 @@ public class NormalEnemy : Enemy
     }
     public override void Reward()
     {
-            HealItem.Instantiate(transform.position);
-        
+        HealItem.Instantiate(transform.position);
+
 
         base.Reward();
     }
-
+    public override void TakeDamage(DamageData damage)
+    {
+        base.TakeDamage(damage);
+        root.DOKill();
+        root.localRotation = Quaternion.identity;
+        root.DOShakeRotation(0.2f, new Vector3(0f, 0f, 5f), 100, 90f, false).OnComplete(() =>
+        {
+            root.localRotation = Quaternion.identity;
+        });
+    }
     public virtual void EndAttack()
     {
         attacking = false;

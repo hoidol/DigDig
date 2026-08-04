@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using Boomlagoon.JSON;
 using System;
 
-public class TranslateManager 
+public class TranslateManager
 {
     static bool init = false;
 
     public static Dictionary<string, TranslateData> translateDic = new Dictionary<string, TranslateData>();
 
-    
+
     public static void Init()
     {
         if (init)
             return;
         init = true;
         int idx = PlayerPrefs.GetInt("LanguageType", -1);
-        if(idx < 0)
+        if (idx < 0)
         {
             //2. 시스템 언어로 번역 언어 설정
             curLanguageType = LanguageType.en;
@@ -56,10 +56,9 @@ public class TranslateManager
         }
         PlayerPrefs.SetInt("LanguageType", (int)curLanguageType);
 
-
         string json = Resources.Load<TextAsset>("JSON/TranslateData").text;
         JSONArray arr = JSONObject.Parse(json).GetArray("JSON");
-        for(int i =0;i< arr.Length; i++)
+        for (int i = 0; i < arr.Length; i++)
         {
             TranslateData translateData = new TranslateData();
 
@@ -87,7 +86,7 @@ public class TranslateManager
 
 
             translateDic.Add(translateData.key, translateData);
-            
+
         }
     }
     static LanguageType curLanguageType;
@@ -140,10 +139,10 @@ public class TranslateManager
         changedLanguageObs.ForEach(e => e.Invoke());
     }
 
-     static List<Action> changedLanguageObs = new List<Action>();
+    static List<Action> changedLanguageObs = new List<Action>();
     public static void AddChangedLanguage(Action action)
     {
-        if(!changedLanguageObs.Contains(action))
+        if (!changedLanguageObs.Contains(action))
             changedLanguageObs.Add(action);
     }
     public static void RemoveChangedLanguage(Action action)
@@ -199,7 +198,7 @@ public enum LanguageType
     es,// 스페인어
     pt,//포르투칼어
     th,//태국어 
-	ru,// 러시아어 (Russian)
+    ru,// 러시아어 (Russian)
     ja,//일본어 (Japanese)	
     zh,//중국어 (Chinese)	
 

@@ -13,7 +13,7 @@ public class MaxHpLevelUpStatData : LevelUpStatData
         int baseHp = (int)Player.Instance.statMgr.playerData.GetPlayerStat(StatType.MaxHp).value;
         int curLv = Player.Instance.statMgr.levelUpStatDic[type].lv;
         int nextLv = curLv + 1;
-        return string.Format(TranslateManager.GetText($"{type}_description"), baseHp + GetValue(curLv), baseHp + GetValue(nextLv));
+        return ""; //return string.Format(TranslateManager.GetText($"{type}_description"), baseHp + GetValue(curLv), baseHp + GetValue(nextLv));
     }
 
     public float GetValue(int lv = -1)

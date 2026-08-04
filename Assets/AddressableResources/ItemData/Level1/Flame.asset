@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Flame
   itemName: "\uD654\uC5FC"
-  desc: "\uD0C4 5\uBC88 \uC3E0\uB54C\uB9C8\uB2E4 \uD654\uC5FC\uD0C4 \uCD94\uAC00
-    \uBC1C\uC0AC (\uB79C\uB364 \uBC29\uD5A5)"
+  desc: "\uD0C4 5\uBC88 \uC3E0\uB54C\uB9C8\uB2E4 \uB7A8\uB369 \uBC29\uD5A5\uC73C\uB85C
+    \uD654\uC5FC\uD0C4 2\uBC1C \uCD94\uAC00 \uBC1C\uC0AC"
   consumeHp: 1
   level: 1
   childItem1: 
@@ -25,4 +25,5 @@ MonoBehaviour:
     type: 3}
   unlockConditions: []
   applyOrder: 0
-  thum: {fileID: 21300000, guid: 6cbdab778c73b4e18b62c55f223e3e98, type: 3}
+  thum: {fileID: 21300000, guid: f35bccad9c5254dc1bf2ed21f1aca5b7, type: 3}
+  color: {r: 1, g: 0.41568628, b: 0, a: 1}

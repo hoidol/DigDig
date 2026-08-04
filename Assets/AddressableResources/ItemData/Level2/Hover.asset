@@ -18,11 +18,12 @@ MonoBehaviour:
     \uC790\uC720\uB85C\uC6CC\uC9D0"
   consumeHp: 2
   level: 2
-  childItem1: "\uC0DD\uC131"
-  childItem2: Orbit
+  childItem1: MiniMe
+  childItem2: "\uADA4\uB3C4"
   valueInfo: 
   itemPrefab: {fileID: 5765403749097734499, guid: 6a832cf7d79d74286a317719f5f91a7c,
     type: 3}
   unlockConditions: []
   applyOrder: 0
-  thum: {fileID: 21300000, guid: cf79792c883284724bc4bb2123b777a9, type: 3}
+  thum: {fileID: 21300000, guid: 9a1489f0d46b5435d9800b18434a684c, type: 3}
+  color: {r: 0.56078434, g: 0.7176471, b: 1, a: 1}

@@ -13,20 +13,20 @@ public class LevelUpStatManager : MonoSingleton<LevelUpStatManager>
             System.Type dataType = System.Type.GetType($"{levelUpStatType}LevelUpStatData");
             if (dataType == null)
             {
-                Debug.LogWarning($"[LevelUpStatPanel] {levelUpStatType}LevelUpStatData 타입을 찾지 못함");
+                // Debug.LogWarning($"[LevelUpStatPanel] {levelUpStatType}LevelUpStatData 타입을 찾지 못함");
                 // return;
                 continue;
             }
             levelUpStatDatas[i] = (LevelUpStatData)System.Activator.CreateInstance(dataType);
             levelUpStatDatas[i].type = levelUpStatType;
 
-            Debug.LogWarning($"[LevelUpStatPanel] {levelUpStatType}LevelUpStatData 생성 완료 ");
+            // Debug.LogWarning($"[LevelUpStatPanel] {levelUpStatType}LevelUpStatData 생성 완료 ");
         }
     }
 
     public LevelUpStatData GetLevelUpStatData(LevelUpStatType type)
     {
-        Debug.Log($"LevelUpStatManager GetLevelUpStatData {type}");
+        // Debug.Log($"LevelUpStatManager GetLevelUpStatData {type}");
         return levelUpStatDatas.Where(e => e.type == type).FirstOrDefault();
     }
 

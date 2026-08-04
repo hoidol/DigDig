@@ -3,9 +3,10 @@ using UnityEngine.UI;
 using TMPro;
 public class ItemPanel : ItemPanelOnlyImage
 {
-    [SerializeField] protected ItemData itemData;
 
+    [Header("비어있으면 설정안됨")]
     public TMP_Text titleText;
+    [Header("비어있으면 설정안됨")]
     public TMP_Text descText;
     public GameObject mergePanel;
     public ItemPanelOnlyImage[] mergeItemPanels;
@@ -13,8 +14,11 @@ public class ItemPanel : ItemPanelOnlyImage
     public override void SetItemData(ItemData itemData)
     {
         base.SetItemData(itemData);
-        this.itemData = itemData;
-        titleText.text = itemData.Title;
-        descText.text = itemData.GetDescription();
+
+        if (titleText != null)
+            titleText.text = itemData.Title;
+
+        if (descText != null)
+            descText.text = itemData.GetDescription();
     }
 }

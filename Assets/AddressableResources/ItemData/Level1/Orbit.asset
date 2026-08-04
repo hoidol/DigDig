@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Orbit
   m_EditorClassIdentifier: 
   key: Orbit
-  itemName: "\uADA4\uB3C4"
-  desc: "\uD68C\uC804 \uACF5\uACA9 (3\uCD08\uB9C8\uB2E4 1\uCCB4\uB825 \uC18C\uBAA8)"
+  itemName: "\uADA4\uB3C4(\uD68C\uC804\uD615)"
+  desc: "\uADA4\uB3C4 \uC0DD\uC131 (3\uCD08\uB9C8\uB2E4 \uCCB4\uB825 -1\uCCB4\uB825)"
   consumeHp: 1
   level: 1
   childItem1: 
@@ -24,4 +24,5 @@ MonoBehaviour:
     type: 3}
   unlockConditions: []
   applyOrder: 0
-  thum: {fileID: 21300000, guid: 6cbdab778c73b4e18b62c55f223e3e98, type: 3}
+  thum: {fileID: 21300000, guid: f35bccad9c5254dc1bf2ed21f1aca5b7, type: 3}
+  color: {r: 0.27450982, g: 0.72156864, b: 1, a: 1}
