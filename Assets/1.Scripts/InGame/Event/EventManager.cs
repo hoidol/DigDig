@@ -68,8 +68,8 @@ public class EventManager : MonoSingleton<EventManager>
 
         EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
         eventRepeatSpawners.Add(itemBoxSpawner);
-        itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
-        eventRepeatSpawners.Add(itemBoxSpawner);
+        // itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
+        // eventRepeatSpawners.Add(itemBoxSpawner);
 
     }
 

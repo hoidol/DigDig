@@ -30,6 +30,7 @@ public class StartSetting
             "BulletManager",
             "UserManager",
             "StageManager",
+            "EquipmentManager",
 
 //UI --------
             "FadeCanvas"

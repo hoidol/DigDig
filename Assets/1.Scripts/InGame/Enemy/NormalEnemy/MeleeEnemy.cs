@@ -34,11 +34,6 @@ public class MeleeEnemy : NormalEnemy
             }
             EndAttack();
         });
-        // meleeAttackIndicator.transform.right = Player.Instance.transform.position - transform.position;
-        // meleeAttackIndicator.PlayIndicator(1.5f, () =>
-        // {
-
-        // });
     }
 
     public override void CancelAttack()

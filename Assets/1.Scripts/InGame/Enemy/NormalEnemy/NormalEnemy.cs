@@ -86,7 +86,7 @@ public class NormalEnemy : Enemy
             ChangeState(NormalEnemyState.Moving).Forget();
             return;
         }
-        if (vec.magnitude <= enemyData.attackRange)
+        if (vec.magnitude <= enemyData.attackRange && attackTimer >= enemyData.attackSpeed)
         {
             ChangeState(NormalEnemyState.Attack).Forget();
             return;
@@ -121,15 +121,17 @@ public class NormalEnemy : Enemy
 
     public virtual void UpdateAttack()
     {
-        Vector2 vec = Player.Instance.transform.position - transform.position;
-
-        UpdateFacing(vec);
-        rg2d.linearVelocity = Vector2.zero;
-
-        if (attackTimer >= enemyData.attackSpeed)
+        
+        if (attackTimer < enemyData.attackSpeed)
+            return;
+        
+        if (!attacking)
+        {
+            Vector2 vec = Player.Instance.transform.position - transform.position;
+            UpdateFacing(vec);
             StartAttack();
+        }
     }
-
 
     public virtual void StartAttack()
     {
@@ -139,8 +141,6 @@ public class NormalEnemy : Enemy
     public override void Reward()
     {
         HealItem.Instantiate(transform.position);
-
-
         base.Reward();
     }
     public override void TakeDamage(DamageData damage)
