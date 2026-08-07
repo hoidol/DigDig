@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: c70b05342caf14c448ee64e6346a3bd3
   m_currentHash:
     serializedVersion: 2
-    Hash: 228ec43c86899bc11b3b4ac31ec4a10b
+    Hash: d906206a24adc0b07a21e8e67282f2ec
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -113,6 +113,7 @@ MonoBehaviour:
     - PlayerBulletObject
     - Level1ItemData
     - Level2ItemData
+    - EquipmentData
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 79b846eb2dce14c8dadbbe237bc03090, type: 2}

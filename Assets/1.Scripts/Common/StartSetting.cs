@@ -31,6 +31,7 @@ public class StartSetting
             "UserManager",
             "StageManager",
             "EquipmentManager",
+            "CharacterManager",
 
 //UI --------
             "FadeCanvas"
