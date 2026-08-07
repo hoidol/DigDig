@@ -79,7 +79,7 @@ public class NormalEnemy : Enemy
     //상태가 Waiting 인 경우 처리
     public virtual void UpdateWaiting()
     {
-        Vector2 vec = Player.Instance.transform.position - transform.position;
+        Vector2 vec = Character.Instance.transform.position - transform.position;
 
         if (vec.magnitude > enemyData.moveRange && moveTimer <= 0)
         {
@@ -96,7 +96,7 @@ public class NormalEnemy : Enemy
     }
     public virtual async UniTask StartMoving()
     {
-        Vector2Int[] dirs = FindPath(transform.position, Player.Instance.transform.position);
+        Vector2Int[] dirs = FindPath(transform.position, Character.Instance.transform.position);
 
         for (int i = 0; i < dirs.Length; i++)
         {
@@ -127,7 +127,7 @@ public class NormalEnemy : Enemy
         
         if (!attacking)
         {
-            Vector2 vec = Player.Instance.transform.position - transform.position;
+            Vector2 vec = Character.Instance.transform.position - transform.position;
             UpdateFacing(vec);
             StartAttack();
         }

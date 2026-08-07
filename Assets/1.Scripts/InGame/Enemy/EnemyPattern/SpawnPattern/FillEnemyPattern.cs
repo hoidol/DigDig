@@ -28,7 +28,7 @@ public class FillEnemyPattern : SpawnPattern
                 for (int y = 0; y < MapManager.tileArray.GetLength(1); y++)
                 {
                     Vector2 pos = MapManager.TileIndexToPosition(new Vector2Int(x, y));
-                    if (pos.magnitude > Player.Instance.distanceMaxDistanceDestroiedStone)
+                    if (pos.magnitude > Character.Instance.distanceMaxDistanceDestroiedStone)
                     {
                         continue;
                     }

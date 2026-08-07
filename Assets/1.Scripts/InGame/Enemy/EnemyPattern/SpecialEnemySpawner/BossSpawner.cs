@@ -18,10 +18,10 @@ public class BossSpawner : SpecialEnemySpawner
     {
         Boss boss = Instantiate(GameManager.Instance.stageData.boss);
 
-        Vector2Int tileIndex = MapManager.PositionToTileIndex(Player.Instance.transform.position);
+        Vector2Int tileIndex = MapManager.PositionToTileIndex(Character.Instance.transform.position);
         Vector2Int[,] tileIndexArr = MapManager.GetIndexArray(tileIndex, boss.Size);
 
-        var bestChecker = Player.Instance.tileCheckers.OrderBy(c => c.TileCount()).First();
+        var bestChecker = Character.Instance.tileCheckers.OrderBy(c => c.TileCount()).First();
         Vector2 bestCheckerCenter = bestChecker.transform.position;
 
         Vector2 rPoint = bestCheckerCenter + Random.insideUnitCircle * 5f;

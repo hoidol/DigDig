@@ -15,7 +15,7 @@ public class EnemyAttackPattern : MonoBehaviour
 
     public virtual async UniTask Execute(IEnemySpecialAttackPattern enemy, Action onEnd)
     {
-        Vector2 vec = Player.Instance.transform.position - transform.position;
+        Vector2 vec = Character.Instance.transform.position - transform.position;
         GetComponentInParent<Enemy>().UpdateFacing(vec);
         await UniTask.WaitForSeconds(readyTime);
     }

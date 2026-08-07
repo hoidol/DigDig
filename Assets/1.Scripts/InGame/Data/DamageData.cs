@@ -12,34 +12,34 @@ public class DamageData
 
         if (!isCrt)
         {
-            DamageText.SetText(pos, dText, GameSetting.playerDamageColor);
+            DamageText.SetText(pos, dText, GameSetting.characterDamageColor);
         }
         else
         {
-            CRTDamageText.SetText(pos, dText, GameSetting.playerCrtDamageColor);
+            CRTDamageText.SetText(pos, dText, GameSetting.characterCrtDamageColor);
         }
 
     }
 }
 
-public class PlayerBulletDamageData : DamageData
+public class CharacterBulletDamageData : DamageData
 {
     public RaycastHit2D hit2D;
-    public PlayerBulletObject playerBulletObject;
-    public void Init(PlayerBulletObject pBObj)
+    public CharacterBulletObject characterBulletObject;
+    public void Init(CharacterBulletObject pBObj)
     {
-        playerBulletObject = pBObj;
+        characterBulletObject = pBObj;
         isCrt = false;
     }
     public bool mustCrit;
     public void Calculate()
     {
-        damage = Player.Instance.statMgr.AttackPower;
+        damage = Character.Instance.statMgr.AttackPower;
         isCrt = false;
-        if (mustCrit || Random.Range(0f, 100f) <= Player.Instance.statMgr.CritChance)
+        if (mustCrit || Random.Range(0f, 100f) <= Character.Instance.statMgr.CritChance)
         {
             isCrt = true;
-            damage *= Player.Instance.statMgr.CritPower;
+            damage *= Character.Instance.statMgr.CritPower;
         }
     }
 
@@ -47,10 +47,10 @@ public class PlayerBulletDamageData : DamageData
     {
         damage = d;
         isCrt = false;
-        if (mustCrit || Random.Range(0f, 100f) <= Player.Instance.statMgr.CritChance)
+        if (mustCrit || Random.Range(0f, 100f) <= Character.Instance.statMgr.CritChance)
         {
             isCrt = true;
-            damage *= Player.Instance.statMgr.CritPower;
+            damage *= Character.Instance.statMgr.CritPower;
         }
     }
 }

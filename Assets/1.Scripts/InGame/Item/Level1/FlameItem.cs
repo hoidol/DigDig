@@ -1,0 +1,45 @@
+using UnityEngine;
+
+public class FlameItem : Item, IFired
+{
+
+    public int[] burnDurations = { 4, 5, 6 };
+    public int[] burnDPSs = { 2, 3, 4 };
+    public int[] triggerCounts = { 5, 5, 5 };
+
+
+
+    int triggerCounter;
+    public override void OnEquip()
+    {
+        base.OnEquip();
+        triggerCounter = 0;
+    }
+
+    public override string GetDescription(int lv = 1, bool detail = false)
+    {
+        return $"{triggerCounts[lv - 1]} 공격마다 화염탄 랜덤 방향으로 추가 발사";
+    }
+
+    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
+    {
+        triggerCounter++;
+        if (triggerCounts[count - 1] <= triggerCounter)
+        {
+            FlameBullet flameBullet = new FlameBullet();
+            flameBullet.burnDuration = burnDurations[count - 1];
+            flameBullet.burnDPS = burnDPSs[count - 1];
+
+            Vector2 randomDir = Random.insideUnitCircle.normalized;
+            Character.Instance.Shoot(flameBullet, randomDir);
+
+
+            randomDir = Random.insideUnitCircle.normalized;
+            Character.Instance.Shoot(flameBullet, randomDir);
+
+            Character.Instance.AddHp(-itemData.consumeHp);
+
+            triggerCounter = 0;
+        }
+    }
+}

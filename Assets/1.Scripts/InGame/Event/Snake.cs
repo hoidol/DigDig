@@ -20,7 +20,7 @@ public class Snake : EventObject
 
         //재장전 속도 증가 / 체력 감소
         suggest = new SnakeSuggest();
-        suggest.buff = new Buff(StatType.ReloadSpeed, 1.3f, StatOpType.Multiply);
+        suggest.buff = new Buff(StatType.AttackSpeed, 5f, StatOpType.Add);
         suggest.nerf = new Buff(StatType.MaxHp, 0.7f, StatOpType.Multiply);
         snakeSuggests.Add(suggest);
 

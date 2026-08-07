@@ -17,7 +17,7 @@ public class StraightSpecialEnemySpawner : SpecialEnemySpawner
         List<Vector2Int> indies = new List<Vector2Int>();
         //임시의 한점
 
-        Vector2 dirToPlayer = Vector2.zero - (Vector2)Player.Instance.transform.position;
+        Vector2 dirToPlayer = Vector2.zero - (Vector2)Character.Instance.transform.position;
         Vector2 dir = Vector2.zero;
         dir.x = dirToPlayer.x > 0 ? 1 : -1;
         dir.y = dirToPlayer.y > 0 ? 1 : -1;
@@ -34,7 +34,7 @@ public class StraightSpecialEnemySpawner : SpecialEnemySpawner
             count = e.count
         });
 
-        Vector2Int startIndex = MapManager.PositionToTileIndex((Vector2)Player.Instance.transform.position + dir * includeSize);
+        Vector2Int startIndex = MapManager.PositionToTileIndex((Vector2)Character.Instance.transform.position + dir * includeSize);
         Vector2Int tempIndex = startIndex;
         for (int i = 0; i < includeSize; i++)
         {

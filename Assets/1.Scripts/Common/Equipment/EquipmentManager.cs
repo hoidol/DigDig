@@ -7,6 +7,7 @@ public class EquipmentManager : MonoSingleton<EquipmentManager>
 
     public EquipmentData[] equipmentDatas;
     public Dictionary<string, EquipmentData> equipmentDataDic = new Dictionary<string, EquipmentData>();
+    public Dictionary<Grade, List<string>> gradeGroupEquipmentDic = new Dictionary<Grade, List<string>>();
     public UniTask LoadTask { get; private set; }
 
     void Awake()
@@ -22,6 +23,12 @@ public class EquipmentManager : MonoSingleton<EquipmentManager>
             foreach (EquipmentData equipmentData in equipmentDatas)
             {
                 equipmentDataDic[equipmentData.key] = equipmentData;
+                if (!gradeGroupEquipmentDic.ContainsKey(equipmentData.grade))
+                {
+                    gradeGroupEquipmentDic.Add(equipmentData.grade, new List<string>());
+                }
+                gradeGroupEquipmentDic[equipmentData.grade].Add(equipmentData.key);
+
             }
 
         });
@@ -31,6 +38,26 @@ public class EquipmentManager : MonoSingleton<EquipmentManager>
     public EquipmentData GetEquipmentData(string key)
     {
         return equipmentDataDic[key];
+    }
+
+    public EquipmentAbility GetSumEquipmentAbility(StatType statType)
+    {
+        EquipmentAbility sumAbility = new EquipmentAbility();
+        sumAbility.statType = statType;
+        UserEquipment[] equippedEquipments = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipments();
+        for (int i = 0; i < equippedEquipments.Length; i++)
+        {
+            EquipmentAbility ability = equippedEquipments[i].equipmentData.GetEquipmentAbility(statType);
+            sumAbility.AddAbility(ability);
+
+        }
+        return sumAbility;
+    }
+
+    public float GetTotalStatValue(CharacterData characterData, StatType statType)
+    {
+        float baseValue = characterData.GetCharacterStat(statType)?.value ?? 0f;
+        return baseValue + GetSumEquipmentAbility(statType).value;
     }
     
 }

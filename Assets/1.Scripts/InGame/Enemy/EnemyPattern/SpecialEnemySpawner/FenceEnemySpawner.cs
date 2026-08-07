@@ -11,7 +11,7 @@ public class FenceEnemySpawner : SpecialEnemySpawner
 
     public override void Spawn()
     {
-        Vector2 center = Player.Instance.transform.position;
+        Vector2 center = Character.Instance.transform.position;
         int count = Mathf.CeilToInt(2f * Mathf.PI * radius / spacing);
 
         for (int i = 0; i < count; i++)

@@ -33,7 +33,7 @@ public class HealItem : MonoBehaviour, IPickable
 
     public void PickedUp()
     {
-        Player.Instance.AddHp(5);
+        Character.Instance.AddHp(5);
         poolingSystem.Return(this);
     }
 
@@ -72,7 +72,7 @@ public class HealItem : MonoBehaviour, IPickable
 
         if (collision.CompareTag("Player"))
         {
-            Take(Player.Instance);
+            Take(Character.Instance);
         }
     }
 }

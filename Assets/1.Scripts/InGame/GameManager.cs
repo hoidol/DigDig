@@ -40,7 +40,7 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Subscribe<BossDeadEvent>(OnBossDeadEvent);
-        GameEventBus.Subscribe<PlayerHpChangedEvent>(OnPlayerHpChangedEvent);
+        GameEventBus.Subscribe<CharacterHpChangedEvent>(OnPlayerHpChangedEvent);
 
         Debug.Log($"UserManager.STAGE_KEY {UserManager.STAGE_KEY}");
         stageData = StageManager.Instance.GetStageData(UserManager.STAGE_KEY);
@@ -127,7 +127,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     void OnBossDeadEvent(BossDeadEvent e)
     {
-        if (Player.Instance.curHp <= 0)
+        if (Character.Instance.curHp <= 0)
             return;
         EndGame(true);
     }
@@ -151,11 +151,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void Resume()
     {
-        Player.Instance.AddHp(Player.Instance.health.MaxHp);
+        Character.Instance.AddHp(Character.Instance.health.MaxHp);
         isPlaying = true;
     }
 
-    void OnPlayerHpChangedEvent(PlayerHpChangedEvent e)
+    void OnPlayerHpChangedEvent(CharacterHpChangedEvent e)
     {
         if (e.curHp <= 0)
         {

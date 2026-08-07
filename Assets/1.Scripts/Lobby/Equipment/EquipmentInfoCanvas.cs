@@ -4,9 +4,11 @@ using UnityEngine.UI;
 
 public class EquipmentInfoCanvas : CanvasUI<EquipmentInfoCanvas>
 {
-    public Image thumImage;
-    public Image bgImage;
-    UserEquipment userEquipment;
+    public EquipmentInfoPanel equipmentInfoPanel;
+    
+    UserEquipment userEquipment;    
+    public GameObject equipButton;
+    public GameObject releaseButton;
     public void OpenCanvas(UserEquipment userEquipment, Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
@@ -15,16 +17,28 @@ public class EquipmentInfoCanvas : CanvasUI<EquipmentInfoCanvas>
     }
     public void UpdateCanvas()
     {
-        if (userEquipment != null)
+        if (userEquipment.equipped)
         {
-            thumImage.sprite = userEquipment.equipmentData.thum;
-            bgImage.color = EquipmentData.GetGradeColor(userEquipment.equipmentData.grade);
+            equipButton.SetActive(false);
+            releaseButton.SetActive(true);
         }
+        else
+        {
+            equipButton.SetActive(true);
+            releaseButton.SetActive(false);
+        }
+        equipmentInfoPanel.SetPanel(userEquipment);
     }
 
     public void OnClickedEquipButton()
     {
         UserManager.Instance.userEquipmentManager.EquiptUserEquipment(userEquipment);
+        EquipmentCanvas.Instance.UpdateCanvas();
+        UpdateCanvas();
+    }
+    public void OnClickedReleaseButton()
+    {
+        UserManager.Instance.userEquipmentManager.ReleaseUserEquipment(userEquipment.id);
         EquipmentCanvas.Instance.UpdateCanvas();
         UpdateCanvas();
     }

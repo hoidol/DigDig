@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class UserManager : MonoSingleton<UserManager>
 {
@@ -50,4 +51,6 @@ public class UserManager : MonoSingleton<UserManager>
 public class UserData
 {
     public int memoryPieceCount; //기억의 조각 개수
+    public string characterName = "Lucky"; 
+    public CharacterName CharacterName => Enum.Parse<CharacterName>(characterName);
 }

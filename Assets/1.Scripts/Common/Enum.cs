@@ -8,17 +8,15 @@
 public enum StatOpType
 {
     Add,       // +=
-    Subtract,  // -=
     Multiply,  // *=
-    Divide     // /=
 }
-public enum Grade
-{
+// public enum Grade
+// {
 
-    Normal,
-    Rare,
-    Unique,
-    Legend,
-    Myth,
-    None,
-}
+//     Normal,
+//     Rare,
+//     Unique,
+//     Legend,
+//     Myth,
+//     None,
+// }

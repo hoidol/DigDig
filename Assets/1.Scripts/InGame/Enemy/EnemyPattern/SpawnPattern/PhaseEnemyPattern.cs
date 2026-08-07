@@ -48,13 +48,13 @@ public class PhaseEnemyPattern : SpawnPattern
     public void Spawn(EnemyType type)
     {
         EnemyData enemyData = EnemyManager.GetEnemyData(type);
-        var sorted = Player.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
+        var sorted = Character.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
         var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
         Vector2 center = bestChecker.transform.position;
         Vector2 rPoint = center + Random.insideUnitCircle * 5f;
 
         //dir 방향
-        Vector2 offset = rPoint - (Vector2)Player.Instance.transform.position;
+        Vector2 offset = rPoint - (Vector2)Character.Instance.transform.position;
         Vector2Int dir = Mathf.Abs(offset.x) > Mathf.Abs(offset.y)
             ? (offset.y > 0 ? Vector2Int.up : Vector2Int.down)
             : (offset.x > 0 ? Vector2Int.right : Vector2Int.left);

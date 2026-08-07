@@ -37,6 +37,7 @@ public class UserEquipmentManager : UserBaseManager
         userEquipment.key = key;
         userEquipment.equipped = false;
         userEquipmentData.userEquipments.Add(userEquipment);
+        // userEquipmentData.userEquipments = userEquipmentData.userEquipments.OrderByDescending(e => e.equipmentData.grade).ThenBy(e => e.equipmentData.equipmentType).ThenBy(e => e.equipmentData.key).ToList();
         SaveData();
         return userEquipment;
     }
@@ -80,13 +81,13 @@ public class UserEquipmentManager : UserBaseManager
             Debug.Log($"ReleaseUserEquipment {equipmentType} 장비 없음");
             return null;
         }
-        userEquipment.equipped= false;
-        SaveData();
-        return userEquipment;
+        
+        return ReleaseUserEquipment(userEquipment.id);
     }
-    public UserEquipment ReleaseUserEquipment(string key)
+
+    public UserEquipment ReleaseUserEquipment(string id)
     {
-        UserEquipment userEquipment = GetUserEquipment(key);
+        UserEquipment userEquipment = GetUserEquipment(id);
         userEquipment.equipped = false;
 
         SaveData();

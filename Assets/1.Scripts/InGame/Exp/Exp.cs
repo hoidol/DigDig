@@ -35,7 +35,7 @@ public class Exp : MonoBehaviour, IPickable
 
     public void PickedUp()
     {
-        Player.Instance.AddExp(1);
+        Character.Instance.AddExp(1);
         poolingSystem.Return(this);
     }
 
@@ -74,7 +74,7 @@ public class Exp : MonoBehaviour, IPickable
 
         if (collision.CompareTag("Player"))
         {
-            Take(Player.Instance);
+            Take(Character.Instance);
         }
     }
 }

@@ -18,7 +18,7 @@ public class SweepPattern : EnemyAttackPattern
         await base.Execute(enemy, onEnd);
 
         Debug.Log("SweepPattern Execute 1");
-        Vector2 dir = (Player.Instance.transform.position - transform.position).normalized;
+        Vector2 dir = (Character.Instance.transform.position - transform.position).normalized;
         warningIndicator = WarningIndicator.Instantiate((Vector2)transform.position + (5.5f * dir), sweepSize);
         float damage = enemy.Transform.GetComponent<Enemy>().enemyData.GetAttackPower() * damageMultiplier;
         damageData.damage = damage;
@@ -44,7 +44,7 @@ public class SweepPattern : EnemyAttackPattern
         {
             if (!col.CompareTag("Player")) continue;
 
-            Player.Instance.TakeDamage(damageData);
+            Character.Instance.TakeDamage(damageData);
         }
     }
 

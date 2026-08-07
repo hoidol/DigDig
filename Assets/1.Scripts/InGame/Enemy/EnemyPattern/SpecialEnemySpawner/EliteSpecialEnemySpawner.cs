@@ -17,14 +17,14 @@ public class EliteSpecialEnemySpawner : SpecialEnemySpawner
 
     public override void Spawn()
     {
-        Vector2Int center = MapManager.PositionToTileIndex(Player.Instance.transform.position);
+        Vector2Int center = MapManager.PositionToTileIndex(Character.Instance.transform.position);
 
         unbreakableStones = MapManager.Instance.MakeUnbreakableStone(center, 20, 10);
 
 
         Enemy eliteEnemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Elite);
         EnemyData enemyData = EnemyManager.GetEnemyData(eliteEnemyPrefab.enemyType);
-        var sorted = Player.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
+        var sorted = Character.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
         var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
         Vector2 bestCheckerCenter = bestChecker.transform.position;
         Vector2 rPoint = bestCheckerCenter + Random.insideUnitCircle * 5f;

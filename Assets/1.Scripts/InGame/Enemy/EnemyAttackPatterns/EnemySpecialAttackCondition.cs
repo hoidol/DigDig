@@ -10,7 +10,7 @@ public class EnemyAttackCondition
         switch (conditionType)
         {
             case EnemyAttackConditionType.NearPlayer:
-                return Vector2.Distance(enemy.Transform.position, Player.Instance.transform.position) < value;
+                return Vector2.Distance(enemy.Transform.position, Character.Instance.transform.position) < value;
             case EnemyAttackConditionType.None:
                 return true;
             default:

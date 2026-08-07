@@ -21,8 +21,8 @@ public class SnakeCanvas : CanvasUI<SnakeCanvas>
 
     public void OnClickAccept()
     {
-        Player.Instance.AddBuff(snakeSuggest.buff);
-        Player.Instance.AddBuff(snakeSuggest.nerf);
+        Character.Instance.AddBuff(snakeSuggest.buff);
+        Character.Instance.AddBuff(snakeSuggest.nerf);
         CloseCanvas();
     }
 

@@ -8583,7 +8583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc15c4c22994841f18cd2ce6c275b4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  key: Digma
+  key: Lucky
   rg: {fileID: 0}
   moveJoystick: {fileID: 0}
   attackJoystick: {fileID: 0}

@@ -19,7 +19,7 @@ public class MeleeEnemy : NormalEnemy
     {
         base.StartAttack();
 
-        Vector2 aPoint = transform.position + (Player.Instance.transform.position - transform.position).normalized * realAttackRange;
+        Vector2 aPoint = transform.position + (Character.Instance.transform.position - transform.position).normalized * realAttackRange;
         warningIndicator = WarningIndicator.Instantiate(aPoint, realAttackRange);
         warningIndicator.Play(2, (indi) =>
         {

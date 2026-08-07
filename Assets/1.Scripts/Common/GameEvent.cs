@@ -64,11 +64,11 @@ public class BossDeadEvent
 //     }
 // }
 
-public class PlayerHpChangedEvent
+public class CharacterHpChangedEvent
 {
     public float curHp;
     public float maxHp;
-    public PlayerHpChangedEvent(float curHp, float maxHp)
+    public CharacterHpChangedEvent(float curHp, float maxHp)
     {
         this.curHp = curHp;
         this.maxHp = maxHp;

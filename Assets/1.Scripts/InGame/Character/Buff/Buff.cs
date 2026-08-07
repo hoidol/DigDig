@@ -1,0 +1,24 @@
+[System.Serializable]
+public class Buff
+{
+    public StatType statType;
+    public float value;
+    public StatOpType opType;
+
+    public Buff(StatType statType, float value, StatOpType opType)
+    {
+        this.statType = statType;
+        this.value = value;
+        this.opType = opType;
+    }
+
+    public float Apply(float baseValue)
+    {
+        switch (opType)
+        {
+            case StatOpType.Add: return baseValue + value;
+            case StatOpType.Multiply: return baseValue * value;
+            default: return baseValue;
+        }
+    }
+}

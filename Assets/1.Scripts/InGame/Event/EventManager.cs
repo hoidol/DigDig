@@ -202,7 +202,7 @@ public class EventManager : MonoSingleton<EventManager>
 
 
         float farDistance = (MapManager.MIN_RANGE_RADIUS + 5) + spawnCount * 2.3f;
-        Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Player.Instance.distanceMaxDistanceDestroiedStone} farDistance {farDistance}");
+        Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Character.Instance.distanceMaxDistanceDestroiedStone} farDistance {farDistance}");
         // Vector2 playerPos = Player.Instance.transform.position;
         Vector2 direction = Quaternion.Euler(0f, 0f, -100f * spawnCount) * initDirection.normalized;
         return MapManager.SnappedPosition(Vector2.zero + direction * farDistance);

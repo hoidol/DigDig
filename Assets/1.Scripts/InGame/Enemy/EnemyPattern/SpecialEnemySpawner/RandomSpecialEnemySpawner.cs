@@ -18,7 +18,7 @@ public class RandomSpecialEnemySpawner : SpecialEnemySpawner
         // Debug.Log("RandomSpecialEnemySpawner Spawn()!!@!");
         //List<Vector2Int> indies = new List<Vector2Int>();
         //임시의 한점
-        List<Vector2Int> indies = MapManager.GetEmptyTileIndexesInRange(Player.Instance.transform.position, includeSize, excludeSize);
+        List<Vector2Int> indies = MapManager.GetEmptyTileIndexesInRange(Character.Instance.transform.position, includeSize, excludeSize);
 
         currentEnemySpawnState = System.Array.ConvertAll(enemySpawnCountChances, e => new EnemySpawnCountChance
         {

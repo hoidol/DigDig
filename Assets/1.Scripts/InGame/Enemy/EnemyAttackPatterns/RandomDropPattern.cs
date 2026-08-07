@@ -29,7 +29,7 @@ public class RandomDropPattern : EnemyAttackPattern
             Vector2 pos = GetRandomPos();
             WarningIndicator warning = WarningIndicator.Instantiate(pos, dropSize);
             activeWarnings.Add(warning);
-            warning.Play(warningDuration, (indicator) =>
+            warning.Play(warningDuration, (Action<WarningIndicator>)((indicator) =>
             {
                 enemy.PlayAnim(readyAnimName);
                 Collider2D[] cols = Physics2D.OverlapBoxAll(indicator.transform.position, new Vector2(dropSize, dropSize), 0);
@@ -37,12 +37,12 @@ public class RandomDropPattern : EnemyAttackPattern
                 {
                     if (col.CompareTag("Player"))
                     {
-                        Player.Instance.TakeDamage(new DamageData() { damage = baseDamage });
+                        Character.Instance.TakeDamage(new DamageData() { damage = baseDamage });
                         break;
                     }
                 }
                 indicator.Cancel();
-            });
+            }));
             await UniTask.Delay(TimeSpan.FromSeconds(spawnInterval));
         }
 
@@ -54,7 +54,7 @@ public class RandomDropPattern : EnemyAttackPattern
 
     Vector2 GetRandomPos()
     {
-        Vector2 playerPos = Player.Instance.transform.position;
+        Vector2 playerPos = Character.Instance.transform.position;
         Vector2 offset = UnityEngine.Random.insideUnitCircle.normalized * UnityEngine.Random.Range(1f, spawnRadius);
         return playerPos + offset;
     }
