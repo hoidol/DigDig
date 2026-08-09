@@ -24,6 +24,7 @@ public class CharacterMovement : MonoBehaviour
     {
         maxDistance = 0;
         maxDistanceSqr = 0f;
+        animator.Play("Idle");
     }
 
     public void Move()

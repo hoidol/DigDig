@@ -7,6 +7,10 @@ public class CharacterBody : MonoBehaviour
     {
         characterParts = GetComponentsInChildren<CharacterPart>();
     }
+    void Start()
+    {
+        UpdateCharacter();
+    }
     public void UpdateCharacter()
     {
         foreach (var part in characterParts)

@@ -8,8 +8,16 @@ public class EquipmentAbilityInfoPanel : MonoBehaviour
     public StatType statType;
     public TMP_Text titleText;
     public TMP_Text valueText;
+    public void Init()
+    {
+        if (titleText == null)
+            titleText = transform.Find("TitleText").GetComponent<TMP_Text>();
+        if (valueText == null)
+            valueText = transform.Find("ValueText").GetComponent<TMP_Text>();
+    }
     public virtual void UpdatePanel(EquipmentData equipmentData)
     {
+        Init();
         EquipmentAbility equipmentAbility = equipmentData.GetEquipmentAbility(statType);
         if (equipmentAbility != null)
         {

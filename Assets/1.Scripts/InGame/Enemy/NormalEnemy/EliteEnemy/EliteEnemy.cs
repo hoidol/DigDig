@@ -51,7 +51,7 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
                 Vector2Int tileIndex = new Vector2Int(x, y);
                 if (!MapManager.CheckEmpty(tileIndex))
                 {
-                    Enemy e = EnemyManager.Instance.GetEnemyInTileIndex(tileIndex);
+                    Enemy e = EnemySpawner.Instance.GetEnemyInTileIndex(tileIndex);
                     if (e == this)
                         continue;
 
@@ -71,7 +71,7 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
     public override void Destroy()
     {
         base.Destroy();
-        
+
     }
 
     public float PlayAnim(string animName)

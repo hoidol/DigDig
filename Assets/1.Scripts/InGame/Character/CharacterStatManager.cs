@@ -23,7 +23,7 @@ public class CharacterStatManager
     public int Bounce => (int)statDic[StatType.Bounce].value;
 
     public CharacterData characterData;
-    Character character;
+    public Character character;
 
     StatType[] usingStatTypes =
     {
@@ -37,7 +37,16 @@ public class CharacterStatManager
     public CharacterStatManager(Character p, CharacterName characterName)
     {
         character = p;
+        Debug.Log($"CharacterStatManager characterName {characterName}");
         characterData = CharacterManager.Instance.GetCharacterData(characterName);
+        if (characterData == null)
+        {
+            Debug.Log($"CharacterStatManager if(characterData == null)");
+        }
+        else
+        {
+            Debug.Log($"CharacterStatManager if(characterData != null)");
+        }
 
         statDic.Clear();
         statList.Clear();
@@ -45,6 +54,7 @@ public class CharacterStatManager
         for (int i = 0; i < usingStatTypes.Length; i++)
         {
             var ps = new CharacterStat { statType = usingStatTypes[i] };
+            Debug.Log($"ps.statType {ps.statType}");
             ps.initValue = characterData.GetCharacterStat(ps.statType).value; //CharacterData 초기화
             statList.Add(ps);
             statDic.Add(ps.statType, ps);
@@ -58,11 +68,11 @@ public class CharacterStatManager
 
         //장비 능력치 초기값에 적용
         UserEquipment[] equippedEquipments = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipments();
-        for(int i = 0; i < equippedEquipments.Length; i++)
+        for (int i = 0; i < equippedEquipments.Length; i++)
         {
-            foreach(var statType in usingStatTypes)
+            foreach (var statType in usingStatTypes)
             {
-                statDic[statType].initValue +=equippedEquipments[i].equipmentData.GetEquipmentAbility(statType).GetValue<float>();
+                statDic[statType].initValue += equippedEquipments[i].equipmentData.GetEquipmentAbility(statType).GetValue<float>();
             }
         }
 

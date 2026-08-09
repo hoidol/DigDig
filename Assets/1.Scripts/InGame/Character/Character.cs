@@ -12,7 +12,7 @@ public class Character : MonoSingleton<Character>, IPicker
     public Joystick moveJoystick;
     public Joystick attackJoystick;
     public CharacterStatManager statMgr;
-    [SerializeField] Animator animator;
+    public Animator animator;
     public Transform bodyRootTr;
     public Transform bodyCenterTr;
     public CameraShake cameraShake;

@@ -1,67 +1,68 @@
 
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LobbyCanvas : MonoBehaviour 
+public class LobbyCanvas : CanvasUI<LobbyCanvas>
 {
-    //public StartStageButton startStageButton;
     public GameObject nextStageButton;
     public GameObject preStageButton;
 
     UserStage curUserStage;
     public int stageOrder;
     public TMP_Text titleText;
-    void Start()
-    {
-        UserStage curUserStage= UserManager.Instance.userStageManager.GetCurrentStage();
-        stageOrder = StageData.GetStageData(curUserStage.key).order;
-        SetUserStage(curUserStage);
-    }
+
     public void UpdateCanvas()
     {
-       
-    }
-
-    public void SetUserStage(UserStage userStage)
-    {
-        curUserStage = userStage;
+        if (curUserStage == null)
+        {
+            curUserStage = UserManager.Instance.userStageManager.GetCurrentStage();
+        }
         StageData stageData = StageManager.Instance.GetStageData(curUserStage.key);
         titleText.text = stageData.Title;
+        stageOrder = stageData.order;
 
-        StageData nextStageData = StageManager.Instance.GetStageData(stageData.order +1);
-        StageData preStageData = StageManager.Instance.GetStageData(stageData.order -1);
+        StageData nextStageData = StageManager.Instance.GetStageData(stageData.order + 1);
+        StageData preStageData = StageManager.Instance.GetStageData(stageData.order - 1);
 
         nextStageButton.SetActive(false);
         preStageButton.SetActive(false);
 
-        if(nextStageData != null && userStage.clearCount > 0)
+        if (nextStageData != null && curUserStage.clearCount > 0)
         {
             nextStageButton.SetActive(true);
         }
 
-        if(preStageData != null)
+        if (preStageData != null)
         {
             preStageButton.SetActive(true);
         }
     }
 
+    public void SetUserStage(UserStage userStage)
+    {
+        curUserStage = userStage;
+        UpdateCanvas();
+
+    }
+
     public void OnClickedNext()
     {
-        string stageKey = StageManager.Instance.GetStageData(stageOrder+1).key;
-        UserStage userStage = UserManager.Instance.userStageManager.GetUserStage(stageKey); 
+        string stageKey = StageManager.Instance.GetStageData(stageOrder + 1).key;
+        UserStage userStage = UserManager.Instance.userStageManager.GetUserStage(stageKey);
         SetUserStage(userStage);
     }
     public void OnClickedPre()
     {
-        string stageKey = StageManager.Instance.GetStageData(stageOrder-1).key;
-        UserStage userStage = UserManager.Instance.userStageManager.GetUserStage(stageKey); 
+        string stageKey = StageManager.Instance.GetStageData(stageOrder - 1).key;
+        UserStage userStage = UserManager.Instance.userStageManager.GetUserStage(stageKey);
         SetUserStage(userStage);
     }
 
     public void OnClickedBtn()
     {
-        UserManager.STAGE_KEY = curUserStage.key;        
+        UserManager.STAGE_KEY = curUserStage.key;
         SceneManager.LoadScene("InGame");
     }
 }

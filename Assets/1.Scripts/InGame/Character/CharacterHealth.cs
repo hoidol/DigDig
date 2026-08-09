@@ -34,7 +34,11 @@ public class CharacterHealth : MonoBehaviour, IHittable
         CharacterTakeDamageText.SetText(hpPoint.position, $"-{(int)damageData.damage}");
         curHp -= damageData.damage;
         if (curHp <= 0)
+        {
             curHp = 0;
+            character.animator.Play("Dead");
+        }
+
 
         GameEventBus.Publish(new CharacterHpChangedEvent(curHp, character.statMgr.MaxHp));
     }
@@ -47,9 +51,9 @@ public class CharacterHealth : MonoBehaviour, IHittable
         if (showDmg)
         {
             if (hp > 0)
-                HealText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, ((int)hp).ToString(), GameSetting.healColor);
+                HealText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, ((int)hp).ToString(), ColorSetting.healColor);
             else if (hp < 0)
-                DamageText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, $"{(int)hp}", GameSetting.enemyDamageColor);
+                DamageText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, $"{(int)hp}", ColorSetting.enemyDamageColor);
         }
 
 

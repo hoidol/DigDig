@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 public class StraightSpecialEnemySpawner : SpecialEnemySpawner
-{    
+{
     public int includeSize;
     public int excludeSize;
     [SerializeField] EnemySpawnCountChance[] enemySpawnCountChances; //참고용 - Chance 총합이 100이 안될 수도 있음, 한번에 Count이상 소환 못함 
@@ -69,13 +69,13 @@ public class StraightSpecialEnemySpawner : SpecialEnemySpawner
                 cumulative += state.chance;
                 if (roll < cumulative)
                 {
-                    if(MapManager.GetTileArray(idx, EnemyManager.GetEnemyData(state.enemyType).size, out spawnTileArray))
+                    if (MapManager.GetTileArray(idx, EnemyManager.GetEnemyData(state.enemyType).size, out spawnTileArray))
                     {
                         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(state.enemyType);
-                        Enemy enemy = EnemyManager.Instance.Instantiate(enemyPrefab);
-                        enemy?.Spawn(spawnTileArray);   
-                        state.count--; 
-                    }     
+                        Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
+                        enemy?.Spawn(spawnTileArray);
+                        state.count--;
+                    }
                     break;
                 }
             }

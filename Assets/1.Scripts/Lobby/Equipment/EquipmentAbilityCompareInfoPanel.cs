@@ -8,8 +8,9 @@ public class EquipmentAbilityCompareInfoPanel : EquipmentAbilityInfoPanel
     public GameObject downImage;
     public override void UpdatePanel(EquipmentData equipmentData)
     {
+        Init();
         EquipmentAbility equipmentAbility = equipmentData.GetEquipmentAbility(statType);
-        
+
         if (equipmentAbility != null)
         {
             upImage.SetActive(false);
@@ -20,14 +21,14 @@ public class EquipmentAbilityCompareInfoPanel : EquipmentAbilityInfoPanel
             valueText.text = equipmentAbility.GetValueToString();
 
             UserEquipment equippedUserEquipment = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipment(equipmentData.equipmentType);
-            if(equippedUserEquipment!= null)
+            if (equippedUserEquipment != null)
             {
                 EquipmentAbility equippedEquipmentAbility = equippedUserEquipment.equipmentData.GetEquipmentAbility(statType);
-                if(equipmentAbility.value > equippedEquipmentAbility.value)
+                if (equipmentAbility.value > equippedEquipmentAbility.value)
                 {
                     upImage.SetActive(true);
                 }
-                else if(equipmentAbility.value  < equippedEquipmentAbility.value) 
+                else if (equipmentAbility.value < equippedEquipmentAbility.value)
                 {
                     downImage.SetActive(true);
                 }

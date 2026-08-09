@@ -1,7 +1,7 @@
 {
     "userStages": [
         {
-            "key": "Gateway1",
+            "key": "1",
             "tryCount": 0,
             "clearCount": 0
         }

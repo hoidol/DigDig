@@ -52,7 +52,7 @@ public class RandomSpecialEnemySpawner : SpecialEnemySpawner
                     if (MapManager.GetTileArray(idx, EnemyManager.GetEnemyData(state.enemyType).size, out spawnTileArray))
                     {
                         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(state.enemyType);
-                        Enemy enemy = EnemyManager.Instance.Instantiate(enemyPrefab);
+                        Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
                         enemy?.Spawn(spawnTileArray);
                         state.count--;
                     }

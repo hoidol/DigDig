@@ -12,24 +12,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a04c6f3342fef4eaab07e38292e32fbb, type: 3}
   m_Name: Lucky
   m_EditorClassIdentifier: 
-  key: Lucky
-  playerStats:
+  characterName: 0
+  characterStats:
   - statType: 0
+    initValue: 0
     value: 10
   - statType: 1
+    initValue: 0
     value: 50
   - statType: 2
+    initValue: 0
     value: 0
   - statType: 3
+    initValue: 0
     value: 10
   - statType: 4
+    initValue: 0
     value: 20
   - statType: 5
-    value: 5
+    initValue: 0
+    value: 2
   - statType: 6
+    initValue: 0
     value: 1.5
   - statType: 7
+    initValue: 0
     value: 0.7
   - statType: 8
-    value: 1
+    initValue: 0
+    value: 0
   defaultBullets: 

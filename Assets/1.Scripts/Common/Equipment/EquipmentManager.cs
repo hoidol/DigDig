@@ -32,7 +32,7 @@ public class EquipmentManager : MonoSingleton<EquipmentManager>
             }
 
         });
-     
+
     }
 
     public EquipmentData GetEquipmentData(string key)
@@ -59,5 +59,5 @@ public class EquipmentManager : MonoSingleton<EquipmentManager>
         float baseValue = characterData.GetCharacterStat(statType)?.value ?? 0f;
         return baseValue + GetSumEquipmentAbility(statType).value;
     }
-    
+
 }

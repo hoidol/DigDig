@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 
-
-public class EquipmentData : ScriptableObject 
+[CreateAssetMenu]
+public class EquipmentData : ScriptableObject
 {
     public string key;
     public EquipmentType equipmentType;
@@ -11,7 +11,7 @@ public class EquipmentData : ScriptableObject
     public Grade grade;
 
     [Header("최대 6개까지 설정하기")]
-    public EquipmentAbility[] abilities; 
+    public EquipmentAbility[] abilities;
 
     public static Color GetGradeColor(Grade grade)
     {
@@ -20,7 +20,7 @@ public class EquipmentData : ScriptableObject
             case Grade.D:
                 return Color.white;
             case Grade.C:
-                return Color. green;
+                return Color.green;
             case Grade.B:
                 return Color.blue;
             case Grade.A:
@@ -65,7 +65,7 @@ public class EquipmentData : ScriptableObject
 
     // public static bool RecommandChange(EquipmentData newEquipmentData,  EquipmentData oldEquipmentData)
     // {
-       
+
 
     //     float oldValue = float.Parse(oldAbility.value);
     //     float newValue = float.Parse(newAbility.value);
@@ -78,23 +78,23 @@ public class EquipmentData : ScriptableObject
 
     // public int GetEquipmentValue()
     // {
-        
+
     // }
 }
 
 public enum EquipmentType
 {
-    Weapon, Shield, Helmet, Accessory
+    R_Hand, L_Hand, Head, Accessory
 }
 
 public enum EquipPartType
 {
-    RightHand, LeftHand, Head, Face,
+    RightHand, LeftHand, Hat, Helmet, Face,
 }
 
-public enum Grade: int
+public enum Grade : int
 {
-    D, C, B, A,S,SS,SSS
+    D, C, B, A, S, SS, SSS
 }
 
 

@@ -90,7 +90,7 @@ public class PhaseEnemyPattern : SpawnPattern
         {
 
             Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type);
-            Enemy enemy = EnemyManager.Instance.Instantiate(enemyPrefab);
+            Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
             enemy?.Spawn(spawnTileArray);
         }
 

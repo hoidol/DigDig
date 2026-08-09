@@ -30,6 +30,7 @@ public class StartSetting
             "BulletManager",
             "UserManager",
             "StageManager",
+            "EnemyManager",
             "EquipmentManager",
             "CharacterManager",
 

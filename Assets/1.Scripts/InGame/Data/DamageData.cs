@@ -12,11 +12,11 @@ public class DamageData
 
         if (!isCrt)
         {
-            DamageText.SetText(pos, dText, GameSetting.characterDamageColor);
+            DamageText.SetText(pos, dText, ColorSetting.characterDamageColor);
         }
         else
         {
-            CRTDamageText.SetText(pos, dText, GameSetting.characterCrtDamageColor);
+            CRTDamageText.SetText(pos, dText, ColorSetting.characterCrtDamageColor);
         }
 
     }

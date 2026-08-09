@@ -49,18 +49,18 @@ public static class PreGameStartEditor
     //         AssetDatabase.SaveAssets();
     //         Debug.Log($"[PreGameStart] LoadData 완료 ({count}개)");
     //     }
-    }
+    // }
 
-    static bool TryCallLoadData(ScriptableObject so)
-    {
-        var method = so.GetType().GetMethod("LoadData", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        if (method == null)
-        {
-            Debug.LogWarning($"[PreGameStart] {so.GetType().Name} ({so.name}) — LoadData 메서드 없음");
-            return false;
-        }
-        method.Invoke(so, null);
-        return true;
-    }
+    // static bool TryCallLoadData(ScriptableObject so)
+    // {
+    //     var method = so.GetType().GetMethod("LoadData", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+    //     if (method == null)
+    //     {
+    //         Debug.LogWarning($"[PreGameStart] {so.GetType().Name} ({so.name}) — LoadData 메서드 없음");
+    //         return false;
+    //     }
+    //     method.Invoke(so, null);
+    //     return true;
+    // }
 }
 #endif

@@ -5,8 +5,9 @@ using UnityEngine.UI;
 public class EquipmentInfoCanvas : CanvasUI<EquipmentInfoCanvas>
 {
     public EquipmentInfoPanel equipmentInfoPanel;
-    
-    UserEquipment userEquipment;    
+    public GameObject equippedPanel;
+
+    UserEquipment userEquipment;
     public GameObject equipButton;
     public GameObject releaseButton;
     public void OpenCanvas(UserEquipment userEquipment, Action closeCallback = null)
@@ -17,6 +18,7 @@ public class EquipmentInfoCanvas : CanvasUI<EquipmentInfoCanvas>
     }
     public void UpdateCanvas()
     {
+        equippedPanel.SetActive(userEquipment.equipped);
         if (userEquipment.equipped)
         {
             equipButton.SetActive(false);
