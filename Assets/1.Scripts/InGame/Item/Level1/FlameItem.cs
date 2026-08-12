@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class FlameItem : Item, IFired
 {
-
-    public int[] burnDurations = { 4, 5, 6 };
-    public int[] burnDPSs = { 2, 3, 4 };
-    public int[] triggerCounts = { 5, 5, 5 };
+    //2초마다 랜덤 방향으로 Flame 발사
+    public int burnDuration = 4;
+    public int burnDPS = 2;
+    public int triggerCount = 5;
 
 
 
@@ -16,28 +16,31 @@ public class FlameItem : Item, IFired
         triggerCounter = 0;
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"{triggerCounts[lv - 1]} 공격마다 화염탄 랜덤 방향으로 추가 발사";
+        return $"{triggerCount}공격마다 화염탄 2발 랜덤 방향으로 발사합니다.";
     }
 
     public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
     {
         triggerCounter++;
-        if (triggerCounts[count - 1] <= triggerCounter)
+        if (triggerCount <= triggerCounter)
         {
-            FlameBullet flameBullet = new FlameBullet();
-            flameBullet.burnDuration = burnDurations[count - 1];
-            flameBullet.burnDPS = burnDPSs[count - 1];
+            for(int i = 0;i < count; i++)
+            {
+                FlameBullet flameBullet = new FlameBullet();
+                flameBullet.burnDuration = burnDuration;
+                flameBullet.burnDPS = burnDPS;
 
-            Vector2 randomDir = Random.insideUnitCircle.normalized;
-            Character.Instance.Shoot(flameBullet, randomDir);
+                Vector2 randomDir = Random.insideUnitCircle.normalized;
+                Character.Instance.Shoot(flameBullet, randomDir);
 
+                randomDir = Random.insideUnitCircle.normalized;
+                Character.Instance.Shoot(flameBullet, randomDir);
 
-            randomDir = Random.insideUnitCircle.normalized;
-            Character.Instance.Shoot(flameBullet, randomDir);
-
-            Character.Instance.AddHp(-itemData.consumeHp);
+                Character.Instance.AddHp(-itemData.consumeHp);
+            }
+            
 
             triggerCounter = 0;
         }

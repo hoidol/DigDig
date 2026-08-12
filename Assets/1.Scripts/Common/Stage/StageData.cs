@@ -26,7 +26,7 @@ public class StageData : ScriptableObject
     public PhaseData GetPhaseData(int idx = -1)
     {
         if (idx < 0)
-            idx = GameManager.Instance.phase;
+            idx = GameManager.Instance.day;
         return phaseDatas[idx];
     }
     public void Init()
@@ -136,7 +136,6 @@ public class StageData : ScriptableObject
         int iOrdealLevels = System.Array.IndexOf(headers, "ordealLevels");
         int iEnemyHp = System.Array.IndexOf(headers, "enemyHp");
         int iEnemyAtk = System.Array.IndexOf(headers, "enemyAttackPower");
-        int iTime = System.Array.IndexOf(headers, "time");
 
         var list = new List<PhaseData>();
         for (int i = 1; i < lines.Length; i++)
@@ -150,7 +149,6 @@ public class StageData : ScriptableObject
             if (int.TryParse(Col(cols, iOrdealLevels), out int ol)) d.ordealLevel = ol;
             if (float.TryParse(Col(cols, iEnemyHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float eh)) d.enemyHp = eh;
             if (float.TryParse(Col(cols, iEnemyAtk), NumberStyles.Float, CultureInfo.InvariantCulture, out float ea)) d.enemyAttackPower = ea;
-            if (float.TryParse(Col(cols, iTime), NumberStyles.Float, CultureInfo.InvariantCulture, out float pt)) d.time = pt;
 
             d.enemyPatternData = FindEnemyPatternData(d.phase);
 
@@ -290,7 +288,7 @@ public class PhaseData
     public int ordealLevel;
     public float enemyHp;
     public float enemyAttackPower;
-    public float time;
+    // public float time;
     public EnemyPatternData enemyPatternData;
 }
 

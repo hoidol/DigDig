@@ -71,7 +71,7 @@ public class RushItem : Item
         }
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
         return $"적 처치 시 즉시 탄 발사 쿨타임 {coolTime}초\n발사 당 체력 {itemData.consumeHp} 감소";
     }

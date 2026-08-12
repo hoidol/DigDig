@@ -10,6 +10,7 @@ public class EnemyData : ScriptableObject
 {
     public EnemyType type;
     public float attackSpeed;
+    public float moveSpeed= 1;
     public float attackRange;
     public float moveRange;
     public int exp;

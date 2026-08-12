@@ -15,7 +15,7 @@ public class IronBounceBehavior : IBulletBehavior
 
         if (ignoreCount<0)
         {
-            bullet.damageMultiplier *= Character.Instance.statMgr.AmmoEfficiency;
+            // bullet.damageMultiplier *= Character.Instance.statMgr.AmmoEfficiency;
         }
 
         if (remaining-- <= 0) return true;

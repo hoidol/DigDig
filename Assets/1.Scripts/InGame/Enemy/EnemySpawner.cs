@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Cysharp.Threading.Tasks;
-using Mono.Cecil;
+using LayerLab.ArtMakerUnity;
 using UnityEngine;
 
 public class EnemySpawner : MonoSingleton<EnemySpawner>
@@ -51,16 +49,25 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         ReleaseEnemy(e.enemy);
     }
 
-    public Enemy GetEnemyInTileIndex(Vector2Int tileIdx)
+    // public Enemy GetEnemyInTileIndex(Vector2Int tileIdx)
+    // {
+    //     foreach (Enemy enemy in activeEnemies)
+    //     {
+    //         foreach (Vector2Int idx in enemy.TileIndexArr)
+    //         {
+    //             if (idx == tileIdx) return enemy;
+    //         }
+    //     }
+    //     return null;
+    // }
+
+    public Vector2 GetSpawnPosition(float howFar =-1)
     {
-        foreach (Enemy enemy in activeEnemies)
+        if(howFar < 0)
         {
-            foreach (Vector2Int idx in enemy.TileIndexArr)
-            {
-                if (idx == tileIdx) return enemy;
-            }
+            howFar = (CameraManager.Instance.mainCamera.orthographicSize * CameraManager.Instance.mainCamera.aspect) +1;
         }
-        return null;
+        return (Vector2)Player.Instance.transform.position + UnityEngine.Random.insideUnitCircle.normalized * howFar;
     }
 
 

@@ -1,24 +1,24 @@
-// 체력 물약: 최대 체력 +10 (소모성, 중첩 가능)
-public class VitalityPotionItem : Item
-{
-    const float BONUS_PER_STACK = 20f;
-    Buff buff;
+// // 체력 물약: 최대 체력 +10 (소모성, 중첩 가능)
+// public class VitalityPotionItem : Item
+// {
+//     const float BONUS_PER_STACK = 20f;
+//     Buff buff;
 
-    public override void UpdateItem()
-    {
-        Character player = Character.Instance;
+//     public override void UpdateItem()
+//     {
+//         Character player = Character.Instance;
 
-        if (buff != null) player.RemoveBuff(buff);
+//         if (buff != null) player.RemoveBuff(buff);
 
-        buff = new Buff(StatType.MaxHp, BONUS_PER_STACK * count, StatOpType.Add);
-        player.AddBuff(buff);
-    }
+//         buff = new Buff(StatType.MaxHp, BONUS_PER_STACK * count, StatOpType.Add);
+//         player.AddBuff(buff);
+//     }
 
-    public override void OnUnequip()
-    {
-        Character.Instance.RemoveBuff(buff);
-    }
+//     public override void OnUnequip()
+//     {
+//         Character.Instance.RemoveBuff(buff);
+//     }
 
-    public override string GetDescription(int lv = 1,bool detail = false)
-        => $"체력 +{BONUS_PER_STACK * count}";
-}
+//     public override string GetDescription(int lv = 1,bool detail = false)
+//         => $"체력 +{BONUS_PER_STACK * count}";
+// }

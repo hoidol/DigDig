@@ -73,7 +73,7 @@ public class StraightSpecialEnemySpawner : SpecialEnemySpawner
                     {
                         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(state.enemyType);
                         Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-                        enemy?.Spawn(spawnTileArray);
+                        // enemy?.Spawn(spawnTileArray);
                         state.count--;
                     }
                     break;

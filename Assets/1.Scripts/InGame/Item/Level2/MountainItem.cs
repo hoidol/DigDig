@@ -4,9 +4,9 @@ using UnityEngine;
 public class MountainItem : Item
 {
     //공격력 +8
-    float[] maxHps = { 25, 50, 75 };
-    float[] attackPowers = { 8, 11, 15 };
-    float[] recoveryHps = { 0.2f, 0.3f, 0.4f };
+    float maxHp = 20;
+    float attackPower = 8;
+    float recoveryHp = 0.3f;
     Buff maxHpBuff;
     Buff attackPowerBuff;
     Buff recoveryHpBuff;
@@ -33,22 +33,22 @@ public class MountainItem : Item
         base.UpdateItem();
         Release();
         //최대 체력
-        maxHpBuff = new Buff(StatType.MaxHp, maxHps[count - 1], StatOpType.Add);
+        maxHpBuff = new Buff(StatType.MaxHp, maxHp *count, StatOpType.Add);
         Character.Instance.AddBuff(maxHpBuff);
 
         //공격 효율
-        attackPowerBuff = new Buff(StatType.AttackPower, attackPowers[count - 1], StatOpType.Add);
+        attackPowerBuff = new Buff(StatType.AttackPower, attackPower*count, StatOpType.Add);
         Character.Instance.AddBuff(attackPowerBuff);
 
         //초당 회복력
-        recoveryHpBuff = new Buff(StatType.RecoveryHp, recoveryHps[count - 1], StatOpType.Add);
+        recoveryHpBuff = new Buff(StatType.RecoveryHp, recoveryHp*count, StatOpType.Add);
         Character.Instance.AddBuff(recoveryHpBuff);
   
     }
 
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"체력 +{maxHps[lv - 1]} 공격력 +{attackPowers[lv - 1]} 초당 회복력 +{recoveryHps[lv - 1]}";
+        return $"체력 +{maxHp} 공격력 +{attackPower} 초당 회복력 +{recoveryHp}";
     }
 }

@@ -14,10 +14,10 @@ public class PhaseEnemyPattern : SpawnPattern
 
     void Awake()
     {
-        GameEventBus.Subscribe<PhaseStartEvent>(OnPhaseStartEvent);
+        GameEventBus.Subscribe<DayStartEvent>(OnDayStartEvent);
     }
 
-    void OnPhaseStartEvent(PhaseStartEvent e)
+    void OnDayStartEvent(DayStartEvent e)
     {
         EndPattern();
         Debug.Log("EnemyPattern StartPattern");
@@ -47,52 +47,56 @@ public class PhaseEnemyPattern : SpawnPattern
 
     public void Spawn(EnemyType type)
     {
-        EnemyData enemyData = EnemyManager.GetEnemyData(type);
-        var sorted = Character.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
-        var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
-        Vector2 center = bestChecker.transform.position;
-        Vector2 rPoint = center + Random.insideUnitCircle * 5f;
+        // EnemyData enemyData = EnemyManager.GetEnemyData(type);
+        // var sorted = Character.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
+        // var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
+        // Vector2 center = bestChecker.transform.position;
+        // Vector2 rPoint = center + Random.insideUnitCircle * 5f;
 
-        //dir 방향
-        Vector2 offset = rPoint - (Vector2)Character.Instance.transform.position;
-        Vector2Int dir = Mathf.Abs(offset.x) > Mathf.Abs(offset.y)
-            ? (offset.y > 0 ? Vector2Int.up : Vector2Int.down)
-            : (offset.x > 0 ? Vector2Int.right : Vector2Int.left);
+        // //dir 방향
+        // Vector2 offset = rPoint - (Vector2)Character.Instance.transform.position;
+        // Vector2Int dir = Mathf.Abs(offset.x) > Mathf.Abs(offset.y)
+        //     ? (offset.y > 0 ? Vector2Int.up : Vector2Int.down)
+        //     : (offset.x > 0 ? Vector2Int.right : Vector2Int.left);
 
 
-        Vector2Int[,] spawnTileArray = null;
-        bool canSpawn = true;
-        if (bestChecker.tile != null && Random.Range(0f, 100f) < 70)
-        {
-            Vector2Int startTileArr = MapManager.PositionToTileIndex(bestChecker.tile.Transform.position);
-            if (!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
-            {
-                if (!FindEmptyInDir(startTileArr, enemyData.size, dir, 4, out spawnTileArray))
-                {
-                    if (!FindEmptyInDir(startTileArr, enemyData.size, -dir, 4, out spawnTileArray))
-                    {
-                        canSpawn = false;
-                    }
-                }
-            }
-        }
-        else
-        {
-            Vector2Int startTileArr = MapManager.PositionToTileIndex(rPoint);
-            if (!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
-            {
-                canSpawn = false;
-            }
+        // Vector2Int[,] spawnTileArray = null;
+        // bool canSpawn = true;
+        // if (bestChecker.tile != null && Random.Range(0f, 100f) < 70)
+        // {
+        //     Vector2Int startTileArr = MapManager.PositionToTileIndex(bestChecker.tile.Transform.position);
+        //     if (!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
+        //     {
+        //         if (!FindEmptyInDir(startTileArr, enemyData.size, dir, 4, out spawnTileArray))
+        //         {
+        //             if (!FindEmptyInDir(startTileArr, enemyData.size, -dir, 4, out spawnTileArray))
+        //             {
+        //                 canSpawn = false;
+        //             }
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     Vector2Int startTileArr = MapManager.PositionToTileIndex(rPoint);
+        //     if (!MapManager.GetTileArray(startTileArr, enemyData.size, out spawnTileArray))
+        //     {
+        //         canSpawn = false;
+        //     }
 
-        }
+        // }
 
-        if (canSpawn)
-        {
+        // if (canSpawn)
+        // {
 
-            Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type);
-            Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-            enemy?.Spawn(spawnTileArray);
-        }
+        //     Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type);
+        //     Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
+        //     enemy?.Spawn(spawnTileArray);
+        // }
+
+        Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type);
+        Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
+        enemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition());
 
     }
     bool FindEmptyInDir(Vector2Int startIdx, Vector2Int size, Vector2Int dir, int steps, out Vector2Int[,] spawnTileArray)

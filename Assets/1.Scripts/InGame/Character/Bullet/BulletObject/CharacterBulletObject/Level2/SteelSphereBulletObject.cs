@@ -10,8 +10,8 @@ public class SteelSphereBulletObject : CharacterBulletObject
     {
         base.Shoot(dir);
 
-        int bounce = Character.Instance.statMgr.Bounce;
-        remaining = Mathf.FloorToInt(bounce * 0.5f);
+        // int bounce = Character.Instance.statMgr.Bounce;
+        // remaining = Mathf.FloorToInt(bounce * 0.5f);
 
         // int lv = Player.Instance.statMgr.bulletStatDic[key].lv;
         // AddBulletForce(new DamageBoostForce(DAMAGE_PER_REDUCED_BOUNCE[lv - 1]));

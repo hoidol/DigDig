@@ -42,7 +42,6 @@ public abstract class BaseGun : MonoBehaviour, IGun
     void OnStartGame(StartGameEvent e)
     {
         SetBullet("Normal");
-
     }
 
 
@@ -134,7 +133,9 @@ public abstract class BaseGun : MonoBehaviour, IGun
         // pendingSpread = 0;
         // var (bullet, shotOrder) = SpendBullet();
 
-        Bullet bullet = null;
+        Bullet bullet = new NormalBullet();
+
+        var bulletObject = bullet.GetBulletObject();
 
         foreach (var e in player.itemInventory.preFires)
             e.OnPreFire(ref bullet, dir);

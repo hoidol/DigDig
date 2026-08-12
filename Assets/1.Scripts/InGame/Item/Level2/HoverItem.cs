@@ -7,9 +7,9 @@ using UnityEngine;
 public class HoverItem : Item
 {
     //자유롭게 돌아다님
-    float[] orbitDamages = { 1f, 2f, 3f };
-    float[] attackPowers = { 6, 11, 20 };
-    float[] attackSpeeds = { 2.5f, 2.5f, 2.5f };
+    float orbitDamage = 2f;
+    float attackPower = 6f;
+    float attackSpeed = 2.5f;
 
     public HoverMiniMe miniMePrefab;
     public HoverMiniMe miniMe;
@@ -21,9 +21,9 @@ public class HoverItem : Item
         {
             miniMe = Instantiate(miniMePrefab);
             Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
-            miniMe.attackPower = attackPowers[count - 1];
-            miniMe.attackSpeed = attackSpeeds[count - 1];
-            miniMe.orbitDamage = orbitDamages[count - 1];
+            miniMe.attackPower = attackPower;
+            miniMe.attackSpeed = attackSpeed;
+            miniMe.orbitDamage = orbitDamage;
             miniMe.Spawn(pos);
         }
     }
@@ -43,9 +43,9 @@ public class HoverItem : Item
         if (miniMe != null)
         {
             miniMe.SetLevel(count);
-            miniMe.attackPower = attackPowers[count - 1];
-            miniMe.orbitDamage = orbitDamages[count - 1];
-            miniMe.attackSpeed = attackSpeeds[count - 1];
+            miniMe.attackPower = attackPower;
+            miniMe.orbitDamage = orbitDamage;
+            miniMe.attackSpeed = attackSpeed;
         }
     }
 
@@ -60,8 +60,8 @@ public class HoverItem : Item
         }
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"궤도를 가진 비행 미니미를 소환합니다. 미니 공격력 {attackPowers[lv - 1]}\n{consumeTime}초마다 체력 {itemData.consumeHp} 감소";
+        return $"궤도를 가진 비행 미니미를 소환합니다. 미니 공격력 {attackPower}\n{consumeTime}초마다 체력 {itemData.consumeHp} 감소";
     }
 }

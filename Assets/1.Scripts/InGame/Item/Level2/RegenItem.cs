@@ -7,7 +7,7 @@ using UnityEngine;
 // 자연	행운
 public class RegenItem : Item
 {
-    float[] recoverHps = { 0.5f, 1, 1.5f };
+    float recoverHp =  0.5f;
     Buff recoveryHpBuff;
 
 
@@ -26,7 +26,7 @@ public class RegenItem : Item
         base.UpdateItem();
         Release();
         //초당 체력 회복
-        recoveryHpBuff = new Buff(StatType.RecoveryHp, recoverHps[count - 1], StatOpType.Add);
+        recoveryHpBuff = new Buff(StatType.RecoveryHp, recoverHp * count, StatOpType.Add);
         Character.Instance.AddBuff(recoveryHpBuff);
     }
 
@@ -36,9 +36,9 @@ public class RegenItem : Item
             Character.Instance.RemoveBuff(recoveryHpBuff);
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"초당 체력 +{recoverHps[count - 1]}회복 ";
+        return $"초당 체력 +{recoverHp}회복 ";
     }
 }
 

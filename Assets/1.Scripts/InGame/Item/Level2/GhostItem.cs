@@ -7,14 +7,8 @@ using UnityEngine;
 //통과 : 관통 힘
 public class GhostItem : Item, IPreFire, IComboFire
 {
-    public int[] triggerCounts = { 8, 8, 8 };
+    public int triggerCount= 8;
     int triggerCounter;
-
-    //공격력 +5, 탄 효율 30%
-    float[] attackPowers = { 7, 12, 17 };
-    float[] ammoEfficiencies = { 0.7f, 0.6f, 0.5f };
-    Buff atkPowerBuff;
-    Buff ammoEfficiencyBuff;
 
 
     public Ghost ghostPrefab;
@@ -33,39 +27,17 @@ public class GhostItem : Item, IPreFire, IComboFire
         cts?.Dispose();
         active = false;
         triggerCounter = 0;
-        Release();
-    }
-    public override void UpdateItem()
-    {
-        base.UpdateItem();
-        Release();
-        //공격력
-        atkPowerBuff = new Buff(StatType.AttackPower, attackPowers[count - 1], StatOpType.Add);
-        Character.Instance.AddBuff(atkPowerBuff);
-
-        //탄 효율
-        ammoEfficiencyBuff = new Buff(StatType.AmmoEfficiency, ammoEfficiencies[count - 1], StatOpType.Multiply);
-        Character.Instance.AddBuff(ammoEfficiencyBuff);
     }
 
-    void Release()
+    public override string GetDescription()
     {
-        if (atkPowerBuff != null)
-            Character.Instance.RemoveBuff(atkPowerBuff);
-
-        if (ammoEfficiencyBuff != null)
-            Character.Instance.RemoveBuff(ammoEfficiencyBuff);
-    }
-
-    public override string GetDescription(int lv = 1, bool detail = false)
-    {
-        return $"공격력 +{attackPowers[lv - 1]} 탄 효율 +{(1 - ammoEfficiencies[lv - 1]) * 100}%";
+        return $"{triggerCount}번 공격마다 거대창 발사합니다.";
     }
     bool active;
     public void OnPreFire(ref Bullet bullet, Vector2 dir) //trigger 타이밍마다 Pierce 발사 
     {
         triggerCounter++;
-        if (triggerCounts[count - 1] <= triggerCounter)
+        if (triggerCount <= triggerCounter)
         {
             active = true;
             triggerCounter = 0;
@@ -76,11 +48,15 @@ public class GhostItem : Item, IPreFire, IComboFire
         if (!active)
             return;
 
-        await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
-        Ghost ghost = Instantiate(ghostPrefab);
-        ghost.transform.position = Character.Instance.transform.position;
-        ghost.damage = Character.Instance.statMgr.AttackPower;
-        ghost.Shoot(dir);
+        for(int i = 0; i < count; i++)
+        {
+            await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+            Ghost ghost = Instantiate(ghostPrefab);
+            ghost.transform.position = Character.Instance.transform.position;
+            ghost.damage = Character.Instance.statMgr.AttackPower;
+            ghost.Shoot(dir);    
+        }
+        
         triggerCounter = 0;
         active = false;
     }

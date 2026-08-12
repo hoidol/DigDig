@@ -11,18 +11,20 @@ using UnityEngine.UI;
 public class WaveTimerPanel : MonoBehaviour
 {
     public TMP_Text waveText;
-    public Image timeBar;
+    public Image dayTimeBar;
+    public Image nightTimeBar;
 
 
     void Start()
     {
-        timeBar.fillAmount = 0;
+        dayTimeBar.fillAmount = 0;
+        nightTimeBar.fillAmount = 0;
         waveText.text = "";
         // GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
-        GameEventBus.Subscribe<PhaseStartEvent>(OnPhaseStartEvent);
+        GameEventBus.Subscribe<DayStartEvent>(OnDayStartEvent);
     }
 
-    void OnPhaseStartEvent(PhaseStartEvent e)
+    void OnDayStartEvent(DayStartEvent e)
     {
         waveText.text = $"웨이브 {e.phaseIdx + 1}";
     }
@@ -33,8 +35,15 @@ public class WaveTimerPanel : MonoBehaviour
         {
             return;
         }
-
-        timeBar.fillAmount = GameManager.Instance.phaseTimer / GameManager.Instance.phaseData.time;
+        if (GameManager.Instance.isDay)
+        {
+            dayTimeBar.fillAmount = GameManager.Instance.dayTimer / GameSetting.DAY_TIME;
+        }
+        else
+        {
+            nightTimeBar.fillAmount = 1f - GameManager.Instance.nightTimer / GameSetting.NIGHT_TIME;
+        }
+        
     }
     // public void StartWave(WaveStartEvent e)
     // {

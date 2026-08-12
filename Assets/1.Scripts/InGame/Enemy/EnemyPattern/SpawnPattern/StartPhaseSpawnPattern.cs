@@ -6,10 +6,10 @@ public class StartPhaseSpawnPattern : SpawnPattern
     public SpecialEnemySpawner[] specialEnemySpawners;
     void Awake()
     {
-        GameEventBus.Subscribe<PhaseStartEvent>(OnPhaseStartEvent);
+        GameEventBus.Subscribe<DayStartEvent>(OnDayStartEvent);
     }
 
-    void OnPhaseStartEvent(PhaseStartEvent e)
+    void OnDayStartEvent(DayStartEvent e)
     {
 
         for(int i = 0; i < phaseIdxs.Length; i++)

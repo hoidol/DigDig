@@ -5,8 +5,9 @@ using System.Linq;
 public class ItemInventory : MonoBehaviour
 {
     public List<Item> curItems = new List<Item>();
-    // public List<MergeItemData> canMergeItemDatas = new List<MergeItemData>();
-    public readonly int MAX_ITEM_COUNT = 7; // 최대 보유 아이템 개수 
+    public List<string> ownItemKeys = new List<string>();
+
+    public readonly int MAX_ITEM_COUNT = 8; // 최대 보유 아이템 개수 
 
     // 인터페이스별 캐시 - 장착/해제 시점에만 갱신
     public List<IPreFire> preFires = new List<IPreFire>();
@@ -36,46 +37,25 @@ public class ItemInventory : MonoBehaviour
     void OnStartGame(StartGameEvent e)
     {
 
-
-
-        // Player.Instance.AddItem("Pierce");
-        // Player.Instance.AddItem("Regen");
-        // Player.Instance.AddItem("Hover"); // 수정 필요 : 너무 약함
-
-
-        // Player.Instance.AddItem("Volt");
-
-        // Player.Instance.AddItem("Shield");
-        // Player.Instance.AddItem("Spread");
-        // Player.Instance.AddItem("Critical");
-        // Player.Instance.AddItem("Ghost");
-
-        // Player.Instance.AddItem("Firelance");
-        // Player.Instance.AddItem("Misfire");
-        // Player.Instance.AddItem("Momentum");
-        // Player.Instance.AddItem("Boost");
-        // Player.Instance.AddItem("Mutant");
-        // Player.Instance.AddItem("Mountain");
-        // Player.Instance.AddItem("Boom");
-        // Player.Instance.AddItem("Firework");
-        // Player.Instance.AddItem("Spray");
-        // Player.Instance.AddItem("Chain");
-
-
-        //Level1 완료
-        // Player.Instance.AddItem("Rush");
-        // Player.Instance.AddItem("Pierce");
-
-        //Player.Instance.AddItem("MiniMe");
-        // Player.Instance.AddItem("Nature");
-        // Player.Instance.AddItem("Wacky");
-        // Player.Instance.AddItem("Force");
-        // Player.Instance.AddItem("Luck");
-        // Player.Instance.AddItem("Orbit");
-
-
     }
 #endif
+
+    public void AddItem(string key)
+    {
+        ownItemKeys.Add(key);
+    }
+    
+    public void RemoveItem(string key, int idx = -1)
+    {
+        if(idx < 0)
+        {
+            ownItemKeys.Remove(key);
+        }
+        else
+        {
+            ownItemKeys.RemoveAt(idx);
+        }
+    }
 
 
     public void UpdateInventory()
@@ -115,7 +95,10 @@ public class ItemInventory : MonoBehaviour
         SortingItem();
     }
 
-
+    // public int GetItemCount(string key)
+    // {
+    //     return ownItems.Count(e => e == key);
+    // }
 
     public void SortingItem()
     {

@@ -8,11 +8,8 @@ public abstract class Item : MonoBehaviour
     // public bool equipped;
     public int count;
     public ReinforceType ReinforceType => ReinforceType.Item;
-    public virtual string GetDescription(int lv = 1, bool detail = false)
+    public virtual string GetDescription()
     {
-        if (itemData == null)
-            Debug.Log($"GetDescription if(itemData== null) {key}");
-
         return itemData.desc;
     }
     public ItemData itemData => ItemManager.Instance.GetItemData(key);
@@ -34,6 +31,7 @@ public abstract class Item : MonoBehaviour
     public virtual void UpdateItem()
     {
         count = Character.Instance.statMgr.itemStatDic[key].count;
+        // count = Character.Instance.itemInventory.GetItemCount(key);//.itemStatDic[key].count;
     }
 
 

@@ -18,7 +18,7 @@ public class LavaShellBehavior : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        bullet.damageMultiplier *= Character.Instance.statMgr.AmmoEfficiency;
+        // bullet.damageMultiplier *= Character.Instance.statMgr.AmmoEfficiency;
 
         if (remaining-- <= 0)
         {

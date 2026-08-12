@@ -3,8 +3,8 @@ using UnityEngine;
 //4킬 처치 시 360° 5발 발사 (체력 -2)
 public class SprayItem : Item
 {
-    int[] killsNeeded = { 4, 3, 2 };
-    int[] bulletCounts = { 5, 7, 9 };
+    int killsNeeded = 4;
+    int bulletCount = 5;
     int killCount = 0;
     public float coolTime = 2;
     public float coolTimer = 0;
@@ -37,7 +37,7 @@ public class SprayItem : Item
             return;
 
         killCount++;
-        if (killCount < killsNeeded[count - 1])
+        if (killCount < killsNeeded)
             return;
 
         killCount = 0;
@@ -53,10 +53,10 @@ public class SprayItem : Item
 
     void Shoot()
     {
-        int bulletCount = bulletCounts[count - 1];
-        float angleStep = 360f / bulletCount;
+        int bCount = bulletCount *count;
+        float angleStep = 360f / bCount;
         Vector2 baseDir = Random.insideUnitCircle.normalized;
-        for (int i = 0; i < bulletCount; i++)
+        for (int i = 0; i < bCount; i++)
         {
             Vector2 dir = Quaternion.Euler(0, 0, angleStep * i) * baseDir;
             Character.Instance.Shoot(new NormalBullet(), dir);
@@ -65,9 +65,9 @@ public class SprayItem : Item
         Character.Instance.AddHp(-itemData.consumeHp);
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"{killsNeeded[lv - 1]}킬 처치 시 360도 {bulletCounts[lv - 1]}발 발사 (체력 -{itemData.consumeHp})";
+        return $"{killsNeeded}킬 처치 시 360도 {bulletCount}발 발사 (체력 -{itemData.consumeHp})";
     }
 
 }

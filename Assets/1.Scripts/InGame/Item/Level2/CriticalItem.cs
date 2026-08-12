@@ -7,7 +7,7 @@ using UnityEngine;
 //관통	아드레날린
 public class CriticalItem : Item
 {
-    int[] pierceCounts = { 5, 6, 7 };
+    int pierceCounts =  5;
     float coolTime = 2;
     float coolTimer = 0;
     void OnEnable()
@@ -57,7 +57,7 @@ public class CriticalItem : Item
             return;
 
         PierceBullet pierceBullet = new PierceBullet();
-        pierceBullet.pierceCount = pierceCounts[count - 1];
+        pierceBullet.pierceCount = pierceCounts;
         for (int i = 0; i < count; i++)
         {
             Character.Instance.weapon.Shoot(pierceBullet, Character.Instance.weapon.GetAttackDirection());
@@ -75,7 +75,7 @@ public class CriticalItem : Item
         }
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
         return $"적 처치 시 관통탄 추가 발사 쿨타임 {coolTime}초\n발사 당 체력 {itemData.consumeHp} 감소";
     }

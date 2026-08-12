@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class LuckItem : TriggerItem
 {
-
+    //1회 방어 40초마다
     StatusEffectHandler shieldHandler;
     public GameObject effect;
-
-    float[] coolTimes = { 40, 35, 30 };
-
+    float baseCoolTime = 40;
+    float addReduceTime = 5;
     public override void OnEquip()
     {
         shieldHandler = Character.Instance.GetComponent<StatusEffectHandler>();
@@ -20,7 +19,7 @@ public class LuckItem : TriggerItem
     public override void UpdateItem()
     {
         base.UpdateItem();
-        coolTime = coolTimes[count - 1];
+        coolTime = baseCoolTime - addReduceTime * (count-1);
     }
 
     public override void OnTrigger()
@@ -34,8 +33,8 @@ public class LuckItem : TriggerItem
         }));
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"{coolTimes[lv - 1]}초마다 피해 1회 차단";
+        return $"{baseCoolTime}초마다 피해 1회 차단 (추가 보유 시 쿨타임 -{addReduceTime} 감소))";
     }
 }

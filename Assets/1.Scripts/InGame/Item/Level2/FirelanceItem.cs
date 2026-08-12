@@ -1,54 +1,65 @@
+using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-//4회마다 관통 화염탄
-public class FirelanceItem : Item, IFired, IComboFire
+//5초마다 바라보는 방향으로 Firelance 발사 count 에 따라서 연속으로 추가 발사 (시간 간격 짧게 있음 )
+public class FirelanceItem : Item
 {
-    public int triggerCount = 5;
     public Firelance firelancePrefab;
-    int triggerCounter;
+    public float triggerInterval = 5f;
+    public float burstInterval = 0.2f;
+
+    float duration = 5;
+    float dp = 4;
+
     CancellationTokenSource cts;
-    // public float damage;
-    float[] durations = { 5, 5, 5 };
-    float[] dps = { 4, 5, 6 };
+
     public override void OnEquip()
     {
         base.OnEquip();
         cts = new CancellationTokenSource();
-    }
-
-    public override string GetDescription(int lv, bool detail = false)
-    {
-        return $"{triggerCount}발사마다 불차 추가 발사";
+        Loop(cts.Token).Forget();
     }
 
     public override void OnUnequip()
     {
         cts?.Cancel();
         cts?.Dispose();
-        triggerCounter = 0;
     }
 
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
+    public override string GetDescription()
     {
-        triggerCounter++;
+        return $"{triggerInterval}초마다 불창 {count}연발 발사";
     }
 
-    public async UniTask OnComboFire(Vector2 dir)
+    async UniTaskVoid Loop(CancellationToken token)
     {
-        if (triggerCounter < triggerCount)
-            return;
+        while (!token.IsCancellationRequested)
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(triggerInterval), cancellationToken: token);
+            if (token.IsCancellationRequested) return;
 
-        await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+            for (int i = 0; i < count; i++)
+            {
+                Fire();
+
+                if (i < count - 1)
+                    await UniTask.Delay(TimeSpan.FromSeconds(burstInterval), cancellationToken: token);
+            }
+        }
+    }
+
+    void Fire()
+    {
+        Vector2 dir = Character.Instance.weapon.GetAttackDirection();
 
         Firelance firelance = Instantiate(firelancePrefab);
         firelance.transform.position = Character.Instance.transform.position;
         firelance.damage = Character.Instance.statMgr.AttackPower;
-        firelance.duration = durations[count - 1];
-        firelance.dps = dps[count - 1];
+        firelance.duration = duration;
+        firelance.dps = dp;
         firelance.Shoot(dir);
 
         Character.Instance.AddHp(-itemData.consumeHp);
-        triggerCounter = 0;
     }
 }

@@ -99,8 +99,9 @@ public class Stone : MonoBehaviour, IHittable, ITile
 
     public void Reward()
     {
-        HealItem.Instantiate(transform.position);
-        Exp.Instantiate(transform.position, exp, 1);
+        // HealPiece.Instantiate(transform.position);
+        //Exp.Instantiate(transform.position, exp, 1);
+        OrePiece.Instantiate(transform.position,2,1f);
     }
 
     public virtual void Destroy()

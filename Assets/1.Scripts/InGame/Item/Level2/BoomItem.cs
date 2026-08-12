@@ -10,14 +10,14 @@ public class BoomItem : Item, IFired, IComboFire
 
     int triggerCounter;
     CancellationTokenSource cts;
-    float[] boomRanges = { 1.5f, 2f, 2.5f };
+    float boomRange =  1.5f;
     public override void OnEquip()
     {
         base.OnEquip();
         cts = new CancellationTokenSource();
     }
 
-    public override string GetDescription(int lv, bool detail = false)
+    public override string GetDescription()
     {
         return $"{triggerCount}발사마다 폭탄 발사 (최대 2번 튕김)";
     }
@@ -40,18 +40,21 @@ public class BoomItem : Item, IFired, IComboFire
 
         if (triggerCounter < triggerCount)
             return;
+        for(int i = 0; i < count; i++)
+        {
+            await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
 
-        await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+            BoomBullet boomBullet = new BoomBullet();
+            boomBullet.boomRange = boomRange;
+            float angleOffset = Random.Range(-10f, 10f) * Mathf.Deg2Rad;
+            Vector2 shootDir = new Vector2(
+                dir.x * Mathf.Cos(angleOffset) - dir.y * Mathf.Sin(angleOffset),
+                dir.x * Mathf.Sin(angleOffset) + dir.y * Mathf.Cos(angleOffset));
+            Character.Instance.Shoot(boomBullet, shootDir);
 
-        BoomBullet boomBullet = new BoomBullet();
-        boomBullet.boomRange = boomRanges[count - 1];
-        float angleOffset = Random.Range(-10f, 10f) * Mathf.Deg2Rad;
-        Vector2 shootDir = new Vector2(
-            dir.x * Mathf.Cos(angleOffset) - dir.y * Mathf.Sin(angleOffset),
-            dir.x * Mathf.Sin(angleOffset) + dir.y * Mathf.Cos(angleOffset));
-        Character.Instance.Shoot(boomBullet, shootDir);
-
-        Character.Instance.AddHp(-itemData.consumeHp);
+            Character.Instance.AddHp(-itemData.consumeHp);
+        }
+        
 
         triggerCounter = 0;
     }

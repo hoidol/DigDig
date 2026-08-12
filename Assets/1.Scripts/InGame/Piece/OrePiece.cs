@@ -2,25 +2,30 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class HealItem : MonoBehaviour, IPickable
+//광석 
+public class OrePiece : MonoBehaviour, IPickable
 {
-    public string Key => "HealItem";
-    public static HealItemPoolingSystem poolingSystem = new();
+    public string Key => "OreItem";
+    // public OreType oreType;
+    public static OrePiecePoolingSystem poolingSystem = new();
 
     public bool IsTaken { get; set; }
     public Transform Transform => transform;
 
-    // Tween autoAttractTween;
+    public SpriteRenderer spriteRenderer;
     CancellationTokenSource moveCts;
     const float MOVE_SPEED = 20f;
 
-    public static void Instantiate(Vector2 pos)
+    public static void Instantiate(Vector2 pos, int count, float size)
     {
-        if (Random.value > 0.15)//HealItem 드랍 확률
+        if (Random.value > 0.2)//OreItem 10% 확률로 드랍
             return;
 
-        Vector2 position = pos + Random.insideUnitCircle;
-        poolingSystem.Get(position);
+        for (int i = 0; i < count; i++)
+        {
+            Vector2 position = pos + Random.insideUnitCircle * size;
+            poolingSystem.Get(position);
+        }
     }
 
     public void Droped(Vector2 pos)
@@ -33,7 +38,7 @@ public class HealItem : MonoBehaviour, IPickable
 
     public void PickedUp()
     {
-        Character.Instance.AddHp(5);
+        Character.Instance.AddOrePiece(1);
         poolingSystem.Return(this);
     }
 
@@ -41,7 +46,6 @@ public class HealItem : MonoBehaviour, IPickable
     {
         if (IsTaken) return;
         IsTaken = true;
-        // autoAttractTween?.Kill();
 
         moveCts?.Cancel();
         moveCts = new CancellationTokenSource();

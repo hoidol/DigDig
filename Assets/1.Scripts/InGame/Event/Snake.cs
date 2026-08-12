@@ -24,11 +24,6 @@ public class Snake : EventObject
         suggest.nerf = new Buff(StatType.MaxHp, 0.7f, StatOpType.Multiply);
         snakeSuggests.Add(suggest);
 
-        //탄 효율 증가 / 체력 감소
-        suggest = new SnakeSuggest();
-        suggest.buff = new Buff(StatType.AmmoEfficiency, 1.2f, StatOpType.Multiply);
-        suggest.nerf = new Buff(StatType.MaxHp, 0.7f, StatOpType.Multiply);
-        snakeSuggests.Add(suggest);
     }
     public void OnTriggerEnter2D(Collider2D collision)
     {

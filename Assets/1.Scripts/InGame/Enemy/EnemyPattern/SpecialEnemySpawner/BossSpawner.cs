@@ -18,8 +18,8 @@ public class BossSpawner : SpecialEnemySpawner
     {
         Boss boss = Instantiate(GameManager.Instance.stageData.boss);
 
-        Vector2Int tileIndex = MapManager.PositionToTileIndex(Character.Instance.transform.position);
-        Vector2Int[,] tileIndexArr = MapManager.GetIndexArray(tileIndex, boss.Size);
+        // Vector2Int tileIndex = MapManager.PositionToTileIndex(Character.Instance.transform.position);
+        // Vector2Int[,] tileIndexArr = MapManager.GetIndexArray(tileIndex, boss.Size);
 
         var bestChecker = Character.Instance.tileCheckers.OrderBy(c => c.TileCount()).First();
         Vector2 bestCheckerCenter = bestChecker.transform.position;
@@ -29,9 +29,10 @@ public class BossSpawner : SpecialEnemySpawner
         Vector2Int center = MapManager.PositionToTileIndex(rPoint);
         unbreakableStones = MapManager.Instance.MakeUnbreakableStone(center, 30, 20);
 
-        MapManager.GetTileArray(center, boss.enemyData.size, out Vector2Int[,] spawnTileArray);
+        // MapManager.GetTileArray(center, boss.enemyData.size, out Vector2Int[,] spawnTileArray);
 
-        boss.Spawn(tileIndexArr);
+        
+        boss.Spawn(EnemySpawner.Instance.GetSpawnPosition());
         BossCanvas.Instance.SetBoss(boss);
         GameEventBus.Publish(new BossSpawnEvent(boss));
     }

@@ -9,12 +9,7 @@ public class MeleeEnemy : NormalEnemy
         base.Awake();
         // meleeAttackIndicator = GetComponentInChildren<MeleeAttackIndicator>(true);
     }
-    public override void Spawn(Vector2Int[,] indexArr)
-    {
-        base.Spawn(indexArr);
-        // meleeAttackIndicator.gameObject.SetActive(false);
-    }
-    WarningIndicator warningIndicator;
+        WarningIndicator warningIndicator;
     public override void StartAttack()
     {
         base.StartAttack();

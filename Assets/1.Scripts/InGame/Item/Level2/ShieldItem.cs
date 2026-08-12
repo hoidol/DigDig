@@ -5,9 +5,9 @@ using UnityEngine;
 //2개 되고 빨라지고 커짐
 public class ShieldItem : TriggerCycleItem
 {
-    float[] damages = { 2, 2, 2 };
-    float[] cooltimes = { 5, 5, 5 };
-    float[] activeTimes = { 8, 8, 8 };
+    float damage = 2;
+    float baseCooltime = 5;
+    float baseActiveTime = 8;
     public ShieldOrbitOrb shieldOrbitOrbPrefab;
     public float orbitRadius = 2.5f; //괘적이 넓음 
     public float orbitSpeed = 70f;
@@ -33,8 +33,8 @@ public class ShieldItem : TriggerCycleItem
     {
         base.UpdateItem();
         RebuildOrbs();
-        coolTime = cooltimes[count - 1];
-        activeTime = activeTimes[count - 1];
+        coolTime = baseCooltime;
+        activeTime = baseActiveTime;
     }
 
     protected void RebuildOrbs()
@@ -49,7 +49,7 @@ public class ShieldItem : TriggerCycleItem
             Vector3 localPos = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad)) * orbitRadius;
 
             ShieldOrbitOrb orb = Instantiate(shieldOrbitOrbPrefab, transform);
-            orb.damage = damages[count - 1];
+            orb.damage = damage;
             orb.transform.localPosition = localPos;
             orb.transform.up = transform.position - orb.transform.position;
             orbs.Add(orb);

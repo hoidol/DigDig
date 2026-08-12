@@ -1,26 +1,26 @@
-// 가죽 장갑: 공격속도 25% 증가
-public class LeatherGlovesItem : Item
-{
-    Buff buff;
-    const float buffValue =0.75f; 
+// // 가죽 장갑: 공격속도 25% 증가
+// public class LeatherGlovesItem : Item
+// {
+//     Buff buff;
+//     const float buffValue =0.75f; 
 
-    float[] buffValues = {0.8f, 0.7f, 0.6f};
-    public override void UpdateItem()
-    {
-        if(buff != null)
-            Character.Instance.RemoveBuff(buff);
+//     float[] buffValues = {0.8f, 0.7f, 0.6f};
+//     public override void UpdateItem()
+//     {
+//         if(buff != null)
+//             Character.Instance.RemoveBuff(buff);
             
-        buff = new Buff(StatType.AttackSpeed,buffValues[count-1] , StatOpType.Multiply);
-        Character.Instance.AddBuff(buff);
-    }
+//         buff = new Buff(StatType.AttackSpeed,buffValues[count-1] , StatOpType.Multiply);
+//         Character.Instance.AddBuff(buff);
+//     }
 
-    public override void OnUnequip()
-    {
-        Character.Instance.RemoveBuff(buff);
-    }
+//     public override void OnUnequip()
+//     {
+//         Character.Instance.RemoveBuff(buff);
+//     }
 
-    public override string GetDescription(int lv = 1,bool detail = false)
-    {
-        return $"공격속도 {1-buffValues[lv-1]*100}% 증가";
-    }
-}
+//     public override string GetDescription(int lv = 1,bool detail = false)
+//     {
+//         return $"공격속도 {1-buffValues[lv-1]*100}% 증가";
+//     }
+// }

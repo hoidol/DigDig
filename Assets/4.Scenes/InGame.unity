@@ -12285,7 +12285,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waveText: {fileID: 0}
-  timeBar: {fileID: 0}
+  dayTimeBar: {fileID: 0}
+  nightTimeBar: {fileID: 0}
 --- !u!1 &703403505
 GameObject:
   m_ObjectHideFlags: 0
@@ -17338,7 +17339,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveTimerPanel
   waveText: {fileID: 768455147}
-  timeBar: {fileID: 1976813568}
+  dayTimeBar: {fileID: 0}
+  nightTimeBar: {fileID: 0}
 --- !u!1 &1020395406
 GameObject:
   m_ObjectHideFlags: 0
@@ -19802,20 +19804,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1702190eac7f44000bfaac2530a20473, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  phase: 0
   stageData: {fileID: 0}
   isPlaying: 0
   <gameTimer>k__BackingField: 0
+  dayTimer: 0
+  nightTimer: 0
+  isDay: 0
+  day: 0
   phaseData:
     phase: 0
     isBoss: 0
     ordealLevel: 0
     enemyHp: 0
     enemyAttackPower: 0
-    time: 0
     enemyPatternData:
       enemySpawnPatternDatas: []
-  phaseTimer: 0
 --- !u!4 &1166215920
 Transform:
   m_ObjectHideFlags: 0
@@ -32572,6 +32575,78 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 5, y: 5}
   m_EdgeRadius: 0
+--- !u!1001 &1940713957
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.923
+      objectReference: {fileID: 0}
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.333
+      objectReference: {fileID: 0}
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2067649798771837938, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7420967802149043619, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      propertyPath: m_Name
+      value: MeleeEnemy
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5593150089614575426, guid: 418f469a0893c4d3ebbc1c5d63d55c48,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 418f469a0893c4d3ebbc1c5d63d55c48, type: 3}
 --- !u!1 &1949654377
 GameObject:
   m_ObjectHideFlags: 0
@@ -35686,3 +35761,4 @@ SceneRoots:
   - {fileID: 1443239897}
   - {fileID: 1828783090}
   - {fileID: 1626847163}
+  - {fileID: 1940713957}

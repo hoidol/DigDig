@@ -22,7 +22,7 @@ public class LevelUpStatPanel : MonoBehaviour
     public void OnClickedSelect()
     {
         LevelUpCanvas.Instance.CloseCanvas();
-        Character.Instance.AddLevelUpState(levelUpStatType, 1);
+        // Character.Instance.AddLevelUpState(levelUpStatType, 1);
 
     }
 }

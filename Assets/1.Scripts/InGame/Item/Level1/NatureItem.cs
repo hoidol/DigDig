@@ -1,12 +1,11 @@
 using UnityEngine;
 
-//체력 +15, 회복 초당 0.5
+
 public class NatureItem : Item
 {
-
-    //공격력 +5, 탄 효율 30%
-    float[] maxHps = { 10, 20, 30 };
-    float[] recoveryHps = { 0.2f, 0.3f, 0.4f };
+    //체력 +10, 회복력 초당 0.3
+    float maxHp =  10;
+    float recoveryHp =  0.3f;
     Buff maxHpBuff;
     Buff recoveryHpBuff;
 
@@ -20,13 +19,17 @@ public class NatureItem : Item
     {
         base.UpdateItem();
         Release();
+
+
+        float addHp =  Character.Instance.itemInventory.GetItem(key).count *maxHp;
         //체력
-        maxHpBuff = new Buff(StatType.MaxHp, maxHps[count - 1], StatOpType.Add);
+        maxHpBuff = new Buff(StatType.MaxHp, addHp, StatOpType.Add);
         Character.Instance.AddBuff(maxHpBuff);
 
 
+        float addRecoveryHp =  Character.Instance.itemInventory.GetItem(key).count *recoveryHp;
         //초당 회복력
-        recoveryHpBuff = new Buff(StatType.RecoveryHp, recoveryHps[count - 1], StatOpType.Add);
+        recoveryHpBuff = new Buff(StatType.RecoveryHp, addRecoveryHp, StatOpType.Add);
         Character.Instance.AddBuff(recoveryHpBuff);
     }
 
@@ -41,8 +44,8 @@ public class NatureItem : Item
     }
 
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"체력 +{maxHps[lv - 1]} 초당 회복력 +{recoveryHps[lv - 1]}";
+        return $"체력 +{maxHp} 초당 회복력 +{recoveryHp}";
     }
 }

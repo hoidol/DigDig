@@ -18,6 +18,7 @@ public class ItemData : ScriptableObject
     public string desc;
     public int consumeHp;
     public int level;
+    public int addPrice; //추가 금액
     public string childItem1;
     public string childItem2;
 
@@ -45,9 +46,9 @@ public class ItemData : ScriptableObject
         return unlocked;
     }
 
-    public string GetDescription(int lv = 1, bool detail = false)
+    public string GetDescription()
     {
-        return itemPrefab.GetDescription(lv, detail);
+        return itemPrefab.GetDescription();
     }
 
     public static ItemData GetItemData(string key)

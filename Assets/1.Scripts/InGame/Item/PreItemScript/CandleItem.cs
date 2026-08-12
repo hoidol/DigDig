@@ -1,38 +1,38 @@
-using Unity.Cinemachine;
-using UnityEngine;
+// using Unity.Cinemachine;
+// using UnityEngine;
 
-public class CandleItem : Item
-{
-    public float sizeIncrease = 2f;
-    const float BASE_SIZE = 8f;
+// public class CandleItem : Item
+// {
+//     public float sizeIncrease = 2f;
+//     const float BASE_SIZE = 8f;
 
-    CinemachineCamera cinemachineCamera;
+//     CinemachineCamera cinemachineCamera;
 
-    public override void OnEquip()
-    {
-        cinemachineCamera = FindFirstObjectByType<CinemachineCamera>();
-        ApplySize();
-    }
+//     public override void OnEquip()
+//     {
+//         cinemachineCamera = FindFirstObjectByType<CinemachineCamera>();
+//         ApplySize();
+//     }
 
-    public override void UpdateItem()
-    {
-        ApplySize();
-    }
+//     public override void UpdateItem()
+//     {
+//         ApplySize();
+//     }
 
-    public override void OnUnequip()
-    {
-        if (cinemachineCamera != null)
-            cinemachineCamera.Lens.OrthographicSize = BASE_SIZE;
-    }
+//     public override void OnUnequip()
+//     {
+//         if (cinemachineCamera != null)
+//             cinemachineCamera.Lens.OrthographicSize = BASE_SIZE;
+//     }
 
-    void ApplySize()
-    {
-        if (cinemachineCamera == null) return;
-        cinemachineCamera.Lens.OrthographicSize = BASE_SIZE + sizeIncrease * count;
-    }
+//     void ApplySize()
+//     {
+//         if (cinemachineCamera == null) return;
+//         cinemachineCamera.Lens.OrthographicSize = BASE_SIZE + sizeIncrease * count;
+//     }
 
-    public override string GetDescription(int lv = 1,bool detail = false)
-    {
-        return $"시야가 넓어짐";
-    }
-}
+//     public override string GetDescription(int lv = 1,bool detail = false)
+//     {
+//         return $"시야가 넓어짐";
+//     }
+// }

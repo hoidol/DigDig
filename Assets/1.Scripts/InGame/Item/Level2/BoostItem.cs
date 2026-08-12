@@ -1,54 +1,53 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-//미니미 2개 소환 및 처치 시 미니미 추가탄 발사 \n쿨타임 : {coolTimes[lv-1]}초, 발사 당 체력 -{itemData.consumeHp}
+//미니미 count만큼 소환 및 처치 시 미니미 추가탄 발사 \n쿨타임 : {coolTimes[lv-1]}초, 발사 당 체력 -{itemData.consumeHp}
 public class BoostItem : Item
 {
     public BoostMiniMe boostMiniMePrefab;
-    public BoostMiniMe[] boostMiniMes = new BoostMiniMe[2];
+    public List<BoostMiniMe> boostMiniMes = new();
 
     public float consumeTime = 5;
 
-    float[] attackPowers = { 5, 8, 12 };
-    float[] attackSpeeds = { 2.5f, 2.5f, 2.5f };
+    float attackPower = 5f;
+    float attackSpeed =  2.5f;
 
-    float[] coolTimes = { 2, 2, 2 };
-
-    public override void OnEquip()
-    {
-        for (int i = 0; i < boostMiniMes.Length; i++)
-        {
-            if (boostMiniMes[i] == null)
-            {
-                boostMiniMes[i] = Instantiate(boostMiniMePrefab);
-                Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
-                boostMiniMes[i].Spawn(pos);
-            }
-        }
-        base.OnEquip();
-    }
+    float coolTime=2f;
 
     public override void OnUnequip()
     {
         base.OnUnequip();
-        for (int i = 0; i < boostMiniMes.Length; i++)
+        foreach (BoostMiniMe boostMiniMe in boostMiniMes)
         {
-            if (boostMiniMes[i] != null)
-            {
-                Destroy(boostMiniMes[i].gameObject);
-            }
-            boostMiniMes[i] = null;
+            Destroy(boostMiniMe.gameObject);
         }
+        boostMiniMes.Clear();
     }
 
     public override void UpdateItem()
     {
         base.UpdateItem();
-        for (int i = 0; i < boostMiniMes.Length; i++)
+
+        while (boostMiniMes.Count < count)
         {
-            boostMiniMes[i]?.SetLevel(count);
-            boostMiniMes[i].attackPower = attackPowers[count - 1];
-            boostMiniMes[i].attackSpeed = attackSpeeds[count - 1];
-            boostMiniMes[i].coolTime = coolTimes[count - 1];
+            BoostMiniMe boostMiniMe = Instantiate(boostMiniMePrefab);
+            Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
+            boostMiniMe.Spawn(pos);
+            boostMiniMes.Add(boostMiniMe);
+        }
+        while (boostMiniMes.Count > count)
+        {
+            BoostMiniMe boostMiniMe = boostMiniMes[^1];
+            boostMiniMes.RemoveAt(boostMiniMes.Count - 1);
+            Destroy(boostMiniMe.gameObject);
+        }
+
+        foreach (BoostMiniMe boostMiniMe in boostMiniMes)
+        {
+            boostMiniMe.SetLevel(count);
+            boostMiniMe.attackPower = attackPower;
+            boostMiniMe.attackSpeed = attackSpeed;
+            boostMiniMe.coolTime = coolTime;
         }
     }
 
@@ -67,9 +66,9 @@ public class BoostItem : Item
 
 
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"미니미 2개 소환, 처지 시 {count}개 추가 탄 발사\n쿨타임 : {coolTimes[lv - 1]}초, {consumeTime}초 당 체력 -{itemData.consumeHp}";
+        return $"미니미 2개 소환, 처지 시 {count}개 추가 탄 발사\n쿨타임 : {coolTime}초, {consumeTime}초 당 체력 -{itemData.consumeHp}";
     }
 
 

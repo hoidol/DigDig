@@ -50,11 +50,11 @@ public class SelectItemPanel : MonoBehaviour
         {
             string havingItem = mergeItemDatas[0].childItemKeys.Where(e => e != itemData.key).FirstOrDefault();
             Character.Instance.AddItem(havingItem, -1);
-            SelectMergeItemCanvas.Instance.OpenCanvas(mergeItemDatas, () =>
-            {
+            // SelectMergeItemCanvas.Instance.OpenCanvas(mergeItemDatas, () =>
+            // {
 
 
-            });
+            // });
         }
         else if (mergeItemDatas.Count == 1)
         {

@@ -46,7 +46,7 @@ public class OrbitBulletObject : MonoBehaviour
                 return;
             }
 
-            damageData.damage *= Character.Instance.statMgr.AmmoEfficiency;
+            // damageData.damage *= Character.Instance.statMgr.AmmoEfficiency;
             if (damageData.damage <= 1)
                 damageData.damage = 1;
 

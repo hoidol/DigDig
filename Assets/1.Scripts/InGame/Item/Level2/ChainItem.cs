@@ -4,8 +4,8 @@ using UnityEngine;
 //4회마다 연속 발사
 public class ChainItem : Item, IFired, IComboFire
 {
-    int[] triggerCounts = { 2, 2, 2 };
-    int[] shootCounts = { 1, 2, 3 };
+    int triggerCount =  2;
+    // int shootCounts = { 1, 2, 3 };
     int triggerCounter;
     bool active;
 
@@ -26,9 +26,9 @@ public class ChainItem : Item, IFired, IComboFire
         triggerCounter = 0;
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"{triggerCounts[lv - 1]}회 발사마다 연속 발사";
+        return $"{triggerCount}회 발사마다 연속 발사";
     }
 
     public async UniTask OnComboFire(Vector2 dir)
@@ -37,7 +37,7 @@ public class ChainItem : Item, IFired, IComboFire
             return;
 
         active = false;
-        for (int i = 0; i < shootCounts[count - 1]; i++)
+        for (int i = 0; i < count; i++)
         {
             await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
             Character.Instance.Shoot(bullet, dir);
@@ -53,7 +53,7 @@ public class ChainItem : Item, IFired, IComboFire
     {
 
         triggerCounter++;
-        active = triggerCounter >= triggerCounts[count - 1];
+        active = triggerCounter >= triggerCount;
         this.bullet = bullet;
 
     }

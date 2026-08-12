@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealItemPoolingSystem : StackPoolingSystem<HealItem>
+public class HealPiecePoolingSystem : StackPoolingSystem<HealPiece>
 {
 
-    public override HealItem Get(Vector3 pos, Transform parent = null)
+    public override HealPiece Get(Vector3 pos, Transform parent = null)
     {
         if (prefab == null)
         {
@@ -13,8 +13,8 @@ public class HealItemPoolingSystem : StackPoolingSystem<HealItem>
             SetPrefab("Prefabs/HealItem");
         }
 
-        HealItem healItem = base.Get(pos, parent);
-        healItem.Droped(pos);
-        return healItem;
+        HealPiece healPiece = base.Get(pos, parent);
+        healPiece.Droped(pos);
+        return healPiece;
     }
 }

@@ -5,14 +5,14 @@ using UnityEngine;
 //2개 되고 빨라지고 커짐
 public class VoltItem : TriggerCycleItem
 {
-    float[] damages = { 2, 2, 2 };
+    float damage = 2;
 
-    float[] cooltimes = { 5, 5, 5 };
-    float[] activeTimes = { 8, 8, 8 };
+    float baseCooltime = 5;
+    float baseActiveTime = 8;
 
-    float[] voltDamages = { 2f, 3f, 4f };
-    float[] voltChances = { 0.2f, 0.3f, 0.4f };
-    float[] voltRadiuses = { 1.5f, 2f, 2.5f };
+    float voltDamage = 3;
+    float voltChance = 0.3f;
+    float voltRadiuse = 1.5f;
 
     public VoltOrbitOrb voltOrbitOrbPrefab;
     float orbitRadius = 2.2f;
@@ -42,8 +42,8 @@ public class VoltItem : TriggerCycleItem
     {
         base.UpdateItem();
         RebuildOrbs();
-        coolTime = cooltimes[count - 1];
-        activeTime = activeTimes[count - 1];
+        coolTime = baseCooltime;
+        activeTime = baseActiveTime;
     }
 
     protected void RebuildOrbs()
@@ -58,10 +58,10 @@ public class VoltItem : TriggerCycleItem
             Vector3 localPos = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad)) * orbitRadius;
 
             VoltOrbitOrb orb = Instantiate(voltOrbitOrbPrefab, transform);
-            orb.damage = damages[count - 1];
-            orb.voltDamage = voltDamages[count - 1];
-            orb.voltChance = voltChances[count - 1];
-            orb.voltRadius = voltRadiuses[count - 1];
+            orb.damage = damage;
+            orb.voltDamage = voltDamage;
+            orb.voltChance = voltChance;
+            orb.voltRadius = voltRadiuse;
 
 
             orb.transform.localPosition = localPos;

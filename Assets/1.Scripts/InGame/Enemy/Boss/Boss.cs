@@ -24,7 +24,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     }
 
 
-    public override void Spawn(Vector2Int[,] idxArr)
+    public override void Spawn(Vector2 pos)
     {
         for (int i = 0; i < phases.Length; i++)
         {
@@ -32,7 +32,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
         }
         EnterBossState(BossState.Intro);
         currentPhase = 0;
-        base.Spawn(idxArr);
+        base.Spawn(pos);
         GameEventBus.Publish(new BossSpawnEvent(this));
     }
 
@@ -125,26 +125,26 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     }
 
     //부수면서 이동하기
-    public async override UniTask MoveTo(Vector2Int dir, float delaySec = 2)
-    {
-        Vector2Int[,] newTiles = MapManager.GetIndexArray(tileIndexArr, dir);
+    // public async override UniTask MoveTo(Vector2Int dir, float delaySec = 2)
+    // {
+    //     Vector2Int[,] newTiles = MapManager.GetIndexArray(tileIndexArr, dir);
 
-        for (int i = 0; i < newTiles.GetLength(0); i++)
-        {
-            for (int j = 0; j < newTiles.GetLength(1); j++)
-            {
-                if (!MapManager.CheckEmpty(newTiles[i, j]))
-                {
-                    if (MapManager.tileArray[newTiles[i, j].x, newTiles[i, j].y] == this)
-                    {
-                        continue;
-                    }
-                    MapManager.tileArray[newTiles[i, j].x, newTiles[i, j].y].Destroy();
-                }
-            }
-        }
-        await base.MoveTo(dir, delaySec);
-    }
+    //     for (int i = 0; i < newTiles.GetLength(0); i++)
+    //     {
+    //         for (int j = 0; j < newTiles.GetLength(1); j++)
+    //         {
+    //             if (!MapManager.CheckEmpty(newTiles[i, j]))
+    //             {
+    //                 if (MapManager.tileArray[newTiles[i, j].x, newTiles[i, j].y] == this)
+    //                 {
+    //                     continue;
+    //                 }
+    //                 MapManager.tileArray[newTiles[i, j].x, newTiles[i, j].y].Destroy();
+    //             }
+    //         }
+    //     }
+    //     await base.MoveTo(dir, delaySec);
+    // }
 
     public BossBehaviour GetBossBehaviour(string name)
     {

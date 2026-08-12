@@ -6,7 +6,7 @@ public class BounceBehavior : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        bullet.damageMultiplier *= Character.Instance.statMgr.AmmoEfficiency; //1에 가까울수록 효율 좋음
+        // bullet.damageMultiplier *= Character.Instance.statMgr.AmmoEfficiency; //1에 가까울수록 효율 좋음
         if (remaining-- <= 0)
             return true;
 

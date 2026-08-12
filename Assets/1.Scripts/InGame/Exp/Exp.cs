@@ -28,14 +28,12 @@ public class Exp : MonoBehaviour, IPickable
     {
         transform.position = pos;
         IsTaken = false;
-        // autoAttractTween?.Kill();
         moveCts?.Cancel();
-        // autoAttractTween = DOVirtual.DelayedCall(5f, () => Take(Player.Instance));
     }
 
     public void PickedUp()
     {
-        Character.Instance.AddExp(1);
+        // Character.Instance.AddExp(1);
         poolingSystem.Return(this);
     }
 

@@ -1,42 +1,49 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MiniMeItem : Item
 {
     public MiniMe miniMePrefab;
-    public MiniMe miniMe;
+    public List<MiniMe> miniMes = new();
+
     public float consumeTime = 5;
-    public float[] attackPowers = { 3, 6, 9 };
-    public float[] attackSpeeds = { 2.5f, 2.5f, 2.5f };
-    public override void OnEquip()
-    {
-        if (miniMe == null)
-        {
-            miniMe = Instantiate(miniMePrefab);
-            Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
-            miniMe.Spawn(pos);
-        }
-        base.OnEquip();
-    }
+    public float attackPower = 3;
+    public float attackSpeed =  2.5f;
+
     public override void OnUnequip()
     {
         base.OnUnequip();
-        if (miniMe != null)
+        foreach (MiniMe miniMe in miniMes)
         {
             Destroy(miniMe.gameObject);
-            miniMe = null;
         }
+        miniMes.Clear();
     }
 
     public override void UpdateItem()
     {
         base.UpdateItem();
-        if (miniMe != null)
+
+        while (miniMes.Count < count)
         {
-            miniMe.SetLevel(count);
-            miniMe.attackPower = attackPowers[count - 1];
-            miniMe.attackSpeed = attackSpeeds[count - 1];
+            MiniMe miniMe = Instantiate(miniMePrefab);
+            Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
+            miniMe.Spawn(pos);
+            miniMes.Add(miniMe);
+        }
+        while (miniMes.Count > count)
+        {
+            MiniMe miniMe = miniMes[^1];
+            miniMes.RemoveAt(miniMes.Count - 1);
+            Destroy(miniMe.gameObject);
         }
 
+        foreach (MiniMe miniMe in miniMes)
+        {
+            miniMe.SetLevel(count);
+            miniMe.attackPower = attackPower;
+            miniMe.attackSpeed = attackSpeed;
+        }
     }
     float timer;
     void Update()
@@ -49,9 +56,9 @@ public class MiniMeItem : Item
         }
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"미니미를 소환합니다. 미니 공격력 {attackPowers[lv - 1]}\n{consumeTime}초마다 체력 1 감소";
+        return $"미니미를 소환합니다. 미니 공격력 {attackPower}\n{consumeTime}초마다 체력 1 감소";
     }
 
 }

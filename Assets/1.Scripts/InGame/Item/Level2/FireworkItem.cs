@@ -5,12 +5,12 @@ using UnityEngine;
 public class FireworkItem : TriggerCycleItem, IFired
 {
 
-    public int[] burnDurations = { 5, 6, 7 };
-    public int[] burnDPSs = { 2, 3, 4 };
+    public int burnDuration =  5;
+    public int burnDPS =  2;
 
-    float[] coolTimes = { 7, 7, 7 };
-    float[] attackSpeeds = { 0.6f, 0.6f, 0.6f };
-    float[] durations = { 4f, 5f, 6f };
+    float baseCoolTime = 7;
+    float attackSpeed = 0.6f;
+    float duration = 4;
 
 
     Buff attackSpeedBuff;
@@ -18,8 +18,8 @@ public class FireworkItem : TriggerCycleItem, IFired
     public override void UpdateItem()
     {
         base.UpdateItem();
-        coolTime = coolTimes[count - 1];
-        activeTime = durations[count - 1];
+        coolTime = baseCoolTime;
+        activeTime = duration *count;
     }
     public override void OnUnequip()
     {
@@ -30,15 +30,15 @@ public class FireworkItem : TriggerCycleItem, IFired
     public override void OnActivate()
     {
         IsActive = true;
-        attackSpeedBuff = new Buff(StatType.AttackSpeed, attackSpeeds[count - 1], StatOpType.Multiply);
+        attackSpeedBuff = new Buff(StatType.AttackSpeed, attackSpeed, StatOpType.Multiply);
         Character.Instance.AddBuff(attackSpeedBuff);
 
         Character.Instance.AddHp(-itemData.consumeHp);
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
-        return $"{durations[lv - 1]}동안 발사 시 화염탄 랜덤 방향으로 난 및 공격 속도 증가\n쿨타임 : {coolTimes[lv - 1]}초, 발사 당 체력 -{itemData.consumeHp}";
+        return $"{duration}동안 발사 시 화염탄 랜덤 방향으로 난 및 공격 속도 증가\n쿨타임 : {baseCoolTime}초, 발사 당 체력 -{itemData.consumeHp}";
     }
 
     public override void OnDeactivate()
@@ -56,8 +56,8 @@ public class FireworkItem : TriggerCycleItem, IFired
             return;
 
         FlameBullet flameBullet = new FlameBullet();
-        flameBullet.burnDuration = burnDurations[count - 1];
-        flameBullet.burnDPS = burnDPSs[count - 1];
+        flameBullet.burnDuration = burnDuration;
+        flameBullet.burnDPS = burnDPS;
 
         Vector2 randomDir = Random.insideUnitCircle.normalized;
         Character.Instance.Shoot(flameBullet, randomDir);

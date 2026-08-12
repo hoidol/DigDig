@@ -1,28 +1,23 @@
 using UnityEngine;
 
-//탄 4번 쏠때마다 관통탄 추가 발사 (랜덤 방향)튕김 횟수 +2 > +4 > +6
-public class PierceItem : Item, IPreFire
+// 탄 관통력 추가
+public class PierceItem : Item, IFired
 {
-    int[] pierceCounts = { 3, 5, 7 };
-    int[] triggerCounts = { 5, 5, 5 };
+    int pierceCount = 2;
+    int triggerCount = 5;
     int triggerCounter;
-    public void OnPreFire(ref Bullet bullet, Vector2 dir)
+
+    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
     {
-        triggerCounter++;
-        if (triggerCounts[count - 1] <= triggerCounter)
+        if (triggerCount <= triggerCounter)
         {
-            if (bullet == null || bullet.bulletData.order < BulletData.GetBulletData("Pierce").order)
-            {
-                PierceBullet pierceBullet = new PierceBullet();
-                pierceBullet.pierceCount = pierceCounts[count - 1];
-                bullet = pierceBullet;
-            }
+            playerBulletObject.AddBehavior(new PierceBehavior(Character.Instance.itemInventory.GetItem(key).count * pierceCount));
             triggerCounter = 0;
         }
+        
     }
-
-    public override string GetDescription(int lv, bool detail = false)
+    public override string GetDescription()
     {
-        return $"{triggerCounts[lv - 1]}발사마다 관통탄 발사\n관통력 +{pierceCounts[lv - 1]}";
+        return $"{triggerCount}발사마다 관통탄 발사\n관통력 +{pierceCount}";
     }
 }

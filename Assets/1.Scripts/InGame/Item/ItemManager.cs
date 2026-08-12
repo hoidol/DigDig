@@ -69,7 +69,6 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
                     continue;
             }
 
-
             //이미 Result안에 있음
             if (result.Any(e => e.key == level1ItemDatas[i].key))
                 continue;
@@ -120,6 +119,11 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
         }
 
         return curMergeItemDataList;
+    }
+
+    public List<MergeItemData> GetMergeItemDataList()
+    {
+        return mergeItemDatas.Where(e => e.childItemKeys.All(key => Character.Instance.itemInventory.GetItem(key) != null)).ToList();
     }
 
 

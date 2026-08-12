@@ -1,0 +1,78 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+public class HealPiece : MonoBehaviour, IPickable
+{
+    public string Key => "HealPiece";
+    public static HealPiecePoolingSystem poolingSystem = new();
+
+    public bool IsTaken { get; set; }
+    public Transform Transform => transform;
+
+    // Tween autoAttractTween;
+    CancellationTokenSource moveCts;
+    const float MOVE_SPEED = 20f;
+
+    public static void Instantiate(Vector2 pos)
+    {
+        if (Random.value > 0.15)//HealItem 드랍 확률
+            return;
+
+        Vector2 position = pos + Random.insideUnitCircle;
+        poolingSystem.Get(position);
+    }
+
+    public void Droped(Vector2 pos)
+    {
+        transform.position = pos;
+        IsTaken = false;
+        transform.localRotation = Quaternion.Euler(new Vector3(0, 0, Random.Range(0, 360)));
+        moveCts?.Cancel();
+    }
+
+    public void PickedUp()
+    {
+        Character.Instance.AddHp(5);
+        poolingSystem.Return(this);
+    }
+
+    public void Take(IPicker picker)
+    {
+        if (IsTaken) return;
+        IsTaken = true;
+        // autoAttractTween?.Kill();
+
+        moveCts?.Cancel();
+        moveCts = new CancellationTokenSource();
+        MoveToPickerAsync(picker, moveCts.Token).Forget();
+    }
+
+    async UniTaskVoid MoveToPickerAsync(IPicker picker, CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
+        {
+            Vector2 target = picker.Transform.position;
+            transform.position = Vector2.MoveTowards(transform.position, target, MOVE_SPEED * Time.deltaTime);
+
+            if (Vector2.Distance(transform.position, target) < 0.05f)
+            {
+                picker.PickUp(this);
+                return;
+            }
+
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (IsTaken)
+            return;
+
+        if (collision.CompareTag("Player"))
+        {
+            Take(Character.Instance);
+        }
+    }
+}

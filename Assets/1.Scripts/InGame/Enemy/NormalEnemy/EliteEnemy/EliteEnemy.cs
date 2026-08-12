@@ -41,37 +41,31 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
         base.Apear();
 
         //출현했을때 해당 자리에 있는 Enemy 제거
-        List<Enemy> enemies = new List<Enemy>();
+        // List<Enemy> enemies = new List<Enemy>();
 
-        enemies.Clear();
-        for (int x = 0; x < tileIndexArr.GetLength(0); x++)
-        {
-            for (int y = 0; y < tileIndexArr.GetLength(1); y++)
-            {
-                Vector2Int tileIndex = new Vector2Int(x, y);
-                if (!MapManager.CheckEmpty(tileIndex))
-                {
-                    Enemy e = EnemySpawner.Instance.GetEnemyInTileIndex(tileIndex);
-                    if (e == this)
-                        continue;
+        // enemies.Clear();
+        // for (int x = 0; x < tileIndexArr.GetLength(0); x++)
+        // {
+        //     for (int y = 0; y < tileIndexArr.GetLength(1); y++)
+        //     {
+        //         Vector2Int tileIndex = new Vector2Int(x, y);
+        //         if (!MapManager.CheckEmpty(tileIndex))
+        //         {
+        //             Enemy e = EnemySpawner.Instance.GetEnemyInTileIndex(tileIndex);
+        //             if (e == this)
+        //                 continue;
 
-                    if (!enemies.Contains(e))
-                        enemies.Add(e);
+        //             if (!enemies.Contains(e))
+        //                 enemies.Add(e);
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
         //현재 위치에 있는 모든 적들을 제거
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            enemies[i].Destroy();
-        }
-    }
-
-    public override void Destroy()
-    {
-        base.Destroy();
-
+        // for (int i = 0; i < enemies.Count; i++)
+        // {
+        //     enemies[i].Destroy();
+        // }
     }
 
     public float PlayAnim(string animName)

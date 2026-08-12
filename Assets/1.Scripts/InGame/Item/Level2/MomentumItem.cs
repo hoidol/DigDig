@@ -64,7 +64,7 @@ public class MomentumItem : TriggerCycleItem
         transform.Rotate(Vector3.forward, orbitSpeed * Time.deltaTime);
     }
 
-    public override string GetDescription(int lv = 1, bool detail = false)
+    public override string GetDescription()
     {
         return $"거대 궤도를 소환합니다.\n{consumeTime}초마다 체력 {itemData.consumeHp} 감소";
     }

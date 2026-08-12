@@ -6,7 +6,7 @@ public class PierceBehavior : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        bullet.damageMultiplier *= Character.Instance.statMgr.AmmoEfficiency;
+        // bullet.damageMultiplier *= Character.Instance.statMgr.AmmoEfficiency;
         // Debug.Log($"PierceBehavior OnHit {remaining}");
         if (--remaining <= 0)
         {

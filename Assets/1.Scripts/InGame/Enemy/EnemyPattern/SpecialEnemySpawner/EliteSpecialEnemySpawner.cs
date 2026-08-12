@@ -17,23 +17,21 @@ public class EliteSpecialEnemySpawner : SpecialEnemySpawner
 
     public override void Spawn()
     {
-        Vector2Int center = MapManager.PositionToTileIndex(Character.Instance.transform.position);
-
-        unbreakableStones = MapManager.Instance.MakeUnbreakableStone(center, 20, 10);
-
+        // Vector2Int center = MapManager.PositionToTileIndex(Character.Instance.transform.position);
+        // unbreakableStones = MapManager.Instance.MakeUnbreakableStone(center, 20, 10);
 
         Enemy eliteEnemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Elite);
-        EnemyData enemyData = EnemyManager.GetEnemyData(eliteEnemyPrefab.enemyType);
-        var sorted = Character.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
-        var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
-        Vector2 bestCheckerCenter = bestChecker.transform.position;
-        Vector2 rPoint = bestCheckerCenter + Random.insideUnitCircle * 5f;
+        // EnemyData enemyData = EnemyManager.GetEnemyData(eliteEnemyPrefab.enemyType);
+        // var sorted = Character.Instance.tileCheckers.OrderBy(c => c.TileCount()).ToList();
+        // var bestChecker = sorted.Take(2).OrderBy(_ => Random.value).First();
+        // Vector2 bestCheckerCenter = bestChecker.transform.position;
+        // Vector2 rPoint = bestCheckerCenter + Random.insideUnitCircle * 5f;
 
-        Vector2Int startTileArr = MapManager.PositionToTileIndex(rPoint);
-        MapManager.GetTileArray(startTileArr, enemyData.size, out Vector2Int[,] spawnTileArray);
+        // Vector2Int startTileArr = MapManager.PositionToTileIndex(rPoint);
+        // MapManager.GetTileArray(startTileArr, enemyData.size, out Vector2Int[,] spawnTileArray);
 
         eliteEnemy = EnemySpawner.Instance.Instantiate(eliteEnemyPrefab) as EliteEnemy;
-        eliteEnemy?.Spawn(spawnTileArray);
+        eliteEnemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition());
         GameEventBus.Publish(new EliteSpawnEvent(eliteEnemy));
     }
 

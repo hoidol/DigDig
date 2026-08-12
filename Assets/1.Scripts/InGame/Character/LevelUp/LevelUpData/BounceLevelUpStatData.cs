@@ -10,15 +10,15 @@ public class BounceLevelUpStatData : LevelUpStatData
 
     public override string GetDescription()
     {
-        int curLv = Character.Instance.statMgr.levelUpStatDic[type].lv;
-        int nextLv = curLv + 1;
+        // int curLv = Character.Instance.statMgr.levelUpStatDic[type].lv;
+        // int nextLv = curLv + 1;
         return ""; //return string.Format(TranslateManager.GetText($"{type}_description"), GetValue(curLv), GetValue(nextLv));
     }
 
     public int GetValue(int lv = -1)
     {
-        if (lv < 0)
-            lv = Character.Instance.statMgr.levelUpStatDic[type].lv;
+        // if (lv < 0)
+        //     lv = Character.Instance.statMgr.levelUpStatDic[type].lv;
         return increaseValue * lv;
     }
 }

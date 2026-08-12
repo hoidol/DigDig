@@ -7,8 +7,9 @@ public class CharacterStatManager
 {
     [SerializeField] List<CharacterStat> statList = new();
     public Dictionary<StatType, CharacterStat> statDic = new Dictionary<StatType, CharacterStat>();
+    // public Dictionary<OreType, CharacterOre> oreDic = new Dictionary<OreType, CharacterOre>();
 
-    public Dictionary<LevelUpStatType, CharacterLevelUpStat> levelUpStatDic = new Dictionary<LevelUpStatType, CharacterLevelUpStat>();
+    // public Dictionary<LevelUpStatType, CharacterLevelUpStat> levelUpStatDic = new Dictionary<LevelUpStatType, CharacterLevelUpStat>();
     public Dictionary<string, CharacterItemStat> itemStatDic = new Dictionary<string, CharacterItemStat>();
     public List<Buff> activeBuffs = new List<Buff>();
 
@@ -19,8 +20,8 @@ public class CharacterStatManager
     public float AttackSpeed => statDic[StatType.AttackSpeed].value;
     public float CritChance => statDic[StatType.CritChance].value;
     public float CritPower => statDic[StatType.CritPower].value;
-    public float AmmoEfficiency => statDic[StatType.AmmoEfficiency].value;
-    public int Bounce => (int)statDic[StatType.Bounce].value;
+    // public float AmmoEfficiency => statDic[StatType.AmmoEfficiency].value;
+    // public int Bounce => (int)statDic[StatType.Bounce].value;
 
     public CharacterData characterData;
     public Character character;
@@ -30,8 +31,8 @@ public class CharacterStatManager
         StatType.MaxHp,StatType.AttackPower,StatType.MoveSpeed,
         StatType.RecoveryHp,StatType.AttackSpeed,StatType.CritChance,
         StatType.CritPower,
-        StatType.AmmoEfficiency,
-        StatType.Bounce
+        // StatType.AmmoEfficiency,
+        // StatType.Bounce
     };
 
     public CharacterStatManager(Character p, CharacterName characterName)
@@ -60,11 +61,11 @@ public class CharacterStatManager
             statDic.Add(ps.statType, ps);
         }
 
-        for (int i = 0; i < LevelUpStatManager.Instance.levelUpStatDatas.Length; i++)
-        {
-            var pl = new CharacterLevelUpStat { type = LevelUpStatManager.Instance.levelUpStatDatas[i].type };
-            levelUpStatDic.Add(pl.type, pl);
-        }
+        // for (int i = 0; i < LevelUpStatManager.Instance.levelUpStatDatas.Length; i++)
+        // {
+        //     var pl = new CharacterLevelUpStat { type = LevelUpStatManager.Instance.levelUpStatDatas[i].type };
+        //     levelUpStatDic.Add(pl.type, pl);
+        // }
 
         //장비 능력치 초기값에 적용
         UserEquipment[] equippedEquipments = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipments();
@@ -91,26 +92,6 @@ public class CharacterStatManager
     {
         Reset();
 
-        #region levelUpStat
-        MaxHpLevelUpStatData maxHpLevelUpStatData = LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.MaxHp) as MaxHpLevelUpStatData;
-        BounceLevelUpStatData bounceLevelUpStatData = LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.Bounce) as BounceLevelUpStatData;
-        AttackPowerLevelUpStatData attackPowerLevelUpStatData = LevelUpStatManager.Instance.GetLevelUpStatData(LevelUpStatType.AttackPower) as AttackPowerLevelUpStatData;
-
-        statDic[StatType.MaxHp].value += maxHpLevelUpStatData.GetValue();
-        statDic[StatType.Bounce].value += bounceLevelUpStatData.GetValue();
-        statDic[StatType.AttackPower].value += attackPowerLevelUpStatData.GetValue();
-
-        #endregion
-        // for (int i = 0; i < character.statInventory.ownStats.Count; i++)
-        // {
-        //     Stat stat = character.statInventory.ownStats[i];
-        //     if (stat.lv <= 0) continue;
-        //     StatData statData = StatData.GetStatData(stat.statType.ToString());
-
-        //     var characterStat = statDic[stat.statType];
-        //     characterStat.value = statData.Apply(characterStat.value, stat.lv);
-        // }
-
 
 
         foreach (var buff in activeBuffs)
@@ -120,18 +101,18 @@ public class CharacterStatManager
         }
     }
 
-    public void AddLevelUpState(LevelUpStatType type, int lv)
-    {
-        if (!levelUpStatDic.ContainsKey(type))
-        {
-            levelUpStatDic.Add(type, new CharacterLevelUpStat()
-            {
-                type = type,
-                lv = 0
-            });
-        }
-        levelUpStatDic[type].lv += lv;
-    }
+    // public void AddLevelUpState(LevelUpStatType type, int lv)
+    // {
+    //     if (!levelUpStatDic.ContainsKey(type))
+    //     {
+    //         levelUpStatDic.Add(type, new CharacterLevelUpStat()
+    //         {
+    //             type = type,
+    //             lv = 0
+    //         });
+    //     }
+    //     levelUpStatDic[type].lv += lv;
+    // }
     public void AddItem(string key, int count)
     {
         if (!itemStatDic.ContainsKey(key))
@@ -150,7 +131,14 @@ public class CharacterStatManager
             itemStatDic.Remove(key);
         }
     }
-
+    // public void AddOre(OreType oreType, int count = 1)
+    // {
+    //     if (!oreDic.ContainsKey(oreType))
+    //     {
+    //         oreDic.Add(oreType, new CharacterOre(){ oreType = oreType, count = count});
+    //     }
+    //     oreDic[oreType].count +=count;
+    // }
     public CharacterItemStat GetCharacterItemStat(string key)
     {
         return itemStatDic[key];
