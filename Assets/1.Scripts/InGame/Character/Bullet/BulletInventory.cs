@@ -93,14 +93,6 @@ public class UpdaterMergeRecommendBulletEvent
 
 
 
-public class AddedBulletEvent
-{
-    public BulletData bulletData;
-    public AddedBulletEvent(BulletData bulletData)
-    {
-        this.bulletData = bulletData;
-    }
-}
 
 public class RemovedBulletEvent
 {

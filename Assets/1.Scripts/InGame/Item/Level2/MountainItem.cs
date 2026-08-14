@@ -1,12 +1,12 @@
 using UnityEngine;
-//체력 +25, 공격력 +8 튕김 효율 50% > 60% > 70% 
+//체력 +25, 공격력 +8 
 //힘, 자연
 public class MountainItem : Item
 {
     //공격력 +8
     float maxHp = 20;
     float attackPower = 8;
-    float recoveryHp = 0.3f;
+    // float recoveryHp = 0.3f;
     Buff maxHpBuff;
     Buff attackPowerBuff;
     Buff recoveryHpBuff;
@@ -41,14 +41,14 @@ public class MountainItem : Item
         Character.Instance.AddBuff(attackPowerBuff);
 
         //초당 회복력
-        recoveryHpBuff = new Buff(StatType.RecoveryHp, recoveryHp*count, StatOpType.Add);
-        Character.Instance.AddBuff(recoveryHpBuff);
+        // recoveryHpBuff = new Buff(StatType.RecoveryHp, recoveryHp*count, StatOpType.Add);
+        // Character.Instance.AddBuff(recoveryHpBuff);
   
     }
 
 
     public override string GetDescription()
     {
-        return $"체력 +{maxHp} 공격력 +{attackPower} 초당 회복력 +{recoveryHp}";
+        return $"체력 +{maxHp} 공격력 +{attackPower}";
     }
 }

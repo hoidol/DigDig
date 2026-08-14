@@ -3,11 +3,10 @@ using UnityEngine;
 public class BounceItem : Item,IFired
 {
     int bounceCount = 2;
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
+    public void OnFired(ref Bullet bullet, ref CharacterBulletObject bulletObject, Vector2 dir)
     {
-        playerBulletObject.AddBehavior(new BounceBehavior(count * bounceCount));
+        bulletObject.AddBehavior(new BounceBehavior(count * bounceCount));
     }
-
 
     public override string GetDescription()
     {

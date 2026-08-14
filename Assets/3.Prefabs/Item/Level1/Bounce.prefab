@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1319924350054576650
+--- !u!1 &5195369128185751950
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4812798775993048887}
-  - component: {fileID: 5965051364179608237}
+  - component: {fileID: 3050783297177971049}
+  - component: {fileID: 4586241931181740639}
   m_Layer: 0
-  m_Name: Momentum
+  m_Name: Bounce
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4812798775993048887
+--- !u!4 &3050783297177971049
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1319924350054576650}
+  m_GameObject: {fileID: 5195369128185751950}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,24 +32,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5965051364179608237
+--- !u!114 &4586241931181740639
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1319924350054576650}
+  m_GameObject: {fileID: 5195369128185751950}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07c6cb0358c814fde889b7dd4d41b8a5, type: 3}
+  m_Script: {fileID: 11500000, guid: dafa237c9836a484db816bcf0d305adb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MomentumItem
-  key: Momentum
+  m_EditorClassIdentifier: Assembly-CSharp::BounceItem
+  key: 
   count: 0
-  coolTime: 0
-  activeTime: 0
-  damage: 4
-  orbPrefab: {fileID: -7619654570459311210, guid: b12b31f13de784acd8e01cf8daf23dbc,
-    type: 3}
-  orbitRadius: 3.5
-  consumeTime: 5

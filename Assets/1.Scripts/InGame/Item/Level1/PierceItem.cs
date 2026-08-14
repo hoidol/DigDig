@@ -7,11 +7,11 @@ public class PierceItem : Item, IFired
     int triggerCount = 5;
     int triggerCounter;
 
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
+    public void OnFired(ref Bullet bullet, ref CharacterBulletObject bulletObject, Vector2 dir)
     {
         if (triggerCount <= triggerCounter)
         {
-            playerBulletObject.AddBehavior(new PierceBehavior(Character.Instance.itemInventory.GetItem(key).count * pierceCount));
+            bulletObject.AddBehavior(new PierceBehavior(Character.Instance.itemInventory.GetItem(key).count * pierceCount));
             triggerCounter = 0;
         }
         

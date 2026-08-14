@@ -79,7 +79,13 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
     public virtual void Update()
     {
-
+        if (isPushing)
+        {
+            if(rg2d.linearVelocity.magnitude < 0.1f)
+            {
+                isPushing = false;
+            }
+        }
 
     }
 
@@ -150,5 +156,11 @@ public abstract class Enemy : MonoBehaviour, IHittable
         return curHp > 0;
     }
 
+    public bool isPushing;
+    public void Push(Vector2 dir, float power)
+    {
+        isPushing =true;
+        rg2d.AddForce(dir*power,ForceMode2D.Impulse);
+    }
 
 }

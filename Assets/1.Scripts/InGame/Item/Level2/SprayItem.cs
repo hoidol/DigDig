@@ -53,7 +53,7 @@ public class SprayItem : Item
 
     void Shoot()
     {
-        int bCount = bulletCount *count;
+        int bCount = bulletCount * count;
         float angleStep = 360f / bCount;
         Vector2 baseDir = Random.insideUnitCircle.normalized;
         for (int i = 0; i < bCount; i++)

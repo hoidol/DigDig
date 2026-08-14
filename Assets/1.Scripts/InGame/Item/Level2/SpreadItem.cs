@@ -5,7 +5,7 @@ using UnityEngine;
 //25% > 35% > 45% 확률로 3발 확산탄 발사 - 미니미 없어짐
 public class SpreadItem : Item, IFired
 {
-    float chance =  0.3f;
+    float chance =  0.25f;
     // int triggerCounter;
     // bool active;
 

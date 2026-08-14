@@ -2,14 +2,11 @@ using UnityEngine;
 
 public class ForceItem : Item
 {
-    //공격력 4증가 
-    
+    //공격력 4증가, 공격속도 10 증가    
     float attackPower = 3;
     float attackSpeed = 10;
-    // float[] ammoEfficiencies = { 0.7f, 0.6f, 0.5f };
     Buff atkPowerBuff;
-    Buff atkSPeedBuff;
-    // Buff ammoEfficiencyBuff;
+    Buff atkSpeedBuff;
     public override void UpdateItem()
     {
         base.UpdateItem();
@@ -21,24 +18,15 @@ public class ForceItem : Item
 
         float addAS =  count *attackSpeed;
         //공격력
-        atkSPeedBuff = new Buff(StatType.AttackSpeed, addAS, StatOpType.Add);
-        Character.Instance.AddBuff(atkSPeedBuff);
-
-
-        //탄 효율
-        // ammoEfficiencyBuff = new Buff(StatType.AmmoEfficiency, ammoEfficiencies[count - 1], StatOpType.Multiply);
-        // Player.Instance.AddBuff(ammoEfficiencyBuff);
+        atkSpeedBuff = new Buff(StatType.AttackSpeed, addAS, StatOpType.Add);
+        Character.Instance.AddBuff(atkSpeedBuff);
     }
     void Release()
     {
-
         if (atkPowerBuff != null)
             Character.Instance.RemoveBuff(atkPowerBuff);
-        if (atkSPeedBuff != null)
-            Character.Instance.RemoveBuff(atkSPeedBuff);
-
-        // if (ammoEfficiencyBuff != null)
-        //     Player.Instance.RemoveBuff(ammoEfficiencyBuff);
+        if (atkSpeedBuff != null)
+            Character.Instance.RemoveBuff(atkSpeedBuff);
     }
 
 

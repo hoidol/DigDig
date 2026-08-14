@@ -15,32 +15,38 @@ public class MutantItem : Item
 
 
     public MutantMiniMe miniMePrefab;
-    public MutantMiniMe miniMe;
+    public List<MutantMiniMe> miniMes = new();
     public float consumeTime = 5;
-    public override void OnEquip()
-    {
-        if (miniMe == null)
-        {
-            miniMe = Instantiate(miniMePrefab);
-            Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
-            miniMe.Spawn(pos);
-        }
-        base.OnEquip();
-    }
+
     public override void OnUnequip()
     {
         base.OnUnequip();
-        if (miniMe != null)
+        foreach (MutantMiniMe miniMe in miniMes)
         {
             Destroy(miniMe.gameObject);
-            miniMe = null;
         }
+        miniMes.Clear();
     }
 
     public override void UpdateItem()
     {
         base.UpdateItem();
-        if (miniMe != null)
+
+        while (miniMes.Count < count)
+        {
+            MutantMiniMe miniMe = Instantiate(miniMePrefab);
+            Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
+            miniMe.Spawn(pos);
+            miniMes.Add(miniMe);
+        }
+        while (miniMes.Count > count)
+        {
+            MutantMiniMe miniMe = miniMes[^1];
+            miniMes.RemoveAt(miniMes.Count - 1);
+            Destroy(miniMe.gameObject);
+        }
+
+        foreach (MutantMiniMe miniMe in miniMes)
         {
             miniMe.SetLevel(count);
             miniMe.healRange = healRange;

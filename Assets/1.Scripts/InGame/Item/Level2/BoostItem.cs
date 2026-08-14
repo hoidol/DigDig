@@ -9,7 +9,7 @@ public class BoostItem : Item
 
     public float consumeTime = 5;
 
-    float attackPower = 5f;
+    float attackPower = 4f;
     float attackSpeed =  2.5f;
 
     float coolTime=2f;
@@ -68,7 +68,7 @@ public class BoostItem : Item
 
     public override string GetDescription()
     {
-        return $"미니미 2개 소환, 처지 시 {count}개 추가 탄 발사\n쿨타임 : {coolTime}초, {consumeTime}초 당 체력 -{itemData.consumeHp}";
+        return $"처지 시 {count*2}개 추가 탄 발사하는 미니미 소환, \n쿨타임 : {coolTime}초, {consumeTime}초 당 체력 -{itemData.consumeHp}";
     }
 
 

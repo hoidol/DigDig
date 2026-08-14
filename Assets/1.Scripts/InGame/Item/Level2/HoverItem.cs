@@ -12,35 +12,38 @@ public class HoverItem : Item
     float attackSpeed = 2.5f;
 
     public HoverMiniMe miniMePrefab;
-    public HoverMiniMe miniMe;
+    public List<HoverMiniMe> miniMes = new();
     public float consumeTime = 5;
-    public override void OnEquip()
-    {
-        base.OnEquip();
-        if (miniMe == null)
-        {
-            miniMe = Instantiate(miniMePrefab);
-            Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
-            miniMe.attackPower = attackPower;
-            miniMe.attackSpeed = attackSpeed;
-            miniMe.orbitDamage = orbitDamage;
-            miniMe.Spawn(pos);
-        }
-    }
+
     public override void OnUnequip()
     {
         base.OnUnequip();
-        if (miniMe != null)
+        foreach (HoverMiniMe miniMe in miniMes)
         {
             Destroy(miniMe.gameObject);
-            miniMe = null;
         }
+        miniMes.Clear();
     }
 
     public override void UpdateItem()
     {
         base.UpdateItem();
-        if (miniMe != null)
+
+        while (miniMes.Count < count)
+        {
+            HoverMiniMe miniMe = Instantiate(miniMePrefab);
+            Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
+            miniMe.Spawn(pos);
+            miniMes.Add(miniMe);
+        }
+        while (miniMes.Count > count)
+        {
+            HoverMiniMe miniMe = miniMes[^1];
+            miniMes.RemoveAt(miniMes.Count - 1);
+            Destroy(miniMe.gameObject);
+        }
+
+        foreach (HoverMiniMe miniMe in miniMes)
         {
             miniMe.SetLevel(count);
             miniMe.attackPower = attackPower;

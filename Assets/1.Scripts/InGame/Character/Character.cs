@@ -42,8 +42,8 @@ public class Character : MonoSingleton<Character>, IPicker
     public int destroyCount;
     public float distanceMaxDistanceDestroiedStone;
     public float distanceMinDistanceDestroiedStone;
-    public Vector2 LastAttackDir => weapon.LastAttackDir;
-    public Vector2 CurAttackDir => weapon.LastAttackDir;
+    public Vector2 AttackDir => weapon.GetAttackDirection();
+    
 
     public Transform Transform => transform;
     public int orePiece;
@@ -233,6 +233,7 @@ public enum StatType
     MoveSpeed, //float 10초동안 얼만큼 가는지
     CritChance, //float
     CritPower, //float
+    Dodge, //float 
     // AmmoEfficiency, // 튕기는 때 데미지 감소량을 줄어듦 - 버프 주지마
     // Bounce, //튕기는 횟수
     Count

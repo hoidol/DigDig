@@ -37,8 +37,5 @@ MonoBehaviour:
     value: 1.5
   - statType: 7
     initValue: 0
-    value: 0.7
-  - statType: 8
-    initValue: 0
     value: 0
   defaultBullets: 

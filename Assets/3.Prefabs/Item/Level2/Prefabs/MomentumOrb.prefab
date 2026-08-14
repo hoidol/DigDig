@@ -101,7 +101,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8699174473209045898}
   - component: {fileID: 4795703617860643716}
-  - component: {fileID: 3154609164965090195}
+  - component: {fileID: -7619654570459311210}
   m_Layer: 0
   m_Name: MomentumOrb
   m_TagString: Bullet
@@ -161,7 +161,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.42
---- !u!114 &3154609164965090195
+--- !u!114 &-7619654570459311210
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,9 +170,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 8632806412220918479}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38828b1067a8949e88f9c3256d82c5eb, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d8fb3b4be3ff45cebe22bbab54a333e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OrbitOrb
+  m_EditorClassIdentifier: Assembly-CSharp::MomentumOrbitOrb
   damage: 0
   layerMask:
     serializedVersion: 2

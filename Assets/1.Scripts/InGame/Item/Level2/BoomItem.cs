@@ -10,7 +10,7 @@ public class BoomItem : Item, IFired, IComboFire
 
     int triggerCounter;
     CancellationTokenSource cts;
-    float boomRange =  1.5f;
+    float boomRange =  2f;
     public override void OnEquip()
     {
         base.OnEquip();
@@ -32,12 +32,10 @@ public class BoomItem : Item, IFired, IComboFire
     public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
     {
         triggerCounter++;
-
     }
 
     public async UniTask OnComboFire(Vector2 dir)
     {
-
         if (triggerCounter < triggerCount)
             return;
         for(int i = 0; i < count; i++)
@@ -55,7 +53,6 @@ public class BoomItem : Item, IFired, IComboFire
             Character.Instance.AddHp(-itemData.consumeHp);
         }
         
-
         triggerCounter = 0;
     }
 }

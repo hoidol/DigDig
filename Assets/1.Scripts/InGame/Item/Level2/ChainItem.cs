@@ -1,11 +1,10 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-//4회마다 연속 발사
+//2회마다 연속 발사
 public class ChainItem : Item, IFired, IComboFire
 {
     int triggerCount =  2;
-    // int shootCounts = { 1, 2, 3 };
     int triggerCounter;
     bool active;
 

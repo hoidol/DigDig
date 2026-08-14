@@ -53,10 +53,10 @@ public class NormalEnemy : Enemy
         {
             rg2d.linearVelocity = Vector2.zero;
             return;
-
         }
-            
 
+        base.Update();
+            
         if (statusEffectHandler.IsStunned)
         {
             if (attacking)
@@ -76,7 +76,8 @@ public class NormalEnemy : Enemy
         if (attacking)
             return;
 
-        else if (state == NormalEnemyState.Attack) UpdateMoving();
+        
+        if (state == NormalEnemyState.Moving) UpdateMoving();
         else if (state == NormalEnemyState.Attack) UpdateAttack();
 
     }
@@ -84,6 +85,8 @@ public class NormalEnemy : Enemy
     //상태가 Waiting 인 경우 처리
     public virtual void UpdateMoving()
     {
+        if(isPushing)
+            return;
         
         Vector2 vec = Character.Instance.transform.position - transform.position;
         
@@ -139,6 +142,8 @@ public class NormalEnemy : Enemy
     public virtual void StartAttack()
     {
         attacking = true;
+        rg2d.linearVelocity = Vector2.zero;
+        
         attackTimer = 0;
     }
     public override void Reward()

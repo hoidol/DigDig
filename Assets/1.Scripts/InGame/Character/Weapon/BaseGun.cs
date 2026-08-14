@@ -20,7 +20,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     Camera mainCamera;
 
     public Transform AttackPoint => attackPoint;
-    public Vector2 LastAttackDir { get; private set; }
+    public Vector2 LastDir { get; private set; }
 
     // public bool IsReloading { get; private set; }
     // public List<string> loadedBullets = new List<string>();
@@ -35,35 +35,34 @@ public abstract class BaseGun : MonoBehaviour, IGun
         statMgr = player.statMgr;
         cameraShake = player.cameraShake;
         mainCamera = Camera.main;
-
+        LastDir = Vector2.right;
+        dirTr.up =Vector2.right;
+        
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
     }
 
     void OnStartGame(StartGameEvent e)
     {
-        SetBullet("Normal");
-    }
-
-
-    public void SetBullet(string key)
-    {
-        SetBullet(BulletData.GetBulletData(key));
-    }
-
-    public void SetBullet(BulletData bulletData)
-    {
-        GameEventBus.Publish(new AddedBulletEvent(bulletData));
-
+        
     }
 
 
     // 마우스(PC) 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
     {
+#if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = mainCamera.WorldToScreenPoint(attackPoint.position).z;
         Vector3 worldMousePos = mainCamera.ScreenToWorldPoint(mousePosition);
         return (worldMousePos - attackPoint.position).normalized;
+#else
+        if (attackJoystick.Direction.magnitude > 0)
+            return attackJoystick.Direction;
+        else
+        {
+            return LastDir;
+        }
+#endif
     }
 
     // 매 프레임 호출: 조준 방향 갱신 + 자동 발사 판정
@@ -72,22 +71,13 @@ public abstract class BaseGun : MonoBehaviour, IGun
         if (!GameManager.Instance.isPlaying) return;
 
         dirTr.up = GetAttackDirection();
-        // if (IsReloading) return;
 
-#if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
-        if (Input.GetMouseButton(0))
-            dirTr.up = GetAttackDirection();
-        if (statMgr != null && Time.timeScale > 0)
-        {
-            // attackTimer는 Attack()에서 리셋되므로 여기선 조건만 체크
-        }
-        // PC: 마우스 누르고 있으면 자동 발사 (UpdateAttack 로직)
+// #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
+//         if (Input.GetMouseButton(0))
+//             dirTr.up = GetAttackDirection();    
+// #endif
         UpdateAttackInternal();
-#else
-        if (attackJoystick.Direction.magnitude > 0)
-            dirTr.up = attackJoystick.Direction;
-        UpdateAttackInternal();
-#endif
+        LastDir = dirTr.up;
     }
 
     float attackTimer;
@@ -95,7 +85,6 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // AttackSpeed 간격마다 Attack 호출
     void UpdateAttackInternal()
     {
-
         //statMgr.AttackSpeed
         attackTimer += Time.deltaTime * statMgr.AttackSpeed /10;
 
@@ -128,20 +117,16 @@ public abstract class BaseGun : MonoBehaviour, IGun
         // if (IsReloading)
         //     return;
 
-        LastAttackDir = dir;
         // pendingMultiShot = 1;
         // pendingSpread = 0;
         // var (bullet, shotOrder) = SpendBullet();
 
         Bullet bullet = new NormalBullet();
 
-        var bulletObject = bullet.GetBulletObject();
-
         foreach (var e in player.itemInventory.preFires)
             e.OnPreFire(ref bullet, dir);
 
-        if (bullet == null)
-            bullet = new NormalBullet();
+        // var bulletObject = bullet.GetBulletObject();
 
         CharacterBulletObject playerBulletObject = Shoot(bullet, dir);
         Character.Instance.AddHp(-bullet.bulletData.consumeHp);
@@ -189,26 +174,19 @@ public abstract class BaseGun : MonoBehaviour, IGun
     public CharacterBulletObject Shoot(Bullet bullet, Vector2 dir)
     {
         if (dir == Vector2.zero)
-            dir = Character.Instance.weapon.dirTr.up;
-
+            dir = GetAttackDirection();
+        
         if (bullet == null)
         {
             Debug.Log("BaseGun Shoot if(bullet == null)");
             bullet = new NormalBullet();
         }
 
+        var characterBulletObject = bullet.Instantiate(); // 총알 초기화됨
+        characterBulletObject.transform.position = attackPoint.position;
 
-        var playerBullet = bullet.GetBulletObject();
-
-        // playerBullet.ClearBehaviors();
-        // playerBullet.ClearBulletForce();
-        playerBullet.transform.position = attackPoint.position;
-
-        // foreach (var e in player.itemInventory.bullets)
-        //     e.OnBulletFired(playerBullet);
-
-        playerBullet.Shoot(dir);
-        return playerBullet;
+        characterBulletObject.Shoot(dir);
+        return characterBulletObject;
     }
 
 

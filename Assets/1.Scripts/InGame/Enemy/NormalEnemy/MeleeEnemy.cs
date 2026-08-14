@@ -16,6 +16,7 @@ public class MeleeEnemy : NormalEnemy
 
         Vector2 aPoint = transform.position + (Character.Instance.transform.position - transform.position).normalized * realAttackRange;
         warningIndicator = WarningIndicator.Instantiate(aPoint, realAttackRange);
+        warningIndicator.transform.parent = transform;
         warningIndicator.Play(2, (indi) =>
         {
             Collider2D[] cols = Physics2D.OverlapCircleAll(attackPoint.position, realAttackRange, LayerMask.GetMask("PlayerSide"));

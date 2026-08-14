@@ -4,7 +4,7 @@ using UnityEngine;
 //5초마다 주변 넓은 범위 화염 공격 - 많이 가질 수록 범위 넓어짐
 public class MisfireItem : TriggerItem
 {
-    public float baseCoolTime = 5;
+    public float baseCoolTime = 4;
     public float radiuse = 2.5f;
     public float duration = 5;
     public float DPS = 3;

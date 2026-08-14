@@ -41,9 +41,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
     public float MaxHp => maxHp;
     public float CurHp => curHp;
     public int level;
-    // public Vector2Int gridPos;
-    // public GameObject gold;
-    // bool isGoldStone;
+    
     public SpriteRenderer innerSpriteRdr;
     public virtual void Init(int level, Color color, Vector2Int[,] idxArr)//, Vector2Int gridPos
     {

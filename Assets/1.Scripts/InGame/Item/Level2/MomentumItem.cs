@@ -1,19 +1,20 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using System.Collections.Generic;
 
-//2개 되고 빨라지고 커짐
+//궤도를 2개 되고 빨라지고 커짐
 public class MomentumItem : TriggerCycleItem
 {
-    public float[] damages = { 4, 4, 4 };
-    float[] cooltimes = { 5, 5, 5 };
-    float[] activeTimes = { 8, 8, 8 };
+    public float damage =  4;
+    float baseCoolTime =5;
+    float baseActiveTime = 8;
     public OrbitOrb orbPrefab;
     public float orbitRadius = 3.5f; //괘적이 넓음 
     float orbitSpeed = 130f;
 
     public float consumeTime = 5;
-    protected System.Collections.Generic.List<OrbitOrb> orbs = new();
+    protected List<OrbitOrb> orbs = new();
     // protected virtual int OrbCount => count;
 
     public override void OnEquip()
@@ -36,8 +37,8 @@ public class MomentumItem : TriggerCycleItem
     {
         base.UpdateItem();
         RebuildOrbs();
-        coolTime = cooltimes[count - 1];
-        activeTime = activeTimes[count - 1];
+        coolTime = baseCoolTime;
+        activeTime = baseActiveTime;
     }
 
     protected void RebuildOrbs()
@@ -52,7 +53,7 @@ public class MomentumItem : TriggerCycleItem
             Vector3 localPos = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad)) * orbitRadius;
 
             OrbitOrb orb = Instantiate(orbPrefab, transform);
-            orb.damage = damages[count - 1];
+            orb.damage = damage;
             orb.transform.localPosition = localPos;
             orb.transform.up = transform.position - orb.transform.position;
             orbs.Add(orb);

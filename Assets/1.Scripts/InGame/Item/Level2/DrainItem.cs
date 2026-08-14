@@ -3,7 +3,7 @@ using UnityEngine;
 // 처치 시 5% 확률로 체력 회복 +2
 public class DrainItem : Item
 {
-    float healChance =  0.2f;
+    float healChance =  0.05f;
     int healAmount = 3;
 
     void OnEnable()
@@ -30,10 +30,10 @@ public class DrainItem : Item
 
     void OnKill()
     {
-        if (Random.value > healChance)
+        if (Random.value > healChance + (0.01 *(count-1)))
             return;
 
-        Character.Instance.AddHp(healAmount*count);
+        Character.Instance.AddHp(healAmount * count);
     }
 
     public override string GetDescription()

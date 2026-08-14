@@ -6,6 +6,6 @@ public interface IWeapon
     void UpdateWeapon();
     void Attack(Vector2 dir);
     Transform AttackPoint { get; }
-    Vector2 LastAttackDir { get; }
+    Vector2 LastDir { get; }
 
 }

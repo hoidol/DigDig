@@ -21,7 +21,7 @@ public class FlameItem : Item, IFired
         return $"{triggerCount}공격마다 화염탄 2발 랜덤 방향으로 발사합니다.";
     }
 
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
+    public void OnFired(ref Bullet bullet, ref CharacterBulletObject bulletObject, Vector2 dir)
     {
         triggerCounter++;
         if (triggerCount <= triggerCounter)

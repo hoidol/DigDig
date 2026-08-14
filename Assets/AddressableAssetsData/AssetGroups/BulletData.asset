@@ -22,7 +22,7 @@ MonoBehaviour:
     - MergeBulletData
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 31ad9c2b0946e402c91137bdbe31e7c6
-    m_Address: PlayerBulletObject
+    m_Address: CharacterBulletObject
     m_ReadOnly: 0
     m_SerializedLabels:
     - PlayerBulletObject

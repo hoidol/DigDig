@@ -30,7 +30,7 @@ public class CharacterStatManager
     {
         StatType.MaxHp,StatType.AttackPower,StatType.MoveSpeed,
         StatType.RecoveryHp,StatType.AttackSpeed,StatType.CritChance,
-        StatType.CritPower,
+        StatType.CritPower,StatType.Dodge
         // StatType.AmmoEfficiency,
         // StatType.Bounce
     };

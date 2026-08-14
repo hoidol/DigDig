@@ -7,7 +7,7 @@ public abstract class Bullet
     public string key;
     public BulletData bulletData => BulletManager.Instance.GetBulletData(key);
     public bool mustCrit;
-    public virtual CharacterBulletObject GetBulletObject()
+    public virtual CharacterBulletObject Instantiate()
     {
         CharacterBulletObject playerBulletObject = BulletManager.Instance.GetPlayerBulletObject(key);
         playerBulletObject.SetBullet(this);
