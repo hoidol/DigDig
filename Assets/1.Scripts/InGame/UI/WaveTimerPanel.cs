@@ -20,7 +20,6 @@ public class WaveTimerPanel : MonoBehaviour
         dayTimeBar.fillAmount = 0;
         nightTimeBar.fillAmount = 0;
         waveText.text = "";
-        // GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
         GameEventBus.Subscribe<DayStartEvent>(OnDayStartEvent);
     }
 

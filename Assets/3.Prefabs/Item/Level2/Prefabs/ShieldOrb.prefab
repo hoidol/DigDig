@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 1878890181139065299}
   - component: {fileID: 2659829121073916391}
   - component: {fileID: 5155653652632894333}
+  - component: {fileID: 33803781768452264}
   m_Layer: 0
   m_Name: ShieldOrb
   m_TagString: Bullet
@@ -177,3 +178,15 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 8
+--- !u!114 &33803781768452264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171462238911814133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e76e3bc0ed845dc8ac346462e2047e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FixRotation

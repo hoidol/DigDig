@@ -13,9 +13,10 @@ public class UserManager : MonoSingleton<UserManager>
     {
         get; private set;
     }
-    // public UserBulletManager userBulletManager;
+    
     public UserStageManager userStageManager;
     public UserEquipmentManager userEquipmentManager;
+    public UserPurchaseManager userPurchaseManager;
     void Awake()
     {
         Application.targetFrameRate = 60;
@@ -29,10 +30,12 @@ public class UserManager : MonoSingleton<UserManager>
         // userBulletManager = new UserBulletManager();
         userStageManager = new UserStageManager();
         userEquipmentManager = new UserEquipmentManager();
+        userPurchaseManager = new UserPurchaseManager();
 
         // userBulletManager.LoadData();
         userStageManager.LoadData();
         userEquipmentManager.LoadData();
+        userPurchaseManager.LoadData();
 
     }
     void Save()

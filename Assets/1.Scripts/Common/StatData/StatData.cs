@@ -17,10 +17,8 @@ public class StatData
                 return $"{value*100:0.0}%";
             case StatType.CritPower:
                 return $"{value*100:0.0}%";
-            // case StatType.AmmoEfficiency:
-            //     return $"{(1-value)*100:0.0}% 감소";
-            // case StatType.Bounce:
-            //     return $"{value}회";
+            case StatType.Dodge:
+                return $"{value*100:0.0}%";
         }
         return $"{value}";
     } 

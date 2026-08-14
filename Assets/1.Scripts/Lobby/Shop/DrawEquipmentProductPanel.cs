@@ -11,6 +11,7 @@ public class DrawEquipmentProductPanel : ProductPanel
     public DrawEquipment drawEquipment;
     public override void Purchased()
     {
+        base.Purchased();
         string[] keys = drawEquipment.Draw();
         for(int i = 0; i < keys.Length; i++)
         {

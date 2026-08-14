@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 3241005660263742425}
   - component: {fileID: 6959438314453121357}
   - component: {fileID: 3136609258504041810}
+  - component: {fileID: -3241479276146403848}
   m_Layer: 0
   m_Name: VoltOrb
   m_TagString: Bullet
@@ -208,3 +209,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-3241479276146403848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6539718214108579505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56e76e3bc0ed845dc8ac346462e2047e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FixRotation

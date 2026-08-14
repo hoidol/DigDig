@@ -1,12 +1,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using System.Linq;
-using DG.Tweening;
-using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
-using System.Threading.Tasks;
-using System;
 public class GameManager : MonoSingleton<GameManager>
 {
     List<ILoadData> loadDatas = new List<ILoadData>();
@@ -169,19 +164,45 @@ public class GameManager : MonoSingleton<GameManager>
             return;
         EndGame(true);
     }
+
+    const string ACCEPT_REVIEW_KEY = "ACCEPT_REVIEW_KEY";
+
     public void EndGame(bool clear)
     {
         if (!isPlaying)
             return;
 
         isPlaying = false;
+        UserManager.Instance.userStageManager.TryStage(stageData.key);
         if (!clear)
         {
             FailCanvas.Instance.OpenCanvas();
         }
         else
         {
+            int accept = PlayerPrefs.GetInt(ACCEPT_REVIEW_KEY, 0);
+            if(accept == 0)
+            {
+                StageData maxStageData = StageManager.Instance.GetStageData(UserManager.Instance.userStageManager.GetMaxStage()) ;
+                if(maxStageData.order >= 2)
+                {
+                    YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("review_title"),TranslateManager.GetText("review_body"), (accept) =>
+                    {
+                        if (accept)
+                        {
+                            Review review = new Review();
+                            review.Request();
+
+                            PlayerPrefs.SetInt(ACCEPT_REVIEW_KEY, 1);
+                        }
+                    });
+                    
+                }
+            }
+            
+
             ResultCanvas.Instance.OpenCanvas();
+            UserManager.Instance.userStageManager.ClearStage(stageData.key);
         }
         // string msg = clear ? "승리" : "패배";
         // FadeCanvs.Instance.FadeIn($"msg", () => { SceneManager.LoadScene("InGame"); });

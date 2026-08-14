@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEditor.SceneManagement;
 [System.Serializable]
 public class UserStageManager : UserBaseManager
 {
@@ -49,7 +50,7 @@ public class UserStageManager : UserBaseManager
         SaveData();
     }
 
-    public void StartStage(string key)
+    public void TryStage(string key)
     {
         UserStage userStage = GetUserStage(key);
         userStage.tryCount++;
@@ -74,12 +75,32 @@ public class UserStageManager : UserBaseManager
     {
         SaveManager.SaveData(UserDataFileName, userStageData);
     }
+
+    public string GetMaxStage()
+    {
+        int order = 0;
+        for(int i = 0; i < userStageData.userStages.Count; i++)
+        {
+            if (userStageData.userStages[i].clearCount > 0)
+            {
+                order++;
+            }
+        }
+        StageData stageData = StageManager.Instance.GetStageData(order);
+        if(stageData == null)
+        {
+            stageData = StageManager.Instance.GetStageData(StageManager.Instance.stageDatas.Length-1);
+        }
+
+        return stageData.key;
+    }
 }
 
 [System.Serializable]
 public class UserStageData
 {
     public List<UserStage> userStages = new List<UserStage>();
+    
 }
 [System.Serializable]
 public class UserStage

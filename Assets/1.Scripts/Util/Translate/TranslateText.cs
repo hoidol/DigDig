@@ -8,14 +8,6 @@ public class TranslateText : MonoBehaviour
     public TMP_Text text;
     public string key;
 
-    //private void OnEnable()
-    //{
-
-    //}
-    //private void OnDestroy()
-    //{
-
-    //}
     // Use this for initialization
     private void Awake()
     {

@@ -37,7 +37,7 @@ public class ProductPanel : MonoBehaviour
     }
     public virtual void Purchased()
     {
-        
+        UserManager.Instance.userPurchaseManager.AddUserPurchase(productData);
     }
     
 }

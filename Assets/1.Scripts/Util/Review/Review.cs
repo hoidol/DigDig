@@ -1,56 +1,50 @@
 #if UNITY_ANDROID
 using Google.Play.Review;
 #endif
-using UnityEngine;
-
-using System.Collections;
-using System.Collections.Generic;
 #if UNITY_IOS
 using UnityEngine.iOS;
 #endif
-public class Review : MonoSingleton<Review>
+using UnityEngine;
+using Cysharp.Threading.Tasks;
+
+public class Review
 {
 #if UNITY_ANDROID
     private ReviewManager reviewManager;
 #endif
 
 
-    // ...
+    // Request() 3번 호출마다 1번씩만 실제 리뷰 요청
     public void Request()
     {
+
 #if UNITY_ANDROID
-        reviewManager = new ReviewManager();
-        StartCoroutine(CoRequest());
+        RequestAndroidReview().Forget();
 #elif UNITY_IOS
         Device.RequestStoreReview();
-#else
 #endif
-
-
     }
+
 #if UNITY_ANDROID
-    IEnumerator CoRequest()
+    async UniTaskVoid RequestAndroidReview()
     {
+        reviewManager = new ReviewManager();
         var requestFlowOperation = reviewManager.RequestReviewFlow();
-        yield return requestFlowOperation;
+        await UniTask.WaitUntil(() => requestFlowOperation.IsDone);
         if (requestFlowOperation.Error != ReviewErrorCode.NoError)
-        {
-            // Log error. For example, using requestFlowOperation.Error.ToString().
-            yield break;
-        }
+            return;
+
         PlayReviewInfo playReviewInfo = requestFlowOperation.GetResult();
         var launchFlowOperation = reviewManager.LaunchReviewFlow(playReviewInfo);
-        yield return launchFlowOperation;
+        await UniTask.WaitUntil(() => launchFlowOperation.IsDone);
 
         if (launchFlowOperation.Error != ReviewErrorCode.NoError)
         {
             Debug.LogError("Failed to launch review flow: " + launchFlowOperation.Error);
-            yield break;
+            return;
         }
 
         Debug.Log("Review flow completed successfully.");
-        Destroy(gameObject);
-
     }
 #endif
 }
