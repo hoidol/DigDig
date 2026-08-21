@@ -67,3 +67,8 @@ unity_project/build
 
 # Render output (local captures)
 [Aa]ssets/[Rr]ender[Oo]utput/
+
+# Firebase desktop (x86_64) editor-only native libs — not needed for iOS/Android builds,
+# and the .bundle/.so exceed GitHub's 100MB push limit. Re-import via Firebase Unity SDK
+# locally if Analytics needs to run inside the Editor.
+[Aa]ssets/Firebase/Plugins/x86_64/
