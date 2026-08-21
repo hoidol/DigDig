@@ -66,5 +66,6 @@ public class HoverItem : Item
     public override string GetDescription()
     {
         return $"궤도를 가진 비행 미니미를 소환합니다. 미니 공격력 {attackPower}\n{consumeTime}초마다 체력 {itemData.consumeHp} 감소";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),attackPower,consumeTime,itemData.consumeHp);
     }
 }

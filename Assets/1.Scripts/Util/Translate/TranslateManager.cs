@@ -92,11 +92,11 @@ public class TranslateManager
     static LanguageType curLanguageType;
     public static string GetText(string key)
     {
-        Init();
+        // Init();
         if (!translateDic.ContainsKey(key))
         {
             Debug.LogWarning($"{key} 해당하는 번역 데이터 없음");
-            return null;
+            return $"*{key}";
         }
 
         //4. 현재 언어 설정에 맞는 데이터 가져오기

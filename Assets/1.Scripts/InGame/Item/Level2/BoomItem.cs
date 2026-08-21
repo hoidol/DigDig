@@ -20,6 +20,7 @@ public class BoomItem : Item, IFired, IComboFire
     public override string GetDescription()
     {
         return $"{triggerCount}발사마다 폭탄 발사 (최대 2번 튕김)";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),triggerCount);
     }
 
     public override void OnUnequip()

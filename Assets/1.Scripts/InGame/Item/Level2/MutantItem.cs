@@ -70,5 +70,6 @@ public class MutantItem : Item
     public override string GetDescription()
     {
         return $"돌연변이 미니미를 소환합니다. 근처에서 공격 시 {healChance * 100}% 체력 회복, 미니 공격력 {attackPower}\n{consumeTime}초마다 체력 {itemData.consumeHp} 감소";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),healChance * 100,attackPower,consumeTime,itemData.consumeHp);
     }
 }

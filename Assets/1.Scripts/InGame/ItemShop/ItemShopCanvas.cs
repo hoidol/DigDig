@@ -13,20 +13,31 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
     [SerializeField] TMP_Text refreshTimeText;
 
     CancellationTokenSource cts;
+    public override void Init()
+    {
+        if(init)
+            return ;
+        init= true;
+        itemShopProductPanels = GetComponentsInChildren<ItemShopProductPanel>();
+        ownItemPanels = GetComponentsInChildren<OwnItemPanel>();
+    }
 
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
+        Init();
         
         if (ItemShopManager.Instance.needToRefresh)
         {
             ResetItemShopProduct();
         }
+        UpdateCanvas();
     }
     void OnEnable()
     {
         Time.timeScale = 0;
         cts = new CancellationTokenSource();
+        UpdateRefreshTime();
         UpdateRefreshTimeTextLoop(cts.Token).Forget();
     }
 
@@ -36,20 +47,36 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
         cts?.Cancel();
         cts?.Dispose();
     }
+    void Start()
+    {
+        GameEventBus.Subscribe<PurchaseItemEvent>(OnPurchaseItemEvent);
+    }
+    void OnPurchaseItemEvent(PurchaseItemEvent e)
+    {
+        for(int i = 0; i < itemShopProductPanels.Length; i++)
+        {
+            if (!itemShopProductPanels[i].purchased)
+            {
+                return;
+            }
+        }
+        // ResetItemShopProduct();
+    }
 
     async UniTask UpdateRefreshTimeTextLoop(CancellationToken token)
     {
         while (!token.IsCancellationRequested)
         {
             UpdateRefreshTime();
-
-            await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: token);
+            await UniTask.Delay(TimeSpan.FromSeconds(1), DelayType.UnscaledDeltaTime, cancellationToken: token);
         }
     }
     void UpdateRefreshTime()
     {
         int remainSeconds = Mathf.CeilToInt(Mathf.Max(0, ItemShopManager.Instance.refreshTime - ItemShopManager.Instance.refreshTimer));
-        refreshTimeText.text = $"갱신까지:{remainSeconds / 60:00}:{remainSeconds % 60:00}";
+
+        Debug.Log($"UpdateRefreshTime 갱신해 {remainSeconds}");
+        refreshTimeText.text = $"{TranslateManager.GetText("UtillRefresh")}:{remainSeconds / 60:00}:{remainSeconds % 60:00}";
     }
 
     public void UpdateCanvas()
@@ -88,7 +115,7 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
 
     public void OnClickedResetItem()
     {
-        Character.Instance.AddOrePiece(-5);
+        Character.Instance.AddCoin(-5);
         ResetItemShopProduct();
     }
 }

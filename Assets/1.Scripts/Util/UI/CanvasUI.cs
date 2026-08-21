@@ -5,6 +5,15 @@ using System;
 public abstract class CanvasUI<T> : MonoSingleton<T> where T : MonoBehaviour
 {
     public Action closeCallback;
+    [HideInInspector] public bool init;
+    public virtual void Init()
+    {
+        if(init)
+            return ;
+        init= true;
+
+        return ;
+    }
     public virtual void OpenCanvas(Action closeCallback = null)
     {
         this.closeCallback = closeCallback;

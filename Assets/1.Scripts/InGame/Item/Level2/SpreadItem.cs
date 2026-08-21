@@ -13,6 +13,7 @@ public class SpreadItem : Item, IFired
     public override string GetDescription()
     {
         return $"{chance * 100}%확률로 분산탄을 발사";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),chance * 100);
     }
 
     public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)

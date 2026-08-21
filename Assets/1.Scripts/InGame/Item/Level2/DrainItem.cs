@@ -39,5 +39,6 @@ public class DrainItem : Item
     public override string GetDescription()
     {
         return $"처치 시 {healChance * 100:0}% 확률로 체력 회복 +{healAmount}";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),healChance * 100,healAmount);
     }
 }

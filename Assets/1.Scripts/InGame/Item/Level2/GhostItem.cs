@@ -32,6 +32,7 @@ public class GhostItem : Item, IPreFire, IComboFire
     public override string GetDescription()
     {
         return $"{triggerCount}번 공격마다 거대창 발사합니다.";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),triggerCount);
     }
     bool active;
     public void OnPreFire(ref Bullet bullet, Vector2 dir) //trigger 타이밍마다 Pierce 발사 

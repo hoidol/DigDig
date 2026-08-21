@@ -10,7 +10,7 @@ public class CoinPoolingSystem : StackPoolingSystem<Coin>
         if (prefab == null)
         {
             // Debug.Log("ExpPoolingSystem Get  if (prefab == null)");
-            SetPrefab("Prefabs/OrePiece");
+            SetPrefab("Prefabs/Coin");
         }
 
         Coin coin = base.Get(pos, parent);

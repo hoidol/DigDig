@@ -3,9 +3,9 @@ using UnityEngine;
 public class FlameItem : Item, IFired
 {
     //2초마다 랜덤 방향으로 Flame 발사
-    public int burnDuration = 4;
-    public int burnDPS = 2;
-    public int triggerCount = 5;
+    int burnDuration = 4;
+    int burnDPS = 2;
+    int triggerCount = 3;
 
 
 
@@ -18,7 +18,8 @@ public class FlameItem : Item, IFired
 
     public override string GetDescription()
     {
-        return $"{triggerCount}공격마다 화염탄 2발 랜덤 방향으로 발사합니다.";
+        return $"{triggerCount}공격마다 화염탄 2발 랜덤 방향으로 발사";
+        //return string.Format(TranslateManager.GetText("{key}_Desc"),triggerCount);
     }
 
     public void OnFired(ref Bullet bullet, ref CharacterBulletObject bulletObject, Vector2 dir)
@@ -38,7 +39,7 @@ public class FlameItem : Item, IFired
                 randomDir = Random.insideUnitCircle.normalized;
                 Character.Instance.Shoot(flameBullet, randomDir);
 
-                Character.Instance.AddHp(-itemData.consumeHp);
+                // Character.Instance.AddHp(-itemData.consumeHp);
             }
             
 

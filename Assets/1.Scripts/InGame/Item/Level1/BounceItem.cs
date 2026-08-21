@@ -11,5 +11,6 @@ public class BounceItem : Item,IFired
     public override string GetDescription()
     {
         return $"탄 튕김 +{bounceCount}";
+        //return string.Format(TranslateManager.GetText("{key}_Desc"),bounceCount);
     }
 }

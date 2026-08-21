@@ -21,10 +21,16 @@ public class ItemShopProductPanel : ItemPanel
         priceText.text= (ItemShopManager.Instance.GetPrice() + itemData.addPrice).ToString();
     }
 
-    public void OnClickedButton()
+    public void OnClickedPurchaseButton()
     {
+        if(Character.Instance.coin < ItemShopManager.Instance.GetPrice())
+        {
+            ToastCanvas.Toast(TranslateManager.GetText("Not enough coin"));
+            return;
+        }
         purchased = true;
-        Character.Instance.AddOrePiece(-ItemShopManager.Instance.GetPrice());
+        Character.Instance.AddCoin(-ItemShopManager.Instance.GetPrice());
+        Character.Instance.AddItem(itemData.key);
         GameEventBus.Publish(new PurchaseItemEvent(itemData));
         GetComponentInParent<ItemShopCanvas>().UpdateCanvas();
     }

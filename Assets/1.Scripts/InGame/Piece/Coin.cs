@@ -38,7 +38,7 @@ public class Coin : MonoBehaviour, IPickable
 
     public void PickedUp()
     {
-        Character.Instance.AddOrePiece(1);
+        Character.Instance.AddCoin(1);
         poolingSystem.Return(this);
     }
 

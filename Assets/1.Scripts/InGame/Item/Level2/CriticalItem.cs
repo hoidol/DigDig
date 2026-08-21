@@ -78,6 +78,7 @@ public class CriticalItem : Item
     public override string GetDescription()
     {
         return $"적 처치 시 관통탄 추가 발사 쿨타임 {coolTime}초\n발사 당 체력 {itemData.consumeHp} 감소";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),coolTime,itemData.consumeHp);
     }
 
 }

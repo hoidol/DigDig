@@ -39,6 +39,7 @@ public class RegenItem : Item
     public override string GetDescription()
     {
         return $"초당 체력 +{recoverHp}회복 ";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),recoverHp);
     }
 }
 

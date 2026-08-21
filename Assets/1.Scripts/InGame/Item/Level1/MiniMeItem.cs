@@ -8,7 +8,7 @@ public class MiniMeItem : Item
 
     public float consumeTime = 5;
     public float attackPower = 3;
-    public float attackSpeed =  2.5f;
+    public float attackSpeed =  1.5f;
 
     public override void OnUnequip()
     {
@@ -45,20 +45,21 @@ public class MiniMeItem : Item
             miniMe.attackSpeed = attackSpeed;
         }
     }
-    float timer;
-    void Update()
-    {
-        timer += Time.deltaTime;
-        if (timer >= consumeTime)
-        {
-            Character.Instance.AddHp(-itemData.consumeHp);
-            timer = 0;
-        }
-    }
+    // float timer;
+    // void Update()
+    // {
+    //     timer += Time.deltaTime;
+    //     if (timer >= consumeTime)
+    //     {
+    //         Character.Instance.AddHp(-itemData.consumeHp);
+    //         timer = 0;
+    //     }
+    // }
 
     public override string GetDescription()
     {
         return $"미니미를 소환합니다. 미니 공격력 {attackPower}\n{consumeTime}초마다 체력 1 감소";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),attackPower,consumeTime);
     }
 
 }

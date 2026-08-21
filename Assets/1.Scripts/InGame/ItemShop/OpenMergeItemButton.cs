@@ -11,7 +11,7 @@ public class OpenMergeItemButton : ButtonUI
     {
         List<MergeItemData> mergeItemDatas = ItemManager.Instance.GetMergeItemDataList();
         canOpen = mergeItemDatas.Count>0;
-        titleText.text = $"합성({mergeItemDatas.Count})";
+        titleText.text = $"{TranslateManager.GetText("TryMerge")} ({mergeItemDatas.Count})";
     }
 
     public override void OnClickedBtn()

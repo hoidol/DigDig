@@ -9,7 +9,7 @@ public class OrbitItem : TriggerCycleItem
 
     public OrbitOrb orbPrefab;
     public float orbitRadius = 2f;
-    public float orbitSpeed = 90f;
+    public float orbitSpeed = 110f;
 
     protected List<OrbitOrb> orbs = new();
 
@@ -71,6 +71,13 @@ public class OrbitItem : TriggerCycleItem
     void Update()
     {
         transform.Rotate(Vector3.forward, orbitSpeed * Time.deltaTime);
+    }
+
+
+    public override string GetDescription()
+    {
+        return $"궤도탄 1개 추가";
+        //return TranslateManager.GetText($"{key}_Desc");
     }
 
 

@@ -38,7 +38,9 @@ public class StartSetting
             "AdManager",
 
 //UI --------
-            "FadeCanvas"
+            "FadeCanvas",
+            "BlockCanvas",
+            "ToastCanvas"
 
         };
 

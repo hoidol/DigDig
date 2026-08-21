@@ -28,6 +28,7 @@ public class ChainItem : Item, IFired, IComboFire
     public override string GetDescription()
     {
         return $"{triggerCount}회 발사마다 연속 발사";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),triggerCount);
     }
 
     public async UniTask OnComboFire(Vector2 dir)

@@ -4,7 +4,7 @@ using UnityEngine;
 public class PierceItem : Item, IFired
 {
     int pierceCount = 2;
-    int triggerCount = 5;
+    int triggerCount = 4;
     int triggerCounter;
 
     public void OnFired(ref Bullet bullet, ref CharacterBulletObject bulletObject, Vector2 dir)
@@ -19,5 +19,6 @@ public class PierceItem : Item, IFired
     public override string GetDescription()
     {
         return $"{triggerCount}발사마다 관통탄 발사\n관통력 +{pierceCount}";
+        //return string.Format(TranslateManager.GetText("{key}_Desc"),triggerCount,pierceCount);
     }
 }

@@ -50,5 +50,6 @@ public class MountainItem : Item
     public override string GetDescription()
     {
         return $"체력 +{maxHp} 공격력 +{attackPower}";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),maxHp,attackPower);
     }
 }

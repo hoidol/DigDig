@@ -5,11 +5,11 @@ public class ItemShopManager : MonoSingleton<ItemShopManager> {
 
 
     public float refreshTimer;
-    public float refreshTime =60;
+    public float refreshTime = 90;
 
     void Start()
     {
-        refreshTimer = refreshTime;    
+        refreshTimer = 0;    
         needToRefresh = true;
         purchaseCount = 0;
         GameEventBus.Subscribe<PurchaseItemEvent>(OnPurchaseItemEvent);
@@ -37,7 +37,7 @@ public class ItemShopManager : MonoSingleton<ItemShopManager> {
             return;
         
 
-        if(refreshTimer > refreshTime)
+        if(refreshTimer > refreshTime && !needToRefresh)
         {
             needToRefresh = true;
             if (ItemShopCanvas.Instance.gameObject.activeSelf)
@@ -46,9 +46,9 @@ public class ItemShopManager : MonoSingleton<ItemShopManager> {
             }
             return;
         }
-            
-        refreshTimer += Time.deltaTime;
-        needToRefresh = false;
+        
+        
+        refreshTimer += Time.unscaledDeltaTime;
     }
 }
 public class PurchaseItemEvent

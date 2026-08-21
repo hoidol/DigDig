@@ -47,5 +47,6 @@ public class NatureItem : Item
     public override string GetDescription()
     {
         return $"체력 +{maxHp} 초당 회복력 +{recoveryHp}";
+        // return string.Format(TranslateManager.GetText($"{key}_Desc"),maxHp,recoveryHp);
     }
 }

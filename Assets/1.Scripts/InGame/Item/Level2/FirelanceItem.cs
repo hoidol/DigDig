@@ -30,6 +30,7 @@ public class FirelanceItem : Item
     public override string GetDescription()
     {
         return $"{triggerInterval}초마다 불창 {count}연발 발사";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),triggerInterval,count);
     }
 
     async UniTaskVoid Loop(CancellationToken token)

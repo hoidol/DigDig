@@ -24,6 +24,7 @@ public class LuckItem : TriggerItem
 
     public override string GetDescription()
     {
-        return $"피해률 +{dodge}%";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),dodge);
+        return $"회피률 +{dodge}%";
     }
 }

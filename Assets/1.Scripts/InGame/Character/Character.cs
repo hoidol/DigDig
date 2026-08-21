@@ -183,8 +183,10 @@ public class Character : MonoSingleton<Character>, IPicker
     {
         statMgr.AddItem(key, count);
         itemInventory.AddItem(key);
+        itemInventory.UpdateInventory();
         UpdateCharacter();
     }
+
     public void RemoveItem(string key, int idx =-1)
     {
         statMgr.AddItem(key,-1);
@@ -193,7 +195,7 @@ public class Character : MonoSingleton<Character>, IPicker
         itemInventory.UpdateInventory();
         UpdateCharacter();
     }
-    public void AddOrePiece(int count)
+    public void AddCoin(int count)
     {
         coin += count;
         GameEventBus.Publish<CoinEvent>(new CoinEvent(coin));

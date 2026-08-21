@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class ForceItem : Item
 {
-    //공격력 4증가, 공격속도 10 증가    
-    float attackPower = 3;
-    float attackSpeed = 10;
+    //공격력 4증가, 공격속도 3 증가    
+    float attackPower = 4;
+    float attackSpeed = 3;
     Buff atkPowerBuff;
     Buff atkSpeedBuff;
     public override void UpdateItem()
@@ -33,5 +33,6 @@ public class ForceItem : Item
     public override string GetDescription()
     {
         return $"공격력 +{attackPower} 공격 속도 +{attackSpeed}";
+        //return string.Format(TranslateManager.GetText("{key}_Desc"),attackPower,attackSpeed);
     }
 }

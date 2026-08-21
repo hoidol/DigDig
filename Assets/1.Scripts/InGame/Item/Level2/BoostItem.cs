@@ -69,6 +69,7 @@ public class BoostItem : Item
     public override string GetDescription()
     {
         return $"처지 시 {count*2}개 추가 탄 발사하는 미니미 소환, \n쿨타임 : {coolTime}초, {consumeTime}초 당 체력 -{itemData.consumeHp}";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),count*2,coolTime,consumeTime,itemData.consumeHp);
     }
 
 
