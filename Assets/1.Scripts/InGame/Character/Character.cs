@@ -46,7 +46,7 @@ public class Character : MonoSingleton<Character>, IPicker
     
 
     public Transform Transform => transform;
-    public int orePiece;
+    public int coin;
 
     private void Awake()
     {
@@ -195,7 +195,8 @@ public class Character : MonoSingleton<Character>, IPicker
     }
     public void AddOrePiece(int count)
     {
-        orePiece += count;
+        coin += count;
+        GameEventBus.Publish<CoinEvent>(new CoinEvent(coin));
     }
 
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
@@ -250,4 +251,10 @@ public class CharacterUpdateEvent
 {
     public Character character;
     public CharacterUpdateEvent(Character character) { this.character = character; }
+}
+
+public class CoinEvent
+{
+    public int curCoin;
+    public CoinEvent(int curCoin) { this.curCoin = curCoin; }
 }

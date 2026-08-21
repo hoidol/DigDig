@@ -61,7 +61,6 @@ public class GameManager : MonoSingleton<GameManager>
 
         GameEventBus.Publish(new StartGameEvent(stageData));
 
-
         ProcessDay(day).Forget();
     }
 
@@ -78,6 +77,8 @@ public class GameManager : MonoSingleton<GameManager>
         isDay= false;
         // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
         Debug.Log($"GameManager StartNight {day}");
+
+        GameEventBus.Publish(new NightStartEvent(day));
         if (phaseData.isBoss)
         {
             StartBoss();
@@ -96,7 +97,8 @@ public class GameManager : MonoSingleton<GameManager>
         {
             dayTime = GameSetting.MIX_DAY_TIME;
         }
-        while (dayTimer >= dayTime)
+        Debug.Log($"day {day} dayTime {dayTime}");
+        while (dayTimer <= dayTime)
         {
             await UniTask.Yield();
 
@@ -116,7 +118,8 @@ public class GameManager : MonoSingleton<GameManager>
             nightTime = GameSetting.MIX_NIGHT_TIME;
         }
 
-        while (nightTimer >= nightTime)
+        Debug.Log($"day {day} nightTime {nightTime}");
+        while (nightTimer <= nightTime)
         {
             await UniTask.Yield();
 
@@ -255,6 +258,15 @@ public class DayStartEvent
     public int phaseIdx;
 
     public DayStartEvent(int p)
+    {
+        phaseIdx = p;
+    }
+}
+public class NightStartEvent
+{
+    public int phaseIdx;
+
+    public NightStartEvent(int p)
     {
         phaseIdx = p;
     }

@@ -99,7 +99,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
     {
         // HealPiece.Instantiate(transform.position);
         //Exp.Instantiate(transform.position, exp, 1);
-        OrePiece.Instantiate(transform.position,2,1f);
+        Coin.Instantiate(transform.position,1,1f);
     }
 
     public virtual void Destroy()

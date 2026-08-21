@@ -148,7 +148,7 @@ public class NormalEnemy : Enemy
     }
     public override void Reward()
     {
-        OrePiece.Instantiate(transform.position,1,1);
+        Coin.Instantiate(transform.position,1,1);
         base.Reward();
     }
     public override void TakeDamage(DamageData damage)
@@ -170,6 +170,7 @@ public class NormalEnemy : Enemy
     public override void Destroy()
     {
         base.Destroy();
+        
         CancelAttack();
         ChangeState(NormalEnemyState.Dead).Forget();
 

@@ -48,8 +48,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public virtual void Spawn(Vector2 pos)
     {
         gameObject.SetActive(gameObject);
-        // Vector2 pos = MapManager.TileIndexToCenterPosition(idxArr);
-
+        
         Apear();
         transform.position = pos;
         maxHp = enemyData.GetHp();
@@ -148,8 +147,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
     }
     public virtual void Destroy()
-    {
-        
+    {  
+        GameEventBus.Publish(new EnemyDeadEvent(this));
     }
     public bool CanHit()
     {

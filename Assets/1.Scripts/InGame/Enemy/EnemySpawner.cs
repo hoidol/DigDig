@@ -44,7 +44,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         ActiveEnemyCount = Mathf.Max(0, ActiveEnemyCount - 1);
     }
 
-    void EnemyDeadEventListener(EnemyDeadEvent e)
+    public void EnemyDeadEventListener(EnemyDeadEvent e)
     {
         ReleaseEnemy(e.enemy);
     }
@@ -67,7 +67,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         {
             howFar = (CameraManager.Instance.mainCamera.orthographicSize * CameraManager.Instance.mainCamera.aspect) +1;
         }
-        return (Vector2)Player.Instance.transform.position + UnityEngine.Random.insideUnitCircle.normalized * howFar;
+        return (Vector2)Character.Instance.transform.position + UnityEngine.Random.insideUnitCircle.normalized * howFar;
     }
 
 

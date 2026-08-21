@@ -33,6 +33,9 @@ public class StartSetting
             "EnemyManager",
             "EquipmentManager",
             "CharacterManager",
+//공용
+            "InAppPurchaseManager",
+            "AdManager",
 
 //UI --------
             "FadeCanvas"

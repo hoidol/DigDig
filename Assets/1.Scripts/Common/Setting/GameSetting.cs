@@ -11,8 +11,8 @@ public class GameSetting
       "Pierce","Flame","Giant","Thunder","Iron"
    };
    public const int DAY_COUNT = 7;
-   public const float DAY_TIME = 20;
-   public const float DAY_INCREASE_TIME = 5;
+   public const float DAY_TIME = 30;
+   public const float DAY_INCREASE_TIME = 3;
    public const float MIX_DAY_TIME = 40;
    public const float NIGHT_TIME = 30;
    public const float NIGHT_INCREASE_TIME = 5;
