@@ -26,9 +26,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
     public Vector2Int Size => Vector2Int.one;
 
-
     public bool interacting;
-    // NpcManager.Spawn() 호출 시 위치가 결정된 뒤 실행됨
     public virtual void Appear(Vector2 spawnPos)
     {
         curTimer = maxTime;

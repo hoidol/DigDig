@@ -28,8 +28,8 @@ public class WarningIndicator : MonoBehaviour
     public void Cancel()
     {
         transform.parent = null;
-        warningVisual.DOKill();
         gameObject.SetActive(false);
+        warningVisual.DOKill();
     }
 
 }

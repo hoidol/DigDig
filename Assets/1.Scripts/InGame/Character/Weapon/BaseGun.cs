@@ -3,6 +3,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using LayerLab.ArtMakerUnity;
 
 public abstract class BaseGun : MonoBehaviour, IGun
 {
@@ -25,7 +26,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // public bool IsReloading { get; private set; }
     // public List<string> loadedBullets = new List<string>();
     readonly BulletFiredEvent bulletFiredEvent = new();
-
+    public SFXPlayer sfxPlayer;
 
     // Player 및 의존 컴포넌트 참조 초기화
     public void Init(Character player)
@@ -36,33 +37,26 @@ public abstract class BaseGun : MonoBehaviour, IGun
         cameraShake = player.cameraShake;
         mainCamera = Camera.main;
         LastDir = Vector2.right;
-        dirTr.up =Vector2.right;
-        
+        dirTr.up = Vector2.right;
+
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
     }
 
     void OnStartGame(StartGameEvent e)
     {
-        
+
     }
 
-
-    // 마우스(PC) 기준 공격 방향 계산
+    public LayerMask targetLayerMask;
+    // 가장 가까운 적 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
     {
-#if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = mainCamera.WorldToScreenPoint(attackPoint.position).z;
-        Vector3 worldMousePos = mainCamera.ScreenToWorldPoint(mousePosition);
-        return (worldMousePos - attackPoint.position).normalized;
-#else
-        if (attackJoystick.Direction.magnitude > 0)
-            return attackJoystick.Direction;
-        else
-        {
-            return LastDir;
-        }
-#endif
+        Transform targetTr = InGameUtil.FindTarget(transform.position, 10, targetLayerMask);
+
+        if (targetTr == null)
+            return Character.Instance.MoveDirection;
+
+        return (targetTr.position - transform.position).normalized;
     }
 
     // 매 프레임 호출: 조준 방향 갱신 + 자동 발사 판정
@@ -72,10 +66,10 @@ public abstract class BaseGun : MonoBehaviour, IGun
 
         dirTr.up = GetAttackDirection();
 
-// #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
-//         if (Input.GetMouseButton(0))
-//             dirTr.up = GetAttackDirection();    
-// #endif
+        // #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
+        //         if (Input.GetMouseButton(0))
+        //             dirTr.up = GetAttackDirection();    
+        // #endif
         UpdateAttackInternal();
         LastDir = dirTr.up;
     }
@@ -86,7 +80,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     void UpdateAttackInternal()
     {
         //statMgr.AttackSpeed
-        attackTimer += Time.deltaTime * statMgr.AttackSpeed /10;
+        attackTimer += Time.deltaTime * statMgr.AttackSpeed / 50;
 
 #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         if (attackTimer >= 1)
@@ -129,7 +123,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         // var bulletObject = bullet.GetBulletObject();
 
         CharacterBulletObject playerBulletObject = Shoot(bullet, dir);
-        Character.Instance.AddHp(-bullet.bulletData.consumeHp);
+        // Character.Instance.AddHp(-bullet.bulletData.consumeHp);
 
         // 멀티샷: 발사 방향에 수직으로 간격을 두어 여러 발 생성
         // Vector2 perp = new(-dir.y, dir.x);
@@ -175,7 +169,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     {
         if (dir == Vector2.zero)
             dir = GetAttackDirection();
-        
+
         if (bullet == null)
         {
             Debug.Log("BaseGun Shoot if(bullet == null)");
@@ -186,6 +180,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         characterBulletObject.transform.position = attackPoint.position;
 
         characterBulletObject.Shoot(dir);
+        sfxPlayer.Play();
         return characterBulletObject;
     }
 

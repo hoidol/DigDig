@@ -43,22 +43,23 @@ public class CharacterHealth : MonoBehaviour, IHittable
         GameEventBus.Publish(new CharacterHpChangedEvent(curHp, character.statMgr.MaxHp));
     }
 
-    public void AddHp(float hp, bool showDmg = true)
+    public void AddHp(float heal, bool showDmg = true)
     {
-        // Debug.Log($"CharacterHealth Add {hp}");
-        if (hp > 0) hp *= healMultiplier;
-        curHp += hp;
+        if (heal > 0) heal *= healMultiplier;
+
+        curHp += heal;
+
         if (showDmg)
         {
-            if (hp > 0)
-                HealText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, ((int)hp).ToString(), ColorSetting.healColor);
-            else if (hp < 0)
-                DamageText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, $"{(int)hp}", ColorSetting.enemyDamageColor);
+            if (heal > 0)
+                HealText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, ((int)heal).ToString(), ColorSetting.healColor);
+            else if (heal < 0)
+                DamageText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, $"{(int)heal}", ColorSetting.enemyDamageColor);
         }
-
 
         if (curHp > character.statMgr.MaxHp)
             curHp = character.statMgr.MaxHp;
+
         GameEventBus.Publish(new CharacterHpChangedEvent(curHp, character.statMgr.MaxHp));
     }
 

@@ -7,7 +7,7 @@ public class CharacterStatManager
 {
     [SerializeField] List<CharacterStat> statList = new();
     public Dictionary<StatType, CharacterStat> statDic = new Dictionary<StatType, CharacterStat>();
-    // public Dictionary<OreType, CharacterOre> oreDic = new Dictionary<OreType, CharacterOre>();
+    public Dictionary<string, CharacterMiniMeData> miniMeDic = new Dictionary<string, CharacterMiniMeData>();
 
     // public Dictionary<LevelUpStatType, CharacterLevelUpStat> levelUpStatDic = new Dictionary<LevelUpStatType, CharacterLevelUpStat>();
     public Dictionary<string, CharacterItemStat> itemStatDic = new Dictionary<string, CharacterItemStat>();
@@ -129,6 +129,36 @@ public class CharacterStatManager
         {
             //아이템 제거하기
             itemStatDic.Remove(key);
+        }
+    }
+
+    public void AddMiniMe(string key, int count)
+    {
+        if (!miniMeDic.ContainsKey(key))
+        {
+            miniMeDic.Add(key, new CharacterMiniMeData()
+            {
+                key = key,
+                count = 0
+            });
+        }
+        miniMeDic[key].count += count;
+        if (miniMeDic[key].count <= 0)
+        {
+            //아이템 제거하기
+            miniMeDic.Remove(key);
+        }
+    }
+    public void RemoveMiniMe(string key)
+    {
+        if (miniMeDic.ContainsKey(key))
+        {
+            miniMeDic[key].count -= 1;
+            if (miniMeDic[key].count <= 0)
+            {
+                //아이템 제거하기
+                miniMeDic.Remove(key);
+            }
         }
     }
     // public void AddOre(OreType oreType, int count = 1)

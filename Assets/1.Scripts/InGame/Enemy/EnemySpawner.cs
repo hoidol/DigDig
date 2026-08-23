@@ -9,7 +9,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
     [field: SerializeField] public int ActiveEnemyCount { get; private set; }
 
-    readonly HashSet<Enemy> activeEnemies = new();
+    public readonly HashSet<Enemy> activeEnemies = new();
     void Start()
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
@@ -17,7 +17,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
     public Enemy Instantiate(Enemy prefab)
     {
-        EnemyData data = EnemyManager.enemyDataDic[prefab.enemyType];
+        // EnemyData data = EnemyManager.enemyDataDic[prefab.enemyType];
 
         if (!pool.ContainsKey(prefab.enemyType))
             pool[prefab.enemyType] = new Stack<Enemy>();
@@ -61,11 +61,11 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     //     return null;
     // }
 
-    public Vector2 GetSpawnPosition(float howFar =-1)
+    public Vector2 GetSpawnPosition(float howFar = -1)
     {
-        if(howFar < 0)
+        if (howFar < 0)
         {
-            howFar = (CameraManager.Instance.mainCamera.orthographicSize * CameraManager.Instance.mainCamera.aspect) +1;
+            howFar = (CameraManager.Instance.mainCamera.orthographicSize * CameraManager.Instance.mainCamera.aspect) + 1;
         }
         return (Vector2)Character.Instance.transform.position + UnityEngine.Random.insideUnitCircle.normalized * howFar;
     }

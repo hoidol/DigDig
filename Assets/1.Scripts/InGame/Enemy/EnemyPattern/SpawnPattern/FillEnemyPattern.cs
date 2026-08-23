@@ -13,33 +13,39 @@ public class FillEnemyPattern : SpawnPattern
     public override void StartGame()
     {
         spawnCount = 0;
+
     }
+
 
     public void Update()
     {
         if (!GameManager.Instance.isPlaying)
             return;
+        if (GameManager.Instance.isDay)
+            return;
 
         if (checkTimer >= checkTime)
         {
-            int emptyCount = 0;
-            for (int x = 0; x < MapManager.tileArray.GetLength(0); x++)
-            {
-                for (int y = 0; y < MapManager.tileArray.GetLength(1); y++)
-                {
-                    Vector2 pos = MapManager.TileIndexToPosition(new Vector2Int(x, y));
-                    if (pos.magnitude > Character.Instance.distanceMaxDistanceDestroiedStone)
-                    {
-                        continue;
-                    }
-                    if (MapManager.tileArray[x, y] == null)
-                    {
-                        emptyCount++;
-                    }
-                }
-            }
-            Debug.Log($"FillEnemyPattern Whole emptyCount {emptyCount}");
-            if (emptyCount >= limitRoomCount)
+            // int emptyCount = 0;
+            // for (int x = 0; x < MapManager.tileArray.GetLength(0); x++)
+            // {
+            //     for (int y = 0; y < MapManager.tileArray.GetLength(1); y++)
+            //     {
+            //         Vector2 pos = MapManager.TileIndexToPosition(new Vector2Int(x, y));
+            //         if (pos.magnitude > Character.Instance.distanceMaxDistanceDestroiedStone)
+            //         {
+            //             continue;
+            //         }
+            //         if (MapManager.tileArray[x, y] == null)
+            //         {
+            //             emptyCount++;
+            //         }
+            //     }
+            // }
+
+
+            // Debug.Log($"FillEnemyPattern Whole emptyCount {emptyCount}");
+            if (EnemySpawner.Instance.activeEnemies.Count <= limitRoomCount)
             {
                 specialEnemySpawner.Spawn();
             }

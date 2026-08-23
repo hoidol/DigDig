@@ -95,7 +95,7 @@ public class TranslateManager
         // Init();
         if (!translateDic.ContainsKey(key))
         {
-            Debug.LogWarning($"{key} 해당하는 번역 데이터 없음");
+            //            Debug.LogWarning($"{key} 해당하는 번역 데이터 없음");
             return $"*{key}";
         }
 

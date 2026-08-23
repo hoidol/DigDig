@@ -16,7 +16,7 @@ public class HealPiece : MonoBehaviour, IPickable
 
     public static void Instantiate(Vector2 pos)
     {
-        if (Random.value > 0.15)//HealItem 드랍 확률
+        if (Random.value > 0.05)//HealItem 드랍 확률
             return;
 
         Vector2 position = pos + Random.insideUnitCircle;

@@ -7,14 +7,22 @@ using Random = UnityEngine.Random;
 
 public class PhaseEnemyPattern : SpawnPattern
 {
-    public EnemyPatternData enemyPatternData;
+    EnemyPatternData enemyPatternData;
     //public Action onSpawned;
 
     CancellationTokenSource cts;
 
     void Awake()
     {
+        GameEventBus.Subscribe<PhaseStartEvent>(OnPhaseStartEvent);
         GameEventBus.Subscribe<DayStartEvent>(OnDayStartEvent);
+        GameEventBus.Subscribe<NightStartEvent>(OnNightStartEvent);
+    }
+    PhaseData phaseData;
+    void OnPhaseStartEvent(PhaseStartEvent e)
+    {
+        phaseData = e.phaseData;
+        enemyPatternData = phaseData.enemyPatternData;
     }
 
     void OnDayStartEvent(DayStartEvent e)
@@ -22,9 +30,18 @@ public class PhaseEnemyPattern : SpawnPattern
         EndPattern();
         Debug.Log("EnemyPattern StartPattern");
 
-        this.enemyPatternData = GameManager.Instance.stageData.phaseDatas[e.phaseIdx].enemyPatternData;
         cts = new CancellationTokenSource();
-        foreach (var spawnData in enemyPatternData.enemySpawnPatternDatas)
+        foreach (var spawnData in enemyPatternData.dayEnemySpawnPatternDatas)
+            SpawnLoop(spawnData, cts.Token).Forget();
+    }
+
+    void OnNightStartEvent(NightStartEvent e)
+    {
+        EndPattern();
+        Debug.Log("EnemyPattern StartNightPattern");
+
+        cts = new CancellationTokenSource();
+        foreach (var spawnData in enemyPatternData.nightEnemySpawnPatternDatas)
             SpawnLoop(spawnData, cts.Token).Forget();
     }
 
@@ -36,8 +53,7 @@ public class PhaseEnemyPattern : SpawnPattern
             float wait = Random.Range(spawnData.intervalRange.x, spawnData.intervalRange.y);
             await UniTask.Delay(TimeSpan.FromSeconds(wait), cancellationToken: token);
 
-            int count = Random.Range(spawnData.countRange.x, spawnData.countRange.y);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < spawnData.spawnCount; i++)
             {
                 Spawn(spawnData.enemyType);
             }

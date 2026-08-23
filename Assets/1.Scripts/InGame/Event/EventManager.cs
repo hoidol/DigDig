@@ -65,7 +65,7 @@ public class EventManager : MonoSingleton<EventManager>
     private void OnStartGameEvent(StartGameEvent e)
     {
         spawnCount = 0;
-        
+
         // EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
         // eventRepeatSpawners.Add(itemBoxSpawner);
         // itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
@@ -198,9 +198,6 @@ public class EventManager : MonoSingleton<EventManager>
 
     public Vector2 CalcSpawnPosition()
     {
-        // Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Player.Instance.distanceMaxDistanceDestroiedStone}");
-
-
         float farDistance = (MapManager.MIN_RANGE_RADIUS + 5) + spawnCount * 2.3f;
         Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Character.Instance.distanceMaxDistanceDestroiedStone} farDistance {farDistance}");
         // Vector2 playerPos = Player.Instance.transform.position;

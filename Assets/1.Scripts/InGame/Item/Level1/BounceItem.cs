@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class BounceItem : Item,IFired
+public class BounceItem : Item, IFired
 {
-    int bounceCount = 2;
+    int bounceCount = 1;
     public void OnFired(ref Bullet bullet, ref CharacterBulletObject bulletObject, Vector2 dir)
     {
         bulletObject.AddBehavior(new BounceBehavior(count * bounceCount));

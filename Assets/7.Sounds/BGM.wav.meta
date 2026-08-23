@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: 27a36dc82ff32054d88d76929bcd1079
+AssetOrigin:
+  serializedVersion: 1
+  productId: 169782
+  packageName: Space Game BGM #2
+  packageVersion: 1.0
+  assetPath: Assets/SpaceGameBgm#2/GhostChaser_Loop.wav
+  uploadId: 374201
+AudioImporter:
+  externalObjects: {}
+  serializedVersion: 8
+  defaultSettings:
+    serializedVersion: 2
+    loadType: 2
+    sampleRateSetting: 0
+    sampleRateOverride: 44100
+    compressionFormat: 1
+    quality: 0.5
+    conversionMode: 0
+    preloadAudioData: 1
+  platformSettingOverrides: {}
+  forceToMono: 1
+  normalize: 1
+  loadInBackground: 0
+  ambisonic: 0
+  3D: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

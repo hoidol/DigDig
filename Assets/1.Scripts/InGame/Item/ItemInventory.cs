@@ -44,10 +44,10 @@ public class ItemInventory : MonoBehaviour
     {
         ownItemKeys.Add(key);
     }
-    
+
     public void RemoveItem(string key, int idx = -1)
     {
-        if(idx < 0)
+        if (idx < 0)
         {
             ownItemKeys.Remove(key);
         }
@@ -126,17 +126,17 @@ public class ItemInventory : MonoBehaviour
 
 }
 
-public class UpdaterMergeRecommendItemEvent
+public class UpdateMergeRecommendItemEvent
 {
     public List<MergeItemData> recommendMergeItems;
-    public UpdaterMergeRecommendItemEvent(List<MergeItemData> list)
+    public UpdateMergeRecommendItemEvent(List<MergeItemData> list)
     {
         recommendMergeItems = list;
     }
 }
 
 [System.Serializable]
-public class PlayerItem
+public class CharacterItem
 {
     public string key;
     public int count;

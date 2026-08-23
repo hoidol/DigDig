@@ -72,3 +72,7 @@ unity_project/build
 # and the .bundle/.so exceed GitHub's 100MB push limit. Re-import via Firebase Unity SDK
 # locally if Analytics needs to run inside the Editor.
 [Aa]ssets/Firebase/Plugins/x86_64/
+
+# Universal Sound FX asset store package (not tracked in git)
+[Aa]ssets/Universal Sound FX/
+[Aa]ssets/Universal Sound FX.meta

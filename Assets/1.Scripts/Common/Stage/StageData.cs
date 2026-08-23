@@ -150,7 +150,8 @@ public class StageData : ScriptableObject
             if (float.TryParse(Col(cols, iEnemyHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float eh)) d.enemyHp = eh;
             if (float.TryParse(Col(cols, iEnemyAtk), NumberStyles.Float, CultureInfo.InvariantCulture, out float ea)) d.enemyAttackPower = ea;
 
-            d.enemyPatternData = FindEnemyPatternData(d.phase);
+            EnemyPatternData epd = FindEnemyPatternData(d.phase);
+            d.enemyPatternData = epd;
 
             list.Add(d);
         }
@@ -178,15 +179,14 @@ public class StageData : ScriptableObject
         int iStage = System.Array.IndexOf(headers, "stage");
         int iPhase = System.Array.IndexOf(headers, "phase");
 
-        int iTrigger = System.Array.IndexOf(headers, "triggerTime");
-        int iEnd = System.Array.IndexOf(headers, "EndTime");
         int iEnemy = System.Array.IndexOf(headers, "enemyType");
-        int iMinCount = System.Array.IndexOf(headers, "minCount");
-        int iMaxCount = System.Array.IndexOf(headers, "maxCount");
-        int iMinItvl = System.Array.IndexOf(headers, "minIntervalTime");
-        int iMaxItvl = System.Array.IndexOf(headers, "maxIntervalTime");
+        int iDaySpawnCount = System.Array.IndexOf(headers, "DaySpawnCount");
+        int iDayItvl = System.Array.IndexOf(headers, "DayIntervalTime");
+        int iNightSpawnCount = System.Array.IndexOf(headers, "NightSpawnCount");
+        int iNightItvl = System.Array.IndexOf(headers, "NightIntervalTime");
 
-        var list = new List<EnemySpawnPatternData>();
+        var dayList = new List<EnemySpawnPatternData>();
+        var nightList = new List<EnemySpawnPatternData>();
         for (int i = 1; i < lines.Length; i++)
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
@@ -194,21 +194,35 @@ public class StageData : ScriptableObject
             //if (Col(cols, iStage) != key) continue;
             if (!int.TryParse(Col(cols, iPhase), out int ph) || ph != phase) continue;
 
-            var e = new EnemySpawnPatternData { phase = ph };
-            // if (float.TryParse(Col(cols, iTrigger), NumberStyles.Float, CultureInfo.InvariantCulture, out float tr)) e.triggerTime = tr;
-            // if (float.TryParse(Col(cols, iEnd), NumberStyles.Float, CultureInfo.InvariantCulture, out float en)) e.endTime = en;
-            if (System.Enum.TryParse(Col(cols, iEnemy), out EnemyType et)) e.enemyType = et;
-            if (int.TryParse(Col(cols, iMinCount), out int minC) && int.TryParse(Col(cols, iMaxCount), out int maxC))
-                e.countRange = new Vector2Int(minC, maxC);
-            if (float.TryParse(Col(cols, iMinItvl), NumberStyles.Float, CultureInfo.InvariantCulture, out float minI) &&
-                float.TryParse(Col(cols, iMaxItvl), NumberStyles.Float, CultureInfo.InvariantCulture, out float maxI))
-                e.intervalRange = new Vector2(minI, maxI);
-            list.Add(e);
+            System.Enum.TryParse(Col(cols, iEnemy), out EnemyType et);
+
+            if (int.TryParse(Col(cols, iDaySpawnCount), out int dayCount) &&
+                TryParseIntervalRange(Col(cols, iDayItvl), out Vector2 dayItvl))
+            {
+                dayList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = dayCount, intervalRange = dayItvl });
+            }
+
+            if (int.TryParse(Col(cols, iNightSpawnCount), out int nightCount) &&
+                TryParseIntervalRange(Col(cols, iNightItvl), out Vector2 nightItvl))
+            {
+                nightList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = nightCount, intervalRange = nightItvl });
+            }
         }
 
-        if (list.Count == 0) { Debug.LogWarning($"[StageData] EnemyPatternData stage={key} phase={phase} 데이터 없음"); return null; }
+        if (dayList.Count == 0 && nightList.Count == 0) { Debug.LogWarning($"[StageData] EnemyPatternData stage={key} phase={phase} 데이터 없음"); return null; }
 
-        return new EnemyPatternData { enemySpawnPatternDatas = list.ToArray() };
+        return new EnemyPatternData { phase = phase, dayEnemySpawnPatternDatas = dayList.ToArray(), nightEnemySpawnPatternDatas = nightList.ToArray() };
+    }
+
+    static bool TryParseIntervalRange(string raw, out Vector2 range)
+    {
+        range = default;
+        string[] parts = raw.Split('/');
+        if (parts.Length != 2) return false;
+        if (!float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float min)) return false;
+        if (!float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float max)) return false;
+        range = new Vector2(min, max);
+        return true;
     }
 
     void LoadEventDatas()
@@ -295,15 +309,16 @@ public class PhaseData
 [System.Serializable]
 public class EnemyPatternData
 {
-    public EnemySpawnPatternData[] enemySpawnPatternDatas;
+    public int phase;
+    public EnemySpawnPatternData[] dayEnemySpawnPatternDatas;
+    public EnemySpawnPatternData[] nightEnemySpawnPatternDatas;
 }
 
 [System.Serializable]
 public class EnemySpawnPatternData
 {
-    public int phase;
     public EnemyType enemyType;
-    public Vector2Int countRange;
+    public int spawnCount;
     public Vector2 intervalRange;
 
 }

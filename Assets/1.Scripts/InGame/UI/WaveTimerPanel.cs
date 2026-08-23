@@ -31,12 +31,14 @@ public class WaveTimerPanel : MonoBehaviour
         dayObject.SetActive(true);
         nigthObject.SetActive(false);
         curIimeBar = dayTimeBar;
-        waveText.text = $"웨이브 {e.phaseIdx + 1}";
+        waveText.text = $"DAY {e.phaseIdx + 1} 낮";
     }
     void OnNightStartEvent(NightStartEvent e)
     {
+        dayObject.SetActive(false);
+        nigthObject.SetActive(true);
         curIimeBar = nightTimeBar;
-        waveText.text = $"웨이브 {e.phaseIdx + 1}";
+        waveText.text = $"DAY {e.phaseIdx + 1} 밤";
     }
 
     void Update()
@@ -54,7 +56,7 @@ public class WaveTimerPanel : MonoBehaviour
         {
             curIimeBar.fillAmount = 1f - GameManager.Instance.nightTimer / GameSetting.NIGHT_TIME;
         }
-        
+
     }
     // public void StartWave(WaveStartEvent e)
     // {

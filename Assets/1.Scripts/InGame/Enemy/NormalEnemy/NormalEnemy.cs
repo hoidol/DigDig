@@ -12,7 +12,7 @@ public class NormalEnemy : Enemy
 
 
     [SerializeField] protected bool moving;
-    protected float moveTimer;
+    // protected float moveTimer;
 
     public Animator animator;
 
@@ -25,7 +25,7 @@ public class NormalEnemy : Enemy
     public override void Spawn(Vector2 pos)
     {
         base.Spawn(pos);
-        moveTimer = MOVE_SPEED;
+        // moveTimer = MOVE_SPEED;
         //apearTime 초 후에 등장
         moving = false;
 
@@ -38,13 +38,9 @@ public class NormalEnemy : Enemy
         attacking = false;
     }
 
-    public async UniTask ChangeState(NormalEnemyState state)
+    public void ChangeState(NormalEnemyState state)
     {
         this.state = state;
-        if (state == NormalEnemyState.Moving)
-        {
-            // StartMoving().Forget();
-        }
     }
 
     public override void Update()
@@ -56,7 +52,7 @@ public class NormalEnemy : Enemy
         }
 
         base.Update();
-            
+
         if (statusEffectHandler.IsStunned)
         {
             if (attacking)
@@ -66,9 +62,8 @@ public class NormalEnemy : Enemy
             return;
         }
 
-        if (moveTimer > 0)
-            moveTimer -= Time.deltaTime;
-
+        // if (moveTimer > 0)
+        //     moveTimer -= Time.deltaTime;
 
         if (attackTimer < enemyData.attackSpeed)
             attackTimer += Time.deltaTime;
@@ -76,7 +71,6 @@ public class NormalEnemy : Enemy
         if (attacking)
             return;
 
-        
         if (state == NormalEnemyState.Moving) UpdateMoving();
         else if (state == NormalEnemyState.Attack) UpdateAttack();
 
@@ -85,14 +79,14 @@ public class NormalEnemy : Enemy
     //상태가 Waiting 인 경우 처리
     public virtual void UpdateMoving()
     {
-        if(isPushing)
+        if (isPushing)
             return;
-        
+
         Vector2 vec = Character.Instance.transform.position - transform.position;
-        
+
         if (vec.magnitude <= enemyData.attackRange)
         {
-            ChangeState(NormalEnemyState.Attack).Forget();
+            ChangeState(NormalEnemyState.Attack);
             return;
         }
 
@@ -100,37 +94,16 @@ public class NormalEnemy : Enemy
         UpdateFacing(vec);
     }
 
-    // public virtual async UniTask StartMoving()
-    // {
-    //     Vector2Int[] dirs = FindPath(transform.position, Character.Instance.transform.position);
-
-    //     for (int i = 0; i < dirs.Length; i++)
-    //     {
-    //         // Debug.Log($"현 위치 {tileIndexArr[0, 0]} 방향 {dirs[i]}");
-    //         if (!MapManager.CheckMoveTo(tileIndexArr, dirs[i]))
-    //             continue;
-
-    //         if (moving) return;
-    //         moving = true;
-    //         await MoveTo(dirs[i]);
-
-    //         moving = false;
-    //         moveTimer = MOVE_SPEED;
-    //         ChangeState(NormalEnemyState.Waiting).Forget();
-    //         return;
-    //     }
-
-    //     //이동 못하는 경우
-    //     ChangeState(NormalEnemyState.Waiting).Forget();
-    //     moveTimer = MOVE_SPEED;
-    // }
 
     public virtual void UpdateAttack()
     {
-        
         if (attackTimer < enemyData.attackSpeed)
+        {
+            ChangeState(NormalEnemyState.Moving);
             return;
-        
+        }
+
+
         if (!attacking)
         {
             Vector2 vec = Character.Instance.transform.position - transform.position;
@@ -143,14 +116,16 @@ public class NormalEnemy : Enemy
     {
         attacking = true;
         rg2d.linearVelocity = Vector2.zero;
-        
+
         attackTimer = 0;
     }
     public override void Reward()
     {
-        Coin.Instantiate(transform.position,1,1);
+        // Coin.Instantiate(transform.position, 1, 1);
+        HealPiece.Instantiate(transform.position);
         base.Reward();
     }
+
     public override void TakeDamage(DamageData damage)
     {
         base.TakeDamage(damage);
@@ -161,18 +136,26 @@ public class NormalEnemy : Enemy
             root.localRotation = Quaternion.identity;
         });
     }
+
+    public override void CancelAttack()
+    {
+        base.CancelAttack();
+        rg2d.linearVelocity = Vector2.zero;
+    }
     public virtual void EndAttack()
     {
         attacking = false;
-        ChangeState(NormalEnemyState.Moving).Forget();
+
+        rg2d.linearVelocity = Vector2.zero;
+        ChangeState(NormalEnemyState.Moving);
     }
 
     public override void Destroy()
     {
         base.Destroy();
-        
+
         CancelAttack();
-        ChangeState(NormalEnemyState.Dead).Forget();
+        ChangeState(NormalEnemyState.Dead);
 
     }
 }

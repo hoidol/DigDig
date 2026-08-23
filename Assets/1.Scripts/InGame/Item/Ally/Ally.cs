@@ -10,7 +10,7 @@ public class Ally : MonoBehaviour
 
     public virtual void SetLevel(int lv)
     {
-        level =lv;
+        level = lv;
     }
 
 }

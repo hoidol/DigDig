@@ -65,7 +65,7 @@ public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
 
     private void HandleProductsFetchFailed(ProductFetchFailed failure)
     {
-        Debug.LogError($"[IAP] 상품 정보 로드 실패 : {failure.FailureReason}");
+        Debug.LogWarning($"[IAP] 상품 정보 로드 실패 : {failure.FailureReason}");
     }
 
     public Product GetProduct(string productId)

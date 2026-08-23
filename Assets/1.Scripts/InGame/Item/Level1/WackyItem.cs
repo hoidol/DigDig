@@ -3,7 +3,7 @@ using UnityEngine;
 //35프로 확률로 랜덤 방향으로 추가 발사
 public class WackyItem : Item, IFired
 {
-    float PROBS = 0.35f;
+    float PROBS = 0.5f;
 
 
     public override string GetDescription()
@@ -14,10 +14,13 @@ public class WackyItem : Item, IFired
 
     public void OnFired(ref Bullet bullet, ref CharacterBulletObject bulletObject, Vector2 dir)
     {
-         if (Random.value >= PROBS *count) return;
-
-        Vector2 randomDir = Random.insideUnitCircle.normalized;
-        Character.Instance.Shoot(new NormalBullet(), randomDir);
+        for (int i = 0; i < count; i++)
+        {
+            if (Random.value >= PROBS)
+                continue;
+            Vector2 randomDir = Random.insideUnitCircle.normalized;
+            Character.Instance.Shoot(new NormalBullet(), randomDir);
+        }
         // Character.Instance.AddHp(-itemData.consumeHp);
     }
 }

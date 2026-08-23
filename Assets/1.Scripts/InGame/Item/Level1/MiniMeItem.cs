@@ -7,8 +7,8 @@ public class MiniMeItem : Item
     public List<MiniMe> miniMes = new();
 
     public float consumeTime = 5;
-    public float attackPower = 3;
-    public float attackSpeed =  1.5f;
+    public float attackPower = 4;
+    public float attackSpeed = 1f;
 
     public override void OnUnequip()
     {

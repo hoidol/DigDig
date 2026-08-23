@@ -10,7 +10,7 @@ public class Character : MonoSingleton<Character>, IPicker
     public CharacterName characterName;
     public Rigidbody2D rg;
     public Joystick moveJoystick;
-    public Joystick attackJoystick;
+    // public Joystick attackJoystick;
     public CharacterStatManager statMgr;
     public Animator animator;
     public Transform bodyRootTr;
@@ -25,6 +25,7 @@ public class Character : MonoSingleton<Character>, IPicker
     // public int bounce;
     [SerializeField] Transform hpPoint;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
+    public MiniMeInventory miniMeInventory;
     // public OreInventory oreInventory; //패시브 스킬로 제공!
     public TileChecker[] tileCheckers;
     public CharacterHealth health;
@@ -43,7 +44,7 @@ public class Character : MonoSingleton<Character>, IPicker
     public float distanceMaxDistanceDestroiedStone;
     public float distanceMinDistanceDestroiedStone;
     public Vector2 AttackDir => weapon.GetAttackDirection();
-    
+
 
     public Transform Transform => transform;
     public int coin;
@@ -51,10 +52,11 @@ public class Character : MonoSingleton<Character>, IPicker
     private void Awake()
     {
         moveJoystick = GameObject.Find("MoveJoystick").GetComponent<Joystick>();
-        attackJoystick = GameObject.Find("AttackJoystick").GetComponent<Joystick>();
+        // attackJoystick = GameObject.Find("AttackJoystick").GetComponent<Joystick>();
 
         rg = GetComponentInChildren<Rigidbody2D>();
         itemInventory = GetComponentInChildren<ItemInventory>();
+        miniMeInventory = GetComponentInChildren<MiniMeInventory>();
         // abilityInventory = GetComponentInChildren<AbilityInventory>();
         // statInventory = GetComponentInChildren<StatInventory>();
         health = GetComponentInChildren<CharacterHealth>();
@@ -187,14 +189,31 @@ public class Character : MonoSingleton<Character>, IPicker
         UpdateCharacter();
     }
 
-    public void RemoveItem(string key, int idx =-1)
+    public void RemoveItem(string key, int idx = -1)
     {
-        statMgr.AddItem(key,-1);
+        statMgr.AddItem(key, -1);
 
         itemInventory.RemoveItem(key, idx);
         itemInventory.UpdateInventory();
         UpdateCharacter();
     }
+
+    public void AddMiniMe(string key, int count = 1)
+    {
+        statMgr.AddMiniMe(key, count);
+        miniMeInventory.AddMiniMe(key);
+        miniMeInventory.UpdateInventory();
+        UpdateCharacter();
+    }
+    public void RemoveMiniMe(MiniMe miniMe)
+    {
+        statMgr.RemoveMiniMe(miniMe.key);
+
+        miniMeInventory.RemoveMiniMe(miniMe);
+        miniMeInventory.UpdateInventory();
+        UpdateCharacter();
+    }
+
     public void AddCoin(int count)
     {
         coin += count;

@@ -48,7 +48,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public virtual void Spawn(Vector2 pos)
     {
         gameObject.SetActive(gameObject);
-        
+
         Apear();
         transform.position = pos;
         maxHp = enemyData.GetHp();
@@ -80,7 +80,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     {
         if (isPushing)
         {
-            if(rg2d.linearVelocity.magnitude < 0.1f)
+            if (rg2d.linearVelocity.magnitude < 0.1f)
             {
                 isPushing = false;
             }
@@ -147,7 +147,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
     }
     public virtual void Destroy()
-    {  
+    {
         GameEventBus.Publish(new EnemyDeadEvent(this));
     }
     public bool CanHit()
@@ -158,8 +158,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public bool isPushing;
     public void Push(Vector2 dir, float power)
     {
-        isPushing =true;
-        rg2d.AddForce(dir*power,ForceMode2D.Impulse);
+        isPushing = true;
+        rg2d.AddForce(dir * power, ForceMode2D.Impulse);
     }
 
 }

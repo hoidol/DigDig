@@ -27,6 +27,7 @@ public class GameManager : MonoSingleton<GameManager>
     public float nightTimer = 0f;
     public bool isDay;
     public int day;
+
     async void Start()
     {
         await UniTask.WhenAll(
@@ -67,14 +68,14 @@ public class GameManager : MonoSingleton<GameManager>
     public PhaseData phaseData;
     public void StartDay(int day)
     {
-        isDay= true;
+        isDay = true;
         // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
         Debug.Log($"GameManager StartPhase {day}");
         GameEventBus.Publish(new DayStartEvent(day));
     }
     public void StartNight(int day)
     {
-        isDay= false;
+        isDay = false;
         // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
         Debug.Log($"GameManager StartNight {day}");
 
@@ -89,11 +90,12 @@ public class GameManager : MonoSingleton<GameManager>
     {
         phaseData = stageData.GetPhaseData(day);
 
+        GameEventBus.Publish(new PhaseStartEvent(phaseData));
         //낮에 대한 시간 처리
         dayTimer = 0;
         StartDay(day);
         float dayTime = GameSetting.DAY_TIME + GameSetting.DAY_INCREASE_TIME * day;
-        if(dayTime >= GameSetting.MIX_DAY_TIME)
+        if (dayTime >= GameSetting.MIX_DAY_TIME)
         {
             dayTime = GameSetting.MIX_DAY_TIME;
         }
@@ -113,7 +115,7 @@ public class GameManager : MonoSingleton<GameManager>
         nightTimer = 0;
 
         float nightTime = GameSetting.NIGHT_TIME + GameSetting.NIGHT_INCREASE_TIME * day;
-        if(nightTime >= GameSetting.MIX_NIGHT_TIME)
+        if (nightTime >= GameSetting.MIX_NIGHT_TIME)
         {
             nightTime = GameSetting.MIX_NIGHT_TIME;
         }
@@ -137,6 +139,7 @@ public class GameManager : MonoSingleton<GameManager>
         if (phaseData.isBoss)
             return;
 
+        GameEventBus.Publish(new PhaseEndEvent(day));
         day++;
         // Time.timeScale = 0;
         // SelectItemCanvas.Instance.OpenCanvas(() =>
@@ -184,12 +187,12 @@ public class GameManager : MonoSingleton<GameManager>
         else
         {
             int accept = PlayerPrefs.GetInt(ACCEPT_REVIEW_KEY, 0);
-            if(accept == 0)
+            if (accept == 0)
             {
-                StageData maxStageData = StageManager.Instance.GetStageData(UserManager.Instance.userStageManager.GetMaxStage()) ;
-                if(maxStageData.order >= 2)
+                StageData maxStageData = StageManager.Instance.GetStageData(UserManager.Instance.userStageManager.GetMaxStage());
+                if (maxStageData.order >= 2)
                 {
-                    YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("review_title"),TranslateManager.GetText("review_body"), (accept) =>
+                    YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("review_title"), TranslateManager.GetText("review_body"), (accept) =>
                     {
                         if (accept)
                         {
@@ -199,10 +202,10 @@ public class GameManager : MonoSingleton<GameManager>
                             PlayerPrefs.SetInt(ACCEPT_REVIEW_KEY, 1);
                         }
                     });
-                    
+
                 }
             }
-            
+
 
             ResultCanvas.Instance.OpenCanvas();
             UserManager.Instance.userStageManager.ClearStage(stageData.key);
@@ -272,6 +275,14 @@ public class NightStartEvent
     }
 }
 
+public class PhaseStartEvent
+{
+    public PhaseData phaseData;
+    public PhaseStartEvent(PhaseData pData)
+    {
+        phaseData = pData;
+    }
+}
 public class PhaseEndEvent
 {
     public int phaseIdx;

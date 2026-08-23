@@ -41,7 +41,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
     public float MaxHp => maxHp;
     public float CurHp => curHp;
     public int level;
-    
+
     public SpriteRenderer innerSpriteRdr;
     public virtual void Init(int level, Color color, Vector2Int[,] idxArr)//, Vector2Int gridPos
     {
@@ -54,7 +54,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
 #endif
         spriteRootTr.localRotation = Quaternion.identity;
         float distance = Vector2.Distance(Vector2.zero, transform.position);
-        float disMulti = distance / 10.5f;
+        float disMulti = distance / 7f;
         if (disMulti <= 1)
             disMulti = 1;
         float defaultHp = GameManager.Instance.stageData.oreHp * disMulti;
@@ -97,9 +97,9 @@ public class Stone : MonoBehaviour, IHittable, ITile
 
     public void Reward()
     {
-        // HealPiece.Instantiate(transform.position);
+        HealPiece.Instantiate(transform.position);
         //Exp.Instantiate(transform.position, exp, 1);
-        Coin.Instantiate(transform.position,1,1f);
+        Coin.Instantiate(transform.position, 1, 1f);
     }
 
     public virtual void Destroy()

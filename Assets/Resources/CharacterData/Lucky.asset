@@ -25,7 +25,7 @@ MonoBehaviour:
     value: 0
   - statType: 3
     initValue: 0
-    value: 10
+    value: 50
   - statType: 4
     initValue: 0
     value: 20

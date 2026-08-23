@@ -26,11 +26,32 @@ public static class InGameUtil
     //백어택 
     public static bool CheckBackAttack(Transform target, int face, Vector2 targetPoint)
     {
-        float x = targetPoint.x - target.position.x ; //x 0보면 크면 오론쪽, 작으면 왼쪽 
-        if ((face > 0 && x <0) || (face < 0 && x > 0)) 
+        float x = targetPoint.x - target.position.x; //x 0보면 크면 오론쪽, 작으면 왼쪽 
+        if ((face > 0 && x < 0) || (face < 0 && x > 0))
         {
             return true;
         }
         return false;
+    }
+
+    public static Transform FindTarget(Vector2 pos, float range, LayerMask layerMask)
+    {
+        Collider2D[] cols = Physics2D.OverlapCircleAll(pos, range, layerMask);
+        if (cols.Length == 0)
+            return null;
+
+        Collider2D nearest = cols[0];
+        float nearestSqrDist = ((Vector2)nearest.transform.position - pos).sqrMagnitude;
+        for (int i = 1; i < cols.Length; i++)
+        {
+            float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
+            if (sqrDist < nearestSqrDist)
+            {
+                nearest = cols[i];
+                nearestSqrDist = sqrDist;
+            }
+        }
+
+        return nearest.transform;
     }
 }

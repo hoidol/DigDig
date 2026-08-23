@@ -4,6 +4,11 @@
             "key": "1",
             "tryCount": 0,
             "clearCount": 0
+        },
+        {
+            "key": "0",
+            "tryCount": 2,
+            "clearCount": 0
         }
     ]
 }
