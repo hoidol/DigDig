@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Address: CharacterBulletObject
     m_ReadOnly: 0
     m_SerializedLabels:
-    - PlayerBulletObject
+    - CharacterBulletObject
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a6271b713b6d045bb963b6fcdd585352
     m_Address: BulletData

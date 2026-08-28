@@ -115,14 +115,14 @@ public abstract class BaseGun : MonoBehaviour, IGun
         // pendingSpread = 0;
         // var (bullet, shotOrder) = SpendBullet();
 
-        Bullet bullet = new NormalBullet();
+        BulletSpec bullet = new NormalBulletSpec();
 
         foreach (var e in player.itemInventory.preFires)
             e.OnPreFire(ref bullet, dir);
 
         // var bulletObject = bullet.GetBulletObject();
 
-        CharacterBulletObject playerBulletObject = Shoot(bullet, dir);
+        AllyBulletObject bulletObject = Shoot(bullet, dir);
         // Character.Instance.AddHp(-bullet.bulletData.consumeHp);
 
         // 멀티샷: 발사 방향에 수직으로 간격을 두어 여러 발 생성
@@ -147,7 +147,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         // pendingSpread=0;
 
         foreach (var e in player.itemInventory.fireds)
-            e.OnFired(ref bullet, ref playerBulletObject, dir);
+            e.OnFired(ref bullet, ref bulletObject, dir);
 
         RunComboAttacks(dir).Forget();
         // cameraShake.Shake(0.15f);
@@ -165,21 +165,20 @@ public abstract class BaseGun : MonoBehaviour, IGun
     }
 
     // 총알 인스턴스 생성 후 아이템/어빌리티 효과 적용하여 발사
-    public CharacterBulletObject Shoot(Bullet bullet, Vector2 dir)
+    public CharacterBulletObject Shoot(BulletSpec bullet, Vector2 dir)
     {
         if (dir == Vector2.zero)
             dir = GetAttackDirection();
 
         if (bullet == null)
         {
-            Debug.Log("BaseGun Shoot if(bullet == null)");
-            bullet = new NormalBullet();
+            bullet = new CharacterBulletSpec();
         }
 
-        var characterBulletObject = bullet.Instantiate(); // 총알 초기화됨
+        CharacterBulletObject characterBulletObject = bullet.Instantiate(Character.Instance) as CharacterBulletObject; // 총알 초기화됨
         characterBulletObject.transform.position = attackPoint.position;
 
-        characterBulletObject.Shoot(dir);
+        characterBulletObject.Shoot(dir, Character.Instance.statMgr.AttackPower);
         sfxPlayer.Play();
         return characterBulletObject;
     }

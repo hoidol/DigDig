@@ -115,16 +115,16 @@ public class PhaseEnemyPattern : SpawnPattern
         enemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition());
 
     }
-    bool FindEmptyInDir(Vector2Int startIdx, Vector2Int size, Vector2Int dir, int steps, out Vector2Int[,] spawnTileArray)
-    {
-        spawnTileArray = new Vector2Int[size.x, size.y];
-        for (int i = 1; i <= steps; i++)
-        {
-            Vector2Int candidate = startIdx + dir * i;
-            if (MapManager.GetTileArray(candidate, size, out spawnTileArray)) return true;
-        }
-        return false;
-    }
+    // bool FindEmptyInDir(Vector2Int startIdx, Vector2Int size, Vector2Int dir, int steps, out Vector2Int[,] spawnTileArray)
+    // {
+    //     spawnTileArray = new Vector2Int[size.x, size.y];
+    //     for (int i = 1; i <= steps; i++)
+    //     {
+    //         Vector2Int candidate = startIdx + dir * i;
+    //         if (MapManager.GetTileArray(candidate, size, out spawnTileArray)) return true;
+    //     }
+    //     return false;
+    // }
 
     void Update()
     {

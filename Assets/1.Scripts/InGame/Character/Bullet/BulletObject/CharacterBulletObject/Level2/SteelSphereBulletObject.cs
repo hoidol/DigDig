@@ -6,16 +6,16 @@ public class SteelSphereBulletObject : CharacterBulletObject
 
     int remaining;
 
-    public override void Shoot(Vector2 dir)
-    {
-        base.Shoot(dir);
+    // public override void Shoot(Vector2 dir)
+    // {
+    //     base.Shoot(dir);
 
-        // int bounce = Character.Instance.statMgr.Bounce;
-        // remaining = Mathf.FloorToInt(bounce * 0.5f);
+    //     // int bounce = Character.Instance.statMgr.Bounce;
+    //     // remaining = Mathf.FloorToInt(bounce * 0.5f);
 
-        // int lv = Player.Instance.statMgr.bulletStatDic[key].lv;
-        // AddBulletForce(new DamageBoostForce(DAMAGE_PER_REDUCED_BOUNCE[lv - 1]));
-    }
+    //     // int lv = Player.Instance.statMgr.bulletStatDic[key].lv;
+    //     // AddBulletForce(new DamageBoostForce(DAMAGE_PER_REDUCED_BOUNCE[lv - 1]));
+    // }
 
     public override void CheckHit()
     {

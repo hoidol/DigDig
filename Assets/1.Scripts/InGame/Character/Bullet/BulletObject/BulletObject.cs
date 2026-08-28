@@ -12,17 +12,18 @@ public abstract class BulletObject : MonoBehaviour
         get;
         set;
     }
-    [field: SerializeField] public float damageMultiplier { get; set; } = 1f;
 
     public LayerMask hitLayerMask;
 
     protected IHittable preTarget;
     const float LIFETIME = 15f;
     protected float lifetimeTimer;
+    public DamageData damageData;
 
-    public virtual void Shoot(Vector2 dir)
+    public virtual void Shoot(Vector2 dir,float damage)
     {
         direction = dir;
+        damageData.damage = damage;
         preTarget = null;
         lifetimeTimer = LIFETIME;
     }

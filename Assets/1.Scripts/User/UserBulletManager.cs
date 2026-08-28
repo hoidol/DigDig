@@ -19,22 +19,22 @@ public class UserBulletManager : UserBaseManager
         if (userBulletData == null)
         {
             userBulletData = new UserBulletData();
-            for (int i = 0; i < GameSetting.INIT_BULLE_KEYS.Length; i++)
-            {
-                UserBullet userBullet = GetUserBullet(GameSetting.INIT_BULLE_KEYS[i]);
-                userBullet.equipedIdx = i;
-                userBullet.own = true;
-            }
+            // for (int i = 0; i < GameSetting.INIT_BULLE_KEYS.Length; i++)
+            // {
+            //     UserBullet userBullet = GetUserBullet(GameSetting.INIT_BULLE_KEYS[i]);
+            //     userBullet.equipedIdx = i;
+            //     userBullet.own = true;
+            // }
         }
 
         for (int i = 0; i < 5; i++)
         {
             if (userBulletData.equiptedBullets[i] == null || string.IsNullOrEmpty(userBulletData.equiptedBullets[i].key) || !userBulletData.equiptedBullets[i].own)
             {
-                Debug.Log($"조건 걸림 i {i} {GameSetting.INIT_BULLE_KEYS[i]}");
-                userBulletData.equiptedBullets[i] = GetUserBullet(GameSetting.INIT_BULLE_KEYS[i]);
-                userBulletData.equiptedBullets[i].own = true;
-                userBulletData.equiptedBullets[i].equipedIdx = i;
+                // Debug.Log($"조건 걸림 i {i} {GameSetting.INIT_BULLE_KEYS[i]}");
+                // userBulletData.equiptedBullets[i] = GetUserBullet(GameSetting.INIT_BULLE_KEYS[i]);
+                // userBulletData.equiptedBullets[i].own = true;
+                // userBulletData.equiptedBullets[i].equipedIdx = i;
             }
             userBulletData.equiptedBullets[i] = GetEquiptUserBullet(i);
         }

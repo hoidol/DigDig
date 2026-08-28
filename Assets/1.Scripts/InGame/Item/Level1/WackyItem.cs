@@ -12,14 +12,14 @@ public class WackyItem : Item, IFired
         // return string.Format(TranslateManager.GetText("{key}_Desc"),$"{PROBS * 100:0}");
     }
 
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject bulletObject, Vector2 dir)
+    public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
     {
         for (int i = 0; i < count; i++)
         {
             if (Random.value >= PROBS)
                 continue;
             Vector2 randomDir = Random.insideUnitCircle.normalized;
-            Character.Instance.Shoot(new NormalBullet(), randomDir);
+            Character.Instance.Shoot(new NormalBulletSpec(), randomDir);
         }
         // Character.Instance.AddHp(-itemData.consumeHp);
     }

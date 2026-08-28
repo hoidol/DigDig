@@ -5,12 +5,6 @@ public class TitanBulletObject : CharacterBulletObject
     int killCount;
      int lv;
      DamageBoostForce damageBoostForce;
-     public override void Shoot(Vector2 dir)
-    {
-        base.Shoot(dir);
-
-        // lv = Player.Instance.statMgr.bulletStatDic[key].lv;
-    }
 
     public override IHittable Hit(RaycastHit2D hit2D)
     {
@@ -28,7 +22,7 @@ public class TitanBulletObject : CharacterBulletObject
             }
         }
 
-        float scale = 1f + killCount * TitanBullet.SIZE_PER_KILL[lv - 1];
+        float scale = 1f + killCount * TitanBulletSpec.SIZE_PER_KILL[lv - 1];
         transform.localScale = Vector3.one * scale;
 
         if (killCount > 0)
@@ -37,7 +31,7 @@ public class TitanBulletObject : CharacterBulletObject
             {
                 RemoveBulletForce(damageBoostForce);
             }
-            damageBoostForce = new DamageBoostForce(killCount * TitanBullet.DAMAGE_PER_KILL[lv - 1]);
+            damageBoostForce = new DamageBoostForce(killCount * TitanBulletSpec.DAMAGE_PER_KILL[lv - 1]);
             AddBulletForce(damageBoostForce);
         }
             

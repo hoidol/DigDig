@@ -16,6 +16,7 @@ public class UserManager : MonoSingleton<UserManager>
     
     public UserStageManager userStageManager;
     public UserEquipmentManager userEquipmentManager;
+    public UserMiniMeManager userMiniMeManager;
     public UserPurchaseManager userPurchaseManager;
     void Awake()
     {
@@ -31,11 +32,13 @@ public class UserManager : MonoSingleton<UserManager>
         userStageManager = new UserStageManager();
         userEquipmentManager = new UserEquipmentManager();
         userPurchaseManager = new UserPurchaseManager();
+        userMiniMeManager = new UserMiniMeManager();
 
         // userBulletManager.LoadData();
         userStageManager.LoadData();
         userEquipmentManager.LoadData();
         userPurchaseManager.LoadData();
+        userMiniMeManager.LoadData();
 
     }
     void Save()

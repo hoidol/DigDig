@@ -34,7 +34,7 @@ public class UnbreakableStone : Stone, IHittable, ITile
 
     public override void ReleaseTile()
     {
-        MapManager.ReleaseTile(tileIndexArr);
+        // MapManager.ReleaseTile(tileIndexArr);
 
         if (!gameObject.activeSelf) return;
         gameObject.SetActive(false);

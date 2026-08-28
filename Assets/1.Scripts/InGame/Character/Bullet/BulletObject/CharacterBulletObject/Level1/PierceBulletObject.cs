@@ -1,20 +1,19 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PierceBulletObject : CharacterBulletObject
+public class PierceBulletObject : AllyBulletObject
 {
 
-    public override void Shoot(Vector2 dir)
+    public override void Shoot(Vector2 dir,float damage)
     {
-        base.Shoot(dir);
-        transform.right = dir; ;
+        base.Shoot(dir,damage);
+        transform.right = dir; 
     }
 
-    public override void SetBullet(Bullet bullet)
+    public override void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
-        base.SetBullet(bullet);
-        PierceBullet pierceBullet = bullet as PierceBullet;
-        // Debug.Log($"PierceBulletObject pierceBullet.pierceCount {pierceBullet.pierceCount}");
+        base.SetBullet(bullet,allyUnit);
+        PierceBulletSpec pierceBullet = bullet as PierceBulletSpec;
         AddBehavior(new PierceBehavior(pierceBullet.pierceCount));
     }
 }

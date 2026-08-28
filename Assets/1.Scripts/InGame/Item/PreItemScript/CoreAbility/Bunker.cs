@@ -109,7 +109,7 @@ public class Bunker : MonoBehaviour//, IHittable
         if (!CanHit())
             return;
         curHp -= damageData.damage;
-        damageData.Applyed(transform.position);
+        // damageData.Applyed(transform.position);
 
         CharacterTakeDamageText.SetText(transform.position + Vector3.up * 2
         + (Vector3)UnityEngine.Random.insideUnitCircle, $"-{((int)damageData.damage).ToString()}");

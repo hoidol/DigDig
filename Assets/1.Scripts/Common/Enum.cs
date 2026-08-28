@@ -10,6 +10,7 @@ public enum StatOpType
     Add,       // +=
     Multiply,  // *=
 }
+
 // public enum Grade
 // {
 

@@ -1,0 +1,76 @@
+{
+    "equiptedMiniMes": [
+        {
+            "key": "Flame",
+            "equipedIdx": 0,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        },
+        {
+            "key": "Bound",
+            "equipedIdx": 1,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        },
+        {
+            "key": "Wacky",
+            "equipedIdx": 2,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        },
+        {
+            "key": "Orbit",
+            "equipedIdx": 3,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        },
+        {
+            "key": "Pierce",
+            "equipedIdx": 4,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        }
+    ],
+    "userMiniMes": [
+        {
+            "key": "Flame",
+            "equipedIdx": 0,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        },
+        {
+            "key": "Bound",
+            "equipedIdx": 1,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        },
+        {
+            "key": "Wacky",
+            "equipedIdx": 2,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        },
+        {
+            "key": "Orbit",
+            "equipedIdx": 3,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        },
+        {
+            "key": "Pierce",
+            "equipedIdx": 4,
+            "own": true,
+            "lv": 0,
+            "exp": 0
+        }
+    ]
+}

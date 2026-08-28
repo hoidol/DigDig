@@ -1,18 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MiniNormalBulletObject : CharacterBulletObject
+public class MiniNormalBulletObject : AllyBulletObject
 {
     static readonly Queue<MiniNormalBulletObject> pool = new();
     static MiniNormalBulletObject prefab;
 
-    public override void Shoot(Vector2 dir)
-    {
-        base.Shoot(dir);
-        lifetimeTimer = 2;
-
-        damageData.Init(this);
-    }
     public static MiniNormalBulletObject Instantiate()
     {
         if (prefab == null)
@@ -35,7 +28,6 @@ public class MiniNormalBulletObject : CharacterBulletObject
         if (preTarget == hit) return null;
 
         preTarget = hit;
-        damageData.Init(this);
         damageData.damage = damage;
         hit.TakeDamage(damageData);
         Release();

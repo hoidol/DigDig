@@ -1,20 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class FlameBulletObject : CharacterBulletObject
+public class FlameBulletObject : AllyBulletObject
 {
-
-    public override void Shoot(Vector2 dir)
+    public override void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
-        base.Shoot(dir);
-    }
-
-    public override void SetBullet(Bullet bullet)
-    {
-        base.SetBullet(bullet);
-        FlameBullet flameBullet = bullet as FlameBullet;
-
+        base.SetBullet(bullet,allyUnit);
+        FlameBulletSpec flameBullet = bullet as FlameBulletSpec;
         AddBehavior(new FlameOnHitBehavior(flameBullet.burnDuration, flameBullet.burnDPS));
     }
+
+
 }
 

@@ -25,7 +25,7 @@ public class RapidFireAbility : SynergyAbility//, IComboAttack
         for (int i = 0; i < rapidCount; i++)
         {
             await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
-            Character.Instance.Shoot(new NormalBullet(), dir);
+            Character.Instance.Shoot(new NormalBulletSpec(), dir);
         }
     }
 }

@@ -9,7 +9,7 @@ public class ChainItem : Item, IFired, IComboFire
     bool active;
 
     CancellationTokenSource cts;
-    Bullet bullet;
+    BulletSpec bullet;
 
     public override void OnEquip()
     {
@@ -49,7 +49,7 @@ public class ChainItem : Item, IFired, IComboFire
 
     }
 
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
+    public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
     {
 
         triggerCounter++;

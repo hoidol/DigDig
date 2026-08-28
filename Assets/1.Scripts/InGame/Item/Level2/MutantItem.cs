@@ -36,7 +36,7 @@ public class MutantItem : Item
         {
             MutantMiniMe miniMe = Instantiate(miniMePrefab);
             Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
-            miniMe.Spawn(pos);
+            // miniMe.Spawn(pos);
             miniMes.Add(miniMe);
         }
         while (miniMes.Count > count)
@@ -48,11 +48,11 @@ public class MutantItem : Item
 
         foreach (MutantMiniMe miniMe in miniMes)
         {
-            miniMe.SetLevel(count);
-            miniMe.healRange = healRange;
-            miniMe.healChance = healChance;
-            miniMe.attackPower = attackPower;
-            miniMe.attackSpeed = attackSpeed;
+            // miniMe.SetLevel(count);
+            // miniMe.healRange = healRange;
+            // miniMe.healChance = healChance;
+            // miniMe.attackPower = attackPower;
+            // miniMe.attackSpeed = attackSpeed;
         }
     }
 

@@ -132,7 +132,7 @@ public class CharacterStatManager
         }
     }
 
-    public void AddMiniMe(string key, int count)
+    public void AddMiniMe(string key, int count=1)
     {
         if (!miniMeDic.ContainsKey(key))
         {
@@ -145,7 +145,6 @@ public class CharacterStatManager
         miniMeDic[key].count += count;
         if (miniMeDic[key].count <= 0)
         {
-            //아이템 제거하기
             miniMeDic.Remove(key);
         }
     }

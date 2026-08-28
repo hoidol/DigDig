@@ -2,30 +2,32 @@ using UnityEngine;
 
 using System.Collections.Generic;
 
-public class CharacterBulletObject : BulletObject
+public class CharacterBulletObject : AllyBulletObject
 {
-    // private static Queue<PlayerBulletObject> pool = new Queue<PlayerBulletObject>();
-    // private static PlayerBulletObject prefab;
-    public string key;
-    public CharacterBulletDamageData damageData = new CharacterBulletDamageData();
+    public CharacterDamageData characterDamageData;
 
-    protected List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
-    protected List<IBulletForce> forces = new List<IBulletForce>();
+    [field: SerializeField] public float damageMultiplier { get; set; } = 1f;
 
-    public override void Shoot(Vector2 dir)
+
+    public override void Shoot(Vector2 dir,float damage)
     {
-        base.Shoot(dir);
+        base.Shoot(dir,damage);
+        
         damageMultiplier = 1;
-        damage = Character.Instance.statMgr.AttackPower;
+        this.damage = damage;
         lifetimeTimer = 20; //Player.Instance.statMgr.AmmoDuration;
-        damageData.Init(this);
+        characterDamageData= new CharacterDamageData();
+        damageData = characterDamageData;
+        characterDamageData.Init(Character.Instance);
     }
-    public virtual void SetBullet(Bullet bullet)
+
+    public override void SetBullet(BulletSpec bullet,IAllyUnit allyUnit)
     {
-        ClearBehaviors();
-        ClearBulletForce();
+        base.SetBullet(bullet,allyUnit);
+
+        
         damageMultiplier = 1;
-        damageData.mustCrit = bullet.mustCrit;
+        characterDamageData.mustCrit = bullet.mustCrit;
     }
 
     public override void Update()
@@ -61,8 +63,8 @@ public class CharacterBulletObject : BulletObject
         if (finalDamage < 1f)
             finalDamage = 1f;
 
-        damageData.Calculate(finalDamage);
-        damageData.hit2D = hit2D;
+        characterDamageData.Calculate(finalDamage);
+        characterDamageData.hit2D = hit2D;
         hit.TakeDamage(damageData);
 
         bool shouldRelease = true;
@@ -75,42 +77,18 @@ public class CharacterBulletObject : BulletObject
 
         if (shouldRelease)
         {
-            // Debug.Log("PlayerBUlletObject Hit ShouldRelease");
             Release();
         }
         return hit;
     }
+
     public override void Release()
     {
         gameObject.SetActive(false);
-        BulletManager.Instance.ReturnPlayerBulletObject(key, this);
+        BulletSpawner.Instance.ReturnPlayerBulletObject(key, this);
     }
 
-
-    public void AddBehavior(IBulletBehavior b)
-    {
-        behaviors.Add(b);
-    }
-    public void ClearBehaviors() => behaviors.Clear();
-    public void AddBulletForce(IBulletForce b)
-    {
-        forces.Add(b);
-
-    }
-    public void RemoveBulletForce(IBulletForce b)
-    {
-        forces.Remove(b);
-    }
-    public void ClearBulletForce() => forces.Clear();
-
-    public override void Bounce(RaycastHit2D hit2D)
-    {
-        Vector2 dir = Vector2.Reflect(direction, hit2D.normal);
-        if (dir != Vector2.zero)
-            direction = dir;
-
-        transform.right = direction;
-    }
+     
 
 }
 

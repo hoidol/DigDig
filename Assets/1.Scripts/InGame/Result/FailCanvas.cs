@@ -19,8 +19,10 @@ public class FailCanvas : CanvasUI<FailCanvas>
     {
         int count = PlayerPrefs.GetInt(DAILY_RESURRECTION_COUNT_KEY, MAX_DAILY_RESURRECTION_COUNT);
         leftResurrectionText.text = $"일일 부활 {MAX_DAILY_RESURRECTION_COUNT - count / MAX_DAILY_RESURRECTION_COUNT}";
+        
         adRetryButton.SetActive(count > 0);
     }
+
     public void OnClickeResume()
     {
         GameManager.Instance.Resume();
@@ -28,6 +30,6 @@ public class FailCanvas : CanvasUI<FailCanvas>
     public void OnClickedCancel()
     {
         CloseCanvas();
-        FadeCanvs.Instance.FadeOutIn(null, () => { SceneManager.LoadScene("Lobby"); });
+        ResultCanvas.Instance.OpenCanvas(false);
     }
 }

@@ -7,7 +7,7 @@ public class ShieldOrbitOrb : OrbitOrb
 
     public override void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.TryGetComponent(out EnemyBullet enemyBullet))
+        if (other.TryGetComponent(out EnemyBulletObject enemyBullet))
         {
             Destroy(enemyBullet.gameObject);
             return;

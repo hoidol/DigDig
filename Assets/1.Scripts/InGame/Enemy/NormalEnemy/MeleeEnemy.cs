@@ -18,7 +18,7 @@ public class MeleeEnemy : NormalEnemy
         warningIndicator.transform.parent = transform;
         warningIndicator.Play(1, (indi) =>
         {
-            Collider2D[] cols = Physics2D.OverlapCircleAll(aPoint, realAttackRange, LayerMask.GetMask("PlayerSide"));
+            Collider2D[] cols = Physics2D.OverlapCircleAll(aPoint, realAttackRange, LayerMask.GetMask("AllyUnit"));
             for (int i = 0; i < cols.Length; i++)
             {
                 if (cols[i].TryGetComponent<IHittable>(out var hittable))

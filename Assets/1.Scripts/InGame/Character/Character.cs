@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class Character : MonoSingleton<Character>, IPicker
+public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
 {
     public const int COMBO_ATTACK_INTERVAL_MS = 70;
 
@@ -48,6 +48,16 @@ public class Character : MonoSingleton<Character>, IPicker
 
     public Transform Transform => transform;
     public int coin;
+    public float AccumulatedDamage { get; set; }
+    public string key;
+    public string Key => key;
+
+    public AllyType AllyType => AllyType.Character;
+
+    public void AccumulateDamage(float d)
+    {
+        AccumulatedDamage+= d;
+    }
 
     private void Awake()
     {
@@ -198,13 +208,19 @@ public class Character : MonoSingleton<Character>, IPicker
         UpdateCharacter();
     }
 
-    public void AddMiniMe(string key, int count = 1)
+    public void AddMiniMe(string key, int lv =0)
     {
-        statMgr.AddMiniMe(key, count);
-        miniMeInventory.AddMiniMe(key);
+        MiniMe miniMe = MiniMeSpawner.Instance.Instantiate(key);
+        miniMe.Spawn((Vector2)transform.position + UnityEngine.Random.insideUnitCircle,lv);
+        
+        statMgr.AddMiniMe(key);
+        miniMeInventory.AddMiniMe(miniMe);
         miniMeInventory.UpdateInventory();
+
+        GameEventBus.Publish(new SpawnMinieEvent(key, lv));
         UpdateCharacter();
     }
+
     public void RemoveMiniMe(MiniMe miniMe)
     {
         statMgr.RemoveMiniMe(miniMe.key);
@@ -239,7 +255,7 @@ public class Character : MonoSingleton<Character>, IPicker
     // }
     //플레이어에 의한 공격 Only
     // public void Attack(Vector2 dir) => weapon.Attack(dir);
-    public CharacterBulletObject Shoot(Bullet b, Vector2 dir) => weapon.Shoot(b, dir);
+    public CharacterBulletObject Shoot(BulletSpec b, Vector2 dir) => weapon.Shoot(b, dir);
 
     // public void QueueExtraShot(int count = 1) => weapon.QueueExtraShot(count);
 
@@ -263,7 +279,7 @@ public enum StatType
 
 public class BulletFiredEvent
 {
-    public Bullet bullet;
+    public BulletSpec bullet;
     public Vector2 dir;
 }
 

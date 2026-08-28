@@ -2,5 +2,5 @@ using UnityEngine;
 
 public interface IFired
 {
-    void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir);
+    void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir);
 }

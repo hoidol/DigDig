@@ -4,5 +4,5 @@ using UnityEngine;
 // Player.Attack()에서 Shoot() 호출 전에 처리됨
 public interface IPreFire
 {
-    void OnPreFire(ref Bullet bullet, Vector2 dir);
+    void OnPreFire(ref BulletSpec bullet, Vector2 dir);
 }

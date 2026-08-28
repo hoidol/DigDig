@@ -12,8 +12,7 @@ public class BulletManager : MonoSingleton<BulletManager>, ILoadData
     public MergeBulletData[] mergeBulletDatas;
 
     // public static Dictionary<string, Bullet> bullets;
-    Dictionary<string, Stack<CharacterBulletObject>> bulletPool = new();
-    Dictionary<string, CharacterBulletObject> bulletPrefabDic = new();
+    public Dictionary<string, AllyBulletObject> bulletPrefabDic = new();
 
 
     public UniTask LoadTask { get; private set; }
@@ -67,123 +66,20 @@ public class BulletManager : MonoSingleton<BulletManager>, ILoadData
 
         });
 
-        await AddressableMgr.LoadAllByLabel<GameObject>("PlayerBulletObject", (dates) =>
+        await AddressableMgr.LoadAllByLabel<GameObject>("CharacterBulletObject", (dates) =>
         {
             for (int i = 0; i < dates.Length; i++)
             {
-                var pbo = dates[i].GetComponent<CharacterBulletObject>();
+                var pbo = dates[i].GetComponent<AllyBulletObject>();
                 bulletPrefabDic.Add(pbo.key, pbo);
             }
 
         });
     }
 
-    float apearMergeBulletChance = 10f;
 
 
 
-    public CharacterBulletObject GetPlayerBulletObject(string key)
-    {
-        // if (!bulletPrefabDic.ContainsKey(key))
-        //     bulletPrefabDic[key] = Resources.Load<PlayerBulletObject>($"PlayerBulletObject/{key}");
-
-        if (bulletPool.TryGetValue(key, out var stack) && stack.Count > 0)
-        {
-            var pooled = stack.Pop();
-            pooled.gameObject.SetActive(true);
-            return pooled;
-        }
-
-        return Instantiate(bulletPrefabDic[key]);
-    }
-
-    public void ReturnPlayerBulletObject(string key, CharacterBulletObject obj)
-    {
-        if (!bulletPool.ContainsKey(key))
-            bulletPool[key] = new Stack<CharacterBulletObject>();
-
-        obj.gameObject.SetActive(false);
-        bulletPool[key].Push(obj);
-    }
-
-    // public static Bullet Create(string key)
-    // {
-    //     if (!bullets.TryGetValue(key, out var b))
-    //         throw new ArgumentException($"BulletManager: 등록되지 않은 키 '{key}'");
-
-    //     b.key = key;
-    //     return b;
-    // }
-
-    // [SerializeField] List<BulletData> canPickBulletDatas = new List<BulletData>();
-    // public BulletData DrawRandomBullet()
-    // {
-    //     return BulletData.GetBulletData(UserManager.Instance.userBulletManager.userBulletData.equiptedBullets[UnityEngine.Random.Range(0, 5)].key);
-    // }
-
-    // public List<BulletData> GetBulletDatas(int count)
-    // {
-
-    //     bool apearMergeBullet = UnityEngine.Random.Range(0f, 100f) < apearMergeBulletChance;
-    //     if (apearMergeBullet)
-    //         apearMergeBulletChance = 10f;
-    //     else
-    //         apearMergeBulletChance += 10f;
-
-    //     var ownedMergeIngredientKeys = new HashSet<string>();
-
-    //     // 가중치 풀 구성
-    //     canPickBulletDatas.Clear();
-    //     var pool = new List<BulletPickChance>();
-    //     foreach (var data in bulletDataDic.Values)
-    //     {
-    //         float weight;
-    //         if (apearMergeBullet)
-    //         {
-    //             weight = ownedMergeIngredientKeys.Contains(data.key) ? 100f : 10f;
-    //         }
-    //         else
-    //         {
-    //             weight = 10;
-    //         }
-    //         pool.Add(new BulletPickChance { bulletData = data, chance = weight });
-    //         canPickBulletDatas.Add(data);
-    //     }
-
-    //     // 가중치 기반 비복원 추출
-    //     var result = new List<BulletData>();
-    //     int pickCount = Mathf.Min(count, pool.Count);
-    //     bool hasUnique = false;
-    //     for (int i = 0; i < pickCount; i++)
-    //     {
-    //         float total = 0f;
-    //         for (int k = 0; k < pool.Count; k++) total += pool[k].chance;
-
-    //         float roll = UnityEngine.Random.Range(0f, total);
-    //         float cumulative = 0f;
-    //         for (int j = 0; j < pool.Count; j++)
-    //         {
-    //             cumulative += pool[j].chance;
-    //             if (roll < cumulative)
-    //             {
-    //                 result.Add(pool[j].bulletData);
-    //                 pool.RemoveAt(j);
-    //                 if (pool[j].bulletData.grade == Grade.Unique)
-    //                     hasUnique = true;
-    //                 break;
-    //             }
-    //         }
-    //     }
-
-
-    //     return result;
-    // }
-
-    public struct BulletPickChance
-    {
-        public BulletData bulletData;
-        public float chance;
-    }
 
 
     public BulletData GetBulletData(string key)

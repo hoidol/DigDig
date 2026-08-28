@@ -9,7 +9,7 @@ public class OrbitBulletObject : MonoBehaviour
     public LayerMask hittableLayer;
     int hitCount;
     float damage;
-    public void SetOrbitBullet(OrbitBullet orbitBullet)
+    public void SetOrbitBullet(OrbitBulletSpec orbitBullet)
     {
         //orbitBullet.
         // hitCount = 1 + Player.Instance.bounce;

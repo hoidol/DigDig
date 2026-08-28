@@ -43,10 +43,22 @@ public class UserStageManager : UserBaseManager
         }
     }
 
-    public void ClearStage(string key)
+    public void EndStage(string key, bool clear, int maxPhase)
     {
+        
         UserStage userStage = GetUserStage(key);
-        userStage.clearCount++;
+
+        if (clear)
+        {
+            userStage.clearCount++;    
+            userStage.maxPhase = maxPhase;
+        }
+        else
+        {
+            if(maxPhase > userStage.maxPhase)
+                userStage.maxPhase = maxPhase;
+        }
+        
         SaveData();
     }
 
@@ -94,6 +106,13 @@ public class UserStageManager : UserBaseManager
 
         return stageData.key;
     }
+
+    public void ReceiveReward(StageData stageData , string id)
+    {
+        UserStage userStage = GetUserStage(stageData.key);
+        userStage.GetUserStageReward(id).gotten =true;
+        SaveData();
+    }
 }
 
 [System.Serializable]
@@ -107,5 +126,18 @@ public class UserStage
 {
     public string key;
     public int tryCount;
+    public int clearCount;
+    public int maxPhase;
+    public List<UserStageReward> userStageRewards = new List<UserStageReward>();
+    public UserStageReward GetUserStageReward(string id)
+    {
+        return userStageRewards.Where(e => e.id ==id).FirstOrDefault();
+    }
+
+
+}
+[System.Serializable]
+public class UserStageReward : UserReward
+{
     public int clearCount;
 }

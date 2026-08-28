@@ -30,9 +30,11 @@ public class CharacterHealth : MonoBehaviour, IHittable
 
     public void TakeDamage(DamageData damageData)
     {
-        if (statusEffectHandler != null && statusEffectHandler.TryBlock()) return;
-        CharacterTakeDamageText.SetText(hpPoint.position, $"-{(int)damageData.damage}");
-        curHp -= damageData.damage;
+        if (statusEffectHandler != null && statusEffectHandler.TryBlock()) 
+            return;
+        
+
+        curHp -= damageData.ApplyDamage(hpPoint.position);
         if (curHp <= 0)
         {
             curHp = 0;

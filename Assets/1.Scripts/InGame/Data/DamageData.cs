@@ -3,8 +3,41 @@ using UnityEngine;
 public class DamageData
 {
     public float damage;
+    public virtual float ApplyDamage(Vector2 pos)
+    {
+        if (damage < 1)
+            damage = 0;
+        return damage;
+    }
+}
+
+
+public class EnemyDamageData : DamageData
+{
+    public override float ApplyDamage(Vector2 pos)
+    {
+        if (damage < 1)
+            damage = 0;
+        string dText = $"-{(int)damage}";
+        CharacterTakeDamageText.SetText(pos, dText);
+        return damage;
+    }
+}
+
+
+public class AllyUnitDamageData : DamageData
+{
+    public IAllyUnit allyUnit;
+
     public bool isCrt;
-    public void Applyed(Vector2 pos)
+
+    public void Init(IAllyUnit allyUnit)
+    {
+        this.allyUnit = allyUnit;
+        isCrt = false;
+    }
+
+    public override float ApplyDamage(Vector2 pos)
     {
         if (damage < 1)
             damage = 0;
@@ -18,17 +51,16 @@ public class DamageData
         {
             CRTDamageText.SetText(pos, dText, ColorSetting.characterCrtDamageColor);
         }
-
+        return damage;
     }
 }
 
-public class CharacterBulletDamageData : DamageData
+public class CharacterDamageData : AllyUnitDamageData
 {
     public RaycastHit2D hit2D;
     public CharacterBulletObject characterBulletObject;
-    public void Init(CharacterBulletObject pBObj)
+    public void Init()
     {
-        characterBulletObject = pBObj;
         isCrt = false;
     }
     public bool mustCrit;

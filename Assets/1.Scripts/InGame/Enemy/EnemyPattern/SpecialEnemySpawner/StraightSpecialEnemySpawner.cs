@@ -14,73 +14,73 @@ public class StraightSpecialEnemySpawner : SpecialEnemySpawner
 
     public override void Spawn()
     {
-        List<Vector2Int> indies = new List<Vector2Int>();
-        //임시의 한점
+        // List<Vector2Int> indies = new List<Vector2Int>();
+        // //임시의 한점
 
-        Vector2 dirToPlayer = Vector2.zero - (Vector2)Character.Instance.transform.position;
-        Vector2 dir = Vector2.zero;
-        dir.x = dirToPlayer.x > 0 ? 1 : -1;
-        dir.y = dirToPlayer.y > 0 ? 1 : -1;
-        Vector2Int oppDir = new Vector2Int(-(int)dir.x, -(int)dir.y);
+        // Vector2 dirToPlayer = Vector2.zero - (Vector2)Character.Instance.transform.position;
+        // Vector2 dir = Vector2.zero;
+        // dir.x = dirToPlayer.x > 0 ? 1 : -1;
+        // dir.y = dirToPlayer.y > 0 ? 1 : -1;
+        // Vector2Int oppDir = new Vector2Int(-(int)dir.x, -(int)dir.y);
 
 
-        //대각선 찾으려고
-        dir = dir.normalized * Mathf.Sqrt(Mathf.Pow(MapManager.TILE_SIZE, 2) + Mathf.Pow(MapManager.TILE_SIZE, 2));
+        // //대각선 찾으려고
+        // dir = dir.normalized * Mathf.Sqrt(Mathf.Pow(MapManager.TILE_SIZE, 2) + Mathf.Pow(MapManager.TILE_SIZE, 2));
 
-        currentEnemySpawnState = System.Array.ConvertAll(enemySpawnCountChances, e => new EnemySpawnCountChance
-        {
-            enemyType = e.enemyType,
-            chance = e.chance,
-            count = e.count
-        });
+        // currentEnemySpawnState = System.Array.ConvertAll(enemySpawnCountChances, e => new EnemySpawnCountChance
+        // {
+        //     enemyType = e.enemyType,
+        //     chance = e.chance,
+        //     count = e.count
+        // });
 
-        Vector2Int startIndex = MapManager.PositionToTileIndex((Vector2)Character.Instance.transform.position + dir * includeSize);
-        Vector2Int tempIndex = startIndex;
-        for (int i = 0; i < includeSize; i++)
-        {
+        // Vector2Int startIndex = MapManager.PositionToTileIndex((Vector2)Character.Instance.transform.position + dir * includeSize);
+        // Vector2Int tempIndex = startIndex;
+        // for (int i = 0; i < includeSize; i++)
+        // {
 
-            for (int j = 0; j < includeSize; j++)
-            {
-                if (MapManager.CheckEmpty(tempIndex))
-                    indies.Add(tempIndex);
+        //     for (int j = 0; j < includeSize; j++)
+        //     {
+        //         if (MapManager.CheckEmpty(tempIndex))
+        //             indies.Add(tempIndex);
 
-                tempIndex.y += oppDir.y;
-            }
-            tempIndex.x += oppDir.x;
-            tempIndex.y = startIndex.y;
-        }
+        //         tempIndex.y += oppDir.y;
+        //     }
+        //     tempIndex.x += oppDir.x;
+        //     tempIndex.y = startIndex.y;
+        // }
 
-        // 랜덤 배치를 위해 indies 셔플
-        for (int i = indies.Count - 1; i > 0; i--)
-        {
-            int r = Random.Range(0, i + 1);
-            (indies[i], indies[r]) = (indies[r], indies[i]);
-        }
+        // // 랜덤 배치를 위해 indies 셔플
+        // for (int i = indies.Count - 1; i > 0; i--)
+        // {
+        //     int r = Random.Range(0, i + 1);
+        //     (indies[i], indies[r]) = (indies[r], indies[i]);
+        // }
 
-        Vector2Int[,] spawnTileArray = null;
-        foreach (var idx in indies)
-        {
-            float roll = Random.Range(0f, 100f);
-            float cumulative = 0f;
+        // Vector2Int[,] spawnTileArray = null;
+        // foreach (var idx in indies)
+        // {
+        //     float roll = Random.Range(0f, 100f);
+        //     float cumulative = 0f;
 
-            foreach (var state in currentEnemySpawnState)
-            {
-                if (state.count <= 0) continue;  // 소환 한도 초과 스킵
-                cumulative += state.chance;
-                if (roll < cumulative)
-                {
-                    if (MapManager.GetTileArray(idx, EnemyManager.GetEnemyData(state.enemyType).size, out spawnTileArray))
-                    {
-                        Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(state.enemyType);
-                        Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-                        // enemy?.Spawn(spawnTileArray);
-                        state.count--;
-                    }
-                    break;
-                }
-            }
-            // roll이 총 chance 합계 초과 → 해당 타일엔 소환 안 함
-        }
+        //     foreach (var state in currentEnemySpawnState)
+        //     {
+        //         if (state.count <= 0) continue;  // 소환 한도 초과 스킵
+        //         cumulative += state.chance;
+        //         if (roll < cumulative)
+        //         {
+        //             if (MapManager.GetTileArray(idx, EnemyManager.GetEnemyData(state.enemyType).size, out spawnTileArray))
+        //             {
+        //                 Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(state.enemyType);
+        //                 Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
+        //                 // enemy?.Spawn(spawnTileArray);
+        //                 state.count--;
+        //             }
+        //             break;
+        //         }
+        //     }
+        //     // roll이 총 chance 합계 초과 → 해당 타일엔 소환 안 함
+        // }
     }
 
     public override void EndSpawn()

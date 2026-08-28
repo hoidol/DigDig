@@ -5,10 +5,10 @@ public class BoomBulletObject : CharacterBulletObject
 {
     float radius;
 
-    public override void SetBullet(Bullet bullet)
+    public override void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
-        base.SetBullet(bullet);
-        BoomBullet boomBullet = bullet as BoomBullet;
+        base.SetBullet(bullet,allyUnit);
+        BoomBulletSpec boomBullet = bullet as BoomBulletSpec;
         radius = boomBullet.boomRange;
         damage = Character.Instance.statMgr.AttackPower;
         // AddBehavior(new BounceBehavior(Mathf.Clamp(Character.Instance.statMgr.Bounce, 0, 2)));
@@ -24,7 +24,7 @@ public class BoomBulletObject : CharacterBulletObject
 
         preTarget = hit;
 
-        float finalDamage = damage * damageMultiplier;
+        float finalDamage = damage ;
 
         if (finalDamage < 1f)
             finalDamage = 1f;

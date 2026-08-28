@@ -23,7 +23,7 @@ public class MultiShotOnReloadAbility : Ability//, IPreAttack
 
     void OnReloadEnd(ReloadEndEvent e) => firstShot = true;
 
-    public void OnPreAttack(ref Bullet bullet, Vector2 dir)
+    public void OnPreAttack(ref BulletSpec bullet, Vector2 dir)
     {
         if (!firstShot) return;
         firstShot = false;

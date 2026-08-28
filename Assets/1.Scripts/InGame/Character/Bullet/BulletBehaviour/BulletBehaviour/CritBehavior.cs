@@ -7,7 +7,7 @@ public class CritBehavior : IBulletForce
     public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         CharacterBulletObject pb = bullet as CharacterBulletObject;
-        pb.damageData.mustCrit = true;
+        // pb.damageData.mustCrit = true;
         return 0;
     }
 }

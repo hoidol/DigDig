@@ -55,3 +55,9 @@ public static class InGameUtil
         return nearest.transform;
     }
 }
+public enum FindTargetType
+{
+    Closest, //현재 기준 가장 가까운 적
+    ClosestToCharacter, //현재 기준 가장 가까운 적
+    LowHp,
+}

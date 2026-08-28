@@ -6,9 +6,6 @@ public class MiniMeInventory : MonoBehaviour
 {
     public List<MiniMe> curMiniMes = new List<MiniMe>();
 
-    public readonly int MAX_MiniMe_COUNT = 5; // 최대 보유 아이템 개수 
-
-
     void Awake()
     {
     }
@@ -26,8 +23,9 @@ public class MiniMeInventory : MonoBehaviour
     }
 #endif
 
-    public void AddMiniMe(string key)
+    public void AddMiniMe(MiniMe me)
     {
+        curMiniMes.Add(me);
     }
 
     public void RemoveMiniMe(MiniMe miniMe, int idx = -1)

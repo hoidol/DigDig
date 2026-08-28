@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: c70b05342caf14c448ee64e6346a3bd3
   m_currentHash:
     serializedVersion: 2
-    Hash: 59896b99b3434c513a72d5c15e3db435
+    Hash: 150cf9b1d5345ac4d732afc8b1d6bdd2
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -66,6 +66,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 46cbd5bfd320340d6abd4d228a7ca94e, type: 2}
   - {fileID: 11400000, guid: 8a9174a5e089f4a37b169d7f5f230d90, type: 2}
   - {fileID: 11400000, guid: 061188c5c880a47b098a011c546a4347, type: 2}
+  - {fileID: 11400000, guid: 40df9b81e14c544d2b85479c97de535b, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
@@ -111,10 +112,15 @@ MonoBehaviour:
     - StageData
     - StatData
     - EnemyData
-    - PlayerBulletObject
+    - CharacterBulletObject
     - Level1ItemData
     - Level2ItemData
     - EquipmentData
+    - Growth0MiniMeData
+    - Growth1MiniMeData
+    - Growth2MiniMeData
+    - MiniMeData
+    - MiniMeMergeData
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 79b846eb2dce14c8dadbbe237bc03090, type: 2}

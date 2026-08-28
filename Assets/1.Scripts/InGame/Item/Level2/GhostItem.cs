@@ -35,7 +35,7 @@ public class GhostItem : Item, IPreFire, IComboFire
         //return string.Format(TranslateManager.GetText($"{key}_Desc"),triggerCount);
     }
     bool active;
-    public void OnPreFire(ref Bullet bullet, Vector2 dir) //trigger 타이밍마다 Pierce 발사 
+    public void OnPreFire(ref BulletSpec bullet, Vector2 dir) //trigger 타이밍마다 Pierce 발사 
     {
         triggerCounter++;
         if (triggerCount <= triggerCounter)

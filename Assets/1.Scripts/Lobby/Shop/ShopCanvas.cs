@@ -23,8 +23,9 @@ public class ShopCanvas : CanvasUI<ShopCanvas>
         for(int i = 0; i < productContainers.Length; i++)
         {
             productContainers[i].UpdateContainer();
-        }
-        
+        }   
     }
-
 }
+
+//미니미를 뽑아야되는가?
+//미니미는 Stage를 클리어하면 보상으로 받게하자

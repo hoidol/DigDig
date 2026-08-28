@@ -56,7 +56,7 @@ public class CriticalItem : Item
         if (coolTimer > 0)
             return;
 
-        PierceBullet pierceBullet = new PierceBullet();
+        PierceBulletSpec pierceBullet = new PierceBulletSpec();
         pierceBullet.pierceCount = pierceCounts;
         for (int i = 0; i < count; i++)
         {

@@ -22,14 +22,14 @@ public class FlameItem : Item, IFired
         //return string.Format(TranslateManager.GetText("{key}_Desc"),triggerCount);
     }
 
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject bulletObject, Vector2 dir)
+    public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
     {
         triggerCounter++;
         if (triggerCount <= triggerCounter)
         {
             for(int i = 0;i < count; i++)
             {
-                FlameBullet flameBullet = new FlameBullet();
+                FlameBulletSpec flameBullet = new FlameBulletSpec();
                 flameBullet.burnDuration = burnDuration;
                 flameBullet.burnDPS = burnDPS;
 

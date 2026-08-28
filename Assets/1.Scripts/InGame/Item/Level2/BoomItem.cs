@@ -30,7 +30,7 @@ public class BoomItem : Item, IFired, IComboFire
         triggerCounter = 0;
     }
 
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
+    public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
     {
         triggerCounter++;
     }
@@ -43,7 +43,7 @@ public class BoomItem : Item, IFired, IComboFire
         {
             await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
 
-            BoomBullet boomBullet = new BoomBullet();
+            BoomBulletSpec boomBullet = new BoomBulletSpec();
             boomBullet.boomRange = boomRange;
             float angleOffset = Random.Range(-10f, 10f) * Mathf.Deg2Rad;
             Vector2 shootDir = new Vector2(

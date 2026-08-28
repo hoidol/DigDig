@@ -16,7 +16,7 @@ public class SpreadItem : Item, IFired
         //return string.Format(TranslateManager.GetText($"{key}_Desc"),chance * 100);
     }
 
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
+    public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
     {
         if (Random.value > chance )
             return;

@@ -9,7 +9,7 @@ public class BonusCritChanceBehavior : IBulletForce
 
     public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        CharacterBulletDamageData d = ((CharacterBulletObject)bullet).damageData;
+        CharacterDamageData d = ((CharacterBulletObject)bullet).characterDamageData;
         if (bonusChance < Character.Instance.statMgr.CritChance)
         {
             bonusChance = Character.Instance.statMgr.CritChance;

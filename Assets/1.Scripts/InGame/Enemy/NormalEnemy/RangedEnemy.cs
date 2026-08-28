@@ -6,10 +6,10 @@ public class RangedEnemy : NormalEnemy
     {
 
         base.StartAttack();
-        EnemyBullet enemyBullet = EnemyBullet.Instantiate();
+        EnemyBulletObject enemyBullet = EnemyBulletObject.Instantiate();
         enemyBullet.transform.position = transform.position;
-        enemyBullet.Shoot((Character.Instance.transform.position - transform.position).normalized);
-        enemyBullet.damage = enemyData.GetAttackPower();
+        enemyBullet.Shoot((Character.Instance.transform.position - transform.position).normalized,enemyData.GetAttackPower());
+        
         EndAttack();
     }
 }

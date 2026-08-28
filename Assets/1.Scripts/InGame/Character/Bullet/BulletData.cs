@@ -27,7 +27,7 @@ public class BulletData : ScriptableObject
     public string[] mergeBulletKeys; // 상위 총알들
 
     // public float multiplyATK; // 공격력 배율 (예: 1.2f는 20% 증가)
-    public CharacterBulletObject prefab;
+    public AllyBulletObject prefab;
 
 
 

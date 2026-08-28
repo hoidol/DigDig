@@ -26,8 +26,8 @@ public class GameManager : MonoSingleton<GameManager>
     public float dayTimer = 0f; // 낮 40초 <-> 밤 80초
     public float nightTimer = 0f;
     public bool isDay;
-    public int day;
-
+    public int phase;
+    public int miniMeSpawnCount;
     async void Start()
     {
         await UniTask.WhenAll(
@@ -41,6 +41,7 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Subscribe<BossDeadEvent>(OnBossDeadEvent);
         GameEventBus.Subscribe<CharacterHpChangedEvent>(OnPlayerHpChangedEvent);
+        GameEventBus.Subscribe<SpawnMinieEvent>(OnSpawnMinieEvent);
 
         Debug.Log($"UserManager.STAGE_KEY {UserManager.STAGE_KEY}");
         stageData = StageManager.Instance.GetStageData(UserManager.STAGE_KEY);
@@ -56,50 +57,50 @@ public class GameManager : MonoSingleton<GameManager>
 
     void StartGame()
     {
-        day = 0;
+        phase = 0;
         gameTimer = 0;
         isPlaying = true;
 
         GameEventBus.Publish(new StartGameEvent(stageData));
 
-        ProcessDay(day).Forget();
+        ProcessDay(phase).Forget();
     }
 
     public PhaseData phaseData;
-    public void StartDay(int day)
+    public void StartDay(int phase)
     {
         isDay = true;
         // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
-        Debug.Log($"GameManager StartPhase {day}");
-        GameEventBus.Publish(new DayStartEvent(day));
+        Debug.Log($"GameManager StartPhase {phase}");
+        GameEventBus.Publish(new DayStartEvent(phase));
     }
-    public void StartNight(int day)
+    public void StartNight(int phase)
     {
         isDay = false;
         // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
-        Debug.Log($"GameManager StartNight {day}");
+        Debug.Log($"GameManager StartNight {phase}");
 
-        GameEventBus.Publish(new NightStartEvent(day));
+        GameEventBus.Publish(new NightStartEvent(phase));
         if (phaseData.isBoss)
         {
             StartBoss();
         }
     }
 
-    async UniTaskVoid ProcessDay(int day)
+    async UniTaskVoid ProcessDay(int phase)
     {
-        phaseData = stageData.GetPhaseData(day);
+        phaseData = stageData.GetPhaseData(phase);
 
         GameEventBus.Publish(new PhaseStartEvent(phaseData));
         //낮에 대한 시간 처리
         dayTimer = 0;
-        StartDay(day);
-        float dayTime = GameSetting.DAY_TIME + GameSetting.DAY_INCREASE_TIME * day;
+        StartDay(phase);
+        float dayTime = GameSetting.DAY_TIME + GameSetting.DAY_INCREASE_TIME * phase;
         if (dayTime >= GameSetting.MIX_DAY_TIME)
         {
             dayTime = GameSetting.MIX_DAY_TIME;
         }
-        Debug.Log($"day {day} dayTime {dayTime}");
+        Debug.Log($"day {phase} dayTime {dayTime}");
         while (dayTimer <= dayTime)
         {
             await UniTask.Yield();
@@ -111,16 +112,16 @@ public class GameManager : MonoSingleton<GameManager>
         }
 
         //밤에 대한 시간 처리
-        StartNight(day);
+        StartNight(phase);
         nightTimer = 0;
 
-        float nightTime = GameSetting.NIGHT_TIME + GameSetting.NIGHT_INCREASE_TIME * day;
+        float nightTime = GameSetting.NIGHT_TIME + GameSetting.NIGHT_INCREASE_TIME * phase;
         if (nightTime >= GameSetting.MIX_NIGHT_TIME)
         {
             nightTime = GameSetting.MIX_NIGHT_TIME;
         }
 
-        Debug.Log($"day {day} nightTime {nightTime}");
+        Debug.Log($"day {phase} nightTime {nightTime}");
         while (nightTimer <= nightTime)
         {
             await UniTask.Yield();
@@ -139,15 +140,9 @@ public class GameManager : MonoSingleton<GameManager>
         if (phaseData.isBoss)
             return;
 
-        GameEventBus.Publish(new PhaseEndEvent(day));
-        day++;
-        // Time.timeScale = 0;
-        // SelectItemCanvas.Instance.OpenCanvas(() =>
-        // {
-        //     Time.timeScale = 1;
-        // });
-        // StartPhase(phase);
-        ProcessDay(day).Forget();
+        GameEventBus.Publish(new PhaseEndEvent(phase));
+        phase++;
+        ProcessDay(phase).Forget();
     }
 
     void StartBoss()
@@ -205,11 +200,11 @@ public class GameManager : MonoSingleton<GameManager>
 
                 }
             }
-
-
-            ResultCanvas.Instance.OpenCanvas();
-            UserManager.Instance.userStageManager.ClearStage(stageData.key);
+            ResultCanvas.Instance.OpenCanvas(true);
         }
+
+
+
         // string msg = clear ? "승리" : "패배";
         // FadeCanvs.Instance.FadeIn($"msg", () => { SceneManager.LoadScene("InGame"); });
     }
@@ -237,6 +232,10 @@ public class GameManager : MonoSingleton<GameManager>
         destroyStoneCount++;
 
         // 필요하면 여기서 UI 업데이트, 세이브, 업적 체크 등도 같이 처리
+    }
+    public void OnSpawnMinieEvent(SpawnMinieEvent e)
+    {
+        miniMeSpawnCount++;
     }
 
 }

@@ -51,12 +51,12 @@ public class FireworkItem : TriggerCycleItem, IFired
         IsActive = false;
     }
 
-    public void OnFired(ref Bullet bullet, ref CharacterBulletObject playerBulletObject, Vector2 dir)
+    public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
     {
         if (!IsActive)
             return;
 
-        FlameBullet flameBullet = new FlameBullet();
+        FlameBulletSpec flameBullet = new FlameBulletSpec();
         flameBullet.burnDuration = burnDuration;
         flameBullet.burnDPS = burnDPS;
 

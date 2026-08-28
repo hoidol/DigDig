@@ -18,7 +18,7 @@ public class DrawEquipmentProductPanel : ProductPanel
             UserManager.Instance.userEquipmentManager.AddUserEquipment(keys[i]);
         }
         
-        DrawEquipmentResultCanvas.Instance.OpenCanvas(keys);
+        Lobby.DrawEquipmentResultCanvas.Instance.OpenCanvas(keys);
 
     }
 }

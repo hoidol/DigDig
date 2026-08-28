@@ -59,7 +59,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
     {
         indexArr = idxArr;
         gameObject.name = $"{eventType} {indexArr[0, 0].x} {indexArr[0, 0].y}";
-        MapManager.RegisterTile(idxArr, this);
+        // MapManager.RegisterTile(idxArr, this);
 
     }
     public virtual void Destroy()
@@ -73,7 +73,6 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
     public void ReleaseTile()
     {
-        MapManager.ReleaseTile(indexArr);
 
     }
 

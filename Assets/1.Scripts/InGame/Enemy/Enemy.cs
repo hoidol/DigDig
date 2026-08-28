@@ -34,7 +34,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public float apearTime = 2; //떨어지면서 등장하는 시간
     public const float MOVE_SPEED = 2; //떨어지면서 등장하는 시간
 
-    public DamageData damageData = new DamageData();
+    public EnemyDamageData damageData = new EnemyDamageData();
     public TMP_Text hpText;
 
     public virtual void Awake()
@@ -114,8 +114,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (curHp <= 0)
             return;
 
-        damage.Applyed(hpPoint.transform.position);
-        curHp = Mathf.Max(0, curHp - damage.damage);
+        
+        curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position));
         if (curHp > 1)
             hpText.text = ((int)curHp).ToString();
         else if (0 < curHp && curHp <= 1)

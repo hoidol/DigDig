@@ -71,8 +71,8 @@ public class Stone : MonoBehaviour, IHittable, ITile
     public virtual void TakeDamage(DamageData damage)
     {
         lastDamage = damage;
-        curHp -= damage.damage;
-        damage.Applyed(hpPoint.transform.position);
+        curHp -= damage.ApplyDamage(hpPoint.transform.position);
+        
 
         spriteRootTr.DOKill();
         spriteRootTr.DOShakeRotation(0.2f, new Vector3(0f, 0f, 5f), 100, 90f, false).OnComplete(() =>
@@ -118,12 +118,12 @@ public class Stone : MonoBehaviour, IHittable, ITile
     public virtual void RegisterTile(Vector2Int[,] idxArr)
     {
         tileIndexArr = idxArr;
-        MapManager.RegisterTile(tileIndexArr, this);
+        // MapManager.RegisterTile(tileIndexArr, this);
     }
 
     public virtual void ReleaseTile()
     {
-        MapManager.ReleaseTile(tileIndexArr);
+        // MapManager.ReleaseTile(tileIndexArr);
 
         if (!gameObject.activeSelf) return;
         gameObject.SetActive(false);

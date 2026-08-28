@@ -16,6 +16,7 @@ public class StageData : ScriptableObject
     public int order;
     public string Title => key;
     public int level; //Mode
+    public StageRewardData[] rewardDatas;
 
     public float oreHp;
     public Enemy[] enemyPrefabs; //해당 스테이지의 등장할 원거리, 근거리 엘리트 등 적 설정
@@ -26,7 +27,7 @@ public class StageData : ScriptableObject
     public PhaseData GetPhaseData(int idx = -1)
     {
         if (idx < 0)
-            idx = GameManager.Instance.day;
+            idx = GameManager.Instance.phase;
         return phaseDatas[idx];
     }
     public void Init()
@@ -321,4 +322,14 @@ public class EnemySpawnPatternData
     public int spawnCount;
     public Vector2 intervalRange;
 
+    
+
+}
+
+[System.Serializable]
+public class StageRewardData: RewardData
+{
+
+    public string id; //0-4_reward,0-7_reward,0-10_reward
+    public int phase; // 4 ,7, 10(클리어)
 }

@@ -59,7 +59,7 @@ public class SprayItem : Item
         for (int i = 0; i < bCount; i++)
         {
             Vector2 dir = Quaternion.Euler(0, 0, angleStep * i) * baseDir;
-            Character.Instance.Shoot(new NormalBullet(), dir);
+            Character.Instance.Shoot(new NormalBulletSpec(), dir);
         }
 
         Character.Instance.AddHp(-itemData.consumeHp);

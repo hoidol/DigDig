@@ -8,6 +8,7 @@ public class LobbyCanvas : CanvasUI<LobbyCanvas>
 {
     public GameObject nextStageButton;
     public GameObject preStageButton;
+    public StageRewardContainer stageRewardContainer;
 
     UserStage curUserStage;
     public int stageOrder;
@@ -20,6 +21,8 @@ public class LobbyCanvas : CanvasUI<LobbyCanvas>
             curUserStage = UserManager.Instance.userStageManager.GetCurrentStage();
         }
         StageData stageData = StageManager.Instance.GetStageData(curUserStage.key);
+        stageRewardContainer.SetStageData(stageData);
+        
         titleText.text = stageData.Title;
         stageOrder = stageData.order;
 

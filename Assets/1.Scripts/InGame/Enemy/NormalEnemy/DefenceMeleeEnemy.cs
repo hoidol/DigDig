@@ -6,7 +6,7 @@ public class DefenceMeleeEnemy : MeleeEnemy
         if (state == NormalEnemyState.Dead)
             return;
 
-        if (damage is CharacterBulletDamageData pBDamage)
+        if (damage is CharacterDamageData pBDamage)
         {
             if (!InGameUtil.CheckBackAttack(transform, face, pBDamage.hit2D.point))
                 return;

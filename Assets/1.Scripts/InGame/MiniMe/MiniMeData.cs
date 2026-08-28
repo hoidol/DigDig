@@ -6,18 +6,17 @@ public class MiniMeData : ScriptableObject
 {
     public static readonly int MAX_COUNT = 3;
     public string key;
-    public string Title => miniMeName;
-    public string miniMeName;
+    public string Title => TranslateManager.GetText(key);
     public string desc;
-    public int level;
-    public int addPrice; //추가 금액
+    public int growth;
 
     public string valueInfo;
     public MiniMe prefab;
-    public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
+    public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)    
 
     public Sprite thum;
     public Color color;
+    public Grade grade;
 
     public bool CheckUnlock()
     {
@@ -64,9 +63,8 @@ public class MiniMeData : ScriptableObject
             headers[i] = headers[i].Trim();
 
         int iKey = System.Array.IndexOf(headers, "key");
-        int iName = System.Array.IndexOf(headers, "name");
         int iDesc = System.Array.IndexOf(headers, "desc");
-        int iLevel = System.Array.IndexOf(headers, "level");
+        int iGrowth = System.Array.IndexOf(headers, "growth");
         int iColor = System.Array.IndexOf(headers, "color");
 
         for (int i = 1; i < lines.Length; i++)
@@ -77,16 +75,14 @@ public class MiniMeData : ScriptableObject
             string rowKey = iKey >= 0 && iKey < cols.Length ? cols[iKey].Trim() : "";
             if (rowKey != key) continue;
 
-            if (iName >= 0 && iName < cols.Length)
-                miniMeName = cols[iName].Trim();
             if (iDesc >= 0 && iDesc < cols.Length)
                 desc = cols[iDesc].Trim();
-            if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
-                level = lv;
+            if (iGrowth >= 0 && iGrowth < cols.Length && int.TryParse(cols[iGrowth].Trim(), out int lv))
+                growth = lv;
             if (iColor >= 0 && iColor < cols.Length && ColorUtility.TryParseHtmlString(cols[iColor].Trim(), out Color parsedColor))
                 color = parsedColor;
 
-            string thumPath = $"Assets/2.Sprites/MiniMe/Thum/Level{level}.png";
+            string thumPath = $"Assets/2.Sprites/MiniMe/Thum/Growth{growth}.png";
             thum = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(thumPath);
             UnityEditor.EditorUtility.SetDirty(this);
             Debug.Log($"[MiniMeData] {key} LoadData 완료");
@@ -136,7 +132,7 @@ public class MiniMeData : ScriptableObject
         if (string.IsNullOrEmpty(key) || key != name)
             key = name;
 
-        string prefabRootFolder = $"Assets/3.Prefabs/MiniMe/Level{level}";
+        string prefabRootFolder = $"Assets/3.Prefabs/MiniMe/Growth{growth}";
 
         // 기존 프리팹 탐색 (grade 폴더 → 루트 폴더 순)
         string[] searchFolders = new[] { prefabRootFolder };
@@ -192,7 +188,7 @@ public class MiniMeData : ScriptableObject
 
     string CreateMiniMeScript(string className)
     {
-        string scriptFolder = $"Assets/1.Scripts/InGame/Character/MiniMe/Level{level}";
+        string scriptFolder = $"Assets/1.Scripts/InGame/Character/MiniMe/Growth{growth}";
         string filePath = $"{scriptFolder}/{className}.cs";
 
         if (System.IO.File.Exists(filePath))

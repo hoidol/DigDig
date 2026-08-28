@@ -32,7 +32,7 @@ public class BoostItem : Item
         {
             BoostMiniMe boostMiniMe = Instantiate(boostMiniMePrefab);
             Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
-            boostMiniMe.Spawn(pos);
+            // boostMiniMe.Spawn(pos);
             boostMiniMes.Add(boostMiniMe);
         }
         while (boostMiniMes.Count > count)
@@ -44,9 +44,9 @@ public class BoostItem : Item
 
         foreach (BoostMiniMe boostMiniMe in boostMiniMes)
         {
-            boostMiniMe.SetLevel(count);
-            boostMiniMe.attackPower = attackPower;
-            boostMiniMe.attackSpeed = attackSpeed;
+            // boostMiniMe.SetLevel(count);
+            // boostMiniMe.attackPower = attackPower;
+            // boostMiniMe.attackSpeed = attackSpeed;
             boostMiniMe.coolTime = coolTime;
         }
     }

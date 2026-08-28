@@ -28,7 +28,7 @@ public class MiniMeItem : Item
         {
             MiniMe miniMe = Instantiate(miniMePrefab);
             Vector2 pos = (Vector2)Character.Instance.transform.position + Random.insideUnitCircle.normalized;
-            miniMe.Spawn(pos);
+            // miniMe.Spawn(pos);
             miniMes.Add(miniMe);
         }
         while (miniMes.Count > count)
@@ -40,9 +40,9 @@ public class MiniMeItem : Item
 
         foreach (MiniMe miniMe in miniMes)
         {
-            miniMe.SetLevel(count);
-            miniMe.attackPower = attackPower;
-            miniMe.attackSpeed = attackSpeed;
+            // miniMe.SetLevel(count);
+            // miniMe.attackPower = attackPower;
+            // miniMe.attackSpeed = attackSpeed;
         }
     }
     // float timer;
