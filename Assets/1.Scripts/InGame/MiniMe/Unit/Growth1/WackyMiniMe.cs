@@ -35,7 +35,7 @@ public class WackyMiniMe : MiniMeGrowth1
         for(int i = 0; i < level+1; i++)
         {     
             Vector2 randomDir = Random.insideUnitCircle.normalized;
-            Fire(randomDir);
+            attackBehaviour.Fire(randomDir);
         }
     }
     

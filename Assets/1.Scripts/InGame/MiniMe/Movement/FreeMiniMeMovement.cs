@@ -4,11 +4,6 @@ using Random = UnityEngine.Random;
 
 public class FreeMiniMeMovement : MiniMeMovement
 {
-    public override void FixedUpdate()
-    {
-        //base.FixedUpdate();
-        rg2D.linearVelocity = dir* moveSpeed;
-    }
     public Vector2 dir; // 이거를 4~7초 마다 랜덤하게 변경되게 하고, 변경되기 전에는 clock에 따라서 각도가 조금씩 변경되게 처리, 플레이어랑 7보다 멀리 떨어져 있으면 플레이어 방향으로 이동하게 설정
     public bool clock;// 참이면 시계 방향 - 5~8초 사이로 랜덤하게 변경되게 처리
 
@@ -76,5 +71,11 @@ public class FreeMiniMeMovement : MiniMeMovement
 
         float angle = rotateSpeed * Time.deltaTime * (clock ? -1f : 1f);
         dir = Quaternion.Euler(0, 0, angle) * dir;
+    }
+    
+    public override void FixedUpdate()
+    {
+        //base.FixedUpdate();
+        rg2D.linearVelocity = dir* moveSpeed;
     }
 }

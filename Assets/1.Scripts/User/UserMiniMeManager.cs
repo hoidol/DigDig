@@ -110,6 +110,12 @@ public class UserMiniMeManager : UserBaseManager
     {
         SaveManager.SaveData(UserDataFileName, userMiniMeData);
     }
+
+    public void AddExp(string key, int exp)
+    {
+        GetUserMiniMe(key).exp += exp;
+        SaveData();
+    }
 }
 
 
@@ -128,7 +134,14 @@ public class UserMiniMe
     public int equipedIdx = -1;
     public bool Equiping => equipedIdx >=0;
     public bool own;
-    public int lv;
+    public int enhanceLevel;
+    public int EnhanceLevel(bool includeBaseLv= true)
+    {
+        if(includeBaseLv)
+            return enhanceLevel + MiniMeManager.Instance.GetEnhanceGradeInfo(MiniMeData.grade).baseEnhance;
+        else
+            return enhanceLevel;
+    }
     public int exp;
     public MiniMeData MiniMeData => MiniMeManager.Instance.GetMiniMeData(key);
 }

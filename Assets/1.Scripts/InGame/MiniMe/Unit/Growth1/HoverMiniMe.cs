@@ -7,6 +7,16 @@ public class HoverMiniMe : MiniMeGrowth1
     public OrbitMachine orbitMachine;
     public float orbitDamage;
 
+    public override AllyBulletObject GetBullet()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override string GetDescription()
+    {
+        throw new System.NotImplementedException();
+    }
+
     // public override void Spawn(Vector2 pos)
     // {
     //     base.Spawn(pos);

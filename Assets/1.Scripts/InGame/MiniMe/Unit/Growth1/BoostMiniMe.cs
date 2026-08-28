@@ -50,7 +50,7 @@ public class BoostMiniMe : MiniMeGrowth1
 
         for (int i = 0; i < 3; i++)
         {
-            Fire(AttackDirecton());
+            attackBehaviour.Fire(attackBehaviour.AttackDirecton());
             await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
         }
         coolTimer = coolTime;
@@ -65,6 +65,13 @@ public class BoostMiniMe : MiniMeGrowth1
         }
     }
 
-    
+    public override string GetDescription()
+    {
+        throw new System.NotImplementedException();
+    }
 
+    public override AllyBulletObject GetBullet()
+    {
+        throw new System.NotImplementedException();
+    }
 }

@@ -1,5 +1,7 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 //플레이어가 공격하면 같이 방향으로 쏨
 //충돌 안하게 하자
@@ -8,14 +10,14 @@ public abstract class MiniMe : MonoBehaviour,IAllyUnit
     public string key;
     public int level;
     
-    public MiniMeMovement miniMeMovement;
+    public MiniMeMovement movement;
+    public MiniMeAttackBehaviour attackBehaviour;
+
     public abstract float AttackSpeed(); 
     public abstract float AttackPower(); 
 
     public Transform rootTr;
-    public float attackTimer;
     public MiniMeData MiniMeData => MiniMeManager.Instance.GetMiniMeData(key);
-
     public float AccumulatedDamage { get; set; }
 
     public void AccumulateDamage(float d)
@@ -25,6 +27,7 @@ public abstract class MiniMe : MonoBehaviour,IAllyUnit
     public Transform Transform => transform;
     public string Key => key;
     public AllyType AllyType => AllyType.MiniMe;
+    public LayerMask targetLayerMask;
 
 
     public virtual void Awake()
@@ -37,6 +40,7 @@ public abstract class MiniMe : MonoBehaviour,IAllyUnit
     }
     public virtual void OnDisable()
     {
+        
     }
     
     public virtual void Spawn(Vector2 pos, int lv)
@@ -49,49 +53,11 @@ public abstract class MiniMe : MonoBehaviour,IAllyUnit
     public virtual void Update()
     {
         rootTr.localScale = new Vector3(Character.Instance.weapon.GetAttackDirection().x >= 0 ? 1 : -1, 1, 1);
-        UpdateAttack();
     }
 
-    public virtual void UpdateAttack()
-    {
-        attackTimer += Time.deltaTime;
-        if (attackTimer > AttackSpeed())
-        {
-            Fire(AttackDirecton());
-        }
-    }
+    public abstract string GetDescription();
 
-    public virtual Vector2 AttackDirecton()
-    {
-        Transform targetTr = InGameUtil.FindTarget(transform.position, 10, targetLayerMask);
-
-        Vector2 fireDir = Character.Instance.moveJoystick.Direction;
-        if (targetTr != null)
-        {
-            fireDir = (targetTr.position - transform.position).normalized;
-        }
-
-        return fireDir;
-    }
-
-    public virtual string GetDescription()
-    {
-        return null;
-    }
-    public LayerMask targetLayerMask;
-
-    public virtual void Fire(Vector2 dir)
-    {
-        AllyBulletObject baseBullet = GetBullet();
-        baseBullet.transform.position = transform.position;
-        baseBullet.Shoot(dir,AttackPower());
-        attackTimer = 0;
-    }
-
-    public virtual AllyBulletObject GetBullet()
-    {
-        return null;
-    }
+    public abstract AllyBulletObject GetBullet();
 
     
     public virtual async UniTask<(bool, string, int)>  Merge(MiniMe target)

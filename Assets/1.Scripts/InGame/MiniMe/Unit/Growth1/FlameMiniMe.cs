@@ -3,12 +3,15 @@ using UnityEngine;
 public class FlameMiniMe : MiniMeGrowth1
 {
     FlameBulletSpec flameBullet;
-    float[] burnDurations = {4f, 6f};
-    float[] burnDPS = {5f,7f};
+    float[] burnDurations = {4f, 5f, 6f};
+    float[] burnDPS = {5f,6f,7f};
     public override void Awake()
     {
         base.Awake();
+        UserMiniMe userMiniMe = UserManager.Instance.userMiniMeManager.GetUserMiniMe(key);
         
+        userMiniMe.EnhanceLevel();
+
         attackPowers = new float[] {10,20,30};
         attackSpeeds = new float[] {10,20,30};
 

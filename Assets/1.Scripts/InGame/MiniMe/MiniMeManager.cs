@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -82,4 +83,55 @@ public class MiniMeManager : MonoSingleton<MiniMeManager>
     {
         return miniMeMergeDataDic[key];
     }
+    [SerializeField] EnhanceGradeInfo[] enhanceGradeInfos;
+    public EnhanceExpInfo[]  enhanceExpInfos;
+    public int GetEnhanceExpInfo(int lv, Grade grade)
+    {
+        return GetEnhanceExpInfo(grade).exps[lv];
+    }
+
+    public EnhanceExpInfo GetEnhanceExpInfo(Grade grade)
+    {
+        for(int i = 0; i < enhanceExpInfos.Length; i++)
+        {
+            if(enhanceExpInfos[i].grade== grade)
+            return enhanceExpInfos[i];
+        }
+        return null;
+    }
+
+    public EnhanceGradeInfo GetEnhanceGradeInfo(Grade grade)
+    {
+        return enhanceGradeInfos.Where(e=>e.grade == grade).FirstOrDefault();
+    }
+}
+
+[System.Serializable]
+public class EnhanceGradeInfo
+{
+    public Grade grade;
+    public int baseEnhance;
+}
+
+[System.Serializable]
+public class EnhanceExpInfo
+{
+    public Grade grade;
+    public int[] exps;
+    public int[] prices;//강화 가격
+    public int TotalExp(int lv)//1이 들어왔어
+    {
+        int sum = 0;
+        for(int i = 0; i < exps.Length; i++)
+        {
+            if (i < lv)
+            {
+                sum += exps[lv];
+            }
+            else
+                break;
+        }
+        return sum;
+    }
+    
 }

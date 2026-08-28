@@ -30,8 +30,15 @@ public class OrbitMiniMe : MiniMeGrowth1
         }
     }
     
-    public override void UpdateAttack()
-    {
 
+    public override AllyBulletObject GetBullet()
+    {
+        throw new System.NotImplementedException();
     }
+
+    public override string GetDescription()
+    {
+        throw new System.NotImplementedException();
+    }
+
 }

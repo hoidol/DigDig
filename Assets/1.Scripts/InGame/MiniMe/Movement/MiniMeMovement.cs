@@ -1,7 +1,6 @@
-using DG.Tweening;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(MiniMe))]
 public class MiniMeMovement : MonoBehaviour
 {
 
@@ -13,11 +12,13 @@ public class MiniMeMovement : MonoBehaviour
 
     public LayerMask hittableLayer;
     const float STUCK_CHECK_INTERVAL = 0.35f;
-    // float stuckCheckTimer;
 
+    // float stuckCheckTimer;
+    public MiniMe miniMe;
     public virtual void Awake()
     {
         rg2D = GetComponent<Rigidbody2D>();
+        miniMe = GetComponent<MiniMe>();
     }
 
     public virtual void FixedUpdate()
