@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 7860255550381579477}
   - component: {fileID: -212533494506657897}
   m_Layer: 0
-  m_Name: Normal
+  m_Name: Ally
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,7 +118,7 @@ Transform:
   m_GameObject: {fileID: 198334406686638309}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.89, y: 1.04, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -176,8 +176,7 @@ MonoBehaviour:
   moveSpeed: 10
   bulletRadius: 0.1
   direction: {x: 0, y: 0, z: 0}
-  <damageMultiplier>k__BackingField: 1
   hitLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  key: Normal
+  key: Ally

@@ -48,10 +48,20 @@ public abstract class BaseGun : MonoBehaviour, IGun
     }
 
     public LayerMask targetLayerMask;
+    public float attackFindRange = 10;
     // 가장 가까운 적 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
     {
-        Transform targetTr = InGameUtil.FindTarget(transform.position, 10, targetLayerMask);
+        // if (Character.Instance.MoveDirection.magnitude == 0)
+        // {
+        //     return dirTr.up;
+        // }
+        // else
+        // {
+        //     return Character.Instance.MoveDirection;
+        // }
+
+        Transform targetTr = InGameUtil.FindTarget(transform.position, attackFindRange, targetLayerMask);
 
         if (targetTr == null)
             return Character.Instance.MoveDirection;
@@ -115,7 +125,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         // pendingSpread = 0;
         // var (bullet, shotOrder) = SpendBullet();
 
-        BulletSpec bullet = new NormalBulletSpec();
+        BulletSpec bullet = new CharacterBulletSpec();
 
         foreach (var e in player.itemInventory.preFires)
             e.OnPreFire(ref bullet, dir);

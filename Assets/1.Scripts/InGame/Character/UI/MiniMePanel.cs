@@ -10,22 +10,22 @@ public class MiniMePanel : MonoBehaviour
     public Image thumImage;
     public TMP_Text descText;
     public MiniMeLevelPanel levelPanel;
-    
+
     MiniMe miniMe;
     public void SetMiniMe(MiniMe me)
     {
         miniMe = me;
-        
-        if(nameText != null)
+
+        if (nameText != null)
             nameText.text = miniMe.MiniMeData.Title;
-        
-        if(thumImage != null)
+
+        if (thumImage != null)
             thumImage.sprite = miniMe.MiniMeData.thum;
-        
-        if(descText != null)
-            nameText.text = miniMe.GetDescription();
+
+        if (descText != null)
+            descText.text = miniMe.GetDescription();
 
         levelPanel?.SetMiniMe(me);
     }
-    
+
 }

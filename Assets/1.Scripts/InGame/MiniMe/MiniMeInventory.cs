@@ -30,6 +30,7 @@ public class MiniMeInventory : MonoBehaviour
 
     public void RemoveMiniMe(MiniMe miniMe, int idx = -1)
     {
+        Destroy(miniMe.gameObject);
         curMiniMes.Remove(miniMe);
 
     }

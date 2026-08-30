@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: Flame
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeData
   key: Flame
-  miniMeName: 
-  desc: 
-  growth: 0
-  addPrice: 0
+  desc: "\uD654\uC5FC\uD0C4 \uBC1C\uC0AC"
+  growth: 1
   valueInfo: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 6666491537767946925, guid: c2eccd09d44a2479aa3430aa28659778, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
-  color: {r: 0, g: 0, b: 0, a: 0}
+  color: {r: 1, g: 0.1861019, b: 0.0990566, a: 1}
+  grade: 0

@@ -65,7 +65,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     {
         if (howFar < 0)
         {
-            howFar = (CameraManager.Instance.mainCamera.orthographicSize * CameraManager.Instance.mainCamera.aspect) + 1;
+            howFar = CameraManager.Instance.mainCamera.orthographicSize + 3f;
         }
         return (Vector2)Character.Instance.transform.position + UnityEngine.Random.insideUnitCircle.normalized * howFar;
     }

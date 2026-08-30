@@ -16,45 +16,45 @@ public class BulletInfoCanvas : CanvasUI<BulletInfoCanvas>
     [SerializeField] GameObject preLvButton;
 
     [SerializeField] BulletDisplayPanel bulletDisplayPanelPrefab;
-    [SerializeField]List<BulletDisplayPanel> bulletDisplayPanelList = new List<BulletDisplayPanel>();
+    [SerializeField] List<BulletDisplayPanel> bulletDisplayPanelList = new List<BulletDisplayPanel>();
     [SerializeField] RectTransform parentTr;
 
-    
-    public  void OpenCanvas(string key,Action closeCallback = null)
+
+    public void OpenCanvas(string key, Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
         bulletData = BulletData.GetBulletData(key);
-        
+
         titleText.text = bulletData.Title;
         thumImage.sprite = bulletData.thumbnail;
-        lv =1;
+        lv = 1;
 
         RefreshMergeBulletPanels();
         UpdateCanvas();
     }
-    
+
     private void RefreshMergeBulletPanels()
     {
-        string[] keys = bulletData.mergeBulletKeys;
+        // string[] keys = bulletData.mergeBulletKeys;
 
-        for (int i = 0; i < bulletDisplayPanelList.Count; i++)
-            bulletDisplayPanelList[i].gameObject.SetActive(false);
+        // for (int i = 0; i < bulletDisplayPanelList.Count; i++)
+        //     bulletDisplayPanelList[i].gameObject.SetActive(false);
 
-        for (int i = 0; i < keys.Length; i++)
-        {
-            BulletDisplayPanel panel;
-            if (i < bulletDisplayPanelList.Count)
-            {
-                panel = bulletDisplayPanelList[i];
-            }
-            else
-            {
-                panel = Instantiate(bulletDisplayPanelPrefab, parentTr);
-                bulletDisplayPanelList.Add(panel);
-            }
-            panel.gameObject.SetActive(true);
-            panel.SetBulletData(keys[i]);
-        }
+        // for (int i = 0; i < keys.Length; i++)
+        // {
+        //     BulletDisplayPanel panel;
+        //     if (i < bulletDisplayPanelList.Count)
+        //     {
+        //         panel = bulletDisplayPanelList[i];
+        //     }
+        //     else
+        //     {
+        //         panel = Instantiate(bulletDisplayPanelPrefab, parentTr);
+        //         bulletDisplayPanelList.Add(panel);
+        //     }
+        //     panel.gameObject.SetActive(true);
+        //     panel.SetBulletData(keys[i]);
+        // }
     }
 
     public void UpdateCanvas()
@@ -62,11 +62,11 @@ public class BulletInfoCanvas : CanvasUI<BulletInfoCanvas>
         // descText.text = bulletData.GetDescription(lv);
         preLvButton.SetActive(false);
         nextLvButton.SetActive(false);
-        if(lv > 1)
+        if (lv > 1)
         {
             preLvButton.SetActive(true);
         }
-        if(lv < BulletData.MAX_LEVEL)
+        if (lv < BulletData.MAX_LEVEL)
         {
             nextLvButton.SetActive(true);
         }

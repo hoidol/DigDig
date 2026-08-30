@@ -1,0 +1,7 @@
+key,name,desc,growth,color,child1,child2,grade
+Base,슬라임,2초마다 1발씩 탄 발사,0,#FFFFFF,,,D
+Wacky,불량,랜덤 방향으로 추가 발사,1,#B45CFF,,,D
+Bounce,탄성,도탄 발사,1,#40F8E2,,,D
+Flame,화염,화염탄 발사,1,#FF6A00,,,D
+Orbit,궤도,궤도 생성 (3초마다 체력 -1체력),1,#1FA2F5,,,D
+Pierce,관통,탄 4번 쏠때마다 관통탄 추가 발사 (랜덤 방향) +3 > +5 > +7,1,#D9E3F0,,,D

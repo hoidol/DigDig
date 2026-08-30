@@ -1,4 +1,4 @@
-public class CharacterBulletSpec : BulletSpec
+public class CharacterBulletSpec : AllyBulletSpec
 {
     public CharacterBulletSpec()
     {

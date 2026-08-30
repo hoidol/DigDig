@@ -9,23 +9,25 @@ public class CharacterBulletObject : AllyBulletObject
     [field: SerializeField] public float damageMultiplier { get; set; } = 1f;
 
 
-    public override void Shoot(Vector2 dir,float damage)
+    public override void Shoot(Vector2 dir, float damage)
     {
-        base.Shoot(dir,damage);
-        
-        damageMultiplier = 1;
+        base.Shoot(dir, damage);
+
         this.damage = damage;
         lifetimeTimer = 20; //Player.Instance.statMgr.AmmoDuration;
-        characterDamageData= new CharacterDamageData();
-        damageData = characterDamageData;
+
         characterDamageData.Init(Character.Instance);
     }
 
-    public override void SetBullet(BulletSpec bullet,IAllyUnit allyUnit)
+    public override void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
-        base.SetBullet(bullet,allyUnit);
+        base.SetBullet(bullet, allyUnit);
+        if (characterDamageData == null)
+        {
+            characterDamageData = new CharacterDamageData();
+            damageData = characterDamageData;
+        }
 
-        
         damageMultiplier = 1;
         characterDamageData.mustCrit = bullet.mustCrit;
     }
@@ -88,7 +90,7 @@ public class CharacterBulletObject : AllyBulletObject
         BulletSpawner.Instance.ReturnPlayerBulletObject(key, this);
     }
 
-     
+
 
 }
 

@@ -17,6 +17,7 @@ public class CharacterMovement : MonoBehaviour
         this.rg = rg;
         this.animator = animator;
         this.bodyRootTr = bodyRootTr;
+        MoveDirection = Vector2.up;
         Restart();
     }
 

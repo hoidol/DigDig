@@ -33,6 +33,7 @@ public class StartSetting
             "EnemyManager",
             "EquipmentManager",
             "CharacterManager",
+            "MiniMeManager",
 //공용
             "InAppPurchaseManager",
             "AdManager",
@@ -40,7 +41,8 @@ public class StartSetting
 //UI --------
             "FadeCanvas",
             "BlockCanvas",
-            "ToastCanvas"
+            "ToastCanvas",
+            "YesOrNoCanvas"
 
         };
 

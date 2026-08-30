@@ -112,15 +112,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b451a2850b1734e3f9f700f4984ba5dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HoverMiniMe
+  key: 
   level: 0
-  miniMeMovement: {fileID: 3930467919404464510}
-  attackPower: 0
+  movement: {fileID: 0}
+  attackBehaviour: {fileID: 0}
   rootTr: {fileID: 3602655828467370795}
-  attackSpeed: 0
-  attackTimer: 0
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  attackPowers: []
+  attackSpeeds: []
   orbitMachine: {fileID: 8023532291407959328}
   orbitDamage: 0
 --- !u!114 &3930467919404464510
@@ -136,11 +137,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FreeMiniMeMovement
   rg2D: {fileID: 6581655379222518411}
+  outRange: 5
   inRange: 5
-  moveSpeed: 0
+  moveSpeed: 3
   hittableLayer:
     serializedVersion: 2
     m_Bits: 0
+  miniMe: {fileID: 0}
   dir: {x: 0, y: 0}
   clock: 0
   leashRange: 7

@@ -4,17 +4,18 @@ using UnityEngine;
 //충돌 안하게 하자
 public abstract class MiniMeGrowth0 : MiniMe
 {
-    
+
     public float attackPower;
     public float attackSpeed;
-    NormalBulletSpec normalBulletSpec;
+    AllyBulletSpec allyBulletSpec;
 
-     public override void Awake()
+    public override void Awake()
     {
         base.Awake();
-        attackPower = 3;
+        attackPower = 2;
         attackSpeed = 1;
-        normalBulletSpec= new NormalBulletSpec();
+        allyBulletSpec = new AllyBulletSpec();
+        allyBulletSpec.damage = attackPower;
     }
 
     public override float AttackPower()
@@ -29,7 +30,7 @@ public abstract class MiniMeGrowth0 : MiniMe
 
     public override AllyBulletObject GetBullet()
     {
-        return normalBulletSpec.Instantiate(this);
+        return allyBulletSpec.Instantiate(this);
     }
 
 }

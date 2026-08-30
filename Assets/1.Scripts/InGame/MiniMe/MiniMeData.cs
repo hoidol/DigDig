@@ -66,6 +66,7 @@ public class MiniMeData : ScriptableObject
         int iDesc = System.Array.IndexOf(headers, "desc");
         int iGrowth = System.Array.IndexOf(headers, "growth");
         int iColor = System.Array.IndexOf(headers, "color");
+        int iGrade = System.Array.IndexOf(headers, "grade");
 
         for (int i = 1; i < lines.Length; i++)
         {
@@ -81,18 +82,42 @@ public class MiniMeData : ScriptableObject
                 growth = lv;
             if (iColor >= 0 && iColor < cols.Length && ColorUtility.TryParseHtmlString(cols[iColor].Trim(), out Color parsedColor))
                 color = parsedColor;
+            if (iGrade >= 0 && iGrade < cols.Length && System.Enum.TryParse(cols[iGrade].Trim(), out Grade parsedGrade))
+                grade = parsedGrade;
 
-            string thumPath = $"Assets/2.Sprites/MiniMe/Thum/Growth{growth}.png";
-            thum = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(thumPath);
+            prefab = FindAssetByName<MiniMe>($"Assets/3.Prefabs/MiniMe/Growth{growth}", $"{key}MiniMe");
+            thum = FindAssetByName<Sprite>($"Assets/2.Sprites/MiniMe/Growth{growth}", key);
+
             UnityEditor.EditorUtility.SetDirty(this);
             Debug.Log($"[MiniMeData] {key} LoadData 완료");
             return;
         }
 
-        //
-
-
         Debug.LogWarning($"[MiniMeData] CSV에서 '{key}' 를 찾지 못함");
+    }
+
+    // folder 안에서 파일명이 fileName과 일치하는 T 타입 에셋을 찾는다.
+    T FindAssetByName<T>(string folder, string fileName) where T : UnityEngine.Object
+    {
+        if (!UnityEditor.AssetDatabase.IsValidFolder(folder))
+        {
+            Debug.LogWarning($"[MiniMeData] 폴더 없음: {folder}");
+            return null;
+        }
+
+        string typeFilter = typeof(T) == typeof(MiniMe) ? "t:Prefab" : "t:Sprite";
+        string[] guids = UnityEditor.AssetDatabase.FindAssets($"{fileName} {typeFilter}", new[] { folder });
+        foreach (string guid in guids)
+        {
+            string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+            if (System.IO.Path.GetFileNameWithoutExtension(path) != fileName) continue;
+
+            T asset = UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
+            if (asset != null) return asset;
+        }
+
+        Debug.LogWarning($"[MiniMeData] {folder} 에서 '{fileName}' 를 찾지 못함");
+        return null;
     }
 
     // CSV의 childMiniMe 컬럼은 Key가 아닌 표시 이름(Name)으로 적혀 있어 역으로 Key를 찾는다.
@@ -133,31 +158,24 @@ public class MiniMeData : ScriptableObject
             key = name;
 
         string prefabRootFolder = $"Assets/3.Prefabs/MiniMe/Growth{growth}";
+        string prefabPath = $"{prefabRootFolder}/{key}MiniMe.prefab";
 
-        // 기존 프리팹 탐색 (grade 폴더 → 루트 폴더 순)
-        string[] searchFolders = new[] { prefabRootFolder };
-        string[] guids = UnityEditor.AssetDatabase.FindAssets($"{key}MiniMe t:Prefab", searchFolders);
-        foreach (string guid in guids)
+        // 이미 해당 경로에 프리팹이 있으면 그대로 연결만 하고 덮어쓰지 않는다.
+        MiniMe existingPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<MiniMe>(prefabPath);
+        if (existingPrefab != null)
         {
-            string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
-            if (System.IO.Path.GetFileNameWithoutExtension(path) != key) continue;
-
-            MiniMe prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<MiniMe>(path);
-            if (prefab != null)
-            {
-                this.prefab = prefab;
-                this.prefab.key = key;
-                UnityEditor.EditorUtility.SetDirty(this);
-                Debug.Log($"[MiniMeData] {key}MiniMe prefab 연결 완료: {path}");
-                return;
-            }
+            prefab = existingPrefab;
+            prefab.key = key;
+            UnityEditor.EditorUtility.SetDirty(this);
+            Debug.Log($"[MiniMeData] {key} 기존 prefab 연결 완료: {prefabPath}");
+            return;
         }
 
         // 프리팹 없으면 grade 폴더에 새로 생성
         if (!UnityEditor.AssetDatabase.IsValidFolder(prefabRootFolder))
             System.IO.Directory.CreateDirectory(prefabRootFolder);
 
-        var go = new GameObject(key);
+        var go = new GameObject(key + "MiniMe");
 
         // key+"MiniMe" 이름의 타입이 존재하면 컴포넌트 추가, 없으면 스크립트 파일 생성
         string componentTypeName = key + "MiniMe";
@@ -176,8 +194,7 @@ public class MiniMeData : ScriptableObject
             return;
         }
 
-        string newPath = $"{prefabRootFolder}/{key}.prefab";
-        var newPrefab = UnityEditor.PrefabUtility.SaveAsPrefabAsset(go, newPath);
+        var newPrefab = UnityEditor.PrefabUtility.SaveAsPrefabAsset(go, prefabPath);
         DestroyImmediate(go);
 
         prefab = newPrefab.GetComponent<MiniMe>();

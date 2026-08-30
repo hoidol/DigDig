@@ -17,13 +17,13 @@ public class MiniMeSpawner : MonoSingleton<MiniMeSpawner>
     }
     public void PurchaseSlot(int idx)
     {
-        miniMeSlotCount++;   
+        miniMeSlotCount++;
     }
     int initPrice = 50;
     int increasePrice = 50;
     public int GetSlotPrice()
     {
-        return  initPrice + increasePrice * (miniMeSlotCount -GameSetting.MIN_MINIME_SLOT_COUNT);
+        return initPrice + increasePrice * (miniMeSlotCount - GameSetting.MIN_MINIME_SLOT_COUNT);
     }
     public MiniMe Instantiate(string key)
     {
@@ -42,7 +42,7 @@ public class MiniMeSpawner : MonoSingleton<MiniMeSpawner>
         ActiveMiniMeCount++;
         return miniMe;
     }
-    
+
 
     public void Release(MiniMe miniMe)
     {

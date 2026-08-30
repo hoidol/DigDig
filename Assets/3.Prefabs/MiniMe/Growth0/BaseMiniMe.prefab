@@ -318,8 +318,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.0608927}
-  m_Radius: 0.4391073
+  m_Offset: {x: 0, y: 0.07497835}
+  m_Radius: 0.35
 --- !u!1 &6049630514680113184
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,6 +363,7 @@ GameObject:
   - component: {fileID: 1174373530362515621}
   - component: {fileID: 6691824415162859709}
   - component: {fileID: 6375558012280561577}
+  - component: {fileID: 8614401740847797794}
   - component: {fileID: 6211682140286446672}
   - component: {fileID: 7628565153249991827}
   m_Layer: 10
@@ -402,12 +403,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BaseMiniMe
   key: Base
   level: 0
-  miniMeMovement: {fileID: 6375558012280561577}
+  movement: {fileID: 6375558012280561577}
+  attackBehaviour: {fileID: 8614401740847797794}
   rootTr: {fileID: 721374975546643552}
-  attackTimer: 0
   targetLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   attackPower: 0
   attackSpeed: 0
 --- !u!114 &6375558012280561577
@@ -423,11 +424,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeMovement
   rg2D: {fileID: 6211682140286446672}
-  inRange: 3.5
+  outRange: 5
+  inRange: 2
   moveSpeed: 2
   hittableLayer:
     serializedVersion: 2
     m_Bits: 8
+  miniMe: {fileID: 0}
+--- !u!114 &8614401740847797794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6579390230575031263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae4622ebbabf94d01bf3022b21d0c5a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MiniMeAttackBehaviour
+  miniMe: {fileID: 0}
+  attackTimer: 0
+  targetTr: {fileID: 0}
 --- !u!50 &6211682140286446672
 Rigidbody2D:
   serializedVersion: 5
@@ -490,7 +508,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0.07497835}
-  m_Radius: 0.42502165
+  m_Radius: 0.35
 --- !u!1 &8476509071621235883
 GameObject:
   m_ObjectHideFlags: 0

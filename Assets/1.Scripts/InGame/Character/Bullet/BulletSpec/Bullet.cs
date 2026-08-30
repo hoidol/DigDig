@@ -1,11 +1,10 @@
 using System.Linq;
 using UnityEngine;
 [System.Serializable]
-public abstract class BulletSpec 
+public abstract class BulletSpec
 {
     public string Key => key;
     public string key;
-    // public BulletData bulletData => BulletManager.Instance.GetBulletData(key);
     public bool mustCrit;
     public virtual AllyBulletObject Instantiate(IAllyUnit allyUnit)
     {

@@ -9,7 +9,7 @@ public class MapManager : MonoSingleton<MapManager>
 
     public const float TILE_SIZE = 1.46f;
     //public static List<Vector2Int> emptyIndexs = new List<Vector2Int>();
-    
+
     public static HashSet<Vector2Int> usedTileIdxs = new HashSet<Vector2Int>();
     // public OreStone oreStonePrefab;
     public Color[] fillColors;
@@ -41,7 +41,11 @@ public class MapManager : MonoSingleton<MapManager>
 
     void Start()
     {
-        
+        GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
+    }
+    void OnStartGameEvent(StartGameEvent e)
+    {
+        SpawnMap();
     }
 
     public const int MIN_RANGE_RADIUS = 5;
@@ -50,7 +54,7 @@ public class MapManager : MonoSingleton<MapManager>
     public void SpawnMap()
     {
         weights = new float[weightCurves.Length];
-        SpawnTile(Character.Instance.transform.position, MAX_RANGE_RADIUS);
+        SpawnTile(Vector2.zero, MAX_RANGE_RADIUS);
         CheckSpawnMap().Forget();
     }
     async UniTask CheckSpawnMap()
@@ -61,9 +65,6 @@ public class MapManager : MonoSingleton<MapManager>
             SpawnTile(Character.Instance.transform.position, MAX_RANGE_RADIUS);
         }
     }
-
-
-
     public static Vector2 SnappedPosition(Vector2 pos)
     {
         int snappedX = Mathf.RoundToInt(pos.x / TILE_SIZE);
@@ -71,7 +72,7 @@ public class MapManager : MonoSingleton<MapManager>
 
         return new(snappedX * TILE_SIZE, snappedY * TILE_SIZE);
     }
-    
+
     public static Vector2 TileIndexToPosition(Vector2Int idx)
     {
         return new Vector2(idx.x * TILE_SIZE, idx.y * TILE_SIZE);
@@ -81,8 +82,8 @@ public class MapManager : MonoSingleton<MapManager>
     {
         Vector2 spappedPos = SnappedPosition(pos);
 
-        int x = Mathf.RoundToInt(spappedPos.x / TILE_SIZE) + MAX_RANGE_RADIUS;
-        int y = Mathf.RoundToInt(spappedPos.y / TILE_SIZE) + MAX_RANGE_RADIUS;
+        int x = Mathf.RoundToInt(spappedPos.x / TILE_SIZE);
+        int y = Mathf.RoundToInt(spappedPos.y / TILE_SIZE);
         return new Vector2Int(x, y);
     }
 
@@ -99,10 +100,10 @@ public class MapManager : MonoSingleton<MapManager>
 
     void ReleaseTile(Vector2Int index)
     {
-        Collider2D[] collider2Ds = Physics2D.OverlapPointAll(TileIndexToPosition(index),LayerMask.GetMask("Hittable"));
-        for(int i = 0; i < collider2Ds.Length; i++)
+        Collider2D[] collider2Ds = Physics2D.OverlapPointAll(TileIndexToPosition(index), LayerMask.GetMask("Hittable"));
+        for (int i = 0; i < collider2Ds.Length; i++)
         {
-            if(collider2Ds[i].gameObject.TryGetComponent(out ITile target))
+            if (collider2Ds[i].gameObject.TryGetComponent(out ITile target))
             {
                 target.Destroy();
             }
@@ -111,32 +112,40 @@ public class MapManager : MonoSingleton<MapManager>
 
     public void SpawnTile(Vector2 pos, float radius)
     {
-        float startX =  pos.x -radius;
-        float startY =  pos.y-radius;
-        float endX =  pos.x +radius;
-        float endY =  pos.y +radius;
+        Debug.Log("MapManager SpawnTile");
+        float startX = pos.x - radius;
+        float startY = pos.y - radius;
+        float endX = pos.x + radius;
+        float endY = pos.y + radius;
 
-        Vector2Int startIdx = PositionToTileIndex(new Vector2(startX,startY));
-        Vector2Int endIdx = PositionToTileIndex(new Vector2(endX,endY));
+        Debug.Log($"MapManager SpawnTile startX {startX} startY {startY}");
+        // Debug.Log($"MapManager SpawnTile startIdx.x {startIdx.x} endIdx.x {endIdx.x}");
+        Vector2Int startIdx = PositionToTileIndex(new Vector2(startX, startY));
+        Vector2Int endIdx = PositionToTileIndex(new Vector2(endX, endY));
 
+        // Debug.Log($"MapManager SpawnTile startIdx.x {startIdx.x} endIdx.x {endIdx.x}");
+        // Debug.Log($"MapManager SpawnTile startIdx.y {startIdx.y} endIdx.y {endIdx.y}");
         for (int x = startIdx.x; x < endIdx.x; x++)
         {
             for (int y = startIdx.y; y < endIdx.y; y++)
             {
-                Vector2Int index = new Vector2Int(x,y);
-                if(usedTileIdxs.Contains(index))
+                Vector2Int index = new Vector2Int(x, y);
+                if (usedTileIdxs.Contains(index))
+                {
+                    // Debug.Log($"index {index} 이미 사용됨");
                     continue;
+                }
                 Vector2 cellPos = TileIndexToPosition(index);
-                usedTileIdxs.Add(index);
-
                 float dist = Vector2.Distance(Vector2.zero, cellPos);
-                
+                // Debug.Log($"cellPos {cellPos} 생성될 위치 ");
                 if (dist < MIN_RANGE_RADIUS)
                 {
-                    ReleaseTile(index);
+                    // Debug.Log($"index {index} cellPos {cellPos} Vector2 zero에 너무 가까움");
+                    // ReleaseTile(index);
                     continue;
                 }
 
+                usedTileIdxs.Add(index);
                 int colorIdx = PickColorIndex(dist);
                 Stone ore = Stone.Get(cellPos, transform);
                 ore.gameObject.name = $"Stone {index.x} {index.y}";
@@ -282,20 +291,20 @@ public class MapManager : MonoSingleton<MapManager>
         unbreakableXCount = xCount;
         unbreakableYCount = yCount;
 
-        int leftX = -xCount/2;
-        int bottomY = -yCount/2;
+        int leftX = -xCount / 2;
+        int bottomY = -yCount / 2;
 
-        for (int x = -xCount/2; x < xCount/2; x++)
+        for (int x = -xCount / 2; x < xCount / 2; x++)
         {
-            for (int y = -yCount/2; y < yCount/2; y++)
+            for (int y = -yCount / 2; y < yCount / 2; y++)
             {
                 if (x == leftX || x == leftX + xCount - 1 || y == bottomY || y == bottomY + yCount - 1)
                 {
                     float posX = centerTilePos.x + x * TILE_SIZE;
                     float posY = centerTilePos.y + y * TILE_SIZE;
-                    
-                    
-                    Vector2Int index = PositionToTileIndex(new Vector2(posX,posY));
+
+
+                    Vector2Int index = PositionToTileIndex(new Vector2(posX, posY));
                     ReleaseTile(index);
 
                     UnbreakableStone unbreakableStone = UnbreakableStone.Get(TileIndexToPosition(new Vector2Int(x, y)), transform);

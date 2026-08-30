@@ -6,7 +6,9 @@ public class MiniMeMovement : MonoBehaviour
 
     public Rigidbody2D rg2D;
 
-    public float inRange = 5;
+
+    public float outRange = 5;
+    public float inRange = 1;
     public float moveSpeed;
 
 
@@ -24,14 +26,19 @@ public class MiniMeMovement : MonoBehaviour
     public virtual void FixedUpdate()
     {
         Vector2 vec = Character.Instance.transform.position - transform.position;
-        if (vec.magnitude < inRange)
+        float tempMoveSpeed = moveSpeed;
+        if (vec.magnitude < outRange)
+        {
+            tempMoveSpeed /= 3;
+        }
+        if (vec.magnitude <= inRange)
         {
             rg2D.linearVelocity = Vector2.zero;
             return;
         }
 
         Vector2 dir = vec.normalized;
-        rg2D.linearVelocity = dir * moveSpeed;
+        rg2D.linearVelocity = dir * tempMoveSpeed;
     }
     public virtual void Update()
     {

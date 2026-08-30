@@ -2,14 +2,14 @@
 // 적중마다 고정 반경으로 1회전 공전. 튕김 횟수만큼 반복 후 소멸.
 using UnityEngine;
 
-public class OrbitBulletSpec : BulletSpec
+public class OrbitBulletSpec : AllyBulletSpec
 {
     public OrbitBulletSpec()
     {
         key = "Orbit";
     }
-    static float[] ORBIT_MULTI_DAMAGES = {1.2f,1.3f,1.5f};
-    
+    static float[] ORBIT_MULTI_DAMAGES = { 1.2f, 1.3f, 1.5f };
+
     // public override void OnBulletFired(PlayerBulletObject bullet)
     // {
     //     Orbit orbit = Player.Instance.GetBulletSubTool("Orbit") as Orbit;

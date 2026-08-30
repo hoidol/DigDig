@@ -1,12 +1,12 @@
 // [철탄]
 // 튕겨도 데미지 감소 없음 (기본 BounceBehavior의 0.6× 감소 제거)
-public class IronBulletSpec : BulletSpec
+public class IronBulletSpec : AllyBulletSpec
 {
     public IronBulletSpec()
     {
         key = "Iron";
     }
-    int[] ignoreBouncEfficiency = {4,6,7};
+    int[] ignoreBouncEfficiency = { 4, 6, 7 };
     // public override void OnBulletFired(PlayerBulletObject bullet)
     // {
     //     bullet.transform.localScale = UnityEngine.Vector3.one;

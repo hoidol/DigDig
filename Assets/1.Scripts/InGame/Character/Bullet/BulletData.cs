@@ -15,7 +15,7 @@ public class BulletData : ScriptableObject
     public string itemName;
     public int consumeHp;
 
-    public bool specialBullet;// 일반을 제외하고 모두 특수 
+    // public bool specialBullet;// 일반을 제외하고 모두 특수 
     public bool mergedBullet; // 머지 횟수 
     public string desc;
 
@@ -23,8 +23,6 @@ public class BulletData : ScriptableObject
     public Grade grade;      // 등급별 필터링용
     public ConditionData[] addEffectUnlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
     public int applyOrder; // 아이템 적용 순서
-    public string[] canMergeBulletKeys; // 해당 총알과 머지가 가능한 총알키 
-    public string[] mergeBulletKeys; // 상위 총알들
 
     // public float multiplyATK; // 공격력 배율 (예: 1.2f는 20% 증가)
     public AllyBulletObject prefab;
@@ -50,7 +48,7 @@ public class BulletData : ScriptableObject
 
         int iKey = System.Array.IndexOf(headers, "key");
         int iName = System.Array.IndexOf(headers, "Name");
-        int iSpecial = System.Array.IndexOf(headers, "specialBullet");
+        // int iSpecial = System.Array.IndexOf(headers, "specialBullet");
         int iDesc = System.Array.IndexOf(headers, "Desc");
         // int iMultiplyATK = System.Array.IndexOf(headers, "multiplyATK");
         int iMergeKeys = System.Array.IndexOf(headers, "mergeKeys");
@@ -66,12 +64,12 @@ public class BulletData : ScriptableObject
 
             itemName = Col(cols, iName);
             desc = Col(cols, iDesc);
-            specialBullet = Col(cols, iSpecial).ToUpper() == "TRUE";
+            // specialBullet = Col(cols, iSpecial).ToUpper() == "TRUE";
 
             // if (float.TryParse(Col(cols, iMultiplyATK), NumberStyles.Float, CultureInfo.InvariantCulture, out float atk)) multiplyATK = atk;
 
             string mergeRaw = Col(cols, iMergeKeys);
-            canMergeBulletKeys = string.IsNullOrEmpty(mergeRaw) ? new string[0] : mergeRaw.Split('/');
+            // canMergeBulletKeys = string.IsNullOrEmpty(mergeRaw) ? new string[0] : mergeRaw.Split('/');
 
             string condTypesRaw = Col(cols, iCondTypes);
             string condValuesRaw = Col(cols, iCondValues);

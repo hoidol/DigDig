@@ -8,32 +8,43 @@ namespace Lobby
     public class MiniMeManageCanvas : CanvasUI<MiniMeManageCanvas>
     {
         public MiniMeEquipedSlotPanel[] equipedSlotPanels;
-        public Growth1MiniMeEntryPanel[]  growth1MiniMeEntryPanels;
+        public Growth1MiniMeEntryPanel[] growth1MiniMeEntryPanels;
         public Growth2MiniMeEntryPanel[] growth2MiniMeEntryPanels;
 
+        public override void Init()
+        {
+            if (init)
+                return;
+            init = true;
+
+            equipedSlotPanels = GetComponentsInChildren<MiniMeEquipedSlotPanel>();
+            growth1MiniMeEntryPanels = GetComponentsInChildren<Growth1MiniMeEntryPanel>();
+            growth2MiniMeEntryPanels = GetComponentsInChildren<Growth2MiniMeEntryPanel>();
+        }
         public override void OpenCanvas(Action closeCallback = null)
         {
             base.OpenCanvas(closeCallback);
+            Init();
             OpenCanvas();
         }
 
         public void OpenCanvas()
         {
-            for(int i = 0; i < equipedSlotPanels.Length; i++)
+            for (int i = 0; i < equipedSlotPanels.Length; i++)
             {
                 equipedSlotPanels[i].idx = i;
             }
 
 
-            MiniMeData[] growth1MiniMeDatas = MiniMeManager.Instance.growth1MiniMeDatas.OrderBy(e=>
+            MiniMeData[] growth1MiniMeDatas = MiniMeManager.Instance.growth1MiniMeDatas.OrderBy(e =>
             {
-                if(UserManager.Instance.userMiniMeManager.GetUserMiniMe(e.key).own)
+                if (UserManager.Instance.userMiniMeManager.GetUserMiniMe(e.key).own)
                     return 0;
-                else 
+                else
                     return 1;
             }).ToArray();
 
-            for(int i = 0; i < growth1MiniMeEntryPanels.Length; i++)
+            for (int i = 0; i < growth1MiniMeEntryPanels.Length; i++)
             {
                 if (i < growth1MiniMeDatas.Length)
                 {
@@ -45,7 +56,7 @@ namespace Lobby
                 }
             }
 
-            for(int i = 0; i < growth2MiniMeEntryPanels.Length; i++)
+            for (int i = 0; i < growth2MiniMeEntryPanels.Length; i++)
             {
                 if (i < MiniMeManager.Instance.growth2MiniMeDatas.Length)
                 {
@@ -62,17 +73,17 @@ namespace Lobby
         public void UpdateCanvas()
         {
             // List<string> equiptedMiniMeKeys = new List<string>();
-            for(int i = 0; i < UserManager.Instance.userMiniMeManager.userMiniMeData.equiptedMiniMes.Length; i++)
+            for (int i = 0; i < UserManager.Instance.userMiniMeManager.userMiniMeData.equiptedMiniMes.Length; i++)
             {
                 equipedSlotPanels[i].SetData(UserManager.Instance.userMiniMeManager.userMiniMeData.equiptedMiniMes[i]);
                 // equiptedMiniMeKeys.Add(UserManager.Instance.userMiniMeManager.userMiniMeData.equiptedMiniMes[i].key);
             }
-           
+
             // List<string> canPickGrowth2MiniMes = new List<string>();
             // for(int i =0;i < MiniMeManager.Instance.growth2MiniMeDatas.Length; i++)
             // {
             //     Growth2MiniMeMergeData growth2MiniMeConditionData = MiniMeManager.Instance.GetGrowth2MiniMeMergeData(MiniMeManager.Instance.growth2MiniMeDatas[i].key); 
-                
+
             //     if(growth2MiniMeConditionData.growth1MiniMeKeys.Length == 1)
             //     {
             //         if (equiptedMiniMeKeys.Contains(growth2MiniMeConditionData.growth1MiniMeKeys[0]))
@@ -90,17 +101,17 @@ namespace Lobby
             //     }
             // }
 
-            for(int i = 0; i < equipedSlotPanels.Length; i++)
+            for (int i = 0; i < equipedSlotPanels.Length; i++)
             {
                 equipedSlotPanels[i].UpdatePanel();
             }
 
-            for(int i = 0; i < growth1MiniMeEntryPanels.Length; i++)
+            for (int i = 0; i < growth1MiniMeEntryPanels.Length; i++)
             {
                 growth1MiniMeEntryPanels[i].UpdatePanel();
             }
-            
-            for(int i = 0; i < growth2MiniMeEntryPanels.Length; i++)
+
+            for (int i = 0; i < growth2MiniMeEntryPanels.Length; i++)
             {
                 growth2MiniMeEntryPanels[i].UpdatePanel();
             }

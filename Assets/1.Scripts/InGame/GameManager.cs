@@ -47,7 +47,8 @@ public class GameManager : MonoSingleton<GameManager>
         stageData = StageManager.Instance.GetStageData(UserManager.STAGE_KEY);
         stageData.Init();
         enemySpawnerContainer = Instantiate(stageData.enemySpawnerContainerPrefab);
-        MapManager.Instance.SpawnMap();
+
+        GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
         FadeCanvs.Instance.FadeIn(stageData.Title, () =>
         {
@@ -61,7 +62,6 @@ public class GameManager : MonoSingleton<GameManager>
         gameTimer = 0;
         isPlaying = true;
 
-        GameEventBus.Publish(new StartGameEvent(stageData));
 
         ProcessDay(phase).Forget();
     }

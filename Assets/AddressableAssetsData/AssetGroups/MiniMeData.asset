@@ -14,7 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: MiniMeData
   m_GUID: f07b26ff7fd094825b79ea5291a007f3
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 21342a686269c4c188b3e8c64a258671
+    m_Address: Growth1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Growth1MiniMeData
+    - MiniMeData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 30dc8ecb9b34c4a24bd18e7b6be7de01
+    m_Address: Growth2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Growth2MiniMeData
+    - MiniMeData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95312c7989bed4b0493be3916be8951a
+    m_Address: Growth0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Growth0MiniMeData
+    - MiniMeData
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9a0180b3d26f4ed3a8015ec93616018
+    m_Address: MiniMeMergeData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MiniMeMergeData
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 7aadc449270984ef0ace796ef1270c88, type: 2}
   m_SchemaSet:

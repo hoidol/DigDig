@@ -1,7 +1,8 @@
-public class NormalBulletSpec : BulletSpec
+public class AllyBulletSpec : BulletSpec
 {
-    public NormalBulletSpec()
+    public float damage;
+    public AllyBulletSpec()
     {
-        key = "Normal";
+        key = "Ally";
     }
 }

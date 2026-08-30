@@ -104,11 +104,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeMovement
   rg2D: {fileID: 6557644555440082030}
+  outRange: 5
   inRange: 3.5
-  moveSpeed: 2
+  moveSpeed: 3
   hittableLayer:
     serializedVersion: 2
     m_Bits: 8
+  miniMe: {fileID: 0}
 --- !u!50 &6557644555440082030
 Rigidbody2D:
   serializedVersion: 5
@@ -184,10 +186,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd2db18b88f234bd68fea0bf1717dd90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoostMiniMe
+  key: 
   level: 0
-  miniMeMovement: {fileID: 407325165819016618}
-  attackPower: 0
+  movement: {fileID: 0}
+  attackBehaviour: {fileID: 0}
   rootTr: {fileID: 1944520035533903226}
+  targetLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  attackPowers: []
+  attackSpeeds: []
   coolTime: 0
   coolTimer: 0
 --- !u!1 &5787644021403196603

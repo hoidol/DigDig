@@ -38,16 +38,8 @@ public class CharacterStatManager
     public CharacterStatManager(Character p, CharacterName characterName)
     {
         character = p;
-        Debug.Log($"CharacterStatManager characterName {characterName}");
+
         characterData = CharacterManager.Instance.GetCharacterData(characterName);
-        if (characterData == null)
-        {
-            Debug.Log($"CharacterStatManager if(characterData == null)");
-        }
-        else
-        {
-            Debug.Log($"CharacterStatManager if(characterData != null)");
-        }
 
         statDic.Clear();
         statList.Clear();
@@ -55,7 +47,7 @@ public class CharacterStatManager
         for (int i = 0; i < usingStatTypes.Length; i++)
         {
             var ps = new CharacterStat { statType = usingStatTypes[i] };
-            Debug.Log($"ps.statType {ps.statType}");
+            // Debug.Log($"ps.statType {ps.statType}");
             ps.initValue = characterData.GetCharacterStat(ps.statType).value; //CharacterData 초기화
             statList.Add(ps);
             statDic.Add(ps.statType, ps);
@@ -132,7 +124,7 @@ public class CharacterStatManager
         }
     }
 
-    public void AddMiniMe(string key, int count=1)
+    public void AddMiniMe(string key, int count = 1)
     {
         if (!miniMeDic.ContainsKey(key))
         {

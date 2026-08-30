@@ -6,9 +6,9 @@ public class GameSetting
    public const int MAX_MF_GROUP_POINT = 5; //MemoryFragment
    public static string FIRST_STAGE_KEY = "0";
    public static CharacterName INIT_CHARACTER_NAME = CharacterName.Lucky;
-   public static string[] INIT_MINIME_KEYS ={"Flame","Bound", "Wacky","Orbit","Pierce"};
-   public static int MINIME_SLOT_COUNT =5;
-   
+   public static string[] INIT_MINIME_KEYS = { "Flame", "Bounce", "Wacky", "Orbit", "Pierce" };
+   public static int MINIME_SLOT_COUNT = 5;
+
    public const int DAY_COUNT = 7;
    public const float DAY_TIME = 40;
    public const float DAY_INCREASE_TIME = 3;
@@ -19,11 +19,11 @@ public class GameSetting
    public const int INIT_ITEM_PRICE = 5;
    public const int INCREASE_ITEM_PRICE = 3;
    public const int INIT_SPAWN_PRICE = 5;
-   public const int INCREASE_SPAWN_PRICE = 1;
+   public const int INCREASE_SPAWN_PRICE = 5;
 
 
 
-   public const int MIN_MINIME_SLOT_COUNT = 5;
+   public const int MIN_MINIME_SLOT_COUNT = 6;
    public const int MAX_MINIME_SLOT_COUNT = 9;
    public const int LEVEL_TO_GROWUP2 = 2;//0,1,2 되어야됌
 

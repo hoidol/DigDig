@@ -72,7 +72,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
     {
         lastDamage = damage;
         curHp -= damage.ApplyDamage(hpPoint.transform.position);
-        
+
 
         spriteRootTr.DOKill();
         spriteRootTr.DOShakeRotation(0.2f, new Vector3(0f, 0f, 5f), 100, 90f, false).OnComplete(() =>
@@ -99,11 +99,12 @@ public class Stone : MonoBehaviour, IHittable, ITile
     {
         HealPiece.Instantiate(transform.position);
         //Exp.Instantiate(transform.position, exp, 1);
-        Coin.Instantiate(transform.position, 1, 1f);
+        Coin.Instantiate(transform.position, level + 1, 1f);
     }
 
     public virtual void Destroy()
     {
+        Debug.Log("Stone 어디서 불리냐");
         EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
         GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
         ReleaseTile();

@@ -60,11 +60,11 @@ public class BulletManager : MonoSingleton<BulletManager>, ILoadData
 
         });
 
-        await AddressableMgr.LoadAllByLabel<MergeBulletData>("MergeBulletData", (dates) =>
-        {
-            mergeBulletDatas = dates;
+        // await AddressableMgr.LoadAllByLabel<MergeBulletData>("MergeBulletData", (dates) =>
+        // {
+        //     mergeBulletDatas = dates;
 
-        });
+        // });
 
         await AddressableMgr.LoadAllByLabel<GameObject>("CharacterBulletObject", (dates) =>
         {

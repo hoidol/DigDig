@@ -15,7 +15,7 @@ public class MiniMeSpawnButton : ButtonUI
     }
     int GetSpawnPrice()
     {
-        return (GameSetting.INIT_SPAWN_PRICE +  GameManager.Instance.miniMeSpawnCount * GameSetting.INCREASE_SPAWN_PRICE);
+        return (GameSetting.INIT_SPAWN_PRICE + GameManager.Instance.miniMeSpawnCount * GameSetting.INCREASE_SPAWN_PRICE);
     }
     public override void OnClickedBtn()
     {
@@ -34,17 +34,19 @@ public class MiniMeSpawnButton : ButtonUI
         Character.Instance.AddCoin(-GetSpawnPrice());
         Character.Instance.AddMiniMe("Base");
 
+        CharacterManageCanvas.Instance.UpdateCanvas();
         UpdateButton();
+
     }
 }
 public class SpawnMinieEvent
-{  
+{
     public string key;
     public int reinforce;
-    public SpawnMinieEvent(string k,int r)
+    public SpawnMinieEvent(string k, int r)
     {
-        key =k;
-        reinforce =r;
+        key = k;
+        reinforce = r;
     }
-    
+
 }

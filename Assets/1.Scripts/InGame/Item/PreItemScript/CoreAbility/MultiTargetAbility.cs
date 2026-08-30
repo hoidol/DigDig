@@ -42,7 +42,7 @@ public class MultiTargetAbility : Ability
             Vector2 dir = ((Vector2)col.transform.position - (Vector2)Character.Instance.attackPoint.position).normalized;
             if (Vector2.Angle(e.dir, dir) < EXCLUDE_ANGLE) continue;
 
-            Character.Instance.weapon.Shoot(new NormalBulletSpec(), dir);
+            Character.Instance.weapon.Shoot(new AllyBulletSpec(), dir);
             fired++;
         }
     }

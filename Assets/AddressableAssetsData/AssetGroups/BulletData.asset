@@ -15,12 +15,6 @@ MonoBehaviour:
   m_GroupName: BulletData
   m_GUID: c70b05342caf14c448ee64e6346a3bd3
   m_SerializeEntries:
-  - m_GUID: 0b8f8470d7f754794aa2285d39f177e2
-    m_Address: MergeBulletData
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - MergeBulletData
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 31ad9c2b0946e402c91137bdbe31e7c6
     m_Address: CharacterBulletObject
     m_ReadOnly: 0

@@ -5,24 +5,32 @@ using System.Collections.Generic;
 
 public class AllyBulletObject : BulletObject
 {
-    
+
     public string key;
 
     protected List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
     protected List<IBulletForce> forces = new List<IBulletForce>();
     AllyUnitDamageData allyUnitDamageData;
     IAllyUnit allyUnit;
-    public virtual void SetBullet(BulletSpec bullet,IAllyUnit allyUnit)
+    public virtual void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
         this.allyUnit = allyUnit;
+        AllyBulletSpec allyBulletSpec = bullet as AllyBulletSpec;
+        damage = allyBulletSpec.damage;
+        if (allyUnitDamageData == null)
+        {
+            allyUnitDamageData = new AllyUnitDamageData();
+            damageData = allyUnitDamageData;
+        }
+
         ClearBehaviors();
         ClearBulletForce();
     }
 
-  
+
     public override IHittable Hit(RaycastHit2D hit2D)
     {
-         IHittable hit = hit2D.collider.GetComponent<IHittable>();
+        IHittable hit = hit2D.collider.GetComponent<IHittable>();
         if (hit == null)
             return null;
 
@@ -31,7 +39,7 @@ public class AllyBulletObject : BulletObject
 
         preTarget = hit;
 
-        float finalDamage = damage ;
+        float finalDamage = damage;
 
         for (int i = 0; i < forces.Count; i++)
         {

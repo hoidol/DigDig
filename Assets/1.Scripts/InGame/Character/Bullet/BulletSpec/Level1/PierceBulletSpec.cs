@@ -1,7 +1,7 @@
 // [숫돌]
 // 발사된 총알에 관통(PierceBehavior)을 추가하는 IBullet.
 // count + basePierceCount만큼 관통 횟수가 설정되어, 총알이 여러 적/광석을 연속으로 통과.
-public class PierceBulletSpec : BulletSpec
+public class PierceBulletSpec : AllyBulletSpec
 {
     // public int[] pierceCounts = {2,3,4};
     // public float[] multiplyATKs = {1.3f,1.4f,1.5f};
