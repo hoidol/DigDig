@@ -7,6 +7,7 @@ public abstract class SlimeGrowth1 : Slime
     public float[] attackPowers;
     public float[] attackSpeeds;
 
+
     public override float AttackPower()
     {
         return attackPowers[level];

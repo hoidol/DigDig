@@ -51,6 +51,7 @@ public class SlimeAttackBehaviour : MonoBehaviour
         AllyBulletObject baseBullet = slime.GetBullet();
         if(baseBullet == null)
             return;
+            
         baseBullet.transform.position = transform.position;
         baseBullet.Shoot(dir,slime.AttackPower());
         attackTimer = 0;

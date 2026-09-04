@@ -11,7 +11,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public int level;
 
     public SlimeMovement movement;
-    public SlimeAttackBehaviour attackBehaviour;
+    // public SlimeAttackBehaviour attackBehaviour;
 
     public abstract float AttackSpeed();
     public abstract float AttackPower();
@@ -19,6 +19,9 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public Transform rootTr;
     public SlimeData SlimeData => SlimeManager.Instance.GetSlimeData(key);
     public float AccumulatedDamage { get; set; }
+
+    public float attackTimer;
+
 
     public void AccumulateDamage(float d)
     {
@@ -30,10 +33,11 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public LayerMask targetLayerMask;
 
 
+    public Action<Transform> onTargetListener;
     public virtual void Awake()
     {
         movement = GetComponent<SlimeMovement>();
-        attackBehaviour = GetComponent<SlimeAttackBehaviour>();
+        // attackBehaviour = GetComponent<SlimeAttackBehaviour>();
 
     }
     public virtual void OnEnable()
@@ -51,16 +55,47 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
         this.level = lv;
     }
 
-
-    public virtual void Update()
-    {
-        rootTr.localScale = new Vector3(Character.Instance.weapon.GetAttackDirection().x >= 0 ? 1 : -1, 1, 1);
-    }
-
     public abstract string GetDescription(int level =0);
 
     public abstract AllyBulletObject GetBullet();
+    public virtual void Update()
+    {
+        rootTr.localScale = new Vector3(Character.Instance.weapon.GetAttackDirection().x >= 0 ? 1 : -1, 1, 1);
+        attackTimer += Time.deltaTime;
+        if (attackTimer > AttackSpeed())
+        {
+            Fire(AttackDirecton());
+        }
+    }
 
+
+    public Transform targetTr;
+    public virtual Vector2 AttackDirecton()
+    {
+        targetTr = FindTarget();
+        onTargetListener?.Invoke(targetTr);
+
+        Vector2 fireDir = Character.Instance.moveJoystick.Direction;
+        if (targetTr != null)
+        {
+            fireDir = (targetTr.position - transform.position).normalized;
+
+        }
+
+        return fireDir;
+    }
+
+    
+    public virtual void Fire(Vector2 dir)
+    {
+        AllyBulletObject baseBullet = GetBullet();
+        if(baseBullet == null)
+            return;
+            
+        baseBullet.transform.position = transform.position;
+        baseBullet.Shoot(dir,AttackPower());
+        attackTimer = 0;
+    }
 
     public virtual async UniTask<(bool, string, int)> Merge(Slime target)
     {

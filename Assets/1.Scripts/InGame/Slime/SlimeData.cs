@@ -4,10 +4,11 @@ using UnityEngine;
 [CreateAssetMenu]
 public class SlimeData : ScriptableObject
 {
-    public static readonly int MAX_COUNT = 3;
+    public static readonly int MAX_Level = 3;
+    
     public string key;
     public string Title => TranslateManager.GetText(key);
-    public string desc;
+    public string[] descs;
     public int growth;
 
     public string valueInfo;
@@ -34,9 +35,9 @@ public class SlimeData : ScriptableObject
         return unlocked;
     }
 
-    public string GetDescription()
+    public string GetDescription(int lv = 0)
     {
-        return prefab.GetDescription();
+        return prefab.GetDescription(lv);
     }
 
     public static SlimeData GetSlimeData(string key)
@@ -77,7 +78,12 @@ public class SlimeData : ScriptableObject
             if (rowKey != key) continue;
 
             if (iDesc >= 0 && iDesc < cols.Length)
-                desc = cols[iDesc].Trim();
+            {
+                string[] descParts = cols[iDesc].Split('/');
+                descs = new string[descParts.Length];
+                for (int d = 0; d < descParts.Length; d++)
+                    descs[d] = descParts[d].Trim();
+            }
             if (iGrowth >= 0 && iGrowth < cols.Length && int.TryParse(cols[iGrowth].Trim(), out int lv))
                 growth = lv;
             if (iColor >= 0 && iColor < cols.Length && ColorUtility.TryParseHtmlString(cols[iColor].Trim(), out Color parsedColor))

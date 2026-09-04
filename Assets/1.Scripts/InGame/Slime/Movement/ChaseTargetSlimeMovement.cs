@@ -9,7 +9,7 @@ public class ChaseTargetSlimeMovement : SlimeMovement
     public override void Awake()
     {
         base.Awake();
-        slime.attackBehaviour.onTargetListener += OnTargetListener;
+        slime.onTargetListener += OnTargetListener;
     }
 
     void OnTargetListener(Transform tr)
