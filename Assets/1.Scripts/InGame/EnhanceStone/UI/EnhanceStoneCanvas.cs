@@ -7,7 +7,7 @@ public class EnhanceStoneCanvas : CanvasUI<EnhanceStoneCanvas>
     // 2. Growth1 - level2 끼리 조합해서 Growth2 만들기
     // 3. 아이템 뽑기
     public LevelUpSlimeButton levelUpSlimeButton;
-    public MergeSlimeButton mergeSlimeButton;
+    // public MergeSlimeButton mergeSlimeButton;
     public DrawItemButton drawItemButton;
     public void OnEnable()
     {
@@ -28,7 +28,7 @@ public class EnhanceStoneCanvas : CanvasUI<EnhanceStoneCanvas>
     }
     public void UpdateCanvas()
     {
-        mergeSlimeButton.UpdateButton();
+        // mergeSlimeButton.UpdateButton();
         levelUpSlimeButton.UpdateButton();
         drawItemButton.UpdateButton();
     }
