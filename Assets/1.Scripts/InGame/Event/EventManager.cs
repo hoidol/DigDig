@@ -71,6 +71,9 @@ public class EventManager : MonoSingleton<EventManager>
         // itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
         // eventRepeatSpawners.Add(itemBoxSpawner);
 
+        EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemShop, 30, 4, 10);
+        eventRepeatSpawners.Add(itemBoxSpawner);
+
     }
 
     private EventType? ResolveEventType(EventData data)
@@ -212,7 +215,8 @@ public enum EventType
     Snake,          // 뱀 - 추가 능력치, 패널티
     LifeFountain,   // 생명 분수 - 체력 증가
     ItemBox,
-    StatStone
+    StatStone,
+    ItemShop
 }
 
 public class EventRepeatSpawner
@@ -226,7 +230,7 @@ public class EventRepeatSpawner
     public EventRepeatSpawner(EventType type, float sTime, float rTime, float aDTime)
     {
         eventType = type;
-        repeatTime = sTime;
+        repeatTime = rTime;
         repeatTimer = sTime;
         afterDestroyTime = aDTime;
         Debug.Log($"if (startTimer <= 0) sTime {sTime}");
@@ -234,13 +238,10 @@ public class EventRepeatSpawner
 
     public void Update()
     {
-
         if (repeatTimer > 0)
         {
             repeatTimer -= Time.deltaTime;
         }
-
-
 
         if (repeatTimer <= 0 && eventObject == null)
         {

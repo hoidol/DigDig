@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class EquipmentCanvas : CanvasUI<EquipmentCanvas>  
+public class EquipmentCanvas : BaseLobbyCanvas
 {
    public EquipmentStatePanel statePanel;
    public EquipmentSlotContainer slotContainer;

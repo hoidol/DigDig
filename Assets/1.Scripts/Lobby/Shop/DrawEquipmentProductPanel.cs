@@ -41,12 +41,12 @@ public class DrawEquipment
         }
         
         var equipmentManager = EquipmentManager.Instance;
-        var picks = new (string key, Grade grade)[count];
+        var picks = new (string key, GradeType grade)[count];
 
         for (int i = 0; i < count; i++)
         {
             float pickChance = Random.Range(0, total);
-            Grade grade = drawEquipmentInfos[drawEquipmentInfos.Length - 1].grade;
+            GradeType grade = drawEquipmentInfos[drawEquipmentInfos.Length - 1].grade;
             for (int j = 0; j < chances.Length - 1; j++)
             {
                 if (pickChance <= chances[j + 1])
@@ -66,6 +66,6 @@ public class DrawEquipment
 [System.Serializable]
 public class DrawEquipmentInfo
 {
-    public Grade grade;
+    public GradeType grade;
     public float chance;
 }

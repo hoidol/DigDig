@@ -7,8 +7,6 @@ public class FlameItem : Item, IFired
     int burnDPS = 2;
     int triggerCount = 3;
 
-
-
     int triggerCounter;
     public override void OnEquip()
     {
@@ -19,7 +17,6 @@ public class FlameItem : Item, IFired
     public override string GetDescription()
     {
         return $"{triggerCount}공격마다 화염탄 2발 랜덤 방향으로 발사";
-        //return string.Format(TranslateManager.GetText("{key}_Desc"),triggerCount);
     }
 
     public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)

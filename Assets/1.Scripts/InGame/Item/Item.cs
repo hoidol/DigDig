@@ -5,7 +5,6 @@ public abstract class Item : MonoBehaviour
 {
     public string Key=>key;
     public string key;
-    // public bool equipped;
     public int count;
     public ReinforceType ReinforceType => ReinforceType.Item;
     public virtual string GetDescription()

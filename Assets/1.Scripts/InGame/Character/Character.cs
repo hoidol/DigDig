@@ -16,6 +16,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
     public Transform bodyRootTr;
     public Transform bodyCenterTr;
     public CameraShake cameraShake;
+    public float coinChance = 0.5f;
 
     // public int exp;
     // public int lv;
@@ -25,7 +26,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
     // public int bounce;
     [SerializeField] Transform hpPoint;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
-    public MiniMeInventory miniMeInventory;
+    public SlimeInventory slimeInventory;
     // public OreInventory oreInventory; //패시브 스킬로 제공!
     public TileChecker[] tileCheckers;
     public CharacterHealth health;
@@ -66,7 +67,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
 
         rg = GetComponentInChildren<Rigidbody2D>();
         itemInventory = GetComponentInChildren<ItemInventory>();
-        miniMeInventory = GetComponentInChildren<MiniMeInventory>();
+        slimeInventory = GetComponentInChildren<SlimeInventory>();
         // abilityInventory = GetComponentInChildren<AbilityInventory>();
         // statInventory = GetComponentInChildren<StatInventory>();
         health = GetComponentInChildren<CharacterHealth>();
@@ -191,12 +192,22 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
 
 
 
-    public void AddItem(string key, int count = 1)
+    public bool AddItem(string key, bool canChange =true)
     {
-        statMgr.AddItem(key, count);
+        if(ItemInventory.MAX_ITEM_COUNT >= itemInventory.curItems.Count)
+        {
+            if(canChange)
+            {
+                ChangeItemCanvas.Instance.OpenCanvas(key);
+                return false;
+            }
+        }
+        
+        statMgr.AddItem(key, 1);
         itemInventory.AddItem(key);
         itemInventory.UpdateInventory();
         UpdateCharacter();
+        return true;
     }
 
     public void RemoveItem(string key, int idx = -1)
@@ -208,25 +219,26 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
         UpdateCharacter();
     }
 
-    public void AddMiniMe(string key, int lv =0)
+    public Slime AddSlime(string key, int lv =0)
     {
-        MiniMe miniMe = MiniMeSpawner.Instance.Instantiate(key);
-        miniMe.Spawn((Vector2)transform.position + UnityEngine.Random.insideUnitCircle,lv);
+        Slime slime = SlimeSpawner.Instance.Instantiate(key);
+        slime.Spawn((Vector2)transform.position + UnityEngine.Random.insideUnitCircle,lv);
         
-        statMgr.AddMiniMe(key);
-        miniMeInventory.AddMiniMe(miniMe);
-        miniMeInventory.UpdateInventory();
+        statMgr.AddSlime(key);
+        slimeInventory.AddSlime(slime);
+        slimeInventory.UpdateInventory();
 
         GameEventBus.Publish(new SpawnMinieEvent(key, lv));
         UpdateCharacter();
+        return slime;
     }
 
-    public void RemoveMiniMe(MiniMe miniMe)
+    public void RemoveSlime(Slime slime)
     {
-        statMgr.RemoveMiniMe(miniMe.key);
+        statMgr.RemoveSlime(slime.key);
 
-        miniMeInventory.RemoveMiniMe(miniMe);
-        miniMeInventory.UpdateInventory();
+        slimeInventory.RemoveSlime(slime);
+        slimeInventory.UpdateInventory();
         UpdateCharacter();
     }
 

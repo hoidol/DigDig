@@ -19,7 +19,7 @@ public class WackyItem : Item, IFired
             if (Random.value >= PROBS)
                 continue;
             Vector2 randomDir = Random.insideUnitCircle.normalized;
-            Character.Instance.Shoot(new AllyBulletSpec(), randomDir);
+            Character.Instance.Shoot(new CharacterBulletSpec(), randomDir);
         }
         // Character.Instance.AddHp(-itemData.consumeHp);
     }

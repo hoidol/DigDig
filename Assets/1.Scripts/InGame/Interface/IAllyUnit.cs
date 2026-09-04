@@ -22,5 +22,5 @@ public interface IAllyUnit
 public enum AllyType
 {
     Character,
-    MiniMe
+    Slime
 }

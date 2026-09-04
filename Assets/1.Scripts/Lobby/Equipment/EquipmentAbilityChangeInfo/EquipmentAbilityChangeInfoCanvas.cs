@@ -26,7 +26,7 @@ public class EquipmentAbilityChangeInfoCanvas : CanvasUI<EquipmentAbilityChangeI
         {
             oldEquipmentData = oldEquipment.equipmentData;
             thumImage.sprite = oldEquipmentData.thum;
-            bgImage.color = EquipmentData.GetGradeColor(oldEquipmentData.grade);
+            bgImage.color = Grade.GetGradeColor(oldEquipmentData.grade);
 
             for(int i =0;i<oldEquipmentData.abilities.Length;i++)
             {
@@ -42,7 +42,7 @@ public class EquipmentAbilityChangeInfoCanvas : CanvasUI<EquipmentAbilityChangeI
         }
 
         thumImage.sprite = newEquipmentData.thum;
-        bgImage.color = EquipmentData.GetGradeColor(newEquipmentData.grade);
+        bgImage.color = Grade.GetGradeColor(newEquipmentData.grade);
 
         oldAbilityContainer.SetContainer(oldEquipmentData, newEquipmentData, allStatTypes);
         newAbilityContainer.SetContainer(oldEquipmentData, newEquipmentData, allStatTypes);
@@ -51,7 +51,8 @@ public class EquipmentAbilityChangeInfoCanvas : CanvasUI<EquipmentAbilityChangeI
     public void OnClickedEquipButton()
     {
         UserManager.Instance.userEquipmentManager.EquiptUserEquipment(newEquipment);
-        EquipmentCanvas.Instance.UpdateCanvas();
+        
+        LobbyManager.Instance.GetLobbyCanvas(LobbyState.Equipment).UpdateCanvas();
         UpdateCanvas();
     }
 }

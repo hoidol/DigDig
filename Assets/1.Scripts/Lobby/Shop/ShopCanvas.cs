@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ShopCanvas : CanvasUI<ShopCanvas>
+public class ShopCanvas : BaseLobbyCanvas
 {
     //장비 뽑기!
     //펫 뽑기! 

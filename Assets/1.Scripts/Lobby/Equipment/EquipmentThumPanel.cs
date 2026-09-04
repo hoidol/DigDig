@@ -15,8 +15,8 @@ public class EquipmentThumPanel : MonoBehaviour
         {
             gameObject.SetActive(true);
             thumImage.sprite = equipmentData.thum;
-            bgImage.color = EquipmentData.GetGradeColor(equipmentData.grade);
-            gradeImage.sprite = EquipmentData.GetGradeSprite(equipmentData.grade);
+            bgImage.color = Grade.GetGradeColor(equipmentData.grade);
+            gradeImage.sprite = Grade.GetGradeSprite(equipmentData.grade);
         }
         else
         {

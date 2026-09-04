@@ -121,7 +121,7 @@ public class NormalEnemy : Enemy
     }
     public override void Reward()
     {
-        // Coin.Instantiate(transform.position, 1, 1);
+        Coin.Instantiate(transform.position, 1, 0.5f);
         HealPiece.Instantiate(transform.position);
         base.Reward();
     }

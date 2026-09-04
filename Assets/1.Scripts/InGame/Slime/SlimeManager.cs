@@ -1,0 +1,163 @@
+using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
+public class SlimeManager : MonoSingleton<SlimeManager>
+{
+    public Dictionary<string, SlimeData> slimeDataDic = new Dictionary<string, SlimeData>();
+    public Dictionary<GradeType, List<string>> gradeGroupGrowth1SlimeDic = new Dictionary<GradeType, List<string>>();
+    public SlimeData[] allSlimeDatas;
+    public SlimeData growth0SlimeData;
+    public SlimeData[] growth1SlimeDatas;
+    public SlimeData[] growth2SlimeDatas;
+
+    public SlimeMergeData[] slimeMergeDatas;
+
+    public Dictionary<string, SlimeMergeData> slimeMergeDataDic = new Dictionary<string, SlimeMergeData>();
+
+    public UniTask LoadTask { get; private set; }
+
+    void Awake()
+    {
+        LoadTask = LoadDataAsync();
+    }
+
+    async UniTask LoadDataAsync()
+    {
+        await AddressableMgr.LoadAllByLabel<SlimeData>("SlimeData", (dates) =>
+        {
+            allSlimeDatas = dates;
+            foreach (SlimeData slimeData in allSlimeDatas)
+            {
+                slimeDataDic[slimeData.key] = slimeData;
+            }
+
+        });
+
+        await AddressableMgr.LoadAllByLabel<SlimeData>("Growth0SlimeData", (dates) =>
+        {
+            growth0SlimeData = dates[0];
+
+        });
+        await AddressableMgr.LoadAllByLabel<SlimeData>("Growth1SlimeData", (dates) =>
+        {
+            growth1SlimeDatas = dates;
+            
+            foreach (SlimeData slimeData in growth1SlimeDatas)
+            {
+                if (!gradeGroupGrowth1SlimeDic.ContainsKey(slimeData.grade))
+                {
+                    gradeGroupGrowth1SlimeDic.Add(slimeData.grade, new List<string>());
+                }
+                gradeGroupGrowth1SlimeDic[slimeData.grade].Add(slimeData.key);
+
+            }
+
+        });
+        await AddressableMgr.LoadAllByLabel<SlimeData>("Growth2SlimeData", (dates) =>
+        {
+            growth2SlimeDatas = dates;
+
+        });
+
+        await AddressableMgr.LoadAllByLabel<SlimeMergeData>("SlimeMergeData", (dates) =>
+        {
+            slimeMergeDatas = dates;
+
+            for(int i = 0; i < slimeMergeDatas.Length; i++)
+            {
+                slimeMergeDataDic.Add(slimeMergeDatas[i].key, slimeMergeDatas[i]);
+            }
+            
+
+        });
+    }
+
+    public SlimeData GetSlimeData(string key)
+    {
+        return slimeDataDic[key];
+    }
+
+    public SlimeMergeData GetSlimeMergeData(string key)
+    {
+        return slimeMergeDataDic[key];
+    }
+    [SerializeField] EnhanceGradeInfo[] enhanceGradeInfos;
+    public EnhanceExpInfo[]  enhanceExpInfos;
+    public int GetEnhanceExpInfo(int lv, GradeType grade)
+    {
+        return GetEnhanceExpInfo(grade).exps[lv];
+    }
+
+    public EnhanceExpInfo GetEnhanceExpInfo(GradeType grade)
+    {
+        for(int i = 0; i < enhanceExpInfos.Length; i++)
+        {
+            if(enhanceExpInfos[i].grade== grade)
+            return enhanceExpInfos[i];
+        }
+        return null;
+    }
+
+    public EnhanceGradeInfo GetEnhanceGradeInfo(GradeType grade)
+    {
+        return enhanceGradeInfos.Where(e=>e.grade == grade).FirstOrDefault();
+    }
+
+    public List<SlimeMergeData> GetSlimeMergeDatas(string[] slimeKeys)
+    {
+        List<SlimeMergeData> canMakeSlimes = new List<SlimeMergeData>();
+        SlimeMergeData[] conditionDatas = slimeMergeDatas;
+        for (int i = 0; i < conditionDatas.Length; i++)
+        {
+            string[] requireKeys = conditionDatas[i].growth1SlimeKeys;
+            List<string> pool = new List<string>(slimeKeys);
+            bool canMake = true;
+            foreach (string requireKey in requireKeys)
+            {
+                string matched = pool.FirstOrDefault(slimeKey => slimeKey == requireKey);
+                if (matched == null)
+                {
+                    canMake = false;
+                    break;
+                }
+                pool.Remove(matched);
+            }
+
+            if (canMake)
+                canMakeSlimes.Add(conditionDatas[i]);
+        }
+        return canMakeSlimes;
+    }
+}
+
+[System.Serializable]
+public class EnhanceGradeInfo
+{
+    public GradeType grade;
+    public int baseEnhance;
+}
+
+[System.Serializable]
+public class EnhanceExpInfo
+{
+    public GradeType grade;
+    public int[] exps;
+    public int[] prices;//강화 가격
+    public int TotalExp(int lv)//1이 들어왔어
+    {
+        int sum = 0;
+        for(int i = 0; i < exps.Length; i++)
+        {
+            if (i < lv)
+            {
+                sum += exps[lv];
+            }
+            else
+                break;
+        }
+        return sum;
+    }
+    
+}

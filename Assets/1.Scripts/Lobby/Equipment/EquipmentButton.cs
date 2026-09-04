@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class EquipmentButton : ButtonUI
+public class EquipmentButton : LobbyStateButton
 {
     public override void OnClickedBtn()
     {
-        EquipmentCanvas.Instance.OpenCanvas();
+        LobbyManager.Instance.OpenCanvas(LobbyState.Equipment);
     }
 
 }

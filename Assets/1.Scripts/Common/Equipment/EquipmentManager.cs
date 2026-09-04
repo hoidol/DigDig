@@ -7,7 +7,7 @@ public class EquipmentManager : MonoSingleton<EquipmentManager>
 
     public EquipmentData[] equipmentDatas;
     public Dictionary<string, EquipmentData> equipmentDataDic = new Dictionary<string, EquipmentData>();
-    public Dictionary<Grade, List<string>> gradeGroupEquipmentDic = new Dictionary<Grade, List<string>>();
+    public Dictionary<GradeType, List<string>> gradeGroupEquipmentDic = new Dictionary<GradeType, List<string>>();
     public UniTask LoadTask { get; private set; }
 
     void Awake()

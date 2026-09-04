@@ -12,8 +12,8 @@ public class RewardData
     {
         switch (rewardType)
         {
-            case RewardType.MiniMe:
-                return MiniMeManager.Instance.GetMiniMeData(value).Title;
+            case RewardType.Slime:
+                return SlimeManager.Instance.GetSlimeData(value).Title;
         }
         return null;
     }
@@ -21,8 +21,8 @@ public class RewardData
     {
         switch (rewardType)
         {
-            case RewardType.MiniMe:
-                return MiniMeManager.Instance.GetMiniMeData(value).thum;
+            case RewardType.Slime:
+                return SlimeManager.Instance.GetSlimeData(value).thum;
         }
         return null;
     }
@@ -30,9 +30,9 @@ public class RewardData
     {
         switch (rewardType)
         {
-            case RewardType.MiniMe:
+            case RewardType.Slime:
                 RewardCanvas.Instance.OpenCanvas(this);
-                UserManager.Instance.userMiniMeManager.AddUserMiniMe(value);
+                UserManager.Instance.userSlimeManager.AddUserSlime(value);
             break;
         }
         
@@ -46,5 +46,5 @@ public class UserReward
 }
 public enum RewardType
 {
-    MiniMe
+    Slime
 }

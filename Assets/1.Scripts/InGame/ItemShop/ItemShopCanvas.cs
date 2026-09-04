@@ -10,10 +10,7 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
 {
     [SerializeField] ItemShopProductPanel[] itemShopProductPanels;
     [SerializeField] OwnItemPanel[] ownItemPanels;
-    [SerializeField] OpenMergeItemButton openMergeItemButton;
-    [SerializeField] TMP_Text refreshTimeText;
 
-    CancellationTokenSource cts;
     public override void Init()
     {
         if (init)
@@ -27,26 +24,17 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
     {
         base.OpenCanvas(closeCallback);
         Init();
-
-        if (ItemShopManager.Instance.needToRefresh)
-        {
-            ResetItemShopProduct();
-        }
+        ResetItemShopProduct();
         UpdateCanvas();
     }
     void OnEnable()
     {
         Time.timeScale = 0;
-        cts = new CancellationTokenSource();
-        UpdateRefreshTime();
-        UpdateRefreshTimeTextLoop(cts.Token).Forget();
     }
 
     void OnDisable()
     {
         Time.timeScale = 1;
-        cts?.Cancel();
-        cts?.Dispose();
     }
     void Start()
     {
@@ -63,23 +51,6 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
         }
         // ResetItemShopProduct();
     }
-
-    async UniTask UpdateRefreshTimeTextLoop(CancellationToken token)
-    {
-        while (!token.IsCancellationRequested)
-        {
-            UpdateRefreshTime();
-            await UniTask.Delay(TimeSpan.FromSeconds(1), DelayType.UnscaledDeltaTime, cancellationToken: token);
-        }
-    }
-    void UpdateRefreshTime()
-    {
-        int remainSeconds = Mathf.CeilToInt(Mathf.Max(0, ItemShopManager.Instance.refreshTime - ItemShopManager.Instance.refreshTimer));
-
-        //        Debug.Log($"UpdateRefreshTime 갱신해 {remainSeconds}");
-        refreshTimeText.text = $"{TranslateManager.GetText("UtillRefresh")}:{remainSeconds / 60:00}:{remainSeconds % 60:00}";
-    }
-
     public void UpdateCanvas()
     {
         for (int i = 0; i < itemShopProductPanels.Length; i++)
@@ -98,7 +69,6 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
                 ownItemPanels[i].SetItem(null, i);
             }
         }
-        openMergeItemButton.UpdateButton();
     }
 
     //60초에 한번씩 갱신됨 - 광석 5개 소모해서 갱신 가능
@@ -110,18 +80,7 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
             itemShopProductPanels[i].SetItemData(itemDatas[i]);
         }
 
-        UpdateRefreshTime();
         GameEventBus.Publish(new RefreshItemShopEvent());
     }
 
-    public void OnClickedResetItem()
-    {
-        if (Character.Instance.coin < 5)
-        {
-            ToastCanvas.Toast(TranslateManager.GetText("Not enough coin"));
-            return;
-        }
-        Character.Instance.AddCoin(-5);
-        ResetItemShopProduct();
-    }
 }

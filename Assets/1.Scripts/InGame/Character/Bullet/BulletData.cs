@@ -31,6 +31,7 @@ public class BulletData : ScriptableObject
 
     public static BulletData GetBulletData(string key)
     {
+        
         return BulletManager.Instance.GetBulletData(key);
     }
 

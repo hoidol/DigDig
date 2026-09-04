@@ -32,7 +32,7 @@ public class RewardCanvas : CanvasUI<RewardCanvas>
         valueText.text = rewardData.GetValueToString();
         switch (rewardData.rewardType)
         {
-            case RewardType.MiniMe:
+            case RewardType.Slime:
                 titleText.text = TranslateManager.GetText("New Slime");
             break;
         }

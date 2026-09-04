@@ -78,4 +78,10 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
         return duration;
 
     }
+    public override void Reward()
+    {
+        base.Reward();
+        EnhanceStone enhanceStone = EnhanceStone.Instantiate();
+        enhanceStone.transform.position = transform.position;
+    }
 }

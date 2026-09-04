@@ -35,13 +35,14 @@ public class EquipmentInfoCanvas : CanvasUI<EquipmentInfoCanvas>
     public void OnClickedEquipButton()
     {
         UserManager.Instance.userEquipmentManager.EquiptUserEquipment(userEquipment);
-        EquipmentCanvas.Instance.UpdateCanvas();
+        LobbyManager.Instance.GetLobbyCanvas(LobbyState.Equipment).UpdateCanvas();
         UpdateCanvas();
     }
     public void OnClickedReleaseButton()
     {
         UserManager.Instance.userEquipmentManager.ReleaseUserEquipment(userEquipment.id);
-        EquipmentCanvas.Instance.UpdateCanvas();
+        
+        LobbyManager.Instance.GetLobbyCanvas(LobbyState.Equipment).UpdateCanvas();
         UpdateCanvas();
     }
 }

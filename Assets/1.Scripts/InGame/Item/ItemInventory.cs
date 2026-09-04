@@ -7,7 +7,7 @@ public class ItemInventory : MonoBehaviour
     public List<Item> curItems = new List<Item>();
     public List<string> ownItemKeys = new List<string>();
 
-    public readonly int MAX_ITEM_COUNT = 8; // 최대 보유 아이템 개수 
+    public readonly static int MAX_ITEM_COUNT = 4; // 최대 보유 아이템 개수 
 
     // 인터페이스별 캐시 - 장착/해제 시점에만 갱신
     public List<IPreFire> preFires = new List<IPreFire>();
@@ -43,6 +43,8 @@ public class ItemInventory : MonoBehaviour
     public void AddItem(string key)
     {
         ownItemKeys.Add(key);
+        ItemData itemData = ItemData.GetItemData(key);
+        GameEventBus.Publish(new AddedItemEvent(itemData));
     }
 
     public void RemoveItem(string key, int idx = -1)

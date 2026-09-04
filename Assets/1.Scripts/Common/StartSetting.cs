@@ -34,6 +34,7 @@ public class StartSetting
             "EquipmentManager",
             "CharacterManager",
             "MiniMeManager",
+            "SoundManager",
 //공용
             "InAppPurchaseManager",
             "AdManager",

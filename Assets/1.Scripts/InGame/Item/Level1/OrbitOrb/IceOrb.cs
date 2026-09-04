@@ -8,6 +8,6 @@ public class IceOrb : OrbitOrb
     {
         base.OnHit(other, hittable);
         var handler = (hittable as UnityEngine.Component)?.GetComponent<StatusEffectHandler>();
-        handler?.Apply(new FreezeEffect(freezeDuration));
+        handler?.Apply(new IceEffect(freezeDuration));
     }
 }

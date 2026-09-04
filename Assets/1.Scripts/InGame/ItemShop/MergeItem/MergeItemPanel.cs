@@ -41,6 +41,6 @@ public class MergeItemPanel : MonoBehaviour
         for(int i = 0; i < mergeItemData.childItemKeys.Length; i++)
             Character.Instance.RemoveItem(mergeItemData.childItemKeys[i]);
         
-        Character.Instance.AddItem(resultItemData.key,1);        
+        Character.Instance.AddItem(resultItemData.key);        
     }
 }

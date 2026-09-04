@@ -18,7 +18,7 @@ public class Coin : MonoBehaviour, IPickable
 
     public static void Instantiate(Vector2 pos, int count, float size)
     {
-        if (Random.value > 0.5)//OreItem 10% 확률로 드랍
+        if (Random.value > Character.Instance.coinChance)//OreItem 10% 확률로 드랍
             return;
 
         for (int i = 0; i < count; i++)

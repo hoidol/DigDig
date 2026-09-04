@@ -27,7 +27,7 @@ public class GameManager : MonoSingleton<GameManager>
     public float nightTimer = 0f;
     public bool isDay;
     public int phase;
-    public int miniMeSpawnCount;
+    public int slimeSpawnCount;
     async void Start()
     {
         await UniTask.WhenAll(
@@ -235,7 +235,7 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public void OnSpawnMinieEvent(SpawnMinieEvent e)
     {
-        miniMeSpawnCount++;
+        slimeSpawnCount++;
     }
 
 }
@@ -292,22 +292,10 @@ public class PhaseEndEvent
 }
 
 /*
-광석을 빨리 파밍하고 싶게 만들어야돼
-[정비] -> 버튼을 누르면 레벨업을 하던가 
-파밍 -> 디펜스 게임이야
-파밍 + 강화 시스템 어떤식으로 진행하면 좋을까...
-뭘 파밍하고 뭘 만들까
-어떻게 해야지 재밌게 강화 능력을 얻게 될까...
+성장2이 있어야되는 이유
+뱀성에 각성같은거야... 필요해
 
-5초씩 늘려 10
-30초 -> 35초 
-1분씩 주는거야
-3개의 광석 
-[강화]
-광석 10개 + 구매 횟수*2 -> [?]살 수 있음
-
-[조합]
-
-강화/조합
+//명,암,화(마법),수(유연 합성),목(성장,회복),금(물리, 공격),토(방어)
+Growth2 EnhanceStone로 슬라임
 
 */

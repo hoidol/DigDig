@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BounceItem : Item, IFired
 {
-    int bounceCount = 1;
+    int bounceCount = 2;
     public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
     {
         bulletObject.AddBehavior(new BounceBehavior(count * bounceCount));

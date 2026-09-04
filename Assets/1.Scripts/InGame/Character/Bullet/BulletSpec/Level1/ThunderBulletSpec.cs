@@ -1,10 +1,13 @@
 // [낙뢰탄]
 // 적중 시 플레이어 주변에서 가장 가까운 적/광석에 낙뢰 (ThunderItem 동일 방식)
+using UnityEngine;
+
 public class ThunderBulletSpec : BulletSpec
 {
-    const float SEARCH_RADIUS = 3f;
-    int[] STRIKE_COUNTS = {2,3,4};
-    const float DAMAGE_RATE = 1f; // 공격력의 100%
+    public float searchRadius = 3f;
+    public int strikeCount;
+    public float damage = 1f; // 공격력의 100%
+    public LayerMask hitLayerMask;
 
     public ThunderBulletSpec()
     {

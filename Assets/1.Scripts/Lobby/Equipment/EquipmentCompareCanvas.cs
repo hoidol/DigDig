@@ -34,7 +34,8 @@ public class EquipmentCompareCanvas : CanvasUI<EquipmentCompareCanvas>
     public void OnClickedEquipButton()
     {
         UserManager.Instance.userEquipmentManager.EquiptUserEquipment(curUserEquipment);
-        EquipmentCanvas.Instance.UpdateCanvas();
+        
+        LobbyManager.Instance.GetLobbyCanvas(LobbyState.Equipment).UpdateCanvas();
         UpdateCanvas();
         CloseCanvas();
     }

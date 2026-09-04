@@ -3,18 +3,20 @@ using UnityEngine;
 
 public class CharacterManageCanvas : CanvasUI<CharacterManageCanvas> 
 {
-    public MiniMeSlotPanel[] miniMeSlotPanels;
+    public SlimeSlotPanel[] slimeSlotPanels;
     public OwnItemPanel[] ownItemPanels;
     
 
     void OnEnable()
     {
         Time.timeScale= 0;
+        GameEventBus.Subscribe<AddedItemEvent>(OnAddedItemEvent);
     }
 
     void OnDisable()
     {
         Time.timeScale= 1;
+        GameEventBus.Unsubscribe<AddedItemEvent>(OnAddedItemEvent);
     }
     public override void Init()
     {
@@ -22,14 +24,20 @@ public class CharacterManageCanvas : CanvasUI<CharacterManageCanvas>
             return;
 
         init =true;
-        miniMeSlotPanels = GetComponentsInChildren<MiniMeSlotPanel>();
+        slimeSlotPanels = GetComponentsInChildren<SlimeSlotPanel>();
         ownItemPanels = GetComponentsInChildren<OwnItemPanel>();
-        for(int i = 0; i < miniMeSlotPanels.Length; i++)
+        for(int i = 0; i < slimeSlotPanels.Length; i++)
         {
-            miniMeSlotPanels[i].idx = i;
+            slimeSlotPanels[i].idx = i;
         }
 
     }
+
+    void OnAddedItemEvent(AddedItemEvent e)
+    {
+        UpdateCanvas();
+    }
+
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
@@ -44,22 +52,22 @@ public class CharacterManageCanvas : CanvasUI<CharacterManageCanvas>
 
     public void UpdateCanvas()
     {
-        // MiniMeSpawner.Instance.miniMeSlotCount
-        for(int i = 0; i < miniMeSlotPanels.Length; i++)
+        // SlimeSpawner.Instance.slimeSlotCount
+        for(int i = 0; i < slimeSlotPanels.Length; i++)
         {
-            if(i < MiniMeSpawner.Instance.miniMeSlotCount)
+            if(i < SlimeSpawner.Instance.slimeSlotCount)
             {
-                miniMeSlotPanels[i].gameObject.SetActive(true);
+                slimeSlotPanels[i].gameObject.SetActive(true);
             }
             else
             {
-                miniMeSlotPanels[i].gameObject.SetActive(false);
+                slimeSlotPanels[i].gameObject.SetActive(false);
             }
         }
 
-        for(int i = 0; i < miniMeSlotPanels.Length; i++)
+        for(int i = 0; i < slimeSlotPanels.Length; i++)
         {
-            miniMeSlotPanels[i].UpdatePanel();
+            slimeSlotPanels[i].UpdatePanel();
         }
     }
 }

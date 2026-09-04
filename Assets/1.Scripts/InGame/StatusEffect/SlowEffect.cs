@@ -13,11 +13,11 @@ public class SlowEffect : StatusEffect
         if (effect != this && remainingTimer < effect.duration)
             remainingTimer = effect.duration;
 
-        handler.SlowRate = RATE;
+        handler.SlowRate *= RATE;
     }
 
     public override void OnRemove(StatusEffectHandler handler)
     {
-        handler.SlowRate = 1f;
+        handler.SlowRate /= RATE;
     }
 }

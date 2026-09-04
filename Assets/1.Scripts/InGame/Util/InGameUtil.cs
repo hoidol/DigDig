@@ -34,6 +34,7 @@ public static class InGameUtil
         return false;
     }
 
+    //범위 내 가장 가까운 적 찾기
     public static Transform FindTarget(Vector2 pos, float range, LayerMask layerMask)
     {
         Collider2D[] cols = Physics2D.OverlapCircleAll(pos, range, layerMask);

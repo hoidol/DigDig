@@ -7,7 +7,7 @@ public class CharacterStatManager
 {
     [SerializeField] List<CharacterStat> statList = new();
     public Dictionary<StatType, CharacterStat> statDic = new Dictionary<StatType, CharacterStat>();
-    public Dictionary<string, CharacterMiniMeData> miniMeDic = new Dictionary<string, CharacterMiniMeData>();
+    public Dictionary<string, CharacterSlimeData> slimeDic = new Dictionary<string, CharacterSlimeData>();
 
     // public Dictionary<LevelUpStatType, CharacterLevelUpStat> levelUpStatDic = new Dictionary<LevelUpStatType, CharacterLevelUpStat>();
     public Dictionary<string, CharacterItemStat> itemStatDic = new Dictionary<string, CharacterItemStat>();
@@ -105,7 +105,7 @@ public class CharacterStatManager
     //     }
     //     levelUpStatDic[type].lv += lv;
     // }
-    public void AddItem(string key, int count)
+    public void AddItem(string key, int count=1)
     {
         if (!itemStatDic.ContainsKey(key))
         {
@@ -124,31 +124,31 @@ public class CharacterStatManager
         }
     }
 
-    public void AddMiniMe(string key, int count = 1)
+    public void AddSlime(string key, int count = 1)
     {
-        if (!miniMeDic.ContainsKey(key))
+        if (!slimeDic.ContainsKey(key))
         {
-            miniMeDic.Add(key, new CharacterMiniMeData()
+            slimeDic.Add(key, new CharacterSlimeData()
             {
                 key = key,
                 count = 0
             });
         }
-        miniMeDic[key].count += count;
-        if (miniMeDic[key].count <= 0)
+        slimeDic[key].count += count;
+        if (slimeDic[key].count <= 0)
         {
-            miniMeDic.Remove(key);
+            slimeDic.Remove(key);
         }
     }
-    public void RemoveMiniMe(string key)
+    public void RemoveSlime(string key)
     {
-        if (miniMeDic.ContainsKey(key))
+        if (slimeDic.ContainsKey(key))
         {
-            miniMeDic[key].count -= 1;
-            if (miniMeDic[key].count <= 0)
+            slimeDic[key].count -= 1;
+            if (slimeDic[key].count <= 0)
             {
                 //아이템 제거하기
-                miniMeDic.Remove(key);
+                slimeDic.Remove(key);
             }
         }
     }

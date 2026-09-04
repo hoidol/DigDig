@@ -13,33 +13,11 @@ public class EquipmentData : ScriptableObject
     public EquipmentType equipmentType;
     public EquipPartType equipPartType;
     public Sprite thum;
-    public Grade grade;
+    public GradeType grade;
 
     [Header("최대 6개까지 설정하기")]
     public EquipmentAbility[] abilities;
 
-    public static Color GetGradeColor(Grade grade)
-    {
-        switch (grade)
-        {
-            case Grade.D:
-                return Color.white;
-            case Grade.C:
-                return Color.green;
-            case Grade.B:
-                return Color.blue;
-            case Grade.A:
-                return Color.purple;
-            case Grade.S:
-                return Color.magenta;
-            case Grade.SS:
-                return new Color(1f, 0.5f, 0f); // Orange
-            case Grade.SSS:
-                return Color.red;
-            default:
-                return Color.white;
-        }
-    }
     public EquipmentAbility GetEquipmentAbility(StatType statType)
     {
         foreach (var ability in abilities)
@@ -61,11 +39,6 @@ public class EquipmentData : ScriptableObject
             }
         }
         return 0f;
-    }
-    public static Sprite GetGradeSprite(Grade grade)
-    {
-        string spriteName = $"grade_{grade.ToString().ToLower()}";
-        return Resources.Load<Sprite>($"UI/Grade/{spriteName}");
     }
 
 #if UNITY_EDITOR
@@ -104,7 +77,7 @@ public class EquipmentData : ScriptableObject
 
             if (Enum.TryParse<EquipmentType>(Col(cols, iEquipmentType), out var et)) equipmentType = et;
             if (Enum.TryParse<EquipPartType>(Col(cols, iEquipPartType), out var ept)) equipPartType = ept;
-            if (Enum.TryParse<Grade>(Col(cols, iGrade), out var gr)) grade = gr;
+            if (Enum.TryParse<GradeType>(Col(cols, iGrade), out var gr)) grade = gr;
 
             var abilityList = new System.Collections.Generic.List<EquipmentAbility>();
             for (int s = 0; s < MAX_ABILITY_COUNT; s++)
@@ -138,11 +111,6 @@ public enum EquipmentType
 public enum EquipPartType
 {
     R_Hand, L_Hand, Hat, Helmet, Face,
-}
-
-public enum Grade : int
-{
-    D, C, B, A, S, SS, SSS
 }
 
 
