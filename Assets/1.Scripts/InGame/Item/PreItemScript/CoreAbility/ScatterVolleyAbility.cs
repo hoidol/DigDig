@@ -22,7 +22,7 @@ public class ScatterVolleyAbility : SynergyAbility//, IAttack
             Vector2 bulletDir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
             // var bullet = Player.Instance.Shoot(bulletDir, Vector2.zero);
             var bullet = Character.Instance.Shoot(new AllyBulletSpec(), bulletDir);
-            bullet.damageData.damage = dmg;
+            bullet.allyUnitDamageData.damage = dmg;
         }
     }
 

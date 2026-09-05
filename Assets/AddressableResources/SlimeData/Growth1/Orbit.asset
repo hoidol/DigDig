@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9cedb506a034c99b3b9f2eaaeaf31e, type: 3}
+  m_Name: Orbit
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeData
+  key: Orbit
+  descs:
+  - 궤도 생성 (3초마다 체력 -1체력)
+  - 궤도 생성 (3초마다 체력 -1체력)
+  - 궤도 생성 (3초마다 체력 -1체력)
+  growth: 1
+  valueInfo: 
+  prefab: {fileID: 8645646148639287178, guid: f136497bc07fc477a9a8ed7760ac703f, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  color: {r: 0.12156863, g: 0.63529414, b: 0.9607843, a: 1}
+  grade: 0

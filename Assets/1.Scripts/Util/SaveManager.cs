@@ -3,14 +3,14 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-public class SaveManager 
+public class SaveManager
 {
     private static readonly string EncryptionKey = "4W8vrR4P2jwdEIoQlIuwcnzCLUk28Jvj"; // 16, 24, 32 문자 길이로 설정
 
     //SaveFile() fName로 저장하기 + T 타입의 데이터를 파일 이름
     public static void SaveData<T>(string fName, T data)
     {
-
+        fName = fName + ".json";
 #if UNITY_EDITOR
         string path = Path.Combine(Application.dataPath, fName);
 #else

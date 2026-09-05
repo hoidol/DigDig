@@ -15,8 +15,8 @@ public class PhaseEnemyPattern : SpawnPattern
     void Awake()
     {
         GameEventBus.Subscribe<PhaseStartEvent>(OnPhaseStartEvent);
-        GameEventBus.Subscribe<DayStartEvent>(OnDayStartEvent);
-        GameEventBus.Subscribe<NightStartEvent>(OnNightStartEvent);
+        GameEventBus.Subscribe<BreakStartEvent>(OnDayStartEvent);
+        GameEventBus.Subscribe<WaveStartEvent>(OnNightStartEvent);
     }
     PhaseData phaseData;
     void OnPhaseStartEvent(PhaseStartEvent e)
@@ -25,7 +25,7 @@ public class PhaseEnemyPattern : SpawnPattern
         enemyPatternData = phaseData.enemyPatternData;
     }
 
-    void OnDayStartEvent(DayStartEvent e)
+    void OnDayStartEvent(BreakStartEvent e)
     {
         EndPattern();
         Debug.Log("EnemyPattern StartPattern");
@@ -35,7 +35,7 @@ public class PhaseEnemyPattern : SpawnPattern
             SpawnLoop(spawnData, cts.Token).Forget();
     }
 
-    void OnNightStartEvent(NightStartEvent e)
+    void OnNightStartEvent(WaveStartEvent e)
     {
         EndPattern();
         Debug.Log("EnemyPattern StartNightPattern");

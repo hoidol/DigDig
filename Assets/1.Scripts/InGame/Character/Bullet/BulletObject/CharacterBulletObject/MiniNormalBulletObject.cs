@@ -6,6 +6,7 @@ public class MiniNormalBulletObject : AllyBulletObject
     static readonly Queue<MiniNormalBulletObject> pool = new();
     static MiniNormalBulletObject prefab;
 
+
     public static MiniNormalBulletObject Instantiate()
     {
         if (prefab == null)
@@ -28,8 +29,8 @@ public class MiniNormalBulletObject : AllyBulletObject
         if (preTarget == hit) return null;
 
         preTarget = hit;
-        damageData.damage = damage;
-        hit.TakeDamage(damageData);
+
+        hit.TakeDamage(allyUnitDamageData);
         Release();
         return hit;
     }

@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: c70b05342caf14c448ee64e6346a3bd3
   m_currentHash:
     serializedVersion: 2
-    Hash: 7d4e3a2be73fd713d605206e2873460c
+    Hash: 28cfabef21c394eea89c7560069a6f0a
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -116,11 +116,13 @@ MonoBehaviour:
     - Level1ItemData
     - Level2ItemData
     - EquipmentData
-    - Growth0MiniMeData
-    - Growth1MiniMeData
-    - Growth2MiniMeData
-    - MiniMeData
-    - MiniMeMergeData
+    - Growth0SlimeData
+    - Growth1SlimeData
+    - Growth2SlimeData
+    - SlimeData
+    - SlimeMergeData
+    - EnhanceGradeInfo
+    - EnhanceExpInfo
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 79b846eb2dce14c8dadbbe237bc03090, type: 2}

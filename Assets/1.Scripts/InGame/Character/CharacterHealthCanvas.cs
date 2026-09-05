@@ -23,8 +23,8 @@ public class CharacterHealthCanvas : MonoBehaviour
     }
     public void UpdateCanvas()
     {
-        hpBar.fillAmount = Character.Instance.curHp / Character.Instance.statMgr.MaxHp;
-        hpText.text = $"{(int)Character.Instance.curHp}";
+        hpBar.fillAmount = Character.Instance.CurHp / Character.Instance.statMgr.MaxHp;
+        hpText.text = $"{(int)Character.Instance.CurHp}";
     }
 
 }

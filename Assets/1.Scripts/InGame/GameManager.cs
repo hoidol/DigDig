@@ -23,9 +23,10 @@ public class GameManager : MonoSingleton<GameManager>
         get;
         private set;
     }
-    public float dayTimer = 0f; // 낮 40초 <-> 밤 80초
-    public float nightTimer = 0f;
-    public bool isDay;
+    public float breakTimer = 0f; // 낮 40초 <-> 밤 80초
+    public float waveTimer = 0f;
+    public float waveTime = 0f;
+    public bool isBreak;
     public int phase;
     public int slimeSpawnCount;
     async void Start()
@@ -63,86 +64,82 @@ public class GameManager : MonoSingleton<GameManager>
         isPlaying = true;
 
 
-        ProcessDay(phase).Forget();
+        ProcessWave(phase).Forget();
     }
 
     public PhaseData phaseData;
     public void StartDay(int phase)
     {
-        isDay = true;
+        isBreak = true;
         // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
         Debug.Log($"GameManager StartPhase {phase}");
-        GameEventBus.Publish(new DayStartEvent(phase));
+        GameEventBus.Publish(new BreakStartEvent(phase));
     }
-    public void StartNight(int phase)
+    public void StartWave(int phase)
     {
-        isDay = false;
+        isBreak = false;
         // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
-        Debug.Log($"GameManager StartNight {phase}");
+        Debug.Log($"GameManager StartWave {phase}");
 
-        GameEventBus.Publish(new NightStartEvent(phase));
+        GameEventBus.Publish(new WaveStartEvent(phase));
         if (phaseData.isBoss)
         {
             StartBoss();
         }
     }
 
-    async UniTaskVoid ProcessDay(int phase)
+    async UniTaskVoid ProcessWave(int phase)
     {
         phaseData = stageData.GetPhaseData(phase);
 
         GameEventBus.Publish(new PhaseStartEvent(phaseData));
         //낮에 대한 시간 처리
-        dayTimer = 0;
+        breakTimer = 0;
         StartDay(phase);
-        float dayTime = GameSetting.DAY_TIME + GameSetting.DAY_INCREASE_TIME * phase;
-        if (dayTime >= GameSetting.MIX_DAY_TIME)
-        {
-            dayTime = GameSetting.MIX_DAY_TIME;
-        }
-        Debug.Log($"day {phase} dayTime {dayTime}");
-        while (dayTimer <= dayTime)
+        float breakTime = GameSetting.BREAK_TIME;
+        // Debug.Log($"day {phase} dayTime {dayTime}");
+        while (breakTimer <= breakTime)
         {
             await UniTask.Yield();
 
             if (!isPlaying)
                 continue;
 
-            dayTimer += Time.deltaTime;
+            breakTimer += Time.deltaTime;
         }
 
         //밤에 대한 시간 처리
-        StartNight(phase);
-        nightTimer = 0;
+        StartWave(phase);
+        waveTimer = 0;
 
-        float nightTime = GameSetting.NIGHT_TIME + GameSetting.NIGHT_INCREASE_TIME * phase;
-        if (nightTime >= GameSetting.MIX_NIGHT_TIME)
+        waveTime = GameSetting.WAVE_TIME + GameSetting.WAVE_INCREASE_TIME * phase;
+        if (waveTime >= GameSetting.MIX_WAVE_TIME)
         {
-            nightTime = GameSetting.MIX_NIGHT_TIME;
+            waveTime = GameSetting.MIX_WAVE_TIME;
         }
 
-        Debug.Log($"day {phase} nightTime {nightTime}");
-        while (nightTimer <= nightTime)
+        Debug.Log($"day {phase} waveTime {waveTime}");
+        while (waveTimer <= waveTime)
         {
             await UniTask.Yield();
 
             if (!isPlaying)
                 continue;
 
-            nightTimer += Time.deltaTime;
+            waveTimer += Time.deltaTime;
         }
 
-        EndAllDay();
+        EndWave();
     }
 
-    public void EndAllDay()
+    public void EndWave()
     {
         if (phaseData.isBoss)
             return;
 
         GameEventBus.Publish(new PhaseEndEvent(phase));
         phase++;
-        ProcessDay(phase).Forget();
+        ProcessWave(phase).Forget();
     }
 
     void StartBoss()
@@ -161,7 +158,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     void OnBossDeadEvent(BossDeadEvent e)
     {
-        if (Character.Instance.curHp <= 0)
+        if (Character.Instance.CurHp <= 0)
             return;
         EndGame(true);
     }
@@ -255,20 +252,20 @@ public class StartBossEvent
 }
 
 
-public class DayStartEvent
+public class BreakStartEvent
 {
     public int phaseIdx;
 
-    public DayStartEvent(int p)
+    public BreakStartEvent(int p)
     {
         phaseIdx = p;
     }
 }
-public class NightStartEvent
+public class WaveStartEvent
 {
     public int phaseIdx;
 
-    public NightStartEvent(int p)
+    public WaveStartEvent(int p)
     {
         phaseIdx = p;
     }
@@ -294,18 +291,8 @@ public class PhaseEndEvent
 /*
 성장2이 있어야되는 이유
 뱀서에 각성같은거야... 필요해
-다른건 뱀서도 제공되는 아이템 및 특성이 고정되어 있어
-나는 유동적이야.... 
-//명,암,화(마법),수(유연 합성),목(성장,회복),금(물리, 공격),토(방어)
-
-//개쩌는놈 명 명 암 2 종류가 있어도 돼
-
-//아뜨 전용 아이템 - 보유 시 3성 아뜨 중 1기가 각성합니다.
-성장2까지가 3개됐을때
-
-성장2 구현 개수가 10개 정도면 괜찮아
-추후에 1개씩 추가하면 돼
-
-Growth2 EnhanceStone로 슬라임
-
+그냥 되는게 있고 안되는게 있게 하자 마음 편하게 
+모든 얘가 될 수는 없어
+양분 슬라임은 없을 수 있는거야 
+조커 슬라임도 없을 수 있는거야
 */

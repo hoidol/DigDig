@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletSpawner : MonoSingleton<BulletSpawner> {
-    
+public class BulletSpawner : MonoSingleton<BulletSpawner>
+{
+
     Dictionary<string, Stack<AllyBulletObject>> bulletPool = new();
 
     public AllyBulletObject GetBulletObject(string key)
     {
-        // if (!bulletPrefabDic.ContainsKey(key))
-        //     bulletPrefabDic[key] = Resources.Load<PlayerBulletObject>($"PlayerBulletObject/{key}");
-
         if (bulletPool.TryGetValue(key, out var stack) && stack.Count > 0)
         {
             var pooled = stack.Pop();

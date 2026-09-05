@@ -1,5 +1,5 @@
 using UnityEngine;
-
+[System.Serializable]
 public class DamageData
 {
     public float damage;
@@ -11,20 +11,21 @@ public class DamageData
     }
 }
 
-
+[System.Serializable]
 public class EnemyDamageData : DamageData
 {
     public override float ApplyDamage(Vector2 pos)
     {
         if (damage < 1)
-            damage = 0;
+            damage = 1;
+
         string dText = $"-{(int)damage}";
         CharacterTakeDamageText.SetText(pos, dText);
         return damage;
     }
 }
 
-
+[System.Serializable]
 public class AllyUnitDamageData : DamageData
 {
     public IAllyUnit allyUnit;
@@ -54,7 +55,7 @@ public class AllyUnitDamageData : DamageData
         return damage;
     }
 }
-
+[System.Serializable]
 public class CharacterDamageData : AllyUnitDamageData
 {
     public RaycastHit2D hit2D;

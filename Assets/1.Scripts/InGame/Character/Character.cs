@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 
-public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
+public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 {
     public const int COMBO_ATTACK_INTERVAL_MS = 70;
 
@@ -34,7 +34,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
     public BaseGun weapon;
 
     // 기존 호출부 변경 없이 유지되는 convenience 프로퍼티/메서드
-    public float curHp => health.curHp;
+    public float CurHp => health.curHp;
     public float healMultiplier { get => health.healMultiplier; set => health.healMultiplier = value; }
 
 
@@ -55,9 +55,12 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
 
     public AllyType AllyType => AllyType.Character;
 
+    public float MaxHp => statMgr.MaxHp;
+
+
     public void AccumulateDamage(float d)
     {
-        AccumulatedDamage+= d;
+        AccumulatedDamage += d;
     }
 
     private void Awake()
@@ -192,17 +195,17 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
 
 
 
-    public bool AddItem(string key, bool canChange =true)
+    public bool AddItem(string key, bool canChange = true)
     {
-        if(ItemInventory.MAX_ITEM_COUNT >= itemInventory.curItems.Count)
+        if (ItemInventory.MAX_ITEM_COUNT >= itemInventory.curItems.Count)
         {
-            if(canChange)
+            if (canChange)
             {
                 ChangeItemCanvas.Instance.OpenCanvas(key);
                 return false;
             }
         }
-        
+
         statMgr.AddItem(key, 1);
         itemInventory.AddItem(key);
         itemInventory.UpdateInventory();
@@ -219,11 +222,11 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
         UpdateCharacter();
     }
 
-    public Slime AddSlime(string key, int lv =0)
+    public Slime AddSlime(string key, int lv = 0)
     {
         Slime slime = SlimeSpawner.Instance.Instantiate(key);
-        slime.Spawn((Vector2)transform.position + UnityEngine.Random.insideUnitCircle,lv);
-        
+        slime.Spawn((Vector2)transform.position + UnityEngine.Random.insideUnitCircle, lv);
+
         statMgr.AddSlime(key);
         slimeInventory.AddSlime(slime);
         slimeInventory.UpdateInventory();
@@ -268,6 +271,16 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit
     //플레이어에 의한 공격 Only
     // public void Attack(Vector2 dir) => weapon.Attack(dir);
     public CharacterBulletObject Shoot(BulletSpec b, Vector2 dir) => weapon.Shoot(b, dir);
+
+    public bool CanHit()
+    {
+        return CurHp > 0;
+    }
+
+    public void ApplyStatusEffect(StatusEffect effect)
+    {
+
+    }
 
     // public void QueueExtraShot(int count = 1) => weapon.QueueExtraShot(count);
 

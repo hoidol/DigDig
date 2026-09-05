@@ -1,6 +1,7 @@
 using UnityEngine;
 
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class CharacterBulletObject : AllyBulletObject
 {
@@ -23,10 +24,10 @@ public class CharacterBulletObject : AllyBulletObject
     {
         base.SetBullet(bullet, allyUnit);
         if (characterDamageData == null)
-        {
             characterDamageData = new CharacterDamageData();
-            damageData = characterDamageData;
-        }
+
+        characterDamageData.Init();
+        characterDamageData.damage = (bullet as CharacterBulletSpec).damage;
 
         damageMultiplier = 1;
         characterDamageData.mustCrit = bullet.mustCrit;
@@ -67,7 +68,7 @@ public class CharacterBulletObject : AllyBulletObject
 
         characterDamageData.Calculate(finalDamage);
         characterDamageData.hit2D = hit2D;
-        hit.TakeDamage(damageData);
+        hit.TakeDamage(characterDamageData);
 
         bool shouldRelease = true;
         foreach (var b in behaviors)
@@ -82,12 +83,6 @@ public class CharacterBulletObject : AllyBulletObject
             Release();
         }
         return hit;
-    }
-
-    public override void Release()
-    {
-        gameObject.SetActive(false);
-        BulletSpawner.Instance.ReturnPlayerBulletObject(key, this);
     }
 
 

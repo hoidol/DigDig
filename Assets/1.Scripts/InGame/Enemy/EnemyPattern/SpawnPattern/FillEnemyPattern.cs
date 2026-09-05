@@ -21,7 +21,7 @@ public class FillEnemyPattern : SpawnPattern
     {
         if (!GameManager.Instance.isPlaying)
             return;
-        if (GameManager.Instance.isDay)
+        if (GameManager.Instance.isBreak)
             return;
 
         if (checkTimer >= checkTime)

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9cedb506a034c99b3b9f2eaaeaf31e, type: 3}
+  m_Name: Shield
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeData
+  key: Shield
+  descs:
+  - "\uC274\uB4DC\uB85C \uC801\uC758 \uACF5\uACA9\uC744 \uB9C9\uC2B5\uB2C8\uB2E4."
+  - "\uC274\uB4DC\uB85C \uC801\uC758 \uACF5\uACA9\uC744 \uB9C9\uC2B5\uB2C8\uB2E4."
+  - "\uC274\uB4DC\uB85C \uC801\uC758 \uACF5\uACA9\uC744 \uB9C9\uC2B5\uB2C8\uB2E4."
+  growth: 1
+  valueInfo: 
+  prefab: {fileID: 587929658570803023, guid: 8791651c8eb9f408d972b9d7083bd6d1, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  color: {r: 0.36078432, g: 0.47843137, b: 0.6, a: 1}
+  grade: 0

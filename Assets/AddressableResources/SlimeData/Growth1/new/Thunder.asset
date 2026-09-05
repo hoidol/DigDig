@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9cedb506a034c99b3b9f2eaaeaf31e, type: 3}
+  m_Name: Thunder
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeData
+  key: Thunder
+  descs:
+  - "\uCC9C\uB465\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4"
+  - "\uCC9C\uB465\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4"
+  - "\uCC9C\uB465\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4"
+  growth: 1
+  valueInfo: 
+  prefab: {fileID: 8905220310320248908, guid: 7042ad83af128419bb40059de245f50c, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  color: {r: 1, g: 0.76862746, b: 0, a: 1}
+  grade: 0

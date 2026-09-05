@@ -5,7 +5,7 @@ using UnityEngine;
 public class SlimeData : ScriptableObject
 {
     public static readonly int MAX_Level = 3;
-    
+
     public string key;
     public string Title => TranslateManager.GetText(key);
     public string[] descs;
@@ -205,6 +205,13 @@ public class SlimeData : ScriptableObject
 
         prefab = newPrefab.GetComponent<Slime>();
         prefab.key = key;
+        newPrefab.AddComponent<SlimeMovement>();
+        Rigidbody2D rg2d = newPrefab.AddComponent<Rigidbody2D>();
+        rg2d.freezeRotation = true;
+        rg2d.gravityScale = 0;
+        CircleCollider2D col = newPrefab.AddComponent<CircleCollider2D>();
+        col.offset = new Vector2(0, 0.075f);
+        col.radius = 0.4f;
         UnityEditor.EditorUtility.SetDirty(this);
         Debug.Log($"[SlimeData] {key} 새 prefab 생성 완료: {prefabRootFolder}");
     }

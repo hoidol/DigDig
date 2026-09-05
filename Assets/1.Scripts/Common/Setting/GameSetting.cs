@@ -9,13 +9,13 @@ public class GameSetting
    public static string[] INIT_SLIME_KEYS = { "Flame", "Bounce", "Wacky", "Orbit", "Pierce" };
    public static int SLIME_SLOT_COUNT = 5;
 
-   public const int DAY_COUNT = 7;
-   public const float DAY_TIME = 40;
-   public const float DAY_INCREASE_TIME = 3;
-   public const float MIX_DAY_TIME = 70;
-   public const float NIGHT_TIME = 40;
-   public const float NIGHT_INCREASE_TIME = 5;
-   public const float MIX_NIGHT_TIME = 120;
+   public const int WAVE_COUNT = 7;
+   public const float BREAK_TIME = 20;
+   public const float WAVE_TIME = 40;
+
+   public const float WAVE_INCREASE_TIME = 5;
+   public const float MIX_WAVE_TIME = 120;
+
    public const int INIT_ITEM_PRICE = 5;
    public const int INCREASE_ITEM_PRICE = 3;
    public const int INIT_SPAWN_PRICE = 5;

@@ -5,12 +5,11 @@ using System.Collections.Generic;
 
 public class AllyBulletObject : BulletObject
 {
-
     public string key;
 
     protected List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
     protected List<IBulletForce> forces = new List<IBulletForce>();
-    AllyUnitDamageData allyUnitDamageData;
+    [SerializeField] public AllyUnitDamageData allyUnitDamageData;
     IAllyUnit allyUnit;
     public virtual void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
@@ -20,8 +19,10 @@ public class AllyBulletObject : BulletObject
         if (allyUnitDamageData == null)
         {
             allyUnitDamageData = new AllyUnitDamageData();
-            damageData = allyUnitDamageData;
         }
+
+        // damageData = allyUnitDamageData;
+        allyUnitDamageData.damage = damage;
 
         ClearBehaviors();
         ClearBulletForce();
@@ -49,8 +50,8 @@ public class AllyBulletObject : BulletObject
             finalDamage = 1f;
 
         allyUnit.AccumulateDamage(finalDamage);
-        damageData.damage = finalDamage;
-        hit.TakeDamage(damageData);
+        allyUnitDamageData.damage = finalDamage;
+        hit.TakeDamage(allyUnitDamageData);
 
         bool shouldRelease = true;
         foreach (var b in behaviors)
@@ -93,6 +94,11 @@ public class AllyBulletObject : BulletObject
             direction = dir;
 
         transform.right = direction;
+    }
+    public override void Release()
+    {
+        base.Release();
+        BulletSpawner.Instance.ReturnPlayerBulletObject(key, this);
     }
 }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 // [불탄]
 // 적중 시 30% 확률로 화상 적용
-public class FlameBulletSpec : BulletSpec
+public class FlameBulletSpec : AllyBulletSpec
 {
     public float burnDuration;
     public float burnDPS;

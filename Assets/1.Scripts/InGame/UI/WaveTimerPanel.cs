@@ -11,34 +11,29 @@ using UnityEngine.UI;
 public class WaveTimerPanel : MonoBehaviour
 {
     public TMP_Text waveText;
-    public GameObject dayObject;
-    public GameObject nigthObject;
-    public Image dayTimeBar;
-    public Image nightTimeBar;
 
-    Image curIimeBar;
+    public GameObject waveObject;
+    public Image waveTimeBar;
     void Start()
     {
-        dayTimeBar.fillAmount = 0;
-        nightTimeBar.fillAmount = 0;
+
+        waveTimeBar.fillAmount = 0;
         waveText.text = "";
-        GameEventBus.Subscribe<DayStartEvent>(OnDayStartEvent);
-        GameEventBus.Subscribe<NightStartEvent>(OnNightStartEvent);
+        GameEventBus.Subscribe<BreakStartEvent>(OnBreakStartEvent);
+        GameEventBus.Subscribe<WaveStartEvent>(OnWavetStartEvent);
+        waveObject.SetActive(false);
+        waveText.text = $"다음 웨이브까지 {GetTime(0, GameSetting.BREAK_TIME)}초";
     }
 
-    void OnDayStartEvent(DayStartEvent e)
+    void OnBreakStartEvent(BreakStartEvent e)
     {
-        dayObject.SetActive(true);
-        nigthObject.SetActive(false);
-        curIimeBar = dayTimeBar;
-        waveText.text = $"DAY {e.phaseIdx + 1} 낮";
+        waveObject.SetActive(false);
+        waveText.text = $"다음 웨이브까지 {GetTime(GameManager.Instance.breakTimer, GameSetting.BREAK_TIME)}초";
     }
-    void OnNightStartEvent(NightStartEvent e)
+    void OnWavetStartEvent(WaveStartEvent e)
     {
-        dayObject.SetActive(false);
-        nigthObject.SetActive(true);
-        curIimeBar = nightTimeBar;
-        waveText.text = $"DAY {e.phaseIdx + 1} 밤";
+        waveObject.SetActive(true);
+        waveText.text = $"WAVE {e.phaseIdx + 1}";
     }
 
     void Update()
@@ -48,16 +43,24 @@ public class WaveTimerPanel : MonoBehaviour
             return;
         }
 
-        if (GameManager.Instance.isDay)
+        if (GameManager.Instance.isBreak)
         {
-            curIimeBar.fillAmount = GameManager.Instance.dayTimer / GameSetting.DAY_TIME;
+            waveText.text = $"다음 웨이브까지 {GetTime(GameManager.Instance.breakTimer, GameSetting.BREAK_TIME)}초";
         }
         else
         {
-            curIimeBar.fillAmount = 1f - GameManager.Instance.nightTimer / GameSetting.NIGHT_TIME;
+            waveTimeBar.fillAmount = 1f - GameManager.Instance.waveTimer / GameManager.Instance.waveTime;
         }
 
     }
+    public string GetTime(float timer, float time)
+    {
+        float remainingTime = time - timer;
+        int minutes = Mathf.FloorToInt(remainingTime / 60f);
+        int seconds = Mathf.FloorToInt(remainingTime % 60f);
+        return $"{minutes:D2}:{seconds:D2}";
+    }
+
     // public void StartWave(WaveStartEvent e)
     // {
     //     waveData = e.waveData;

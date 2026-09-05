@@ -12,7 +12,7 @@ public class SlimeMovement : MonoBehaviour
     public float moveSpeed;
 
 
-    public LayerMask hittableLayer;
+    //public LayerMask hittableLayer = LayerMask.GetMask("Hittable");
     const float STUCK_CHECK_INTERVAL = 0.35f;
 
     // float stuckCheckTimer;

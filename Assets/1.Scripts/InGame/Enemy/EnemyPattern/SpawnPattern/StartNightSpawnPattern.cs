@@ -7,10 +7,10 @@ public class StartNightSpawnPattern : SpawnPattern
 
     public override void StartGame()
     {
-        GameEventBus.Subscribe<NightStartEvent>(OnNightStartEvent);
+        GameEventBus.Subscribe<WaveStartEvent>(OnNightStartEvent);
     }
 
-    void OnNightStartEvent(NightStartEvent e)
+    void OnNightStartEvent(WaveStartEvent e)
     {
         specialEnemySpawner.Spawn();
     }

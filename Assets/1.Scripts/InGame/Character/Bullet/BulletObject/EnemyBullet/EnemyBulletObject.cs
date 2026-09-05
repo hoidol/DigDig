@@ -5,7 +5,7 @@ public class EnemyBulletObject : BulletObject
     private static Queue<EnemyBulletObject> pool = new Queue<EnemyBulletObject>();
     private static EnemyBulletObject prefab;
     public Transform spriteTr;
-
+    EnemyDamageData enemyDamageData;
     public static EnemyBulletObject Instantiate()
     {
         if (prefab == null)
@@ -24,11 +24,14 @@ public class EnemyBulletObject : BulletObject
     }
     void Awake()
     {
-        damageData = new DamageData();
     }
 
     public override void Shoot(Vector2 dir, float damage)
     {
+        if (enemyDamageData == null)
+            enemyDamageData = new EnemyDamageData();
+
+        enemyDamageData.damage = damage;
         base.Shoot(dir, damage);
 
         transform.right = dir;
@@ -53,11 +56,11 @@ public class EnemyBulletObject : BulletObject
             playerSideLayer = LayerMask.NameToLayer("AllyUnit");
 
         if (other.gameObject.layer != playerSideLayer) return;
-        
-        if(other.TryGetComponent<IHittable>(out IHittable hit))
+
+        if (other.TryGetComponent<IHittable>(out IHittable hit))
         {
-            damageData.damage = damage;
-            hit.TakeDamage(damageData);
+            Debug.Log($"EnemyBulletObject damage {enemyDamageData.damage}");
+            hit.TakeDamage(enemyDamageData);
             Release();
         }
     }

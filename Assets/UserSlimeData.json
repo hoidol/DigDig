@@ -1,0 +1,76 @@
+{
+    "equiptedSlimes": [
+        {
+            "key": "Flame",
+            "equipedIdx": 0,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Bounce",
+            "equipedIdx": 1,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Wacky",
+            "equipedIdx": 2,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Orbit",
+            "equipedIdx": 3,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Pierce",
+            "equipedIdx": 4,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        }
+    ],
+    "userSlimes": [
+        {
+            "key": "Flame",
+            "equipedIdx": 0,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Bounce",
+            "equipedIdx": 1,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Wacky",
+            "equipedIdx": 2,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Orbit",
+            "equipedIdx": 3,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Pierce",
+            "equipedIdx": 4,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        }
+    ]
+}

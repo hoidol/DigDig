@@ -44,7 +44,7 @@ public class LevelUpCanvas : CanvasUI<LevelUpCanvas>
         var pool = levelUpStatPanels.ToList();
         var result = new List<LevelUpStatPanel>();
 
-        bool isLowHp = Character.Instance.curHp < LOW_HP_THRESHOLD;
+        bool isLowHp = Character.Instance.CurHp < LOW_HP_THRESHOLD;
         if (isLowHp && UnityEngine.Random.value < FULL_HEAL_APPEAR_CHANCE)
         {
             var fullHealPanel = pool.FirstOrDefault(p => p.levelUpStatType == LevelUpStatType.FullHeal);

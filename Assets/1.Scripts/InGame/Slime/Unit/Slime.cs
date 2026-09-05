@@ -30,20 +30,41 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public Transform Transform => transform;
     public string Key => key;
     public AllyType AllyType => AllyType.Slime;
-    public LayerMask targetLayerMask;
+    public LayerMask targetLayerMask = 1 << 3;
 
 
     public Action<Transform> onTargetListener;
     public virtual void Awake()
     {
         movement = GetComponent<SlimeMovement>();
-        // attackBehaviour = GetComponent<SlimeAttackBehaviour>();
-
+        if (rootTr == null)
+            rootTr = transform.Find("Root");
     }
+
     public virtual void OnEnable()
     {
-
+        GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
+        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
     }
+    void OnEnemyDeadEvent(EnemyDeadEvent e)
+    {
+        CheckTarget(e.enemy);
+    }
+    void OnDestroyedStoneEvent(DestroyedStoneEvent e)
+    {
+        CheckTarget(e.stone);
+    }
+    void CheckTarget(IHittable hittable)
+    {
+        if (targetTr != null)
+        {
+            if (hittable.Transform == targetTr)
+            {
+                targetTr = null;
+            }
+        }
+    }
+
     public virtual void OnDisable()
     {
 
@@ -55,16 +76,19 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
         this.level = lv;
     }
 
-    public abstract string GetDescription(int level =0);
+    public abstract string GetDescription(int level = 0);
 
     public abstract AllyBulletObject GetBullet();
     public virtual void Update()
     {
-        rootTr.localScale = new Vector3(Character.Instance.weapon.GetAttackDirection().x >= 0 ? 1 : -1, 1, 1);
         attackTimer += Time.deltaTime;
         if (attackTimer > AttackSpeed())
         {
             Fire(AttackDirecton());
+        }
+        if (targetTr == null)
+        {
+            rootTr.localScale = new Vector3(Character.Instance.AttackDir.x >= 0 ? 1 : -1, 1, 1);
         }
     }
 
@@ -79,21 +103,21 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
         if (targetTr != null)
         {
             fireDir = (targetTr.position - transform.position).normalized;
-
+            rootTr.localScale = new Vector3(fireDir.x >= 0 ? 1 : -1, 1, 1);
         }
 
         return fireDir;
     }
 
-    
+
     public virtual void Fire(Vector2 dir)
     {
         AllyBulletObject baseBullet = GetBullet();
-        if(baseBullet == null)
+        if (baseBullet == null)
             return;
-            
+
         baseBullet.transform.position = transform.position;
-        baseBullet.Shoot(dir,AttackPower());
+        baseBullet.Shoot(dir, AttackPower());
         attackTimer = 0;
     }
 
@@ -105,9 +129,9 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
             return (false, null, 0);
         if (level != target.level)
             return (false, null, 0);
-        if(target.key != key)
+        if (target.key != key)
             return (false, null, 0);
-        if(level ==2 || target.level == 2)
+        if (level == 2 || target.level == 2)
             return (false, null, 0);
 
         string pickedSlimeKey = null;
@@ -125,7 +149,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
             // }   
             UserSlime userSlime = UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length)];
             pickedSlimeKey = userSlime.key;
-            lv = level + 1;         
+            lv = level + 1;
         }
         else if (SlimeData.growth == 0)
         {

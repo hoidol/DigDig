@@ -33,7 +33,7 @@ public class StartSetting
             "EnemyManager",
             "EquipmentManager",
             "CharacterManager",
-            "MiniMeManager",
+            "SlimeManager",
             "SoundManager",
 //공용
             "InAppPurchaseManager",

@@ -12,7 +12,7 @@ public class CharacterHealth : MonoBehaviour, IHittable
     public CharacterHealthCanvas healthCanvas;
 
     Character character;
-    StatusEffectHandler statusEffectHandler;
+    public StatusEffectHandler statusEffectHandler;
     Transform hpPoint;
 
     public Transform Transform => transform;
@@ -30,9 +30,9 @@ public class CharacterHealth : MonoBehaviour, IHittable
 
     public void TakeDamage(DamageData damageData)
     {
-        if (statusEffectHandler != null && statusEffectHandler.TryBlock()) 
+        if (statusEffectHandler != null && statusEffectHandler.TryBlock())
             return;
-        
+
 
         curHp -= damageData.ApplyDamage(hpPoint.position);
         if (curHp <= 0)

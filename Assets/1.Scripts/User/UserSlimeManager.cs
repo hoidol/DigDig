@@ -56,12 +56,12 @@ public class UserSlimeManager : UserBaseManager
             userSlime = new UserSlime();
             userSlime.key = key;
             userSlimeData.userSlimes.Add(userSlime);
-            Debug.Log($"GetUserSlime key {key} 새로 만들자 저장하자");
+            // Debug.Log($"GetUserSlime key {key} 새로 만들자 저장하자");
             SaveData();
         }
         else
         {
-            Debug.Log($"GetUserSlime key {key} 이미 있음");
+            // Debug.Log($"GetUserSlime key {key} 이미 있음");
         }
 
         return userSlime;
@@ -81,7 +81,7 @@ public class UserSlimeManager : UserBaseManager
     public UserSlime EquiptUserSlime(UserSlime userSlime, int idx)
     {
         ReleaseUserSlime(idx);
-        
+
         userSlime.equipedIdx = idx;
 
         SaveData();
@@ -132,13 +132,21 @@ public class UserSlime
 {
     public string key;
     public int equipedIdx = -1;
-    public bool Equiping => equipedIdx >=0;
+    public bool Equiping => equipedIdx >= 0;
     public bool own;
     public int enhanceLevel;
-    public int EnhanceLevel(bool includeBaseLv= true)
+    public int EnhanceLevel(bool includeBaseLv = true)
     {
-        if(includeBaseLv)
+        if (includeBaseLv)
+        {
+            if (SlimeData == null)
+            {
+                Debug.Log($"if(SlimeData == null) key : {key}");
+            }
+
             return enhanceLevel + SlimeManager.Instance.GetEnhanceGradeInfo(SlimeData.grade).baseEnhance;
+        }
+
         else
             return enhanceLevel;
     }

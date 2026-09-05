@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 public class SlimeManager : MonoSingleton<SlimeManager>
 {
@@ -12,6 +11,8 @@ public class SlimeManager : MonoSingleton<SlimeManager>
     public SlimeData[] growth1SlimeDatas;
     public SlimeData[] growth2SlimeDatas;
 
+    public Dictionary<GradeType, EnhanceGradeInfo> enhanceGradeInfoDic = new Dictionary<GradeType, EnhanceGradeInfo>();
+    public Dictionary<GradeType, EnhanceExpInfo> enhanceExpInfoDic = new Dictionary<GradeType, EnhanceExpInfo>();
     public SlimeMergeData[] slimeMergeDatas;
 
     public Dictionary<string, SlimeMergeData> slimeMergeDataDic = new Dictionary<string, SlimeMergeData>();
@@ -43,7 +44,7 @@ public class SlimeManager : MonoSingleton<SlimeManager>
         await AddressableMgr.LoadAllByLabel<SlimeData>("Growth1SlimeData", (dates) =>
         {
             growth1SlimeDatas = dates;
-            
+
             foreach (SlimeData slimeData in growth1SlimeDatas)
             {
                 if (!gradeGroupGrowth1SlimeDic.ContainsKey(slimeData.grade))
@@ -65,12 +66,28 @@ public class SlimeManager : MonoSingleton<SlimeManager>
         {
             slimeMergeDatas = dates;
 
-            for(int i = 0; i < slimeMergeDatas.Length; i++)
+            for (int i = 0; i < slimeMergeDatas.Length; i++)
             {
                 slimeMergeDataDic.Add(slimeMergeDatas[i].key, slimeMergeDatas[i]);
             }
-            
 
+
+        });
+
+        await AddressableMgr.LoadAllByLabel<EnhanceGradeInfo>("EnhanceGradeInfo", (dates) =>
+        {
+            foreach (EnhanceGradeInfo info in dates)
+            {
+                enhanceGradeInfoDic[info.grade] = info;
+            }
+        });
+
+        await AddressableMgr.LoadAllByLabel<EnhanceExpInfo>("EnhanceExpInfo", (dates) =>
+        {
+            foreach (EnhanceExpInfo info in dates)
+            {
+                enhanceExpInfoDic[info.grade] = info;
+            }
         });
     }
 
@@ -83,8 +100,6 @@ public class SlimeManager : MonoSingleton<SlimeManager>
     {
         return slimeMergeDataDic[key];
     }
-    [SerializeField] EnhanceGradeInfo[] enhanceGradeInfos;
-    public EnhanceExpInfo[]  enhanceExpInfos;
     public int GetEnhanceExpInfo(int lv, GradeType grade)
     {
         return GetEnhanceExpInfo(grade).exps[lv];
@@ -92,17 +107,12 @@ public class SlimeManager : MonoSingleton<SlimeManager>
 
     public EnhanceExpInfo GetEnhanceExpInfo(GradeType grade)
     {
-        for(int i = 0; i < enhanceExpInfos.Length; i++)
-        {
-            if(enhanceExpInfos[i].grade== grade)
-            return enhanceExpInfos[i];
-        }
-        return null;
+        return enhanceExpInfoDic.TryGetValue(grade, out EnhanceExpInfo info) ? info : null;
     }
 
     public EnhanceGradeInfo GetEnhanceGradeInfo(GradeType grade)
     {
-        return enhanceGradeInfos.Where(e=>e.grade == grade).FirstOrDefault();
+        return enhanceGradeInfoDic.TryGetValue(grade, out EnhanceGradeInfo info) ? info : null;
     }
 
     public List<SlimeMergeData> GetSlimeMergeDatas(string[] slimeKeys)
@@ -130,34 +140,4 @@ public class SlimeManager : MonoSingleton<SlimeManager>
         }
         return canMakeSlimes;
     }
-}
-
-[System.Serializable]
-public class EnhanceGradeInfo
-{
-    public GradeType grade;
-    public int baseEnhance;
-}
-
-[System.Serializable]
-public class EnhanceExpInfo
-{
-    public GradeType grade;
-    public int[] exps;
-    public int[] prices;//강화 가격
-    public int TotalExp(int lv)//1이 들어왔어
-    {
-        int sum = 0;
-        for(int i = 0; i < exps.Length; i++)
-        {
-            if (i < lv)
-            {
-                sum += exps[lv];
-            }
-            else
-                break;
-        }
-        return sum;
-    }
-    
 }
