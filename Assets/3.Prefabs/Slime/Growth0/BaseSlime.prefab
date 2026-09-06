@@ -363,7 +363,6 @@ GameObject:
   - component: {fileID: 1174373530362515621}
   - component: {fileID: 6691824415162859709}
   - component: {fileID: 6375558012280561577}
-  - component: {fileID: 8614401740847797794}
   - component: {fileID: 6211682140286446672}
   - component: {fileID: 7628565153249991827}
   m_Layer: 10
@@ -428,25 +427,7 @@ MonoBehaviour:
   outRange: 5
   inRange: 2
   moveSpeed: 2
-  hittableLayer:
-    serializedVersion: 2
-    m_Bits: 8
   slime: {fileID: 0}
---- !u!114 &8614401740847797794
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6579390230575031263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae4622ebbabf94d01bf3022b21d0c5a9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MiniMeAttackBehaviour
-  slime: {fileID: 0}
-  attackTimer: 0
-  targetTr: {fileID: 0}
 --- !u!50 &6211682140286446672
 Rigidbody2D:
   serializedVersion: 5

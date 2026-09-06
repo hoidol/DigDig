@@ -71,6 +71,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
     public virtual void TakeDamage(DamageData damage)
     {
         lastDamage = damage;
+        Debug.Log($"Stone TakeDamage {damage.damage}");
         curHp -= damage.ApplyDamage(hpPoint.transform.position);
 
 
