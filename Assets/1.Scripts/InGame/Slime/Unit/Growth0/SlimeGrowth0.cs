@@ -5,28 +5,16 @@ using UnityEngine;
 public abstract class SlimeGrowth0 : Slime
 {
 
-    public float attackPower;
-    public float attackSpeed;
     AllyBulletSpec allyBulletSpec;
 
     public override void Awake()
     {
         base.Awake();
-        attackPower = 2;
-        attackSpeed = 1;
+
         allyBulletSpec = new AllyBulletSpec();
-        allyBulletSpec.damage = attackPower;
+        allyBulletSpec.damage = AttackPower;
     }
 
-    public override float AttackPower()
-    {
-        return attackPower;
-    }
-
-    public override float AttackSpeed()
-    {
-        return attackSpeed;
-    }
 
     public override AllyBulletObject GetBullet()
     {

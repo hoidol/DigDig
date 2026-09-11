@@ -6,25 +6,21 @@ public class ThunderSlime : SlimeGrowth1
 
     float searchRadius = 3f;
     int strikeCount = 1;
-    float[] damages = {2f, 3f, 4f}; // 공격력의 100%
     public LayerMask hitLayerMask;
-    public override void Awake()
+
+
+    public override void Spawn(Vector2 pos, int lv)
     {
-        base.Awake();
-        UserSlime userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(key);
+        base.Spawn(pos, lv);
+
         
-        userSlime.EnhanceLevel();
-
-        attackPowers = new float[] {10,20,30};
-        attackSpeeds = new float[] {10,20,30};
-
-
         thunderBullet = new ThunderBulletSpec();
         thunderBullet.searchRadius = searchRadius;
         thunderBullet.strikeCount = strikeCount;
-        thunderBullet.damage = damages[level];
+        thunderBullet.damage = AttackPower;
         thunderBullet.hitLayerMask = hitLayerMask;
     }
+    
 
     public override AllyBulletObject GetBullet()
     {

@@ -90,7 +90,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     void UpdateAttackInternal()
     {
         //statMgr.AttackSpeed
-        attackTimer += Time.deltaTime * statMgr.AttackSpeed / 50;
+        attackTimer += Time.deltaTime * statMgr.AttackSpeed /50;
 
 #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         if (attackTimer >= 1)

@@ -11,19 +11,6 @@ public class HealSlime : SlimeGrowth1
 
     CancellationTokenSource cts;
 
-    public override void Awake()
-    {
-        base.Awake();
-        UserSlime userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(key);
-
-        userSlime.EnhanceLevel();
-
-        attackPowers = new float[] {4,6,8};
-        attackSpeeds = new float[] {2,2,2};
-
-
-        allyBulletSpec = new AllyBulletSpec();
-    }
 
     public override void OnEnable()
     {
@@ -42,6 +29,9 @@ public class HealSlime : SlimeGrowth1
     {
         base.Spawn(pos, lv);
         HealLoop().Forget();
+
+        allyBulletSpec = new AllyBulletSpec();
+        allyBulletSpec.damage= AttackPower;
     }
 
     async UniTask HealLoop()

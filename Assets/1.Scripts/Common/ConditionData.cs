@@ -5,7 +5,7 @@ public class ConditionData
     public string value;
     public int count;
 
-    public bool Check()
+    public bool Unlock()
     {
         // if (conditionType == ConditionType.NeedAbility)
         // {

@@ -116,7 +116,7 @@ public class CharacterStatManager
             });
         }
         itemStatDic[key].count += count;
-        itemStatDic[key].sum += count;
+        // itemStatDic[key].sum += count;
         if (itemStatDic[key].count <= 0)
         {
             //아이템 제거하기
@@ -152,14 +152,7 @@ public class CharacterStatManager
             }
         }
     }
-    // public void AddOre(OreType oreType, int count = 1)
-    // {
-    //     if (!oreDic.ContainsKey(oreType))
-    //     {
-    //         oreDic.Add(oreType, new CharacterOre(){ oreType = oreType, count = count});
-    //     }
-    //     oreDic[oreType].count +=count;
-    // }
+    
     public CharacterItemStat GetCharacterItemStat(string key)
     {
         return itemStatDic[key];
@@ -186,5 +179,5 @@ public class CharacterItemStat
 {
     public string key;
     public int count; //현재
-    public int sum;//누적
+    // public int sum;//누적
 }

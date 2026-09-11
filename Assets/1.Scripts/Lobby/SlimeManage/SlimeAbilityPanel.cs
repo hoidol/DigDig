@@ -1,0 +1,12 @@
+using TMPro;
+using UnityEngine;
+
+public class SlimeAbilityPanel : MonoBehaviour
+{
+    public StatType statType;
+    public TMP_Text valueText;
+    public void SetSlimeData(SlimeData slimeData)
+    {
+        valueText.text = slimeData.GetSlimeStat(statType).GetValueToString();
+    }
+}

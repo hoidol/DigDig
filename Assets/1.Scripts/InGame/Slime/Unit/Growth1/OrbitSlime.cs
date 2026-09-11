@@ -8,20 +8,19 @@ public class OrbitSlime : SlimeGrowth1
     // public float[] orbitDamages = {3,3,3};
     public float[] orbitRotationSpeeds = {120,150,180};
 
-    public override void Spawn(Vector2 pos, int lv)
-    {
-        base.Spawn(pos, lv);
-    }
-
 
     public override void Awake()
     {
         base.Awake();
         
-        attackPowers = new float[] {3,4,5};
-        attackSpeeds = new float[] {30,30,30};
 
-        orbitMachine.damage = attackPowers[level];
+    }
+    
+    public override void Spawn(Vector2 pos, int lv)
+    {
+        base.Spawn(pos, lv);
+
+        orbitMachine.damage = AttackPower;
         orbitMachine.radius = 2;
         orbitMachine.rotationSpeed = orbitRotationSpeeds[level];
         for(int i = 0; i < level + 1; i++)
@@ -29,7 +28,7 @@ public class OrbitSlime : SlimeGrowth1
             orbitMachine.AddOrbit();    
         }
     }
-    
+
 
     public override AllyBulletObject GetBullet()
     {

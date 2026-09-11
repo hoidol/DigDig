@@ -7,14 +7,5 @@ public abstract class SlimeGrowth2 : Slime
     public float attackPower;
     public float attackSpeed;
 
-    public override float AttackPower()
-    {
-        return attackPower;
-    }
-
-    public override float AttackSpeed()
-    {
-        return attackSpeed;
-    }
 
 }

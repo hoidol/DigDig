@@ -2,7 +2,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-//처치 시 한발 더 발사함
+//처지 시 한발 더 발사함
 public class DopamineSlime : SlimeGrowth1
 {
     CancellationTokenSource cts;
@@ -73,12 +73,13 @@ public class DopamineSlime : SlimeGrowth1
     
     AllyBulletSpec allyBulletSpec;
 
-    public override void Awake()
+
+     public override void Spawn(Vector2 pos, int lv)
     {
-        base.Awake();
-        attackPowers = new float[] { 6, 20, 30 };
-        attackSpeeds = new float[] { 10, 20, 30 };
+        base.Spawn(pos, lv);
+
         allyBulletSpec = new AllyBulletSpec();
+        allyBulletSpec.damage= AttackPower;
     }
     public override AllyBulletObject GetBullet()
     {

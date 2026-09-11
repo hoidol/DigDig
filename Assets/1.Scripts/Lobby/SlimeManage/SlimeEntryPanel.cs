@@ -10,6 +10,10 @@ namespace Lobby
         {
             this.slimeData = slimeData;
             userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(slimeData.key); 
+            if(slimePanel == null)
+            {
+                Debug.Log("SlimeEntryPanel if(slimePanel == null)");
+            }
             slimePanel.SetData(slimeData);
         }
 

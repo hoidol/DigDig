@@ -71,6 +71,62 @@
             "own": true,
             "enhanceLevel": 0,
             "exp": 0
+        },
+        {
+            "key": "Boom",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Dopamine",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Heal",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Ice",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Lightning",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Shield",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Thunder",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Wacky2",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
         }
     ]
 }

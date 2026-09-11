@@ -2,23 +2,28 @@ using UnityEngine;
 
 public class WackySlime : SlimeGrowth1
 {
-    float[] fireTimes = { 1, 1f, 1f };
+    float[] fireTimes = { 2f, 1.5f, 1f };
     float fireTimer;
     AllyBulletSpec allyBulletSpec;
+    public float wackyFireSpeed;
 
     public override void Awake()
     {
         base.Awake();
-        attackPowers = new float[] { 6, 20, 30 };
-        attackSpeeds = new float[] { 10, 20, 30 };
         allyBulletSpec = new AllyBulletSpec();
     }
 
     public override void Spawn(Vector2 pos, int lv)
     {
-        base.Spawn(pos, lv);
+        allyBulletSpec = new AllyBulletSpec();
+        allyBulletSpec.damage = AttackPower;
+    
         fireTimer = 0;
+        wackyFireSpeed = 1;
+        base.Spawn(pos, lv);
+
     }
+
 
     public override void Update()
     {
@@ -28,7 +33,7 @@ public class WackySlime : SlimeGrowth1
             Fire();
             fireTimer = 0;
         }
-        fireTimer += Time.deltaTime;
+        fireTimer += Time.deltaTime * wackyFireSpeed;
     }
 
     void Fire()

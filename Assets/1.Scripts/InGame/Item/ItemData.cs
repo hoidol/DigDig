@@ -11,7 +11,7 @@ public enum AcquireMethod
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
-    public static readonly int MAX_COUNT = 3;
+    public static readonly int MAX_COUNT = 2;
     public string key;
     public string Title => itemName;
     public string itemName;
@@ -38,7 +38,7 @@ public class ItemData : ScriptableObject
 
         for (int i = 0; i < unlockConditions.Length; i++)
         {
-            if (!unlockConditions[i].Check())
+            if (!unlockConditions[i].Unlock())
             {
                 unlocked = false;
             }

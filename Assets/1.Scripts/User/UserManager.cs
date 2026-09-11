@@ -45,9 +45,9 @@ public class UserManager : MonoSingleton<UserManager>
     {
         SaveManager.SaveData(UserDataFileName, userData); 
     }
-    public void AddMemoryPiece(int count)
+    public void AddGold(int count)
     {
-        userData.memoryPieceCount += count;
+        userData.gold += count;
         Save();
     }
 
@@ -56,7 +56,24 @@ public class UserManager : MonoSingleton<UserManager>
 [System.Serializable]
 public class UserData
 {
-    public int memoryPieceCount; //기억의 조각 개수
+    public int gold; //던전 수정 조작 느낌으로
+    public int dia; //던전 수정 조작 느낌으로
+
+    public int GetCurrency(CurrencyType currencyType)
+    {
+        switch (currencyType)
+        {
+            case CurrencyType.Gold:
+                return gold;
+            case CurrencyType.Dia:
+                return dia;
+        }
+        return 0;
+    }
     public string characterName = "Lucky"; 
     public CharacterName CharacterName => Enum.Parse<CharacterName>(characterName);
+}
+public enum CurrencyType
+{
+    Gold,Dia
 }

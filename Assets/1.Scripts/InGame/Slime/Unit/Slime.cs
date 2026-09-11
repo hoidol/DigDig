@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,11 +11,19 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public string key;
     public int level;
 
+    public SlimeEnhanceAbility[] slimeEnhanceAbilities;
     public SlimeMovement movement;
-    // public SlimeAttackBehaviour attackBehaviour;
 
-    public abstract float AttackSpeed();
-    public abstract float AttackPower();
+    public Dictionary<StatType, SlimeStat> statDic = new Dictionary<StatType, SlimeStat>();
+
+    public float AttackPower => statDic[StatType.AttackPower].value;
+    public float AttackSpeed => statDic[StatType.AttackSpeed].value;
+    public float AttackRange => statDic[StatType.AttackRange].value;
+
+    // public float attackPower;
+    // public float attackSpeed;
+    // public float attackRange;
+
 
     public Transform rootTr;
     public SlimeData SlimeData => SlimeManager.Instance.GetSlimeData(key);
@@ -34,13 +43,57 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
 
     public Action<Transform> onTargetListener;
+    public SlimeData slimeData;
+    public List<Buff> activeBuffs = new List<Buff>();
     public virtual void Awake()
     {
+        slimeEnhanceAbilities = GetComponentsInChildren<SlimeEnhanceAbility>();
         movement = GetComponent<SlimeMovement>();
         if (rootTr == null)
             rootTr = transform.Find("Root");
+
+    }
+     public UserSlime userSlime;
+    public virtual void Spawn(Vector2 pos, int lv)
+    {
+        userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(key);
+        transform.position = pos;
+        this.level = lv;
+
+        slimeData = SlimeManager.Instance.GetSlimeData(key);
+
+        statDic.Clear();
+        statDic.Add(StatType.AttackPower, new SlimeStat(){ statType = StatType.AttackPower});
+        statDic.Add(StatType.AttackSpeed, new SlimeStat(){ statType = StatType.AttackSpeed});
+        statDic.Add(StatType.AttackRange, new SlimeStat(){ statType = StatType.AttackRange});
+
+        UpdateSlime();
     }
 
+    public void UpdateSlime()
+    {
+        statDic[StatType.AttackPower].value = slimeData.GetSlimeStat(StatType.AttackPower).value;
+        statDic[StatType.AttackSpeed].value = slimeData.attackSpeed;
+        statDic[StatType.AttackRange].value = slimeData.attackRange;
+
+        foreach (var buff in activeBuffs)
+        {
+            var stat = statDic[buff.statType];
+            stat.value = buff.Apply(stat.value);
+        }
+    }
+
+    public SlimeEnhanceAbility GetSlimeEnhanceAbility(int lv)
+    {
+        for(int i = 0; i < slimeEnhanceAbilities.Length; i++)
+        {
+            if(slimeEnhanceAbilities[i].level == lv)
+            {
+                return slimeEnhanceAbilities[i];
+            }
+        }
+        return null;
+    }
     public virtual void OnEnable()
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
@@ -70,19 +123,15 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
     }
 
-    public virtual void Spawn(Vector2 pos, int lv)
-    {
-        transform.position = pos;
-        this.level = lv;
-    }
 
     public abstract string GetDescription(int level = 0);
 
     public abstract AllyBulletObject GetBullet();
     public virtual void Update()
     {
-        attackTimer += Time.deltaTime;
-        if (attackTimer > AttackSpeed())
+        
+        attackTimer += Time.deltaTime * AttackSpeed / 50;
+        if (attackTimer > AttackSpeed)
         {
             Fire(AttackDirecton());
         }
@@ -117,7 +166,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
             return;
 
         baseBullet.transform.position = transform.position;
-        baseBullet.Shoot(dir, AttackPower());
+        baseBullet.Shoot(dir, AttackPower);
         attackTimer = 0;
     }
 
@@ -162,7 +211,21 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     //적 찾는 방식 설정
     public virtual Transform FindTarget()
     {
-        return InGameUtil.FindTarget(transform.position, 10, targetLayerMask);
+        return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask);
     }
+
+
+    public void AddBuff(Buff buff)
+    {
+        activeBuffs.Add(buff);
+        UpdateSlime();
+    }
+
+    public void RemoveBuff(Buff buff)
+    {
+        activeBuffs.Remove(buff);
+        UpdateSlime();
+    }
+
 
 }

@@ -35,6 +35,7 @@ public class StartSetting
             "CharacterManager",
             "SlimeManager",
             "SoundManager",
+            "AchievementManager",
 //공용
             "InAppPurchaseManager",
             "AdManager",

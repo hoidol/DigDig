@@ -16,7 +16,7 @@ public class MemoryPiecePanel : MonoBehaviour
     }
     void UpdatePanel()
     {
-        memoryPieceText.text = UserManager.Instance.userData.memoryPieceCount.ToString();
+        // memoryPieceText.text = UserManager.Instance.userData.memoryPieceCount.ToString();
     }
 }
 public class ChangedMemoryPieceEvent

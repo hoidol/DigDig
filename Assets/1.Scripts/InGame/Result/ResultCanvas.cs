@@ -24,10 +24,9 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         int destroy = GameManager.Instance.destroyStoneCount + GameManager.Instance.killEnemyCount;
         destroyCountText.text = $"처치 수 : {destroy}";
 
-
         int memoryPieceCount = destroy / 10;
         memorPieceCountText.text = $"X {memoryPieceCount}";
-        UserManager.Instance.AddMemoryPiece(memoryPieceCount);
+        UserManager.Instance.AddGold(memoryPieceCount);
 
         //최대 깊이에 따라서 보상 받게 하자
         float distance = Vector2.Distance(Character.Instance.transform.position,Vector2.zero); 

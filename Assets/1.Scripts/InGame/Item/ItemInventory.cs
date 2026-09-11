@@ -114,6 +114,11 @@ public class ItemInventory : MonoBehaviour
         return curItems.FirstOrDefault(e => e.key == key);
     }
 
+    public bool CheckOwn(string key)
+    {
+        return GetItem(key).count > 0;
+    }
+
 #if UNITY_EDITOR
     void Update()
     {

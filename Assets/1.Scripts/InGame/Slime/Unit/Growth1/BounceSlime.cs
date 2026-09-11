@@ -4,11 +4,10 @@ public class BounceSlime : SlimeGrowth1
 {
     BounceBulletSpec bounceBullet;
     int[] bounces = {1, 2, 3};
-    public override void Awake()
+    public override void Spawn(Vector2 pos, int lv)
     {
-        base.Awake();
-        attackPowers = new float[] {6,20,30};
-        attackSpeeds = new float[] {10,20,30};
+        base.Spawn(pos, lv);
+
         bounceBullet = new BounceBulletSpec();
         bounceBullet.bounce = bounces[level];
     }

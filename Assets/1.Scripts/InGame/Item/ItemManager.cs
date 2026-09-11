@@ -65,7 +65,7 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
 
             if (Character.Instance.statMgr.itemStatDic.ContainsKey(level1ItemDatas[i].key))
             {
-                if (Character.Instance.statMgr.itemStatDic[level1ItemDatas[i].key].sum == ItemData.MAX_COUNT)
+                if (Character.Instance.statMgr.itemStatDic[level1ItemDatas[i].key].count == ItemData.MAX_COUNT)
                     continue;
             }
 

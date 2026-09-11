@@ -70,7 +70,7 @@ namespace Lobby
             UpdateCanvas();
         }
 
-        public void UpdateCanvas()
+        public override void UpdateCanvas()
         {
             // List<string> equiptedSlimeKeys = new List<string>();
             for (int i = 0; i < UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length; i++)

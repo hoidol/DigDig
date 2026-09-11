@@ -13,7 +13,7 @@ public class BattleCanvas : BaseLobbyCanvas
     public int stageOrder;
     public TMP_Text titleText;
 
-    public void UpdateCanvas()
+    public override void UpdateCanvas()
     {
         if (curUserStage == null)
         {

@@ -181,13 +181,13 @@ public class StageData : ScriptableObject
         int iPhase = System.Array.IndexOf(headers, "phase");
 
         int iEnemy = System.Array.IndexOf(headers, "enemyType");
-        int iDaySpawnCount = System.Array.IndexOf(headers, "DaySpawnCount");
-        int iDayItvl = System.Array.IndexOf(headers, "DayIntervalTime");
-        int iNightSpawnCount = System.Array.IndexOf(headers, "NightSpawnCount");
-        int iNightItvl = System.Array.IndexOf(headers, "NightIntervalTime");
+        // int iDaySpawnCount = System.Array.IndexOf(headers, "DaySpawnCount");
+        // int iDayItvl = System.Array.IndexOf(headers, "DayIntervalTime");
+        int iNightSpawnCount = System.Array.IndexOf(headers, "WaveSpawnCount");
+        int iNightItvl = System.Array.IndexOf(headers, "WaveIntervalTime");
 
-        var dayList = new List<EnemySpawnPatternData>();
-        var nightList = new List<EnemySpawnPatternData>();
+        // var dayList = new List<EnemySpawnPatternData>();
+        var waveList = new List<EnemySpawnPatternData>();
         for (int i = 1; i < lines.Length; i++)
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
@@ -197,22 +197,22 @@ public class StageData : ScriptableObject
 
             System.Enum.TryParse(Col(cols, iEnemy), out EnemyType et);
 
-            if (int.TryParse(Col(cols, iDaySpawnCount), out int dayCount) &&
-                TryParseIntervalRange(Col(cols, iDayItvl), out Vector2 dayItvl))
-            {
-                dayList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = dayCount, intervalRange = dayItvl });
-            }
+            // if (int.TryParse(Col(cols, iDaySpawnCount), out int dayCount) &&
+            //     TryParseIntervalRange(Col(cols, iDayItvl), out Vector2 dayItvl))
+            // {
+            //     dayList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = dayCount, intervalRange = dayItvl });
+            // }
 
             if (int.TryParse(Col(cols, iNightSpawnCount), out int nightCount) &&
                 TryParseIntervalRange(Col(cols, iNightItvl), out Vector2 nightItvl))
             {
-                nightList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = nightCount, intervalRange = nightItvl });
+                waveList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = nightCount, intervalRange = nightItvl });
             }
         }
 
-        if (dayList.Count == 0 && nightList.Count == 0) { Debug.LogWarning($"[StageData] EnemyPatternData stage={key} phase={phase} 데이터 없음"); return null; }
+        if ( waveList.Count == 0) { Debug.LogWarning($"[StageData] EnemyPatternData stage={key} phase={phase} 데이터 없음"); return null; }
 
-        return new EnemyPatternData { phase = phase, dayEnemySpawnPatternDatas = dayList.ToArray(), nightEnemySpawnPatternDatas = nightList.ToArray() };
+        return new EnemyPatternData { phase = phase,  wavePatternDatas = waveList.ToArray() };
     }
 
     static bool TryParseIntervalRange(string raw, out Vector2 range)
@@ -311,8 +311,8 @@ public class PhaseData
 public class EnemyPatternData
 {
     public int phase;
-    public EnemySpawnPatternData[] dayEnemySpawnPatternDatas;
-    public EnemySpawnPatternData[] nightEnemySpawnPatternDatas;
+    // public EnemySpawnPatternData[] dayEnemySpawnPatternDatas;
+    public EnemySpawnPatternData[] wavePatternDatas;
 }
 
 [System.Serializable]

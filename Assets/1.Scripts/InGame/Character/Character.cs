@@ -299,6 +299,7 @@ public enum StatType
     Dodge, //float 
     // AmmoEfficiency, // 튕기는 때 데미지 감소량을 줄어듦 - 버프 주지마
     // Bounce, //튕기는 횟수
+    AttackRange,
     Count
 }
 

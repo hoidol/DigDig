@@ -4,19 +4,16 @@ public class PierceSlime : SlimeGrowth1
 {
     PierceBulletSpec pierceBullet;
     int[] pierceBullt = {2,3,4};
-    public override void Awake()
-    {
-        base.Awake();
-        //public float burnDuration;
-        //public float burnDPS;
-        attackPowers = new float[] {10,20,30};
-        attackSpeeds = new float[] {10,20,30};
 
+    public override void Spawn(Vector2 pos, int lv)
+    {
+        base.Spawn(pos, lv);
 
         pierceBullet = new PierceBulletSpec();
         pierceBullet.pierceCount = pierceBullt[level];
+        pierceBullet.damage = AttackPower;
     }
-
+    
     public override AllyBulletObject GetBullet()
     {
         return pierceBullet.Instantiate(this);

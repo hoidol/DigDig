@@ -4,20 +4,47 @@ using UnityEngine;
 [CreateAssetMenu]
 public class SlimeData : ScriptableObject
 {
-    public static readonly int MAX_Level = 3;
+    public static readonly int MAX_LEVEL = 3;
+    public static readonly int MAX_ENHANCE_LEVEL = 15;
 
     public string key;
     public string Title => TranslateManager.GetText(key);
     public string[] descs;
     public int growth;
 
-    public string valueInfo;
+    public float attackPower;
+    public float attackSpeed;
+    public float attackRange;
+
     public Slime prefab;
     public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)    
 
     public Sprite thum;
     public Color color;
     public GradeType grade;
+
+
+    public SlimeStat GetSlimeStat(StatType statType, int lv = 0)
+    {
+        float value = 0;
+        switch (statType)
+        {
+            case StatType.AttackPower:
+            value = attackPower * (lv +1);
+            break;
+            case StatType.AttackSpeed:
+            value = attackSpeed;
+            break;
+            case StatType.AttackRange:
+            value = attackRange;
+            break;
+        }
+        return new SlimeStat()
+        {
+            statType = statType,
+            value = value
+        };
+    }
 
     public bool CheckUnlock()
     {
@@ -27,7 +54,7 @@ public class SlimeData : ScriptableObject
 
         for (int i = 0; i < unlockConditions.Length; i++)
         {
-            if (!unlockConditions[i].Check())
+            if (!unlockConditions[i].Unlock())
             {
                 unlocked = false;
             }
@@ -68,6 +95,9 @@ public class SlimeData : ScriptableObject
         int iGrowth = System.Array.IndexOf(headers, "growth");
         int iColor = System.Array.IndexOf(headers, "color");
         int iGrade = System.Array.IndexOf(headers, "grade");
+        int iAttackPower = System.Array.IndexOf(headers, "attackPower");
+        int iAttackSpeed = System.Array.IndexOf(headers, "attackSpeed");
+        int iAttackRange = System.Array.IndexOf(headers, "attackRange");
 
         for (int i = 1; i < lines.Length; i++)
         {
@@ -90,6 +120,12 @@ public class SlimeData : ScriptableObject
                 color = parsedColor;
             if (iGrade >= 0 && iGrade < cols.Length && System.Enum.TryParse(cols[iGrade].Trim(), out GradeType parsedGrade))
                 grade = parsedGrade;
+            if (iAttackPower >= 0 && iAttackPower < cols.Length && float.TryParse(cols[iAttackPower].Trim(), out float parsedAttackPower))
+                attackPower = parsedAttackPower;
+            if (iAttackSpeed >= 0 && iAttackSpeed < cols.Length && float.TryParse(cols[iAttackSpeed].Trim(), out float parsedAttackSpeed))
+                attackSpeed = parsedAttackSpeed;
+            if (iAttackRange >= 0 && iAttackRange < cols.Length && float.TryParse(cols[iAttackRange].Trim(), out float parsedAttackRange))
+                attackRange = parsedAttackRange;
 
             prefab = FindAssetByName<Slime>($"Assets/3.Prefabs/Slime/Growth{growth}", $"{key}Slime");
             thum = FindAssetByName<Sprite>($"Assets/2.Sprites/Slime/Growth{growth}", key);
@@ -236,4 +272,23 @@ public class {className} : Slime
         return filePath;
     }
 #endif
+}
+public enum SlimeAbilityType
+{
+    AttackPower,
+    AttackSpeed,
+    AttackRange
+}
+
+[System.Serializable]
+public class SlimeStat
+{
+    public StatType statType;
+    public float value;
+
+    public string GetValueToString()
+    {
+        
+            return value.ToString();
+    }
 }

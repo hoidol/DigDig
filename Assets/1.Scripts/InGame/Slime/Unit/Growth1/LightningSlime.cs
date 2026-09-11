@@ -7,22 +7,17 @@ public class LightningSlime : SlimeGrowth1
     public LayerMask hitLayerMask;
     float searchRadius = 2f;
     float initSearchRadius = 6f;
-    public override void Awake()
+
+    public override void Spawn(Vector2 pos, int lv)
     {
-        base.Awake();
-        UserSlime userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(key);
+        base.Spawn(pos, lv);
+
         
-        userSlime.EnhanceLevel();
-
-        attackPowers = new float[] {4,6,8};
-        attackSpeeds = new float[] {10,20,30};
-
-
         lightningBulletSpec = new LightningBulletSpec();
         lightningBulletSpec.initSearchRadius = initSearchRadius;
         lightningBulletSpec.searchRadius = searchRadius;
         lightningBulletSpec.lightningCount = lightningCounts[level];
-        lightningBulletSpec.damage = attackPowers[level];
+        lightningBulletSpec.damage = AttackPower;
         lightningBulletSpec.hitLayerMask = hitLayerMask;
     }
 

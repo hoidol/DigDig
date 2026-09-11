@@ -11,7 +11,6 @@ public class SlimeManager : MonoSingleton<SlimeManager>
     public SlimeData[] growth1SlimeDatas;
     public SlimeData[] growth2SlimeDatas;
 
-    public Dictionary<GradeType, EnhanceGradeInfo> enhanceGradeInfoDic = new Dictionary<GradeType, EnhanceGradeInfo>();
     public Dictionary<GradeType, EnhanceExpInfo> enhanceExpInfoDic = new Dictionary<GradeType, EnhanceExpInfo>();
     public SlimeMergeData[] slimeMergeDatas;
 
@@ -74,13 +73,6 @@ public class SlimeManager : MonoSingleton<SlimeManager>
 
         });
 
-        await AddressableMgr.LoadAllByLabel<EnhanceGradeInfo>("EnhanceGradeInfo", (dates) =>
-        {
-            foreach (EnhanceGradeInfo info in dates)
-            {
-                enhanceGradeInfoDic[info.grade] = info;
-            }
-        });
 
         await AddressableMgr.LoadAllByLabel<EnhanceExpInfo>("EnhanceExpInfo", (dates) =>
         {
@@ -108,11 +100,6 @@ public class SlimeManager : MonoSingleton<SlimeManager>
     public EnhanceExpInfo GetEnhanceExpInfo(GradeType grade)
     {
         return enhanceExpInfoDic.TryGetValue(grade, out EnhanceExpInfo info) ? info : null;
-    }
-
-    public EnhanceGradeInfo GetEnhanceGradeInfo(GradeType grade)
-    {
-        return enhanceGradeInfoDic.TryGetValue(grade, out EnhanceGradeInfo info) ? info : null;
     }
 
     public List<SlimeMergeData> GetSlimeMergeDatas(string[] slimeKeys)

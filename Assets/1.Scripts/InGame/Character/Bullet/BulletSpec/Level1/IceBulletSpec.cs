@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class IceBulletSpec : BulletSpec
+public class IceBulletSpec : AllyBulletSpec
 {
     public float duration;
 

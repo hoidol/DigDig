@@ -15,7 +15,6 @@ public class CloverItem : Item
     public override string GetDescription()
     {
         return $"코인 드랍 확률 +{chance * 100:0}%";
-        //return string.Format(TranslateManager.GetText("{key}_Desc"),critChance);
     }
     
 }

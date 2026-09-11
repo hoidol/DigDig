@@ -7,16 +7,17 @@ public class BoomSlime : SlimeGrowth1
     public override void Awake()
     {
         base.Awake();
-        UserSlime userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(key);
-        
-        userSlime.EnhanceLevel();
+        // UserSlime userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(key);
+        // userSlime.EnhanceLevel();
+    }
 
-        attackPowers = new float[] {4,6,8};
-        attackSpeeds = new float[] {5,4.7f,4.2f};
+    public override void Spawn(Vector2 pos, int lv)
+    {
+        base.Spawn(pos, lv);
 
         boomBulletSpec = new BoomBulletSpec();
         boomBulletSpec.boomRange = boomRanges[level];
-        boomBulletSpec.damage = attackPowers[level];
+        boomBulletSpec.damage = AttackPower;
     }
 
     public override AllyBulletObject GetBullet()

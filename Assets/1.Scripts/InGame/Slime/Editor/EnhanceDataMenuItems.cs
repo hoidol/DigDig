@@ -18,9 +18,9 @@ public static class EnhanceDataMenuItems
     {
         foreach (GradeType grade in (GradeType[])Enum.GetValues(typeof(GradeType)))
         {
-            EnhanceGradeInfo gradeInfo = GetOrCreateAsset<EnhanceGradeInfo>(GRADE_INFO_FOLDER, grade.ToString(), asset => asset.grade = grade);
-            gradeInfo.LoadData();
-            AddToAddressables(gradeInfo, "EnhanceGradeInfo");
+            // EnhanceGradeInfo gradeInfo = GetOrCreateAsset<EnhanceGradeInfo>(GRADE_INFO_FOLDER, grade.ToString(), asset => asset.grade = grade);
+            // gradeInfo.LoadData();
+            // AddToAddressables(gradeInfo, "EnhanceGradeInfo");
 
             EnhanceExpInfo expInfo = GetOrCreateAsset<EnhanceExpInfo>(EXP_INFO_FOLDER, grade.ToString(), asset => asset.grade = grade);
             expInfo.LoadData();

@@ -22,7 +22,7 @@ public class AbilityData : ScriptableObject
     {
         foreach (var condition in conditions)
         {
-            if (!condition.Check())
+            if (!condition.Unlock())
                 return false;
         }
         return true;

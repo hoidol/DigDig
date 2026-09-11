@@ -11,7 +11,7 @@ namespace Lobby
         public Image thumImge;
         public TMP_Text enhanceLvText;
         public SlimeExpPanel mineMeExpPanel;
-
+        public Image gradeImage;
 
         public void SetData(SlimeData uMData)
         {
@@ -23,15 +23,28 @@ namespace Lobby
 
             if (thumImge != null)
                 thumImge.sprite = uMData.thum;
+            if(gradeImage != null)
+                gradeImage.sprite = Grade.GetGradeSprite(uMData.grade);
 
             if (enhanceLvText != null)
             {
-                int enhanceLevel = userSlime.EnhanceLevel();
-                enhanceLvText.text = $"LV.{enhanceLevel}";
+                int enhanceLevel = userSlime.enhanceLevel;
+                if(enhanceLevel == SlimeData.MAX_ENHANCE_LEVEL)
+                {
+                    enhanceLvText.text = "MAX";
+                }   
+                else
+                {
+                    enhanceLvText.text = enhanceLevel.ToString();    
+                }
+                
             }
 
-
-            mineMeExpPanel.SetSlime(uMData);
+            if(mineMeExpPanel != null)
+            {
+                mineMeExpPanel.SetSlime(uMData);    
+            }
+            
         }
 
     }

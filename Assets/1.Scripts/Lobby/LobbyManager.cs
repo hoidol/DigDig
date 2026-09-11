@@ -34,6 +34,10 @@ public class LobbyManager : MonoSingleton<LobbyManager>
     public void OpenCanvas(LobbyState state)
     {
         lobbyState = state;
+        for(int i = 0; i < lobbyCanvases.Length; i++)
+        {
+            lobbyCanvases[i].CloseCanvas();
+        }
         var canvas = lobbyCanvases.FirstOrDefault(c => c.state == state);
         canvas?.OpenCanvas();
         lobbyCanvas.UpdateCanvas();
