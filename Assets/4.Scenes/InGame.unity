@@ -25282,7 +25282,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -248.6, y: -116.359985}
+  m_AnchoredPosition: {x: -248.6, y: -116.35986}
   m_SizeDelta: {x: 744.8, y: 232.71}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1014599513
@@ -29255,8 +29255,7 @@ MonoBehaviour:
     enemyAttackPower: 0
     enemyPatternData:
       phase: 0
-      dayEnemySpawnPatternDatas: []
-      nightEnemySpawnPatternDatas: []
+      wavePatternDatas: []
 --- !u!4 &1166215920
 Transform:
   m_ObjectHideFlags: 0

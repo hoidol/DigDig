@@ -10,6 +10,7 @@ public class SlimeData : ScriptableObject
     public string key;
     public string Title => TranslateManager.GetText(key);
     public string[] descs;
+    public string[] enhanceAbilityDescs;
     public int growth;
 
     public float attackPower;
@@ -30,14 +31,14 @@ public class SlimeData : ScriptableObject
         switch (statType)
         {
             case StatType.AttackPower:
-            value = attackPower * (lv +1);
-            break;
+                value = attackPower * (lv + 1);
+                break;
             case StatType.AttackSpeed:
-            value = attackSpeed;
-            break;
+                value = attackSpeed;
+                break;
             case StatType.AttackRange:
-            value = attackRange;
-            break;
+                value = attackRange;
+                break;
         }
         return new SlimeStat()
         {
@@ -288,7 +289,7 @@ public class SlimeStat
 
     public string GetValueToString()
     {
-        
-            return value.ToString();
+
+        return value.ToString();
     }
 }

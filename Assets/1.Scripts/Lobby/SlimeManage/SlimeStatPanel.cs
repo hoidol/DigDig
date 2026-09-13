@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class SlimeAbilityPanel : MonoBehaviour
+public class SlimeStatPanel : MonoBehaviour
 {
     public StatType statType;
     public TMP_Text valueText;

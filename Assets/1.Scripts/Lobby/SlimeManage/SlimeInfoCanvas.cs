@@ -8,7 +8,8 @@ namespace Lobby
         public SlimePanel slimePanel;
         public GameObject equiptButton;
         public GameObject levelUpButton;
-        public SlimeAbilityPanel[] slimeAbilityPanels;
+        public SlimeStatPanel[] statPanels;
+        public SlimeEnhanceAbilityPanel[] enhanceAbilityPanels;
         SlimeData slimeData;
         UserSlime userSlime;
         public void OpenCanvas(SlimeData slimeData, Action closeCallback = null)
@@ -27,31 +28,35 @@ namespace Lobby
 
         public void UpdateCanvas()
         {
-            equiptButton.SetActive(false);    
+            equiptButton.SetActive(false);
             if (userSlime.own)
             {
-                equiptButton.SetActive(true);    
+                equiptButton.SetActive(true);
             }
 
-            for(int i = 0; i < slimeAbilityPanels.Length; i++)
+            for (int i = 0; i < statPanels.Length; i++)
             {
-                slimeAbilityPanels[i].SetSlimeData(slimeData);
+                statPanels[i].SetSlimeData(slimeData);
             }
-            
+
+            for (int i = 0; i < enhanceAbilityPanels.Length; i++)
+            {
+                enhanceAbilityPanels[i].SetSlimeData(slimeData, userSlime);
+            }
         }
 
         public void OnClickedLeft()
         {
-            
+
         }
 
         public void OnClickedRight()
         {
-            
+
         }
         public void OnClickedLevelUp()
         {
-            
+
         }
         public void OnClickedEquipt()
         {
