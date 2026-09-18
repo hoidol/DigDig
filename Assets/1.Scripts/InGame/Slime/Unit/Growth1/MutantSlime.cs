@@ -31,8 +31,8 @@ public class MutantSlime : SlimeGrowth1
         throw new System.NotImplementedException();
     }
 
-    public override string GetDescription(int level =0)
-    {
-        throw new System.NotImplementedException();
-    }
+    // public override string GetDescription(int level =0)
+    // {
+    //     throw new System.NotImplementedException();
+    // }
 }

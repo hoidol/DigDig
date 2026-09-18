@@ -39,7 +39,7 @@ public class UserStageManager : UserBaseManager
             userStage.key = GameSetting.FIRST_STAGE_KEY;
 
             userStageData.userStages.Add(userStage);
-            SaveData();
+            RequestSave();
         }
     }
 
@@ -58,15 +58,15 @@ public class UserStageManager : UserBaseManager
             if(maxPhase > userStage.maxPhase)
                 userStage.maxPhase = maxPhase;
         }
-        
-        SaveData();
+
+        RequestSave();
     }
 
     public void TryStage(string key)
     {
         UserStage userStage = GetUserStage(key);
         userStage.tryCount++;
-        SaveData();
+        RequestSave();
     }
 
     public UserStage GetUserStage(string key)
@@ -78,7 +78,7 @@ public class UserStageManager : UserBaseManager
             userStage.key = key;
             userStageData.userStages.Add(userStage);
             userStageData.userStages = userStageData.userStages.OrderBy(e => StageData.GetStageData(key).order).ToList();
-            SaveData();
+            RequestSave();
         }
         return userStage;
     }
@@ -111,7 +111,7 @@ public class UserStageManager : UserBaseManager
     {
         UserStage userStage = GetUserStage(stageData.key);
         userStage.GetUserStageReward(id).gotten =true;
-        SaveData();
+        RequestSave();
     }
 }
 

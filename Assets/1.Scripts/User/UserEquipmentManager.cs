@@ -20,8 +20,7 @@ public class UserEquipmentManager : UserBaseManager
         {
             userEquipmentData = new UserEquipmentData();
         }
-
-        SaveData();
+        RequestSave();
     }
 
 
@@ -37,8 +36,7 @@ public class UserEquipmentManager : UserBaseManager
         userEquipment.key = key;
         userEquipment.equipped = false;
         userEquipmentData.userEquipments.Add(userEquipment);
-        // userEquipmentData.userEquipments = userEquipmentData.userEquipments.OrderByDescending(e => e.equipmentData.grade).ThenBy(e => e.equipmentData.equipmentType).ThenBy(e => e.equipmentData.key).ToList();
-        SaveData();
+        RequestSave();
         return userEquipment;
     }
 
@@ -56,7 +54,7 @@ public class UserEquipmentManager : UserBaseManager
             return;
         }
         userEquipmentData.userEquipments.Remove(userEquipment);
-        SaveData();
+        RequestSave();
     }
 
     public UserEquipment EquiptUserEquipment(UserEquipment userEquipment)
@@ -65,7 +63,7 @@ public class UserEquipmentManager : UserBaseManager
         
         userEquipment.equipped = true;
 
-        SaveData();
+        RequestSave();
         return userEquipment;
     }
     public UserEquipment GetEquippedUserEquipment(EquipmentType equipmentType)
@@ -90,7 +88,7 @@ public class UserEquipmentManager : UserBaseManager
         UserEquipment userEquipment = GetUserEquipment(id);
         userEquipment.equipped = false;
 
-        SaveData();
+        RequestSave();
         return userEquipment;
     }
     public UserEquipment[] GetEquippedUserEquipments()

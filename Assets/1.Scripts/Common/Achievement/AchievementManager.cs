@@ -6,7 +6,7 @@ public class AchievementManager : MonoSingleton<AchievementManager>
 {
     public DailyAchievementManager dailyAchievementManager;
     public CumulativeAchievementManager cumulativeAchievementManager;
-    public List<SubAchievementManager> subAchievementManagers;
+    public List<SubAchievementManager> subAchievementManagers = new List<SubAchievementManager>();
     void Awake()
     {
         dailyAchievementManager = new DailyAchievementManager();

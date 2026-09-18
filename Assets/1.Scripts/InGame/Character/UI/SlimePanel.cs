@@ -23,7 +23,7 @@ public class SlimePanel : MonoBehaviour
             thumImage.sprite = slime.SlimeData.thum;
 
         if (descText != null)
-            descText.text = slime.GetDescription(slime.level);
+            descText.text = slime.slimeData.GetDescription(slime.mergeLevel);
 
         levelPanel?.SetSlime(me);
     }

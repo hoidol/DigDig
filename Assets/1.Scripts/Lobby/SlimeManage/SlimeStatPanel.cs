@@ -1,12 +1,18 @@
+
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SlimeStatPanel : MonoBehaviour
 {
-    public StatType statType;
+    // public SlimeStatType statType;
+    public TMP_Text titleText;
     public TMP_Text valueText;
-    public void SetSlimeData(SlimeData slimeData)
+    public Image thumImage;
+    public void SetSlimeStat(SlimeStat slimeStat,int mergeLv)
     {
-        valueText.text = slimeData.GetSlimeStat(statType).GetValueToString();
+        thumImage.sprite = slimeStat.Thum;
+        titleText.text = slimeStat.Title;
+        valueText.text = slimeStat.GetValueToString(mergeLv);
     }
 }

@@ -9,18 +9,229 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a9cedb506a034c99b3b9f2eaaeaf31e, type: 3}
+  m_Script: {fileID: 11500000, guid: 207c082cc04b9421d84ea0714399f31a, type: 3}
   m_Name: Pierce
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeData
+  m_EditorClassIdentifier: Assembly-CSharp::PierceSlimeData
   key: Pierce
-  descs:
-  - 탄 4번 쏠때마다 관통탄 추가 발사 (랜덤 방향) +3 > +5 > +7
-  - 탄 4번 쏠때마다 관통탄 추가 발사 (랜덤 방향) +3 > +5 > +7
-  - 탄 4번 쏠때마다 관통탄 추가 발사 (랜덤 방향) +3 > +5 > +7
+  desc: "\uD0C4 4\uBC88 \uC3E0\uB54C\uB9C8\uB2E4 \uAD00\uD1B5\uD0C4 \uCD94\uAC00
+    \uBC1C\uC0AC (\uB79C\uB364 \uBC29\uD5A5) +3 > +5 > +7"
   growth: 1
-  valueInfo: 
+  commonSlimeEnhanceInfos:
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
+  - level: 15
+    slimeStats:
+    - statType: 0
+      values:
+      - 0
+      - 0
+    - statType: 1
+      values:
+      - 0
+      - 0
+    - statType: 2
+      values:
+      - 0
+      - 0
   prefab: {fileID: 5710616033647722441, guid: fa57aaf9051d343018ee74a6557f1e39, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
-  color: {r: 0.8509804, g: 0.8901961, b: 0.9411765, a: 1}
-  grade: 0
+  grade: 2
+  displayStatTypes: 000000000100000002000000
+  enhanceAbilityInfos: []
+  uniqueSlimeStats: []
+  pierceCount: 020000000400000006000000

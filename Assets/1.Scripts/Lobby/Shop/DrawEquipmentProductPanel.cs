@@ -7,7 +7,6 @@ using UnityEngine;
 public class DrawEquipmentProductPanel : ProductPanel 
 {
     //어떤것들이 나올지 설정해야지
-    public string[] equipmentKeys;//중에 랜덤으로 하나?
     public DrawEquipment drawEquipment;
     public override void Purchased()
     {
@@ -19,13 +18,14 @@ public class DrawEquipmentProductPanel : ProductPanel
         }
         
         Lobby.DrawEquipmentResultCanvas.Instance.OpenCanvas(keys);
-
     }
 }
 
 [System.Serializable]
 public class DrawEquipment
 {
+    // public string[] equipmentKeys;//중에 랜덤으로 하나?
+
     [Header("등급에 따른 확률")]
     public DrawEquipmentInfo[] drawEquipmentInfos;
     [Header("몇개 뽑을지")]

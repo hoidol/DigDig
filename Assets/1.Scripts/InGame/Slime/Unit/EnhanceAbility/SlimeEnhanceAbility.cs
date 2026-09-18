@@ -9,10 +9,11 @@ public abstract class SlimeEnhanceAbility : MonoBehaviour
 {
     public int level;
     public Slime slime;
-    public virtual void Spawn(Slime slime)
-    {
-        
+    public bool isActivate;
+    public virtual void Activate(Slime slime, bool a)
+    {        
         this.slime = slime;
+        isActivate = a;
     }
     
     public virtual void Fire()

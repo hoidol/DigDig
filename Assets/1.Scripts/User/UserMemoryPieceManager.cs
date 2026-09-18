@@ -40,7 +40,7 @@ public class UserMemoryPieceManager : UserBaseManager
         group.point++;
         userMemoryPiece.point++;
 
-        SaveData();
+        RequestSave();
     }
 
     UserMemoryPiece GetUserMemoryPiece(string key)

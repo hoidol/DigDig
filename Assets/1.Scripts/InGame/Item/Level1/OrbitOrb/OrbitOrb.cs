@@ -9,13 +9,23 @@ public class OrbitOrb : MonoBehaviour
     public List<HitCooldown> hitCooldowns = new();
     protected const float HIT_COOLDOWN = 0.5f;
     public LayerMask layerMask;
+    public List<IBulletBehavior> bulletBehaviors = new List<IBulletBehavior>();
 
     public class HitCooldown
     {
         public IHittable hittable;
         public float cooltime;
     }
-
+    OrbitMachine orbitMachine;
+    public void Spawn(OrbitMachine orbitMachine)
+    {
+        this.orbitMachine = orbitMachine;
+        bulletBehaviors.Clear();
+    }
+    public void AddBulletBehaviour(IBulletBehavior bulletBehavior)
+    {
+        bulletBehaviors.Add(bulletBehavior);
+    }
     public virtual void Update()
     {
         for (int i = hitCooldowns.Count - 1; i >= 0; i--)
@@ -38,6 +48,7 @@ public class OrbitOrb : MonoBehaviour
 
     public virtual void OnHit(Collider2D other, IHittable hittable)
     {
+        bulletBehaviors.ForEach(e=>e.OnHit(null,hittable,new RaycastHit2D(),transform.position- orbitMachine.transform.position));
         hittable.TakeDamage(new DamageData { damage = damage });
     }
 }

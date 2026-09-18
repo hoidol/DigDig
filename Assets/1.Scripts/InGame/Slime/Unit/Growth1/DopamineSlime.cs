@@ -48,7 +48,7 @@ public class DopamineSlime : SlimeGrowth1
         if (coolTimer > 0)
             return;
 
-        for (int i = 0; i < level+1; i++)
+        for (int i = 0; i < mergeLevel+1; i++)
         {
             Fire(AttackDirecton());
             await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
@@ -65,10 +65,6 @@ public class DopamineSlime : SlimeGrowth1
         }
     }
 
-    public override string GetDescription(int level =0)
-    {
-        throw new System.NotImplementedException();
-    }
 
     
     AllyBulletSpec allyBulletSpec;

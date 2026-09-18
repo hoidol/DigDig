@@ -9,6 +9,12 @@ namespace Lobby
         public virtual void SetData(SlimeData slimeData)
         {
             this.slimeData = slimeData;
+            if(slimeData == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            gameObject.SetActive(true);
             userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(slimeData.key); 
             if(slimePanel == null)
             {

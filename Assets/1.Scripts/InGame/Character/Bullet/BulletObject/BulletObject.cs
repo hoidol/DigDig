@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public abstract class BulletObject : MonoBehaviour
 {
+    [Header("총알 이동속도")]
     [SerializeField] float moveSpeed;
     [SerializeField] float bulletRadius = 0.1f;
     public Vector3 direction;
@@ -19,11 +20,9 @@ public abstract class BulletObject : MonoBehaviour
     const float LIFETIME = 15f;
     protected float lifetimeTimer;
     // public DamageData damageData;
-
     public virtual void Shoot(Vector2 dir, float damage)
     {
         direction = dir;
-        // damageData.damage = damage;
         preTarget = null;
         lifetimeTimer = LIFETIME;
     }

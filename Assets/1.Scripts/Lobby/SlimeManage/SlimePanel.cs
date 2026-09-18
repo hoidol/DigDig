@@ -11,7 +11,7 @@ namespace Lobby
         public Image thumImge;
         public TMP_Text enhanceLvText;
         public SlimeExpPanel mineMeExpPanel;
-        public Image gradeImage;
+        public SlimeGradePanel slimeGradePanel;
 
         public void SetData(SlimeData uMData)
         {
@@ -22,9 +22,21 @@ namespace Lobby
                 descText.text = uMData.GetDescription();
 
             if (thumImge != null)
+            {
                 thumImge.sprite = uMData.thum;
-            if(gradeImage != null)
-                gradeImage.sprite = Grade.GetGradeSprite(uMData.grade);
+                if (userSlime.own)
+                {
+                    thumImge.color = Color.white;
+                }
+                else
+                {
+                    thumImge.color = Color.gray;
+                }
+            }
+                
+            if(slimeGradePanel != null){
+                slimeGradePanel.SetSlimeData(uMData);
+            }
 
             if (enhanceLvText != null)
             {

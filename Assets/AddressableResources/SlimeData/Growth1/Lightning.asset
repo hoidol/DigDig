@@ -1,0 +1,221 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb67b57b722d74aec972b63925ef4d25, type: 3}
+  m_Name: Lightning
+  m_EditorClassIdentifier: Assembly-CSharp::LightningSlimeData
+  key: Lightning
+  desc: "\uBAAC\uC2A4\uD130 \uACF5\uACA9 \uC2DC \uD0C0\uAC9F\uC744 \uD3EC\uD568\uD55C
+    3\uAC1C\uC758 \uBAAC\uC2A4\uD130\uC5D0\uAC8C \uAC01\uAC01 100%, 70%, 30% [\uC804\uAE30]\uB370\uBBF8\uC9C0\uB97C
+    \uC785\uD78C\uB2E4."
+  growth: 1
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 5
+    - statType: 1
+      values:
+      - 25
+    - statType: 2
+      values:
+      - 3
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 5
+    - statType: 1
+      values:
+      - 29
+    - statType: 2
+      values:
+      - 3
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 6
+    - statType: 1
+      values:
+      - 29
+    - statType: 2
+      values:
+      - 3
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 6
+    - statType: 1
+      values:
+      - 29
+    - statType: 2
+      values:
+      - 3.2
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 7
+    - statType: 1
+      values:
+      - 29
+    - statType: 2
+      values:
+      - 3.2
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 7
+    - statType: 1
+      values:
+      - 33
+    - statType: 2
+      values:
+      - 3.2
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 8
+    - statType: 1
+      values:
+      - 33
+    - statType: 2
+      values:
+      - 3.2
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 8
+    - statType: 1
+      values:
+      - 33
+    - statType: 2
+      values:
+      - 3.5
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 8
+    - statType: 1
+      values:
+      - 33
+    - statType: 2
+      values:
+      - 3.5
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 11
+      - 9
+    - statType: 1
+      values:
+      - 33
+    - statType: 2
+      values:
+      - 3.5
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 11
+      - 9
+    - statType: 1
+      values:
+      - 37
+    - statType: 2
+      values:
+      - 3.5
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 11
+      - 9
+    - statType: 1
+      values:
+      - 37
+    - statType: 2
+      values:
+      - 3.8
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 12
+      - 10
+    - statType: 1
+      values:
+      - 37
+    - statType: 2
+      values:
+      - 3.8
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 12
+      - 10
+    - statType: 1
+      values:
+      - 37
+    - statType: 2
+      values:
+      - 3.8
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 12
+      - 10
+    - statType: 1
+      values:
+      - 41
+    - statType: 2
+      values:
+      - 3.8
+  prefab: {fileID: 6013896055276470971, guid: b556d70b9ec6e4200b09a813f7133bad, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  grade: 3
+  displayStatTypes: 000000000100000002000000
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 +2 \uC99D\uAC00"
+  - level: 5
+    desc: "\uB099\uB8B0 \uD0D0\uC0C9 \uBC94\uC704(searchRadius) 20% \uC99D\uAC00"
+  - level: 8
+    desc: "[\uAC01\uC131] \uAC10\uC804(\uC774\uB3D9\uC18D\uB3C4 \uAC10\uC18C) \uD6A8\uACFC
+      \uBD80\uC5EC"
+  - level: 11
+    desc: "\uCCB4\uC778 \uD69F\uC218 +1"
+  - level: 14
+    desc: "\uACF5\uACA9 \uC18D\uB3C4 +10% \uC99D\uAC00"
+  uniqueSlimeStats: []
+  searchRadius: 2
+  initSearchRadius: 6
+  lightningCounts: 030000000500000007000000

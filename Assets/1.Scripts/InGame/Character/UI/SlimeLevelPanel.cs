@@ -20,7 +20,7 @@ public class SlimeLevelPanel : MonoBehaviour
         
         if(slime.SlimeData.growth == 1)
         {
-            for(int i = 0; i < slime.level+1; i++)
+            for(int i = 0; i < slime.mergeLevel+1; i++)
             {
                 stars[i].gameObject.SetActive(true);
             }

@@ -55,6 +55,45 @@ public static class InGameUtil
 
         return nearest.transform;
     }
+
+    //exceptEffect 이펙트가 적용된 타겟을 후순위로 찾음
+    public static Transform FindTarget(Vector2 pos, float range, LayerMask layerMask, string exceptEffect)
+    {
+        
+        Collider2D[] cols = Physics2D.OverlapCircleAll(pos, range, layerMask);
+        if (cols.Length == 0)
+            return null;
+
+        // Vector2 pos = transform.position;
+
+        Collider2D nearest = null;
+        float nearestSqrDist = float.MaxValue;
+        Collider2D nearestBurning = null;
+        float nearestBurningSqrDist = float.MaxValue;
+
+        for (int i = 0; i < cols.Length; i++)
+        {
+            float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
+            bool isEffecting = cols[i].TryGetComponent(out StatusEffectHandler handler) && handler.HasEffect(exceptEffect);
+
+            if (isEffecting)
+            {
+                if (sqrDist < nearestBurningSqrDist)
+                {
+                    nearestBurning = cols[i];
+                    nearestBurningSqrDist = sqrDist;
+                }
+            }
+            else if (sqrDist < nearestSqrDist)
+            {
+                nearest = cols[i];
+                nearestSqrDist = sqrDist;
+            }
+        }
+
+        Collider2D target = nearest != null ? nearest : nearestBurning;
+        return target != null ? target.transform : null;
+    }
 }
 public enum FindTargetType
 {

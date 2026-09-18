@@ -7,6 +7,6 @@ public class LevelUpSlimeSlotPanel : MonoBehaviour
     public void SetSlime(Slime slime)
     {
         slimePanel.SetSlime(slime);
-        levelText.text = $"Lv.{slime.level} > {slime.level + 1}";
+        levelText.text = $"Lv.{slime.mergeLevel} > {slime.mergeLevel + 1}";
     }
 }

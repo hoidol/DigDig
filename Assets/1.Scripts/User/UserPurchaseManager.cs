@@ -21,7 +21,7 @@ public class UserPurchaseManager : UserBaseManager
             userPurchaseData = new UserPurchaseData();
         }
 
-        SaveData();
+        RequestSave();
     }
 
 
@@ -32,7 +32,7 @@ public class UserPurchaseManager : UserBaseManager
         userPurchase.key = productData.key;
         userPurchase.purchaseTime = TimeManager.NowToString();
         userPurchaseData.userPurchases.Add(userPurchase);
-        SaveData();
+        RequestSave();
         return userPurchase;
     }
 

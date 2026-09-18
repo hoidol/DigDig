@@ -3,26 +3,17 @@
 // count + basePierceCount만큼 관통 횟수가 설정되어, 총알이 여러 적/광석을 연속으로 통과.
 public class PierceBulletSpec : AllyBulletSpec
 {
-    // public int[] pierceCounts = {2,3,4};
-    // public float[] multiplyATKs = {1.3f,1.4f,1.5f};
-
-    // public float multiplyAtk;
     public int pierceCount;
     public PierceBulletSpec()
     {
         key = "Pierce";
     }
-    // public override void OnBulletFired(PlayerBulletObject bullet)
-    // {
-    //     base.OnBulletFired(bullet);
-    //     bullet.AddBulletForce(new DamageBoostForce(multiplyATKs[GetLevel()-1])); // +0.5×
-    //     bullet.AddBehavior(new PierceBehavior(pierceCounts[GetLevel()-1]));
-    // }
+    public override void StartBulletSpec()
+    {
+        base.StartBulletSpec();
+        AddBulletBehaviour(new PierceBehavior(pierceCount));
+    }
 
-    // public override string GetDescription(int lv, bool detail = false)
-    // {
-    //     return $"튕긴 후 관통 +{pierceCounts[lv-1]} 피해 {(multiplyATKs[lv-1]-1)*100}% 증가";
-    // }
 
 
 }

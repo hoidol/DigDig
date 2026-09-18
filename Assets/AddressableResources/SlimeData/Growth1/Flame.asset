@@ -9,18 +9,244 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a9cedb506a034c99b3b9f2eaaeaf31e, type: 3}
+  m_Script: {fileID: 11500000, guid: 62463ba7ea8a94a3da2cbb995737403d, type: 3}
   m_Name: Flame
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeData
+  m_EditorClassIdentifier: Assembly-CSharp::FlameSlimeData
   key: Flame
-  descs:
-  - 화염탄 발사
-  - 화염탄 발사
-  - 화염탄 발사
+  desc: "\uD654\uC5FC\uD0C4\uC7441\uAC1C \uBC1C\uC0AC/"
   growth: 1
-  valueInfo: 
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+    - statType: 1
+      values:
+      - 30
+      - 3
+    - statType: 2
+      values:
+      - 3
+      - 0.2
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+    - statType: 1
+      values:
+      - 35
+      - 4
+    - statType: 2
+      values:
+      - 3
+      - 0.2
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 11
+      - 11
+    - statType: 1
+      values:
+      - 35
+      - 4
+    - statType: 2
+      values:
+      - 3
+      - 0.2
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 11
+      - 11
+    - statType: 1
+      values:
+      - 35
+      - 4
+    - statType: 2
+      values:
+      - 3.2
+      - 0.2
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 12
+      - 12
+    - statType: 1
+      values:
+      - 35
+      - 4
+    - statType: 2
+      values:
+      - 3.2
+      - 0.2
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 12
+      - 12
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.2
+      - 0.2
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 13
+      - 13
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.2
+      - 0.2
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 13
+      - 13
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.5
+      - 0.2
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 13
+      - 13
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.5
+      - 0.2
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 14
+      - 14
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.5
+      - 0.2
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 14
+      - 14
+    - statType: 1
+      values:
+      - 45
+      - 6
+    - statType: 2
+      values:
+      - 3.5
+      - 0.2
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 14
+      - 14
+    - statType: 1
+      values:
+      - 45
+      - 6
+    - statType: 2
+      values:
+      - 3.8
+      - 0.2
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 15
+      - 15
+    - statType: 1
+      values:
+      - 45
+      - 6
+    - statType: 2
+      values:
+      - 3.8
+      - 0.2
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 15
+      - 15
+    - statType: 1
+      values:
+      - 45
+      - 6
+    - statType: 2
+      values:
+      - 3.8
+      - 0.2
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 15
+      - 15
+    - statType: 1
+      values:
+      - 50
+      - 7
+    - statType: 2
+      values:
+      - 3.8
+      - 0.2
   prefab: {fileID: 6666491537767946925, guid: c2eccd09d44a2479aa3430aa28659778, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
-  color: {r: 1, g: 0.41568627, b: 0, a: 1}
-  grade: 0
+  grade: 1
+  displayStatTypes: 000000000100000002000000
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00"
+  - level: 5
+    desc: "\uD654\uC5FC \uC9C0\uC18D \uC2DC\uAC04 4\uCD08 > 5\uCD08 \uC99D\uAC00"
+  - level: 8
+    desc: "[\uAC01\uC131] \uB2A5\uB825 \uAC1C\uBC29 - 5\uCD08\uB9C8\uB2E4 \uC8FC\uBCC0
+      \uC801\uC5D0\uAC8C \uD654\uC5FC"
+  - level: 11
+    desc: "\uD654\uC5FC\uC774 \uC5C6\uB294 \uC720\uB2DB\uC744 \uC6B0\uC120 \uD0C0\uAC9F"
+  - level: 14
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00 + \uACF5\uACA9\uC18D\uB3C4 10% \uC99D\uAC00"
+  uniqueSlimeStats:
+  - statType: 3
+    values:
+    - 5
+    - 7
+    - 10
+  burnDuration: 4

@@ -12,10 +12,10 @@ public class HoverSlime : SlimeGrowth1
         throw new System.NotImplementedException();
     }
 
-    public override string GetDescription(int level =0)
-    {
-        throw new System.NotImplementedException();
-    }
+    // public override string GetDescription(int level =0)
+    // {
+    //     throw new System.NotImplementedException();
+    // }
 
     // public override void Spawn(Vector2 pos)
     // {

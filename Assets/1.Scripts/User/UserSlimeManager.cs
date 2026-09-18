@@ -39,7 +39,7 @@ public class UserSlimeManager : UserBaseManager
             userSlimeData.equiptedSlimes[i] = GetEquiptUserSlime(i);
         }
 
-        SaveData();
+        RequestSave();
     }
 
 
@@ -56,7 +56,7 @@ public class UserSlimeManager : UserBaseManager
             userSlime = new UserSlime();
             userSlime.key = key;
             userSlimeData.userSlimes.Add(userSlime);
-            SaveData();
+            RequestSave();
         }
 
         return userSlime;
@@ -68,7 +68,7 @@ public class UserSlimeManager : UserBaseManager
         if (!userSlime.own)
         {
             userSlime.own = true;
-            SaveData();
+            RequestSave();
         }
         return userSlime;
     }
@@ -79,7 +79,7 @@ public class UserSlimeManager : UserBaseManager
 
         userSlime.equipedIdx = idx;
 
-        SaveData();
+        RequestSave();
         return userSlime;
     }
 
@@ -88,7 +88,7 @@ public class UserSlimeManager : UserBaseManager
         UserSlime userSlime = GetEquiptUserSlime(idx);
         userSlime.equipedIdx = -1;
 
-        SaveData();
+        RequestSave();
         return userSlime;
     }
     public UserSlime ReleaseUserSlime(string key)
@@ -96,7 +96,7 @@ public class UserSlimeManager : UserBaseManager
         UserSlime userSlime = GetUserSlime(key);
         userSlime.equipedIdx = -1;
 
-        SaveData();
+        RequestSave();
         return userSlime;
     }
 
@@ -109,7 +109,13 @@ public class UserSlimeManager : UserBaseManager
     public void AddExp(string key, int exp)
     {
         GetUserSlime(key).exp += exp;
-        SaveData();
+        RequestSave();
+    }
+
+    public void LevelUp(string key)
+    {
+        GetUserSlime(key).enhanceLevel++;
+        RequestSave();
     }
 }
 

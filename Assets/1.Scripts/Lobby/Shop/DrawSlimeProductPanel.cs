@@ -7,7 +7,6 @@ using UnityEngine;
 public class DrawSlimeProductPanel : ProductPanel 
 {
     //어떤것들이 나올지 설정해야지
-    public string[] slimeKeys;//중에 랜덤으로 하나?
     public DrawSlime drawSlime;
     public override void Purchased()
     {
@@ -25,6 +24,9 @@ public class DrawSlimeProductPanel : ProductPanel
 [System.Serializable]
 public class DrawSlime
 {
+
+    // public string[] slimeKeys;//중에 랜덤으로 하나?
+
     [Header("등급에 따른 확률")]
     public DrawSlimeInfo[] drawSlimeInfos;
     [Header("몇개 뽑을지")]

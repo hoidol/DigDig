@@ -28,8 +28,8 @@ public class ThunderSlime : SlimeGrowth1
     }
 
 
-    public override string GetDescription(int level =0)
-    {
-        return "천둥탄을 발사합니다";
-    }
+    // public override string GetDescription(int level =0)
+    // {
+    //     return "천둥탄을 발사합니다";
+    // }
 }

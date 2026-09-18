@@ -12,15 +12,8 @@ public class LightningBulletSpec : BulletSpec
 
     public LightningBulletSpec()
     {
-        key = "Lightning";
+        key = "Lightning";        
     }
-    // public override void OnBulletFired(PlayerBulletObject bullet)
-    // {
-    //     base.OnBulletFired(bullet);
-    //     bullet.AddBehavior(new ThunderOnHitBehavior(SEARCH_RADIUS, STRIKE_COUNTS[GetLevel()-1], DAMAGE_RATE));
-    // }
 
-    // public override string GetDescription(int lv = 1, bool detail = false)
-    //     => $"적중 시 낙뢰 (공격력 {DAMAGE_RATE * 100:0}% 데미지, 주변 {SEARCH_RADIUS}m 내 타격)";
 
 }

@@ -8,14 +8,16 @@ namespace Lobby
         public SlimePanel slimePanel;
         public GameObject equiptButton;
         public GameObject levelUpButton;
-        public SlimeStatPanel[] statPanels;
+        public SlimeMergeInfoPanel slimeMergeInfoPanel;
         public SlimeEnhanceAbilityPanel[] enhanceAbilityPanels;
+        // public SlimeGradePanel slimeGradePanel;
         SlimeData slimeData;
         UserSlime userSlime;
         public void OpenCanvas(SlimeData slimeData, Action closeCallback = null)
         {
             this.slimeData = slimeData;
             this.userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(slimeData.key);
+            slimeMergeInfoPanel.SetSlimeData(userSlime,slimeData);
             base.OpenCanvas(closeCallback);
             slimePanel.SetData(slimeData);
             OpenCanvas();
@@ -34,10 +36,7 @@ namespace Lobby
                 equiptButton.SetActive(true);
             }
 
-            for (int i = 0; i < statPanels.Length; i++)
-            {
-                statPanels[i].SetSlimeData(slimeData);
-            }
+            slimeMergeInfoPanel.UpdatePanel();
 
             for (int i = 0; i < enhanceAbilityPanels.Length; i++)
             {
@@ -54,9 +53,18 @@ namespace Lobby
         {
 
         }
+        
         public void OnClickedLevelUp()
         {
+            int exp = SlimeManager.Instance.GetEnhanceExpInfo(userSlime.enhanceLevel, slimeData.grade);
+            if( userSlime.exp < exp)
+            {
+                ToastCanvas.Toast(TranslateManager.GetText("Not enough exp"));
+                return;
+            }
 
+            UserManager.Instance.userSlimeManager.LevelUp(slimeData.key);
+            UpdateCanvas();
         }
         public void OnClickedEquipt()
         {

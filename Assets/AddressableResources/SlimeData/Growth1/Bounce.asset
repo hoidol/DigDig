@@ -9,18 +9,210 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a9cedb506a034c99b3b9f2eaaeaf31e, type: 3}
+  m_Script: {fileID: 11500000, guid: e4042fc903109479abd63593e070248c, type: 3}
   m_Name: Bounce
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeData
+  m_EditorClassIdentifier: Assembly-CSharp::BounceSlimeData
   key: Bounce
-  descs:
-  - 도탄 발사
-  - 도탄 발사
-  - 도탄 발사
+  desc: "1\uD68C \uD295\uAE30\uB294 \uB3C4\uD0C4 \uBC1C\uC0AC/2\uD68C \uD295\uAE30\uB294
+    \uB3C4\uD0C4 \uBC1C\uC0AC/4\uD68C \uD295\uAE30\uB294 \uB3C4\uD0C4 \uBC1C\uC0AC"
   growth: 1
-  valueInfo: 
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+    - statType: 1
+      values:
+      - 30
+    - statType: 2
+      values:
+      - 3
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+    - statType: 1
+      values:
+      - 35
+    - statType: 2
+      values:
+      - 3
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 11
+      - 11
+    - statType: 1
+      values:
+      - 35
+    - statType: 2
+      values:
+      - 3
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 11
+      - 11
+    - statType: 1
+      values:
+      - 35
+    - statType: 2
+      values:
+      - 3.2
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 12
+      - 12
+    - statType: 1
+      values:
+      - 35
+    - statType: 2
+      values:
+      - 3.2
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 12
+      - 12
+    - statType: 1
+      values:
+      - 40
+    - statType: 2
+      values:
+      - 3.2
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 13
+      - 13
+    - statType: 1
+      values:
+      - 40
+    - statType: 2
+      values:
+      - 3.2
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 13
+      - 13
+    - statType: 1
+      values:
+      - 40
+    - statType: 2
+      values:
+      - 3.5
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 13
+      - 13
+    - statType: 1
+      values:
+      - 40
+    - statType: 2
+      values:
+      - 3.5
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 14
+      - 14
+    - statType: 1
+      values:
+      - 40
+    - statType: 2
+      values:
+      - 3.5
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 14
+      - 14
+    - statType: 1
+      values:
+      - 45
+    - statType: 2
+      values:
+      - 3.5
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 14
+      - 14
+    - statType: 1
+      values:
+      - 45
+    - statType: 2
+      values:
+      - 3.8
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 15
+      - 15
+    - statType: 1
+      values:
+      - 45
+    - statType: 2
+      values:
+      - 3.8
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 15
+      - 15
+    - statType: 1
+      values:
+      - 45
+    - statType: 2
+      values:
+      - 3.8
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 15
+      - 15
+    - statType: 1
+      values:
+      - 50
+    - statType: 2
+      values:
+      - 3.8
   prefab: {fileID: 3525381018257742225, guid: 2f000a40b38ba435a8af18a9489199b3, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
-  color: {r: 0.2509804, g: 0.972549, b: 0.8862745, a: 1}
-  grade: 0
+  grade: 1
+  displayStatTypes: 000000000100000002000000
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00"
+  - level: 5
+    desc: "\uD295\uAE30\uB294 \uD69F\uC218 +1"
+  - level: 8
+    desc: "[\uAC01\uC131] \uD295\uAE38 \uB54C\uB9C8\uB2E4 \uD53C\uD574\uB7C9 10%
+      \uC99D\uAC00"
+  - level: 11
+    desc: "\uBC1C\uC0AC \uC18D\uB3C4 10% \uC99D\uAC00"
+  - level: 14
+    desc: "\uD295\uAE30\uB294 \uD69F\uC218 +1"
+  uniqueSlimeStats: []
+  bounces: 020000000400000006000000

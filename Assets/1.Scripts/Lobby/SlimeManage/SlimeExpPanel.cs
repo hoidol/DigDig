@@ -11,7 +11,7 @@ public class SlimeExpPanel : MonoBehaviour
         UserSlime userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(slimeData.key);
         
         EnhanceExpInfo enhanceExpInfo = SlimeManager.Instance.GetEnhanceExpInfo(slimeData.grade);
-        int totalPreLvSumExp = enhanceExpInfo.TotalExp(userSlime.enhanceLevel-1);
+        int totalPreLvSumExp = enhanceExpInfo.TotalExp(userSlime.enhanceLevel);
         int exp = userSlime.exp - totalPreLvSumExp;
         expText.text = $"{exp}/{enhanceExpInfo.exps[userSlime.enhanceLevel]}";
         expBar.fillAmount = exp/enhanceExpInfo.exps[userSlime.enhanceLevel];

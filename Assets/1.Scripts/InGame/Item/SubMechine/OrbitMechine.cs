@@ -33,6 +33,7 @@ public class OrbitMachine : SubMachine
     public OrbitOrb AddOrbit()
     {
         OrbitOrb obj = GetFromPool();
+        obj.Spawn(this);
         obj.damage = damage;
         orbitOrbs.Add(obj);
         Sorting();
@@ -59,6 +60,14 @@ public class OrbitMachine : SubMachine
             float rad = angleBetween * i * Mathf.Deg2Rad;
             orbitOrbs[i].transform.localPosition =
                 new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * radius;
+        }
+    }
+
+    public void UpdateOrbitMachine()
+    {
+        for(int i = 0; i < orbitOrbs.Count; i++)
+        {
+            orbitOrbs[i].damage = damage;
         }
     }
 

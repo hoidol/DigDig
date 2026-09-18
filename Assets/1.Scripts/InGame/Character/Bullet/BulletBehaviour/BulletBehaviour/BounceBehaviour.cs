@@ -9,7 +9,6 @@ public class BounceBehavior : IBulletBehavior
         if (remaining-- <= 0)
             return true;
 
-
         bullet.Bounce(hit2D);
         return false;
     }

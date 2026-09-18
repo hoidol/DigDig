@@ -21,7 +21,7 @@ public class ShieldSlime : SlimeGrowth1
         orbitMachine.damage = AttackPower;
         orbitMachine.radius = 2.3f;
         orbitMachine.rotationSpeed = orbitRotationSpeed;
-        for(int i = 0; i < level + 1; i++)
+        for(int i = 0; i < mergeLevel + 1; i++)
         {
             orbitMachine.AddOrbit();    
         }
@@ -34,9 +34,9 @@ public class ShieldSlime : SlimeGrowth1
         return null;
     }
 
-    public override string GetDescription(int level =0)
-    {
-        return "쉴드로 적의 공격을 막습니다.";
-    }
+    // public override string GetDescription(int level =0)
+    // {
+    //     return "쉴드로 적의 공격을 막습니다.";
+    // }
 
 }

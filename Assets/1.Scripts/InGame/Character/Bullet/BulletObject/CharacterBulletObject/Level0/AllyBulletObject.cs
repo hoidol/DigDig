@@ -10,22 +10,34 @@ public class AllyBulletObject : BulletObject
     protected List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
     protected List<IBulletForce> forces = new List<IBulletForce>();
     [SerializeField] public AllyUnitDamageData allyUnitDamageData;
-    IAllyUnit allyUnit;
+    public IAllyUnit allyUnit;
     public virtual void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
         this.allyUnit = allyUnit;
         AllyBulletSpec allyBulletSpec = bullet as AllyBulletSpec;
         damage = allyBulletSpec.damage;
+        transform.localScale = Vector3.one;
+        
         if (allyUnitDamageData == null)
         {
             allyUnitDamageData = new AllyUnitDamageData();
         }
 
-        // damageData = allyUnitDamageData;
         allyUnitDamageData.damage = damage;
 
         ClearBehaviors();
         ClearBulletForce();
+
+
+        for(int i = 0; i < bullet.bulletBehaviors.Count; i++)
+        {
+            AddBehavior(bullet.bulletBehaviors[i]); 
+        }
+
+        for(int i = 0; i < bullet.bulletBehaviors.Count; i++)
+        {
+            AddBulletForce(bullet.bulletForces[i]); 
+        }
     }
 
 

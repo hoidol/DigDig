@@ -9,21 +9,16 @@ using Random = UnityEngine.Random;
 public abstract class Slime : MonoBehaviour, IAllyUnit
 {
     public string key;
-    public int level;
+    public int mergeLevel;
 
     public SlimeEnhanceAbility[] slimeEnhanceAbilities;
     public SlimeMovement movement;
 
-    public Dictionary<StatType, SlimeStat> statDic = new Dictionary<StatType, SlimeStat>();
+    public Dictionary<StatType, float> statDic = new Dictionary<StatType, float>();
 
-    public float AttackPower => statDic[StatType.AttackPower].value;
-    public float AttackSpeed => statDic[StatType.AttackSpeed].value;
-    public float AttackRange => statDic[StatType.AttackRange].value;
-
-    // public float attackPower;
-    // public float attackSpeed;
-    // public float attackRange;
-
+    public float AttackPower => statDic[StatType.AttackPower];
+    public float AttackSpeed => statDic[StatType.AttackSpeed];
+    public float AttackRange => statDic[StatType.AttackRange];
 
     public Transform rootTr;
     public SlimeData SlimeData => SlimeManager.Instance.GetSlimeData(key);
@@ -53,33 +48,46 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
             rootTr = transform.Find("Root");
 
     }
-     public UserSlime userSlime;
-    public virtual void Spawn(Vector2 pos, int lv)
+    public UserSlime userSlime;
+    public SlimeEnhanceInfo slimeEnhanceInfo;
+    public virtual void Spawn(Vector2 pos, int mLv)
     {
         userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(key);
+
+        slimeEnhanceInfo = slimeData.GetCommonSlimeEnhanceInfo(userSlime.enhanceLevel);
         transform.position = pos;
-        this.level = lv;
+        this.mergeLevel = mLv;
 
         slimeData = SlimeManager.Instance.GetSlimeData(key);
 
         statDic.Clear();
-        statDic.Add(StatType.AttackPower, new SlimeStat(){ statType = StatType.AttackPower});
-        statDic.Add(StatType.AttackSpeed, new SlimeStat(){ statType = StatType.AttackSpeed});
-        statDic.Add(StatType.AttackRange, new SlimeStat(){ statType = StatType.AttackRange});
-
+        statDic.Add(StatType.AttackPower, 0);
+        statDic.Add(StatType.AttackSpeed, 0);
+        statDic.Add(StatType.AttackRange, 0);
+        
+        InitSlime();
         UpdateSlime();
     }
 
-    public void UpdateSlime()
+    public virtual void InitSlime()
     {
-        statDic[StatType.AttackPower].value = slimeData.GetSlimeStat(StatType.AttackPower).value;
-        statDic[StatType.AttackSpeed].value = slimeData.attackSpeed;
-        statDic[StatType.AttackRange].value = slimeData.attackRange;
+
+    }
+
+    public virtual void InitSlimeStat()
+    {        
+        statDic[StatType.AttackPower] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackPower).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackSpeed] =  slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackSpeed).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackRange] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackRange).GetValue<float>(mergeLevel); 
+    }
+
+    public virtual void UpdateSlime()
+    {
+        InitSlimeStat();
 
         foreach (var buff in activeBuffs)
         {
-            var stat = statDic[buff.statType];
-            stat.value = buff.Apply(stat.value);
+            statDic[buff.statType] = buff.Apply(statDic[buff.statType]);
         }
     }
 
@@ -123,18 +131,18 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
     }
 
-
-    public abstract string GetDescription(int level = 0);
-
     public abstract AllyBulletObject GetBullet();
     public virtual void Update()
     {
-        
-        attackTimer += Time.deltaTime * AttackSpeed / 50;
-        if (attackTimer > AttackSpeed)
+        if(AttackSpeed >= 0)
         {
-            Fire(AttackDirecton());
+            attackTimer += Time.deltaTime * AttackSpeed / 50;
+            if (attackTimer > AttackSpeed)
+            {
+                Fire(AttackDirecton());
+            }    
         }
+        
         if (targetTr == null)
         {
             rootTr.localScale = new Vector3(Character.Instance.AttackDir.x >= 0 ? 1 : -1, 1, 1);
@@ -176,29 +184,20 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
             return (false, null, 0);
         if (SlimeData.growth != target.SlimeData.growth)
             return (false, null, 0);
-        if (level != target.level)
+        if (mergeLevel != target.mergeLevel)
             return (false, null, 0);
         if (target.key != key)
             return (false, null, 0);
-        if (level == 2 || target.level == 2)
+        if (mergeLevel == 2 || target.mergeLevel == 2)
             return (false, null, 0);
 
         string pickedSlimeKey = null;
         int lv = 0;
         if (SlimeData.growth == 1)
         {
-            // if(level == 2)
-            // {
-            //     pickedSlimeKey = await SelectMergeSlimeCanvas.Instance.OpenCanvas(this, target);
-            //     if (pickedSlimeKey == null)
-            //         return (false, null, 0);
-            // }
-            // else if( level < 2)
-            // {
-            // }   
             UserSlime userSlime = UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length)];
             pickedSlimeKey = userSlime.key;
-            lv = level + 1;
+            lv = mergeLevel + 1;
         }
         else if (SlimeData.growth == 0)
         {

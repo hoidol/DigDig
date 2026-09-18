@@ -39,7 +39,7 @@ public class UserBulletManager : UserBaseManager
             userBulletData.equiptedBullets[i] = GetEquiptUserBullet(i);
         }
 
-        SaveData();
+        RequestSave();
     }
 
 
@@ -57,7 +57,7 @@ public class UserBulletManager : UserBaseManager
             userBullet.key = key;
             userBulletData.userBullets.Add(userBullet);
             Debug.Log($"GetUserBullet key {key} 새로 만들자 저장하자");
-            SaveData();
+            RequestSave();
         }
         else
         {
@@ -73,7 +73,7 @@ public class UserBulletManager : UserBaseManager
         if (!userBullet.own)
         {
             userBullet.own = true;
-            SaveData();
+            RequestSave();
         }
         return userBullet;
     }
@@ -84,7 +84,7 @@ public class UserBulletManager : UserBaseManager
         UserBullet userBullet = GetUserBullet(key);
         userBullet.equipedIdx = idx;
 
-        SaveData();
+        RequestSave();
         return userBullet;
     }
 
@@ -93,7 +93,7 @@ public class UserBulletManager : UserBaseManager
         UserBullet userBullet = GetEquiptUserBullet(idx);
         userBullet.equipedIdx = -1;
 
-        SaveData();
+        RequestSave();
         return userBullet;
     }
     public UserBullet ReleaseUserBullet(string key)
@@ -101,7 +101,7 @@ public class UserBulletManager : UserBaseManager
         UserBullet userBullet = GetUserBullet(key);
         userBullet.equipedIdx = -1;
 
-        SaveData();
+        RequestSave();
         return userBullet;
     }
 

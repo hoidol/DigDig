@@ -46,7 +46,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
     public Slime LevelUp(Slime s)
     {
         string key = s.key;
-        int level = s.level;
+        int level = s.mergeLevel;
         Character.Instance.RemoveSlime(s);
         Slime slime = Character.Instance.AddSlime(key, level + 1);
         return slime;

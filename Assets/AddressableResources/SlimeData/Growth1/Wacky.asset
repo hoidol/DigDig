@@ -9,18 +9,240 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a9cedb506a034c99b3b9f2eaaeaf31e, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a4ff0164a3f1483497200ea15e338f7, type: 3}
   m_Name: Wacky
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeData
+  m_EditorClassIdentifier: Assembly-CSharp::WackySlimeData
   key: Wacky
-  descs:
-  - 랜덤 방향으로 추가 발사
-  - 랜덤 방향으로 추가 발사
-  - 랜덤 방향으로 추가 발사
+  desc: "{0}\uCD08\uB9C8\uB2E4 \uB79C\uB364\uD55C \uBC29\uD5A5\uC73C\uB85C \uCD1D\uC54C\uC744
+    \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
   growth: 1
-  valueInfo: 
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+    - statType: 1
+      values:
+      - 30
+      - 3
+    - statType: 2
+      values:
+      - 3
+      - 0.2
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+    - statType: 1
+      values:
+      - 35
+      - 4
+    - statType: 2
+      values:
+      - 3
+      - 0.2
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 11
+      - 11
+    - statType: 1
+      values:
+      - 35
+      - 4
+    - statType: 2
+      values:
+      - 3
+      - 0.2
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 11
+      - 11
+    - statType: 1
+      values:
+      - 35
+      - 4
+    - statType: 2
+      values:
+      - 3.2
+      - 0.2
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 12
+      - 12
+    - statType: 1
+      values:
+      - 35
+      - 4
+    - statType: 2
+      values:
+      - 3.2
+      - 0.2
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 12
+      - 12
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.2
+      - 0.2
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 13
+      - 13
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.2
+      - 0.2
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 13
+      - 13
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.5
+      - 0.2
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 13
+      - 13
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.5
+      - 0.2
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 14
+      - 14
+    - statType: 1
+      values:
+      - 40
+      - 5
+    - statType: 2
+      values:
+      - 3.5
+      - 0.2
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 14
+      - 14
+    - statType: 1
+      values:
+      - 45
+      - 6
+    - statType: 2
+      values:
+      - 3.5
+      - 0.2
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 14
+      - 14
+    - statType: 1
+      values:
+      - 45
+      - 6
+    - statType: 2
+      values:
+      - 3.8
+      - 0.2
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 15
+      - 15
+    - statType: 1
+      values:
+      - 45
+      - 6
+    - statType: 2
+      values:
+      - 3.8
+      - 0.2
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 15
+      - 15
+    - statType: 1
+      values:
+      - 45
+      - 6
+    - statType: 2
+      values:
+      - 3.8
+      - 0.2
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 15
+      - 15
+    - statType: 1
+      values:
+      - 50
+      - 7
+    - statType: 2
+      values:
+      - 3.8
+      - 0.2
   prefab: {fileID: 1358385290756183109, guid: 0b213b5c98b6a4260a2fa4adeea3a912, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
-  color: {r: 0.7058824, g: 0.36078432, b: 1, a: 1}
-  grade: 0
+  grade: 1
+  displayStatTypes: 000000000100000002000000
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00"
+  - level: 5
+    desc: "\uCD94\uAC00 \uBC1C\uC0AC \uCFE8\uD0C0\uC784 10% \uAC10\uC18C"
+  - level: 8
+    desc: "[\uAC01\uC131] 6\uBC88 \uD0C4\uC744 \uBC1C\uC0AC\uD560\uB54C\uB9C8\uB2E4
+      4\uBE59\uD5A5\uC73C\uB85C \uBC1C\uC0AC"
+  - level: 11
+    desc: "[\uAC01\uC131] \uC2A4\uD0AC \uBC1C\uB3D9 \uC2DC 7\uBC29\uD5A5\uC73C\uB85C
+      \uBC1C\uC0AC"
+  - level: 14
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00 + \uACF5\uACA9\uC18D\uB3C4 10% \uC99D\uAC00"
+  uniqueSlimeStats: []

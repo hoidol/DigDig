@@ -18,6 +18,26 @@ public class UserManager : MonoSingleton<UserManager>
     public UserEquipmentManager userEquipmentManager;
     public UserSlimeManager userSlimeManager;
     public UserPurchaseManager userPurchaseManager;
+
+    private readonly List<UserBaseManager> dirtySaveManagers = new List<UserBaseManager>();
+
+    public void RegisterDirtySave(UserBaseManager manager)
+    {
+        dirtySaveManagers.Add(manager);
+    }
+
+    void LateUpdate()
+    {
+        if (dirtySaveManagers.Count == 0)
+            return;
+
+        for (int i = 0; i < dirtySaveManagers.Count; i++)
+        {
+            dirtySaveManagers[i].FlushSave();
+        }
+        dirtySaveManagers.Clear();
+    }
+
     void Awake()
     {
         Application.targetFrameRate = 60;
@@ -45,6 +65,7 @@ public class UserManager : MonoSingleton<UserManager>
     {
         SaveManager.SaveData(UserDataFileName, userData); 
     }
+    
     public void AddGold(int count)
     {
         userData.gold += count;

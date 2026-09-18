@@ -5,7 +5,7 @@ public class FlameEffect : StatusEffect
     float damagePerSecond;
     float damageTimer;
     IHittable hittable;
-    public override string EffectKey => "Burn";
+    public override string EffectKey => "Flame";
 
     public FlameEffect(float duration, float dps)
     {
