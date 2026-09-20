@@ -15,7 +15,7 @@ public class EnemyManager : MonoSingleton<EnemyManager>, ILoadData
 
     void Awake()
     {
-        LoadTask = LoadDataAsync();
+        LoadTask = LoadDataAsync().Preserve();
     }
 
     async UniTask LoadDataAsync()

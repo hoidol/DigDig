@@ -16,23 +16,33 @@ public class StageRewardPanel : MonoBehaviour
         this.stageData = stageData;
         this.userStage = userStage;
         stageRewardData = stageData.rewardDatas[idx];
-        userStageReward = userStage.userStageRewards[idx];
+        userStageReward = userStage.GetUserStageReward(stageData.rewardDatas[idx].id);
         thumImage.sprite = stageRewardData.GetThum();
         valueText.text = stageRewardData.GetValueToString();
+    }
+
+    public void UpdatePanel()
+    {
+        if (userStageReward == null)
+        {
+            alreadyGotten.SetActive(false);
+            return;
+        }
+
         alreadyGotten.SetActive(userStageReward.gotten);
     }
 
     public void OnClickedGetReward()
     {
-        if(userStageReward.gotten)
+        if (userStageReward.gotten)
             return;
-        
-        if(userStage.maxPhase < stageRewardData.phase)
+
+        if (userStage.maxPhase < stageRewardData.phase)
         {
             return;
         }
         stageRewardData.Receive();
-        UserManager.Instance.userStageManager.ReceiveReward(stageData,stageRewardData.id);
+        UserManager.Instance.userStageManager.ReceiveReward(stageData, stageRewardData.id);
         LobbyCanvas.Instance.UpdateCanvas();
     }
 }

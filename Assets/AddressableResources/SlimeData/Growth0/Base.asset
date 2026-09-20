@@ -9,18 +9,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a9cedb506a034c99b3b9f2eaaeaf31e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4297a7f0f76fb482aa7feb92cd735c23, type: 3}
   m_Name: Base
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeData
+  m_EditorClassIdentifier: Assembly-CSharp::BaseSlimeData
   key: Base
-  descs:
-  - "2\uCD08\uB9C8\uB2E4 1\uBC1C\uC529 \uD0C4 \uBC1C\uC0AC"
-  enhanceAbilityDescs: []
+  desc: "\uAC00\uB2A5\uC131\uC774 \uD48D\uBD80\uD55C \uC791\uC740 \uC2AC\uB77C\uC784"
   growth: 0
-  commonSlimeEnhanceInfos: []
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 4
+    - statType: 1
+      values:
+      - 30
+    - statType: 2
+      values:
+      - 7
   prefab: {fileID: 6691824415162859709, guid: 6d1966787a2b24e05ac00d3f489c1193, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
-  color: {r: 1, g: 1, b: 1, a: 1}
   grade: 0
   displayStatTypes: 000000000100000002000000
+  enhanceAbilityInfos: []
+  uniqueSlimeStats: []

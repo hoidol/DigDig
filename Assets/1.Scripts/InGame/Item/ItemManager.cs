@@ -16,7 +16,7 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
 
     void Awake()
     {
-        LoadTask = LoadDataAsync();
+        LoadTask = LoadDataAsync().Preserve();
     }
 
     async UniTask LoadDataAsync()

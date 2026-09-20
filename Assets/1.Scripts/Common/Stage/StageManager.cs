@@ -11,7 +11,7 @@ public class StageManager : MonoSingleton<StageManager>, ILoadData
 
     void Awake()
     {
-        LoadTask = LoadDataAsync();
+        LoadTask = LoadDataAsync().Preserve();
     }
 
     async UniTask LoadDataAsync()

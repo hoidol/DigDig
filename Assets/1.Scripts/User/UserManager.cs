@@ -7,13 +7,13 @@ public class UserManager : MonoSingleton<UserManager>
 {
     public const string UserDataFileName = "UserData";
     public static string STAGE_KEY = GameSetting.FIRST_STAGE_KEY;// "Gateway1";
-    public static int STAGE_LEVEL = 0;
+    // public static int STAGE_LEVEL = 0;
     [field: SerializeField]
     public UserData userData
     {
         get; private set;
     }
-    
+
     public UserStageManager userStageManager;
     public UserEquipmentManager userEquipmentManager;
     public UserSlimeManager userSlimeManager;
@@ -63,12 +63,23 @@ public class UserManager : MonoSingleton<UserManager>
     }
     void Save()
     {
-        SaveManager.SaveData(UserDataFileName, userData); 
+        SaveManager.SaveData(UserDataFileName, userData);
     }
-    
+
     public void AddGold(int count)
     {
         userData.gold += count;
+        Save();
+    }
+    public void AddDia(int count)
+    {
+        userData.dia += count;
+        Save();
+    }
+
+    public void AddEnerge(int count)
+    {
+        userData.energe += count;
         Save();
     }
 
@@ -79,6 +90,7 @@ public class UserData
 {
     public int gold; //던전 수정 조작 느낌으로
     public int dia; //던전 수정 조작 느낌으로
+    public int energe;
 
     public int GetCurrency(CurrencyType currencyType)
     {
@@ -91,10 +103,10 @@ public class UserData
         }
         return 0;
     }
-    public string characterName = "Lucky"; 
+    public string characterName = "Lucky";
     public CharacterName CharacterName => Enum.Parse<CharacterName>(characterName);
 }
 public enum CurrencyType
 {
-    Gold,Dia
+    Gold, Dia
 }

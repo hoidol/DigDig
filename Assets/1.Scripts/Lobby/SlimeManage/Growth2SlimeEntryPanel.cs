@@ -12,10 +12,24 @@ namespace Lobby
         public override void SetData(SlimeData slimeData)
         {
             base.SetData(slimeData);
-            slimeMergeData = SlimeManager.Instance.GetSlimeMergeData(slimeData.key); 
+
+            if (slimeData == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            gameObject.SetActive(true);
+            slimeMergeData = SlimeManager.Instance.GetSlimeMergeData(slimeData.key);
         }
         public override void UpdatePanel()
         {
+            if (slimeData == null)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+            gameObject.SetActive(true);
+
             unownPanel.SetActive(false);
             canMergePanel.SetActive(false);
 
@@ -32,5 +46,5 @@ namespace Lobby
             }
         }
 
-    }    
+    }
 }

@@ -7,10 +7,10 @@ public class ProductManager : MonoSingleton<ProductManager>
 
     public ProductData GetProductData(string key)
     {
-        for(int i = 0; i < productDatas.Length; i++)
+        for (int i = 0; i < productDatas.Length; i++)
         {
-            if(productDatas[i].key == key)
-            return productDatas[i];
+            if (productDatas[i].key == key)
+                return productDatas[i];
         }
         return null;
     }
@@ -19,7 +19,7 @@ public class ProductManager : MonoSingleton<ProductManager>
     {
         if (!string.IsNullOrEmpty(productData.productId))
         {
-            InAppPurchaseManager.Instance.Buy(productData.productId,success);
+            InAppPurchaseManager.Instance.Buy(productData.productId, success);
         }
         return true;
     }

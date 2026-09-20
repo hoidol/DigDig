@@ -17,6 +17,19 @@ MonoBehaviour:
   key: 0
   order: 0
   level: 1
+  rewardDatas:
+  - rewardType: 1
+    value: 100
+    id: 
+    phase: 3
+  - rewardType: 2
+    value: 2
+    id: 
+    phase: 6
+  - rewardType: 0
+    value: Heal
+    id: 
+    phase: 10
   oreHp: 11
   enemyPrefabs:
   - {fileID: -623162833200235267, guid: 1d3cacd36ecba40c3b55703eee730486, type: 3}
@@ -30,20 +43,7 @@ MonoBehaviour:
     enemyAttackPower: 3
     enemyPatternData:
       phase: 0
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
-      - enemyType: 1
-        spawnCount: 1
-        intervalRange: {x: 6, y: 7}
+      wavePatternDatas: []
   - phase: 1
     isBoss: 0
     ordealLevel: 2
@@ -51,20 +51,7 @@ MonoBehaviour:
     enemyAttackPower: 4
     enemyPatternData:
       phase: 1
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
-      - enemyType: 1
-        spawnCount: 1
-        intervalRange: {x: 6, y: 7}
+      wavePatternDatas: []
   - phase: 2
     isBoss: 0
     ordealLevel: 4
@@ -72,20 +59,7 @@ MonoBehaviour:
     enemyAttackPower: 5
     enemyPatternData:
       phase: 2
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
-      - enemyType: 1
-        spawnCount: 1
-        intervalRange: {x: 6, y: 7}
+      wavePatternDatas: []
   - phase: 3
     isBoss: 0
     ordealLevel: 1
@@ -93,20 +67,7 @@ MonoBehaviour:
     enemyAttackPower: 6
     enemyPatternData:
       phase: 3
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
-      - enemyType: 1
-        spawnCount: 1
-        intervalRange: {x: 6, y: 7}
+      wavePatternDatas: []
   - phase: 4
     isBoss: 0
     ordealLevel: 2
@@ -114,20 +75,7 @@ MonoBehaviour:
     enemyAttackPower: 7
     enemyPatternData:
       phase: 4
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
-      - enemyType: 1
-        spawnCount: 1
-        intervalRange: {x: 6, y: 7}
+      wavePatternDatas: []
   - phase: 5
     isBoss: 0
     ordealLevel: 4
@@ -135,20 +83,7 @@ MonoBehaviour:
     enemyAttackPower: 8
     enemyPatternData:
       phase: 5
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
-      - enemyType: 1
-        spawnCount: 1
-        intervalRange: {x: 6, y: 7}
+      wavePatternDatas: []
   - phase: 6
     isBoss: 0
     ordealLevel: 1
@@ -156,20 +91,7 @@ MonoBehaviour:
     enemyAttackPower: 9
     enemyPatternData:
       phase: 6
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
-      - enemyType: 1
-        spawnCount: 1
-        intervalRange: {x: 6, y: 7}
+      wavePatternDatas: []
   - phase: 7
     isBoss: 0
     ordealLevel: 2
@@ -177,20 +99,7 @@ MonoBehaviour:
     enemyAttackPower: 10
     enemyPatternData:
       phase: 7
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
-      - enemyType: 1
-        spawnCount: 1
-        intervalRange: {x: 6, y: 7}
+      wavePatternDatas: []
   - phase: 8
     isBoss: 0
     ordealLevel: 4
@@ -198,20 +107,7 @@ MonoBehaviour:
     enemyAttackPower: 11
     enemyPatternData:
       phase: 8
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
-      - enemyType: 1
-        spawnCount: 1
-        intervalRange: {x: 6, y: 7}
+      wavePatternDatas: []
   - phase: 9
     isBoss: 1
     ordealLevel: 1
@@ -219,17 +115,7 @@ MonoBehaviour:
     enemyAttackPower: 12
     enemyPatternData:
       phase: 9
-      dayEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 1
-        intervalRange: {x: 8, y: 10}
-      - enemyType: 1
-        spawnCount: 0
-        intervalRange: {x: 7, y: 8}
-      nightEnemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCount: 2
-        intervalRange: {x: 4, y: 5}
+      wavePatternDatas: []
   eventDatas:
   - eventTypes: 
     triggers: 00000000

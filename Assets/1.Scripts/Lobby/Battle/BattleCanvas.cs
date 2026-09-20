@@ -1,4 +1,5 @@
 
+using System;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -9,19 +10,28 @@ public class BattleCanvas : BaseLobbyCanvas
     public GameObject preStageButton;
     public StageRewardContainer stageRewardContainer;
 
-    UserStage curUserStage;
+    [SerializeField] UserStage curUserStage;
+    public StageData stageData;
     public int stageOrder;
     public TMP_Text titleText;
-
-    public override void UpdateCanvas()
+    public override void OpenCanvas(Action closeCallback = null)
     {
-        if (curUserStage == null)
+        base.OpenCanvas(closeCallback);
+
+        if (curUserStage == null || string.IsNullOrEmpty(curUserStage.key))
         {
             curUserStage = UserManager.Instance.userStageManager.GetCurrentStage();
         }
-        StageData stageData = StageManager.Instance.GetStageData(curUserStage.key);
-        stageRewardContainer.SetStageData(stageData);
-        
+
+        stageData = StageManager.Instance.GetStageData(curUserStage.key);
+        stageRewardContainer.SetStageData(curUserStage, stageData);
+
+        UpdateCanvas();
+    }
+    public override void UpdateCanvas()
+    {
+
+        stageRewardContainer.UpdateContainer();
         titleText.text = stageData.Title;
         stageOrder = stageData.order;
 

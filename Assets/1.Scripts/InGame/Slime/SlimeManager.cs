@@ -20,7 +20,7 @@ public class SlimeManager : MonoSingleton<SlimeManager>
 
     void Awake()
     {
-        LoadTask = LoadDataAsync();
+        LoadTask = LoadDataAsync().Preserve();
     }
 
     async UniTask LoadDataAsync()

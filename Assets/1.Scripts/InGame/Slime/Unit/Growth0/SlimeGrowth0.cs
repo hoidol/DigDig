@@ -4,20 +4,19 @@ using UnityEngine;
 //충돌 안하게 하자
 public abstract class SlimeGrowth0 : Slime
 {
-
     AllyBulletSpec allyBulletSpec;
 
-    public override void Awake()
+    public override void Spawn(Vector2 pos, int mLv)
     {
-        base.Awake();
-
+        base.Spawn(pos, mLv);
         allyBulletSpec = new AllyBulletSpec();
-        allyBulletSpec.damage = AttackPower;
-    }
 
+    }
 
     public override AllyBulletObject GetBullet()
     {
+        allyBulletSpec.damage = AttackPower;
+        allyBulletSpec.StartBulletSpec();
         return allyBulletSpec.Instantiate(this);
     }
 

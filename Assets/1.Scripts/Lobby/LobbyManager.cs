@@ -8,8 +8,8 @@ public class LobbyManager : MonoSingleton<LobbyManager>
     public LobbyCanvas lobbyCanvas;
     void Awake()
     {
-        
-        lobbyCanvases = FindObjectsByType<BaseLobbyCanvas>( FindObjectsInactive.Include ,FindObjectsSortMode.None);
+
+        lobbyCanvases = FindObjectsByType<BaseLobbyCanvas>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         lobbyCanvas = FindFirstObjectByType<LobbyCanvas>();
         GameEventBus.Clear();
     }
@@ -21,7 +21,9 @@ public class LobbyManager : MonoSingleton<LobbyManager>
             BulletManager.Instance.LoadTask,
             ItemManager.Instance.LoadTask,
             EnemyManager.Instance.LoadTask,
-            EquipmentManager.Instance.LoadTask
+            EquipmentManager.Instance.LoadTask,
+            SlimeManager.Instance.LoadTask
+
         );
 
         FadeCanvs.Instance.FadeIn("", () =>
@@ -34,7 +36,7 @@ public class LobbyManager : MonoSingleton<LobbyManager>
     public void OpenCanvas(LobbyState state)
     {
         lobbyState = state;
-        for(int i = 0; i < lobbyCanvases.Length; i++)
+        for (int i = 0; i < lobbyCanvases.Length; i++)
         {
             lobbyCanvases[i].CloseCanvas();
         }

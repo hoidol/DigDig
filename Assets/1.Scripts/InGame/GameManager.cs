@@ -35,7 +35,9 @@ public class GameManager : MonoSingleton<GameManager>
             StageManager.Instance.LoadTask,
             BulletManager.Instance.LoadTask,
             ItemManager.Instance.LoadTask,
-            EnemyManager.Instance.LoadTask
+            EnemyManager.Instance.LoadTask,
+            EquipmentManager.Instance.LoadTask,
+            SlimeManager.Instance.LoadTask
         );
 
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);

@@ -42,7 +42,7 @@ public class BulletManager : MonoSingleton<BulletManager>, ILoadData
         //     { "LightningRod", new LightningRodBullet() },
         //     { "LavaShell",    new LavaShellBullet() },
         // };
-        LoadTask = LoadDataAsync();
+        LoadTask = LoadDataAsync().Preserve();
     }
 
     async UniTask LoadDataAsync()

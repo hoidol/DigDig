@@ -12,7 +12,7 @@ public class EquipmentManager : MonoSingleton<EquipmentManager>
 
     void Awake()
     {
-        LoadTask = LoadDataAsync();
+        LoadTask = LoadDataAsync().Preserve();
     }
 
     async UniTask LoadDataAsync()

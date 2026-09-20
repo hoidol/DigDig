@@ -99,18 +99,27 @@ public class AddressableMgr
         T[] data = Array.Empty<T>();
         try
         {
-            var handle = Addressables.LoadAssetsAsync<T>(label, null, Addressables.MergeMode.Union);
-            handles.Add(handle);
-            // Debug.Log("LoadAllByLabel 1");
-            await handle.Task;
+            // 라벨에 해당하는 에셋이 없으면 LoadAssetsAsync가 InvalidKeyException을 로그로 남기므로 먼저 확인한다.
+            var locationHandle = Addressables.LoadResourceLocationsAsync(label, typeof(T));
+            await locationHandle.Task;
+            bool hasAsset = locationHandle.Status == AsyncOperationStatus.Succeeded && locationHandle.Result.Count > 0;
+            Addressables.Release(locationHandle);
 
-            if (handle.Status != AsyncOperationStatus.Succeeded)
+            if (hasAsset)
             {
-                Debug.LogWarning($"Addressables.LoadAssetsAsync<>() is failed({handle.Status}) for label '{label}'");
-                throw handle.OperationException;
-            }
+                var handle = Addressables.LoadAssetsAsync<T>(label, null, Addressables.MergeMode.Union);
+                handles.Add(handle);
+                // Debug.Log("LoadAllByLabel 1");
+                await handle.Task;
 
-            data = handle.Result.ToArray();
+                if (handle.Status != AsyncOperationStatus.Succeeded)
+                {
+                    Debug.LogWarning($"Addressables.LoadAssetsAsync<>() is failed({handle.Status}) for label '{label}'");
+                    throw handle.OperationException;
+                }
+
+                data = handle.Result.ToArray();
+            }
         }
         catch (Exception ex)
         {

@@ -73,28 +73,7 @@
             "exp": 0
         },
         {
-            "key": "Heal",
-            "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
-        },
-        {
-            "key": "Ice",
-            "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
-        },
-        {
-            "key": "Lightning",
-            "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
-        },
-        {
-            "key": "Wacky2",
+            "key": "Base",
             "equipedIdx": -1,
             "own": false,
             "enhanceLevel": 0,

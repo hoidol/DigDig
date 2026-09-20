@@ -1,3 +1,4 @@
+[System.Serializable]
 public class ProductData
 {
     public string key;

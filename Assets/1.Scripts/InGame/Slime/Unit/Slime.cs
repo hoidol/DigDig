@@ -54,17 +54,17 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     {
         userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(key);
 
+        slimeData = SlimeManager.Instance.GetSlimeData(key);
         slimeEnhanceInfo = slimeData.GetCommonSlimeEnhanceInfo(userSlime.enhanceLevel);
         transform.position = pos;
         this.mergeLevel = mLv;
 
-        slimeData = SlimeManager.Instance.GetSlimeData(key);
 
         statDic.Clear();
         statDic.Add(StatType.AttackPower, 0);
         statDic.Add(StatType.AttackSpeed, 0);
         statDic.Add(StatType.AttackRange, 0);
-        
+
         InitSlime();
         UpdateSlime();
     }
@@ -75,10 +75,10 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     }
 
     public virtual void InitSlimeStat()
-    {        
+    {
         statDic[StatType.AttackPower] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackPower).GetValue<float>(mergeLevel);
-        statDic[StatType.AttackSpeed] =  slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackSpeed).GetValue<float>(mergeLevel);
-        statDic[StatType.AttackRange] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackRange).GetValue<float>(mergeLevel); 
+        statDic[StatType.AttackSpeed] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackSpeed).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackRange] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackRange).GetValue<float>(mergeLevel);
     }
 
     public virtual void UpdateSlime()
@@ -93,9 +93,9 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
     public SlimeEnhanceAbility GetSlimeEnhanceAbility(int lv)
     {
-        for(int i = 0; i < slimeEnhanceAbilities.Length; i++)
+        for (int i = 0; i < slimeEnhanceAbilities.Length; i++)
         {
-            if(slimeEnhanceAbilities[i].level == lv)
+            if (slimeEnhanceAbilities[i].level == lv)
             {
                 return slimeEnhanceAbilities[i];
             }
@@ -134,15 +134,15 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public abstract AllyBulletObject GetBullet();
     public virtual void Update()
     {
-        if(AttackSpeed >= 0)
+        if (AttackSpeed >= 0)
         {
             attackTimer += Time.deltaTime * AttackSpeed / 50;
-            if (attackTimer > AttackSpeed)
+            if (attackTimer >= 1)
             {
                 Fire(AttackDirecton());
-            }    
+            }
         }
-        
+
         if (targetTr == null)
         {
             rootTr.localScale = new Vector3(Character.Instance.AttackDir.x >= 0 ? 1 : -1, 1, 1);
