@@ -1,9 +1,3 @@
 {
-    "userCumulativeAchievements": [
-        {
-            "type": 0,
-            "value": 0,
-            "clearCount": 0
-        }
-    ]
+    "userCumulativeAchievements": []
 }

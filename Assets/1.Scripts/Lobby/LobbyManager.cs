@@ -28,9 +28,9 @@ namespace Lobby
 
         );
 
+            StartLobby();
         FadeCanvs.Instance.FadeIn("", () =>
         {
-            StartLobby();
         });
     }
 

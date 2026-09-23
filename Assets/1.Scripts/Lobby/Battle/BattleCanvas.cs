@@ -23,6 +23,10 @@ public class BattleCanvas : BaseLobbyCanvas
 
     void OnChangedDifficultyEvent(ChangedDifficultyEvent e)
     {
+        StageData changedStageData = StageManager.Instance.GetStageData(UserDataManager.difficultyType, stageData.order );
+        
+        UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(changedStageData.key);
+        SetUserStage(userStage);
         UpdateCanvas();
     }
 
@@ -34,11 +38,17 @@ public class BattleCanvas : BaseLobbyCanvas
         {
             curUserStage = UserDataManager.Instance.userStageManager.GetCurrentStage();
         }
+        SetUserStage(curUserStage);
+        UpdateCanvas();
+    }
 
+    public void SetUserStage(UserStage userStage)
+    {
+        curUserStage = userStage;
         stageData = StageManager.Instance.GetStageData(curUserStage.key);
         stageRewardContainer.SetStageData(curUserStage, stageData);
-
         UpdateCanvas();
+
     }
 
     public override void UpdateCanvas()
@@ -53,7 +63,7 @@ public class BattleCanvas : BaseLobbyCanvas
         nextStageButton.SetActive(false);
         preStageButton.SetActive(false);
 
-        if (nextStageData != null && curUserStage.clearCount > 0)
+        if (nextStageData != null )//&& curUserStage.clearCount > 0
         {
             nextStageButton.SetActive(true);
         }
@@ -66,21 +76,17 @@ public class BattleCanvas : BaseLobbyCanvas
         stageLockedGO.SetActive(!stageData.ChekcUnlock());
     }
 
-    public void SetUserStage(UserStage userStage)
-    {
-        curUserStage = userStage;
-        UpdateCanvas();
-
-    }
 
     public void OnClickedNext()
     {
+        Debug.Log("OnClickedNext()");
         string stageKey = StageManager.Instance.GetStageData(UserDataManager.difficultyType, stageOrder + 1).key;
         UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(stageKey);
         SetUserStage(userStage);
     }
     public void OnClickedPre()
     {
+        Debug.Log("OnClickedPre()");
         string stageKey = StageManager.Instance.GetStageData(UserDataManager.difficultyType, stageOrder - 1).key;
         UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(stageKey);
         SetUserStage(userStage);

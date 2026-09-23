@@ -4,7 +4,7 @@ public class GameSetting
 {
    public const int MAX_EQUIPT_BULLET_COUNT = 5;
    public const int MAX_MF_GROUP_POINT = 5; //MemoryFragment
-   public static string FIRST_STAGE_KEY = "0";
+   public static string FIRST_STAGE_KEY = "Normal_0";
    public static CharacterName INIT_CHARACTER_NAME = CharacterName.Lucky;
    public static string[] INIT_SLIME_KEYS = { "Flame", "Bounce", "Wacky", "Orbit", "Pierce" };
    public static int SLIME_SLOT_COUNT = 5;

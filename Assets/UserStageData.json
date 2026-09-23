@@ -1,7 +1,14 @@
 {
     "userStages": [
         {
-            "key": "0",
+            "key": "Normal_0",
+            "tryCount": 0,
+            "clearCount": 0,
+            "maxPhase": 0,
+            "userStageRewards": []
+        },
+        {
+            "key": "Normal_1",
             "tryCount": 0,
             "clearCount": 0,
             "maxPhase": 0,
