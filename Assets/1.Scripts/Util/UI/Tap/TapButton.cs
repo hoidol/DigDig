@@ -14,7 +14,7 @@ public class TapButton : ButtonUI
         image = GetComponent<Image>();
     }
 
-    public void UpdateButton()
+    public virtual void UpdateButton()
     {
         if(GetComponentInParent<TapContainer>().selectedIdx == idx)
         {
@@ -22,7 +22,7 @@ public class TapButton : ButtonUI
             //    image.sprite = Resources.Load<Sprite>("UI/btn_rectangle_pressed_purple");
             //else
             
-            image.color = Color.white;
+            image.color = ColorSetting.activeColor;
         }
         else
         {
@@ -33,7 +33,7 @@ public class TapButton : ButtonUI
     }
     public override void OnClickedBtn()
     {
-        SoundMgr.Instance.PlaySound(SFXType.Click);
+        SoundManager.Instance.PlaySound(SFXType.Click);
         GetComponentInParent<TapContainer>().Switch(idx);
     }
 }

@@ -8,8 +8,11 @@ public class GameSetting
    public static CharacterName INIT_CHARACTER_NAME = CharacterName.Lucky;
    public static string[] INIT_SLIME_KEYS = { "Flame", "Bounce", "Wacky", "Orbit", "Pierce" };
    public static int SLIME_SLOT_COUNT = 5;
+   public static int PLAY_COST_ENERGE =5;
+   public static int MAX_ENERGE =30;
 
    public const int WAVE_COUNT = 7;
+   public const int BOSS_PHASE = 9;
    public const float BREAK_TIME = 20;
    public const float WAVE_TIME = 40;
 

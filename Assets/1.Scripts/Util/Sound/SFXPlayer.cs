@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SFXPlayer : MonoBehaviour
 {
     public SFXData sfxData;
     public AudioSource[] audioSources;
+    public AudioMixerGroup sfxGroup;
     public void Start()
     {
         int count = 5;
@@ -16,6 +18,7 @@ public class SFXPlayer : MonoBehaviour
             audioSources[i].loop = sfxData.loop;
             audioSources[i].pitch = sfxData.pitch;
             audioSources[i].volume = sfxData.volume;
+            audioSources[i].outputAudioMixerGroup = sfxGroup;
 
         }
     }

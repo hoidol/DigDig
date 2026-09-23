@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine;
-
-public class LevelUpCanvas : CanvasUI<LevelUpCanvas>
+namespace InGame
+{
+    public class LevelUpCanvas : CanvasUI<LevelUpCanvas>
 {
     const int SELECT_COUNT = 3;
     const float LOW_HP_THRESHOLD = 30f;
@@ -64,4 +65,5 @@ public class LevelUpCanvas : CanvasUI<LevelUpCanvas>
 
         return result;
     }
+}
 }

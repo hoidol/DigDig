@@ -20,17 +20,7 @@ public class EnemyData : ScriptableObject
     public float hpMultiplier;
     public float attackPowerMultiplier;
 
-    // 최종 체력 = stageData.enemyHp * 에너미 배율 * 층 배율 * 웨이브 배율
-    public float GetHp()
-    {
-        return GameManager.Instance.stageData.GetPhaseData().enemyHp * hpMultiplier;
-    }
-
-    // 최종 공격력 = stageData.enemyAttackPower * 에너미 배율 * 층 배율 * 웨이브 배율
-    public float GetAttackPower()
-    {
-        return GameManager.Instance.stageData.GetPhaseData().enemyAttackPower * attackPowerMultiplier;
-    }
+    
 
 #if UNITY_EDITOR
     public void LoadData()

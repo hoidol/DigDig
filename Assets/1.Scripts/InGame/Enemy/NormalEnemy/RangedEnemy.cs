@@ -8,7 +8,7 @@ public class RangedEnemy : NormalEnemy
         base.StartAttack();
         EnemyBulletObject enemyBullet = EnemyBulletObject.Instantiate();
         enemyBullet.transform.position = transform.position;
-        enemyBullet.Shoot((Character.Instance.transform.position - transform.position).normalized,enemyData.GetAttackPower());
+        enemyBullet.Shoot((Character.Instance.transform.position - transform.position).normalized,GetAttackPower());
         
         EndAttack();
     }

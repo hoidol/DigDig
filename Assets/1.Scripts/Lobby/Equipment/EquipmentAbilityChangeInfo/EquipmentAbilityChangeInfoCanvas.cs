@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using Lobby;
 public class EquipmentAbilityChangeInfoCanvas : CanvasUI<EquipmentAbilityChangeInfoCanvas>
 {
     public Image thumImage;
@@ -50,7 +50,7 @@ public class EquipmentAbilityChangeInfoCanvas : CanvasUI<EquipmentAbilityChangeI
 
     public void OnClickedEquipButton()
     {
-        UserManager.Instance.userEquipmentManager.EquiptUserEquipment(newEquipment);
+        UserDataManager.Instance.userEquipmentManager.EquiptUserEquipment(newEquipment);
         
         LobbyManager.Instance.GetLobbyCanvas(LobbyState.Equipment).UpdateCanvas();
         UpdateCanvas();

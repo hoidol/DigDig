@@ -1,11 +1,16 @@
-phase	isBoss	enemyHp	enemyAttackPower	ordealLevels	time
-0	FALSE	11	3	1	60
-1	FALSE	15	4	2	60
-2	FALSE	19	5	4	60
-3	FALSE	23	6	1	60
-4	FALSE	27	7	2	60
-5	FALSE	31	8	4	60
-6	FALSE	35	9	1	60
-7	FALSE	39	10	2	60
-8	FALSE	43	11	4	60
-9	TRUE	47	12	1	0
+key	enemyHp	enemyIncreaseHp	enemyAttackPower	enemyIncreaseAttackPower
+Normal_0	10	4	3	1
+Normal_1	12	5	4	2
+Normal_2	15	6	5	3
+Normal_3	12	5	4	2
+Normal_4	15	6	5	3
+Hard_0	19	7	6	4
+Hard_1	14	6	5	3
+Hard_2	18	7	6	4
+Hard_3	23	8	7	5
+Hard_4	16	7	6	4
+Hell_0	21	8	7	5
+Hell_1	27	9	8	6
+Hell_2	18	8	7	5
+Hell_3	24	9	8	6
+Hell_4	31	10	9	7

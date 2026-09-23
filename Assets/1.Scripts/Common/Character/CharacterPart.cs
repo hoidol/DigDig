@@ -8,7 +8,7 @@ public class CharacterPart : MonoBehaviour
     {
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
-        UserEquipment[] equippedEquipments = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipments();
+        UserEquipment[] equippedEquipments = UserDataManager.Instance.userEquipmentManager.GetEquippedUserEquipments();
         spriteRenderer.sprite = null;
         for (int i = 0; i < equippedEquipments.Length; i++)
         {

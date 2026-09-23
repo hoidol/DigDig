@@ -51,11 +51,23 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
         Apear();
         transform.position = pos;
-        maxHp = enemyData.GetHp();
+        maxHp = GetHp();
         curHp = maxHp;
         hpText.text = ((int)curHp).ToString();
 
-        damageData.damage = enemyData.GetAttackPower();
+        damageData.damage = GetAttackPower();
+    }
+
+    // 최종 체력 = stageData.enemyHp * 에너미 배율 * 층 배율 * 웨이브 배율
+    public float GetHp()
+    {
+        return (GameManager.Instance.phaseData.enemyHp + GameManager.Instance.phaseData.enemyIncreaseHp * GameManager.Instance.phase)* enemyData.hpMultiplier;
+    }
+
+    // 최종 공격력 = stageData.enemyAttackPower * 에너미 배율 * 층 배율 * 웨이브 배율
+    public float GetAttackPower()
+    {
+        return (GameManager.Instance.phaseData.enemyAttackPower + GameManager.Instance.phaseData.enemyIncreaseAttackPower * GameManager.Instance.phase)* enemyData.attackPowerMultiplier;
     }
 
     const float APEAR_POP_DURATION = 0.15f;

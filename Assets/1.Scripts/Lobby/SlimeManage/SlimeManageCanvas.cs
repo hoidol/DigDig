@@ -38,7 +38,7 @@ namespace Lobby
 
             SlimeData[] growth1SlimeDatas = SlimeManager.Instance.growth1SlimeDatas.OrderBy(e =>
             {
-                if (UserManager.Instance.userSlimeManager.GetUserSlime(e.key).own)
+                if (UserDataManager.Instance.userSlimeManager.GetUserSlime(e.key).own)
                     return 0;
                 else
                     return 1;
@@ -73,9 +73,9 @@ namespace Lobby
         public override void UpdateCanvas()
         {
             // List<string> equiptedSlimeKeys = new List<string>();
-            for (int i = 0; i < UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length; i++)
+            for (int i = 0; i < UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length; i++)
             {
-                equipedSlotPanels[i].SetData(UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[i]);
+                equipedSlotPanels[i].SetData(UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[i]);
                 // equiptedSlimeKeys.Add(UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[i].key);
             }
 

@@ -21,7 +21,7 @@ public class LevelUpStatPanel : MonoBehaviour
 
     public void OnClickedSelect()
     {
-        LevelUpCanvas.Instance.CloseCanvas();
+        InGame.LevelUpCanvas.Instance.CloseCanvas();
         // Character.Instance.AddLevelUpState(levelUpStatType, 1);
 
     }

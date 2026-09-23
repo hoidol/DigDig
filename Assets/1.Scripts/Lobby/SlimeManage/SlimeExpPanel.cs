@@ -8,7 +8,7 @@ public class SlimeExpPanel : MonoBehaviour
     public TMP_Text expText;
     public void SetSlime(SlimeData slimeData)
     {
-        UserSlime userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(slimeData.key);
+        UserSlime userSlime = UserDataManager.Instance.userSlimeManager.GetUserSlime(slimeData.key);
         
         EnhanceExpInfo enhanceExpInfo = SlimeManager.Instance.GetEnhanceExpInfo(slimeData.grade);
         int totalPreLvSumExp = enhanceExpInfo.TotalExp(userSlime.enhanceLevel);

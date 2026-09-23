@@ -13,12 +13,12 @@ public class SlimeMergeData : ScriptableObject
     {
         if (sell)
         {
-            if (!UserManager.Instance.userSlimeManager.GetUserSlime(key).own)
+            if (!UserDataManager.Instance.userSlimeManager.GetUserSlime(key).own)
             {
                 return false;
             }
         }
-        string[] equiptedSlimeKeys = UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes
+        string[] equiptedSlimeKeys = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes
             .Select(slime => slime.key)
             .ToArray();
 

@@ -29,6 +29,10 @@ public class RewardData
                 return Resources.Load<Sprite>("Icons/Dia");
             case RewardType.Energe:
                 return Resources.Load<Sprite>("Icons/Energe");
+            case RewardType.Exp:
+                return Resources.Load<Sprite>("Icons/Exp");
+            case RewardType.DrawTicket:
+                return Resources.Load<Sprite>("Icons/DrawTicket");
         }
         return null;
     }
@@ -38,17 +42,22 @@ public class RewardData
         {
             case RewardType.Slime:
                 RewardCanvas.Instance.OpenCanvas(this);
-                UserManager.Instance.userSlimeManager.AddUserSlime(value);
+                UserDataManager.Instance.userSlimeManager.AddUserSlime(value);
                 break;
-
             case RewardType.Gold:
-                UserManager.Instance.AddGold(int.Parse(value));
+                UserDataManager.Instance.AddGold(int.Parse(value));
                 break;
             case RewardType.Dia:
-                UserManager.Instance.AddDia(int.Parse(value));
+                UserDataManager.Instance.AddDia(int.Parse(value));
                 break;
             case RewardType.Energe:
-                UserManager.Instance.AddEnerge(int.Parse(value));
+                UserDataManager.Instance.AddEnerge(int.Parse(value));
+                break;
+            case RewardType.Exp:
+                UserDataManager.Instance.userMyInfoManager.AddExp(int.Parse(value));
+                break;
+            case RewardType.DrawTicket:
+                UserDataManager.Instance.AddDrawTicket(int.Parse(value));
                 break;
         }
 
@@ -65,5 +74,7 @@ public enum RewardType
     Slime,
     Gold,
     Dia,
-    Energe
+    Energe,
+    Exp,
+    DrawTicket
 }

@@ -9,7 +9,7 @@ public class EquippedSlotPanel : MonoBehaviour
     
     public void UpdatePanel()
     {
-        userEquipment = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipment(equipmentType);
+        userEquipment = UserDataManager.Instance.userEquipmentManager.GetEquippedUserEquipment(equipmentType);
         
         if (userEquipment != null)
         {

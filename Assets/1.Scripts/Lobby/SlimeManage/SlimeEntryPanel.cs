@@ -15,7 +15,7 @@ namespace Lobby
                 return;
             }
             gameObject.SetActive(true);
-            userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(slimeData.key); 
+            userSlime = UserDataManager.Instance.userSlimeManager.GetUserSlime(slimeData.key); 
             if(slimePanel == null)
             {
                 Debug.Log("SlimeEntryPanel if(slimePanel == null)");

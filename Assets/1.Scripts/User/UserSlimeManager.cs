@@ -115,6 +115,7 @@ public class UserSlimeManager : UserBaseManager
     public void LevelUp(string key)
     {
         GetUserSlime(key).enhanceLevel++;
+        GameEventBus.Publish(new LevelUpSlimeEvent(key));
         RequestSave();
     }
 }
@@ -138,4 +139,14 @@ public class UserSlime
     public int enhanceLevel = 0;
     public int exp;
     public SlimeData SlimeData => SlimeManager.Instance.GetSlimeData(key);
+}
+
+[System.Serializable]
+public class LevelUpSlimeEvent
+{
+    public string key;
+    public LevelUpSlimeEvent(string key)
+    {
+        this.key = key;        
+    }
 }

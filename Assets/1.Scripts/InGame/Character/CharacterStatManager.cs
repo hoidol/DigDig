@@ -60,7 +60,7 @@ public class CharacterStatManager
         // }
 
         //장비 능력치 초기값에 적용
-        UserEquipment[] equippedEquipments = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipments();
+        UserEquipment[] equippedEquipments = UserDataManager.Instance.userEquipmentManager.GetEquippedUserEquipments();
         for (int i = 0; i < equippedEquipments.Length; i++)
         {
             foreach (var statType in usingStatTypes)

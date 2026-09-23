@@ -7,6 +7,8 @@ public class DailyAchievementPanel : AchievementPanel
     UserDailyAchievement userDailyAchievement;
     public GameObject gottenRewardObj;
 
+    public GameObject redDot;
+
     public override void SetAchievementData(AchievementData achievementData)
     {
 
@@ -29,14 +31,19 @@ public class DailyAchievementPanel : AchievementPanel
             return;
         }
 
-        titleText.text = dailyAchievementData.Title;
-        descText.text = dailyAchievementData.Desc();
+        redDot.SetActive(false);
+        if (!userDailyAchievement.getReward && dailyAchievementData.CheckCanClear())
+        {
+            redDot.SetActive(true);
+        }
+            
+
         gottenRewardObj.SetActive(userDailyAchievement.getReward);
     }
 
     public override void OnClickedGetReward()
     {
-        if(!dailyAchievementData.CheckClear())
+        if(!dailyAchievementData.CheckCanClear())
             return;
 
         if(userDailyAchievement.getReward)

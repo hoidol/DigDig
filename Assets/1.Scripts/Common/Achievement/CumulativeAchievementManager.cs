@@ -10,6 +10,7 @@ public class CumulativeAchievementManager : SubAchievementManager
     public override void Init()
     {
         userCumulativeAchievementManager = new UserCumulativeAchievementManager();
+        category = AchievementCategory.Cumulative;
     }
 
 
@@ -43,6 +44,21 @@ public class CumulativeAchievementManager : SubAchievementManager
         userCumulative.value = remainValue;
         userCumulativeAchievementManager.SaveData();
     }
+
+
+    public override int GetCanClearCount()
+    {
+        int count = 0;
+        for(int i = 0; i < cumulativeAchievementDatas.Length; i++)
+        {
+            UserCumulativeAchievement userAchievement = userCumulativeAchievementManager.GetUserAchievement(cumulativeAchievementDatas[i].type) as UserCumulativeAchievement;
+            if(cumulativeAchievementDatas[i].CheckCanClear())
+            {
+                count++;
+            }
+        }
+        return count;
+    }
 }
 
 public class CumulativeAchievementData : AchievementData
@@ -58,7 +74,7 @@ public class CumulativeAchievementData : AchievementData
         return AchievementManager.Instance.cumulativeAchievementManager.userCumulativeAchievementManager.GetUserAchievement(type) as UserCumulativeAchievement;
     }
 
-    public override bool CheckClear()
+    public override bool CheckCanClear()
     {
         UserCumulativeAchievement achievement = GetUserAchievement() as UserCumulativeAchievement;
         return achievement.value >= GetGoal(achievement.clearCount);

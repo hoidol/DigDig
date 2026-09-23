@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-
+using Lobby;
 public class EquipmentInfoCanvas : CanvasUI<EquipmentInfoCanvas>
 {
     public EquipmentInfoPanel equipmentInfoPanel;
@@ -34,13 +34,13 @@ public class EquipmentInfoCanvas : CanvasUI<EquipmentInfoCanvas>
 
     public void OnClickedEquipButton()
     {
-        UserManager.Instance.userEquipmentManager.EquiptUserEquipment(userEquipment);
+        UserDataManager.Instance.userEquipmentManager.EquiptUserEquipment(userEquipment);
         LobbyManager.Instance.GetLobbyCanvas(LobbyState.Equipment).UpdateCanvas();
         UpdateCanvas();
     }
     public void OnClickedReleaseButton()
     {
-        UserManager.Instance.userEquipmentManager.ReleaseUserEquipment(userEquipment.id);
+        UserDataManager.Instance.userEquipmentManager.ReleaseUserEquipment(userEquipment.id);
         
         LobbyManager.Instance.GetLobbyCanvas(LobbyState.Equipment).UpdateCanvas();
         UpdateCanvas();

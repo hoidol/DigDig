@@ -16,7 +16,7 @@ public abstract class UserBaseManager
             return;
 
         isDirty = true;
-        UserManager.Instance.RegisterDirtySave(this);
+        UserDataManager.Instance.RegisterDirtySave(this);
     }
 
     public void FlushSave()

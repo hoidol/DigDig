@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using System.Linq;
-public class SoundMgr : MonoSingleton<SoundMgr>
+public class SoundManager : MonoSingleton<SoundManager>
 {
     [SerializeField] SFXData[] sfxDatas;
     [SerializeField] BGMPlayer[] bgmPlayers;
 
     [SerializeField] AudioSource[] audioSources;
+
+    [SerializeField] AudioMixer audioMixer;
+    [SerializeField] AudioMixerGroup sfxGroup;
 
 
     void Start()
@@ -16,12 +20,15 @@ public class SoundMgr : MonoSingleton<SoundMgr>
         //Debug.Log($"mute {mute}");
         SetMute(mute);
 
+        AudioVolumeUtil.ApplyAllFromPlayerPrefs(audioMixer);
+
         audioSources = new AudioSource[30];
         bgmPlayers = GetComponentsInChildren<BGMPlayer>();
         for (int i = 0; i < 30; i++)
         {
             //AudioSource 컴포넌트 생성하기
             audioSources[i] = gameObject.AddComponent<AudioSource>();
+            audioSources[i].outputAudioMixerGroup = sfxGroup;
         }
         PlayBGM(BGMType.Main);
     }

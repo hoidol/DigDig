@@ -30,7 +30,7 @@ public class NormalEnemy : Enemy
         moving = false;
 
         root.localRotation = Quaternion.identity;
-        damageData.damage = enemyData.GetAttackPower();
+        damageData.damage = GetAttackPower();
 
         ChangeState(NormalEnemyState.Moving);
 

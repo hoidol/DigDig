@@ -112,13 +112,13 @@ public class MapManager : MonoSingleton<MapManager>
 
     public void SpawnTile(Vector2 pos, float radius)
     {
-        Debug.Log("MapManager SpawnTile");
+        // Debug.Log("MapManager SpawnTile");
         float startX = pos.x - radius;
         float startY = pos.y - radius;
         float endX = pos.x + radius;
         float endY = pos.y + radius;
 
-        Debug.Log($"MapManager SpawnTile startX {startX} startY {startY}");
+        // Debug.Log($"MapManager SpawnTile startX {startX} startY {startY}");
         // Debug.Log($"MapManager SpawnTile startIdx.x {startIdx.x} endIdx.x {endIdx.x}");
         Vector2Int startIdx = PositionToTileIndex(new Vector2(startX, startY));
         Vector2Int endIdx = PositionToTileIndex(new Vector2(endX, endY));

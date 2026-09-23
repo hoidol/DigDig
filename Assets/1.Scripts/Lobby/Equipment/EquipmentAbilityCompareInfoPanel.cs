@@ -20,7 +20,7 @@ public class EquipmentAbilityCompareInfoPanel : EquipmentAbilityInfoPanel
             titleText.text = equipmentAbility.Title;
             valueText.text = equipmentAbility.GetValueToString();
 
-            UserEquipment equippedUserEquipment = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipment(equipmentData.equipmentType);
+            UserEquipment equippedUserEquipment = UserDataManager.Instance.userEquipmentManager.GetEquippedUserEquipment(equipmentData.equipmentType);
             if (equippedUserEquipment != null)
             {
                 EquipmentAbility equippedEquipmentAbility = equippedUserEquipment.equipmentData.GetEquipmentAbility(statType);

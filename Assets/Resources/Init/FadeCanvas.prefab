@@ -200,7 +200,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 32767
   m_TargetDisplay: 0
 --- !u!114 &5250878777566309349
 MonoBehaviour:
@@ -254,6 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15085caa054b04750b2f2e6b34e32e4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FadeCanvs
+  init: 0
   canvasGroup: {fileID: 4892247033581482054}
   fadeInSec: 0.7
   fadeOutSec: 0.5

@@ -11,6 +11,7 @@ public class DailyAchievementManager : SubAchievementManager
     public override void Init()
     {
         userDailyAchievementManager = new UserDailyAchievementManager();
+        category = AchievementCategory.Daily;
     }
 
 
@@ -27,6 +28,20 @@ public class DailyAchievementManager : SubAchievementManager
         userDailyAchievement.getReward = true;
         userDailyAchievementManager.SaveData();        
     }
+
+    public override int GetCanClearCount()
+    {
+        int count = 0;
+        for(int i = 0; i < dailyAchievementDatas.Length; i++)
+        {
+            UserDailyAchievement userAchievement = userDailyAchievementManager.GetUserAchievement(dailyAchievementDatas[i].type) as UserDailyAchievement;
+            if(!userAchievement.getReward && dailyAchievementDatas[i].CheckCanClear())
+            {
+                count++;
+            }
+        }
+        return count;
+    }
 }
 
 public class DailyAchievementData :AchievementData
@@ -39,7 +54,7 @@ public class DailyAchievementData :AchievementData
     }
 
 
-    public override bool CheckClear()
+    public override bool CheckCanClear()
     {
         UserDailyAchievement achievement = GetUserAchievement() as UserDailyAchievement;
         return achievement.value >=goal;

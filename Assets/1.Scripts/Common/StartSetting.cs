@@ -36,6 +36,7 @@ public class StartSetting
             "SlimeManager",
             "SoundManager",
             "AchievementManager",
+            "EnergeManager",
 //공용
             "InAppPurchaseManager",
             "AdManager",
@@ -44,7 +45,8 @@ public class StartSetting
             "FadeCanvas",
             "BlockCanvas",
             "ToastCanvas",
-            "YesOrNoCanvas"
+            "YesOrNoCanvas",
+            "RewardEffectCanvas"
 
         };
 

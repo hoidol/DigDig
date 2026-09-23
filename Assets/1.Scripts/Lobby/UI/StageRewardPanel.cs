@@ -42,7 +42,7 @@ public class StageRewardPanel : MonoBehaviour
             return;
         }
         stageRewardData.Receive();
-        UserManager.Instance.userStageManager.ReceiveReward(stageData, stageRewardData.id);
+        UserDataManager.Instance.userStageManager.ReceiveReward(stageData, stageRewardData.id);
         LobbyCanvas.Instance.UpdateCanvas();
     }
 }

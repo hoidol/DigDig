@@ -52,7 +52,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public SlimeEnhanceInfo slimeEnhanceInfo;
     public virtual void Spawn(Vector2 pos, int mLv)
     {
-        userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(key);
+        userSlime = UserDataManager.Instance.userSlimeManager.GetUserSlime(key);
 
         slimeData = SlimeManager.Instance.GetSlimeData(key);
         slimeEnhanceInfo = slimeData.GetCommonSlimeEnhanceInfo(userSlime.enhanceLevel);
@@ -195,13 +195,13 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
         int lv = 0;
         if (SlimeData.growth == 1)
         {
-            UserSlime userSlime = UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length)];
+            UserSlime userSlime = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length)];
             pickedSlimeKey = userSlime.key;
             lv = mergeLevel + 1;
         }
         else if (SlimeData.growth == 0)
         {
-            UserSlime userSlime = UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length)];
+            UserSlime userSlime = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length)];
             pickedSlimeKey = userSlime.key;
         }
 

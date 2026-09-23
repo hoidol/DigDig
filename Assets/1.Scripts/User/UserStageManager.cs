@@ -24,7 +24,7 @@ public class UserStageManager : UserBaseManager
         return userStageData.userStages[userStageData.userStages.Count - 1]; //마지막거 보내주기
     }
 
-    public UserStage GetUserStage(int order)
+    public UserStage GetUserStage(DifficultyType difficultyType, int order)
     {
         return userStageData.userStages.Where(e => StageData.GetStageData(e.key).order == order).FirstOrDefault();
     }
@@ -88,7 +88,7 @@ public class UserStageManager : UserBaseManager
         SaveManager.SaveData(UserDataFileName, userStageData);
     }
 
-    public string GetMaxStage()
+    public string GetMaxStage(DifficultyType difficultyType)
     {
         int order = 0;
         for(int i = 0; i < userStageData.userStages.Count; i++)
@@ -98,10 +98,11 @@ public class UserStageManager : UserBaseManager
                 order++;
             }
         }
-        StageData stageData = StageManager.Instance.GetStageData(order);
+        StageData stageData = StageManager.Instance.GetStageData(difficultyType, order);
         if(stageData == null)
         {
-            stageData = StageManager.Instance.GetStageData(StageManager.Instance.stageDatas.Length-1);
+            StageData[] difficultyStageDatas = StageManager.Instance.GetStageDatas(difficultyType);
+            stageData = StageManager.Instance.GetStageData(difficultyType, difficultyStageDatas.Length-1);
         }
 
         return stageData.key;
@@ -118,6 +119,8 @@ public class UserStageManager : UserBaseManager
 [System.Serializable]
 public class UserStageData
 {
+
+    // public DifficultyType difficultyType;// 유저가 현재 선택한 난이도
     public List<UserStage> userStages = new List<UserStage>();
     
 }

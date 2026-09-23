@@ -21,7 +21,7 @@ public class EquipmentSlotContainer : MonoBehaviour
 
     public void UpdateContainer()
     {
-        List<UserEquipment> userEquipments = UserManager.Instance.userEquipmentManager.userEquipmentData.userEquipments;
+        List<UserEquipment> userEquipments = UserDataManager.Instance.userEquipmentManager.userEquipmentData.userEquipments;
         List<UserEquipment> sortedUserEquipments = null; ;
 
         if (slotCategory == EquipmentSlotCategory.All)

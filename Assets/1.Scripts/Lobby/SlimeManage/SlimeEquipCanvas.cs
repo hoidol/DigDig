@@ -20,7 +20,7 @@ namespace Lobby
         public void OpenCanvas(UserSlime userSlime, Action closeCallback = null)
         {
             base.OpenCanvas(closeCallback);
-            userSlimes = UserManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes;
+            userSlimes = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes;
             for(int i = 0; i < equipPanels.Length; i++)
             {
                 equipPanels[i].SetData(userSlimes[i].SlimeData);
@@ -31,7 +31,7 @@ namespace Lobby
         
         public void Selected(int idx)
         {
-            UserManager.Instance.userSlimeManager.EquiptUserSlime(userSlime,idx);
+            UserDataManager.Instance.userSlimeManager.EquiptUserSlime(userSlime,idx);
             CloseCanvas();
         }
 

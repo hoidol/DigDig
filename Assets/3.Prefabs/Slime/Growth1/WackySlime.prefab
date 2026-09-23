@@ -105,9 +105,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WackyMiniMe
   key: Wacky
-  level: 0
+  mergeLevel: 0
   slimeEnhanceAbilities: []
-  movement: {fileID: 0}
+  movement: {fileID: 4726313380201368068}
   rootTr: {fileID: 4004374591677386144}
   attackTimer: 0
   targetLayerMask:
@@ -121,8 +121,14 @@ MonoBehaviour:
     own: 0
     enhanceLevel: 0
     exp: 0
+  slimeEnhanceInfo:
+    level: 0
+    slimeStats: []
   targetTr: {fileID: 0}
+  wackySlimeData: {fileID: 0}
   wackyFireSpeed: 0
+  skillBulletCount: 0
+  skillCoolTime: 0
 --- !u!114 &4726313380201368068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,6 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WackyEnhance12Ability
   level: 12
   slime: {fileID: 0}
+  isActivate: 0
 --- !u!1 &3178978153369438688
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,6 +521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WackyEnhance9Ability
   level: 9
   slime: {fileID: 0}
+  isActivate: 0
 --- !u!1 &6806684022790454282
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,6 +568,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WackyEnhance15Ability
   level: 15
   slime: {fileID: 0}
+  isActivate: 0
 --- !u!1 &7832820370291875807
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,6 +615,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WackyEnhance3Ability
   level: 3
   slime: {fileID: 0}
+  isActivate: 0
 --- !u!1 &8178184893464452718
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,6 +694,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WackyEnhance6Ability
   level: 6
   slime: {fileID: 0}
+  isActivate: 0
 --- !u!1 &9199188040141692415
 GameObject:
   m_ObjectHideFlags: 0

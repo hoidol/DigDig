@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 public class PhaseEnemyPattern : SpawnPattern
 {
-    EnemyPatternData enemyPatternData;
+    EnemySpawnPatternData[] wavePatternDatas;
     //public Action onSpawned;
 
     CancellationTokenSource cts;
@@ -18,11 +18,9 @@ public class PhaseEnemyPattern : SpawnPattern
         GameEventBus.Subscribe<BreakStartEvent>(OnBreakStartEvent);
         GameEventBus.Subscribe<WaveStartEvent>(OnWaveStartEvent);
     }
-    PhaseData phaseData;
     void OnPhaseStartEvent(PhaseStartEvent e)
     {
-        phaseData = e.phaseData;
-        enemyPatternData = phaseData.enemyPatternData;
+        wavePatternDatas = e.wavePatternDatas;
     }
 
     void OnBreakStartEvent(BreakStartEvent e)
@@ -31,17 +29,17 @@ public class PhaseEnemyPattern : SpawnPattern
         Debug.Log("EnemyPattern StartPattern");
 
         cts = new CancellationTokenSource();
-        foreach (var spawnData in enemyPatternData.wavePatternDatas)
+        foreach (var spawnData in wavePatternDatas)
             SpawnLoop(spawnData, cts.Token).Forget();
     }
 
     void OnWaveStartEvent(WaveStartEvent e)
     {
         EndPattern();
-        Debug.Log("EnemyPattern StartNightPattern");
+        Debug.Log("EnemyPattern OnWaveStartEvent");
 
         cts = new CancellationTokenSource();
-        foreach (var spawnData in enemyPatternData.wavePatternDatas)
+        foreach (var spawnData in wavePatternDatas)
             SpawnLoop(spawnData, cts.Token).Forget();
     }
 

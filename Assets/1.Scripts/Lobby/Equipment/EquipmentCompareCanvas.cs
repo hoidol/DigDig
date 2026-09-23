@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-
+using Lobby;
 public class EquipmentCompareCanvas : CanvasUI<EquipmentCompareCanvas>
 {
     //현재
@@ -22,7 +22,7 @@ public class EquipmentCompareCanvas : CanvasUI<EquipmentCompareCanvas>
     public void UpdateCanvas()
     {
         curEquipmentInfoPanel.SetPanel(curUserEquipment);
-        UserEquipment equippedUserEquipment = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipment(curUserEquipment.equipmentData.equipmentType);
+        UserEquipment equippedUserEquipment = UserDataManager.Instance.userEquipmentManager.GetEquippedUserEquipment(curUserEquipment.equipmentData.equipmentType);
         equippedEquipmentInfoPanel.gameObject.SetActive(equippedUserEquipment != null); 
         if (equippedUserEquipment != null)
         {   
@@ -33,7 +33,7 @@ public class EquipmentCompareCanvas : CanvasUI<EquipmentCompareCanvas>
     //현재 보고 있는 장비로 교체하기
     public void OnClickedEquipButton()
     {
-        UserManager.Instance.userEquipmentManager.EquiptUserEquipment(curUserEquipment);
+        UserDataManager.Instance.userEquipmentManager.EquiptUserEquipment(curUserEquipment);
         
         LobbyManager.Instance.GetLobbyCanvas(LobbyState.Equipment).UpdateCanvas();
         UpdateCanvas();

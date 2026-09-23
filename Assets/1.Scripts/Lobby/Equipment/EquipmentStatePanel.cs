@@ -21,7 +21,7 @@ public class EquipmentStatePanel : MonoBehaviour
 
         for (int i = 0; i < currentEquipmentAbilityInfoPanels.Length; i++)
         {
-            currentEquipmentAbilityInfoPanels[i].UpdatePanel(UserManager.Instance.userData.characterName);
+            currentEquipmentAbilityInfoPanels[i].UpdatePanel(UserDataManager.Instance.userData.characterName);
         }
     }
 }

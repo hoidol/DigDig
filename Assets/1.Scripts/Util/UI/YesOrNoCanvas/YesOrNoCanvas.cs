@@ -27,14 +27,14 @@ public class YesOrNoCanvas : CanvasUI<YesOrNoCanvas>
 
     public void OnClickedYes()
     {
-        SoundMgr.Instance.PlaySound(SFXType.Click);
+        SoundManager.Instance.PlaySound(SFXType.Click);
         resultCallback?.Invoke(true);
         resultCallback = null;
         CloseCanvas();
     }
     public void OnClickedNo()
     {
-        SoundMgr.Instance.PlaySound(SFXType.Click);
+        SoundManager.Instance.PlaySound(SFXType.Click);
         resultCallback?.Invoke(false);
         resultCallback = null;
         CloseCanvas();

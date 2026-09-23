@@ -15,7 +15,7 @@ namespace Lobby
 
         public void SetData(SlimeData uMData)
         {
-            UserSlime userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(uMData.key);
+            UserSlime userSlime = UserDataManager.Instance.userSlimeManager.GetUserSlime(uMData.key);
             if (titleText != null)
                 titleText.text = uMData.Title;
             if (descText != null)

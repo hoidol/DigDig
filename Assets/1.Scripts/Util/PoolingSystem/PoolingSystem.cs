@@ -19,9 +19,9 @@ public class PoolingSystem<T> where T : MonoBehaviour
         this.prefab = prefab;
     }
 
-    public T GetObject<T>() where T : Component
+    public T GetObject<T>(Transform parent =null) where T : Component
     {
-        GameObject obj = GetObject();
+        GameObject obj = GetObject(parent);
         return obj.GetComponent<T>();
     }
 

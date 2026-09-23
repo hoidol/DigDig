@@ -1,10 +1,12 @@
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-
-public class LobbyManager : MonoSingleton<LobbyManager>
+namespace Lobby
+{
+    public class LobbyManager : MonoSingleton<LobbyManager>
 {
     public BaseLobbyCanvas[] lobbyCanvases;
+    public LobbyStateButton[] lobbyStateButtons;
     public LobbyCanvas lobbyCanvas;
     void Awake()
     {
@@ -28,10 +30,20 @@ public class LobbyManager : MonoSingleton<LobbyManager>
 
         FadeCanvs.Instance.FadeIn("", () =>
         {
-            OpenCanvas(LobbyState.Battle);
-            LobbyCanvas.Instance.UpdateCanvas();
+            StartLobby();
         });
     }
+
+    async void StartLobby()
+    {        
+        OpenCanvas(LobbyState.Battle);
+        LobbyCanvas.Instance.UpdateCanvas();
+        while (UserDataManager.Instance.userMyInfoManager.LevelUp())
+        {
+            UserLevelUpCanvas.Instance.OpenCanvas();
+        }
+    }
+
     public LobbyState lobbyState;
     public void OpenCanvas(LobbyState state)
     {
@@ -43,6 +55,11 @@ public class LobbyManager : MonoSingleton<LobbyManager>
         var canvas = lobbyCanvases.FirstOrDefault(c => c.state == state);
         canvas?.OpenCanvas();
         lobbyCanvas.UpdateCanvas();
+
+        for(int i = 0; i < lobbyStateButtons.Length; i++)
+        {
+            lobbyStateButtons[i].UpdateButton();
+        }
     }
 
     public BaseLobbyCanvas GetLobbyCanvas(LobbyState state)
@@ -51,6 +68,8 @@ public class LobbyManager : MonoSingleton<LobbyManager>
         return canvas;
     }
 }
+}
+
 public enum LobbyState
 {
     Shop,

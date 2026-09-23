@@ -11,24 +11,47 @@ public class StageData : ScriptableObject
 {
     public EnemySpawnerContainer enemySpawnerContainerPrefab;
 
-    // public BossSpawner bossSpawner;
     public string key;
     public int order;
     public string Title => key;
-    public int level; //Mode
+    public int stage; //Mode
+    public DifficultyType difficulty;
     public StageRewardData[] rewardDatas;
 
-    public float oreHp;
+    public float stoneHp;
     public Enemy[] enemyPrefabs; //해당 스테이지의 등장할 원거리, 근거리 엘리트 등 적 설정
     Dictionary<EnemyType, Enemy> enemyPrefabDic = new Dictionary<EnemyType, Enemy>();
-    public PhaseData[] phaseDatas;
+    public PhaseData phaseData;
     public EventData[] eventDatas;
     public Boss boss;
-    public PhaseData GetPhaseData(int idx = -1)
+
+    public bool ChekcUnlock()
     {
-        if (idx < 0)
-            idx = GameManager.Instance.phase;
-        return phaseDatas[idx];
+        if(difficulty == DifficultyType.Normal && order == 0)
+        {
+            return true;
+        }
+
+        UserStage preStageUserStage = UserDataManager.Instance.userStageManager.GetUserStage(difficulty, order -1);
+        //이전 단계했는지 확인
+        if(order > 0)
+        {
+            if(preStageUserStage.clearCount <=0)
+                return false;
+        }
+        
+        int difficultyNum = (int)difficulty;
+
+        //낮은 난이도 깼는지 확인
+        if(difficultyNum > 0)
+        {
+            UserStage lowDifficultyUserStage = UserDataManager.Instance.userStageManager.GetUserStage((DifficultyType)difficultyNum-1, order);
+            if(lowDifficultyUserStage.clearCount <=0)
+                return false;
+        }
+
+        return true;
+        
     }
     public void Init()
     {
@@ -70,18 +93,36 @@ public class StageData : ScriptableObject
         if (lines.Length < 2) return;
 
         string[] headers = lines[0].Split('\t');
-        int iKey = System.Array.IndexOf(headers, "key");
-        int iLevel = System.Array.IndexOf(headers, "level");
-        int iOreHp = System.Array.IndexOf(headers, "oreHp");
+        for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
+        int iOrder = System.Array.IndexOf(headers, "order");
+        int iDifficulty = System.Array.IndexOf(headers, "difficulty");
+        int iStage = System.Array.IndexOf(headers, "stage");
+        int iStoneHp = System.Array.IndexOf(headers, "stoneHp");
+
+        // 에셋 경로(Assets/.../StageData/{Difficulty}/{order}.asset)로 CSV 행을 식별
+        // (key 필드는 CSV의 복합 key 컬럼과 형식이 달라 게임 전역 조회용 값을 유지해야 하므로 매칭에 쓰지 않음)
+        string assetPath = AssetDatabase.GetAssetPath(this);
+        string fileName = Path.GetFileNameWithoutExtension(assetPath);
+        string folderName = Path.GetFileName(Path.GetDirectoryName(assetPath));
+
+        if (!int.TryParse(fileName, out int expectedOrder) || !System.Enum.TryParse(folderName, out DifficultyType expectedDifficulty))
+        {
+            Debug.LogWarning($"[StageData] 에셋 경로에서 order/difficulty 파싱 실패: {assetPath}");
+            return;
+        }
 
         for (int i = 1; i < lines.Length; i++)
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
             string[] cols = lines[i].Split('\t');
-            if (Col(cols, iKey) != key) continue;
 
-            if (int.TryParse(Col(cols, iLevel), out var lv)) level = lv;
-            if (float.TryParse(Col(cols, iOreHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float oh)) oreHp = oh;
+            if (!int.TryParse(Col(cols, iOrder), out var od) || od != expectedOrder) continue;
+            if (!System.Enum.TryParse(Col(cols, iDifficulty), out DifficultyType dt) || dt != expectedDifficulty) continue;
+
+            order = od;
+            difficulty = dt;
+            if (int.TryParse(Col(cols, iStage), out var st)) stage = st;
+            if (float.TryParse(Col(cols, iStoneHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float shp)) stoneHp = shp;
             break;
         }
 
@@ -132,39 +173,45 @@ public class StageData : ScriptableObject
         string[] headers = lines[0].Split('\t');
         for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
 
-        int phase = System.Array.IndexOf(headers, "phase");
-        int iIsBoss = System.Array.IndexOf(headers, "isBoss");
-        int iOrdealLevels = System.Array.IndexOf(headers, "ordealLevels");
+        int iKey = System.Array.IndexOf(headers, "key");
         int iEnemyHp = System.Array.IndexOf(headers, "enemyHp");
+        int iEnemyIncreaseHp = System.Array.IndexOf(headers, "enemyIncreaseHp");
         int iEnemyAtk = System.Array.IndexOf(headers, "enemyAttackPower");
+        int iEnemyIncreaseAtk = System.Array.IndexOf(headers, "enemyIncreaseAttackPower");
 
-        var list = new List<PhaseData>();
+        // order당 PhaseData는 1개만 사용 (hp/atk는 enemyIncrease* * GameManager.phase 로 실시간 스케일링됨)
         for (int i = 1; i < lines.Length; i++)
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
             string[] cols = lines[i].Split('\t');
 
+            // key 형식: {stage}_{order}_{phase} (ex. Greed_0_0)
+            string[] keyParts = Col(cols, iKey).Split('_');
+            if (keyParts.Length != 3) continue;
+            if (!int.TryParse(keyParts[1], out int rowOrder) || rowOrder != order) continue;
+
             var d = new PhaseData();
-            if (int.TryParse(Col(cols, phase), out int p)) d.phase = p;
-            d.isBoss = Col(cols, iIsBoss).ToUpper() == "TRUE";
-            if (int.TryParse(Col(cols, iOrdealLevels), out int ol)) d.ordealLevel = ol;
             if (float.TryParse(Col(cols, iEnemyHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float eh)) d.enemyHp = eh;
+            if (float.TryParse(Col(cols, iEnemyIncreaseHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float eih)) d.enemyIncreaseHp = eih;
             if (float.TryParse(Col(cols, iEnemyAtk), NumberStyles.Float, CultureInfo.InvariantCulture, out float ea)) d.enemyAttackPower = ea;
+            if (float.TryParse(Col(cols, iEnemyIncreaseAtk), NumberStyles.Float, CultureInfo.InvariantCulture, out float eia)) d.enemyIncreaseAttackPower = eia;
 
-            EnemyPatternData epd = FindEnemyPatternData(d.phase);
-            d.enemyPatternData = epd;
+            d.enemyPatternData = new EnemyPatternData[GameSetting.BOSS_PHASE];
+            for (int p = 0; p < GameSetting.BOSS_PHASE; p++)
+            {
+                d.enemyPatternData[p] = new EnemyPatternData { enemySpawnPatternDatas = FindEnemyPatternData(p) };
+            }
 
-            list.Add(d);
+            phaseData = d;
+            break;
         }
-
-        phaseDatas = list.ToArray();
-        Debug.Log($"[StageData] {key} PhaseData {list.Count}개 로드 완료");
+        Debug.Log($"[StageData] {key} PhaseData 로드 완료");
     }
 
-    EnemyPatternData FindEnemyPatternData(int phase)
+    EnemySpawnPatternData[] FindEnemyPatternData(int phase)
     {
         // Debug.Log($"FindEnemyPatternData {phase}");
-        string path = Path.Combine(Application.dataPath, "Json/EnemyPatternData.csv");
+        string path = Path.Combine(Application.dataPath, $"Json/EnemyPatternData/{difficulty}.csv");
         if (!File.Exists(path)) { Debug.LogWarning($"[StageData] EnemyPatternData CSV 없음: {path}"); return null; }
 
         string[] lines = File.ReadAllLines(path, System.Text.Encoding.UTF8);
@@ -212,7 +259,7 @@ public class StageData : ScriptableObject
 
         if ( waveList.Count == 0) { Debug.LogWarning($"[StageData] EnemyPatternData stage={key} phase={phase} 데이터 없음"); return null; }
 
-        return new EnemyPatternData { phase = phase,  wavePatternDatas = waveList.ToArray() };
+        return waveList.ToArray();
     }
 
     static bool TryParseIntervalRange(string raw, out Vector2 range)
@@ -298,21 +345,17 @@ public class StageData : ScriptableObject
 [System.Serializable]
 public class PhaseData
 {
-    public int phase;
-    public bool isBoss;
-    public int ordealLevel;
     public float enemyHp;
+    public float enemyIncreaseHp;
     public float enemyAttackPower;
-    // public float time;
-    public EnemyPatternData enemyPatternData;
+    public float enemyIncreaseAttackPower;
+    public EnemyPatternData[] enemyPatternData; //총 9개가 되야함
 }
 
 [System.Serializable]
 public class EnemyPatternData
 {
-    public int phase;
-    // public EnemySpawnPatternData[] dayEnemySpawnPatternDatas;
-    public EnemySpawnPatternData[] wavePatternDatas;
+    public EnemySpawnPatternData[] enemySpawnPatternDatas;
 }
 
 [System.Serializable]
@@ -320,9 +363,7 @@ public class EnemySpawnPatternData
 {
     public EnemyType enemyType;
     public int spawnCount;
-    public Vector2 intervalRange;
-
-    
+    public Vector2 intervalRange;    
 
 }
 
@@ -332,4 +373,11 @@ public class StageRewardData: RewardData
 
     public string id; //0-4_reward,0-7_reward,0-10_reward
     public int phase; // 4 ,7, 10(클리어)
+}
+
+public enum DifficultyType :int
+{
+    Normal,
+    Hard,
+    Hell
 }

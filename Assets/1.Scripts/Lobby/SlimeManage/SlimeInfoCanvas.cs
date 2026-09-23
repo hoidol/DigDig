@@ -16,7 +16,7 @@ namespace Lobby
         public void OpenCanvas(SlimeData slimeData, Action closeCallback = null)
         {
             this.slimeData = slimeData;
-            this.userSlime = UserManager.Instance.userSlimeManager.GetUserSlime(slimeData.key);
+            this.userSlime = UserDataManager.Instance.userSlimeManager.GetUserSlime(slimeData.key);
             slimeMergeInfoPanel.SetSlimeData(userSlime,slimeData);
             base.OpenCanvas(closeCallback);
             slimePanel.SetData(slimeData);
@@ -63,7 +63,7 @@ namespace Lobby
                 return;
             }
 
-            UserManager.Instance.userSlimeManager.LevelUp(slimeData.key);
+            UserDataManager.Instance.userSlimeManager.LevelUp(slimeData.key);
             UpdateCanvas();
         }
         public void OnClickedEquipt()

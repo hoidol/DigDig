@@ -14,7 +14,7 @@ public class DrawEquipmentProductPanel : ProductPanel
         string[] keys = drawEquipment.Draw();
         for(int i = 0; i < keys.Length; i++)
         {
-            UserManager.Instance.userEquipmentManager.AddUserEquipment(keys[i]);
+            UserDataManager.Instance.userEquipmentManager.AddUserEquipment(keys[i]);
         }
         
         Lobby.DrawEquipmentResultCanvas.Instance.OpenCanvas(keys);

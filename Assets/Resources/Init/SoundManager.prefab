@@ -53,3 +53,6 @@ MonoBehaviour:
     playOnAwake: 0
   bgmPlayers: []
   audioSources: []
+  audioMixer: {fileID: 24100000, guid: f031bda868aa34d658b3574081b25f02, type: 2}
+  sfxGroup: {fileID: -6750286429557888034, guid: f031bda868aa34d658b3574081b25f02,
+    type: 2}

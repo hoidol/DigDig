@@ -71,13 +71,6 @@
             "own": true,
             "enhanceLevel": 0,
             "exp": 0
-        },
-        {
-            "key": "Base",
-            "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
         }
     ]
 }

@@ -65,7 +65,6 @@ public class EventManager : MonoSingleton<EventManager>
     private void OnStartGameEvent(StartGameEvent e)
     {
         spawnCount = 0;
-
         // EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
         // eventRepeatSpawners.Add(itemBoxSpawner);
         // itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
@@ -73,7 +72,6 @@ public class EventManager : MonoSingleton<EventManager>
 
         EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemShop, 30, 4, 10);
         eventRepeatSpawners.Add(itemBoxSpawner);
-
     }
 
     private EventType? ResolveEventType(EventData data)
@@ -233,7 +231,7 @@ public class EventRepeatSpawner
         repeatTime = rTime;
         repeatTimer = sTime;
         afterDestroyTime = aDTime;
-        Debug.Log($"if (startTimer <= 0) sTime {sTime}");
+        // Debug.Log($"if (startTimer <= 0) sTime {sTime}");
     }
 
     public void Update()

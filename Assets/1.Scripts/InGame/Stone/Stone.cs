@@ -55,7 +55,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
         float disMulti = distance / 7f;
         if (disMulti <= 1)
             disMulti = 1;
-        float defaultHp = GameManager.Instance.stageData.oreHp * disMulti;
+        float defaultHp = GameManager.Instance.stageData.stoneHp * disMulti;
         this.maxHp = defaultHp + defaultHp * level * 0.5f;
 
         curHp = maxHp;
@@ -69,7 +69,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
     public virtual void TakeDamage(DamageData damage)
     {
         lastDamage = damage;
-        Debug.Log($"Stone TakeDamage {damage.damage}");
+        // Debug.Log($"Stone TakeDamage {damage.damage}");
         curHp -= damage.ApplyDamage(hpPoint.transform.position);
 
 
@@ -103,7 +103,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
 
     public virtual void Destroy()
     {
-        Debug.Log("Stone 어디서 불리냐");
+        // Debug.Log("Stone 어디서 불리냐");
         EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
         GameEventBus.Publish(new DestroyedStoneEvent(this, lastDamage));
         ReleaseTile();

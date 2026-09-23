@@ -20,7 +20,7 @@ public class RandomDropPattern : EnemyAttackPattern
     public async override UniTask Execute(IEnemySpecialAttackPattern enemy, Action onEnd)
     {
         await base.Execute(enemy, onEnd);
-        float baseDamage = enemy.Transform.GetComponent<Enemy>().enemyData.GetAttackPower() * 0.8f;
+        float baseDamage = enemy.Transform.GetComponent<Enemy>().GetAttackPower() * 0.8f;
 
         activeWarnings.Clear();
 

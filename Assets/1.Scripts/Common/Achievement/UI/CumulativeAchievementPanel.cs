@@ -21,7 +21,7 @@ public class CumulativeAchievementPanel : AchievementPanel
 
     public override void OnClickedGetReward()
     {
-          if(!cumulativeAchievementData.CheckClear())
+          if(!cumulativeAchievementData.CheckCanClear())
             return;
 
         AchievementManager.Instance.cumulativeAchievementManager.GetReward(cumulativeAchievementData);

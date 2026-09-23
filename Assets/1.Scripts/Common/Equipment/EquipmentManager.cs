@@ -44,7 +44,7 @@ public class EquipmentManager : MonoSingleton<EquipmentManager>
     {
         EquipmentAbility sumAbility = new EquipmentAbility();
         sumAbility.statType = statType;
-        UserEquipment[] equippedEquipments = UserManager.Instance.userEquipmentManager.GetEquippedUserEquipments();
+        UserEquipment[] equippedEquipments = UserDataManager.Instance.userEquipmentManager.GetEquippedUserEquipments();
         for (int i = 0; i < equippedEquipments.Length; i++)
         {
             EquipmentAbility ability = equippedEquipments[i].equipmentData.GetEquipmentAbility(statType);

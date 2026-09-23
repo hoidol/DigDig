@@ -29,6 +29,8 @@ public class GameManager : MonoSingleton<GameManager>
     public bool isBreak;
     public int phase;
     public int slimeSpawnCount;
+    public DifficultyType difficultyType;
+    
     async void Start()
     {
         await UniTask.WhenAll(
@@ -46,9 +48,10 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Subscribe<CharacterHpChangedEvent>(OnPlayerHpChangedEvent);
         GameEventBus.Subscribe<SpawnMinieEvent>(OnSpawnMinieEvent);
 
-        Debug.Log($"UserManager.STAGE_KEY {UserManager.STAGE_KEY}");
-        stageData = StageManager.Instance.GetStageData(UserManager.STAGE_KEY);
+        Debug.Log($"UserManager.STAGE_KEY {UserDataManager.STAGE_KEY}");
+        stageData = StageManager.Instance.GetStageData(UserDataManager.STAGE_KEY);
         stageData.Init();
+        phaseData = stageData.phaseData;
         enemySpawnerContainer = Instantiate(stageData.enemySpawnerContainerPrefab);
 
         GameEventBus.Publish(new StartGameEvent(stageData));
@@ -70,21 +73,21 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
     public PhaseData phaseData;
-    public void StartDay(int phase)
+    public void StartBreak(int phase)
     {
         isBreak = true;
-        // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
+        // phase = GameSetting.BOSS_PHASE; //보스 테스트용 - 테스트 후 주석하기
         Debug.Log($"GameManager StartPhase {phase}");
         GameEventBus.Publish(new BreakStartEvent(phase));
     }
     public void StartWave(int phase)
     {
         isBreak = false;
-        // phase = stageData.phaseDatas.Length - 1; //보스 테스트용 - 테스트 후 주석하기
+        // phase = GameSetting.BOSS_PHASE; //보스 테스트용 - 테스트 후 주석하기
         Debug.Log($"GameManager StartWave {phase}");
 
         GameEventBus.Publish(new WaveStartEvent(phase));
-        if (phaseData.isBoss)
+        if (phase == GameSetting.BOSS_PHASE)
         {
             StartBoss();
         }
@@ -92,14 +95,14 @@ public class GameManager : MonoSingleton<GameManager>
 
     async UniTaskVoid ProcessWave(int phase)
     {
-        phaseData = stageData.GetPhaseData(phase);
-
-        GameEventBus.Publish(new PhaseStartEvent(phaseData));
+        if (phase < GameSetting.BOSS_PHASE)
+        {
+            GameEventBus.Publish(new PhaseStartEvent(phase, stageData.phaseData.enemyPatternData[phase].enemySpawnPatternDatas));
+        }
         //낮에 대한 시간 처리
         breakTimer = 0;
-        StartDay(phase);
+        StartBreak(phase);
         float breakTime = GameSetting.BREAK_TIME;
-        // Debug.Log($"day {phase} dayTime {dayTime}");
         while (breakTimer <= breakTime)
         {
             await UniTask.Yield();
@@ -136,7 +139,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void EndWave()
     {
-        if (phaseData.isBoss)
+        if (phase == GameSetting.BOSS_PHASE)
             return;
 
         GameEventBus.Publish(new PhaseEndEvent(phase));
@@ -173,17 +176,20 @@ public class GameManager : MonoSingleton<GameManager>
             return;
 
         isPlaying = false;
-        UserManager.Instance.userStageManager.TryStage(stageData.key);
+        UserDataManager.Instance.userStageManager.TryStage(stageData.key);
+        GameEventBus.Publish(new TryStageEvent(stageData.key));
+
         if (!clear)
         {
             FailCanvas.Instance.OpenCanvas();
         }
         else
         {
+            GameEventBus.Publish(new ClearStageEvent(stageData.key));
             int accept = PlayerPrefs.GetInt(ACCEPT_REVIEW_KEY, 0);
             if (accept == 0)
             {
-                StageData maxStageData = StageManager.Instance.GetStageData(UserManager.Instance.userStageManager.GetMaxStage());
+                StageData maxStageData = StageManager.Instance.GetStageData(UserDataManager.Instance.userStageManager.GetMaxStage(UserDataManager.difficultyType));
                 if (maxStageData.order >= 2)
                 {
                     YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("review_title"), TranslateManager.GetText("review_body"), (accept) =>
@@ -201,8 +207,6 @@ public class GameManager : MonoSingleton<GameManager>
             }
             ResultCanvas.Instance.OpenCanvas(true);
         }
-
-
 
         // string msg = clear ? "승리" : "패배";
         // FadeCanvs.Instance.FadeIn($"msg", () => { SceneManager.LoadScene("InGame"); });
@@ -275,10 +279,12 @@ public class WaveStartEvent
 
 public class PhaseStartEvent
 {
-    public PhaseData phaseData;
-    public PhaseStartEvent(PhaseData pData)
+    public int phaseIdx;
+    public EnemySpawnPatternData[] wavePatternDatas;
+    public PhaseStartEvent(int phaseIdx, EnemySpawnPatternData[] wavePatternDatas)
     {
-        phaseData = pData;
+        this.phaseIdx = phaseIdx;
+        this.wavePatternDatas = wavePatternDatas;
     }
 }
 public class PhaseEndEvent
@@ -289,7 +295,24 @@ public class PhaseEndEvent
         phaseIdx = p;
     }
 }
+public class ClearStageEvent
+{
+    public string key;
+    public ClearStageEvent(string key)
+    {   
+        this.key = key;
+    }
+}
 
+
+public class TryStageEvent
+{
+    public string key;
+    public TryStageEvent(string key)
+    {   
+        this.key = key;
+    }
+}
 /*
 성장2이 있어야되는 이유
 뱀서에 각성같은거야... 필요해

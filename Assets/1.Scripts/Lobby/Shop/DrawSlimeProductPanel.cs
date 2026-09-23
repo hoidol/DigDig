@@ -14,7 +14,7 @@ public class DrawSlimeProductPanel : ProductPanel
         string[] keys = drawSlime.Draw();
         for(int i = 0; i < keys.Length; i++)
         {
-            UserManager.Instance.userSlimeManager.AddUserSlime(keys[i]);
+            UserDataManager.Instance.userSlimeManager.AddUserSlime(keys[i]);
         }
         Lobby.DrawSlimeResultCanvas.Instance.OpenCanvas(keys);
 
