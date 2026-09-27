@@ -17,7 +17,7 @@ public class AllyBulletObject : BulletObject
         AllyBulletSpec allyBulletSpec = bullet as AllyBulletSpec;
         damage = allyBulletSpec.damage;
         transform.localScale = Vector3.one;
-        
+
         if (allyUnitDamageData == null)
         {
             allyUnitDamageData = new AllyUnitDamageData();
@@ -29,14 +29,14 @@ public class AllyBulletObject : BulletObject
         ClearBulletForce();
 
 
-        for(int i = 0; i < bullet.bulletBehaviors.Count; i++)
+        for (int i = 0; i < bullet.bulletBehaviors.Count; i++)
         {
-            AddBehavior(bullet.bulletBehaviors[i]); 
+            AddBehavior(bullet.bulletBehaviors[i]);
         }
 
-        for(int i = 0; i < bullet.bulletBehaviors.Count; i++)
+        for (int i = 0; i < bullet.bulletForces.Count; i++)
         {
-            AddBulletForce(bullet.bulletForces[i]); 
+            AddBulletForce(bullet.bulletForces[i]);
         }
     }
 

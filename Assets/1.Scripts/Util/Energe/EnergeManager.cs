@@ -2,7 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class EnergeManager :MonoSingleton<EnergeManager>
+public class EnergeManager : MonoSingleton<EnergeManager>
 {
     // public const int MAX_ENERGE = 30;
     private const int CHARGE_INTERVAL_MINUTES = 1;
@@ -57,7 +57,7 @@ public class EnergeManager :MonoSingleton<EnergeManager>
         if (addable > 0)
         {
             UserDataManager.Instance.AddEnerge(addable);
-            GameEventBus.Publish(new ChangedEnergeEvent { energe = UserDataManager.Instance.userData.energe });
+
         }
     }
 
@@ -69,9 +69,11 @@ public class EnergeManager :MonoSingleton<EnergeManager>
 
 public class ChangedEnergeEvent
 {
-    public int energe;
-    public ChangedEnergeEvent()
+    public int totalEnerge;
+    public int change;//변화량
+    public ChangedEnergeEvent(int totalEnerge, int change)
     {
-        
+        this.totalEnerge = totalEnerge;
+        this.change = change;
     }
 }
