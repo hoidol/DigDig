@@ -12,7 +12,7 @@ public class ItemNotifyEffectPanel : MonoBehaviour
     public void SetItem(Item item)
     {
         thumImage.sprite = item.itemData.thum;
-        thumImage.color = item.itemData.color;
+        // thumImage.color = item.itemData.color;
         // item.notifyListener = null;
         // item.notifyListener += Notify;
     }

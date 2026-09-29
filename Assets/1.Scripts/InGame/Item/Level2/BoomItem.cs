@@ -51,7 +51,7 @@ public class BoomItem : Item, IFired, IComboFire
                 dir.x * Mathf.Sin(angleOffset) + dir.y * Mathf.Cos(angleOffset));
             Character.Instance.Shoot(boomBullet, shootDir);
 
-            Character.Instance.AddHp(-itemData.consumeHp);
+            // Character.Instance.AddHp(-itemData.consumeHp);
         }
         
         triggerCounter = 0;

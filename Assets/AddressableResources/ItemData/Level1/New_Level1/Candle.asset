@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
-  m_Name: Mutant
+  m_Name: Candle
   m_EditorClassIdentifier: 
-  key: Mutant
-  itemName: "\uB3CC\uC5F0\uBCC0\uC774"
-  desc: "\uBBF8\uB2C8\uBBF8\uC5D0 \uADFC\uCC98\uC5D0\uC11C \uACF5\uACA9 \uC2DC 20%\uD655\uB960\uB85C
-    \uCCB4\uB825 +1"
-  consumeHp: 1
+  key: Candle
+  itemName: "\uC804\uAE30"
+  desc: "\uADA4\uB3C4\uAC00 2\uAC1C\uB418\uACE0 \uC804\uAE30\uB85C \uBC14\uB01C,
+    \uC804\uAE30 \uACF5\uACA9 \uBC1B\uC73C\uBA74 \uC8FC\uBCC0\uC5D0\uC11C \uC804\uAE30
+    \uB5A8\uC5B4\uC9D0"
   level: 2
+  addPrice: 0
   childItem1: Luck
-  childItem2: MiniMe
+  childItem2: "\uADA4\uB3C4"
   valueInfo: 
-  itemPrefab: {fileID: 7052181432605751903, guid: fc4bc6348d1f44781bbf2bd07119de2a,
+  itemPrefab: {fileID: 5256288561441140790, guid: c2ea475d708f8455e81355fec1efc253,
     type: 3}
   unlockConditions: []
   applyOrder: 0
   thum: {fileID: 21300000, guid: 9a1489f0d46b5435d9800b18434a684c, type: 3}
-  color: {r: 0.70980394, g: 0.8784314, b: 0.5568628, a: 1}

@@ -20,7 +20,7 @@ public class SelectItemPanel : MonoBehaviour
     {
         this.itemData = itemData;
         thumImage.sprite = itemData.thum;
-        thumImage.color = itemData.color;
+        // thumImage.color = itemData.color;
 
         titleText.text = itemData.Title;
         descText.text = itemData.GetDescription();

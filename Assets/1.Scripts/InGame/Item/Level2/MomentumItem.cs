@@ -67,13 +67,14 @@ public class MomentumItem : TriggerCycleItem
 
     public override string GetDescription()
     {
-        return $"거대 궤도를 소환합니다.\n{consumeTime}초마다 체력 {itemData.consumeHp} 감소";
+        return  null;
+        // return $"거대 궤도를 소환합니다.\n{consumeTime}초마다 체력 {itemData.consumeHp} 감소";
         //return string.Format(TranslateManager.GetText($"{key}_Desc"),consumeTime,itemData.consumeHp);
     }
 
     public override void OnActivate()
     {
-        Character.Instance.AddHp(-itemData.consumeHp);
+        // Character.Instance.AddHp(-itemData.consumeHp);
         RebuildOrbs();
     }
 

@@ -11,7 +11,7 @@ public class ItemPanelOnlyImage : MonoBehaviour
         if(itemData != null)
         {
             thumImage.sprite = itemData.thum;
-            thumImage.color = itemData.color;
+            // thumImage.color = itemData.color;
             thumImage.enabled = true;
         }
         else

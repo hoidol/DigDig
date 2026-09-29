@@ -63,7 +63,7 @@ public class ShieldItem : TriggerCycleItem
 
     public override void OnActivate()
     {
-        Character.Instance.AddHp(-itemData.consumeHp);
+        // Character.Instance.AddHp(-itemData.consumeHp);
         RebuildOrbs();
     }
 

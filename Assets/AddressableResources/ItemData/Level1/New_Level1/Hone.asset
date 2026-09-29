@@ -10,22 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
-  m_Name: MiniMe
+  m_Name: Hone
   m_EditorClassIdentifier: 
-  key: MiniMe
-  itemName: "\uBBF8\uB2C8\uBBF8"
-  desc: "\uC77C\uC815\uD55C \uD68C\uC804\uC744 \uAC00\uC9C0\uACE0 \uBC14\uB77C\uBCF4\uB294
-    \uBC29\uD5A5\uC73C\uB85C \uACF5\uACA9\uD558\uB294 \uBBF8\uB2C8\uBBF8 \uC18C\uD658
-    (\uD0C4 \uD295\uAE40 \uC5C6\uC74C) \uC9C0\uC18D \uC2DC\uAC04 10\uCD08 \uCFE8\uD0C0\uC784
-    10 \uC18C\uD658 \uC2DC \uCCB4\uB825 2\uC18C\uBAA8"
-  consumeHp: 1
+  key: Hone
+  itemName: "\uD295\uAE40"
+  desc: 
   level: 1
+  addPrice: 0
   childItem1: 
   childItem2: 
   valueInfo: 
-  itemPrefab: {fileID: 6555938412696219393, guid: c3bbb2ae7b9414f228a10fbf2ac05f7e,
+  itemPrefab: {fileID: 4586241931181740639, guid: 2b4e0b48e34584c4396314847b09344f,
     type: 3}
   unlockConditions: []
   applyOrder: 0
   thum: {fileID: 21300000, guid: f35bccad9c5254dc1bf2ed21f1aca5b7, type: 3}
-  color: {r: 1, g: 0.48235294, b: 0.79607844, a: 1}

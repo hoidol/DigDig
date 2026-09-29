@@ -16,7 +16,7 @@ public class ItemDisplayPanel : MonoBehaviour
     {
         // bgImage.color = ItemData.GetGradeColor(itemData.grade);
         thumImage.sprite = itemData.thum;
-        thumImage.color = itemData.color;
+        // thumImage.color = itemData.color;
     }
 
 

@@ -61,6 +61,6 @@ public class FirelanceItem : Item
         firelance.dps = dp;
         firelance.Shoot(dir);
 
-        Character.Instance.AddHp(-itemData.consumeHp);
+        // Character.Instance.AddHp(-itemData.consumeHp);
     }
 }

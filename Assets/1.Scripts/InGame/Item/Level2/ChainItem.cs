@@ -43,7 +43,7 @@ public class ChainItem : Item, IFired, IComboFire
             Character.Instance.Shoot(bullet, dir);
         }
 
-        Character.Instance.AddHp(-itemData.consumeHp);
+        // Character.Instance.AddHp(-itemData.consumeHp);
         triggerCounter = 0;
 
 

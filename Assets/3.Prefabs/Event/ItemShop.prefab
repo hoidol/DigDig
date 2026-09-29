@@ -1642,9 +1642,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemShop
   eventType: 5
-  clearRadius: 5
+  clearRadius: 2
   thum: {fileID: 21300000, guid: 294311b9699c84163b8fb5a0536bbb45, type: 3}
-  maxTime: 0
+  maxTime: 180
   curTimer: 0
   interacting: 0
 --- !u!58 &4498071015302534749

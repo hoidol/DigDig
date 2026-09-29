@@ -4,7 +4,8 @@ public class DailyAchievementContainer : AchievementContainer
 {
     //   public DailyAchievementPanel[] dailyAchievementPanels;
       public override void OpenContainer()
-      {for(int i = 0; i < achievementPanels.Length; i++)
+      {
+        for(int i = 0; i < achievementPanels.Length; i++)
         {
             achievementPanels[i].gameObject.SetActive(false);
         }

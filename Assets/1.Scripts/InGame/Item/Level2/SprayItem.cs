@@ -62,12 +62,13 @@ public class SprayItem : Item
             Character.Instance.Shoot(new AllyBulletSpec(), dir);
         }
 
-        Character.Instance.AddHp(-itemData.consumeHp);
+        // Character.Instance.AddHp(-itemData.consumeHp);
     }
 
     public override string GetDescription()
     {
-        return $"{killsNeeded}킬 처치 시 360도 {bulletCount}발 발사 (체력 -{itemData.consumeHp})";
+        return null;
+        // return $"{killsNeeded}킬 처치 시 360도 {bulletCount}발 발사 (체력 -{itemData.consumeHp})";
         //return string.Format(TranslateManager.GetText($"{key}_Desc"),killsNeeded,bulletCount,itemData.consumeHp);
     }
 

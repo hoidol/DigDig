@@ -16,7 +16,7 @@ public class ItemData : ScriptableObject
     public string Title => itemName;
     public string itemName;
     public string desc;
-    public int consumeHp;
+    // public int consumeHp;
     public int level;
     public int addPrice; //추가 금액
     public string childItem1;
@@ -28,7 +28,7 @@ public class ItemData : ScriptableObject
     public int applyOrder; // 아이템 적용 순서
     public Sprite thum;
 
-    public Color color;
+    // public Color color;
 
     public bool CheckUnlock()
     {
@@ -99,12 +99,12 @@ public class ItemData : ScriptableObject
                 childItem2 = ResolveKeyByName(lines, iKey, iName, cols[iChildItem2].Trim());
             if (iDesc >= 0 && iDesc < cols.Length)
                 desc = cols[iDesc].Trim();
-            if (iConsumeHp >= 0 && iConsumeHp < cols.Length && int.TryParse(cols[iConsumeHp].Trim(), out int hp))
-                consumeHp = hp;
+            // if (iConsumeHp >= 0 && iConsumeHp < cols.Length && int.TryParse(cols[iConsumeHp].Trim(), out int hp))
+            //     consumeHp = hp;
             if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
                 level = lv;
-            if (iColor >= 0 && iColor < cols.Length && ColorUtility.TryParseHtmlString(cols[iColor].Trim(), out Color parsedColor))
-                color = parsedColor;
+            // if (iColor >= 0 && iColor < cols.Length && ColorUtility.TryParseHtmlString(cols[iColor].Trim(), out Color parsedColor))
+            //     color = parsedColor;
 
             string thumPath = $"Assets/2.Sprites/Item/Thum/Level{level}.png";
             thum = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(thumPath);

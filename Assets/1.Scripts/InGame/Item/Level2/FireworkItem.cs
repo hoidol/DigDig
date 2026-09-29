@@ -33,12 +33,13 @@ public class FireworkItem : TriggerCycleItem, IFired
         attackSpeedBuff = new Buff(StatType.AttackSpeed, attackSpeed, StatOpType.Multiply);
         Character.Instance.AddBuff(attackSpeedBuff);
 
-        Character.Instance.AddHp(-itemData.consumeHp);
+        // Character.Instance.AddHp(-itemData.consumeHp);
     }
 
     public override string GetDescription()
     {
-        return $"{duration}동안 발사 시 화염탄 랜덤 방향으로 난 및 공격 속도 증가\n쿨타임 : {baseCoolTime}초, 발사 당 체력 -{itemData.consumeHp}";
+        return null;
+        // return $"{duration}동안 발사 시 화염탄 랜덤 방향으로 난 및 공격 속도 증가\n쿨타임 : {baseCoolTime}초, 발사 당 체력 -{itemData.consumeHp}";
         //return string.Format(TranslateManager.GetText($"{key}_Desc"),duration,baseCoolTime,itemData.consumeHp);
     }
 

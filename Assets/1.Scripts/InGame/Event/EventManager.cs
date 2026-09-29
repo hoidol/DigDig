@@ -70,7 +70,7 @@ public class EventManager : MonoSingleton<EventManager>
         // itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
         // eventRepeatSpawners.Add(itemBoxSpawner);
 
-        EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemShop, 30, 4, 10);
+        EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemShop, 3, 4, 10);
         eventRepeatSpawners.Add(itemBoxSpawner);
     }
 
@@ -199,7 +199,7 @@ public class EventManager : MonoSingleton<EventManager>
 
     public Vector2 CalcSpawnPosition()
     {
-        float farDistance = (MapManager.MIN_RANGE_RADIUS + 5) + spawnCount * 2.3f;
+        float farDistance = (MapManager.MIN_RANGE_RADIUS + 8) + spawnCount * 2.3f;
         Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Character.Instance.distanceMaxDistanceDestroiedStone} farDistance {farDistance}");
         // Vector2 playerPos = Player.Instance.transform.position;
         Vector2 direction = Quaternion.Euler(0f, 0f, -100f * spawnCount) * initDirection.normalized;
@@ -248,7 +248,8 @@ public class EventRepeatSpawner
     }
     public void Spawn()
     {
+        Debug.Log($"EventRepeatSpawner Spawn() eventType {eventType}");
         eventObject = EventManager.Instance.Spawn(eventType);
-        repeatTimer = repeatTime;
+        repeatTimer = repeatTime + afterDestroyTime;
     }
 }

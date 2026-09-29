@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
-  m_Name: Shield
+  m_Name: HustleArmor
   m_EditorClassIdentifier: 
-  key: Shield
+  key: HustleArmor
   itemName: "\uBC29\uD328"
   desc: "\uC6D0\uAC70\uB9AC \uACF5\uACA9 \uBC29\uC5B4, \uCCB4\uB825 +25"
-  consumeHp: 0
   level: 2
+  addPrice: 0
   childItem1: "\uADA4\uB3C4"
   childItem2: Nature
   valueInfo: 
@@ -25,4 +25,3 @@ MonoBehaviour:
   unlockConditions: []
   applyOrder: 0
   thum: {fileID: 21300000, guid: 9a1489f0d46b5435d9800b18434a684c, type: 3}
-  color: {r: 0.25882354, g: 0.78431374, b: 0.65882355, a: 1}
