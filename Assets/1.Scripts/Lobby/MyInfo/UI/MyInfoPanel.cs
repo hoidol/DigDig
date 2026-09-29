@@ -9,20 +9,38 @@ public class MyInfoPanel : MonoBehaviour
     public TMP_Text nickText;
     public TMP_Text lvText;
 
+    void Start()
+    {
+        UpdatePanel();
+    }
+
+    void OnEnable()
+    {
+        GameEventBus.Subscribe<ChangedEnergeEvent>(OnChangedEnergeEvent);
+    }
+    void OnDisable()
+    {
+        GameEventBus.Unsubscribe<ChangedEnergeEvent>(OnChangedEnergeEvent);
+    }
+    void OnChangedEnergeEvent(ChangedEnergeEvent e)
+    {
+        UpdatePanel();
+    }
+
     public void UpdatePanel()
     {
-        barImage.fillAmount = (float)UserDataManager.Instance.userMyInfoManager.userMyInfoData.exp/(float)UserDataManager.Instance.userMyInfoManager.GetMaxExp();
-        expText.text =$"{UserDataManager.Instance.userMyInfoManager.userMyInfoData.exp}/{UserDataManager.Instance.userMyInfoManager.GetMaxExp()}";
+        barImage.fillAmount = (float)UserDataManager.Instance.userMyInfoManager.userMyInfoData.exp / (float)UserDataManager.Instance.userMyInfoManager.GetMaxExp();
+        expText.text = $"{UserDataManager.Instance.userMyInfoManager.userMyInfoData.exp}/{UserDataManager.Instance.userMyInfoManager.GetMaxExp()}";
         nickText.text = UserDataManager.Instance.userMyInfoManager.userMyInfoData.nickname;
         lvText.text = $"LV.{UserDataManager.Instance.userMyInfoManager.userMyInfoData.lv}";
     }
 
     public void OnClickedEditNick()
     {
-        
+
     }
     // public void OnClickedEditMyInfo()
     // {
-        
+
     // }
 }

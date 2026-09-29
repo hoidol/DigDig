@@ -27,31 +27,31 @@ public class StageData : ScriptableObject
 
     public bool ChekcUnlock()
     {
-        if(difficulty == DifficultyType.Normal && order == 0)
+        if (difficulty == DifficultyType.Normal && order == 0)
         {
             return true;
         }
 
-        UserStage preStageUserStage = UserDataManager.Instance.userStageManager.GetUserStage(difficulty, order -1);
+        UserStage preStageUserStage = UserDataManager.Instance.userStageManager.GetUserStage(difficulty, order - 1);
         //이전 단계했는지 확인
-        if(order > 0)
+        if (order > 0)
         {
-            if(preStageUserStage.clearCount <=0)
+            if (preStageUserStage.clearCount <= 0)
                 return false;
         }
-        
+
         int difficultyNum = (int)difficulty;
 
         //낮은 난이도 깼는지 확인
-        if(difficultyNum > 0)
+        if (difficultyNum > 0)
         {
-            UserStage lowDifficultyUserStage = UserDataManager.Instance.userStageManager.GetUserStage((DifficultyType)difficultyNum-1, order);
-            if(lowDifficultyUserStage.clearCount <=0)
+            UserStage lowDifficultyUserStage = UserDataManager.Instance.userStageManager.GetUserStage((DifficultyType)difficultyNum - 1, order);
+            if (lowDifficultyUserStage.clearCount <= 0)
                 return false;
         }
 
         return true;
-        
+
     }
     public void Init()
     {
@@ -148,7 +148,7 @@ public class StageData : ScriptableObject
 
     void LoadEnemyPrefabs()
     {
-        string folderPath = $"Assets/3.Prefabs/{key}/Enemy";
+        string folderPath = $"Assets/3.Prefabs/Stage/{order}/Enemy";
         string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { folderPath });
         var list = new List<Enemy>();
         foreach (string guid in guids)
@@ -179,15 +179,18 @@ public class StageData : ScriptableObject
         int iEnemyAtk = System.Array.IndexOf(headers, "enemyAttackPower");
         int iEnemyIncreaseAtk = System.Array.IndexOf(headers, "enemyIncreaseAttackPower");
 
+        bool found = false;
+
         // order당 PhaseData는 1개만 사용 (hp/atk는 enemyIncrease* * GameManager.phase 로 실시간 스케일링됨)
         for (int i = 1; i < lines.Length; i++)
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
             string[] cols = lines[i].Split('\t');
 
-            // key 형식: {stage}_{order}_{phase} (ex. Greed_0_0)
+            // key 형식: {difficulty}_{order} (ex. Normal_0)
             string[] keyParts = Col(cols, iKey).Split('_');
-            if (keyParts.Length != 3) continue;
+            if (keyParts.Length != 2) continue;
+            if (!System.Enum.TryParse(keyParts[0], out DifficultyType rowDifficulty) || rowDifficulty != difficulty) continue;
             if (!int.TryParse(keyParts[1], out int rowOrder) || rowOrder != order) continue;
 
             var d = new PhaseData();
@@ -203,8 +206,11 @@ public class StageData : ScriptableObject
             }
 
             phaseData = d;
+            found = true;
             break;
         }
+
+        if (!found) { Debug.LogWarning($"[StageData] {key} PhaseData 없음 ({difficulty}_{order})"); return; }
         Debug.Log($"[StageData] {key} PhaseData 로드 완료");
     }
 
@@ -224,40 +230,41 @@ public class StageData : ScriptableObject
         string[] headers = lines[0].Split('\t');
         for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
 
-        int iStage = System.Array.IndexOf(headers, "stage");
+        // 헤더: phase / enemyType / WaveSpawnCount / WaveIntervalTime(min/max)
         int iPhase = System.Array.IndexOf(headers, "phase");
-
         int iEnemy = System.Array.IndexOf(headers, "enemyType");
-        // int iDaySpawnCount = System.Array.IndexOf(headers, "DaySpawnCount");
-        // int iDayItvl = System.Array.IndexOf(headers, "DayIntervalTime");
-        int iNightSpawnCount = System.Array.IndexOf(headers, "WaveSpawnCount");
-        int iNightItvl = System.Array.IndexOf(headers, "WaveIntervalTime");
+        int iWaveSpawnCount = System.Array.IndexOf(headers, "WaveSpawnCount");
+        int iWaveItvl = System.Array.IndexOf(headers, "WaveIntervalTime");
 
-        // var dayList = new List<EnemySpawnPatternData>();
+        if (iPhase < 0 || iEnemy < 0 || iWaveSpawnCount < 0 || iWaveItvl < 0)
+        {
+            Debug.LogWarning($"[StageData] EnemyPatternData 헤더 누락: {path}");
+            return null;
+        }
+
         var waveList = new List<EnemySpawnPatternData>();
         for (int i = 1; i < lines.Length; i++)
         {
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
             string[] cols = lines[i].Split('\t');
-            //if (Col(cols, iStage) != key) continue;
+
+            // 난이도별 파일이므로 phase 로 행 식별
             if (!int.TryParse(Col(cols, iPhase), out int ph) || ph != phase) continue;
 
-            System.Enum.TryParse(Col(cols, iEnemy), out EnemyType et);
-
-            // if (int.TryParse(Col(cols, iDaySpawnCount), out int dayCount) &&
-            //     TryParseIntervalRange(Col(cols, iDayItvl), out Vector2 dayItvl))
-            // {
-            //     dayList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = dayCount, intervalRange = dayItvl });
-            // }
-
-            if (int.TryParse(Col(cols, iNightSpawnCount), out int nightCount) &&
-                TryParseIntervalRange(Col(cols, iNightItvl), out Vector2 nightItvl))
+            if (!System.Enum.TryParse(Col(cols, iEnemy), out EnemyType et))
             {
-                waveList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = nightCount, intervalRange = nightItvl });
+                Debug.LogWarning($"[StageData] EnemyPatternData enemyType 파싱 실패: {Col(cols, iEnemy)} ({difficulty}.csv {i + 1}행)");
+                continue;
+            }
+
+            if (int.TryParse(Col(cols, iWaveSpawnCount), out int waveCount) &&
+                TryParseIntervalRange(Col(cols, iWaveItvl), out Vector2 waveItvl))
+            {
+                waveList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = waveCount, intervalRange = waveItvl });
             }
         }
 
-        if ( waveList.Count == 0) { Debug.LogWarning($"[StageData] EnemyPatternData stage={key} phase={phase} 데이터 없음"); return null; }
+        if (waveList.Count == 0) { Debug.LogWarning($"[StageData] EnemyPatternData {difficulty} phase={phase} 데이터 없음"); return null; }
 
         return waveList.ToArray();
     }
@@ -363,19 +370,19 @@ public class EnemySpawnPatternData
 {
     public EnemyType enemyType;
     public int spawnCount;
-    public Vector2 intervalRange;    
+    public Vector2 intervalRange;
 
 }
 
 [System.Serializable]
-public class StageRewardData: RewardData
+public class StageRewardData : RewardData
 {
 
     public string id; //0-4_reward,0-7_reward,0-10_reward
     public int phase; // 4 ,7, 10(클리어)
 }
 
-public enum DifficultyType :int
+public enum DifficultyType : int
 {
     Normal,
     Hard,

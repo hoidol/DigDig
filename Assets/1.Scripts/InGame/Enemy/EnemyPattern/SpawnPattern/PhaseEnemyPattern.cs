@@ -28,9 +28,9 @@ public class PhaseEnemyPattern : SpawnPattern
         EndPattern();
         Debug.Log("EnemyPattern StartPattern");
 
-        cts = new CancellationTokenSource();
-        foreach (var spawnData in wavePatternDatas)
-            SpawnLoop(spawnData, cts.Token).Forget();
+        // cts = new CancellationTokenSource();
+        // foreach (var spawnData in wavePatternDatas)
+        //     SpawnLoop(spawnData, cts.Token).Forget();
     }
 
     void OnWaveStartEvent(WaveStartEvent e)

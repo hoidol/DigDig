@@ -7,7 +7,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
 {
     public const string UserDataFileName = "UserData";
     public static string STAGE_KEY = GameSetting.FIRST_STAGE_KEY;// "Gateway1";
-    
+
     public static DifficultyType difficultyType = DifficultyType.Normal;
 
     [field: SerializeField]
@@ -52,14 +52,13 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             userData.energe = GameSetting.MAX_ENERGE;
         }
         Debug.Log("UserManager Awake()");
-        
+
         userStageManager = new UserStageManager();
         userEquipmentManager = new UserEquipmentManager();
         userPurchaseManager = new UserPurchaseManager();
         userSlimeManager = new UserSlimeManager();
-        userMyInfoManager= new UserMyInfoManager();
+        userMyInfoManager = new UserMyInfoManager();
 
-        // userBulletManager.LoadData();
         userStageManager.LoadData();
         userEquipmentManager.LoadData();
         userPurchaseManager.LoadData();
@@ -86,6 +85,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     public void AddEnerge(int count)
     {
         userData.energe += count;
+        GameEventBus.Publish(new ChangedEnergeEvent(userData.energe, count));
         Save();
     }
 
@@ -126,5 +126,5 @@ public class UserData
 }
 public enum CurrencyType
 {
-    Gold, Dia,Energe,DrawTicket
+    Gold, Dia, Energe, DrawTicket
 }

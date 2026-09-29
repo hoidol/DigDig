@@ -7,10 +7,18 @@ public class ShopCanvas : BaseLobbyCanvas
     //펫 뽑기! 
     public ProductContainer[] productContainers;
 
+    public override void Init()
+    {
+        if (init)
+            return;
+        base.Init();
+        productContainers = GetComponentsInChildren<ProductContainer>();
+    }
+
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
-        for(int i = 0; i < productContainers.Length; i++)
+        for (int i = 0; i < productContainers.Length; i++)
         {
             productContainers[i].OpenContainer();
         }
@@ -18,12 +26,12 @@ public class ShopCanvas : BaseLobbyCanvas
         UpdateCanvas();
     }
 
-    void UpdateCanvas()
+    public override void UpdateCanvas()
     {
-        for(int i = 0; i < productContainers.Length; i++)
+        for (int i = 0; i < productContainers.Length; i++)
         {
             productContainers[i].UpdateContainer();
-        }   
+        }
     }
 }
 
