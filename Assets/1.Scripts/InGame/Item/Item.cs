@@ -41,6 +41,6 @@ public abstract class Item : MonoBehaviour
 
     public bool IsMaxLevel()
     {
-        return ItemData.MAX_COUNT == count;
+        return count >= itemData.maxCount;
     }
 }

@@ -32,7 +32,13 @@ public class CharacterHealth : MonoBehaviour, IHittable
     {
         if (statusEffectHandler != null && statusEffectHandler.TryBlock())
             return;
-
+        
+        if(UnityEngine.Random.value <= character.statMgr.Dodge)
+        {
+            //회피함
+            CharacterTakeDamageText.SetText(hpPoint.position, "회피");
+            return;
+        }
 
         curHp -= damageData.ApplyDamage(hpPoint.position);
         if (curHp <= 0)
@@ -40,7 +46,6 @@ public class CharacterHealth : MonoBehaviour, IHittable
             curHp = 0;
             character.animator.Play("Dead");
         }
-
 
         GameEventBus.Publish(new CharacterHpChangedEvent(curHp, character.statMgr.MaxHp));
     }

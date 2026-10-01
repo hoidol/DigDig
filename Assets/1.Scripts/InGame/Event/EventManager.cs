@@ -214,7 +214,8 @@ public enum EventType
     LifeFountain,   // 생명 분수 - 체력 증가
     ItemBox,
     StatStone,
-    ItemShop
+    ItemShop,
+    EnemyArea
 }
 
 public class EventRepeatSpawner

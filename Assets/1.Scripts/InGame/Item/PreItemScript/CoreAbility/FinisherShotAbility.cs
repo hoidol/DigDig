@@ -16,6 +16,6 @@ public class FinisherShotAbility : Ability, IBullet
     public void OnBulletFired(CharacterBulletObject bullet)
     {
         //if (Player.Instance.curBulletCount != 1) return; //마지막 탄있지 확인
-        bullet.AddBehavior(new PierceBehavior(PIERCE_COUNT));
+        // bullet.AddBehavior(new PierceBehavior(PIERCE_COUNT));
     }
 }

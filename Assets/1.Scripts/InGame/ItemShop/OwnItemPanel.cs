@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class OwnItemPanel : ItemPanel
 {
     public Item item;
-    int idx;
+    public int idx;
     public void SetItem(Item item, int idx)
     {
         this.idx =idx;

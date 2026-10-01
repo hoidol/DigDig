@@ -2,7 +2,7 @@ using UnityEngine;
 
 // 보스/엘리트 제외하고 적중 시 스턴
 public class StunOnHitBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     float duration;
     public StunOnHitBehavior(float d)
     {

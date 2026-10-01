@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,12 +27,17 @@ public class ItemShopProductPanel : ItemPanel
 
     public void OnClickedPurchaseButton()
     {
+        PurchaseAsync().Forget();
+    }
+
+    async UniTaskVoid PurchaseAsync()
+    {
         if(Character.Instance.coin < ItemShopManager.Instance.GetPrice())
         {
             ToastCanvas.Toast(TranslateManager.GetText("Not enough coin"));
             return;
         }
-        bool success = Character.Instance.AddItem(itemData.key);
+        bool success = await Character.Instance.AddItem(itemData.key);
         if (success)
         {
             purchased = true;

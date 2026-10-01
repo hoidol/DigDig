@@ -1,7 +1,7 @@
 // 철탄 전용 바운스 - 데미지 감소 없이 튕김
 using UnityEngine;
 public class IronBounceBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     int remaining; 
     int ignoreCount; 
     public IronBounceBehavior(int bounceCount, int iCount) 

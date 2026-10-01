@@ -15,9 +15,10 @@ public class ToastPanel : MonoBehaviour
 
         rectTransform.DOKill();
         rectTransform.anchoredPosition = Vector2.zero;
-        rectTransform.DOAnchorPos(rectTransform.anchoredPosition + new Vector2(0, 150), 3f).OnComplete(() =>
+        rectTransform.DOAnchorPos(rectTransform.anchoredPosition + new Vector2(0, 150), 3f).SetUpdate(true).OnComplete(() =>
         {
             onComplete?.Invoke(this);
         });
+        
     }
 }

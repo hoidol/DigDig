@@ -1,7 +1,7 @@
-// 가죽 장갑: 공격속도 25% 증가
+// 가죽 장갑: 공격속도 +10 증가
 public class LeatherGlovesItem : Item
 {
-    float attackSpeed = 5;
+    float attackSpeed = 10;
     Buff attackSpeedBuff;
     public override void UpdateItem()
     {
@@ -22,7 +22,7 @@ public class LeatherGlovesItem : Item
 
     public override string GetDescription()
     {
-        return $"공격속도 +{attackSpeed}%";
+        return $"공격속도 +{attackSpeed}";
         //return string.Format(TranslateManager.GetText("{key}_Desc"),attackSpeed);
     }
 }

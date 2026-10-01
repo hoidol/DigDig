@@ -26,7 +26,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     protected Rigidbody2D rg2d;
     public Rigidbody2D Rigidbody2D => rg2d;
     protected Collider2D col2d;
-
+    public bool followingPlayer;
 
     public Transform Transform => transform;
 

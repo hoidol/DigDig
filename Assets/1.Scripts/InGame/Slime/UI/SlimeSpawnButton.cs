@@ -19,7 +19,7 @@ public class SlimeSpawnButton : ButtonUI
     }
     public override void OnClickedBtn()
     {
-        if (GameSetting.MAX_SLIME_SLOT_COUNT <= EnemySpawner.Instance.activeEnemies.Count)
+        if (GameSetting.MAX_SLIME_SLOT_COUNT <= SlimeSpawner.Instance.activeslimes.Count)
         {
             ToastCanvas.Toast(string.Format(TranslateManager.GetText("MaxSlime"), $"{GameSetting.MAX_SLIME_SLOT_COUNT}/{EnemySpawner.Instance.activeEnemies.Count}"));
             return;

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class InstakillBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     float chance;
     DamageData damageData = new DamageData();
 

@@ -3,33 +3,30 @@ using UnityEngine;
 
 public class CandleItem : Item
 {
-    public float sizeIncrease = 2f;
-    const float BASE_SIZE = 8f;
-
+    public float[] sizeIncreases = {2.5f,3.5f};
     CinemachineCamera cinemachineCamera;
 
     public override void OnEquip()
     {
         cinemachineCamera = FindFirstObjectByType<CinemachineCamera>();
-        ApplySize();
+        UpdateItem();
     }
 
     public override void UpdateItem()
     {
-        ApplySize();
+        if (cinemachineCamera == null) return;
+        
+        cinemachineCamera.Lens.OrthographicSize = CameraManager.INIT_ORTHOGRAPHIC_SIZE + sizeIncreases[count-1];
     }
 
     public override void OnUnequip()
     {
-        if (cinemachineCamera != null)
-            cinemachineCamera.Lens.OrthographicSize = BASE_SIZE;
+        if (cinemachineCamera == null)
+            return;
+
+        UpdateItem();
     }
 
-    void ApplySize()
-    {
-        if (cinemachineCamera == null) return;
-        cinemachineCamera.Lens.OrthographicSize = BASE_SIZE + sizeIncrease * count;
-    }
 
     public override string GetDescription()
     {

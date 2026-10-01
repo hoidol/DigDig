@@ -230,11 +230,11 @@ public class StageData : ScriptableObject
         string[] headers = lines[0].Split('\t');
         for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
 
-        // 헤더: phase / enemyType / WaveSpawnCount / WaveIntervalTime(min/max)
+        // 헤더: phase / enemyType / WaveSpawnCounts(min/max) / WaveIntervalTimes(min/max)
         int iPhase = System.Array.IndexOf(headers, "phase");
         int iEnemy = System.Array.IndexOf(headers, "enemyType");
-        int iWaveSpawnCount = System.Array.IndexOf(headers, "WaveSpawnCount");
-        int iWaveItvl = System.Array.IndexOf(headers, "WaveIntervalTime");
+        int iWaveSpawnCount = System.Array.IndexOf(headers, "WaveSpawnCounts");
+        int iWaveItvl = System.Array.IndexOf(headers, "WaveIntervalTimes");
 
         if (iPhase < 0 || iEnemy < 0 || iWaveSpawnCount < 0 || iWaveItvl < 0)
         {
@@ -257,16 +257,33 @@ public class StageData : ScriptableObject
                 continue;
             }
 
-            if (int.TryParse(Col(cols, iWaveSpawnCount), out int waveCount) &&
+            if (TryParseCountRange(Col(cols, iWaveSpawnCount), out Vector2Int waveCount) &&
                 TryParseIntervalRange(Col(cols, iWaveItvl), out Vector2 waveItvl))
             {
-                waveList.Add(new EnemySpawnPatternData { enemyType = et, spawnCount = waveCount, intervalRange = waveItvl });
+                waveList.Add(new EnemySpawnPatternData { enemyType = et, spawnCountRange = waveCount, intervalRange = waveItvl });
+            }
+            else
+            {
+                Debug.LogWarning($"[StageData] EnemyPatternData 파싱 실패: {Col(cols, iWaveSpawnCount)} / {Col(cols, iWaveItvl)} ({difficulty}.csv {i + 1}행)");
             }
         }
 
         if (waveList.Count == 0) { Debug.LogWarning($"[StageData] EnemyPatternData {difficulty} phase={phase} 데이터 없음"); return null; }
 
         return waveList.ToArray();
+    }
+
+    // "min/max" 또는 단일 값 "n" 허용
+    static bool TryParseCountRange(string raw, out Vector2Int range)
+    {
+        range = default;
+        string[] parts = raw.Split('/');
+        if (parts.Length == 1 && int.TryParse(parts[0], out int single)) { range = new Vector2Int(single, single); return true; }
+        if (parts.Length != 2) return false;
+        if (!int.TryParse(parts[0], out int min)) return false;
+        if (!int.TryParse(parts[1], out int max)) return false;
+        range = new Vector2Int(min, max);
+        return true;
     }
 
     static bool TryParseIntervalRange(string raw, out Vector2 range)
@@ -369,8 +386,10 @@ public class EnemyPatternData
 public class EnemySpawnPatternData
 {
     public EnemyType enemyType;
-    public int spawnCount;
+    public Vector2Int spawnCountRange; //min/max (둘 다 포함)
     public Vector2 intervalRange;
+
+    public int GetSpawnCount() => Random.Range(spawnCountRange.x, spawnCountRange.y + 1);
 
 }
 

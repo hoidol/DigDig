@@ -14,7 +14,7 @@ public class PierceBulletObject : AllyBulletObject
     {
         base.SetBullet(bullet,allyUnit);
         PierceBulletSpec pierceBullet = bullet as PierceBulletSpec;
-        AddBehavior(new PierceBehavior(pierceBullet.pierceCount));
+        AddBehavior(new PierceBehavior(pierceBullet.pierceCount,1));
     }
 }
 

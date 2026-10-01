@@ -4,7 +4,6 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 public class GameManager : MonoSingleton<GameManager>
 {
-    List<ILoadData> loadDatas = new List<ILoadData>();
     // public int phase;
     public int destroyStoneCount { get; private set; }
     public int killEnemyCount { get; private set; }
@@ -67,7 +66,6 @@ public class GameManager : MonoSingleton<GameManager>
         phase = 0;
         gameTimer = 0;
         isPlaying = true;
-
 
         ProcessWave(phase).Forget();
     }
@@ -207,9 +205,6 @@ public class GameManager : MonoSingleton<GameManager>
             }
             ResultCanvas.Instance.OpenCanvas(true);
         }
-
-        // string msg = clear ? "승리" : "패배";
-        // FadeCanvs.Instance.FadeIn($"msg", () => { SceneManager.LoadScene("InGame"); });
     }
 
     public void Resume()
@@ -230,19 +225,17 @@ public class GameManager : MonoSingleton<GameManager>
     {
         killEnemyCount++;
     }
+
     public void OnDestroyedStoneEvent(DestroyedStoneEvent e)
     {
         destroyStoneCount++;
-
-        // 필요하면 여기서 UI 업데이트, 세이브, 업적 체크 등도 같이 처리
     }
+
     public void OnSpawnMinieEvent(SpawnMinieEvent e)
     {
         slimeSpawnCount++;
     }
-
 }
-
 
 public class StartGameEvent
 {
@@ -252,11 +245,11 @@ public class StartGameEvent
         stageData = data;
     }
 }
+
 public class StartBossEvent
 {
 
 }
-
 
 public class BreakStartEvent
 {
@@ -287,6 +280,7 @@ public class PhaseStartEvent
         this.wavePatternDatas = wavePatternDatas;
     }
 }
+
 public class PhaseEndEvent
 {
     public int phaseIdx;
@@ -295,6 +289,7 @@ public class PhaseEndEvent
         phaseIdx = p;
     }
 }
+
 public class ClearStageEvent
 {
     public string key;
@@ -304,7 +299,6 @@ public class ClearStageEvent
     }
 }
 
-
 public class TryStageEvent
 {
     public string key;
@@ -313,6 +307,7 @@ public class TryStageEvent
         this.key = key;
     }
 }
+
 /*
 성장2이 있어야되는 이유
 뱀서에 각성같은거야... 필요해
@@ -328,18 +323,14 @@ public class TryStageEvent
 - 화염 얼음 : 
 - 폭발 
 
-
 불량
 탄성
 화염
 궤도
 관통
-
 얼음
-
 썬더
 라이트닝
-
 도파민
 치료
 폭발

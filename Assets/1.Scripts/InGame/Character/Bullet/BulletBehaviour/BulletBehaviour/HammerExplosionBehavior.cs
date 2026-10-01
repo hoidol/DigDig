@@ -2,7 +2,7 @@ using UnityEngine;
 
 //
 public class HammerExplosionBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     float chance;
     float radius;
     float damage;

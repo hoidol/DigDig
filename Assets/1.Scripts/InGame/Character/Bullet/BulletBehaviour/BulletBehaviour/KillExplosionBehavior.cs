@@ -2,7 +2,7 @@ using UnityEngine;
 
 // 처치한 적 위치에서 범위 폭발
 public class KillExplosionBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     float radius;
     float damage;
     LayerMask enemyLayer;

@@ -14,7 +14,7 @@ public class MiningPierceAbility : Ability, IBullet
 
     public void OnBulletFired(CharacterBulletObject bullet)
     {
-        if (Random.value < PROB)
-            bullet.AddBehavior(new PierceBehavior(1));
+        // if (Random.value < PROB)
+        //     bullet.AddBehavior(new PierceBehavior(1));
     }
 }

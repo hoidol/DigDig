@@ -19,9 +19,11 @@ public abstract class BulletObject : MonoBehaviour
     protected IHittable preTarget;
     const float LIFETIME = 15f;
     protected float lifetimeTimer;
+    public float damageMultiplier;
     // public DamageData damageData;
     public virtual void Shoot(Vector2 dir, float damage)
     {
+        damageMultiplier = 1;
         direction = dir;
         preTarget = null;
         lifetimeTimer = LIFETIME;

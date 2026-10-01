@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CloverItem : Item
 {
-    float chance = 0.15f;
+    float chance = 0.10f;
     public override  void OnEquip()
     {
         Character.Instance.coinChance += chance;

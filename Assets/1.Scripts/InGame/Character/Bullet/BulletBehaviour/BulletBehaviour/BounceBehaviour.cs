@@ -1,6 +1,7 @@
 using UnityEngine;
 public class BounceBehavior : IBulletBehavior
 {
+    public int ApplyOrder => 0;
     int remaining;
     public BounceBehavior(int count) { remaining = count; }
 

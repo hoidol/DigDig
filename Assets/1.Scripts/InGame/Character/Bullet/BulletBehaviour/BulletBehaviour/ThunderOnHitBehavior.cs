@@ -6,6 +6,7 @@ using UnityEngine;
 // 탄 적중 시 플레이어 주변 가장 가까운 적/광석에 낙뢰 (ThunderItem 방식)
 public class ThunderOnHitBehavior : IBulletBehavior
 {
+public int ApplyOrder => 0;
     readonly float searchRadius;
     readonly int strikeCount;
     readonly float damageRate;

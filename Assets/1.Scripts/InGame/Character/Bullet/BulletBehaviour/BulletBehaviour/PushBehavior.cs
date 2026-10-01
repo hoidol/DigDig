@@ -1,6 +1,6 @@
 using UnityEngine;
 public class PushBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     float power;
     public PushBehavior(float power) {this.power = power;}
 

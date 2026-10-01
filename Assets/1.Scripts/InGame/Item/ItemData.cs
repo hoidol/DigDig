@@ -11,7 +11,6 @@ public enum AcquireMethod
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
-    public static readonly int MAX_COUNT = 2;
     public string key;
     public string Title => itemName;
     public string itemName;
@@ -19,8 +18,7 @@ public class ItemData : ScriptableObject
     // public int consumeHp;
     public int level;
     public int addPrice; //추가 금액
-    public string childItem1;
-    public string childItem2;
+    public int maxCount = 2; //최대 보유 개수
 
     public string valueInfo;
     public Item itemPrefab;
@@ -76,12 +74,10 @@ public class ItemData : ScriptableObject
 
         int iKey = System.Array.IndexOf(headers, "key");
         int iName = System.Array.IndexOf(headers, "name");
-        int iChildItem1 = System.Array.IndexOf(headers, "childItem1");
-        int iChildItem2 = System.Array.IndexOf(headers, "childItem2");
         int iDesc = System.Array.IndexOf(headers, "desc");
-        int iConsumeHp = System.Array.IndexOf(headers, "consumeHp");
         int iLevel = System.Array.IndexOf(headers, "level");
-        int iColor = System.Array.IndexOf(headers, "color");
+        int iAddPrice = System.Array.IndexOf(headers, "addPrice");
+        int iMaxCount = System.Array.IndexOf(headers, "maxCount");
 
         for (int i = 1; i < lines.Length; i++)
         {
@@ -93,20 +89,16 @@ public class ItemData : ScriptableObject
 
             if (iName >= 0 && iName < cols.Length)
                 itemName = cols[iName].Trim();
-            if (iChildItem1 >= 0 && iChildItem1 < cols.Length)
-                childItem1 = ResolveKeyByName(lines, iKey, iName, cols[iChildItem1].Trim());
-            if (iChildItem2 >= 0 && iChildItem2 < cols.Length)
-                childItem2 = ResolveKeyByName(lines, iKey, iName, cols[iChildItem2].Trim());
             if (iDesc >= 0 && iDesc < cols.Length)
                 desc = cols[iDesc].Trim();
-            // if (iConsumeHp >= 0 && iConsumeHp < cols.Length && int.TryParse(cols[iConsumeHp].Trim(), out int hp))
-            //     consumeHp = hp;
             if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
                 level = lv;
-            // if (iColor >= 0 && iColor < cols.Length && ColorUtility.TryParseHtmlString(cols[iColor].Trim(), out Color parsedColor))
-            //     color = parsedColor;
+            if (iAddPrice >= 0 && iAddPrice < cols.Length && int.TryParse(cols[iAddPrice].Trim(), out int ap))
+                addPrice = ap;
+            if (iMaxCount >= 0 && iMaxCount < cols.Length && int.TryParse(cols[iMaxCount].Trim(), out int mc))
+                maxCount = mc;
 
-            string thumPath = $"Assets/2.Sprites/Item/Thum/Level{level}.png";
+            string thumPath = $"Assets/2.Sprites/Item/Level{level}/{key}.png";
             thum = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(thumPath);
             UnityEditor.EditorUtility.SetDirty(this);
             Debug.Log($"[ItemData] {key} LoadData 완료");
@@ -117,22 +109,6 @@ public class ItemData : ScriptableObject
 
 
         Debug.LogWarning($"[ItemData] CSV에서 '{key}' 를 찾지 못함");
-    }
-
-    // CSV의 childItem 컬럼은 Key가 아닌 표시 이름(Name)으로 적혀 있어 역으로 Key를 찾는다.
-    static string ResolveKeyByName(string[] lines, int iKey, int iName, string name)
-    {
-        if (string.IsNullOrEmpty(name)) return "";
-        for (int i = 1; i < lines.Length; i++)
-        {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = ParseCsvLine(lines[i]);
-            if (iName < 0 || iName >= cols.Length) continue;
-            if (cols[iName].Trim() != name) continue;
-            return iKey >= 0 && iKey < cols.Length ? cols[iKey].Trim() : "";
-        }
-        Debug.LogWarning($"[ItemData] childItem 이름 '{name}' 에 해당하는 Key를 찾지 못함");
-        return name;
     }
 
     static string[] ParseCsvLine(string line)

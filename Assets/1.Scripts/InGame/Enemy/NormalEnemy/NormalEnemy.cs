@@ -162,6 +162,7 @@ public class NormalEnemy : Enemy
 
 public enum NormalEnemyState
 {
+    Idle,
     Moving,
     Attack,
     Dead

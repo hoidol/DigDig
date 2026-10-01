@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using Cysharp.Threading.Tasks;
 
 public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 {
@@ -17,6 +18,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public Transform bodyCenterTr;
     public CameraShake cameraShake;
     public float coinChance = 0.5f;
+    
 
     // public int exp;
     // public int lv;
@@ -195,15 +197,17 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
 
 
-    public bool AddItem(string key, bool canChange = true)
+    // 인벤토리가 가득 찼으면 교체 UI를 띄우고 결과를 기다림 (교체 시 ChangeItemCanvas에서 아이템 추가까지 처리)
+    public async UniTask<bool> AddItem(string key, bool canChange = true)
     {
-        if (ItemInventory.MAX_ITEM_COUNT >= itemInventory.curItems.Count)
+        if (itemInventory.IsFull())
         {
-            if (canChange)
-            {
-                ChangeItemCanvas.Instance.OpenCanvas(key);
+            if (!canChange)
                 return false;
-            }
+
+            var tcs = new UniTaskCompletionSource<bool>();
+            ChangeItemCanvas.Instance.OpenCanvas(key, r => tcs.TrySetResult(r));
+            return await tcs.Task;
         }
 
         statMgr.AddItem(key, 1);

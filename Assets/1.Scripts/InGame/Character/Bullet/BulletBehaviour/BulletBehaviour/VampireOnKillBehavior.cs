@@ -1,7 +1,7 @@
 // 적 처치 시 최대 체력의 healRate만큼 회복 (0.005 = 0.5%)
 using UnityEngine;
 public class VampireOnKillBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     readonly float healRate;
     public VampireOnKillBehavior(float healRate) { this.healRate = healRate; }
 

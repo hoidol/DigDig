@@ -11,7 +11,7 @@ public class PierceBulletSpec : AllyBulletSpec
     public override void StartBulletSpec()
     {
         base.StartBulletSpec();
-        AddBulletBehaviour(new PierceBehavior(pierceCount));
+        AddBulletBehaviour(new PierceBehavior(pierceCount,1));
     }
 
 

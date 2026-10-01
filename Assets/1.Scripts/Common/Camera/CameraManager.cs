@@ -9,6 +9,7 @@ public class CameraManager : MonoSingleton<CameraManager>
 
     private CinemachineBasicMultiChannelPerlin perlin;
     private float shakeTimer;
+    public const int INIT_ORTHOGRAPHIC_SIZE = 10;
     void Awake()
     {
         mainCamera= Camera.main;

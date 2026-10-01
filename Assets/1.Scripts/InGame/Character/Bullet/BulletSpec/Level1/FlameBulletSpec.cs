@@ -29,7 +29,7 @@ public class FlameBulletSpec : AllyBulletSpec
 
 // FlameBullet 전용 인라인 Behavior (파일 분리 불필요한 단순 래퍼)
 public class ChanceBurnBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     readonly float chance;
     readonly float duration;
     readonly float dps;

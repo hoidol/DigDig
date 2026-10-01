@@ -1,13 +1,14 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
 public class ItemInventory : MonoBehaviour
 {
-    public List<Item> curItems = new List<Item>();
-    public List<string> ownItemKeys = new List<string>();
+    public List<Item> curItems = new List<Item>();    
 
     public readonly static int MAX_ITEM_COUNT = 4; // 최대 보유 아이템 개수 
+    public string[] ownItemKeys = new string[MAX_ITEM_COUNT];
 
     // 인터페이스별 캐시 - 장착/해제 시점에만 갱신
     public List<IPreFire> preFires = new List<IPreFire>();
@@ -36,27 +37,51 @@ public class ItemInventory : MonoBehaviour
 #if UNITY_EDITOR
     void OnStartGame(StartGameEvent e)
     {
+        // Character.Instance.AddItem("Armor");        
+        // Character.Instance.AddItem("Bow");
+        // Character.Instance.AddItem("Candle");
+        // Character.Instance.AddItem("Clover");        
+        // Character.Instance.AddItem("Bandage").Forget();
+        // Character.Instance.AddItem("Feather").Forget();
+        // Character.Instance.AddItem("Hone").Forget();
+        // Character.Instance.AddItem("Mirror").Forget();
 
+        
+        Character.Instance.AddItem("RedEye").Forget();
+        Character.Instance.AddItem("SkullCane").Forget();
+        Character.Instance.AddItem("Mushroom").Forget();
+        Character.Instance.AddItem("WoodSword").Forget();
+
+
+        
+        
     }
 #endif
 
     public void AddItem(string key)
     {
-        ownItemKeys.Add(key);
+        for(int i = 0; i < ownItemKeys.Length; i++)
+        {
+            if(string.IsNullOrEmpty(ownItemKeys[i]))
+            {
+                ownItemKeys[i] = key;
+                break;
+            }
+        }
+        
         ItemData itemData = ItemData.GetItemData(key);
         GameEventBus.Publish(new AddedItemEvent(itemData));
     }
 
+    // idx를 모르면(-1) key로 슬롯을 찾아서 비움
     public void RemoveItem(string key, int idx = -1)
     {
         if (idx < 0)
-        {
-            ownItemKeys.Remove(key);
-        }
-        else
-        {
-            ownItemKeys.RemoveAt(idx);
-        }
+            idx = System.Array.LastIndexOf(ownItemKeys, key);
+        if (idx < 0 || idx >= ownItemKeys.Length)
+            return;
+
+        ownItemKeys[idx] = null;
     }
 
 
@@ -78,6 +103,7 @@ public class ItemInventory : MonoBehaviour
                 ItemData itemData = ItemData.GetItemData(data.Value.key);
                 item = Instantiate(itemData.itemPrefab, transform);
                 item.key = itemData.key;
+                item.count =data.Value.count;
                 curItems.Add(item);
 
                 item.OnEquip();
@@ -95,6 +121,18 @@ public class ItemInventory : MonoBehaviour
         }
 
         SortingItem();
+    }
+
+    public bool IsFull()
+    {
+         for(int i = 0; i < ownItemKeys.Length; i++)
+        {
+            if(string.IsNullOrEmpty(ownItemKeys[i]))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     // public int GetItemCount(string key)

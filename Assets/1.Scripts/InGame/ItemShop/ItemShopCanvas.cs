@@ -57,17 +57,10 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
         {
             itemShopProductPanels[i].UpdatePanel();
         }
-        List<Item> items = Character.Instance.itemInventory.curItems;
+        string[] itemKeys = Character.Instance.itemInventory.ownItemKeys;
         for (int i = 0; i < ownItemPanels.Length; i++)
         {
-            if (i < items.Count)
-            {
-                ownItemPanels[i].SetItem(items[i], i);
-            }
-            else
-            {
-                ownItemPanels[i].SetItem(null, i);
-            }
+            ownItemPanels[i].SetItem(Character.Instance.itemInventory.GetItem(itemKeys[i]), i);
         }
     }
 

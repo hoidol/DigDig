@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class BoomBehaviour : IBulletBehavior
 {
+
+    public int ApplyOrder => 0;
     readonly float radius;
     readonly float damage;
     readonly LayerMask layer;

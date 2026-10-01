@@ -1,7 +1,7 @@
-// 가죽 장화: 이동속도 25% 증가
+// 가죽 장화: 이동속도 +10 증가
 public class LeatherBootsItem : Item
 {
-    float moveSpeed = 5;
+    float moveSpeed = 7;
     Buff moveSpeedBuff;
     public override void UpdateItem()
     {
@@ -22,7 +22,7 @@ public class LeatherBootsItem : Item
 
     public override string GetDescription()
     {
-        return $"이동속도 +{moveSpeed}%";
+        return $"이동속도 +{moveSpeed}";
         //return string.Format(TranslateManager.GetText("{key}_Desc"),moveSpeed);
     }
 }

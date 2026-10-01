@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -41,6 +42,6 @@ public class MergeItemPanel : MonoBehaviour
         for(int i = 0; i < mergeItemData.childItemKeys.Length; i++)
             Character.Instance.RemoveItem(mergeItemData.childItemKeys[i]);
         
-        Character.Instance.AddItem(resultItemData.key);        
+        Character.Instance.AddItem(resultItemData.key).Forget();        
     }
 }

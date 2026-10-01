@@ -3,6 +3,7 @@ using UnityEngine;
 // 적중한 적에게 피뢰침 표식 부여, 표식은 duration 후 자동 제거
 public class LightningRodBehavior : IBulletBehavior
 {
+    public int ApplyOrder => 0;
     readonly float duration;
 
     public LightningRodBehavior(float duration)

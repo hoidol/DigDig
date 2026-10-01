@@ -1,11 +1,15 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class ChangeItemPanel : OwnItemPanel
 {
     
+    // 선택한 슬롯의 아이템을 버리고 새 아이템으로 교체
     public override void OnClickedButton()
     {
-        //능력치 확인 및 버릴 수 있음 창 뜨기
-        // ItemInfoCanvas.Instance.OpenCanvas(item,idx);
+        if (item == null)
+            return;
+
+        GetComponentInParent<ChangeItemCanvas>().Selected(idx).Forget();
     }
 }

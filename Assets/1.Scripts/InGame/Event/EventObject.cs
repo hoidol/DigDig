@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 {
@@ -15,6 +16,7 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
     [SerializeField] protected float maxTime;
 
     public float CurTimer => curTimer;
+    public Image barImage;
 
     public Vector2Int[,] TileIndexArr => indexArr;
 
@@ -48,6 +50,9 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
         if (curTimer > 0)
             curTimer -= Time.deltaTime;
+
+
+            barImage.fillAmount = curTimer/maxTime;
     }
     public virtual void ClearArea(Vector2 pos)
     {

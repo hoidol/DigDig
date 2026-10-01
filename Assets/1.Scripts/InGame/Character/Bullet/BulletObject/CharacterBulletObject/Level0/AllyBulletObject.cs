@@ -1,6 +1,7 @@
 using UnityEngine;
 
 using System.Collections.Generic;
+using System.Linq;
 
 
 public class AllyBulletObject : BulletObject
@@ -39,7 +40,6 @@ public class AllyBulletObject : BulletObject
             AddBulletForce(bullet.bulletForces[i]);
         }
     }
-
 
     public override IHittable Hit(RaycastHit2D hit2D)
     {
@@ -84,6 +84,7 @@ public class AllyBulletObject : BulletObject
     public void AddBehavior(IBulletBehavior b)
     {
         behaviors.Add(b);
+        behaviors = behaviors.OrderBy(e=>e.ApplyOrder).ToList();
     }
     public void ClearBehaviors() => behaviors.Clear();
     public void AddBulletForce(IBulletForce b)

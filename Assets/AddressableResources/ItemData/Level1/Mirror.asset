@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9afac26bb04384417a711262cabe0bc1, type: 3}
+  m_Name: Mirror
+  m_EditorClassIdentifier: 
+  key: Mirror
+  itemName: "\uAC70\uC6B8"
+  desc: "\uD0C4\uC774 2\uBC88 \uD295\uAE41\uB2C8\uB2E4."
+  level: 1
+  addPrice: 0
+  maxCount: 2
+  valueInfo: 
+  itemPrefab: {fileID: 5249646005168707494, guid: 63570d0963ef74b458ec2925e349b07e,
+    type: 3}
+  unlockConditions: []
+  applyOrder: 0
+  thum: {fileID: 21300000, guid: 9bf3d0ce34a3e442088a14ec7a5cc524, type: 3}

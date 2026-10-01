@@ -3,6 +3,7 @@ using UnityEngine;
 // 적중 시 고정 반경으로 1회전 공전 후 다음 타격 반복. 마지막 공전 후 소멸.
 public class OrbitBehavior : IBulletBehavior
 {
+    public int ApplyOrder => 0;
     int remaining;
     readonly float radius;
     readonly float angularSpeed; // degrees/sec

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class FlameOnHitBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     float duration;
     float dps;
 

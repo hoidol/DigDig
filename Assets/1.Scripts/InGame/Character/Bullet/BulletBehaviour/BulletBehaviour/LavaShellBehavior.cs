@@ -2,7 +2,7 @@ using UnityEngine;
 
 // 마지막 튕김 지점에 용암 지대 생성
 public class LavaShellBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     int remaining;
     readonly float lavaRadius;
     readonly float lavaDamageRate;

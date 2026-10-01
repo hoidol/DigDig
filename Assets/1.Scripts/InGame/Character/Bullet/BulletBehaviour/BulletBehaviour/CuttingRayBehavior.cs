@@ -2,7 +2,7 @@ using UnityEngine;
 
 // 적 적중 시 진행 방향으로 레이저 발사, 선상의 모든 적에게 데미지
 public class CuttingRayBehavior : IBulletBehavior
-{
+{public int ApplyOrder => 0;
     readonly float damageRate;
     const float LASER_RANGE = 100f;
 

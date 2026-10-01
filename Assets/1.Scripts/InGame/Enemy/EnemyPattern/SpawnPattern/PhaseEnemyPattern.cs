@@ -51,7 +51,8 @@ public class PhaseEnemyPattern : SpawnPattern
             float wait = Random.Range(spawnData.intervalRange.x, spawnData.intervalRange.y);
             await UniTask.Delay(TimeSpan.FromSeconds(wait), cancellationToken: token);
 
-            for (int i = 0; i < spawnData.spawnCount; i++)
+            int count = spawnData.GetSpawnCount();
+            for (int i = 0; i < count; i++)
             {
                 Spawn(spawnData.enemyType);
             }

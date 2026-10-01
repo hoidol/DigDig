@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -46,7 +47,7 @@ public class SelectItemPanel : MonoBehaviour
     {
 
         GetComponentInParent<SelectItemCanvas>().CloseCanvas();
-        Character.Instance.AddItem(itemData.key);
+        Character.Instance.AddItem(itemData.key).Forget();
 
 
     }

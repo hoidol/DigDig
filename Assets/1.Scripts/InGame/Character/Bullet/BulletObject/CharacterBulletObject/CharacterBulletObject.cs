@@ -7,7 +7,7 @@ public class CharacterBulletObject : AllyBulletObject
 {
     public CharacterDamageData characterDamageData;
 
-    [field: SerializeField] public float damageMultiplier { get; set; } = 1f;
+    // [field: SerializeField] public float damageMultiplier { get; set; } = 1f;
 
 
     public override void Shoot(Vector2 dir, float damage)

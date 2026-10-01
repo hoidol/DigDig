@@ -81,8 +81,8 @@ public class WayPointer : MonoBehaviour
         float distance = Vector2.Distance(Vector2.zero, wayPointerTarget.Transform.position);
         distanceText.text = $"{distance:F1}M";
 
-        float scaleT = Mathf.InverseLerp(minScaleDistance, maxScaleDistance, distance);
-        transform.localScale = Vector3.one * Mathf.Lerp(1f, 0.2f, scaleT);
+        // float scaleT = Mathf.InverseLerp(minScaleDistance, maxScaleDistance, distance);
+        // transform.localScale = Vector3.one * Mathf.Lerp(1f, 0.2f, scaleT);
 
         Vector3 toPos = wayPointerTarget.Transform.position;
         Vector3 fromPos = mainCamera.transform.position;

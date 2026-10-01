@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class CritBehavior : IBulletForce
 {
-
+public int ApplyOrder => 0;
     public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         CharacterBulletObject pb = bullet as CharacterBulletObject;
