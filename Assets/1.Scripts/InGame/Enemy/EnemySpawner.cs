@@ -10,9 +10,28 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     [field: SerializeField] public int ActiveEnemyCount { get; private set; }
 
     public readonly HashSet<Enemy> activeEnemies = new();
+
+    public EnemyArea enemyAreaPrefab;
+    public readonly List<EnemyArea> enemyAreas = new();
+
     void Start()
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
+        GameEventBus.Subscribe<MapRoomCreatedEvent>(OnMapRoomCreatedEvent);
+    }
+
+    // 방이 생성될 때마다 중심에 EnemyArea 배치
+    void OnMapRoomCreatedEvent(MapRoomCreatedEvent e)
+    {
+        if (enemyAreaPrefab == null)
+        {
+            Debug.LogWarning("EnemySpawner enemyAreaPrefab 미등록");
+            return;
+        }
+
+        EnemyArea enemyArea = GameObject.Instantiate(enemyAreaPrefab, e.room.CenterPosition, Quaternion.identity);
+        enemyArea.room = e.room;
+        enemyAreas.Add(enemyArea);
     }
 
     public Enemy Instantiate(Enemy prefab)

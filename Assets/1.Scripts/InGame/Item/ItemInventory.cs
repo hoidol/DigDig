@@ -44,17 +44,11 @@ public class ItemInventory : MonoBehaviour
         // Character.Instance.AddItem("Bandage").Forget();
         // Character.Instance.AddItem("Feather").Forget();
         // Character.Instance.AddItem("Hone").Forget();
-        // Character.Instance.AddItem("Mirror").Forget();
-
-        
-        Character.Instance.AddItem("RedEye").Forget();
-        Character.Instance.AddItem("SkullCane").Forget();
-        Character.Instance.AddItem("Mushroom").Forget();
-        Character.Instance.AddItem("WoodSword").Forget();
-
-
-        
-        
+        // Character.Instance.AddItem("Mirror").Forget();        
+        // Character.Instance.AddItem("RedEye").Forget();
+        // Character.Instance.AddItem("SkullCane").Forget();
+        // Character.Instance.AddItem("Mushroom").Forget();
+        // Character.Instance.AddItem("WoodSword").Forget();
     }
 #endif
 

@@ -18,6 +18,38 @@ public class MapManager : MonoSingleton<MapManager>
     public AnimationCurve[] weightCurves;
     [SerializeField] private float[] weights;
 
+    [Header("Room - 돌을 비운 넓은 공간")]
+    [SerializeField] int initRoomCount = 3; // 게임 시작 시 생성할 방 개수
+    [SerializeField] Vector2 roomRadiusRange = new Vector2(2.5f, 3.5f); // 타일 단위
+    [SerializeField] Vector2 roomDistanceRange = new Vector2(9f, 15f); // 기준 위치에서의 거리 (월드 단위)
+    [SerializeField] float roomGap = 2f; // 방 사이 최소 간격 (타일 단위)
+    [SerializeField] float roomEdgeNoise = 0.35f; // 0이면 원형, 클수록 울퉁불퉁
+    [SerializeField] int roomMaxAttempts = 30;
+
+    [Header("Cave - 펄린 노이즈로 비우는 작은 공간")]
+    [SerializeField, Range(0f, 1f)] float caveThreshold = 0.3f; // 노이즈 값이 이보다 작으면 돌 없음. 0이면 비활성
+    [SerializeField] float caveScale = 0.18f;
+
+    public static readonly List<MapRoom> rooms = new List<MapRoom>();
+    static readonly Dictionary<Vector2Int, MapRoom> roomCellMap = new Dictionary<Vector2Int, MapRoom>();
+    float noiseSeed;
+
+    void Awake()
+    {
+        // static 데이터는 씬을 다시 로드해도 남아 있으므로 초기화
+        usedTileIdxs.Clear();
+        rooms.Clear();
+        roomCellMap.Clear();
+        Stone.ClearPool();
+        UnbreakableStone.ClearPool();
+    }
+
+    public static MapRoom GetRoom(Vector2 pos)
+    {
+        roomCellMap.TryGetValue(PositionToTileIndex(pos), out MapRoom room);
+        return room;
+    }
+
     // public static List<Vector2Int> GetEmptyTileIndexesInRange(Vector2 characterPos, int includeSize, int excludeSize = 0)
     // {
     //     List<Vector2Int> indies = new();
@@ -54,8 +86,88 @@ public class MapManager : MonoSingleton<MapManager>
     public void SpawnMap()
     {
         weights = new float[weightCurves.Length];
+        noiseSeed = Random.Range(0f, 10000f);
+        // 돌보다 방을 먼저 등록해야 방 칸에 돌이 생성되지 않음
+        for (int i = 0; i < initRoomCount; i++)
+            TryAddRandomRoom(Vector2.zero);
         SpawnTile(Vector2.zero, MAX_RANGE_RADIUS);
         CheckSpawnMap().Forget();
+    }
+
+    // basePos 기준 roomDistanceRange 거리에 다른 방과 겹치지 않는 위치를 찾아 방 생성. 실패 시 null
+    public MapRoom TryAddRandomRoom(Vector2 basePos)
+    {
+        for (int attempt = 0; attempt < roomMaxAttempts; attempt++)
+        {
+            float radius = Random.Range(roomRadiusRange.x, roomRadiusRange.y);
+            Vector2 pos = basePos + Random.insideUnitCircle.normalized * Random.Range(roomDistanceRange.x, roomDistanceRange.y);
+            Vector2Int centerIdx = PositionToTileIndex(pos);
+
+            if (IsOverlapRoom(centerIdx, radius))
+                continue;
+
+            return AddRoom(centerIdx, radius);
+        }
+
+        Debug.LogWarning($"MapManager 방 생성 위치 못 찾음. roomDistanceRange/roomGap 확인");
+        return null;
+    }
+
+    bool IsOverlapRoom(Vector2Int centerIdx, float radius)
+    {
+        foreach (var other in rooms)
+        {
+            if (Vector2Int.Distance(centerIdx, other.centerIdx) < radius + other.radius + roomGap)
+                return true;
+        }
+        return false;
+    }
+
+    // centerIdx 주변을 비워 방으로 등록. 이미 깔린 돌은 보상/이벤트 없이 제거
+    public MapRoom AddRoom(Vector2Int centerIdx, float radius)
+    {
+        MapRoom room = new MapRoom(rooms.Count, centerIdx, radius);
+        int r = Mathf.CeilToInt(radius * (1f + roomEdgeNoise));
+        for (int x = -r; x <= r; x++)
+        {
+            for (int y = -r; y <= r; y++)
+            {
+                Vector2Int idx = centerIdx + new Vector2Int(x, y);
+                // 가장자리를 노이즈로 흔들어 원형이 아닌 자연스러운 모양으로
+                float edge = radius * (1f + (Mathf.PerlinNoise(noiseSeed + idx.x * 0.4f, noiseSeed + idx.y * 0.4f) - 0.5f) * 2f * roomEdgeNoise);
+                if (new Vector2(x, y).magnitude > edge)
+                    continue;
+                if (roomCellMap.ContainsKey(idx))
+                    continue;
+
+                room.cells.Add(idx);
+                roomCellMap[idx] = room;
+
+                if (usedTileIdxs.Contains(idx))
+                    RemoveStoneSilently(idx);
+            }
+        }
+        rooms.Add(room);
+        GameEventBus.Publish(new MapRoomCreatedEvent(room));
+        return room;
+    }
+
+    void RemoveStoneSilently(Vector2Int index)
+    {
+        Collider2D[] collider2Ds = Physics2D.OverlapPointAll(TileIndexToPosition(index), LayerMask.GetMask("Hittable"));
+        for (int i = 0; i < collider2Ds.Length; i++)
+        {
+            // 보스전 벽(UnbreakableStone)은 유지
+            if (collider2Ds[i].TryGetComponent(out Stone stone) && stone is not UnbreakableStone)
+                stone.ReleaseTile();
+        }
+    }
+
+    bool IsCave(Vector2Int index)
+    {
+        if (caveThreshold <= 0f)
+            return false;
+        return Mathf.PerlinNoise(noiseSeed + 500f + index.x * caveScale, noiseSeed + 500f + index.y * caveScale) < caveThreshold;
     }
     async UniTask CheckSpawnMap()
     {
@@ -146,6 +258,9 @@ public class MapManager : MonoSingleton<MapManager>
                 }
 
                 usedTileIdxs.Add(index);
+                if (roomCellMap.ContainsKey(index) || IsCave(index))
+                    continue;
+
                 int colorIdx = PickColorIndex(dist);
                 Stone ore = Stone.Get(cellPos, transform);
                 ore.gameObject.name = $"Stone {index.x} {index.y}";

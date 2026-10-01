@@ -16291,6 +16291,14 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   weights: []
+  initRoomCount: 3
+  roomRadiusRange: {x: 1.5, y: 3.5}
+  roomDistanceRange: {x: 12, y: 20}
+  roomGap: 3
+  roomEdgeNoise: 0.2
+  roomMaxAttempts: 20
+  caveThreshold: 0.2
+  caveScale: 0.3
 --- !u!1 &545790523
 GameObject:
   m_ObjectHideFlags: 0
@@ -47395,6 +47403,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   <ActiveEnemyCount>k__BackingField: 0
+  enemyAreaPrefab: {fileID: 488895040780197949, guid: 55f27f46d52a549c6ad466252212eabe,
+    type: 3}
 --- !u!4 &1828783090
 Transform:
   m_ObjectHideFlags: 0

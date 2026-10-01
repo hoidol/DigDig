@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 8914809919275280209}
   - component: {fileID: 5320797415600177611}
   - component: {fileID: 4739359238430582153}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: FlameSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ MonoBehaviour:
   rg2D: {fileID: 0}
   outRange: 5
   inRange: 1
-  moveSpeed: 3
+  moveSpeed: 7
   slime: {fileID: 0}
 --- !u!50 &5320797415600177611
 Rigidbody2D:
@@ -314,7 +314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2313da5b00cb424c9a135b27f4b595c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlameEnhance11Ability
-  level: 0
+  level: 11
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &3502166730569360245
@@ -545,7 +545,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda614b66ce3c42cc8bc0fe4f02c76bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlameEnhance8Ability
-  level: 0
+  level: 8
   slime: {fileID: 0}
   isActivate: 0
   cooltime: 0
@@ -595,7 +595,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6982aa16dddd4b6ba5bc2e16d241b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlameEnhance5Ability
-  level: 0
+  level: 5
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &8155521375206722803
@@ -678,7 +678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a224b3c133954af5aa2407c72475583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlameEnhance2Ability
-  level: 0
+  level: 2
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &8971045984661583410
@@ -725,7 +725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b24bc7fd98c1243bf8c1bc2d43f31ac7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlameEnhance14Ability
-  level: 0
+  level: 14
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &9073086076126328009

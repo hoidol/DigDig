@@ -77,6 +77,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public virtual void InitSlimeStat()
     {
         statDic[StatType.AttackPower] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackPower).GetValue<float>(mergeLevel);
+        Debug.Log($"Slime {key} MergeLevel {mergeLevel} AttackPower {statDic[StatType.AttackPower]}");
         statDic[StatType.AttackSpeed] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackSpeed).GetValue<float>(mergeLevel);
         statDic[StatType.AttackRange] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackRange).GetValue<float>(mergeLevel);
     }
@@ -156,14 +157,14 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
         targetTr = FindTarget();
         onTargetListener?.Invoke(targetTr);
 
-        Vector2 fireDir = Character.Instance.moveJoystick.Direction;
+        Vector2 fireDir = Character.Instance.weapon.LastDir;
         if (targetTr != null)
         {
             fireDir = (targetTr.position - transform.position).normalized;
             rootTr.localScale = new Vector3(fireDir.x >= 0 ? 1 : -1, 1, 1);
         }
 
-        return fireDir;
+        return fireDir.normalized;
     }
 
 

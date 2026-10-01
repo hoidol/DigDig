@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,8 +9,24 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
     [SerializeField] EnemyType enemyType = EnemyType.Melee;
     [SerializeField] int count = 40;
     [SerializeField] float radius = -1; // 0 이하면 화면 밖 기본 거리 사용
-    // [SerializeField] EnemySpawnCountChance[] enemySpawnCountChances;
+    
+    public float delay=2;
+    public float interval =3f;
+    public int spawnCount=1;
     public override void Spawn()
+    {
+        StartCoroutine(SpawnCoroutine());
+    }
+    IEnumerator SpawnCoroutine()
+    {
+        yield return new WaitForSeconds(delay);
+        for (int i = 0; i < spawnCount; i++)
+        {
+            SpawnEnemy();
+            yield return new WaitForSeconds(interval);
+        }
+    }   
+    void SpawnEnemy()
     {
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(enemyType);
         if (enemyPrefab == null || count <= 0) return;
@@ -27,7 +45,6 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
             enemy?.Spawn(pos);
         }
     }
-
     public override void EndSpawn()
     {
 

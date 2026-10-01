@@ -43,17 +43,17 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
         RegisterTile(indexArr);
     }
 
-    void Update()
+    public virtual void Update()
     {
         if (interacting)
             return;
 
         if (curTimer > 0)
             curTimer -= Time.deltaTime;
-
-
-            barImage.fillAmount = curTimer/maxTime;
+        
+        barImage.fillAmount = curTimer/maxTime;
     }
+    
     public virtual void ClearArea(Vector2 pos)
     {
         MapManager.Instance.ClearTilesInRadius(pos, clearRadius, clearRadius);

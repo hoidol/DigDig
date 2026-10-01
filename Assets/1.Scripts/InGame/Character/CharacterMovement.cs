@@ -71,9 +71,9 @@ public class CharacterMovement : MonoBehaviour
         float maxR = MapManager.MAX_RANGE_RADIUS;
         if (pos.sqrMagnitude > maxR * maxR)
         {
-            rg.position = pos.normalized * maxR;
-            if (Vector2.Dot(rg.linearVelocity, pos) > 0)
-                rg.linearVelocity = Vector2.zero;
+            // rg.position = pos.normalized * maxR;
+            // if (Vector2.Dot(rg.linearVelocity, pos) > 0)
+            //     rg.linearVelocity = Vector2.zero;
         }
     }
 }

@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019c95c624ad45fd8772250556a68e2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightningEnhance11Ability
-  level: 0
+  level: 11
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &2740520132375393401
@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ed5a30ce9e44bf0bdab8ad5ba517e4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightningEnhance2Ability
-  level: 0
+  level: 2
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &3501883893073026737
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cb2f1ff9fe5461089d30fcfd0e860c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightningEnhance5Ability
-  level: 0
+  level: 5
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &3964937852929440703
@@ -574,7 +574,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8876d7a4e90b4563a78eb61b50b2f91d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightningEnhance14Ability
-  level: 0
+  level: 14
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &7636975332439259438
@@ -621,7 +621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7591b0a6898349d384fdc4446616c6be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightningEnhance8Ability
-  level: 0
+  level: 8
   slime: {fileID: 0}
   isActivate: 0
   slowDuration: 0
@@ -638,7 +638,7 @@ GameObject:
   - component: {fileID: -2253325051224804692}
   - component: {fileID: -2790069514381412680}
   - component: {fileID: 2745203751624406897}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: LightningSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -715,7 +715,7 @@ MonoBehaviour:
   rg2D: {fileID: 0}
   outRange: 5
   inRange: 1
-  moveSpeed: 0
+  moveSpeed: 7
   slime: {fileID: 0}
 --- !u!50 &-2790069514381412680
 Rigidbody2D:

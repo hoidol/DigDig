@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a924ee7d4d2040f7b4a2689065462c7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IceEnhance8Ability
-  level: 0
+  level: 8
   slime: {fileID: 0}
   isActivate: 0
   bounceCount: 0
@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 207099a661f24c9f9ab4e17629dabfa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IceEnhance5Ability
-  level: 0
+  level: 5
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &4425737624832488859
@@ -313,7 +313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f372c6bc295f4994875031c7aba7cf25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IceEnhance11Ability
-  level: 0
+  level: 11
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &5549185037047250651
@@ -421,7 +421,7 @@ GameObject:
   - component: {fileID: -6993086702801978507}
   - component: {fileID: -8887611375890930516}
   - component: {fileID: -1634835198859611057}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: IceSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -497,7 +497,7 @@ MonoBehaviour:
   rg2D: {fileID: 0}
   outRange: 5
   inRange: 1
-  moveSpeed: 0
+  moveSpeed: 7
   slime: {fileID: 0}
 --- !u!50 &-8887611375890930516
 Rigidbody2D:
@@ -697,7 +697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66c70741b57340f29fe8dde5a14459fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IceEnhance2Ability
-  level: 0
+  level: 2
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &8467455961709279657
@@ -776,6 +776,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 015f7dc9f2d74afb812f1763fea4e630, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IceEnhance14Ability
-  level: 0
+  level: 14
   slime: {fileID: 0}
   isActivate: 0

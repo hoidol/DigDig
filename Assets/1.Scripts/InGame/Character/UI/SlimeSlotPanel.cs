@@ -112,6 +112,8 @@ public class SlimeSlotPanel : MonoBehaviour
     async UniTask Merged(SlimeSlotPanel sourceSlot)
     {
         var (result, mergeResultKey, lv) = await SlimeSpawner.Instance.Merge(sourceSlot.slime, this.slime);
+
+        
         if (result)
         {
             Debug.Log($"Merged mergeResultKey {mergeResultKey}");

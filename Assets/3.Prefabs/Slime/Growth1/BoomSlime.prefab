@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2066374224270050175}
   - component: {fileID: 10567149269989591}
   - component: {fileID: 6898828069678679840}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BoomSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,7 +151,7 @@ MonoBehaviour:
   rg2D: {fileID: 0}
   outRange: 5
   inRange: 1
-  moveSpeed: 3
+  moveSpeed: 7
   slime: {fileID: 0}
 --- !u!1 &2177644121307383076
 GameObject:
@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 561aaa15299f48649f67367cb45d512a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoomEnhance14Ability
-  level: 0
+  level: 14
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &3091963608640981102
@@ -391,7 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b300486405b4aa99e21e7e2ac4fe78e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoomEnhance8Ability
-  level: 0
+  level: 8
   slime: {fileID: 0}
   isActivate: 0
   pushPower: 0
@@ -439,7 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bf64d164fec4bebb1600bf3802ff61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoomEnhance2Ability
-  level: 0
+  level: 2
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &5147266070896282370
@@ -569,7 +569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59525a2c7a124fb1b324564eb7a7a3cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoomEnhance5Ability
-  level: 0
+  level: 5
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &7235368365913088804
@@ -707,7 +707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41dd9822d814485ba64bd4622ca26005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoomEnhance11Ability
-  level: 0
+  level: 11
   slime: {fileID: 0}
   isActivate: 0
 --- !u!1 &7624331905150353542

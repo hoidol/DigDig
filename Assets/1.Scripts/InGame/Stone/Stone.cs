@@ -30,6 +30,9 @@ public class Stone : MonoBehaviour, IHittable, ITile
         return ore;
     }
 
+    // 씬이 바뀌면 풀에 남은 오브젝트는 파괴되므로 비움
+    public static void ClearPool() => pool.Clear();
+
 
     public Transform hpPoint;
     public TMP_Text hpText;

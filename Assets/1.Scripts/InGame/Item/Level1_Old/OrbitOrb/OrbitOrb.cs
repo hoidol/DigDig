@@ -49,6 +49,6 @@ public class OrbitOrb : MonoBehaviour
     public virtual void OnHit(Collider2D other, IHittable hittable)
     {
         bulletBehaviors.ForEach(e=>e.OnHit(null,hittable,new RaycastHit2D(),transform.position- orbitMachine.transform.position));
-        hittable.TakeDamage(new DamageData { damage = damage });
+        hittable.TakeDamage(new AllyUnitDamageData { damage = damage });
     }
 }

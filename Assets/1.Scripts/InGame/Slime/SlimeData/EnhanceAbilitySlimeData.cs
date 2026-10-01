@@ -80,6 +80,25 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
         commonSlimeEnhanceInfos = enhanceInfos.ToArray();
         enhanceAbilityInfos = abilityInfos.ToArray();
 
+        // 공용 컬럼 외에 헤더명이 SlimeStatType과 일치하는 컬럼(FlameDPS, SkillCooltime 등)은
+        // 강화 레벨에 상관없는 고유 스탯으로 보고, 첫 번째로 값이 있는 행을 uniqueSlimeStats에 설정한다.
+        uniqueSlimeStats = System.Array.Empty<SlimeStat>();
+        for (int h = 0; h < headers.Length; h++)
+        {
+            if (h == iLevel || h == iAttackPower || h == iAttackSpeed || h == iAttackRange || h == iEnhanceAbility) continue;
+            if (!System.Enum.TryParse(headers[h], out SlimeStatType statType)) continue;
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(lines[i])) continue;
+                string raw = GetCol(ParseCsvLine(lines[i]), h);
+                if (string.IsNullOrWhiteSpace(raw)) continue;
+
+                SetUniqueStat(statType, raw);
+                break;
+            }
+        }
+
         UnityEditor.EditorUtility.SetDirty(this);
         Debug.Log($"[EnhanceAbilitySlimeData] {key} 강화 데이터 LoadData 완료 ({commonSlimeEnhanceInfos.Length}레벨)");
     }

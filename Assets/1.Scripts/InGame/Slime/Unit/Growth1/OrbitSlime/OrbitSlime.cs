@@ -27,6 +27,8 @@ public class OrbitSlime : SlimeGrowth1
 
         //회전 머신 설정
         orbitMachine.damage = AttackPower;
+
+        Debug.Log($"OrbitSlime InitSlime() {key} MergeLevel {mergeLevel} AttackPower {AttackPower}");
         orbitMachine.radius = radius;
         orbitMachine.rotationSpeed = rotationSpeed;
         for(int i = 0; i < orbitCount; i++)
@@ -43,6 +45,7 @@ public class OrbitSlime : SlimeGrowth1
     {
         base.UpdateSlime();
         orbitMachine.damage = AttackPower;
+        Debug.Log($"OrbitSlime UpdateSlime() {key} MergeLevel {mergeLevel} AttackPower {AttackPower}");
         orbitMachine.UpdateOrbitMachine();
     }
     public override void Fire(Vector2 dir)

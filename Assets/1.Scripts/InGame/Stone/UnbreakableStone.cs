@@ -32,6 +32,8 @@ public class UnbreakableStone : Stone, IHittable, ITile
         return ore;
     }
 
+    public static new void ClearPool() => pool.Clear();
+
     public override void ReleaseTile()
     {
         // MapManager.ReleaseTile(tileIndexArr);

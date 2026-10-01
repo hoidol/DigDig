@@ -19,7 +19,7 @@ public class SlimeInventory : MonoBehaviour
 #if UNITY_EDITOR
     void OnStartGame(StartGameEvent e)
     {
-
+        Character.Instance.AddSlime("Wacky");
     }
 #endif
 
