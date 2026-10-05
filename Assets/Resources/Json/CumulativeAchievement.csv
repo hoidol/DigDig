@@ -1,0 +1,7 @@
+type	initGoal	increaseGoal	rewardType	rewardValue
+DestroyStone	100	50	Gold	100
+KillEnemy	80	40	Gold	100
+ClearStage	1	1	Gold	100
+LevelUpSlime	2	1	Gold	100
+DrawSlime	3	3	Gold	100
+DrawEquipment	3	3	Gold	100

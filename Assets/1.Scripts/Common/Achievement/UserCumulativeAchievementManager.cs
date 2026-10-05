@@ -2,29 +2,31 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-public class UserCumulativeAchievementManager :UserSubAchievementManager
+[System.Serializable]
+public class UserCumulativeAchievementManager : UserSubAchievementManager
 {
 
     [field: SerializeField]
-    public UserCumulativeAchievementData  userCumulativeAchievementData
+    public UserCumulativeAchievementData userCumulativeAchievementData
     {
         get; private set;
     }
-    public UserCumulativeAchievementManager()
+    void Awake()
     {
         UserDataFileName = "UserCumulativeAchievement";
         LoadData();
     }
     public override void LoadData()
     {
-        userCumulativeAchievementData = SaveManager.LoadData<UserCumulativeAchievementData>(UserDataFileName);
-        
-        if (userCumulativeAchievementData == null)
+        Debug.Log($"UserCumulativeAchievementManager LoadData() UserDataFileName {UserDataFileName}");
+        UserCumulativeAchievementData uCumulativeAchievementData = SaveManager.LoadData<UserCumulativeAchievementData>(UserDataFileName);
+
+        if (uCumulativeAchievementData == null)
         {
-            userCumulativeAchievementData = new UserCumulativeAchievementData();
+            uCumulativeAchievementData = new UserCumulativeAchievementData();
         }
-        userAchievementData = userCumulativeAchievementData;
+        userAchievementData = uCumulativeAchievementData;
+        userCumulativeAchievementData = uCumulativeAchievementData;
 
         SaveData();
     }
@@ -34,9 +36,9 @@ public class UserCumulativeAchievementManager :UserSubAchievementManager
 
     public UserAchievement GetUserAchievement(AchievementType type)
     {
-        for(int i = 0; i < userCumulativeAchievementData.userCumulativeAchievements.Count; i++)
+        for (int i = 0; i < userCumulativeAchievementData.userCumulativeAchievements.Count; i++)
         {
-            if(userCumulativeAchievementData.userCumulativeAchievements[i].type == type)
+            if (userCumulativeAchievementData.userCumulativeAchievements[i].type == type)
             {
                 return userCumulativeAchievementData.userCumulativeAchievements[i];
             }
@@ -55,7 +57,7 @@ public class UserCumulativeAchievementManager :UserSubAchievementManager
 public class UserCumulativeAchievementData : UserAchievementData
 {
     //장비 보유 상태
-    public List<UserCumulativeAchievement> userCumulativeAchievements = new List<UserCumulativeAchievement>(); 
+    public List<UserCumulativeAchievement> userCumulativeAchievements = new List<UserCumulativeAchievement>();
 }
 public class UserAchievement
 {
@@ -66,7 +68,7 @@ public class UserAchievement
 [System.Serializable]
 public class UserCumulativeAchievement : UserAchievement
 {
-    
+
     public int clearCount;
     public CumulativeAchievementData achievementData
     {
@@ -75,5 +77,5 @@ public class UserCumulativeAchievement : UserAchievement
             return AchievementManager.Instance.cumulativeAchievementManager.GetAchievementData(type) as CumulativeAchievementData;
         }
     }
-    
+
 }

@@ -7,14 +7,14 @@ public abstract class AchievementPanel : MonoBehaviour
     public TMP_Text titleText; //스톤 부수기
     // public TMP_Text descText; //부순 횟수 {0}/{goal}
     public Image barImage;
-     public TMP_Text progressText; 
-    
-    
+    public TMP_Text progressText;
+    public TMP_Text rewardValueText;
+
     AchievementData achievementData;
     public virtual void SetAchievementData(AchievementData aData)
     {
         achievementData = aData;
-        if(achievementData == null|| achievementData.conditionData.Unlock())
+        if (achievementData == null || !achievementData.conditionData.Unlock())
         {
             gameObject.SetActive(false);
             return;
@@ -23,12 +23,14 @@ public abstract class AchievementPanel : MonoBehaviour
     }
     public virtual void UpdatePanel()
     {
-        if(achievementData ==null)
+        if (achievementData == null)
             return;
-            
-        titleText.text= achievementData.Title;
-        progressText.text= achievementData.Desc();
+
+        titleText.text = achievementData.Title;
+        progressText.text = achievementData.Desc();
         barImage.fillAmount = achievementData.fillAmount;
+
+        rewardValueText.text = achievementData.rewardData.GetValueToString();
     }
     public abstract void OnClickedGetReward();
 }

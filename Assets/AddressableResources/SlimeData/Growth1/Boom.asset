@@ -20,8 +20,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 6
       - 4
+      - 2
     - statType: 1
       values:
       - 20
@@ -32,11 +32,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 6
       - 4
+      - 2
     - statType: 1
       values:
-      - 23
+      - 22
     - statType: 2
       values:
       - 3
@@ -44,11 +44,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 7
-      - 5
+      - 4
+      - 3
     - statType: 1
       values:
-      - 23
+      - 22
     - statType: 2
       values:
       - 3
@@ -56,11 +56,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 7
-      - 5
+      - 4
+      - 3
     - statType: 1
       values:
-      - 23
+      - 22
     - statType: 2
       values:
       - 3.2
@@ -68,11 +68,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 8
-      - 6
+      - 5
+      - 3
     - statType: 1
       values:
-      - 23
+      - 22
     - statType: 2
       values:
       - 3.2
@@ -80,11 +80,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 8
-      - 6
+      - 5
+      - 3
     - statType: 1
       values:
-      - 26
+      - 24
     - statType: 2
       values:
       - 3.2
@@ -92,11 +92,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 9
-      - 7
+      - 5
+      - 4
     - statType: 1
       values:
-      - 26
+      - 24
     - statType: 2
       values:
       - 3.2
@@ -104,11 +104,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 9
-      - 7
+      - 5
+      - 4
     - statType: 1
       values:
-      - 26
+      - 24
     - statType: 2
       values:
       - 3.5
@@ -116,11 +116,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 9
-      - 7
+      - 5
+      - 4
     - statType: 1
       values:
-      - 26
+      - 24
     - statType: 2
       values:
       - 3.5
@@ -128,11 +128,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 10
-      - 8
+      - 6
+      - 4
     - statType: 1
       values:
-      - 26
+      - 24
     - statType: 2
       values:
       - 3.5
@@ -140,11 +140,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 10
-      - 8
+      - 6
+      - 4
     - statType: 1
       values:
-      - 29
+      - 26
     - statType: 2
       values:
       - 3.5
@@ -152,11 +152,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 10
-      - 8
+      - 6
+      - 4
     - statType: 1
       values:
-      - 29
+      - 26
     - statType: 2
       values:
       - 3.8
@@ -164,11 +164,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 11
-      - 9
+      - 6
+      - 4
     - statType: 1
       values:
-      - 29
+      - 26
     - statType: 2
       values:
       - 3.8
@@ -176,11 +176,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 11
-      - 9
+      - 6
+      - 5
     - statType: 1
       values:
-      - 29
+      - 26
     - statType: 2
       values:
       - 3.8
@@ -188,11 +188,11 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 11
-      - 9
+      - 6
+      - 5
     - statType: 1
       values:
-      - 32
+      - 28
     - statType: 2
       values:
       - 3.8
@@ -214,7 +214,7 @@ MonoBehaviour:
     desc: "\uACF5\uACA9\uB825 +3 \uC99D\uAC00"
   uniqueSlimeStats: []
   ranges:
-  - 2
-  - 2.4
-  - 2.8
+  - 1.5
+  - 1.9
+  - 2.3
   maxHitCount: 5

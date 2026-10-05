@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartNightSpawnPattern
   specialEnemySpawner: {fileID: 1251796665371473344}
-  phaseIdxs: 00000000010000000200000003000000040000000500000006000000070000000800000009000000
+  phaseIdxs: 010000000200000003000000040000000500000006000000070000000800000009000000
 --- !u!1 &2393469665427476838
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,10 +386,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BundleWaveEnemySpawner
   enemyType: 0
-  waveCount: 3
+  waveCount: 1
   waveInterval: 3
-  bundleCountPerWave: 3
-  enemyCountPerBundle: 8
+  bundleCountPerWave: 2
+  enemyCountPerBundle: 6
   bundleRadius: 1.5
   distance: -1
 --- !u!1 &7764128090695332084

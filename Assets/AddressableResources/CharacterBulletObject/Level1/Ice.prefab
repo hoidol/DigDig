@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1161724893128664713}
   - component: {fileID: 7860255550381579477}
-  - component: {fileID: 7463712640051638609}
+  - component: {fileID: -7716060485358860938}
   m_Layer: 0
-  m_Name: Boom
+  m_Name: Ice
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,7 +70,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.25
---- !u!114 &7463712640051638609
+--- !u!114 &-7716060485358860938
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -79,17 +79,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 198334406686638309}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c5ac527eb2e44545be3a2aaa5118353, type: 3}
+  m_Script: {fileID: 11500000, guid: 138317cab8cef42e4a02d28fe51c4563, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BoomBulletObject
-  moveSpeed: 5
-  bulletRadius: 0.25
+  m_EditorClassIdentifier: Assembly-CSharp::IceBulletObject
+  moveSpeed: 8
+  bulletRadius: 0.4
   direction: {x: 0, y: 0, z: 0}
   hitLayerMask:
     serializedVersion: 2
     m_Bits: 8
-  damageMultiplier: 1
-  key: Boom
+  damageMultiplier: 0
+  key: Ice
   allyUnitDamageData:
     damage: 0
     isCrt: 0
@@ -119,7 +119,7 @@ Transform:
   m_GameObject: {fileID: 6038000613544866773}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.031, y: 0.081, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -174,12 +174,12 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: d8e4ff1d2d1864b80b0a66838d39181c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a6bc842ba7fc4d25ad00669d5925bd3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

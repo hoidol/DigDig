@@ -10,9 +10,9 @@ public class AchievementManager : MonoSingleton<AchievementManager>
     public List<SubAchievementManager> subAchievementManagers = new List<SubAchievementManager>();
     void Awake()
     {
-        dailyAchievementManager = new DailyAchievementManager();
-        cumulativeAchievementManager = new CumulativeAchievementManager();
-        
+        dailyAchievementManager = GetComponentInChildren<DailyAchievementManager>();
+        cumulativeAchievementManager = GetComponentInChildren<CumulativeAchievementManager>();
+
         subAchievementManagers.Add(dailyAchievementManager);
         subAchievementManagers.Add(cumulativeAchievementManager);
 
@@ -30,9 +30,9 @@ public class AchievementManager : MonoSingleton<AchievementManager>
     }
     public SubAchievementManager GetSubAchievementManager(AchievementCategory category)
     {
-        for(int i = 0; i < subAchievementManagers.Count; i++)
+        for (int i = 0; i < subAchievementManagers.Count; i++)
         {
-            if(subAchievementManagers[i].category == category)
+            if (subAchievementManagers[i].category == category)
             {
                 return subAchievementManagers[i];
             }
@@ -41,42 +41,43 @@ public class AchievementManager : MonoSingleton<AchievementManager>
     }
     void OnLoadedScene(Scene scene, LoadSceneMode mode)
     {
-        if(scene.name == "InGame")
+        if (scene.name == "InGame")
         {
             GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
-            GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);   
+            GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
         }
-        else if(scene.name == "Lobby")
+        else if (scene.name == "Lobby")
         {
             GameEventBus.Subscribe<LevelUpSlimeEvent>(OnLevelUpSlimeEvent);
         }
-        
+
     }
 
 
     void OnUnloadedScene(Scene scene)
-    {    
-        if(scene.name == "InGame")
+    {
+        if (scene.name == "InGame")
         {
             GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
             GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
             GameEventBus.Unsubscribe<ClearStageEvent>(OnClearStageEvent);
             GameEventBus.Unsubscribe<TryStageEvent>(OnTryStageEvent);
         }
-        else if(scene.name == "Lobby")
-        {            
+        else if (scene.name == "Lobby")
+        {
             GameEventBus.Unsubscribe<LevelUpSlimeEvent>(OnLevelUpSlimeEvent);
         }
-        
+
     }
 
 
-    public void Achieve(AchievementType achievementType)
+    public void Achieve(AchievementType achievementType, int count = 1)
     {
-        for(int i = 0; i < subAchievementManagers.Count; i++)
+        for (int i = 0; i < subAchievementManagers.Count; i++)
         {
-            subAchievementManagers[i].Achieve(achievementType);
+            subAchievementManagers[i].Achieve(achievementType, count);
         }
+        GameEventBus.Publish(new UpdateAchievementEvent());
     }
 
 
@@ -89,7 +90,7 @@ public class AchievementManager : MonoSingleton<AchievementManager>
         Achieve(AchievementType.KillEnemy);
     }
     void OnLevelUpSlimeEvent(LevelUpSlimeEvent e)
-    {        
+    {
         Achieve(AchievementType.LevelUpSlime);
     }
     private void OnTryStageEvent(TryStageEvent @event)
@@ -97,9 +98,21 @@ public class AchievementManager : MonoSingleton<AchievementManager>
         Achieve(AchievementType.TryStage);
     }
     private void OnClearStageEvent(ClearStageEvent @event)
-    {        
+    {
         Achieve(AchievementType.ClearStage);
     }
+
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            Achieve(AchievementType.KillEnemy, 10);
+            Achieve(AchievementType.DestroyStone, 10);
+
+        }
+    }
+#endif
 }
 public enum AchievementCategory
 {
@@ -118,18 +131,23 @@ public enum AchievementType
     DrawEquipment,
     Watch_Ad
 }
-
+[System.Serializable]
 public abstract class AchievementData
 {
     public AchievementType type;
-    public ConditionData conditionData;
+    public ConditionData conditionData = new ConditionData();
     public RewardData rewardData;
     public string Title => $"{type}";
     public string Desc() => $"{GetUserAchievement().value}/{GetGoal()}";
-    public float fillAmount => (float)GetUserAchievement().value/(float)GetGoal();
+    public float fillAmount => (float)GetUserAchievement().value / (float)GetGoal();
 
     public abstract UserAchievement GetUserAchievement();
     public abstract bool CheckCanClear();
     public abstract int GetGoal();
+}
+
+public class UpdateAchievementEvent
+{
+
 }
 

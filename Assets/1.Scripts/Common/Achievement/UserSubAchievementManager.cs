@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-public abstract class UserSubAchievementManager 
+[System.Serializable]
+public abstract class UserSubAchievementManager : MonoBehaviour
 {
     public string UserDataFileName;
 
@@ -22,5 +22,5 @@ public abstract class UserSubAchievementManager
 
 public class UserAchievementData
 {
-    
+
 }

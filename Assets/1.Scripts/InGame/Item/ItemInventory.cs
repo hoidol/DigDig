@@ -5,7 +5,7 @@ using System.Linq;
 
 public class ItemInventory : MonoBehaviour
 {
-    public List<Item> curItems = new List<Item>();    
+    public List<Item> curItems = new List<Item>();
 
     public readonly static int MAX_ITEM_COUNT = 4; // 최대 보유 아이템 개수 
     public string[] ownItemKeys = new string[MAX_ITEM_COUNT];
@@ -38,15 +38,15 @@ public class ItemInventory : MonoBehaviour
     void OnStartGame(StartGameEvent e)
     {
         // Character.Instance.AddItem("Armor");        
-        // Character.Instance.AddItem("Bow");
+        Character.Instance.AddItem("Bow").Forget();
         // Character.Instance.AddItem("Candle");
         // Character.Instance.AddItem("Clover");        
         // Character.Instance.AddItem("Bandage").Forget();
         // Character.Instance.AddItem("Feather").Forget();
         // Character.Instance.AddItem("Hone").Forget();
-        // Character.Instance.AddItem("Mirror").Forget();        
+        Character.Instance.AddItem("Mirror").Forget();
         // Character.Instance.AddItem("RedEye").Forget();
-        // Character.Instance.AddItem("SkullCane").Forget();
+        Character.Instance.AddItem("SkullCane").Forget();
         // Character.Instance.AddItem("Mushroom").Forget();
         // Character.Instance.AddItem("WoodSword").Forget();
     }
@@ -54,15 +54,15 @@ public class ItemInventory : MonoBehaviour
 
     public void AddItem(string key)
     {
-        for(int i = 0; i < ownItemKeys.Length; i++)
+        for (int i = 0; i < ownItemKeys.Length; i++)
         {
-            if(string.IsNullOrEmpty(ownItemKeys[i]))
+            if (string.IsNullOrEmpty(ownItemKeys[i]))
             {
                 ownItemKeys[i] = key;
                 break;
             }
         }
-        
+
         ItemData itemData = ItemData.GetItemData(key);
         GameEventBus.Publish(new AddedItemEvent(itemData));
     }
@@ -97,7 +97,7 @@ public class ItemInventory : MonoBehaviour
                 ItemData itemData = ItemData.GetItemData(data.Value.key);
                 item = Instantiate(itemData.itemPrefab, transform);
                 item.key = itemData.key;
-                item.count =data.Value.count;
+                item.count = data.Value.count;
                 curItems.Add(item);
 
                 item.OnEquip();
@@ -119,9 +119,9 @@ public class ItemInventory : MonoBehaviour
 
     public bool IsFull()
     {
-         for(int i = 0; i < ownItemKeys.Length; i++)
+        for (int i = 0; i < ownItemKeys.Length; i++)
         {
-            if(string.IsNullOrEmpty(ownItemKeys[i]))
+            if (string.IsNullOrEmpty(ownItemKeys[i]))
             {
                 return false;
             }

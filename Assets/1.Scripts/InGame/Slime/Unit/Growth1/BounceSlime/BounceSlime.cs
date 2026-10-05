@@ -4,8 +4,8 @@ using UnityEngine;
 public class BounceSlime : SlimeGrowth1
 {
     BounceBulletSpec bounceBulletSpec;
-    public int bounceCount ;
-    public BounceSlimeData  bounceSlimeData;
+    public int bounceCount;
+    public BounceSlimeData bounceSlimeData;
     public BounceEnhance8Ability damageBoostAbility;
     public List<IBulletForce> bulletForces = new List<IBulletForce>();
     public override void Spawn(Vector2 pos, int lv)
@@ -19,7 +19,7 @@ public class BounceSlime : SlimeGrowth1
     {
         bounceCount = bounceSlimeData.bounces[mergeLevel];
         bounceBulletSpec = new BounceBulletSpec();
-        
+
         base.InitSlime();
     }
 
@@ -27,14 +27,15 @@ public class BounceSlime : SlimeGrowth1
     {
         bounceBulletSpec.bounce = bounceCount;
         bounceBulletSpec.damage = AttackPower;
+        bounceBulletSpec.multi = 0.8f;
         bounceBulletSpec.StartBulletSpec();
 
         if (damageBoostAbility.isActivate)
         {
-             bounceBulletSpec.AddBulletForce(new DamageBoostForce(damageBoostAbility.boostForceValue)); 
+            bounceBulletSpec.AddBulletForce(new DamageBoostForce(damageBoostAbility.boostForceValue));
         }
-        
-        
+
+
         return bounceBulletSpec.Instantiate(this);
     }
 

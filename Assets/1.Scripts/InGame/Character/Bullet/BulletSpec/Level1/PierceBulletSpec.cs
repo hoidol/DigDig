@@ -4,6 +4,7 @@
 public class PierceBulletSpec : AllyBulletSpec
 {
     public int pierceCount;
+    public float multi = 1;
     public PierceBulletSpec()
     {
         key = "Pierce";
@@ -11,7 +12,7 @@ public class PierceBulletSpec : AllyBulletSpec
     public override void StartBulletSpec()
     {
         base.StartBulletSpec();
-        AddBulletBehaviour(new PierceBehavior(pierceCount,1));
+        AddBulletBehaviour(new PierceBehavior(pierceCount, multi));
     }
 
 

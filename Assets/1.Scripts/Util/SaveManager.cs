@@ -32,6 +32,7 @@ public class SaveManager
     public static T LoadData<T>(string fName)
     {
         T data = default;
+        fName = fName + ".json";
 #if UNITY_EDITOR //유니티 에디터에서만 동작되는 코드
         string path = Path.Combine(Application.dataPath, fName);
 #else

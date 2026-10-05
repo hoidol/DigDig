@@ -3,30 +3,32 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[System.Serializable]
 public class UserDailyAchievementManager : UserSubAchievementManager
 {
 
     [field: SerializeField]
-    public UserDailyAchievementData  userDailyAchievementData
+    public UserDailyAchievementData userDailyAchievementData
     {
         get; private set;
     }
-    public UserDailyAchievementManager()
-    {   
+    void Awake()
+    {
         UserDataFileName = "UserDailyAchievement";
         LoadData();
     }
-    
+
     public override void LoadData()
     {
-        userDailyAchievementData = SaveManager.LoadData<UserDailyAchievementData>(UserDataFileName);
-        
-        
-        if (userDailyAchievementData == null)
+        UserDailyAchievementData uDailyAchievementData = SaveManager.LoadData<UserDailyAchievementData>(UserDataFileName);
+
+        Debug.Log($"UserDailyAchievementManager LoadData() UserDataFileName {UserDataFileName}");
+        if (uDailyAchievementData == null)
         {
-            userDailyAchievementData = new UserDailyAchievementData();
+            uDailyAchievementData = new UserDailyAchievementData();
         }
-        userAchievementData = userDailyAchievementData;
+        userAchievementData = uDailyAchievementData;
+        userDailyAchievementData = uDailyAchievementData;
 
         SaveData();
     }
@@ -37,9 +39,9 @@ public class UserDailyAchievementManager : UserSubAchievementManager
 
     public UserAchievement GetUserAchievement(AchievementType type)
     {
-        for(int i = 0; i < userDailyAchievementData.userDailyAchievements.Count; i++)
+        for (int i = 0; i < userDailyAchievementData.userDailyAchievements.Count; i++)
         {
-            if(userDailyAchievementData.userDailyAchievements[i].type == type)
+            if (userDailyAchievementData.userDailyAchievements[i].type == type)
             {
                 return userDailyAchievementData.userDailyAchievements[i];
             }
@@ -59,7 +61,7 @@ public class UserDailyAchievementManager : UserSubAchievementManager
 public class UserDailyAchievementData : UserAchievementData
 {
     //장비 보유 상태
-    public List<UserDailyAchievement> userDailyAchievements = new List<UserDailyAchievement>(); 
+    public List<UserDailyAchievement> userDailyAchievements = new List<UserDailyAchievement>();
 }
 
 [System.Serializable]

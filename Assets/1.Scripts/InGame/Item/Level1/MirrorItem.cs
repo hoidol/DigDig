@@ -5,7 +5,7 @@ public class MirrorItem : Item, IFired
     int bounceCount = 1;
     public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
     {
-        bulletObject.AddBehavior(new BounceBehavior(count * bounceCount));
+        bulletObject.AddBehavior(new BounceBehavior(count * bounceCount, 0.8f));
     }
 
     public override string GetDescription()

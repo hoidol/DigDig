@@ -14,28 +14,28 @@ public class IceSlime : SlimeGrowth1
         iceSlimeData = SlimeManager.Instance.GetSlimeData(key) as IceSlimeData;
         base.Spawn(pos, lv);
     }
-    
+
 
     public override void InitSlime()
     {
         iceBulletSpec = new IceBulletSpec();
-        
+
         iceDuration = iceSlimeData.durations[mergeLevel];
         effectChance = float.Parse(iceSlimeData.GetUniqueStat(SlimeStatType.EffectChance).values[mergeLevel]);
         base.InitSlime();
     }
-    
+
     public override AllyBulletObject GetBullet()
     {
-        iceBulletSpec.damage= AttackPower;
+        iceBulletSpec.damage = AttackPower;
         iceBulletSpec.duration = iceDuration;
-        iceBulletSpec.chance = effectChance;        
-    
+        iceBulletSpec.chance = effectChance;
+
         iceBulletSpec.StartBulletSpec();
         if (bounceAbility.isActivate)
         {
-            iceBulletSpec.AddBulletBehaviour(new BounceBehavior(bounceAbility.bounceCount));
-            
+            iceBulletSpec.AddBulletBehaviour(new BounceBehavior(bounceAbility.bounceCount, 1));
+
         }
         return iceBulletSpec.Instantiate(this);
     }
@@ -51,7 +51,7 @@ public class IceSlime : SlimeGrowth1
         {
             return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, "Ice");
         }
-        
+
     }
 
 }

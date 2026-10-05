@@ -70,6 +70,7 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
         List<ItemData> itemDatas = ItemManager.Instance.GetDrawItems(3);
         for (int i = 0; i < itemDatas.Count; i++)
         {
+            Debug.Log($"ItemShopCanvas ResetItemShopProduct() itemDatas[i] {itemDatas[i].key}");
             itemShopProductPanels[i].SetItemData(itemDatas[i]);
         }
 

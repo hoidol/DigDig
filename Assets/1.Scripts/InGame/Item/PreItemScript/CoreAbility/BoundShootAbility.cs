@@ -14,7 +14,7 @@ public class BoundShootAbility : Ability, IBullet
 
     public void OnBulletFired(CharacterBulletObject bullet)
     {
-        if (Random.value < PROB)
-            bullet.AddBehavior(new BounceBehavior(1));
+        // if (Random.value < PROB)
+        //     bullet.AddBehavior(new BounceBehavior(1));
     }
 }

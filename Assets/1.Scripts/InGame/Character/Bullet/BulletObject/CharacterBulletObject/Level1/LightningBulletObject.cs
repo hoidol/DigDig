@@ -14,6 +14,10 @@ public class LightningBulletObject : AllyBulletObject
     // LightningChainOnHitBehavior lightningChainOnHitBehavior;
     public override void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
+        if (bullet == null)
+        {
+            Debug.Log("LightningBulletObject SetBullet() if(bullet == null)");
+        }
         base.SetBullet(bullet, allyUnit);
         lightningBulletSpec = bullet as LightningBulletSpec;
         // lightningChainOnHitBehavior = new LightningChainOnHitBehavior(
@@ -57,11 +61,11 @@ public class LightningBulletObject : AllyBulletObject
             originPos = next.Transform.position;
             radius = lightningBulletSpec.searchRadius;
         }
-        
+
         if (lineRenderer != null && points.Count > 1)
         {
             direction = Vector2.zero;
-            StartCoroutine(ShowLine( points, hitTargets));
+            StartCoroutine(ShowLine(points, hitTargets));
             return false;
         }
 

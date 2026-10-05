@@ -3,10 +3,16 @@ public class BounceBehavior : IBulletBehavior
 {
     public int ApplyOrder => 0;
     int remaining;
-    public BounceBehavior(int count) { remaining = count; }
+    float multi;
+    public BounceBehavior(int count, float mul)
+    {
+        remaining = count;
+        multi = mul;
+    }
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
+        bullet.damageMultiplier *= multi;
         if (remaining-- <= 0)
             return true;
 

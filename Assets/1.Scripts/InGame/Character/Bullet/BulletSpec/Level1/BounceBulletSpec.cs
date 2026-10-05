@@ -5,16 +5,17 @@ using UnityEngine;
 public class BounceBulletSpec : AllyBulletSpec
 {
     public int bounce;
+    public float multi = 1;
 
     public BounceBulletSpec()
     {
         key = "Bounce";
     }
-    
+
     public override void StartBulletSpec()
     {
         base.StartBulletSpec();
-        AddBulletBehaviour(new BounceBehavior(bounce));
+        AddBulletBehaviour(new BounceBehavior(bounce, multi));
     }
 
 }

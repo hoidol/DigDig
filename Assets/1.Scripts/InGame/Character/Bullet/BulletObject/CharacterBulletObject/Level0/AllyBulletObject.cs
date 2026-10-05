@@ -16,7 +16,6 @@ public class AllyBulletObject : BulletObject
     {
         this.allyUnit = allyUnit;
         AllyBulletSpec allyBulletSpec = bullet as AllyBulletSpec;
-        damage = allyBulletSpec.damage;
         transform.localScale = Vector3.one;
 
         if (allyUnitDamageData == null)
@@ -24,6 +23,7 @@ public class AllyBulletObject : BulletObject
             allyUnitDamageData = new AllyUnitDamageData();
         }
 
+        damage = allyBulletSpec.damage;
         allyUnitDamageData.damage = damage;
 
         ClearBehaviors();
@@ -52,7 +52,7 @@ public class AllyBulletObject : BulletObject
 
         preTarget = hit;
 
-        float finalDamage = damage;
+        float finalDamage = damage * damageMultiplier;
 
         for (int i = 0; i < forces.Count; i++)
         {
@@ -84,7 +84,7 @@ public class AllyBulletObject : BulletObject
     public void AddBehavior(IBulletBehavior b)
     {
         behaviors.Add(b);
-        behaviors = behaviors.OrderBy(e=>e.ApplyOrder).ToList();
+        behaviors = behaviors.OrderBy(e => e.ApplyOrder).ToList();
     }
     public void ClearBehaviors() => behaviors.Clear();
     public void AddBulletForce(IBulletForce b)

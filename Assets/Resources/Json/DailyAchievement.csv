@@ -1,0 +1,4 @@
+type	goal	rewardType	rewardValue
+DestroyStone	150	Gold	100
+KillEnemy	220	Gold	100
+TryStage	3	Gold	100

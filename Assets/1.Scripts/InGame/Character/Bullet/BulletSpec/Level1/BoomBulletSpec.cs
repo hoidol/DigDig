@@ -3,10 +3,9 @@
 // count + basePierceCount만큼 관통 횟수가 설정되어, 총알이 여러 적/광석을 연속으로 통과.
 using UnityEngine;
 
-public class BoomBulletSpec : BulletSpec
+public class BoomBulletSpec : AllyBulletSpec
 {
     public float boomRange = 2.5f;
-    public float damage;
     public int maxHitCount;
 
     public BoomBulletSpec()

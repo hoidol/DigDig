@@ -7,6 +7,9 @@ public class DamageData
     {
         if (damage < 1)
             damage = 0;
+
+        string dText = $"-{(int)damage}";
+        DamageText.SetText(pos, dText, ColorSetting.enemyDamageColor);
         return damage;
     }
 }

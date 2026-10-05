@@ -13,12 +13,17 @@ public class BowItem : TriggerItem
     {
         base.OnTrigger();
         Debug.Log("BowItem OnTrigger()");
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
             Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-            Character.Instance.weapon.Shoot(new CharacterBulletSpec(), dir);    
+            Character.Instance.weapon.Shoot(new CharacterBulletSpec(), dir);
         }
-        
+
+    }
+
+    public override string GetDescription()
+    {
+        return $"{coolTime}초마다 랜덤 방향으로 탄을 발사";
     }
 }

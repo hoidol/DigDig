@@ -9,22 +9,61 @@ public class CumulativeAchievementManager : SubAchievementManager
     public CumulativeAchievementData[] cumulativeAchievementDatas;
     public override void Init()
     {
-        userCumulativeAchievementManager = new UserCumulativeAchievementManager();
+        userCumulativeAchievementManager = GetComponentInChildren<UserCumulativeAchievementManager>();
         category = AchievementCategory.Cumulative;
+        SetCumulativeAchievementData();
+    }
+    void SetCumulativeAchievementData()
+    {
+        List<CumulativeAchievementData> list = new List<CumulativeAchievementData>();
+        TextAsset csv = Resources.Load<TextAsset>("Json/CumulativeAchievement");
+        if (csv == null)
+        {
+            Debug.LogWarning("[CumulativeAchievementManager] CSV 파일 없음: Resources/Json/CumulativeAchievement.csv");
+            cumulativeAchievementDatas = list.ToArray();
+            return;
+        }
+
+        string[] lines = csv.text.Split('\n');
+        string[] headers = lines[0].Trim().Split('\t');
+        int iType = System.Array.IndexOf(headers, "type");
+        int iInitGoal = System.Array.IndexOf(headers, "initGoal");
+        int iIncreaseGoal = System.Array.IndexOf(headers, "increaseGoal");
+        int iRewardType = System.Array.IndexOf(headers, "rewardType");
+        int iRewardValue = System.Array.IndexOf(headers, "rewardValue");
+
+        for (int i = 1; i < lines.Length; i++)
+        {
+            if (string.IsNullOrWhiteSpace(lines[i])) continue;
+            string[] cols = lines[i].Trim().Split('\t');
+
+            if (!System.Enum.TryParse(cols[iType].Trim(), out AchievementType type)) continue;
+            if (!System.Enum.TryParse(cols[iRewardType].Trim(), out RewardType rewardType)) continue;
+
+            list.Add(new CumulativeAchievementData
+            {
+                type = type,
+                initGoal = int.Parse(cols[iInitGoal].Trim()),
+                increaseGoal = int.Parse(cols[iIncreaseGoal].Trim()),
+                rewardData = new RewardData { rewardType = rewardType, value = cols[iRewardValue].Trim() }
+            });
+        }
+        cumulativeAchievementDatas = list.ToArray();
     }
 
 
-    public override void Achieve(AchievementType type)
+    public override void Achieve(AchievementType type, int count)
     {
         UserCumulativeAchievement userCumulativeAchievement = userCumulativeAchievementManager.GetUserAchievement(type) as UserCumulativeAchievement;
-        userCumulativeAchievement.value++;
+        userCumulativeAchievement.value += count;
+        userCumulativeAchievementManager.SaveData();
     }
-    
+
     public AchievementData GetAchievementData(AchievementType type)
     {
-        for(int i = 0; i < cumulativeAchievementDatas.Length; i++)
+        for (int i = 0; i < cumulativeAchievementDatas.Length; i++)
         {
-            if(cumulativeAchievementDatas[i].type == type)
+            if (cumulativeAchievementDatas[i].type == type)
             {
                 return cumulativeAchievementDatas[i];
             }
@@ -49,10 +88,10 @@ public class CumulativeAchievementManager : SubAchievementManager
     public override int GetCanClearCount()
     {
         int count = 0;
-        for(int i = 0; i < cumulativeAchievementDatas.Length; i++)
+        for (int i = 0; i < cumulativeAchievementDatas.Length; i++)
         {
             UserCumulativeAchievement userAchievement = userCumulativeAchievementManager.GetUserAchievement(cumulativeAchievementDatas[i].type) as UserCumulativeAchievement;
-            if(cumulativeAchievementDatas[i].CheckCanClear())
+            if (cumulativeAchievementDatas[i].CheckCanClear())
             {
                 count++;
             }
@@ -60,7 +99,7 @@ public class CumulativeAchievementManager : SubAchievementManager
         return count;
     }
 }
-
+[System.Serializable]
 public class CumulativeAchievementData : AchievementData
 {
     public int initGoal;
@@ -82,7 +121,7 @@ public class CumulativeAchievementData : AchievementData
 
     public override int GetGoal()
     {
-        UserCumulativeAchievement userAchievement =  GetUserAchievement() as UserCumulativeAchievement;
+        UserCumulativeAchievement userAchievement = GetUserAchievement() as UserCumulativeAchievement;
         return GetGoal(userAchievement.clearCount);
     }
 }

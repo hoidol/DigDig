@@ -13,12 +13,13 @@ public class PierceSlime : SlimeGrowth1
         pierceSlimeData = SlimeManager.Instance.GetSlimeData(key) as PierceSlimeData;
         base.Spawn(pos, lv);
     }
-    
+
 
     public override void InitSlime()
     {
         pierceBulletSpec = new PierceBulletSpec();
         pierceCount = pierceSlimeData.pierceCount[mergeLevel];
+
 
         base.InitSlime();
     }
@@ -26,7 +27,9 @@ public class PierceSlime : SlimeGrowth1
     {
         pierceBulletSpec.pierceCount = pierceCount;
         pierceBulletSpec.damage = AttackPower;
+        pierceBulletSpec.multi = 0.8f;
         pierceBulletSpec.StartBulletSpec();
+
 
         AllyBulletObject bulletObj = pierceBulletSpec.Instantiate(this);
 
@@ -39,7 +42,7 @@ public class PierceSlime : SlimeGrowth1
 
         if (damageBoostAbility.isActivate)
         {
-             pierceBulletSpec.AddBulletForce(new DamageBoostForce(damageBoostAbility.boostForceValue)); 
+            pierceBulletSpec.AddBulletForce(new DamageBoostForce(damageBoostAbility.boostForceValue));
         }
         return bulletObj;
     }

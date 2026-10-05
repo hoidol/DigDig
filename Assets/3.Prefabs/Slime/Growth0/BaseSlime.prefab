@@ -401,16 +401,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseMiniMe
   key: Base
-  level: 0
+  mergeLevel: 0
+  slimeEnhanceAbilities: []
   movement: {fileID: 6375558012280561577}
   rootTr: {fileID: 721374975546643552}
   attackTimer: 0
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  slimeData: {fileID: 0}
+  activeBuffs: []
+  userSlime:
+    key: 
+    equipedIdx: -1
+    own: 0
+    enhanceLevel: 0
+    exp: 0
+  slimeEnhanceInfo:
+    level: 0
+    slimeStats: []
   targetTr: {fileID: 0}
-  attackPower: 0
-  attackSpeed: 0
 --- !u!114 &6375558012280561577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,7 +436,7 @@ MonoBehaviour:
   rg2D: {fileID: 6211682140286446672}
   outRange: 5
   inRange: 2
-  moveSpeed: 2
+  moveSpeed: 4
   slime: {fileID: 0}
 --- !u!50 &6211682140286446672
 Rigidbody2D:
