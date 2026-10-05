@@ -22,9 +22,9 @@ TagManager:
   - PhysicArea
   - AllyUnit
   - GroundMiniMeBody
-  - 
-  - 
-  - 
+  - Slime
+  - Event
+  - Stone
   - 
   - 
   - 

@@ -31,8 +31,16 @@ public class SlimeSpawnButton : ButtonUI
             return;
         }
 
+        Tile tile = TileManager.Instance.GetRandomEmptyTile();
+        if (tile == null)
+        {
+            ToastCanvas.Toast("No empty tile");
+            return;
+        }
+
         Character.Instance.AddCoin(-GetSpawnPrice());
-        Character.Instance.AddSlime("Base");
+        Slime slime = Character.Instance.AddSlime("Base");
+        tile.SetSlime(slime);
 
         CharacterManageCanvas.Instance.UpdateCanvas();
         UpdateButton();

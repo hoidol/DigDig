@@ -6,7 +6,7 @@ using UnityEngine;
 public class Coin : MonoBehaviour, IPickable
 {
     public string Key => "Coin";
-    // public OreType oreType;
+
     public static CoinPoolingSystem poolingSystem = new();
 
     public bool IsTaken { get; set; }

@@ -15,7 +15,7 @@ public class CharacterBulletObject : AllyBulletObject
         base.Shoot(dir, damage);
 
         this.damage = damage;
-        lifetimeTimer = 20; //Player.Instance.statMgr.AmmoDuration;
+        lifetimeTimer = 5; //Player.Instance.statMgr.AmmoDuration;
 
         characterDamageData.Init(Character.Instance);
     }

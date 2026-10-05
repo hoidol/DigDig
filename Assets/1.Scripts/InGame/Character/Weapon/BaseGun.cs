@@ -52,19 +52,14 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // 가장 가까운 적 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
     {
-        // if (Character.Instance.MoveDirection.magnitude == 0)
-        // {
-        //     return dirTr.up;
-        // }
-        // else
-        // {
-        //     return Character.Instance.MoveDirection;
-        // }
-
+        if (TargetPointer.Instance.targetIcon.activeSelf)
+        {
+            return TargetPointer.Instance.Direction();
+        }
         Transform targetTr = InGameUtil.FindTarget(transform.position, attackFindRange, targetLayerMask);
 
         if (targetTr == null)
-            return Character.Instance.MoveDirection;
+            return LastDir;
 
         return (targetTr.position - transform.position).normalized;
     }
@@ -90,7 +85,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     void UpdateAttackInternal()
     {
         //statMgr.AttackSpeed
-        attackTimer += Time.deltaTime * statMgr.AttackSpeed /50;
+        attackTimer += Time.deltaTime * statMgr.AttackSpeed / 50;
 
 #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         if (attackTimer >= 1)

@@ -5,20 +5,20 @@ using UnityEngine;
 public class OrbitSlime : SlimeGrowth1
 {
     public OrbitMachine orbitMachine;
-    public OrbitSlimeData  orbitSlimeData;
-    public int orbitCount ;
-    public float rotationSpeed ;
-    public  float radius;
+    public OrbitSlimeData orbitSlimeData;
+    public int orbitCount;
+    public float rotationSpeed;
+    public float radius;
 
     public OrbitEnhance8Ability pushAbility;
     public override void Spawn(Vector2 pos, int lv)
     {
         orbitSlimeData = SlimeManager.Instance.GetSlimeData(key) as OrbitSlimeData;
-        base.Spawn(pos, lv);        
+        base.Spawn(pos, lv);
     }
 
     public override void InitSlime()
-    {        
+    {
         orbitCount = orbitSlimeData.orbitCount[mergeLevel];
         rotationSpeed = orbitSlimeData.orbitRotationSpeed;
         radius = orbitSlimeData.radius;
@@ -31,7 +31,7 @@ public class OrbitSlime : SlimeGrowth1
         Debug.Log($"OrbitSlime InitSlime() {key} MergeLevel {mergeLevel} AttackPower {AttackPower}");
         orbitMachine.radius = radius;
         orbitMachine.rotationSpeed = rotationSpeed;
-        for(int i = 0; i < orbitCount; i++)
+        for (int i = 0; i < orbitCount; i++)
         {
             OrbitOrb orbitOrb = orbitMachine.AddOrbit();
             if (pushAbility.isActivate)
@@ -39,6 +39,15 @@ public class OrbitSlime : SlimeGrowth1
                 orbitOrb.AddBulletBehaviour(new PushBehavior(pushAbility.power));
             }
         }
+    }
+
+    public override void StartDrag()
+    {
+        orbitMachine.gameObject.SetActive(false);
+    }
+    public override void EndDrag(Tile t)
+    {
+        orbitMachine.gameObject.SetActive(true);
     }
 
     public override void UpdateSlime()
@@ -50,7 +59,7 @@ public class OrbitSlime : SlimeGrowth1
     }
     public override void Fire(Vector2 dir)
     {
-        
+
     }
 
     public override AllyBulletObject GetBullet()

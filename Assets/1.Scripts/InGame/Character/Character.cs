@@ -18,7 +18,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public Transform bodyCenterTr;
     public CameraShake cameraShake;
     public float coinChance = 0.5f;
-    
+
 
     // public int exp;
     // public int lv;
@@ -32,7 +32,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     // public OreInventory oreInventory; //패시브 스킬로 제공!
     public TileChecker[] tileCheckers;
     public CharacterHealth health;
-    public CharacterMovement movement;
+    // public CharacterMovement movement;
     public BaseGun weapon;
 
     // 기존 호출부 변경 없이 유지되는 convenience 프로퍼티/메서드
@@ -41,8 +41,8 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
 
     public Transform attackPoint => weapon.AttackPoint;
-    public Vector2 MoveDirection => movement.MoveDirection;
-    public float maxDistance => movement.maxDistance;
+    // public Vector2 MoveDirection => movement.MoveDirection;
+    // public float maxDistance => movement.maxDistance;
     public int destroyCount;
     public float distanceMaxDistanceDestroiedStone;
     public float distanceMinDistanceDestroiedStone;
@@ -76,7 +76,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         // abilityInventory = GetComponentInChildren<AbilityInventory>();
         // statInventory = GetComponentInChildren<StatInventory>();
         health = GetComponentInChildren<CharacterHealth>();
-        movement = GetComponentInChildren<CharacterMovement>();
+        // movement = GetComponentInChildren<CharacterMovement>();
         weapon = GetComponentInChildren<BaseGun>();
 
 
@@ -91,7 +91,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
         var statusEffectHandler = GetComponentInChildren<StatusEffectHandler>();
         health.Init(this, hpPoint, statusEffectHandler);
-        movement.Init(this, rg, animator, bodyRootTr);
+        // movement.Init(this, rg, animator, bodyRootTr);
         weapon.Init(this);
 
         UpdateCharacter();
@@ -120,7 +120,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     {
         // if (!GameManager.Instance.isPlaying) return;
 
-        movement.Move();
+        // movement.Move();
         weapon.UpdateWeapon();
 
 #if UNITY_EDITOR

@@ -42,10 +42,8 @@ GameObject:
   m_Component:
   - component: {fileID: 445969393264239543}
   - component: {fileID: 6666491537767946925}
-  - component: {fileID: 8914809919275280209}
-  - component: {fileID: 5320797415600177611}
-  - component: {fileID: 4739359238430582153}
-  m_Layer: 10
+  - component: {fileID: 5241100349090715337}
+  m_Layer: 12
   m_Name: FlameSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,7 +82,6 @@ MonoBehaviour:
   key: Flame
   mergeLevel: 0
   slimeEnhanceAbilities: []
-  movement: {fileID: 0}
   rootTr: {fileID: 4033681722477547004}
   attackTimer: 0
   targetLayerMask:
@@ -107,52 +104,8 @@ MonoBehaviour:
   burnDPS: 0
   skill1: {fileID: 1841564258002774597}
   targetSearcher: {fileID: 8936613861889266371}
---- !u!114 &8914809919275280209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 596385396270230341}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05fdce4e2f22b4e12a31790a07b152ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MiniMeMovement
-  rg2D: {fileID: 0}
-  outRange: 5
-  inRange: 1
-  moveSpeed: 7
-  slime: {fileID: 0}
---- !u!50 &5320797415600177611
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 596385396270230341}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
---- !u!58 &4739359238430582153
-CircleCollider2D:
+--- !u!61 &5241100349090715337
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -185,8 +138,18 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.075}
-  m_Radius: 0.4
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &1013934476794958872
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,7 +160,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4033681722477547004}
   - component: {fileID: 2490262051948278329}
-  - component: {fileID: 1133596637055097156}
   m_Layer: 11
   m_Name: Root
   m_TagString: Untagged
@@ -214,7 +176,7 @@ Transform:
   m_GameObject: {fileID: 1013934476794958872}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.10899997, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -234,42 +196,6 @@ SortingGroup:
   m_SortingOrder: 10
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
---- !u!58 &1133596637055097156
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1013934476794958872}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.0608927}
-  m_Radius: 0.4391073
 --- !u!1 &3366665517090901801
 GameObject:
   m_ObjectHideFlags: 0

@@ -29,7 +29,7 @@ public class GameManager : MonoSingleton<GameManager>
     public int phase;
     public int slimeSpawnCount;
     public DifficultyType difficultyType;
-    
+
     async void Start()
     {
         await UniTask.WhenAll(
@@ -98,18 +98,18 @@ public class GameManager : MonoSingleton<GameManager>
             GameEventBus.Publish(new PhaseStartEvent(phase, stageData.phaseData.enemyPatternData[phase].enemySpawnPatternDatas));
         }
         //낮에 대한 시간 처리
-        breakTimer = 0;
-        StartBreak(phase);
-        float breakTime = GameSetting.BREAK_TIME;
-        while (breakTimer <= breakTime)
-        {
-            await UniTask.Yield();
+        // breakTimer = 0;
+        // StartBreak(phase);
+        // float breakTime = GameSetting.BREAK_TIME;
+        // while (breakTimer <= breakTime)
+        // {
+        //     await UniTask.Yield();
 
-            if (!isPlaying)
-                continue;
+        //     if (!isPlaying)
+        //         continue;
 
-            breakTimer += Time.deltaTime;
-        }
+        //     breakTimer += Time.deltaTime;
+        // }
 
         //밤에 대한 시간 처리
         StartWave(phase);
@@ -294,7 +294,7 @@ public class ClearStageEvent
 {
     public string key;
     public ClearStageEvent(string key)
-    {   
+    {
         this.key = key;
     }
 }
@@ -303,7 +303,7 @@ public class TryStageEvent
 {
     public string key;
     public TryStageEvent(string key)
-    {   
+    {
         this.key = key;
     }
 }

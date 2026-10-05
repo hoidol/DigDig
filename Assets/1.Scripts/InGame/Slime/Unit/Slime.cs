@@ -12,7 +12,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public int mergeLevel;
 
     public SlimeEnhanceAbility[] slimeEnhanceAbilities;
-    public SlimeMovement movement;
+    // public SlimeMovement movement;
 
     public Dictionary<StatType, float> statDic = new Dictionary<StatType, float>();
 
@@ -43,7 +43,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public virtual void Awake()
     {
         slimeEnhanceAbilities = GetComponentsInChildren<SlimeEnhanceAbility>();
-        movement = GetComponent<SlimeMovement>();
+        // movement = GetComponent<SlimeMovement>();
         if (rootTr == null)
             rootTr = transform.Find("Root");
 
@@ -227,5 +227,14 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
         UpdateSlime();
     }
 
+    public virtual void StartDrag()
+    {
+
+    }
+
+    public virtual void EndDrag(Tile t)
+    {
+
+    }
 
 }

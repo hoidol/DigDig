@@ -440,7 +440,7 @@ GameObject:
   - component: {fileID: 7215978079524147182}
   - component: {fileID: 3756728505516221412}
   - component: {fileID: 4498071015302534749}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: ItemShop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -482,6 +482,7 @@ MonoBehaviour:
   barImage: {fileID: 4493293947431964443}
   curTimer: 0
   interacting: 0
+  movingTimer: 0
 --- !u!58 &4498071015302534749
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -517,7 +518,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 1
+  m_Radius: 0.67
 --- !u!1 &2228143652240043318
 GameObject:
   m_ObjectHideFlags: 0

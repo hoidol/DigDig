@@ -38,15 +38,15 @@ public class ItemInventory : MonoBehaviour
     void OnStartGame(StartGameEvent e)
     {
         // Character.Instance.AddItem("Armor");        
-        Character.Instance.AddItem("Bow").Forget();
+        // Character.Instance.AddItem("Bow").Forget();
         // Character.Instance.AddItem("Candle");
         // Character.Instance.AddItem("Clover");        
         // Character.Instance.AddItem("Bandage").Forget();
         // Character.Instance.AddItem("Feather").Forget();
         // Character.Instance.AddItem("Hone").Forget();
-        Character.Instance.AddItem("Mirror").Forget();
+        // Character.Instance.AddItem("Mirror").Forget();
         // Character.Instance.AddItem("RedEye").Forget();
-        Character.Instance.AddItem("SkullCane").Forget();
+        // Character.Instance.AddItem("SkullCane").Forget();
         // Character.Instance.AddItem("Mushroom").Forget();
         // Character.Instance.AddItem("WoodSword").Forget();
     }

@@ -235,7 +235,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3055844595915171410}
   - component: {fileID: 3251963259303908390}
-  - component: {fileID: 2574718379896532522}
   m_Layer: 11
   m_Name: Root
   m_TagString: Untagged
@@ -252,7 +251,7 @@ Transform:
   m_GameObject: {fileID: 4010132867916291437}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.10899997, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -272,42 +271,6 @@ SortingGroup:
   m_SortingOrder: 10
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
---- !u!58 &2574718379896532522
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4010132867916291437}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.0608927}
-  m_Radius: 0.4391073
 --- !u!1 &4076180193271452949
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,10 +281,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4799627197803190956}
   - component: {fileID: 8645646148639287178}
-  - component: {fileID: 8015332874387547569}
-  - component: {fileID: 6357446913763281427}
-  - component: {fileID: 1783038227818943842}
-  m_Layer: 10
+  - component: {fileID: 3461687357319508422}
+  m_Layer: 12
   m_Name: OrbitSlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +322,6 @@ MonoBehaviour:
   key: Orbit
   mergeLevel: 0
   slimeEnhanceAbilities: []
-  movement: {fileID: 8015332874387547569}
   rootTr: {fileID: 3055844595915171410}
   attackTimer: 0
   targetLayerMask:
@@ -385,52 +345,8 @@ MonoBehaviour:
   rotationSpeed: 0
   radius: 0
   pushAbility: {fileID: 7529706799399069192}
---- !u!114 &8015332874387547569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4076180193271452949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05fdce4e2f22b4e12a31790a07b152ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MiniMeMovement
-  rg2D: {fileID: 0}
-  outRange: 5
-  inRange: 1
-  moveSpeed: 7
-  slime: {fileID: 0}
---- !u!50 &6357446913763281427
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4076180193271452949}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
---- !u!58 &1783038227818943842
-CircleCollider2D:
+--- !u!61 &3461687357319508422
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -463,8 +379,18 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.075}
-  m_Radius: 0.4
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &4123640462257594690
 GameObject:
   m_ObjectHideFlags: 0

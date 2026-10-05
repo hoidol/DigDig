@@ -176,8 +176,11 @@ MonoBehaviour:
   moveSpeed: 10
   bulletRadius: 0.1
   direction: {x: 0, y: 0, z: 0}
-  <damageMultiplier>k__BackingField: 1
   hitLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 24584
+  damageMultiplier: 0
   key: Bounce
+  allyUnitDamageData:
+    damage: 0
+    isCrt: 0

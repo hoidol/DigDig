@@ -50,11 +50,11 @@ public class Bunker : MonoBehaviour//, IHittable
         mountedTimer += Time.deltaTime;
 
         // 탑승 후 0.2초 지나야 퇴장 가능
-        if (mountedTimer >= DISMOUNT_DELAY && Character.Instance.MoveDirection.magnitude > 0.1f)
-        {
-            Dismount();
-            return;
-        }
+        // if (mountedTimer >= DISMOUNT_DELAY && Character.Instance.MoveDirection.magnitude > 0.1f)
+        // {
+        //     Dismount();
+        //     return;
+        // }
 
         // 탑승 중 위치 고정
         Character.Instance.rg.linearVelocity = Vector2.zero;

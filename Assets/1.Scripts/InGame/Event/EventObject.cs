@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
+public abstract class EventObject : MonoBehaviour, IWayPointerTarget, IHittable
 {
     public EventType eventType;
     [SerializeField] protected float clearRadius = 5f;
@@ -28,6 +28,10 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
     public Vector2Int Size => Vector2Int.one;
 
+    public float MaxHp => float.MaxValue;
+
+    public float CurHp => float.MaxValue;
+
     public bool interacting;
     public virtual void Appear(Vector2 spawnPos)
     {
@@ -50,10 +54,24 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
         if (curTimer > 0)
             curTimer -= Time.deltaTime;
-        
-        barImage.fillAmount = curTimer/maxTime;
+
+        barImage.fillAmount = curTimer / maxTime;
+
+        if (movingTimer > 0)
+        {
+            movingTimer -= Time.deltaTime;
+            transform.position += (Vector3)direction * Time.deltaTime;
+        }
     }
-    
+
+    Vector2 direction;
+    public float movingTimer;
+    public void TakeDamage(DamageData damageData)
+    {
+        direction = (Character.Instance.transform.position - transform.position).normalized;
+        movingTimer = 0.5f;
+    }
+
     public virtual void ClearArea(Vector2 pos)
     {
         MapManager.Instance.ClearTilesInRadius(pos, clearRadius, clearRadius);
@@ -81,4 +99,14 @@ public abstract class EventObject : MonoBehaviour, IWayPointerTarget, ITile
 
     }
 
+
+    public bool CanHit()
+    {
+        return true;
+    }
+
+    public void ApplyStatusEffect(StatusEffect effect)
+    {
+
+    }
 }

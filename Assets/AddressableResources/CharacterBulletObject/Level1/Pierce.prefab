@@ -85,11 +85,14 @@ MonoBehaviour:
   moveSpeed: 8
   bulletRadius: 0.4
   direction: {x: 0, y: 0, z: 0}
-  <damageMultiplier>k__BackingField: 1
   hitLayerMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 24584
+  damageMultiplier: 0
   key: Pierce
+  allyUnitDamageData:
+    damage: 0
+    isCrt: 0
 --- !u!1 &6038000613544866773
 GameObject:
   m_ObjectHideFlags: 0

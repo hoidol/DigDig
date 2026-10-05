@@ -77,7 +77,7 @@ public class MapManager : MonoSingleton<MapManager>
     }
     void OnStartGameEvent(StartGameEvent e)
     {
-        SpawnMap();
+        // SpawnMap();
     }
 
     public const int MIN_RANGE_RADIUS = 5;

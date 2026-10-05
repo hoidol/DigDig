@@ -65,10 +65,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8203139941919249194}
   - component: {fileID: 1358385290756183109}
-  - component: {fileID: 4726313380201368068}
-  - component: {fileID: 2870378277667457793}
-  - component: {fileID: 4873399000037578923}
-  m_Layer: 10
+  - component: {fileID: 7222306196130425403}
+  m_Layer: 12
   m_Name: WackySlime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,7 +105,6 @@ MonoBehaviour:
   key: Wacky
   mergeLevel: 0
   slimeEnhanceAbilities: []
-  movement: {fileID: 4726313380201368068}
   rootTr: {fileID: 4004374591677386144}
   attackTimer: 0
   targetLayerMask:
@@ -129,52 +126,8 @@ MonoBehaviour:
   wackyFireSpeed: 0
   skillBulletCount: 0
   skillCoolTime: 0
---- !u!114 &4726313380201368068
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1915177412412619246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05fdce4e2f22b4e12a31790a07b152ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MiniMeMovement
-  rg2D: {fileID: 0}
-  outRange: 5
-  inRange: 1
-  moveSpeed: 7
-  slime: {fileID: 0}
---- !u!50 &2870378277667457793
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1915177412412619246}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
---- !u!58 &4873399000037578923
-CircleCollider2D:
+--- !u!61 &7222306196130425403
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -207,8 +160,18 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.075}
-  m_Radius: 0.4
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0
 --- !u!1 &2112157181587111058
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,7 +668,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4004374591677386144}
   - component: {fileID: 3721247268088442882}
-  - component: {fileID: 4274187828031178536}
   m_Layer: 11
   m_Name: Root
   m_TagString: Untagged
@@ -722,7 +684,7 @@ Transform:
   m_GameObject: {fileID: 9199188040141692415}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.109, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -742,39 +704,3 @@ SortingGroup:
   m_SortingOrder: 10
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
---- !u!58 &4274187828031178536
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9199188040141692415}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.0608927}
-  m_Radius: 0.4391073

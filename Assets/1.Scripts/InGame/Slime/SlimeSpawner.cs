@@ -58,6 +58,8 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
             pool[slime.key] = new Stack<Slime>();
 
         activeslimes.Remove(slime);
+        if (TileManager.Instance != null)
+            TileManager.Instance.RemoveSlime(slime);
         slime.gameObject.SetActive(false);
         pool[slime.key].Push(slime);
         ActiveSlimeCount = Mathf.Max(0, ActiveSlimeCount - 1);
