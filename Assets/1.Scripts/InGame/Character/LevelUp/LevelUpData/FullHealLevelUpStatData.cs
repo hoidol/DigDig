@@ -5,7 +5,7 @@ public class FullHealLevelUpStatData : LevelUpStatData
 
     public FullHealLevelUpStatData()
     {
-        type = LevelUpStatType.FullHeal;
+        // type = LevelUpStatType.FullHeal;
     }
 
     public override string GetDescription()

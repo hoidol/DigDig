@@ -10,17 +10,12 @@ public class EnemyData : ScriptableObject
 {
     public EnemyType type;
     public float attackSpeed;
-    public float moveSpeed= 1;
     public float attackRange;
-    public float moveRange;
     public int exp;
-    public Vector2Int size;
-    public bool breakTileWhenSpawn;
-
     public float hpMultiplier;
     public float attackPowerMultiplier;
-
-    
+    public int gold;
+    public float moveSpeed = 1;
 
 #if UNITY_EDITOR
     public void LoadData()
@@ -35,12 +30,11 @@ public class EnemyData : ScriptableObject
         int iType = System.Array.IndexOf(headers, "type");
         int iAttackSpeed = System.Array.IndexOf(headers, "attackSpeed");
         int iAttackRange = System.Array.IndexOf(headers, "attackRange");
-        int iMoveRange = System.Array.IndexOf(headers, "moveRange");
         int iExp = System.Array.IndexOf(headers, "exp");
         int iHpMul = System.Array.IndexOf(headers, "hpMultiplier");
         int iAtkMul = System.Array.IndexOf(headers, "attackPowerMultiplier");
-        int iSize = System.Array.IndexOf(headers, "size");
-        int iBreakTile = System.Array.IndexOf(headers, "breakTileWhenSpawn");
+        int iGold = System.Array.IndexOf(headers, "gold");
+        int iMoveSpeed = System.Array.IndexOf(headers, "moveSpeed");
 
         for (int i = 1; i < lines.Length; i++)
         {
@@ -50,13 +44,11 @@ public class EnemyData : ScriptableObject
             if (!System.Enum.TryParse<EnemyType>(Col(cols, iType), out var rowType) || rowType != type) continue;
             if (float.TryParse(Col(cols, iAttackSpeed), NumberStyles.Float, CultureInfo.InvariantCulture, out var v)) attackSpeed = v;
             if (float.TryParse(Col(cols, iAttackRange), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) attackRange = v;
-            if (float.TryParse(Col(cols, iMoveRange), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) moveRange = v;
-            if (int.TryParse(Col(cols, iExp), out var e)) exp = e;
+            if (int.TryParse(Col(cols, iExp), out var n)) exp = n;
             if (float.TryParse(Col(cols, iHpMul), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) hpMultiplier = v;
             if (float.TryParse(Col(cols, iAtkMul), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) attackPowerMultiplier = v;
-            if (int.TryParse(Col(cols, iSize), out var s)) size = new Vector2Int(s, s);
-            var breakStr = Col(cols, iBreakTile).ToUpper();
-            if (breakStr == "TRUE" || breakStr == "FALSE") breakTileWhenSpawn = breakStr == "TRUE";
+            if (int.TryParse(Col(cols, iGold), out n)) gold = n;
+            if (float.TryParse(Col(cols, iMoveSpeed), NumberStyles.Float, CultureInfo.InvariantCulture, out v)) moveSpeed = v;
 
             EditorUtility.SetDirty(this);
             Debug.Log($"[EnemyData] {type} LoadData 완료");
@@ -74,5 +66,6 @@ public enum EnemyType
     Melee,
     Ranged,
     Elite,
+    BonusElite,
     Boss
 }

@@ -48,12 +48,12 @@ namespace InGame
         bool isLowHp = Character.Instance.CurHp < LOW_HP_THRESHOLD;
         if (isLowHp && UnityEngine.Random.value < FULL_HEAL_APPEAR_CHANCE)
         {
-            var fullHealPanel = pool.FirstOrDefault(p => p.levelUpStatType == LevelUpStatType.FullHeal);
-            if (fullHealPanel != null)
-            {
-                result.Add(fullHealPanel);
-                pool.Remove(fullHealPanel);
-            }
+            // var fullHealPanel = pool.FirstOrDefault(p => p.levelUpStatType == LevelUpStatType.FullHeal);
+            // if (fullHealPanel != null)
+            // {
+            //     result.Add(fullHealPanel);
+            //     pool.Remove(fullHealPanel);
+            // }
         }
 
         while (result.Count < SELECT_COUNT && pool.Count > 0)

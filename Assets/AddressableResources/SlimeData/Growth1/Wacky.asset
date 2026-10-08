@@ -21,211 +21,226 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 10
-      - 10
+      - 3~15
+      - 6~30
+      - 9~50
     - statType: 1
       values:
       - 30
       - 3
     - statType: 2
       values:
-      - 3
+      - 5
       - 0.2
   - level: 1
     slimeStats:
     - statType: 0
       values:
-      - 10
-      - 10
+      - 3~15
+      - 6~30
+      - 9~50
     - statType: 1
       values:
       - 35
       - 4
     - statType: 2
       values:
-      - 3
+      - 5
       - 0.2
   - level: 2
     slimeStats:
     - statType: 0
       values:
-      - 11
-      - 11
+      - 4~16
+      - 7~31
+      - 10~51
     - statType: 1
       values:
       - 35
       - 4
     - statType: 2
       values:
-      - 3
+      - 5
       - 0.2
   - level: 3
     slimeStats:
     - statType: 0
       values:
-      - 11
-      - 11
+      - 4~16
+      - 7~31
+      - 10~51
     - statType: 1
       values:
       - 35
       - 4
     - statType: 2
       values:
-      - 3.2
+      - 5.2
       - 0.2
   - level: 4
     slimeStats:
     - statType: 0
       values:
-      - 12
-      - 12
+      - 5~17
+      - 8~32
+      - 11~52
     - statType: 1
       values:
       - 35
       - 4
     - statType: 2
       values:
-      - 3.2
+      - 5.2
       - 0.2
   - level: 5
     slimeStats:
     - statType: 0
       values:
-      - 12
-      - 12
+      - 5~17
+      - 8~32
+      - 11~52
     - statType: 1
       values:
       - 40
       - 5
     - statType: 2
       values:
-      - 3.2
+      - 5.2
       - 0.2
   - level: 6
     slimeStats:
     - statType: 0
       values:
-      - 13
-      - 13
+      - 6~18
+      - 9~33
+      - 12~53
     - statType: 1
       values:
       - 40
       - 5
     - statType: 2
       values:
-      - 3.2
+      - 5.2
       - 0.2
   - level: 7
     slimeStats:
     - statType: 0
       values:
-      - 13
-      - 13
+      - 6~18
+      - 9~33
+      - 12~53
     - statType: 1
       values:
       - 40
       - 5
     - statType: 2
       values:
-      - 3.5
+      - 5.5
       - 0.2
   - level: 8
     slimeStats:
     - statType: 0
       values:
-      - 13
-      - 13
+      - 6~18
+      - 9~33
+      - 12~53
     - statType: 1
       values:
       - 40
       - 5
     - statType: 2
       values:
-      - 3.5
+      - 5.5
       - 0.2
   - level: 9
     slimeStats:
     - statType: 0
       values:
-      - 14
-      - 14
+      - 7~19
+      - 10~34
+      - 13~54
     - statType: 1
       values:
       - 40
       - 5
     - statType: 2
       values:
-      - 3.5
+      - 5.5
       - 0.2
   - level: 10
     slimeStats:
     - statType: 0
       values:
-      - 14
-      - 14
+      - 7~19
+      - 10~34
+      - 13~54
     - statType: 1
       values:
       - 45
       - 6
     - statType: 2
       values:
-      - 3.5
+      - 5.5
       - 0.2
   - level: 11
     slimeStats:
     - statType: 0
       values:
-      - 14
-      - 14
+      - 7~19
+      - 10~34
+      - 13~54
     - statType: 1
       values:
       - 45
       - 6
     - statType: 2
       values:
-      - 3.8
+      - 5.8
       - 0.2
   - level: 12
     slimeStats:
     - statType: 0
       values:
-      - 15
-      - 15
+      - 8~20
+      - 11~35
+      - 14~55
     - statType: 1
       values:
       - 45
       - 6
     - statType: 2
       values:
-      - 3.8
+      - 5.8
       - 0.2
   - level: 13
     slimeStats:
     - statType: 0
       values:
-      - 15
-      - 15
+      - 8~20
+      - 11~35
+      - 14~55
     - statType: 1
       values:
       - 45
       - 6
     - statType: 2
       values:
-      - 3.8
+      - 5.8
       - 0.2
   - level: 14
     slimeStats:
     - statType: 0
       values:
-      - 15
-      - 15
+      - 8~20
+      - 11~35
+      - 14~55
     - statType: 1
       values:
       - 50
       - 7
     - statType: 2
       values:
-      - 3.8
+      - 5.8
       - 0.2
   prefab: {fileID: 1358385290756183109, guid: 0b213b5c98b6a4260a2fa4adeea3a912, type: 3}
   unlockConditions: []
@@ -245,9 +260,5 @@ MonoBehaviour:
       \uBC1C\uC0AC"
   - level: 14
     desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00 + \uACF5\uACA9\uC18D\uB3C4 10% \uC99D\uAC00"
-  uniqueSlimeStats:
-  - statType: 5
-    values:
-    - 2
-    - 1.5
-    - 1
+  uniqueSlimeStats: []
+  damages: []

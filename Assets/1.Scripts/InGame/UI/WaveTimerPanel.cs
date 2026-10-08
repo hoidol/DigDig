@@ -16,13 +16,16 @@ public class WaveTimerPanel : MonoBehaviour
     public Image waveTimeBar;
     void Start()
     {
-
         waveTimeBar.fillAmount = 0;
         waveText.text = "";
         GameEventBus.Subscribe<BreakStartEvent>(OnBreakStartEvent);
         GameEventBus.Subscribe<WaveStartEvent>(OnWavetStartEvent);
-        waveObject.SetActive(false);
-        waveText.text = $"다음 웨이브까지 {GetTime(0, GameSetting.BREAK_TIME)}초";
+        GameEventBus.Subscribe<BossSpawnEvent>(OnBossSpawnEvent);
+
+        
+        waveObject.SetActive(true);
+        waveText.text = $"WAVE 1";
+        waveTimeBar.fillAmount =1;
     }
 
     void OnBreakStartEvent(BreakStartEvent e)
@@ -34,6 +37,11 @@ public class WaveTimerPanel : MonoBehaviour
     {
         waveObject.SetActive(true);
         waveText.text = $"WAVE {e.phaseIdx + 1}";
+    }
+    void OnBossSpawnEvent(BossSpawnEvent e)
+    {
+        waveText.text = "BOSS!";
+        waveObject.SetActive(false);
     }
 
     void Update()

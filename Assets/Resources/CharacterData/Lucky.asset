@@ -16,7 +16,7 @@ MonoBehaviour:
   characterStats:
   - statType: 0
     initValue: 0
-    value: 10
+    value: 6
   - statType: 1
     initValue: 0
     value: 50

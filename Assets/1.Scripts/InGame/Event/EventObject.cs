@@ -3,94 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class EventObject : MonoBehaviour, IWayPointerTarget, IHittable
+public abstract class EventObject : MonoBehaviour
 {
     public EventType eventType;
-    [SerializeField] protected float clearRadius = 5f;
     public Transform Transform => transform;
-
-    public virtual Sprite GetThum() => thum;
-    [SerializeField] Sprite thum;
-
     public float MaxTime => maxTime;
     [SerializeField] protected float maxTime;
 
     public float CurTimer => curTimer;
     public Image barImage;
 
-    public Vector2Int[,] TileIndexArr => indexArr;
 
     [SerializeField] protected float curTimer;
 
-    Vector2Int[,] indexArr;
 
-    public bool BreakTileWhenSpawn => true;
 
-    public Vector2Int Size => Vector2Int.one;
-
-    public float MaxHp => float.MaxValue;
-
-    public float CurHp => float.MaxValue;
 
     public bool interacting;
     public virtual void Appear(Vector2 spawnPos)
     {
         curTimer = maxTime;
-        indexArr = new Vector2Int[Size.x, Size.y];
-        indexArr[0, 0] = MapManager.PositionToTileIndex(spawnPos);
-        Debug.Log($"EventObject OnAppear x {indexArr[0, 0].x} y {indexArr[0, 0].y}");
-
 
         interacting = false;
-        WayPointerCanvas.Instance.AddWayPoint(this);
-        ClearArea(transform.position);
-        RegisterTile(indexArr);
+        
     }
 
     public virtual void Update()
     {
         if (interacting)
             return;
+        if(curTimer <= 0)
+        {
+            Destroy();
+        }
 
         if (curTimer > 0)
             curTimer -= Time.deltaTime;
 
         barImage.fillAmount = curTimer / maxTime;
-
-        if (movingTimer > 0)
-        {
-            movingTimer -= Time.deltaTime;
-            transform.position += (Vector3)direction * Time.deltaTime;
-        }
     }
 
-    Vector2 direction;
-    public float movingTimer;
-    public void TakeDamage(DamageData damageData)
-    {
-        direction = (Character.Instance.transform.position - transform.position).normalized;
-        movingTimer = 0.5f;
-    }
-
-    public virtual void ClearArea(Vector2 pos)
-    {
-        MapManager.Instance.ClearTilesInRadius(pos, clearRadius, clearRadius);
-    }
+    public abstract void StartEvent();
 
 
-    public void RegisterTile(Vector2Int[,] idxArr)
-    {
-        indexArr = idxArr;
-        gameObject.name = $"{eventType} {indexArr[0, 0].x} {indexArr[0, 0].y}";
-        // MapManager.RegisterTile(idxArr, this);
 
-    }
     public virtual void Destroy()
     {
         EventManager.Instance?.RemoveEventObject(this);
         Destroy(gameObject);
 
-        WayPointerCanvas.Instance.Remove(this);
         ReleaseTile();
     }
 

@@ -32,13 +32,13 @@ public class SlimeSlotPanel : MonoBehaviour
             Slime slime = Character.Instance.slimeInventory.curSlimes[idx];
             SetSlime(slime);
         }
-        else if (idx + 1 == SlimeSpawner.Instance.slimeSlotCount)
-        {
-            selling = true;
-            gameObject.SetActive(true);
-            priceText.text = SlimeSpawner.Instance.GetSlotPrice().ToString();
-            sellPanel.SetActive(true);
-        }
+        // else if (idx + 1 == SlimeSpawner.Instance.slimeSlotCount)
+        // {
+        //     selling = true;
+        //     gameObject.SetActive(true);
+        //     priceText.text = SlimeSpawner.Instance.GetSlotPrice().ToString();
+        //     sellPanel.SetActive(true);
+        // }
 
     }
 
@@ -47,14 +47,14 @@ public class SlimeSlotPanel : MonoBehaviour
         if (!selling)
             return;
 
-        if (Character.Instance.coin < SlimeSpawner.Instance.GetSlotPrice())
-        {
-            ToastCanvas.Toast(TranslateManager.GetText("Not enough coin"));
-            return;
-        }
-        Character.Instance.AddCoin(-SlimeSpawner.Instance.GetSlotPrice());
-        SlimeSpawner.Instance.PurchaseSlot(idx);
-        CharacterManageCanvas.Instance.UpdateCanvas();
+        // if (Character.Instance.coin < SlimeSpawner.Instance.GetSlotPrice())
+        // {
+        //     ToastCanvas.Toast(TranslateManager.GetText("Not enough coin"));
+        //     return;
+        // }
+        // Character.Instance.AddCoin(-SlimeSpawner.Instance.GetSlotPrice());
+        // SlimeSpawner.Instance.PurchaseSlot(idx);
+        // CharacterManageCanvas.Instance.UpdateCanvas();
     }
 
     public void OnBeginDrag(BaseEventData data)

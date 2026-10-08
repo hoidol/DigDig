@@ -28,7 +28,7 @@ MonoBehaviour:
       - 3
     - statType: 2
       values:
-      - 3
+      - 5
       - 0.2
   - level: 1
     slimeStats:
@@ -42,7 +42,7 @@ MonoBehaviour:
       - 4
     - statType: 2
       values:
-      - 3
+      - 5
       - 0.2
   - level: 2
     slimeStats:
@@ -56,7 +56,7 @@ MonoBehaviour:
       - 4
     - statType: 2
       values:
-      - 3
+      - 5
       - 0.2
   - level: 3
     slimeStats:
@@ -70,7 +70,7 @@ MonoBehaviour:
       - 4
     - statType: 2
       values:
-      - 3.2
+      - 5.2
       - 0.2
   - level: 4
     slimeStats:
@@ -84,7 +84,7 @@ MonoBehaviour:
       - 4
     - statType: 2
       values:
-      - 3.2
+      - 5.2
       - 0.2
   - level: 5
     slimeStats:
@@ -98,7 +98,7 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 3.2
+      - 5.2
       - 0.2
   - level: 6
     slimeStats:
@@ -112,7 +112,7 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 3.2
+      - 5.2
       - 0.2
   - level: 7
     slimeStats:
@@ -126,7 +126,7 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 3.5
+      - 5.5
       - 0.2
   - level: 8
     slimeStats:
@@ -140,7 +140,7 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 3.5
+      - 5.5
       - 0.2
   - level: 9
     slimeStats:
@@ -154,7 +154,7 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 3.5
+      - 5.5
       - 0.2
   - level: 10
     slimeStats:
@@ -168,7 +168,7 @@ MonoBehaviour:
       - 6
     - statType: 2
       values:
-      - 3.5
+      - 5.5
       - 0.2
   - level: 11
     slimeStats:
@@ -182,7 +182,7 @@ MonoBehaviour:
       - 6
     - statType: 2
       values:
-      - 3.8
+      - 5.8
       - 0.2
   - level: 12
     slimeStats:
@@ -196,7 +196,7 @@ MonoBehaviour:
       - 6
     - statType: 2
       values:
-      - 3.8
+      - 5.8
       - 0.2
   - level: 13
     slimeStats:
@@ -210,7 +210,7 @@ MonoBehaviour:
       - 6
     - statType: 2
       values:
-      - 3.8
+      - 5.8
       - 0.2
   - level: 14
     slimeStats:
@@ -224,7 +224,7 @@ MonoBehaviour:
       - 7
     - statType: 2
       values:
-      - 3.8
+      - 5.8
       - 0.2
   prefab: {fileID: 6666491537767946925, guid: c2eccd09d44a2479aa3430aa28659778, type: 3}
   unlockConditions: []
@@ -246,7 +246,7 @@ MonoBehaviour:
   uniqueSlimeStats:
   - statType: 3
     values:
-    - 5
-    - 7
-    - 10
+    - 1
+    - 2
+    - 3
   burnDuration: 4

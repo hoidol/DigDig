@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: Melee
   m_EditorClassIdentifier: 
   type: 0
-  attackSpeed: 6
-  attackRange: 2
-  moveRange: 2
-  exp: 1
-  size: {x: 1, y: 1}
-  breakTileWhenSpawn: 0
+  attackSpeed: 3
+  attackRange: 0.5
+  exp: 2
   hpMultiplier: 1
   attackPowerMultiplier: 1
+  gold: 1
+  moveSpeed: 0.6

@@ -62,9 +62,6 @@ public class NormalEnemy : Enemy
             return;
         }
 
-        // if (moveTimer > 0)
-        //     moveTimer -= Time.deltaTime;
-
         if (attackTimer < enemyData.attackSpeed)
             attackTimer += Time.deltaTime;
 
@@ -73,7 +70,6 @@ public class NormalEnemy : Enemy
 
         if (state == NormalEnemyState.Moving) UpdateMoving();
         else if (state == NormalEnemyState.Attack) UpdateAttack();
-
     }
 
     //상태가 Waiting 인 경우 처리
@@ -121,9 +117,9 @@ public class NormalEnemy : Enemy
     }
     public override void Reward()
     {
-        Character.Instance.AddCoin(1);
-        // Coin.Instantiate(transform.position, 1, 0.5f);
-        // HealPiece.Instantiate(transform.position);
+        
+        Character.Instance.AddCoin(enemyData.gold);
+        CoinText.Instantiate().SetCoinText(transform.position, $"+{enemyData.gold}");
         base.Reward();
     }
 

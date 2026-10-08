@@ -43,10 +43,12 @@ public class OrbitSlime : SlimeGrowth1
 
     public override void StartDrag()
     {
+        base.StartDrag();
         orbitMachine.gameObject.SetActive(false);
     }
     public override void EndDrag(Tile t)
     {
+        base.EndDrag(t);
         orbitMachine.gameObject.SetActive(true);
     }
 

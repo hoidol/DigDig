@@ -9,7 +9,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
     public GameObject clearObj;
     public GameObject failObj;
     public TMP_Text stageText;
-    public TMP_Text distanceText;
+    // public TMP_Text distanceText;
     // public TMP_Text memorPieceCountText;
     public RewardPanel[] rewardPanels;
 
@@ -69,18 +69,18 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             UserDataManager.Instance.AddGold(gold);  
 
         //최대 깊이에 따라서 보상 받게 하자
-        float distance = Vector2.Distance(Character.Instance.transform.position,Vector2.zero); 
-        distanceText.text = distance.ToString();
+        // float distance = Vector2.Distance(Character.Instance.transform.position,Vector2.zero); 
+        //distanceText.text = distance.ToString();
 
-        int drawTicket = Mathf.FloorToInt(distance);
-        if(userStage.clearCount > 0)
-        {
-            int orderGap = (StageManager.Instance.GetStageData(curUserStage.key).order - GameManager.Instance.stageData.order)+1;
-            drawTicket = (int)(distance/orderGap);
-        }
+        // int drawTicket = Mathf.FloorToInt(distance);
+        // if(userStage.clearCount > 0)
+        // {
+        //     int orderGap = (StageManager.Instance.GetStageData(curUserStage.key).order - GameManager.Instance.stageData.order)+1;
+        //     drawTicket = (int)(distance/orderGap);
+        // }
         
-        if(drawTicket>0)
-            UserDataManager.Instance.AddDrawTicket(drawTicket);  
+        // if(drawTicket>0)
+        //     UserDataManager.Instance.AddDrawTicket(drawTicket);  
 
         for(int i = 0; i < rewardPanels.Length; i++)
             rewardPanels[i].gameObject.SetActive(false);
@@ -94,14 +94,14 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
                 value = exp.ToString()
             });
         }
-        if(drawTicket > 0)
-        {
-            rewardDatas.Add(new RewardData()
-            {
-                rewardType = RewardType.DrawTicket,
-                value = drawTicket.ToString()
-            });
-        }
+        // if(drawTicket > 0)
+        // {
+        //     rewardDatas.Add(new RewardData()
+        //     {
+        //         rewardType = RewardType.DrawTicket,
+        //         value = drawTicket.ToString()
+        //     });
+        // }
         
         if(gold > 0)
         {

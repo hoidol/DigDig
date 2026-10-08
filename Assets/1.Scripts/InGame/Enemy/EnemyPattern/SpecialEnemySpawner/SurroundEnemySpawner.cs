@@ -19,6 +19,7 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
     }
     IEnumerator SpawnCoroutine()
     {
+        WaveWarningCanvas.Instance.StartWaveWarning(WaveWarningType.Surround, Vector2.zero);
         yield return new WaitForSeconds(delay);
         for (int i = 0; i < spawnCount; i++)
         {
@@ -42,7 +43,7 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
             Vector2 pos = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * r;
 
             Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-            enemy?.Spawn(pos);
+            enemy?.Spawn(pos + Random.insideUnitCircle*0.3f);
         }
     }
     public override void EndSpawn()

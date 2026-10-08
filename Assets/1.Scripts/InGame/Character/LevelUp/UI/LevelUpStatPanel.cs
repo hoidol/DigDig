@@ -28,11 +28,12 @@ public class LevelUpStatPanel : MonoBehaviour
 }
 public enum LevelUpStatType : int
 {
-    MaxHp,
-    FullHeal, //체력 완전 회복
-    Bounce,
-    AttackPower,
-    Count
+    MaxHp,//최대 체력 증가
+    HalfHeal,
+    //FullHeal, //체력 완전 회복    
+    AttackPower, //공격력 증가
+    AttackSpeed, //공격속도 증가
+    Count, 
     // RecoveryHp
     // AddSpecialBullet,
     // MergeBullet

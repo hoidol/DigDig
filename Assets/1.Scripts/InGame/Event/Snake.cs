@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Snake : EventObject
 {
+    public override void StartEvent()
+    {
+    }
     List<SnakeSuggest> snakeSuggests = new List<SnakeSuggest>();
     void Start()
     {

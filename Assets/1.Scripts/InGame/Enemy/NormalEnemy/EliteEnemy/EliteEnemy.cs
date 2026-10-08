@@ -18,6 +18,11 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
         cts = new CancellationTokenSource();
         ProcessAttack(cts.Token).Forget();
     }
+    public void Spawn(Vector2 pos, int spawnCount)
+    {
+        base.Spawn(pos);
+        maxHp = GetHp() * (1 + spawnCount);
+    }
     async UniTask ProcessAttack(CancellationToken ct)
     {
         await enemyAttackPattern.Execute(this, () =>
@@ -81,7 +86,7 @@ public class EliteEnemy : NormalEnemy, IEnemySpecialAttackPattern
     public override void Reward()
     {
         base.Reward();
-        EnhanceStone enhanceStone = EnhanceStone.Instantiate();
-        enhanceStone.transform.position = transform.position;
+        //ItemBox 드랍 -> 클릭으로 열기
+        EventManager.Instance.Spawn(EventType.ItemBox, transform.position);
     }
 }

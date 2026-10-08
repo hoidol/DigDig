@@ -65,7 +65,7 @@ public class FlameSlime : SlimeGrowth1,IExecuteSkillSlime
         }
         else
         {
-            return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, "Flame");
+            return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, findTargetType, "Flame");
         }
 
     }

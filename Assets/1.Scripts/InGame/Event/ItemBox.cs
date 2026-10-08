@@ -2,17 +2,14 @@ using UnityEngine;
 
 public class ItemBox : EventObject
 {
-    public void OnTriggerEnter2D(Collider2D collision)
+    public override void StartEvent()
     {
-        if (collision.CompareTag("Player"))
+        interacting = true;
+        Time.timeScale = 0;
+        SelectItemCanvas.Instance.OpenCanvas(() =>
         {
-            interacting = true;
-            Time.timeScale = 0;
-            SelectItemCanvas.Instance.OpenCanvas(() =>
-            {
-                Time.timeScale = 1;
-                Destroy();
-            });
-        }
+            Time.timeScale = 1;
+            Destroy();
+        });
     }
 }

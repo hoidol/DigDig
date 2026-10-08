@@ -8,4 +8,8 @@ public class SpawnPattern : MonoBehaviour
     {
 
     }
+    public virtual void StartPattern()
+    {
+        
+    }
 }

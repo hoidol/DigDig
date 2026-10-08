@@ -70,6 +70,7 @@ public class EventManager : MonoSingleton<EventManager>
         // itemBoxSpawner = new EventRepeatSpawner(EventType.ItemBox, 0, 4, 10);
         // eventRepeatSpawners.Add(itemBoxSpawner);
 
+
         EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemShop, 3, 4, 10);
         eventRepeatSpawners.Add(itemBoxSpawner);
     }
@@ -134,19 +135,31 @@ public class EventManager : MonoSingleton<EventManager>
         {
             Spawn(EventType.ItemBox);
         }
+
+        if(Input.GetMouseButtonDown(0))
+        {
+            Vector2 mousePos = CameraManager.Instance.mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            Collider2D[] hitColliders = Physics2D.OverlapPointAll(mousePos,  LayerMask.GetMask("Event"));
+            if(hitColliders.Length > 0)
+            {
+                hitColliders[0].GetComponent<EventObject>()?.StartEvent();
+            }
+            
+        }
     }
 
 
 
     // EventObjectType에 해당하는 NPC를 계산된 위치에 스폰
-    public EventObject Spawn(EventType eventType)
+    public EventObject Spawn(EventType eventType, Vector2? spawnPos = null)
     {
         if (!prefabMap.TryGetValue(eventType, out EventObject prefab))
         {
             Debug.LogWarning($"EventObjectManager: {eventType} 프리팹이 등록되지 않았습니다.");
             return null;
         }
-        if (!TryGetValidSpawnPosition(out Vector2 pos))
+        Vector2 pos = spawnPos ?? Vector2.zero;
+        if (spawnPos == null && !TryGetValidSpawnPosition(out pos))
         {
             Debug.LogWarning($"설치할 위치없음");
             return null;
@@ -199,10 +212,10 @@ public class EventManager : MonoSingleton<EventManager>
 
     public Vector2 CalcSpawnPosition()
     {
-        float farDistance = (MapManager.MIN_RANGE_RADIUS + 8) + spawnCount * 2.3f;
+        float farDistance = (MapManager.MIN_RANGE_RADIUS + 2) ;//+ spawnCount * 2.3f;
         Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Character.Instance.distanceMaxDistanceDestroiedStone} farDistance {farDistance}");
-        // Vector2 playerPos = Player.Instance.transform.position;
-        Vector2 direction = Quaternion.Euler(0f, 0f, -100f * spawnCount) * initDirection.normalized;
+        //Vector2.right 를 0도 기준으로 60~120도 사이 랜덤 각도로 회전시킨 방향으로 farDistance만큼 떨어진 위치를 반환
+        Vector2 direction = Quaternion.Euler(0, 0, Random.Range(60f, 120f)) * Vector2.right;
         return MapManager.SnappedPosition(Vector2.zero + direction * farDistance);
     }
 }

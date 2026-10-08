@@ -1,10 +1,20 @@
 using UnityEngine;
 
-public class WackyEnhance5Ability : SlimeEnhanceAbility, IForceSlimeEnhanceAbility
+public class WackyEnhance5Ability : SlimeEnhanceAbility, IFireSlimeEnhanceAbility
 {
-    // 추가 발사 쿨타임 10% 감소
-    public void Force(Slime slime)
+    //[각성] 6번 탄을 발사할때마다 1빙향으로 발사
+    public override void Activate(Slime slime, bool a)
     {
-        (slime as WackySlime).wackyFireSpeed = 1.1f;       
+        base.Activate(slime,a);
+        if((slime as WackySlime).skillBulletCount < 1)
+        {
+            (slime as WackySlime).skillBulletCount = 1;    
+        }   
+    }
+    
+
+    public void Fire(Vector2 dir)
+    {
+        (slime as WackySlime).CountUp(); 
     }
 }

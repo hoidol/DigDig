@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: Elite
   m_EditorClassIdentifier: 
   type: 2
-  attackSpeed: 3
-  attackRange: 7
-  moveRange: 8
-  exp: 5
-  size: {x: 2, y: 2}
-  breakTileWhenSpawn: 0
+  attackSpeed: 5
+  attackRange: 4
+  exp: 3
   hpMultiplier: 0.6
   attackPowerMultiplier: 1
+  gold: 10
+  moveSpeed: 0.3

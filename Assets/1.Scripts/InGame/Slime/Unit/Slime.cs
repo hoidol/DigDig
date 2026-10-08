@@ -16,7 +16,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
     public Dictionary<StatType, float> statDic = new Dictionary<StatType, float>();
 
-    public float AttackPower => statDic[StatType.AttackPower];
+    public virtual float AttackPower => statDic[StatType.AttackPower];
     public float AttackSpeed => statDic[StatType.AttackSpeed];
     public float AttackRange => statDic[StatType.AttackRange];
 
@@ -25,6 +25,8 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public float AccumulatedDamage { get; set; }
 
     public float attackTimer;
+    //적 찾는 방식 설정
+    public FindTargetType findTargetType = FindTargetType.Closest;
 
 
     public void AccumulateDamage(float d)
@@ -50,6 +52,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     }
     public UserSlime userSlime;
     public SlimeEnhanceInfo slimeEnhanceInfo;
+    public Transform rangeTr;
     public virtual void Spawn(Vector2 pos, int mLv)
     {
         userSlime = UserDataManager.Instance.userSlimeManager.GetUserSlime(key);
@@ -58,12 +61,13 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
         slimeEnhanceInfo = slimeData.GetCommonSlimeEnhanceInfo(userSlime.enhanceLevel);
         transform.position = pos;
         this.mergeLevel = mLv;
-
+isDraging =false;
 
         statDic.Clear();
         statDic.Add(StatType.AttackPower, 0);
         statDic.Add(StatType.AttackSpeed, 0);
         statDic.Add(StatType.AttackRange, 0);
+        rangeTr.gameObject.SetActive(false);
 
         InitSlime();
         UpdateSlime();
@@ -76,10 +80,11 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
     public virtual void InitSlimeStat()
     {
-        statDic[StatType.AttackPower] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackPower).GetValue<float>(mergeLevel);
-        Debug.Log($"Slime {key} MergeLevel {mergeLevel} AttackPower {statDic[StatType.AttackPower]}");
-        statDic[StatType.AttackSpeed] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackSpeed).GetValue<float>(mergeLevel);
-        statDic[StatType.AttackRange] = slimeEnhanceInfo.GetSlimeStat(SlimeStatType.AttackRange).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackPower] = slimeData.GetSlimeStat(  SlimeStatType.AttackPower,userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackSpeed] = slimeData.GetSlimeStat( SlimeStatType.AttackSpeed, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackRange] = slimeData.GetSlimeStat( SlimeStatType.AttackRange, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+
+        rangeTr.localScale = Vector3.one * statDic[StatType.AttackRange];
     }
 
     public virtual void UpdateSlime()
@@ -135,7 +140,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public abstract AllyBulletObject GetBullet();
     public virtual void Update()
     {
-        if (AttackSpeed >= 0)
+        if (AttackSpeed >= 0 && !isDraging)
         {
             attackTimer += Time.deltaTime * AttackSpeed / 50;
             if (attackTimer >= 1)
@@ -146,18 +151,20 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
         if (targetTr == null)
         {
-            rootTr.localScale = new Vector3(Character.Instance.AttackDir.x >= 0 ? 1 : -1, 1, 1);
+            rootTr.localScale = new Vector3(fireDir.x >= 0 ? 1 : -1, 1, 1);
         }
     }
 
 
     public Transform targetTr;
+    Vector2 fireDir;
     public virtual Vector2 AttackDirecton()
     {
+        Vector2 fireDir = Vector2.zero;
+
         targetTr = FindTarget();
         onTargetListener?.Invoke(targetTr);
 
-        Vector2 fireDir = Character.Instance.weapon.LastDir;
         if (targetTr != null)
         {
             fireDir = (targetTr.position - transform.position).normalized;
@@ -170,6 +177,9 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
     public virtual void Fire(Vector2 dir)
     {
+        if (dir == Vector2.zero)
+            return;
+            
         AllyBulletObject baseBullet = GetBullet();
         if (baseBullet == null)
             return;
@@ -208,10 +218,13 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
         return (true, pickedSlimeKey, lv);
     }
-    //적 찾는 방식 설정
+    public void SetFindTargetType(FindTargetType type)
+    {
+        findTargetType = type;
+    }
     public virtual Transform FindTarget()
     {
-        return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask);
+        return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, findTargetType);
     }
 
 
@@ -226,15 +239,20 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
         activeBuffs.Remove(buff);
         UpdateSlime();
     }
-
+    bool isDraging;
     public virtual void StartDrag()
     {
-
+        isDraging= true;
+        rangeTr.gameObject.SetActive(true);
+    }
+    public virtual void EndTarget()
+    {
+        rangeTr.gameObject.SetActive(false);
     }
 
     public virtual void EndDrag(Tile t)
     {
-
+        isDraging =false;
+        // rangeTr.gameObject.SetActive(false);
     }
-
 }

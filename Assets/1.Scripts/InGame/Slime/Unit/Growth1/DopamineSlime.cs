@@ -47,6 +47,9 @@ public class DopamineSlime : SlimeGrowth1
     {
         if (coolTimer > 0)
             return;
+        
+        if (AttackDirecton() == Vector2.zero)
+            return;
 
         for (int i = 0; i < mergeLevel+1; i++)
         {

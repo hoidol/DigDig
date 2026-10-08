@@ -5,7 +5,7 @@ public class AttackPowerLevelUpStatData : LevelUpStatData
     public float increaseValue = 1;
     public AttackPowerLevelUpStatData()
     {
-        type = LevelUpStatType.AttackPower;
+        // type = LevelUpStatType.AttackPower;
     }
 
     public override string GetDescription()

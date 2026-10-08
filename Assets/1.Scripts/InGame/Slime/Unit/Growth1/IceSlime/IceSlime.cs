@@ -49,7 +49,7 @@ public class IceSlime : SlimeGrowth1
         }
         else
         {
-            return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, "Ice");
+            return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, findTargetType, "Ice");
         }
 
     }

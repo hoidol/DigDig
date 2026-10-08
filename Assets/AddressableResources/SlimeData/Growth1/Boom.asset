@@ -27,7 +27,7 @@ MonoBehaviour:
       - 20
     - statType: 2
       values:
-      - 3
+      - 4
   - level: 1
     slimeStats:
     - statType: 0
@@ -39,7 +39,7 @@ MonoBehaviour:
       - 22
     - statType: 2
       values:
-      - 3
+      - 4
   - level: 2
     slimeStats:
     - statType: 0
@@ -51,7 +51,7 @@ MonoBehaviour:
       - 22
     - statType: 2
       values:
-      - 3
+      - 4
   - level: 3
     slimeStats:
     - statType: 0
@@ -63,7 +63,7 @@ MonoBehaviour:
       - 22
     - statType: 2
       values:
-      - 3.2
+      - 4.2
   - level: 4
     slimeStats:
     - statType: 0
@@ -75,7 +75,7 @@ MonoBehaviour:
       - 22
     - statType: 2
       values:
-      - 3.2
+      - 4.2
   - level: 5
     slimeStats:
     - statType: 0
@@ -87,7 +87,7 @@ MonoBehaviour:
       - 24
     - statType: 2
       values:
-      - 3.2
+      - 4.2
   - level: 6
     slimeStats:
     - statType: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
       - 24
     - statType: 2
       values:
-      - 3.2
+      - 4.2
   - level: 7
     slimeStats:
     - statType: 0
@@ -111,7 +111,7 @@ MonoBehaviour:
       - 24
     - statType: 2
       values:
-      - 3.5
+      - 4.5
   - level: 8
     slimeStats:
     - statType: 0
@@ -123,7 +123,7 @@ MonoBehaviour:
       - 24
     - statType: 2
       values:
-      - 3.5
+      - 4.5
   - level: 9
     slimeStats:
     - statType: 0
@@ -135,7 +135,7 @@ MonoBehaviour:
       - 24
     - statType: 2
       values:
-      - 3.5
+      - 4.5
   - level: 10
     slimeStats:
     - statType: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
       - 26
     - statType: 2
       values:
-      - 3.5
+      - 4.5
   - level: 11
     slimeStats:
     - statType: 0
@@ -159,7 +159,7 @@ MonoBehaviour:
       - 26
     - statType: 2
       values:
-      - 3.8
+      - 4.8
   - level: 12
     slimeStats:
     - statType: 0
@@ -171,7 +171,7 @@ MonoBehaviour:
       - 26
     - statType: 2
       values:
-      - 3.8
+      - 4.8
   - level: 13
     slimeStats:
     - statType: 0
@@ -183,7 +183,7 @@ MonoBehaviour:
       - 26
     - statType: 2
       values:
-      - 3.8
+      - 4.8
   - level: 14
     slimeStats:
     - statType: 0
@@ -195,7 +195,7 @@ MonoBehaviour:
       - 28
     - statType: 2
       values:
-      - 3.8
+      - 4.8
   prefab: {fileID: 3171748586308020387, guid: c37af5d36790b4a86a0810f86a1f347b, type: 3}
   unlockConditions: []
   thum: {fileID: 0}

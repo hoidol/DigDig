@@ -20,8 +20,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 8
-      - 8
+      - 5
+      - 5
     - statType: 1
       values:
       - 30
@@ -32,8 +32,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 8
-      - 8
+      - 5
+      - 5
     - statType: 1
       values:
       - 35
@@ -44,8 +44,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 9
-      - 9
+      - 6
+      - 6
     - statType: 1
       values:
       - 35
@@ -56,8 +56,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 9
-      - 9
+      - 6
+      - 6
     - statType: 1
       values:
       - 35
@@ -68,8 +68,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 10
-      - 10
+      - 7
+      - 7
     - statType: 1
       values:
       - 35
@@ -80,8 +80,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 10
-      - 10
+      - 7
+      - 7
     - statType: 1
       values:
       - 40
@@ -92,8 +92,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 11
-      - 11
+      - 8
+      - 8
     - statType: 1
       values:
       - 40
@@ -104,8 +104,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 11
-      - 11
+      - 8
+      - 8
     - statType: 1
       values:
       - 40
@@ -116,8 +116,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 11
-      - 11
+      - 8
+      - 8
     - statType: 1
       values:
       - 40
@@ -128,8 +128,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 12
-      - 12
+      - 9
+      - 9
     - statType: 1
       values:
       - 40
@@ -140,8 +140,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 12
-      - 12
+      - 9
+      - 9
     - statType: 1
       values:
       - 45
@@ -152,8 +152,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 12
-      - 12
+      - 9
+      - 9
     - statType: 1
       values:
       - 45
@@ -164,8 +164,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 13
-      - 13
+      - 10
+      - 10
     - statType: 1
       values:
       - 45
@@ -176,8 +176,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 13
-      - 13
+      - 10
+      - 10
     - statType: 1
       values:
       - 45
@@ -188,8 +188,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 13
-      - 13
+      - 10
+      - 10
     - statType: 1
       values:
       - 50

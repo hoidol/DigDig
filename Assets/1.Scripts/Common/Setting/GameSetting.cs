@@ -13,21 +13,21 @@ public class GameSetting
 
    public const int WAVE_COUNT = 7;
    public const int BOSS_PHASE = 9;
-   public const float BREAK_TIME = 20;
+   public const float BREAK_TIME = 15;
    public const float WAVE_TIME = 60;
 
-   public const float WAVE_INCREASE_TIME = 5;
+   public const float WAVE_INCREASE_TIME = 7.5f;
    public const float MIX_WAVE_TIME = 120;
 
    public const int INIT_ITEM_PRICE = 5;
    public const int INCREASE_ITEM_PRICE = 3;
    public const int INIT_SPAWN_PRICE = 5;
-   public const int INCREASE_SPAWN_PRICE = 5;
+   public const int INCREASE_SPAWN_PRICE = 3;
 
 
 
-   public const int MIN_SLIME_SLOT_COUNT = 6;
-   public const int MAX_SLIME_SLOT_COUNT = 9;
+   // public const int MIN_SLIME_SLOT_COUNT = 6;
+   // public const int MAX_SLIME_SLOT_COUNT = 9;
    public const int LEVEL_TO_GROWUP2 = 2;//0,1,2 되어야됌
 
 

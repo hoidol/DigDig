@@ -13,7 +13,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
 
     // public BulletInventory bulletInventory;
     [SerializeField] public Transform attackPoint;
-    [SerializeField] public Transform dirTr;
+    // [SerializeField] public Transform dirTr;
 
     protected Character player;
     protected CharacterStatManager statMgr;
@@ -21,7 +21,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     Camera mainCamera;
 
     public Transform AttackPoint => attackPoint;
-    public Vector2 LastDir { get; private set; }
+    public Vector2 AttackDir { get; private set; }
 
     // public bool IsReloading { get; private set; }
     // public List<string> loadedBullets = new List<string>();
@@ -36,8 +36,8 @@ public abstract class BaseGun : MonoBehaviour, IGun
         statMgr = player.statMgr;
         cameraShake = player.cameraShake;
         mainCamera = Camera.main;
-        LastDir = Vector2.right;
-        dirTr.up = Vector2.right;
+        AttackDir = Vector2.zero;
+        // dirTr.up = Vector2.right;
 
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame);
     }
@@ -52,14 +52,10 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // 가장 가까운 적 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
     {
-        if (TargetPointer.Instance.targetIcon.activeSelf)
-        {
-            return TargetPointer.Instance.Direction();
-        }
         Transform targetTr = InGameUtil.FindTarget(transform.position, attackFindRange, targetLayerMask);
 
         if (targetTr == null)
-            return LastDir;
+            return Vector2.zero;
 
         return (targetTr.position - transform.position).normalized;
     }
@@ -69,14 +65,14 @@ public abstract class BaseGun : MonoBehaviour, IGun
     {
         if (!GameManager.Instance.isPlaying) return;
 
-        dirTr.up = GetAttackDirection();
+         AttackDir = GetAttackDirection();
 
         // #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         //         if (Input.GetMouseButton(0))
         //             dirTr.up = GetAttackDirection();    
         // #endif
         UpdateAttackInternal();
-        LastDir = dirTr.up;
+        // LastDir = dirTr.up;
     }
 
     float attackTimer;
@@ -113,6 +109,8 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // 실제 발사 처리: preAttack 콜백 → 멀티/확산 Shoot → postAttack 콜백 → 장전 판정
     public void Attack(Vector2 dir) //Player한테서만 불려야함
     {
+        if(dir == Vector2.zero )
+            return;
         // if (IsReloading)
         //     return;
 

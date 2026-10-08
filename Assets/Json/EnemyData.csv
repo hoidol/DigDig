@@ -1,3 +1,4 @@
-grade	type	attackSpeed	attackRange	moveRange	exp	hpMultiplier	attackPowerMultiplier	size	breakTileWhenSpawn
-Normal	Melee	6	1.5	2	1	1	2	1	FALSE
-Normal	Ranged	6	7	8	1	0.6	3	1	FALSE
+type	attackSpeed	attackRange	exp	hpMultiplier	attackPowerMultiplier	gold	moveSpeed
+Melee	3	0.5	2	1	1	1	0.6
+Ranged	3	7	3	0.6	1	1	0.5
+Elite	5	4	3	0.6	1	10	0.3

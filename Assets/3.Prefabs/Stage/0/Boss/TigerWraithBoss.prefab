@@ -31,7 +31,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8086883967972702164}
-  - {fileID: 4222393833191016817}
   - {fileID: 8221461866949733350}
   m_Father: {fileID: 8020923503905720973}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -160,7 +159,7 @@ GameObject:
   - component: {fileID: 4551231650818570712}
   - component: {fileID: 7837982868996976849}
   - component: {fileID: 2323350187061452681}
-  - component: {fileID: 4804037249634351094}
+  - component: {fileID: 849048190450283185}
   m_Layer: 3
   m_Name: TigerWraithBoss
   m_TagString: Enemy
@@ -241,14 +240,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ef2c155293ec43039d15ac0048b42be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 3
+  enemyType: 4
   enemyData: {fileID: 11400000, guid: 66ab2fdb56864443f9c52971c7a1b7c7, type: 2}
   <statusEffectHandler>k__BackingField: {fileID: 7837982868996976849}
   maxHp: 0
   curHp: 0
   root: {fileID: 1870489733264396304}
   hpPoint: {fileID: 5222797862798271139}
+  followingPlayer: 0
   apearTime: 2
+  damageData:
+    damage: 0
   hpText: {fileID: 8255142255019599821}
   face: 0
   isPushing: 0
@@ -260,8 +262,8 @@ MonoBehaviour:
   curBossPhase: {fileID: 0}
   waitingTime: 5
   bossBehaviours: []
---- !u!60 &4804037249634351094
-PolygonCollider2D:
+--- !u!61 &849048190450283185
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -290,7 +292,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -304,17 +306,8 @@ PolygonCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 2.2663512, y: 3.011664}
-      - {x: -2.2361019, y: 3.0158143}
-      - {x: -3.0050287, y: 2.2649415}
-      - {x: -3.0074978, y: -2.24444}
-      - {x: -2.2283773, y: -2.9963279}
-      - {x: 2.2435424, y: -3.019831}
-      - {x: 3.022211, y: -2.25432}
-      - {x: 3.0157177, y: 2.275361}
-  m_UseDelaunayMesh: 0
+  m_Size: {x: 5.54, y: 5.58}
+  m_EdgeRadius: 0
 --- !u!1 &1413315130613231115
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,59 +493,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8020923503905720973}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4540557478806741531
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4222393833191016817}
-  - component: {fileID: 6117998399137700764}
-  m_Layer: 3
-  m_Name: BulletSprayPattern
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4222393833191016817
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4540557478806741531}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 732851966755846640}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6117998399137700764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4540557478806741531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac8603f87c959420e8f5a789b792f94d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: 
-  duration: 0
-  readyTime: 0
-  readyAnimName: 
-  count: 8
-  spreadAngle: 25
-  minSpeedMult: 0.8
-  maxSpeedMult: 1.3
-  burstInterval: 0.05
 --- !u!1 &4592203388605077359
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,7 +502,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2541735745735539187}
-  - component: {fileID: 4966532515008856351}
   m_Layer: 3
   m_Name: BulletSprayPattern
   m_TagString: Untagged
@@ -585,27 +524,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2550630691975084992}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4966532515008856351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4592203388605077359}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac8603f87c959420e8f5a789b792f94d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: 
-  duration: 0
-  readyTime: 0
-  readyAnimName: 
-  count: 8
-  spreadAngle: 25
-  minSpeedMult: 0.8
-  maxSpeedMult: 1.3
-  burstInterval: 0.05
 --- !u!1 &4704924878906554437
 GameObject:
   m_ObjectHideFlags: 0
@@ -615,7 +533,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 982760078226095397}
-  - component: {fileID: 8286564160381522112}
   m_Layer: 3
   m_Name: BulletSpray
   m_TagString: Untagged
@@ -638,27 +555,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5247452359034000925}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8286564160381522112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4704924878906554437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac8603f87c959420e8f5a789b792f94d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  key: BulletSpray
-  duration: 6
-  readyTime: 0.2
-  readyAnimName: hit_right hand
-  count: 7
-  spreadAngle: 25
-  minSpeedMult: 0.8
-  maxSpeedMult: 1.3
-  burstInterval: 0.4
 --- !u!1 &5579290242725113621
 GameObject:
   m_ObjectHideFlags: 0

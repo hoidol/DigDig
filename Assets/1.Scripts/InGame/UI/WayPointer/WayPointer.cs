@@ -11,7 +11,7 @@ public class WayPointer : MonoBehaviour
     public IWayPointerTarget wayPointerTarget;
     public Transform directionTr;
     public Image thumImage;
-    public Image timerImage;
+    // public Image timerImage;
     public TMP_Text distanceText;
 
     bool isPlayingEffect;
@@ -76,7 +76,7 @@ public class WayPointer : MonoBehaviour
     {
         if (wayPointerTarget == null) return;
 
-        timerImage.fillAmount = wayPointerTarget.CurTimer / wayPointerTarget.MaxTime;
+        // timerImage.fillAmount = wayPointerTarget.CurTimer / wayPointerTarget.MaxTime;
         thumImage.sprite = wayPointerTarget.GetThum();
         float distance = Vector2.Distance(Vector2.zero, wayPointerTarget.Transform.position);
         distanceText.text = $"{distance:F1}M";

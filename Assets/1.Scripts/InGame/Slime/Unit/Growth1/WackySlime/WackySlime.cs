@@ -1,15 +1,19 @@
 using UnityEngine;
 
-//엉뚱한 슬라임 
+//데미지 범위가 넓게 
+// 10 - 3 ~ 15
+// 20 - 5 ~ 30
+// 30 - 10 ~ 50
 public class WackySlime : SlimeGrowth1
 {
+    public override float AttackPower => slimeData.GetSlimeStat(  SlimeStatType.AttackPower,userSlime.enhanceLevel).GetValue<float>(mergeLevel);
     public WackySlimeData wackySlimeData;
-    float fireTimer;
+    // float fireTimer;
     AllyBulletSpec allyBulletSpec;
-    public float wackyFireSpeed;
+    // public float wackyFireSpeed;
     
     public int skillBulletCount;
-    public float skillCoolTime;
+    // public float skillCoolTime;
     public override void Spawn(Vector2 pos, int lv)
     {
         wackySlimeData = SlimeManager.Instance.GetSlimeData(key) as WackySlimeData;
@@ -18,36 +22,39 @@ public class WackySlime : SlimeGrowth1
 
     public override void InitSlime()
     {
-        skillCoolTime = float.Parse(wackySlimeData.GetUniqueStat(SlimeStatType.SkillCooltime).values[mergeLevel]) ;
+        // skillCoolTime = float.Parse(wackySlimeData.GetUniqueStat(SlimeStatType.SkillCooltime).values[mergeLevel]) ;
         allyBulletSpec = new AllyBulletSpec();
-        fireTimer = 0;
-        wackyFireSpeed = 1;
+        // fireTimer = 0;
+        // wackyFireSpeed = 1;
 
         base.InitSlime();
     }
 
-    public override void Update()
-    {
-        base.Update();
-        if (fireTimer >= skillCoolTime)
-        {
-            Fire();
-            fireTimer = 0;
-        }
-        fireTimer += Time.deltaTime * wackyFireSpeed;
-    }
+    // public override void Update()
+    // {
+    //     base.Update();
+    //     // if (fireTimer >= skillCoolTime)
+    //     // {
+    //     //     Fire();
+    //     //     fireTimer = 0;
+    //     // }
+    //     // fireTimer += Time.deltaTime * wackyFireSpeed;
+    // }
 
-    void Fire()
-    {
-        for (int i = 0; i < mergeLevel + 1; i++)
-        {
-            Vector2 randomDir = Random.insideUnitCircle.normalized;
-            Fire(randomDir);
-        }   
-    }
+    // void Fire()
+    // {
+    //     for (int i = 0; i < mergeLevel + 1; i++)
+    //     {
+    //         Vector2 randomDir = Random.insideUnitCircle.normalized;
+    //         Fire(randomDir);
+    //     }   
+    // }
 
     public override void Fire(Vector2 dir)
     { 
+        if (dir == Vector2.zero)
+            return;
+
         if(skillCounter >= 6)
         {
             ExecuteSkill();
@@ -63,7 +70,7 @@ public class WackySlime : SlimeGrowth1
     }
     public void ExecuteSkill()
     {
-        float baseAngle = Vector2.SignedAngle(Vector2.right, AttackDirecton());
+        float baseAngle = Random.Range(0f, 360f);
         float angleStep = 360f / skillBulletCount;
         for (int i = 0; i < skillBulletCount; i++)
         {

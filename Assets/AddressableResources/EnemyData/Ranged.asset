@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: Ranged
   m_EditorClassIdentifier: 
   type: 1
-  attackSpeed: 6
+  attackSpeed: 3
   attackRange: 7
-  moveRange: 8
-  exp: 1
-  size: {x: 1, y: 1}
-  breakTileWhenSpawn: 0
-  hpMultiplier: 0.7
-  attackPowerMultiplier: 0.5
+  exp: 3
+  hpMultiplier: 0.6
+  attackPowerMultiplier: 1
+  gold: 1
+  moveSpeed: 0.5

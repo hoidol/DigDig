@@ -10,7 +10,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     public CharacterName characterName;
     public Rigidbody2D rg;
-    public Joystick moveJoystick;
+    // public Joystick moveJoystick;
     // public Joystick attackJoystick;
     public CharacterStatManager statMgr;
     public Animator animator;
@@ -20,12 +20,12 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public float coinChance = 0.5f;
 
 
-    // public int exp;
-    // public int lv;
+    public int exp;
+    public int lv;
 
-    // bool levelUped;
-    // [SerializeField] int maxExp;
-    // public int bounce;
+    bool levelUped;
+    [SerializeField] int maxExp;
+    
     [SerializeField] Transform hpPoint;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
     public SlimeInventory slimeInventory;
@@ -67,7 +67,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     private void Awake()
     {
-        moveJoystick = GameObject.Find("MoveJoystick").GetComponent<Joystick>();
+        // moveJoystick = GameObject.Find("MoveJoystick").GetComponent<Joystick>();
         // attackJoystick = GameObject.Find("AttackJoystick").GetComponent<Joystick>();
 
         rg = GetComponentInChildren<Rigidbody2D>();
@@ -123,6 +123,11 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         // movement.Move();
         weapon.UpdateWeapon();
 
+        if(weapon.AttackDir != Vector2.zero)
+        {
+            bodyRootTr.localScale = new Vector3(weapon.AttackDir.x >= 0 ? 1 : -1, 1, 1);
+        }
+
 #if UNITY_EDITOR
         // if (Input.GetKeyDown(KeyCode.L)) AddExp(10);
         if (Input.GetKeyDown(KeyCode.Minus))
@@ -160,40 +165,40 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         UpdateCharacter();
     }
 
-    // public void AddExp(int e)
-    // {
-    //     this.exp += e;
-    //     if (exp >= GetMaxExp())
-    //     {
-    //         LevelUp();
-    //         Time.timeScale = 0;
-    //         LevelUpCanvas.Instance.OpenCanvas(() =>
-    //         {
-    //             Time.timeScale = 1;
-    //             AddExp(0);
-    //         });
-    //     }
-    //     GameEventBus.Publish(new ExpChangedEvent(exp, GetMaxExp()));
-    // }
+    public void AddExp(int e)
+    {
+        this.exp += e;
+        if (exp >= GetMaxExp())
+        {
+            LevelUp();
+            Time.timeScale = 0;
+            InGame.LevelUpCanvas.Instance.OpenCanvas(() =>
+            {
+                Time.timeScale = 1;
+                AddExp(0);
+            });
+        }
+        GameEventBus.Publish(new ExpChangedEvent(exp, GetMaxExp()));
+    }
 
-    // void LevelUp()
-    // {
-    //     int remain = exp - GetMaxExp();
-    //     exp = remain;
-    //     lv++;
-    //     levelUped = true;
-    // }
+    void LevelUp()
+    {
+        int remain = exp - GetMaxExp();
+        exp = remain;
+        lv++;
+        levelUped = true;
+    }
 
-    // public int GetMaxExp(int l = -1)
-    // {
-    //     if (l == -1) l = lv;
-    //     if (maxExp == 0 || levelUped)
-    //     {
-    //         maxExp = 5 + l * 3;
-    //         levelUped = false;
-    //     }
-    //     return maxExp;
-    // }
+    public int GetMaxExp(int l = -1)
+    {
+        if (l == -1) l = lv;
+        if (maxExp == 0 || levelUped)
+        {
+            maxExp = 3 + l * 2;
+            levelUped = false;
+        }
+        return maxExp;
+    }
 
 
 
@@ -252,7 +257,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public void AddCoin(int count)
     {
         coin += count;
-        GameEventBus.Publish<CoinEvent>(new CoinEvent(coin));
+        GameEventBus.Publish(new CoinEvent(coin));
     }
 
     public void TakeDamage(DamageData d) => health.TakeDamage(d);

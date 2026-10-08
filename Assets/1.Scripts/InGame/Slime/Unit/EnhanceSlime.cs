@@ -37,6 +37,8 @@ public abstract class EnhanceSlime : Slime
 
     public override void Fire(Vector2 dir)
     {
+        if (dir == Vector2.zero)
+            return;
         base.Fire(dir);
         for(int i = 0; i < fireAbilities.Count; i++)
         {

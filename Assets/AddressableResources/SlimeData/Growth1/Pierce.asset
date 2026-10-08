@@ -17,221 +17,217 @@ MonoBehaviour:
     \uBC1C\uC0AC (\uB79C\uB364 \uBC29\uD5A5) +3 > +5 > +7"
   growth: 1
   commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+    - statType: 1
+      values:
+      - 30
+    - statType: 2
+      values:
+      - 5
+      - 0.2
   - level: 1
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 10
+      - 10
     - statType: 1
       values:
-      - 0
-      - 0
+      - 35
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5
+      - 0.2
   - level: 2
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 11
+      - 11
     - statType: 1
       values:
-      - 0
-      - 0
+      - 35
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5
+      - 0.2
   - level: 3
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 11
+      - 11
     - statType: 1
       values:
-      - 0
-      - 0
+      - 35
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.2
+      - 0.2
   - level: 4
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 12
+      - 12
     - statType: 1
       values:
-      - 0
-      - 0
+      - 35
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.2
+      - 0.2
   - level: 5
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 12
+      - 12
     - statType: 1
       values:
-      - 0
-      - 0
+      - 40
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.2
+      - 0.2
   - level: 6
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 13
+      - 13
     - statType: 1
       values:
-      - 0
-      - 0
+      - 40
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.2
+      - 0.2
   - level: 7
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 13
+      - 13
     - statType: 1
       values:
-      - 0
-      - 0
+      - 40
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.5
+      - 0.2
   - level: 8
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 13
+      - 13
     - statType: 1
       values:
-      - 0
-      - 0
+      - 40
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.5
+      - 0.2
   - level: 9
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 14
+      - 14
     - statType: 1
       values:
-      - 0
-      - 0
+      - 40
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.5
+      - 0.2
   - level: 10
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 14
+      - 14
     - statType: 1
       values:
-      - 0
-      - 0
+      - 45
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.5
+      - 0.2
   - level: 11
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 14
+      - 14
     - statType: 1
       values:
-      - 0
-      - 0
+      - 45
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.8
+      - 0.2
   - level: 12
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 15
+      - 15
     - statType: 1
       values:
-      - 0
-      - 0
+      - 45
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.8
+      - 0.2
   - level: 13
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 15
+      - 15
     - statType: 1
       values:
-      - 0
-      - 0
+      - 45
     - statType: 2
       values:
-      - 0
-      - 0
+      - 5.8
+      - 0.2
   - level: 14
     slimeStats:
     - statType: 0
       values:
-      - 0
-      - 0
+      - 15
+      - 15
     - statType: 1
       values:
-      - 0
-      - 0
+      - 50
     - statType: 2
       values:
-      - 0
-      - 0
-  - level: 15
-    slimeStats:
-    - statType: 0
-      values:
-      - 0
-      - 0
-    - statType: 1
-      values:
-      - 0
-      - 0
-    - statType: 2
-      values:
-      - 0
-      - 0
+      - 5.8
+      - 0.2
   prefab: {fileID: 5710616033647722441, guid: fa57aaf9051d343018ee74a6557f1e39, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
   grade: 2
   displayStatTypes: 000000000100000002000000
-  enhanceAbilityInfos: []
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 7% \uC99D\uAC00"
+  - level: 5
+    desc: "\uAD00\uD1B5 \uD69F\uC218 +1"
+  - level: 8
+    desc: "[\uAC01\uC131] \uAD00\uD1B5\uD560 \uB54C\uB9C8\uB2E4 \uD53C\uD574\uB7C9\uC774
+      \uB204\uC801 \uC99D\uAC00"
+  - level: 11
+    desc: "\uAD00\uD1B5\uD0C4 \uD06C\uAE30 30% \uC99D\uAC00"
+  - level: 14
+    desc: "\uAD00\uD1B5 \uD69F\uC218 +1"
   uniqueSlimeStats: []
   pierceCount: 020000000400000006000000

@@ -53,17 +53,17 @@ public class CharacterManageCanvas : CanvasUI<CharacterManageCanvas>
     public void UpdateCanvas()
     {
         // SlimeSpawner.Instance.slimeSlotCount
-        for (int i = 0; i < slimeSlotPanels.Length; i++)
-        {
-            if (i < SlimeSpawner.Instance.slimeSlotCount)
-            {
-                slimeSlotPanels[i].gameObject.SetActive(true);
-            }
-            else
-            {
-                slimeSlotPanels[i].gameObject.SetActive(false);
-            }
-        }
+        // for (int i = 0; i < slimeSlotPanels.Length; i++)
+        // {
+        //     if (i < SlimeSpawner.Instance.slimeSlotCount)
+        //     {
+        //         slimeSlotPanels[i].gameObject.SetActive(true);
+        //     }
+        //     else
+        //     {
+        //         slimeSlotPanels[i].gameObject.SetActive(false);
+        //     }
+        // }
 
         for (int i = 0; i < slimeSlotPanels.Length; i++)
         {

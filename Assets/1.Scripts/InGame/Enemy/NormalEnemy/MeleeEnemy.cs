@@ -3,43 +3,41 @@ public class MeleeEnemy : NormalEnemy
 {
     // MeleeAttackIndicator meleeAttackIndicator;
     // public Transform attackPoint;
-    public float realAttackRange = 1.5f;
-    public WarningIndicator warningIndicator;
     public override void Awake()
     {
         base.Awake();
-        // meleeAttackIndicator = GetComponentInChildren<MeleeAttackIndicator>(true);
-    }
-    public override void StartAttack()
-    {
-        base.StartAttack();
-        Vector2 aPoint = transform.position + (Character.Instance.transform.position - transform.position).normalized * realAttackRange;
-        warningIndicator = WarningIndicator.Instantiate(aPoint, realAttackRange);
-        warningIndicator.transform.parent = transform;
-        warningIndicator.Play(1, (indi) =>
-        {
-            Collider2D[] cols = Physics2D.OverlapCircleAll(aPoint, realAttackRange, LayerMask.GetMask("AllyUnit"));
-            for (int i = 0; i < cols.Length; i++)
-            {
-                if (cols[i].TryGetComponent<IHittable>(out var hittable))
-                {
-                    hittable.TakeDamage(damageData);
-                    break;
-                }
-            }
-            EndAttack();
-        });
     }
 
-    public override void CancelAttack()
+
+    public override void Update()
     {
-        base.CancelAttack();
-        EndAttack();
+        if (!GameManager.Instance.isPlaying)
+        {
+            rg2d.linearVelocity = Vector2.zero;
+            return;
+        }
+
+        base.Update();
+
+        if (statusEffectHandler.IsStunned)
+        {
+            if (attacking)
+            {
+                CancelAttack();
+            }
+            return;
+        }
+
+
+        if (state == NormalEnemyState.Moving) UpdateMoving();
+        else if (state == NormalEnemyState.Attack) UpdateAttack();
     }
-    public override void EndAttack()
+
+    public override void UpdateAttack()
     {
-        base.EndAttack();
-        warningIndicator?.Cancel();
-        warningIndicator = null;
+        
+        Character.Instance.TakeDamage(damageData);
+        Destroy();
     }
+
 }

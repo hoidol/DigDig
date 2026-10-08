@@ -5,7 +5,7 @@ public class BounceLevelUpStatData : LevelUpStatData
     int increaseValue = 1;
     public BounceLevelUpStatData()
     {
-        type = LevelUpStatType.Bounce;
+        // type = LevelUpStatType.Bounce;
     }
 
     public override string GetDescription()

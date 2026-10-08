@@ -28,11 +28,6 @@ public class SlimeData : ScriptableObject
         return commonSlimeEnhanceInfos.Where(e => e.level == lv).FirstOrDefault();
     }    
 
-    public virtual SlimeStat GetSlimeStat(SlimeStatType statType, int enhanceLv)
-    {
-        SlimeEnhanceInfo slimeEnhanceInfo =  GetCommonSlimeEnhanceInfo(enhanceLv);
-        return slimeEnhanceInfo.GetSlimeStat(statType);
-    }
 
     // UI에 노출할 스탯 종류와 순서. 에셋별 인스펙터에서 설정한다. (예: Flame은 FlameDuration은 빼고 FlameDPS까지만)
     public SlimeStatType[] displayStatTypes = { SlimeStatType.AttackPower, SlimeStatType.AttackSpeed, SlimeStatType.AttackRange };
@@ -47,6 +42,12 @@ public class SlimeData : ScriptableObject
                 result.Add(stat);
         }
         return result;
+    }
+
+    public virtual SlimeStat GetSlimeStat(SlimeStatType statType, int enhanceLv)
+    {
+        SlimeEnhanceInfo slimeEnhanceInfo =  GetCommonSlimeEnhanceInfo(enhanceLv);
+        return slimeEnhanceInfo.GetSlimeStat(statType);
     }
 
     public bool CheckUnlock()
@@ -74,6 +75,8 @@ public class SlimeData : ScriptableObject
     {
         return SlimeManager.Instance.GetSlimeData(key);
     }
+
+
 
 
 #if UNITY_EDITOR
@@ -261,41 +264,6 @@ public class {className} : Slime
 }
 
 [System.Serializable]
-public class SlimeStat
-{
-    public SlimeStatType statType;
-    public string[] values;
-    public string Title => statType.ToString();
-    public Sprite Thum => null;
-    public string GetValueToString(int mergeLv)
-    {
-        return values[mergeLv].ToString();
-    }
-
-    public T GetValue<T>(int mergeLv)
-    {
-        float result;
-        if (values.Length == 2)
-        {
-            result = float.Parse(values[0]) + float.Parse(values[1]) * mergeLv;
-        }
-        else if (values.Length == 3)
-        {
-            result = float.Parse(values[mergeLv]);
-        }
-        else
-        {
-            result = float.Parse(values[0]);
-        }
-
-        if (typeof(T) == typeof(int))
-            return (T)(object)Mathf.RoundToInt(result);
-
-        return (T)(object)result;
-    }
-}
-
-[System.Serializable]
 public class SlimeEnhanceInfo
 {
     public int level;
@@ -305,6 +273,70 @@ public class SlimeEnhanceInfo
         return slimeStats.Where(e=>e.statType == slimeStatType).FirstOrDefault();
     }
 }
+
+[System.Serializable]
+public class SlimeStat
+{
+    public SlimeStatType statType;
+    public string[] values;
+    public string Title => statType.ToString();
+    public Sprite Thum => null;
+    public string GetValueToString(int mergeLv)
+    {
+        if(values[mergeLv].Contains("~"))
+        {
+            string[] parts = values[mergeLv].Split('~');
+            return parts[0] + "~" + parts[1];
+        }
+        return values[mergeLv].ToString();
+    }
+
+    public T GetValue<T>(int mergeLv)
+    {
+        float result;
+        if (values.Length == 2)
+        {
+            result = GetValue(values[0]) + GetValue(values[1]) * mergeLv;
+        }
+        else if (values.Length == 3)
+        {
+            result = GetValue(values[mergeLv]);
+        }
+        else
+        {
+            result = GetValue(values[0]);
+        }
+
+        if (typeof(T) == typeof(int))
+            return (T)(object)Mathf.RoundToInt(result);
+
+        return (T)(object)result;
+    }
+
+    float GetValue(string valueString)
+    {
+        if (string.IsNullOrEmpty(valueString))
+            return 0;
+
+        if (valueString.Contains("~"))
+        {
+            string[] parts = valueString.Split('~');
+            if (parts.Length == 2)
+            {
+                float minValue = float.Parse(parts[0]);
+                float maxValue = float.Parse(parts[1]);
+                return Random.Range(minValue, maxValue);
+            }
+        }
+        else
+        {
+            return float.Parse(valueString);
+        }
+
+        return 0;
+    }
+}
+
 
 public enum SlimeStatType
 {

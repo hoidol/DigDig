@@ -9,6 +9,7 @@ public class TileManager : MonoSingleton<TileManager>
     void Awake()
     {
         tiles = GetComponentsInChildren<Tile>();
+        tileLayer = LayerMask.GetMask("Tile");
     }
 
     // 배치 가능한(비어있는) 타일 중 랜덤 하나 반환, 없으면 null
@@ -27,21 +28,16 @@ public class TileManager : MonoSingleton<TileManager>
         return emptyTiles[Random.Range(0, emptyTiles.Count)];
     }
 
-    // pos에서 maxDistance 이내의 가장 가까운 타일 반환, 없으면 null
-    public Tile GetNearestTile(Vector2 pos, float maxDistance)
+
+    LayerMask tileLayer ;
+    public Tile GetNearestTile(Vector2 pos)
     {
-        Tile nearest = null;
-        float minDist = maxDistance * maxDistance;
-        foreach (Tile tile in tiles)
+        Collider2D col = Physics2D.OverlapPoint(pos, tileLayer);
+        if (col != null && col.TryGetComponent<Tile>(out Tile t))
         {
-            float dist = ((Vector2)tile.transform.position - pos).sqrMagnitude;
-            if (dist <= minDist)
-            {
-                minDist = dist;
-                nearest = tile;
-            }
+            return t;
         }
-        return nearest;
+        return null;
     }
 
     public Tile GetTile(Slime slime)

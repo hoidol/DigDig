@@ -84,14 +84,26 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     {
         if (howFar < 0)
         {
-            howFar = CameraManager.Instance.mainCamera.orthographicSize + 0.5f;
+             howFar = InGameUtil.GetEndOutLength();
         }
 
         Vector2 pos = (Vector2)Character.Instance.transform.position + UnityEngine.Random.insideUnitCircle.normalized * howFar;
-        float xLimit = CameraManager.Instance.mainCamera.orthographicSize * CameraManager.Instance.mainCamera.aspect;
+        float xLimit = CameraManager.Instance.mainCamera.orthographicSize * CameraManager.Instance.mainCamera.aspect + 0.5f;
         pos.x = Mathf.Clamp(pos.x, -xLimit, xLimit);
         return pos;
     }
 
 
+    public Vector2 GetSpawnTopPosition(float howFar = -1)
+    {
+        if (howFar < 0)
+        {
+            
+            
+            howFar = InGameUtil.GetEndOutLength();
+        }
+
+        Vector2 direction = Quaternion.Euler(0, 0, UnityEngine.Random.Range(60f, 120f)) * Vector2.right;
+        return MapManager.SnappedPosition(Vector2.zero + direction * howFar);
+    }
 }

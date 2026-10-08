@@ -97,19 +97,8 @@ public class GameManager : MonoSingleton<GameManager>
         {
             GameEventBus.Publish(new PhaseStartEvent(phase, stageData.phaseData.enemyPatternData[phase].enemySpawnPatternDatas));
         }
-        //낮에 대한 시간 처리
-        // breakTimer = 0;
-        // StartBreak(phase);
-        // float breakTime = GameSetting.BREAK_TIME;
-        // while (breakTimer <= breakTime)
-        // {
-        //     await UniTask.Yield();
-
-        //     if (!isPlaying)
-        //         continue;
-
-        //     breakTimer += Time.deltaTime;
-        // }
+        
+        
 
         //밤에 대한 시간 처리
         StartWave(phase);
@@ -133,6 +122,19 @@ public class GameManager : MonoSingleton<GameManager>
         }
 
         EndWave();
+        breakTimer = 0;
+        StartBreak(phase);
+        float breakTime = GameSetting.BREAK_TIME;
+        while (breakTimer <= breakTime)
+        {
+            await UniTask.Yield();
+
+            if (!isPlaying)
+                continue;
+
+            breakTimer += Time.deltaTime;
+        }
+
     }
 
     public void EndWave()

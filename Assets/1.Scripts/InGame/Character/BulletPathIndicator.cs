@@ -14,29 +14,29 @@ public class BulletPathIndicator : MonoBehaviour
 
         float length = pathLength;
         Vector2 point = Character.Instance.weapon.attackPoint.position;
-        Vector2 direction = Character.Instance.weapon.dirTr.up;
-        paths.Add(point);
-        while (length > 0)
-        {
-            RaycastHit2D hit = Physics2D.Raycast(point, direction, length, layerMask);
-            if (hit)
-            {
-                float distance = Vector2.Distance(point, hit.point);
-                Debug.Log($"부딪힘 {hit.collider.gameObject.name}");
-                if (distance < 0.001f) break;
+        // Vector2 direction = Character.Instance.weapon.dirTr.up;
+        // paths.Add(point);
+        // while (length > 0)
+        // {
+        //     RaycastHit2D hit = Physics2D.Raycast(point, direction, length, layerMask);
+        //     if (hit)
+        //     {
+        //         float distance = Vector2.Distance(point, hit.point);
+        //         Debug.Log($"부딪힘 {hit.collider.gameObject.name}");
+        //         if (distance < 0.001f) break;
 
-                paths.Add(hit.point);
-                length -= distance;
-                direction = Vector2.Reflect(direction, hit.normal);
-                point = hit.point + hit.normal * 0.05f;
+        //         paths.Add(hit.point);
+        //         length -= distance;
+        //         direction = Vector2.Reflect(direction, hit.normal);
+        //         point = hit.point + hit.normal * 0.05f;
 
-            }
-            else
-            {
-                paths.Add(point + direction * length);
-                length = 0;
-            }
-        }
+        //     }
+        //     else
+        //     {
+        //         paths.Add(point + direction * length);
+        //         length = 0;
+        //     }
+        // }
 
         lineRenderer.positionCount = paths.Count;
         for (int i = 0; i < paths.Count; i++)
