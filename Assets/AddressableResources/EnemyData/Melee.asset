@@ -19,4 +19,4 @@ MonoBehaviour:
   hpMultiplier: 1
   attackPowerMultiplier: 1
   gold: 1
-  moveSpeed: 0.6
+  moveSpeed: 0.5

@@ -83,71 +83,71 @@ public static class InGameUtil
                 return cols[Random.Range(0, cols.Count)].transform;
 
             case FindTargetType.Farthest:
-            {
-                Collider2D farthest = null;
-                float farthestSqrDist = float.MinValue;
-                for (int i = 0; i < cols.Count; i++)
                 {
-                    float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
-                    if (sqrDist > farthestSqrDist)
+                    Collider2D farthest = null;
+                    float farthestSqrDist = float.MinValue;
+                    for (int i = 0; i < cols.Count; i++)
                     {
-                        farthest = cols[i];
-                        farthestSqrDist = sqrDist;
+                        float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
+                        if (sqrDist > farthestSqrDist)
+                        {
+                            farthest = cols[i];
+                            farthestSqrDist = sqrDist;
+                        }
                     }
+                    return farthest.transform;
                 }
-                return farthest.transform;
-            }
 
             case FindTargetType.LowHp:
-            {
-                //체력이 같으면 가까운 적 우선
-                Collider2D lowest = null;
-                float lowestHp = float.MaxValue;
-                float lowestSqrDist = float.MaxValue;
-                for (int i = 0; i < cols.Count; i++)
                 {
-                    if (!cols[i].TryGetComponent(out IHittable h))
-                        continue;
-
-                    float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
-                    if (h.CurHp < lowestHp || (h.CurHp == lowestHp && sqrDist < lowestSqrDist))
+                    //체력이 같으면 가까운 적 우선
+                    Collider2D lowest = null;
+                    float lowestHp = float.MaxValue;
+                    float lowestSqrDist = float.MaxValue;
+                    for (int i = 0; i < cols.Count; i++)
                     {
-                        lowest = cols[i];
-                        lowestHp = h.CurHp;
-                        lowestSqrDist = sqrDist;
+                        if (!cols[i].TryGetComponent(out IHittable h))
+                            continue;
+
+                        float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
+                        if (h.CurHp < lowestHp || (h.CurHp == lowestHp && sqrDist < lowestSqrDist))
+                        {
+                            lowest = cols[i];
+                            lowestHp = h.CurHp;
+                            lowestSqrDist = sqrDist;
+                        }
                     }
+                    //체력 정보가 없으면 가까운 적
+                    return lowest != null ? lowest.transform : SelectTarget(cols, pos, FindTargetType.Closest);
                 }
-                //체력 정보가 없으면 가까운 적
-                return lowest != null ? lowest.transform : SelectTarget(cols, pos, FindTargetType.Closest);
-            }
 
             case FindTargetType.Closest:
             default:
-            {
-                Collider2D nearest = null;
-                float nearestSqrDist = float.MaxValue;
-                for (int i = 0; i < cols.Count; i++)
                 {
-                    float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
-                    if (sqrDist < nearestSqrDist)
+                    Collider2D nearest = null;
+                    float nearestSqrDist = float.MaxValue;
+                    for (int i = 0; i < cols.Count; i++)
                     {
-                        nearest = cols[i];
-                        nearestSqrDist = sqrDist;
+                        float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
+                        if (sqrDist < nearestSqrDist)
+                        {
+                            nearest = cols[i];
+                            nearestSqrDist = sqrDist;
+                        }
                     }
+                    return nearest.transform;
                 }
-                return nearest.transform;
-            }
         }
     }
     static float endOutLength = 0;
     public static float GetEndOutLength() // 화면 중심에서 모서리까지의 대각선 길이
     {
-        if (endOutLength<=0)
+        if (endOutLength <= 0)
         {
             Camera cam = CameraManager.Instance.mainCamera;
-            endOutLength = new Vector2(cam.orthographicSize, cam.orthographicSize * cam.aspect).magnitude + 0.5f;  
+            endOutLength = new Vector2(cam.orthographicSize, cam.orthographicSize * cam.aspect).magnitude + 0.5f;
         }
-        
+
         return endOutLength;
     }
 }
@@ -157,5 +157,7 @@ public enum FindTargetType
     Farthest, //먼
     Random, //랜덤 
     LowHp,
+    //높은 체력
+
     Count
 }

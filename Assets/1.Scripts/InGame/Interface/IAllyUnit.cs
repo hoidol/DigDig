@@ -2,9 +2,18 @@ using UnityEngine;
 
 public interface IAllyUnit
 {
-    float AccumulatedDamage{get;set;}
+    float AccumulatedDamage { get; set; }
     void AccumulateDamage(float d);
-    
+
+    public void SetFindTargetType(FindTargetType type);
+    public FindTargetType FindTargetType
+    {
+        get;
+    }
+
+    public void StartTarget();
+
+    public void EndTarget();
     Transform Transform
     {
         get;

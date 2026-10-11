@@ -45,67 +45,67 @@ MonoBehaviour:
     enemyPatternData:
     - enemySpawnPatternDatas:
       - enemyType: 0
-        spawnCountRange: {x: 1, y: 3}
-        intervalRange: {x: 2, y: 3}
+        spawnCountRange: {x: 1, y: 2}
+        intervalRange: {x: 3, y: 5}
       - enemyType: 1
         spawnCountRange: {x: 0, y: 0}
         intervalRange: {x: 10, y: 11}
     - enemySpawnPatternDatas:
       - enemyType: 0
-        spawnCountRange: {x: 2, y: 2}
-        intervalRange: {x: 2, y: 3}
-      - enemyType: 1
-        spawnCountRange: {x: 1, y: 1}
-        intervalRange: {x: 9, y: 10}
-    - enemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCountRange: {x: 2, y: 2}
-        intervalRange: {x: 2, y: 3}
-      - enemyType: 1
-        spawnCountRange: {x: 1, y: 1}
-        intervalRange: {x: 7, y: 8}
-    - enemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCountRange: {x: 2, y: 3}
-        intervalRange: {x: 2, y: 3}
-      - enemyType: 1
         spawnCountRange: {x: 1, y: 2}
-        intervalRange: {x: 3, y: 4}
+        intervalRange: {x: 3, y: 5}
+      - enemyType: 1
+        spawnCountRange: {x: 0, y: 1}
+        intervalRange: {x: 10, y: 11}
     - enemySpawnPatternDatas:
       - enemyType: 0
-        spawnCountRange: {x: 2, y: 2}
-        intervalRange: {x: 2, y: 3}
-      - enemyType: 1
-        spawnCountRange: {x: 1, y: 1}
-        intervalRange: {x: 3, y: 4}
-    - enemySpawnPatternDatas:
-      - enemyType: 0
-        spawnCountRange: {x: 2, y: 3}
-        intervalRange: {x: 2, y: 3}
-      - enemyType: 1
         spawnCountRange: {x: 1, y: 2}
-        intervalRange: {x: 3, y: 4}
+        intervalRange: {x: 3, y: 5}
+      - enemyType: 1
+        spawnCountRange: {x: 0, y: 1}
+        intervalRange: {x: 10, y: 11}
     - enemySpawnPatternDatas:
       - enemyType: 0
-        spawnCountRange: {x: 2, y: 3}
-        intervalRange: {x: 2, y: 3}
-      - enemyType: 1
         spawnCountRange: {x: 1, y: 2}
-        intervalRange: {x: 3, y: 4}
+        intervalRange: {x: 3, y: 5}
+      - enemyType: 1
+        spawnCountRange: {x: 0, y: 1}
+        intervalRange: {x: 10, y: 11}
     - enemySpawnPatternDatas:
       - enemyType: 0
-        spawnCountRange: {x: 2, y: 3}
-        intervalRange: {x: 2, y: 3}
-      - enemyType: 1
         spawnCountRange: {x: 1, y: 2}
-        intervalRange: {x: 3, y: 4}
+        intervalRange: {x: 3, y: 5}
+      - enemyType: 1
+        spawnCountRange: {x: 0, y: 1}
+        intervalRange: {x: 10, y: 11}
     - enemySpawnPatternDatas:
       - enemyType: 0
-        spawnCountRange: {x: 2, y: 3}
-        intervalRange: {x: 2, y: 3}
-      - enemyType: 1
         spawnCountRange: {x: 1, y: 2}
-        intervalRange: {x: 3, y: 4}
+        intervalRange: {x: 3, y: 5}
+      - enemyType: 1
+        spawnCountRange: {x: 0, y: 1}
+        intervalRange: {x: 10, y: 11}
+    - enemySpawnPatternDatas:
+      - enemyType: 0
+        spawnCountRange: {x: 1, y: 2}
+        intervalRange: {x: 3, y: 5}
+      - enemyType: 1
+        spawnCountRange: {x: 0, y: 1}
+        intervalRange: {x: 10, y: 11}
+    - enemySpawnPatternDatas:
+      - enemyType: 0
+        spawnCountRange: {x: 1, y: 2}
+        intervalRange: {x: 3, y: 5}
+      - enemyType: 1
+        spawnCountRange: {x: 0, y: 1}
+        intervalRange: {x: 10, y: 11}
+    - enemySpawnPatternDatas:
+      - enemyType: 0
+        spawnCountRange: {x: 1, y: 2}
+        intervalRange: {x: 3, y: 5}
+      - enemyType: 1
+        spawnCountRange: {x: 0, y: 1}
+        intervalRange: {x: 10, y: 11}
   eventDatas:
   - eventTypes: 
     triggers: 00000000

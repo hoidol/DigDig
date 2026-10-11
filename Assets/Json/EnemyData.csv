@@ -1,4 +1,5 @@
 type	attackSpeed	attackRange	exp	hpMultiplier	attackPowerMultiplier	gold	moveSpeed
-Melee	3	0.5	2	1	1	1	0.6
-Ranged	3	7	3	0.6	1	1	0.5
-Elite	5	4	3	0.6	1	10	0.3
+Melee	3	0.5	2	1	1	1	0.5
+Ranged	6	7	3	0.6	1	1	0.4
+Elite	10	4	3	15	1	10	0.2
+BonusElite	10	4	3	11	1	10	0.2

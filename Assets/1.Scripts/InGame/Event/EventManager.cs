@@ -71,8 +71,8 @@ public class EventManager : MonoSingleton<EventManager>
         // eventRepeatSpawners.Add(itemBoxSpawner);
 
 
-        EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemShop, 3, 4, 10);
-        eventRepeatSpawners.Add(itemBoxSpawner);
+        // EventRepeatSpawner itemBoxSpawner = new EventRepeatSpawner(EventType.ItemShop, 25, 30, 10);
+        // eventRepeatSpawners.Add(itemBoxSpawner);
     }
 
     private EventType? ResolveEventType(EventData data)
@@ -136,15 +136,15 @@ public class EventManager : MonoSingleton<EventManager>
             Spawn(EventType.ItemBox);
         }
 
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             Vector2 mousePos = CameraManager.Instance.mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            Collider2D[] hitColliders = Physics2D.OverlapPointAll(mousePos,  LayerMask.GetMask("Event"));
-            if(hitColliders.Length > 0)
+            Collider2D[] hitColliders = Physics2D.OverlapPointAll(mousePos, LayerMask.GetMask("Event"));
+            if (hitColliders.Length > 0)
             {
                 hitColliders[0].GetComponent<EventObject>()?.StartEvent();
             }
-            
+
         }
     }
 
@@ -212,7 +212,7 @@ public class EventManager : MonoSingleton<EventManager>
 
     public Vector2 CalcSpawnPosition()
     {
-        float farDistance = (MapManager.MIN_RANGE_RADIUS + 2) ;//+ spawnCount * 2.3f;
+        float farDistance = (MapManager.MIN_RANGE_RADIUS + 2);//+ spawnCount * 2.3f;
         Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Character.Instance.distanceMaxDistanceDestroiedStone} farDistance {farDistance}");
         //Vector2.right 를 0도 기준으로 60~120도 사이 랜덤 각도로 회전시킨 방향으로 farDistance만큼 떨어진 위치를 반환
         Vector2 direction = Quaternion.Euler(0, 0, Random.Range(60f, 120f)) * Vector2.right;

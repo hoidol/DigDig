@@ -31,7 +31,7 @@ public class WaveTimerPanel : MonoBehaviour
     void OnBreakStartEvent(BreakStartEvent e)
     {
         waveObject.SetActive(false);
-        waveText.text = $"다음 웨이브까지 {GetTime(GameManager.Instance.breakTimer, GameSetting.BREAK_TIME)}초";
+        waveText.text = GetBreakText();
     }
     void OnWavetStartEvent(WaveStartEvent e)
     {
@@ -53,7 +53,7 @@ public class WaveTimerPanel : MonoBehaviour
 
         if (GameManager.Instance.isBreak)
         {
-            waveText.text = $"다음 웨이브까지 {GetTime(GameManager.Instance.breakTimer, GameSetting.BREAK_TIME)}초";
+            waveText.text = GetBreakText();
         }
         else
         {
@@ -61,6 +61,12 @@ public class WaveTimerPanel : MonoBehaviour
         }
 
     }
+    string GetBreakText()
+    {
+        float remainingTime = Mathf.Max(0, GameSetting.BREAK_TIME - GameManager.Instance.breakTimer);
+        return $"다음 웨이브까지 {Mathf.CeilToInt(remainingTime)}초";
+    }
+
     public string GetTime(float timer, float time)
     {
         float remainingTime = time - timer;

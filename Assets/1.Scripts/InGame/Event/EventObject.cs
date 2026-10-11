@@ -23,16 +23,16 @@ public abstract class EventObject : MonoBehaviour
     public virtual void Appear(Vector2 spawnPos)
     {
         curTimer = maxTime;
-
         interacting = false;
-        
+
     }
 
     public virtual void Update()
     {
         if (interacting)
             return;
-        if(curTimer <= 0)
+
+        if (curTimer <= 0)
         {
             Destroy();
         }
@@ -45,29 +45,12 @@ public abstract class EventObject : MonoBehaviour
 
     public abstract void StartEvent();
 
-
-
     public virtual void Destroy()
     {
         EventManager.Instance?.RemoveEventObject(this);
         Destroy(gameObject);
 
-        ReleaseTile();
-    }
-
-    public void ReleaseTile()
-    {
-
     }
 
 
-    public bool CanHit()
-    {
-        return true;
-    }
-
-    public void ApplyStatusEffect(StatusEffect effect)
-    {
-
-    }
 }

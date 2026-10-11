@@ -4,26 +4,30 @@ public class ItemShop : EventObject
 {
     void Start()
     {
-        
+
         GameEventBus.Subscribe<PurchaseItemEvent>(OnPurchaseItemEvent);
     }
     int purchaseCount;
     public override void Appear(Vector2 spawnPos)
-    {purchaseCount = 0;
+    {
+        purchaseCount = 0;
         base.Appear(spawnPos);
+        ItemShopCanvas.Instance.Init();
+        ItemShopCanvas.Instance.ResetItemShopProduct();
     }
+
     public override void StartEvent()
     {
         interacting = true;
         Time.timeScale = 0;
         ItemShopCanvas.Instance.OpenCanvas(() =>
         {
-            if(purchaseCount == 3)
+            if (purchaseCount == 3)
             {
-                Destroy();    
+                Destroy();
             }
             Time.timeScale = 1;
-            
+            interacting = false;
         });
 
         // ItemShopManager.Instance.OpenCanvas(this);
@@ -33,7 +37,7 @@ public class ItemShop : EventObject
     {
         purchaseCount++;
     }
-    
+
     //  public void OnTriggerEnter2D(Collider2D collision)
     // {
     //     if (collision.CompareTag("Player"))

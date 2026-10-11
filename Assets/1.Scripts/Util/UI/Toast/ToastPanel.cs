@@ -10,15 +10,15 @@ public class ToastPanel : MonoBehaviour
     public void Toast(string message, Action<ToastPanel> onComplete)
     {
         messageText.text = message;
-        if(rectTransform == null)
+        if (rectTransform == null)
             rectTransform = GetComponent<RectTransform>();
 
         rectTransform.DOKill();
-        rectTransform.anchoredPosition = Vector2.zero;
+        rectTransform.anchoredPosition = ToastCanvas.Instance.initRectTr.anchoredPosition;
         rectTransform.DOAnchorPos(rectTransform.anchoredPosition + new Vector2(0, 150), 3f).SetUpdate(true).OnComplete(() =>
         {
             onComplete?.Invoke(this);
         });
-        
+
     }
 }

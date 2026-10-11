@@ -28,6 +28,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     //적 찾는 방식 설정
     public FindTargetType findTargetType = FindTargetType.Closest;
 
+    public FindTargetType FindTargetType => findTargetType;
 
     public void AccumulateDamage(float d)
     {
@@ -61,7 +62,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
         slimeEnhanceInfo = slimeData.GetCommonSlimeEnhanceInfo(userSlime.enhanceLevel);
         transform.position = pos;
         this.mergeLevel = mLv;
-isDraging =false;
+        isDraging = false;
 
         statDic.Clear();
         statDic.Add(StatType.AttackPower, 0);
@@ -80,9 +81,9 @@ isDraging =false;
 
     public virtual void InitSlimeStat()
     {
-        statDic[StatType.AttackPower] = slimeData.GetSlimeStat(  SlimeStatType.AttackPower,userSlime.enhanceLevel).GetValue<float>(mergeLevel);
-        statDic[StatType.AttackSpeed] = slimeData.GetSlimeStat( SlimeStatType.AttackSpeed, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
-        statDic[StatType.AttackRange] = slimeData.GetSlimeStat( SlimeStatType.AttackRange, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackPower] = slimeData.GetSlimeStat(SlimeStatType.AttackPower, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackSpeed] = slimeData.GetSlimeStat(SlimeStatType.AttackSpeed, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackRange] = slimeData.GetSlimeStat(SlimeStatType.AttackRange, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
 
         rangeTr.localScale = Vector3.one * statDic[StatType.AttackRange];
     }
@@ -179,7 +180,7 @@ isDraging =false;
     {
         if (dir == Vector2.zero)
             return;
-            
+
         AllyBulletObject baseBullet = GetBullet();
         if (baseBullet == null)
             return;
@@ -242,9 +243,14 @@ isDraging =false;
     bool isDraging;
     public virtual void StartDrag()
     {
-        isDraging= true;
+        isDraging = true;
+    }
+    public virtual void StartTarget()
+    {
+        isDraging = true;
         rangeTr.gameObject.SetActive(true);
     }
+
     public virtual void EndTarget()
     {
         rangeTr.gameObject.SetActive(false);
@@ -252,7 +258,7 @@ isDraging =false;
 
     public virtual void EndDrag(Tile t)
     {
-        isDraging =false;
+        isDraging = false;
         // rangeTr.gameObject.SetActive(false);
     }
 }

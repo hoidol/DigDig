@@ -317,7 +317,7 @@ GameObject:
   - component: {fileID: 1023638632558965531}
   - component: {fileID: 5600299325344775503}
   - component: {fileID: 4042171150877512397}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: ItemBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -353,9 +353,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventType: 3
-  clearRadius: 0.5
-  thum: {fileID: 21300000, guid: 102d7847086f448d4a4d2dbe29e1f25f, type: 3}
-  maxTime: 300
+  maxTime: 30
+  barImage: {fileID: 4596127668363751240}
   curTimer: 0
   interacting: 0
 --- !u!58 &4042171150877512397

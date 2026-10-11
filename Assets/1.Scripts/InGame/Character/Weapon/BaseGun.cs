@@ -52,20 +52,25 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // 가장 가까운 적 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
     {
-        Transform targetTr = InGameUtil.FindTarget(transform.position, attackFindRange, targetLayerMask);
+        Transform targetTr = FindTarget();
 
         if (targetTr == null)
             return Vector2.zero;
 
         return (targetTr.position - transform.position).normalized;
     }
+    public virtual Transform FindTarget()
+    {
+        return InGameUtil.FindTarget(transform.position, attackFindRange, targetLayerMask, Character.Instance.findTargetType);
+    }
+
 
     // 매 프레임 호출: 조준 방향 갱신 + 자동 발사 판정
     public void UpdateWeapon()
     {
         if (!GameManager.Instance.isPlaying) return;
 
-         AttackDir = GetAttackDirection();
+        AttackDir = GetAttackDirection();
 
         // #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         //         if (Input.GetMouseButton(0))
@@ -109,7 +114,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // 실제 발사 처리: preAttack 콜백 → 멀티/확산 Shoot → postAttack 콜백 → 장전 판정
     public void Attack(Vector2 dir) //Player한테서만 불려야함
     {
-        if(dir == Vector2.zero )
+        if (dir == Vector2.zero)
             return;
         // if (IsReloading)
         //     return;

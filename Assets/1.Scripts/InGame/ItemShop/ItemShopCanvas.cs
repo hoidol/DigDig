@@ -23,8 +23,6 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
-        Init();
-        ResetItemShopProduct();
         UpdateCanvas();
     }
     void OnEnable()

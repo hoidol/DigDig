@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Elite
   m_EditorClassIdentifier: 
   type: 2
-  attackSpeed: 5
+  attackSpeed: 10
   attackRange: 4
   exp: 3
-  hpMultiplier: 0.6
+  hpMultiplier: 15
   attackPowerMultiplier: 1
   gold: 10
-  moveSpeed: 0.3
+  moveSpeed: 0.2

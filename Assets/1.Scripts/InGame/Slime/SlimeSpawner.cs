@@ -43,7 +43,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         ActiveSlimeCount++;
         return slime;
     }
-    
+
     public Slime LevelUp(Slime s)
     {
         string key = s.key;
@@ -71,7 +71,8 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         return await slime1.Merge(slime2);
     }
 
-        public LayerMask slimeLayer;
+    public LayerMask slimeLayer;
+    public LayerMask characterLayer;
     // public float tileSnapDistance = 1f; // 드롭 위치에서 이 거리 이내의 타일로 이동
 
     // public bool IsMerging { get; private set; }
@@ -84,6 +85,8 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
     {
         if (slimeLayer == 0)
             slimeLayer = LayerMask.GetMask("Slime");
+        if (characterLayer == 0)
+            characterLayer = LayerMask.GetMask("Character");
     }
 
     void Update()
@@ -104,13 +107,13 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         {
             EndDrag();
         }
-        
+
     }
 
-    
 
-    [SerializeField] Slime targetSlime;
-    // 클릭한 위치의 슬라임 드래그 시작
+
+    IAllyUnit targetUnit; // 현재 선택된 아군 (슬라임 or 캐릭터)
+    // 클릭한 위치의 슬라임 드래그 시작, 캐릭터는 선택만
     void BeginDrag()
     {
         Vector3 mousePos = GetMouseWorldPos();
@@ -118,21 +121,18 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
         if (slime == null)
         {
-            ReleaseTarget();
+            // 캐릭터는 드래그 없이 선택만
+            if (IsCharacterAt(mousePos))
+                SetTarget(Character.Instance);
+            else
+                ReleaseTarget();
             return;
         }
-        else
-        {
-            if(targetSlime != slime)
-                ReleaseTarget();
 
-        }
-            
-        targetSlime = slime;
-        SlimeSettingPanel.Instance.SetSlime(targetSlime);
-        targetSlime.StartDrag();
-        dragSlime = targetSlime;
-        originPos = targetSlime.transform.position;
+        SetTarget(slime);
+        slime.StartDrag();
+        dragSlime = slime;
+        originPos = slime.transform.position;
         offset = originPos - mousePos;
         offset.z = 0;
     }
@@ -210,21 +210,43 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         Slime merged = Character.Instance.AddSlime(mergeResultKey, lv);
         if (tile != null)
             tile.SetSlime(merged);
-        
-        ReleaseTarget();        
+
+        ReleaseTarget();
         CharacterManageCanvas.Instance.UpdateCanvas();
     }
 
-    void ReleaseTarget()
-    {        
-        Debug.Log("SlimeSpanwer ReleaseTarget(). 11");
-        if(targetSlime == null)
+    bool IsCharacterAt(Vector2 pos)
+    {
+        if (Character.Instance == null)
+            return false;
+
+        foreach (Collider2D col in Physics2D.OverlapPointAll(pos, characterLayer))
+        {
+            if (col.GetComponentInParent<Character>() == Character.Instance)
+                return true;
+        }
+        return false;
+    }
+
+    void SetTarget(IAllyUnit unit)
+    {
+        if (targetUnit == unit)
             return;
 
-        Debug.Log("SlimeSpanwer ReleaseTarget(). 22");
-        targetSlime.EndTarget();
-        targetSlime = null;
-        SlimeSettingPanel.Instance.SetSlime(null); 
+        ReleaseTarget();
+        targetUnit = unit;
+        AllySettingPanel.Instance.SetSlime(targetUnit);
+        targetUnit.StartTarget();
+    }
+
+    void ReleaseTarget()
+    {
+        if (targetUnit == null)
+            return;
+
+        targetUnit.EndTarget();
+        targetUnit = null;
+        AllySettingPanel.Instance.SetSlime(null);
     }
 
 

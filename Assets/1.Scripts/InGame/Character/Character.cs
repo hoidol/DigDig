@@ -19,13 +19,16 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public CameraShake cameraShake;
     public float coinChance = 0.5f;
 
+    public FindTargetType findTargetType = FindTargetType.Closest;
+
+    public FindTargetType FindTargetType => findTargetType;
 
     public int exp;
     public int lv;
 
     bool levelUped;
     [SerializeField] int maxExp;
-    
+
     [SerializeField] Transform hpPoint;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
     public SlimeInventory slimeInventory;
@@ -123,7 +126,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         // movement.Move();
         weapon.UpdateWeapon();
 
-        if(weapon.AttackDir != Vector2.zero)
+        if (weapon.AttackDir != Vector2.zero)
         {
             bodyRootTr.localScale = new Vector3(weapon.AttackDir.x >= 0 ? 1 : -1, 1, 1);
         }
@@ -179,6 +182,10 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
             });
         }
         GameEventBus.Publish(new ExpChangedEvent(exp, GetMaxExp()));
+    }
+    public void SetFindTargetType(FindTargetType type)
+    {
+        findTargetType = type;
     }
 
     void LevelUp()
@@ -291,7 +298,15 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     }
 
-    // public void QueueExtraShot(int count = 1) => weapon.QueueExtraShot(count);
+    public void StartTarget()
+    {
+    }
+
+    public void EndTarget()
+    {
+    }
+
+
 
 }
 

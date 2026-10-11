@@ -19,10 +19,10 @@ public class GameSetting
    public const float WAVE_INCREASE_TIME = 7.5f;
    public const float MIX_WAVE_TIME = 120;
 
-   public const int INIT_ITEM_PRICE = 5;
-   public const int INCREASE_ITEM_PRICE = 3;
-   public const int INIT_SPAWN_PRICE = 5;
-   public const int INCREASE_SPAWN_PRICE = 3;
+   public const int INIT_ITEM_PRICE = 10;
+   public const int INCREASE_ITEM_PRICE = 5;
+   public const int INIT_SPAWN_PRICE = 10;
+   public const int INCREASE_SPAWN_PRICE = 0;
 
 
 

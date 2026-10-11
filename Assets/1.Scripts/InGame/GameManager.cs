@@ -121,7 +121,6 @@ public class GameManager : MonoSingleton<GameManager>
             waveTimer += Time.deltaTime;
         }
 
-        EndWave();
         breakTimer = 0;
         StartBreak(phase);
         float breakTime = GameSetting.BREAK_TIME;
@@ -135,6 +134,15 @@ public class GameManager : MonoSingleton<GameManager>
             breakTimer += Time.deltaTime;
         }
 
+        EndWave();
+    }
+
+    public void SkipBreak()
+    {
+        if (!isBreak)
+            return;
+
+        breakTimer = GameSetting.BREAK_TIME;
     }
 
     public void EndWave()
