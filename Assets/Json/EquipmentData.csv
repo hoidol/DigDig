@@ -1,1 +1,25 @@
-key	equipmentType	equipPartType	grade	statType1	statValue1	statType2	statValue2	statType3	statValue3	statType4	statValue4	statType5	statValue5	statType6	statValue6
+Key	EquipmentType	EquipPartType	Grade	StatType1	StatValue1	StatType2	StatValue2	StatType3	StatValue3	StatType4	StatValue4	StatType5	StatValue5	StatType6	StatValue6
+	R_Hand	R_Hand	D												
+	L_Hand	L_Hand	D												
+	Head	Helmet	D												
+	Accessory	Face	D												
+	R_Hand	R_Hand	B												
+	L_Hand	L_Hand	B												
+	Head	Helmet	B												
+	Accessory	Face	B												
+	R_Hand	R_Hand	A												
+	L_Hand	L_Hand	A												
+	Head	Helmet	A												
+	Accessory	Face	A												
+	R_Hand	R_Hand	S												
+	L_Hand	L_Hand	S												
+	Head	Helmet	S												
+	Accessory	Face	S												
+	R_Hand	R_Hand	SS												
+	L_Hand	L_Hand	SS												
+	Head	Helmet	SS												
+	Accessory	Face	SS												
+	R_Hand	R_Hand	SSS												
+	L_Hand	L_Hand	SSS												
+	Head	Helmet	SSS												
+	Accessory	Face	SSS												

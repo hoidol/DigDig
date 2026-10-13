@@ -16,7 +16,7 @@ MonoBehaviour:
   characterStats:
   - statType: 0
     initValue: 0
-    value: 6
+    value: 8
   - statType: 1
     initValue: 0
     value: 50
@@ -25,17 +25,21 @@ MonoBehaviour:
     value: 0
   - statType: 3
     initValue: 0
-    value: 50
+    value: 1
   - statType: 4
     initValue: 0
-    value: 20
+    value: 0
   - statType: 5
     initValue: 0
-    value: 2
+    value: 5
   - statType: 6
     initValue: 0
     value: 1.5
   - statType: 7
     initValue: 0
     value: 0
+  - statType: 8
+    initValue: 0
+    value: 8
   defaultBullets: 
+  thum: {fileID: 0}

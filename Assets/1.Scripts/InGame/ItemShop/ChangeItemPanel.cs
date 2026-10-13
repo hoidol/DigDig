@@ -10,6 +10,6 @@ public class ChangeItemPanel : OwnItemPanel
         if (item == null)
             return;
 
-        GetComponentInParent<ChangeItemCanvas>().Selected(idx).Forget();
+        // GetComponentInParent<ChangeItemCanvas>().Selected(idx).Forget();
     }
 }

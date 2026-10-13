@@ -1,4 +1,4 @@
-level	AttackPower	AttackSpeed	AttackRange	EnhanceAbility	EffectChance
+Level	AttackPower	AttackSpeed	AttackRange	EnhanceAbility	EffectChance
 0	10/10	30	5/0.2		0.2/0.3/0.4
 1	10/10	35	5/0.2		0.2/0.3/0.4
 2	11/11	35	5/0.2	공격력 10% 증가	0.2/0.3/0.4

@@ -25,20 +25,12 @@ public class EnhanceExpInfo : ScriptableObject
 #if UNITY_EDITOR
     public void LoadData()
     {
-        string path = System.IO.Path.Combine(Application.dataPath, "Json/EnhanceLevelInfo.csv");
-        if (!System.IO.File.Exists(path))
-        {
-            Debug.LogWarning($"[EnhanceExpInfo] CSV 파일 없음: {path}");
-            return;
-        }
+        TableReader table = TableReader.Load("EnhanceLevelInfo.csv");
+        if (table == null || table.rows.Count == 0) return;
 
-        string[] lines = System.IO.File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        if (lines.Length < 2) return;
-
-        string[] headers = lines[0].Split('\t');
-        int expCol = System.Array.IndexOf(headers, $"{grade}_Exp");
-        int priceCol = System.Array.IndexOf(headers, $"{grade}_Price");
-        if (expCol < 0 || priceCol < 0)
+        string expColumn = $"{grade}_Exp";
+        string priceColumn = $"{grade}_Price";
+        if (!table.HasColumn(expColumn) || !table.HasColumn(priceColumn))
         {
             Debug.LogWarning($"[EnhanceExpInfo] CSV 헤더에서 '{grade}' 컬럼을 찾지 못함");
             return;
@@ -46,12 +38,10 @@ public class EnhanceExpInfo : ScriptableObject
 
         var expList = new System.Collections.Generic.List<int>();
         var priceList = new System.Collections.Generic.List<int>();
-        for (int i = 1; i < lines.Length; i++)
+        foreach (TableReader.Row row in table.rows)
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = lines[i].Split('\t');
-            expList.Add(expCol < cols.Length && int.TryParse(cols[expCol].Trim(), out int exp) ? exp : 0);
-            priceList.Add(priceCol < cols.Length && int.TryParse(cols[priceCol].Trim(), out int price) ? price : 0);
+            expList.Add(row.TryGetInt(expColumn, out int exp) ? exp : 0);
+            priceList.Add(row.TryGetInt(priceColumn, out int price) ? price : 0);
         }
 
         exps = expList.ToArray();

@@ -55,11 +55,6 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
         {
             itemShopProductPanels[i].UpdatePanel();
         }
-        string[] itemKeys = Character.Instance.itemInventory.ownItemKeys;
-        for (int i = 0; i < ownItemPanels.Length; i++)
-        {
-            ownItemPanels[i].SetItem(Character.Instance.itemInventory.GetItem(itemKeys[i]), i);
-        }
     }
 
     //60초에 한번씩 갱신됨 - 광석 5개 소모해서 갱신 가능

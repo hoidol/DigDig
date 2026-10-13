@@ -36,43 +36,30 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
     {
         base.LoadData();
 
-        string path = System.IO.Path.Combine(Application.dataPath, $"Json/SlimeEnhance/{key}.csv");
-        if (!System.IO.File.Exists(path))
+        string relativePath = $"SlimeEnhance/{key}.csv";
+        if (!System.IO.File.Exists(TableReader.GetFullPath(relativePath)))
         {
-            CreateTempCsv(path);
+            CreateTempCsv(TableReader.GetFullPath(relativePath));
         }
 
-        string[] lines = System.IO.File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        if (lines.Length < 2) return;
-
-        string[] headers = ParseCsvLine(lines[0]);
-        for (int i = 0; i < headers.Length; i++)
-            headers[i] = headers[i].Trim();
-
-        int iLevel = System.Array.IndexOf(headers, "level");
-        int iAttackPower = System.Array.IndexOf(headers, "AttackPower");
-        int iAttackSpeed = System.Array.IndexOf(headers, "AttackSpeed");
-        int iAttackRange = System.Array.IndexOf(headers, "AttackRange");
-        int iEnhanceAbility = System.Array.IndexOf(headers, "EnhanceAbility");
+        TableReader table = TableReader.Load(relativePath);
+        if (table == null || table.rows.Count == 0) return;
 
         var enhanceInfos = new List<SlimeEnhanceInfo>();
         var abilityInfos = new List<EnhanceAbilityInfo>();
 
-        for (int i = 1; i < lines.Length; i++)
+        foreach (TableReader.Row row in table.rows)
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = ParseCsvLine(lines[i]);
-
-            if (!int.TryParse(GetCol(cols, iLevel), out int level))
+            if (!row.TryGetInt("Level", out int level))
                 continue;
 
             var stats = new List<SlimeStat>();
-            AddStat(stats, SlimeStatType.AttackPower, GetCol(cols, iAttackPower));
-            AddStat(stats, SlimeStatType.AttackSpeed, GetCol(cols, iAttackSpeed));
-            AddStat(stats, SlimeStatType.AttackRange, GetCol(cols, iAttackRange));
+            AddStat(stats, SlimeStatType.AttackPower, row.Get("AttackPower"));
+            AddStat(stats, SlimeStatType.AttackSpeed, row.Get("AttackSpeed"));
+            AddStat(stats, SlimeStatType.AttackRange, row.Get("AttackRange"));
             enhanceInfos.Add(new SlimeEnhanceInfo { level = level, slimeStats = stats.ToArray() });
 
-            string desc = GetCol(cols, iEnhanceAbility);
+            string desc = row.Get("EnhanceAbility");
             if (!string.IsNullOrWhiteSpace(desc))
                 abilityInfos.Add(new EnhanceAbilityInfo { level = level, desc = desc });
         }
@@ -82,16 +69,16 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
 
         // 공용 컬럼 외에 헤더명이 SlimeStatType과 일치하는 컬럼(FlameDPS, SkillCooltime 등)은
         // 강화 레벨에 상관없는 고유 스탯으로 보고, 첫 번째로 값이 있는 행을 uniqueSlimeStats에 설정한다.
+        string[] commonColumns = { "Level", "AttackPower", "AttackSpeed", "AttackRange", "EnhanceAbility" };
         uniqueSlimeStats = System.Array.Empty<SlimeStat>();
-        for (int h = 0; h < headers.Length; h++)
+        for (int h = 0; h < table.headers.Length; h++)
         {
-            if (h == iLevel || h == iAttackPower || h == iAttackSpeed || h == iAttackRange || h == iEnhanceAbility) continue;
-            if (!System.Enum.TryParse(headers[h], out SlimeStatType statType)) continue;
+            if (System.Array.Exists(commonColumns, c => string.Equals(c, table.headers[h], System.StringComparison.OrdinalIgnoreCase))) continue;
+            if (!System.Enum.TryParse(table.headers[h], true, out SlimeStatType statType)) continue;
 
-            for (int i = 1; i < lines.Length; i++)
+            foreach (TableReader.Row row in table.rows)
             {
-                if (string.IsNullOrWhiteSpace(lines[i])) continue;
-                string raw = GetCol(ParseCsvLine(lines[i]), h);
+                string raw = row.Get(h);
                 if (string.IsNullOrWhiteSpace(raw)) continue;
 
                 SetUniqueStat(statType, raw);
@@ -142,9 +129,6 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
         };
         info.slimeStats = stats.ToArray();
     }
-
-    protected static string GetCol(string[] cols, int index)
-        => index >= 0 && index < cols.Length ? cols[index].Trim() : "";
 
     protected static void AddStat(List<SlimeStat> stats, SlimeStatType type, string raw)
     {

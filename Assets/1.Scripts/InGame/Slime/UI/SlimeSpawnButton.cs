@@ -39,7 +39,9 @@ public class SlimeSpawnButton : ButtonUI
         }
 
         Character.Instance.AddCoin(-GetSpawnPrice());
-        Slime slime = Character.Instance.AddSlime("Base");
+        string randomSlimeKey = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, 5)].key;
+        //Slime slime = Character.Instance.AddSlime("Base");
+        Slime slime = Character.Instance.AddSlime(randomSlimeKey);        
         tile.SetSlime(slime);
 
         CharacterManageCanvas.Instance.UpdateCanvas();

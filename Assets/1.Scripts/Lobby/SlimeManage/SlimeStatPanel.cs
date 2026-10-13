@@ -11,7 +11,9 @@ public class SlimeStatPanel : MonoBehaviour
     public Image thumImage;
     public void SetSlimeStat(SlimeStat slimeStat,int mergeLv)
     {
-        thumImage.sprite = slimeStat.Thum;
+        if(thumImage != null)
+            thumImage.sprite = slimeStat.Thum;
+            
         titleText.text = slimeStat.Title;
         valueText.text = slimeStat.GetValueToString(mergeLv);
     }

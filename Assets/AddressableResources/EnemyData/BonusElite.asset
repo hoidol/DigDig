@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: BonusElite
   m_EditorClassIdentifier: 
   type: 3
-  attackSpeed: 10
+  attackSpeed: 5
   attackRange: 4
   exp: 3
-  hpMultiplier: 11
+  hpMultiplier: 0.6
   attackPowerMultiplier: 1
   gold: 10
-  moveSpeed: 0.2
+  moveSpeed: 0.19

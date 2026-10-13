@@ -39,8 +39,8 @@ public class MergeItemPanel : MonoBehaviour
     {        
         GetComponentInParent<MergeItemCanvas>().CloseCanvas();
         
-        for(int i = 0; i < mergeItemData.childItemKeys.Length; i++)
-            Character.Instance.RemoveItem(mergeItemData.childItemKeys[i]);
+        // for(int i = 0; i < mergeItemData.childItemKeys.Length; i++)
+        //     Character.Instance.RemoveItem(mergeItemData.childItemKeys[i]);
         
         Character.Instance.AddItem(resultItemData.key).Forget();        
     }

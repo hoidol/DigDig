@@ -7,8 +7,8 @@ public class ItemInventory : MonoBehaviour
 {
     public List<Item> curItems = new List<Item>();
 
-    public readonly static int MAX_ITEM_COUNT = 4; // 최대 보유 아이템 개수 
-    public string[] ownItemKeys = new string[MAX_ITEM_COUNT];
+    // public readonly static int MAX_ITEM_COUNT = 4; // 최대 보유 아이템 개수 
+    public List<string> ownItemKeys = new List<string>();
 
     // 인터페이스별 캐시 - 장착/해제 시점에만 갱신
     public List<IPreFire> preFires = new List<IPreFire>();
@@ -54,29 +54,22 @@ public class ItemInventory : MonoBehaviour
 
     public void AddItem(string key)
     {
-        for (int i = 0; i < ownItemKeys.Length; i++)
-        {
-            if (string.IsNullOrEmpty(ownItemKeys[i]))
-            {
-                ownItemKeys[i] = key;
-                break;
-            }
-        }
+        ownItemKeys.Add(key);
 
         ItemData itemData = ItemData.GetItemData(key);
         GameEventBus.Publish(new AddedItemEvent(itemData));
     }
 
     // idx를 모르면(-1) key로 슬롯을 찾아서 비움
-    public void RemoveItem(string key, int idx = -1)
-    {
-        if (idx < 0)
-            idx = System.Array.LastIndexOf(ownItemKeys, key);
-        if (idx < 0 || idx >= ownItemKeys.Length)
-            return;
+    // public void RemoveItem(string key, int idx = -1)
+    // {
+    //     if (idx < 0)
+    //         idx = System.Array.LastIndexOf(ownItemKeys, key);
+    //     if (idx < 0 || idx >= ownItemKeys.Length)
+    //         return;
 
-        ownItemKeys[idx] = null;
-    }
+    //     ownItemKeys[idx] = null;
+    // }
 
 
     public void UpdateInventory()
@@ -117,17 +110,17 @@ public class ItemInventory : MonoBehaviour
         SortingItem();
     }
 
-    public bool IsFull()
-    {
-        for (int i = 0; i < ownItemKeys.Length; i++)
-        {
-            if (string.IsNullOrEmpty(ownItemKeys[i]))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+    // public bool IsFull()
+    // {
+    //     for (int i = 0; i < ownItemKeys.Length; i++)
+    //     {
+    //         if (string.IsNullOrEmpty(ownItemKeys[i]))
+    //         {
+    //             return false;
+    //         }
+    //     }
+    //     return true;
+    // }
 
     // public int GetItemCount(string key)
     // {

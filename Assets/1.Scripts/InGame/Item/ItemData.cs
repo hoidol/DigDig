@@ -58,73 +58,31 @@ public class ItemData : ScriptableObject
 #if UNITY_EDITOR
     public void LoadData()
     {
-        string path = System.IO.Path.Combine(Application.dataPath, "Json/ItemData.csv");
-        if (!System.IO.File.Exists(path))
+        TableReader table = TableReader.Load("ItemData.csv");
+        if (table == null) return;
+
+        TableReader.Row row = table.Find("Key", key);
+        if (row == null)
         {
-            Debug.LogWarning($"[ItemData] CSV 파일 없음: {path}");
+            Debug.LogWarning($"[ItemData] CSV에서 '{key}' 를 찾지 못함");
             return;
         }
 
-        string[] lines = System.IO.File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        if (lines.Length < 2) return;
+        if (table.HasColumn("Name"))
+            itemName = row.Get("Name");
+        if (table.HasColumn("Desc"))
+            desc = row.Get("Desc");
+        if (row.TryGetInt("Level", out int lv))
+            level = lv;
+        if (row.TryGetInt("AddPrice", out int ap))
+            addPrice = ap;
+        if (row.TryGetInt("MaxCount", out int mc))
+            maxCount = mc;
 
-        string[] headers = ParseCsvLine(lines[0]);
-        for (int i = 0; i < headers.Length; i++)
-            headers[i] = headers[i].Trim();
-
-        int iKey = System.Array.IndexOf(headers, "key");
-        int iName = System.Array.IndexOf(headers, "name");
-        int iDesc = System.Array.IndexOf(headers, "desc");
-        int iLevel = System.Array.IndexOf(headers, "level");
-        int iAddPrice = System.Array.IndexOf(headers, "addPrice");
-        int iMaxCount = System.Array.IndexOf(headers, "maxCount");
-
-        for (int i = 1; i < lines.Length; i++)
-        {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = ParseCsvLine(lines[i]);
-
-            string rowKey = iKey >= 0 && iKey < cols.Length ? cols[iKey].Trim() : "";
-            if (rowKey != key) continue;
-
-            if (iName >= 0 && iName < cols.Length)
-                itemName = cols[iName].Trim();
-            if (iDesc >= 0 && iDesc < cols.Length)
-                desc = cols[iDesc].Trim();
-            if (iLevel >= 0 && iLevel < cols.Length && int.TryParse(cols[iLevel].Trim(), out int lv))
-                level = lv;
-            if (iAddPrice >= 0 && iAddPrice < cols.Length && int.TryParse(cols[iAddPrice].Trim(), out int ap))
-                addPrice = ap;
-            if (iMaxCount >= 0 && iMaxCount < cols.Length && int.TryParse(cols[iMaxCount].Trim(), out int mc))
-                maxCount = mc;
-
-            string thumPath = $"Assets/2.Sprites/Item/Level{level}/{key}.png";
-            thum = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(thumPath);
-            UnityEditor.EditorUtility.SetDirty(this);
-            Debug.Log($"[ItemData] {key} LoadData 완료");
-            return;
-        }
-
-        //
-
-
-        Debug.LogWarning($"[ItemData] CSV에서 '{key}' 를 찾지 못함");
-    }
-
-    static string[] ParseCsvLine(string line)
-    {
-        var result = new System.Collections.Generic.List<string>();
-        bool inQuotes = false;
-        var current = new System.Text.StringBuilder();
-        for (int i = 0; i < line.Length; i++)
-        {
-            char c = line[i];
-            if (c == '"') { inQuotes = !inQuotes; continue; }
-            if (c == ',' && !inQuotes) { result.Add(current.ToString()); current.Clear(); continue; }
-            current.Append(c);
-        }
-        result.Add(current.ToString());
-        return result.ToArray();
+        string thumPath = $"Assets/2.Sprites/Item/Level{level}/{key}.png";
+        thum = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(thumPath);
+        UnityEditor.EditorUtility.SetDirty(this);
+        Debug.Log($"[ItemData] {key} LoadData 완료");
     }
 
     public void Edit()

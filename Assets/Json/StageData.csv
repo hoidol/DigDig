@@ -1,16 +1,16 @@
-key	order	difficulty	stage	stoneHp
-Normal_0	0	Normal	0	11
-Normal_1	1	Normal	1	13
-Normal_2	2	Normal	2	15
-Normal_3	3	Normal	3	17
-Normal_4	4	Normal	4	19
-Hard_0	0	Hard	0	13
-Hard_1	1	Hard	1	16
-Hard_2	2	Hard	2	19
-Hard_3	3	Hard	3	22
-Hard_4	4	Hard	4	25
-Hell_0	0	Hell	0	16
-Hell_1	1	Hell	1	20
-Hell_2	2	Hell	2	24
-Hell_3	3	Hell	3	28
-Hell_4	4	Hell	4	32
+Key	Order	Difficulty	Stage	StoneHp	BossName
+Normal_0	0	Normal	0	11	TigerWraithBoss
+Normal_1	1	Normal	1	13	TigerWraithBoss
+Normal_2	2	Normal	2	15	TigerWraithBoss
+Normal_3	3	Normal	3	17	TigerWraithBoss
+Normal_4	4	Normal	4	19	TigerWraithBoss
+Hard_0	0	Hard	0	13	TigerWraithBoss
+Hard_1	1	Hard	1	16	TigerWraithBoss
+Hard_2	2	Hard	2	19	TigerWraithBoss
+Hard_3	3	Hard	3	22	TigerWraithBoss
+Hard_4	4	Hard	4	25	TigerWraithBoss
+Hell_0	0	Hell	0	16	TigerWraithBoss
+Hell_1	1	Hell	1	20	TigerWraithBoss
+Hell_2	2	Hell	2	24	TigerWraithBoss
+Hell_3	3	Hell	3	28	TigerWraithBoss
+Hell_4	4	Hell	4	32	TigerWraithBoss

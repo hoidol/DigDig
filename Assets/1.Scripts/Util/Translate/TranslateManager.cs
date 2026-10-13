@@ -62,26 +62,26 @@ public class TranslateManager
         {
             TranslateData translateData = new TranslateData();
 
-            translateData.key = arr[i].Obj.GetString("key");
+            translateData.key = arr[i].Obj.GetString("Key");
 
-            translateData.en = arr[i].Obj.GetString("en");
+            translateData.en = arr[i].Obj.GetString("En");
             translateData.en = translateData.en.Replace("\\n", "\n");
 
 
-            translateData.kr = arr[i].Obj.GetString("kr");
+            translateData.kr = arr[i].Obj.GetString("Kr");
             translateData.kr = translateData.kr.Replace("\\n", "\n");
 
             //3. 시트 to Data
-            translateData.vi = arr[i].Obj.GetString("vi");
+            translateData.vi = arr[i].Obj.GetString("Vi");
             translateData.vi = translateData.vi.Replace("\\n", "\n");
 
-            translateData.es = arr[i].Obj.GetString("es");
+            translateData.es = arr[i].Obj.GetString("Es");
             translateData.es = translateData.es.Replace("\\n", "\n");
 
-            translateData.pt = arr[i].Obj.GetString("pt");
+            translateData.pt = arr[i].Obj.GetString("Pt");
             translateData.pt = translateData.pt.Replace("\\n", "\n");
 
-            translateData.de = arr[i].Obj.GetString("de");
+            translateData.de = arr[i].Obj.GetString("De");
             translateData.de = translateData.de.Replace("\\n", "\n");
 
 

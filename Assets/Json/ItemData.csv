@@ -1,16 +1,12 @@
-key,name,desc,level,addPrice,maxCount
-WoodSword,나무검,공격력 +4,1,0,2
-LeatherGloves,가죽 장갑,공격속도 증가 25%,1,0,2
-LeatherBoots,가죽 장화,이동속도 증가 25%,1,0,2
-SkullCane,해골지팡이,크리티컬 확률 10% 증가,1,0,2
-Clover,클로버,골드 드랍 확률 10% 증가,1,0,2
-Candle,촛불,시야 넓어짐,1,0,2
-Feather,행운,회피 +5 확률,1,0,2
-Hone,숫돌,탄 관통력+2,1,0,2
-Mushroom,회복,체력 회복력 초당 1,1,0,2
-Armor,갑옷,체력 +40,1,0,2
-Bow,활,1초마다 랜덤방향으로 탄 발사됨,1,0,2
-Mirror,거울,탄이 2번 튕깁니다.,1,0,2
-Bandage,밴드,30초마다 HP 3 회복,1,0,2
-RedEye,붉은 눈,적 처치 시 즉시 발사,1,0,2
-Pickaxe,곡괭이,40% 확률로 붙어있는 광석 추가 타격,1,0,2
+Key	Name	Desc	Level	AddPrice	MaxCount
+WoodSword	나무검	공격력 +4 증가	1	0	2
+LeatherGloves	가죽 장갑	공격속도 +10 증가	1	0	2
+SkullCane	해골지팡이	크리티컬 확률 10% 증가	1	0	2
+Feather	행운	회피 +5 확률	1	0	2
+Hone	숫돌	탄 관통력+1	1	0	2
+Mushroom	회복	체력 회복력 초당 1	1	0	2
+Armor	갑옷	체력 +20	1	0	2
+Bow	활	1초마다 랜덤방향으로 탄 발사됨	1	0	2
+Mirror	거울	탄이 1번 튕깁니다.	1	0	2
+Bandage	밴드	30초마다 HP 3 회복	1	0	2
+RedEye	붉은 눈	적 처치 시 즉시 발사	1	0	2

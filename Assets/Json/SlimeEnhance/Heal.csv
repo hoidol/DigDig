@@ -1,4 +1,4 @@
-level	AttackPower	AttackSpeed	AttackRange	EnhanceAbility	Heal
+Level	AttackPower	AttackSpeed	AttackRange	EnhanceAbility	Heal
 0	7/5	25	5/0.2		1/2/3
 1	7/5	29	5/0.2		1/2/3
 2	8/6	29	5/0.2	공격력 10% 증가	1/2/3

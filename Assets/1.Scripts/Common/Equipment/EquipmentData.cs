@@ -1,8 +1,6 @@
 using System;
 using UnityEngine;
 #if UNITY_EDITOR
-using System.Globalization;
-using System.IO;
 using UnityEditor;
 #endif
 
@@ -46,60 +44,33 @@ public class EquipmentData : ScriptableObject
 
     public void Edit()
     {
-        string path = Path.Combine(Application.dataPath, "Json/EquipmentData.csv");
-        if (!File.Exists(path)) { Debug.LogWarning($"[EquipmentData] CSV 없음: {path}"); return; }
+        TableReader table = TableReader.Load("EquipmentData.csv");
+        if (table == null) return;
 
-        string[] lines = File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        if (lines.Length < 2) return;
-
-        string[] headers = lines[0].Split('\t');
-        for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
-
-        int iKey = Array.IndexOf(headers, "key");
-        int iEquipmentType = Array.IndexOf(headers, "equipmentType");
-        int iEquipPartType = Array.IndexOf(headers, "equipPartType");
-        int iGrade = Array.IndexOf(headers, "grade");
-
-        int[] iStatType = new int[MAX_ABILITY_COUNT];
-        int[] iStatValue = new int[MAX_ABILITY_COUNT];
-        for (int s = 0; s < MAX_ABILITY_COUNT; s++)
+        TableReader.Row row = table.Find("Key", key);
+        if (row == null)
         {
-            iStatType[s] = Array.IndexOf(headers, $"statType{s + 1}");
-            iStatValue[s] = Array.IndexOf(headers, $"statValue{s + 1}");
-        }
-
-        for (int i = 1; i < lines.Length; i++)
-        {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = lines[i].Split('\t');
-
-            if (Col(cols, iKey) != key) continue;
-
-            if (Enum.TryParse<EquipmentType>(Col(cols, iEquipmentType), out var et)) equipmentType = et;
-            if (Enum.TryParse<EquipPartType>(Col(cols, iEquipPartType), out var ept)) equipPartType = ept;
-            if (Enum.TryParse<GradeType>(Col(cols, iGrade), out var gr)) grade = gr;
-
-            var abilityList = new System.Collections.Generic.List<EquipmentAbility>();
-            for (int s = 0; s < MAX_ABILITY_COUNT; s++)
-            {
-                string typeStr = Col(cols, iStatType[s]);
-                if (string.IsNullOrEmpty(typeStr)) continue;
-                if (!Enum.TryParse<StatType>(typeStr, out var st)) continue;
-
-                float.TryParse(Col(cols, iStatValue[s]), NumberStyles.Float, CultureInfo.InvariantCulture, out float value);
-                abilityList.Add(new EquipmentAbility { statType = st, value = value });
-            }
-            abilities = abilityList.ToArray();
-
-            EditorUtility.SetDirty(this);
-            Debug.Log($"[EquipmentData] {key} Edit 완료");
+            Debug.LogWarning($"[EquipmentData] CSV에서 key '{key}' 를 찾지 못함");
             return;
         }
 
-        Debug.LogWarning($"[EquipmentData] CSV에서 key '{key}' 를 찾지 못함");
-    }
+        if (row.TryGetEnum("EquipmentType", out EquipmentType et)) equipmentType = et;
+        if (row.TryGetEnum("EquipPartType", out EquipPartType ept)) equipPartType = ept;
+        if (row.TryGetEnum("Grade", out GradeType gr)) grade = gr;
 
-    static string Col(string[] cols, int idx) => idx >= 0 && idx < cols.Length ? cols[idx].Trim() : "";
+        var abilityList = new System.Collections.Generic.List<EquipmentAbility>();
+        for (int s = 0; s < MAX_ABILITY_COUNT; s++)
+        {
+            if (!row.TryGetEnum($"StatType{s + 1}", out StatType st)) continue;
+
+            row.TryGetFloat($"StatValue{s + 1}", out float value);
+            abilityList.Add(new EquipmentAbility { statType = st, value = value });
+        }
+        abilities = abilityList.ToArray();
+
+        EditorUtility.SetDirty(this);
+        Debug.Log($"[EquipmentData] {key} Edit 완료");
+    }
 #endif
 }
 

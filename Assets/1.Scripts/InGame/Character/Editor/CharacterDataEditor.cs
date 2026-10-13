@@ -14,6 +14,11 @@ public class CharacterDataEditor : Editor
         CharacterData playerData = (CharacterData)target;
 
         GUILayout.Space(10);
+        if (GUILayout.Button("LoadData"))
+        {
+            playerData.LoadData();
+            AssetDatabase.SaveAssets();
+        }
         if (GUILayout.Button("Edit"))
         {
             var method = playerData.GetType().GetMethod("Edit", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);

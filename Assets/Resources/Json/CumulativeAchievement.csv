@@ -1,4 +1,4 @@
-type	initGoal	increaseGoal	rewardType	rewardValue
+Type	InitGoal	IncreaseGoal	RewardType	RewardValue
 DestroyStone	100	50	Gold	100
 KillEnemy	80	40	Gold	100
 ClearStage	1	1	Gold	100

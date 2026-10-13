@@ -27,10 +27,10 @@ public class DailyAchievementManager : SubAchievementManager
 
         string[] lines = csv.text.Split('\n');
         string[] headers = lines[0].Trim().Split('\t');
-        int iType = System.Array.IndexOf(headers, "type");
-        int iGoal = System.Array.IndexOf(headers, "goal");
-        int iRewardType = System.Array.IndexOf(headers, "rewardType");
-        int iRewardValue = System.Array.IndexOf(headers, "rewardValue");
+        int iType = System.Array.IndexOf(headers, "Type");
+        int iGoal = System.Array.IndexOf(headers, "Goal");
+        int iRewardType = System.Array.IndexOf(headers, "RewardType");
+        int iRewardValue = System.Array.IndexOf(headers, "RewardValue");
 
         for (int i = 1; i < lines.Length; i++)
         {

@@ -1,19 +1,33 @@
+using TMPro;
 using UnityEngine;
 
-public class SlimeShortcutInfoPanel : MonoSingleton<SlimeShortcutInfoPanel>
+public class SlimeShortcutInfoPanel : MonoBehaviour
 {
-    public GameObject obj;
-    public SetFindTargetButton setFindTargetButton;
-    Slime targetSlime;
-    public void SetSlime(IAllyUnit allyUnit)
+    
+    // public TMP_Text descText;
+
+    public SlimeStatPanel[] slimeStatPanels;
+    public void SetSlime(Slime slime)
     {
-        if (allyUnit.AllyType == AllyType.Character)
+        gameObject.SetActive(true);
+        // descText.text = slime.slimeData.GetDescription(slime.mergeLevel); 
+        for(int i = 0; i < slimeStatPanels.Length; i++)
         {
-            Character character = allyUnit.Transform.GetComponent<Character>();
+            slimeStatPanels[i].gameObject.SetActive(false);
         }
-        else
+        for(int i = 0; i < slimeStatPanels.Length; i++)
         {
-            Slime slime = allyUnit.Transform.GetComponent<Slime>();
+            if (i < slime.slimeData.displayStatTypes.Length)
+            {
+                slimeStatPanels[i].gameObject.SetActive(true);
+                slimeStatPanels[i].SetSlimeStat(slime.slimeData.GetSlimeStat(slime.slimeData.displayStatTypes[i],slime.userSlime.enhanceLevel), slime.mergeLevel);
+            }
+            else
+            {
+                slimeStatPanels[i].gameObject.SetActive(false);
+                
+            }
+            
         }
     }
 }

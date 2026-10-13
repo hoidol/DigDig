@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Wacky
   m_EditorClassIdentifier: Assembly-CSharp::WackySlimeData
   key: Wacky
-  desc: "{0}\uCD08\uB9C8\uB2E4 \uB79C\uB364\uD55C \uBC29\uD5A5\uC73C\uB85C \uCD1D\uC54C\uC744
-    \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+  desc: "{0}~{1} \uD53C\uD574\uB97C \uAC00\uC9C4 \uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
   growth: 1
   commonSlimeEnhanceInfos:
   - level: 0

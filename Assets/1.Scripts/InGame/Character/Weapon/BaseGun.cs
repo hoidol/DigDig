@@ -17,9 +17,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
 
     protected Character player;
     protected CharacterStatManager statMgr;
-    CameraShake cameraShake;
-    Camera mainCamera;
-
+    // CameraShake cameraShake;
     public Transform AttackPoint => attackPoint;
     public Vector2 AttackDir { get; private set; }
 
@@ -34,8 +32,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         this.player = player;
         // bulletInventory = GetComponentInChildren<BulletInventory>();
         statMgr = player.statMgr;
-        cameraShake = player.cameraShake;
-        mainCamera = Camera.main;
+        // cameraShake = player.cameraShake;
         AttackDir = Vector2.zero;
         // dirTr.up = Vector2.right;
 
@@ -48,7 +45,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     }
 
     public LayerMask targetLayerMask;
-    public float attackFindRange = 10;
+    // public float attackFindRange = 10;
     // 가장 가까운 적 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
     {
@@ -61,7 +58,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
     }
     public virtual Transform FindTarget()
     {
-        return InGameUtil.FindTarget(transform.position, attackFindRange, targetLayerMask, Character.Instance.findTargetType);
+        return InGameUtil.FindTarget(transform.position, Character.Instance.statMgr.AttackRange+0.3f, targetLayerMask, Character.Instance.findTargetType);
     }
 
 

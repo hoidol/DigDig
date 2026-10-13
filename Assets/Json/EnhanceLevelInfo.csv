@@ -1,4 +1,4 @@
-enhanceLevel	D_Exp	C_Exp	B_Exp	A_Exp	S_Exp	SS_Exp	SSS_Exp	D_Price	C_Price	B_Price	A_Price	S_Price	SS_Price	SSS_Price
+EnhanceLevel	D_Exp	C_Exp	B_Exp	A_Exp	S_Exp	SS_Exp	SSS_Exp	D_Price	C_Price	B_Price	A_Price	S_Price	SS_Price	SSS_Price
 0	10	10	8	6	4	2	2	50	50	200	650	2000	7250	19550
 1	20	20	16	12	8	4	3	100	100	350	1100	3050	9300	23100
 2	30	30	24	18	12	6	4	150	150	500	1550	4100	11350	26650

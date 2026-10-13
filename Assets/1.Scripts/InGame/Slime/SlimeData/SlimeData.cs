@@ -82,49 +82,28 @@ public class SlimeData : ScriptableObject
 #if UNITY_EDITOR
     public virtual void LoadData()
     {
-        string path = System.IO.Path.Combine(Application.dataPath, "Json/SlimeData.csv");
-        if (!System.IO.File.Exists(path))
+        TableReader table = TableReader.Load("SlimeData.csv");
+        if (table == null) return;
+
+        TableReader.Row row = table.Find("Key", key);
+        if (row == null)
         {
-            Debug.LogWarning($"[SlimeData] CSV 파일 없음: {path}");
+            Debug.LogWarning($"[SlimeData] CSV에서 '{key}' 를 찾지 못함");
             return;
         }
 
-        string[] lines = System.IO.File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        if (lines.Length < 2) return;
+        if (table.HasColumn("Desc"))
+            desc = row.Get("Desc");
+        if (row.TryGetInt("Growth", out int lv))
+            growth = lv;
+        if (row.TryGetEnum("Grade", out GradeType parsedGrade))
+            grade = parsedGrade;
 
-        string[] headers = ParseCsvLine(lines[0]);
-        for (int i = 0; i < headers.Length; i++)
-            headers[i] = headers[i].Trim();
+        prefab = FindAssetByName<Slime>($"Assets/3.Prefabs/Slime/Growth{growth}", $"{key}Slime");
+        thum = FindAssetByName<Sprite>($"Assets/2.Sprites/Slime/Growth{growth}", key);
 
-        int iKey = System.Array.IndexOf(headers, "key");
-        int iDesc = System.Array.IndexOf(headers, "desc");
-        int iGrowth = System.Array.IndexOf(headers, "growth");
-        int iGrade = System.Array.IndexOf(headers, "grade");
-
-        for (int i = 1; i < lines.Length; i++)
-        {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = ParseCsvLine(lines[i]);
-
-            string rowKey = iKey >= 0 && iKey < cols.Length ? cols[iKey].Trim() : "";
-            if (rowKey != key) continue;
-
-            if (iDesc >= 0 && iDesc < cols.Length)
-                desc = cols[iDesc].Trim();
-            if (iGrowth >= 0 && iGrowth < cols.Length && int.TryParse(cols[iGrowth].Trim(), out int lv))
-                growth = lv;
-            if (iGrade >= 0 && iGrade < cols.Length && System.Enum.TryParse(cols[iGrade].Trim(), out GradeType parsedGrade))
-                grade = parsedGrade;
-
-            prefab = FindAssetByName<Slime>($"Assets/3.Prefabs/Slime/Growth{growth}", $"{key}Slime");
-            thum = FindAssetByName<Sprite>($"Assets/2.Sprites/Slime/Growth{growth}", key);
-
-            UnityEditor.EditorUtility.SetDirty(this);
-            Debug.Log($"[SlimeData] {key} LoadData 완료");
-            return;
-        }
-
-        Debug.LogWarning($"[SlimeData] CSV에서 '{key}' 를 찾지 못함");
+        UnityEditor.EditorUtility.SetDirty(this);
+        Debug.Log($"[SlimeData] {key} LoadData 완료");
     }
 
     // folder 안에서 파일명이 fileName과 일치하는 T 타입 에셋을 찾는다.
@@ -151,37 +130,6 @@ public class SlimeData : ScriptableObject
         return null;
     }
 
-    // CSV의 childSlime 컬럼은 Key가 아닌 표시 이름(Name)으로 적혀 있어 역으로 Key를 찾는다.
-    static string ResolveKeyByName(string[] lines, int iKey, int iName, string name)
-    {
-        if (string.IsNullOrEmpty(name)) return "";
-        for (int i = 1; i < lines.Length; i++)
-        {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = ParseCsvLine(lines[i]);
-            if (iName < 0 || iName >= cols.Length) continue;
-            if (cols[iName].Trim() != name) continue;
-            return iKey >= 0 && iKey < cols.Length ? cols[iKey].Trim() : "";
-        }
-        Debug.LogWarning($"[SlimeData] childSlime 이름 '{name}' 에 해당하는 Key를 찾지 못함");
-        return name;
-    }
-
-    protected static string[] ParseCsvLine(string line)
-    {
-        var result = new List<string>();
-        bool inQuotes = false;
-        var current = new System.Text.StringBuilder();
-        for (int i = 0; i < line.Length; i++)
-        {
-            char c = line[i];
-            if (c == '"') { inQuotes = !inQuotes; continue; }
-            if ((c == ',' || c == '\t') && !inQuotes) { result.Add(current.ToString()); current.Clear(); continue; }
-            current.Append(c);
-        }
-        result.Add(current.ToString());
-        return result.ToArray();
-    }
 
     public void Edit()
     {
@@ -280,7 +228,15 @@ public class SlimeStat
     public SlimeStatType statType;
     public string[] values;
     public string Title => statType.ToString();
-    public Sprite Thum => null;
+    public Sprite Thum
+    {
+        get
+        {
+            var sprite = Resources.Load<Sprite>($"Icon/Stat/{statType}");
+            return sprite;
+        }
+    }
+
     public string GetValueToString(int mergeLv)
     {
         if(values[mergeLv].Contains("~"))

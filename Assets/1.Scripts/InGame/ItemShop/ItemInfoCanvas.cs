@@ -26,7 +26,7 @@ public class ItemInfoCanvas : CanvasUI<ItemInfoCanvas>
 
     public void OnClickedDiscard()
     {
-        Character.Instance.RemoveItem(curItem.key,idx);
+        // Character.Instance.RemoveItem(curItem.key,idx);
     }
 
 

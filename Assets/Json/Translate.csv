@@ -1,0 +1,35 @@
+Key	Kr	En
+AttackPower_title	공격력	
+MaxHp_title	최대 체력	
+RecoveryHp_title	초당 회복량	
+AttackSpeed_title	공격 속도	
+MoveSpeed_title	이동 속도	
+CritChance_title	치명률	
+CritPower_title	치명력	
+Dodge_title	회피률	
+Day	낮	Day
+Night	밤	Night
+Not enough coin	코인이 부족합니다.	Not enough coin
+MaxMiniMe	더 이상 소환할 수 없습니다.\n{0}	
+review_title	플레이해주셔서 감사합니다.	
+review_body	더 재밌는 게임이 되기 위해서 소중한 리뷰를 남겨주세요.	
+NormalDrawEquipment	일반 장비 뽑기	
+UniqueDrawEquipment	고급 장비 뽑기	
+Purchased	구매함	Purchased
+TryMerge	합성하기(0)	
+UtillRefresh	갱신까지	
+Refresh	갱신하기	
+LuckItem_Desc	회피률 +{0}%	
+ForceItem_Desc	공격력 +{0} 공격 속도 +{1}	
+BounceItem_Desc	탄 튕김 +{0}	
+FlameItem_Desc	{0}번 공격마다 화염탄 2발 발사	
+MiniMeItem_Desc	미니미를 소환, 미니 공격력 {0}	
+NatureItem_Desc	체력 +{0} 초당 회복력 +{1}	
+OrbitItem_Desc	궤도탄 1개 추가	
+PierceItem_Desc	{0}번 공격마다 관통탄 발사\n관통력 +{1}	
+RushItem_Desc	처치 시 추가탄 발사, 쿨타임 {0}초	
+WackyItem_Desc	{0}% 확률로 랜덤 방향으로 추가탄 발사	
+BoomItem_Desc	{0}발사마다 폭탄 발사 (최대 2번 튕김)	
+New Slime	새로운 슬라임	
+Not enough exp	경험치가 부족합니다.	
+Not enough energe	에너지가 부족합니다. 에너지를 1분마다 1개씩 충전됩니다.	

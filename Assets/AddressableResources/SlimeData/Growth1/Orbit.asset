@@ -211,7 +211,7 @@ MonoBehaviour:
   - level: 11
     desc: "\uACF5\uC804 \uBC18\uC9C0\uB984(radius) 20% \uC99D\uAC00"
   - level: 14
-    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00"
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00, \uACF5\uACA9 \uC18D\uB3C4 10% \uC99D\uAC00"
   uniqueSlimeStats: []
   orbitCount: 020000000300000004000000
   orbitRotationSpeed: 120

@@ -193,7 +193,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
     async UniTaskVoid Merge(Slime source, Slime target, Vector3 sourceOriginPos)
     {
 
-        var (result, mergeResultKey, lv) = await SlimeSpawner.Instance.Merge(source, target);
+        var (result, mergeResultKey, lv) = await Merge(source, target);
         if (!result)
         {
             source.transform.position = sourceOriginPos;

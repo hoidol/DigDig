@@ -86,18 +86,8 @@ public class StageData : ScriptableObject
 
     void LoadStageBasic()
     {
-        string path = Path.Combine(Application.dataPath, "Json/StageData.csv");
-        if (!File.Exists(path)) { Debug.LogWarning($"[StageData] CSV 없음: {path}"); return; }
-
-        string[] lines = File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        if (lines.Length < 2) return;
-
-        string[] headers = lines[0].Split('\t');
-        for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
-        int iOrder = System.Array.IndexOf(headers, "order");
-        int iDifficulty = System.Array.IndexOf(headers, "difficulty");
-        int iStage = System.Array.IndexOf(headers, "stage");
-        int iStoneHp = System.Array.IndexOf(headers, "stoneHp");
+        TableReader table = TableReader.Load("StageData.csv");
+        if (table == null || table.rows.Count == 0) return;
 
         // 에셋 경로(Assets/.../StageData/{Difficulty}/{order}.asset)로 CSV 행을 식별
         // (key 필드는 CSV의 복합 key 컬럼과 형식이 달라 게임 전역 조회용 값을 유지해야 하므로 매칭에 쓰지 않음)
@@ -111,39 +101,48 @@ public class StageData : ScriptableObject
             return;
         }
 
-        for (int i = 1; i < lines.Length; i++)
+        string bossName = "";
+        foreach (TableReader.Row row in table.rows)
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = lines[i].Split('\t');
-
-            if (!int.TryParse(Col(cols, iOrder), out var od) || od != expectedOrder) continue;
-            if (!System.Enum.TryParse(Col(cols, iDifficulty), out DifficultyType dt) || dt != expectedDifficulty) continue;
+            if (!row.TryGetInt("Order", out int od) || od != expectedOrder) continue;
+            if (!row.TryGetEnum("Difficulty", out DifficultyType dt) || dt != expectedDifficulty) continue;
 
             order = od;
             difficulty = dt;
-            if (int.TryParse(Col(cols, iStage), out var st)) stage = st;
-            if (float.TryParse(Col(cols, iStoneHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float shp)) stoneHp = shp;
+            if (row.TryGetInt("Stage", out int st)) stage = st;
+            if (row.TryGetFloat("StoneHp", out float shp)) stoneHp = shp;
+            bossName = row.Get("BossName");
             break;
         }
 
         LoadPhaseDatas();
         LoadEventDatas();
         LoadEnemyPrefabs();
-        LoadBossPrefab();
+        LoadBossPrefab(bossName);
     }
 
-    void LoadBossPrefab()
+    const string BOSS_PREFAB_FOLDER = "Assets/3.Prefabs/Boss";
+
+    // StageData.csv의 BossName → Assets/3.Prefabs/Boss/{BossName}.prefab (못 찾으면 기존 값 유지)
+    void LoadBossPrefab(string bossName)
     {
-        string folderPath = $"Assets/3.Prefabs/{key}/Boss";
-        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { folderPath });
-        foreach (string guid in guids)
+        if (string.IsNullOrEmpty(bossName))
         {
-            string p = AssetDatabase.GUIDToAssetPath(guid);
-            var go = AssetDatabase.LoadAssetAtPath<GameObject>(p);
-            var b = go != null ? go.GetComponent<Boss>() : null;
-            if (b != null) { boss = b; break; }
+            Debug.LogWarning($"[StageData] {key} BossName 비어 있음 (기존 보스 유지: {(boss != null ? boss.name : "없음")})");
+            return;
         }
-        Debug.Log($"[StageData] {key} BossPrefab 로드 완료: {(boss != null ? boss.name : "없음")}");
+
+        string prefabPath = $"{BOSS_PREFAB_FOLDER}/{bossName}.prefab";
+        var go = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+        var b = go != null ? go.GetComponent<Boss>() : null;
+        if (b == null)
+        {
+            Debug.LogWarning($"[StageData] {key} 보스 프리팹 없음: {prefabPath} (기존 보스 유지: {(boss != null ? boss.name : "없음")})");
+            return;
+        }
+
+        boss = b;
+        Debug.Log($"[StageData] {key} BossPrefab 로드 완료: {boss.name}");
     }
 
     void LoadEnemyPrefabs()
@@ -164,40 +163,25 @@ public class StageData : ScriptableObject
 
     void LoadPhaseDatas()
     {
-        string path = Path.Combine(Application.dataPath, "Json/PhaseData.csv");
-        if (!File.Exists(path)) { Debug.LogWarning($"[StageData] PhaseData CSV 없음: {path}"); return; }
-
-        string[] lines = File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        if (lines.Length < 2) return;
-
-        string[] headers = lines[0].Split('\t');
-        for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
-
-        int iKey = System.Array.IndexOf(headers, "key");
-        int iEnemyHp = System.Array.IndexOf(headers, "enemyHp");
-        int iEnemyIncreaseHp = System.Array.IndexOf(headers, "enemyIncreaseHp");
-        int iEnemyAtk = System.Array.IndexOf(headers, "enemyAttackPower");
-        int iEnemyIncreaseAtk = System.Array.IndexOf(headers, "enemyIncreaseAttackPower");
+        TableReader table = TableReader.Load("PhaseData.csv");
+        if (table == null) return;
 
         bool found = false;
 
         // order당 PhaseData는 1개만 사용 (hp/atk는 enemyIncrease* * GameManager.phase 로 실시간 스케일링됨)
-        for (int i = 1; i < lines.Length; i++)
+        foreach (TableReader.Row row in table.rows)
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = lines[i].Split('\t');
-
             // key 형식: {difficulty}_{order} (ex. Normal_0)
-            string[] keyParts = Col(cols, iKey).Split('_');
+            string[] keyParts = row.Get("Key").Split('_');
             if (keyParts.Length != 2) continue;
             if (!System.Enum.TryParse(keyParts[0], out DifficultyType rowDifficulty) || rowDifficulty != difficulty) continue;
             if (!int.TryParse(keyParts[1], out int rowOrder) || rowOrder != order) continue;
 
             var d = new PhaseData();
-            if (float.TryParse(Col(cols, iEnemyHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float eh)) d.enemyHp = eh;
-            if (float.TryParse(Col(cols, iEnemyIncreaseHp), NumberStyles.Float, CultureInfo.InvariantCulture, out float eih)) d.enemyIncreaseHp = eih;
-            if (float.TryParse(Col(cols, iEnemyAtk), NumberStyles.Float, CultureInfo.InvariantCulture, out float ea)) d.enemyAttackPower = ea;
-            if (float.TryParse(Col(cols, iEnemyIncreaseAtk), NumberStyles.Float, CultureInfo.InvariantCulture, out float eia)) d.enemyIncreaseAttackPower = eia;
+            if (row.TryGetFloat("EnemyHp", out float eh)) d.enemyHp = eh;
+            if (row.TryGetFloat("EnemyIncreaseHp", out float eih)) d.enemyIncreaseHp = eih;
+            if (row.TryGetFloat("EnemyAttackPower", out float ea)) d.enemyAttackPower = ea;
+            if (row.TryGetFloat("EnemyIncreaseAttackPower", out float eia)) d.enemyIncreaseAttackPower = eia;
 
             d.enemyPatternData = new EnemyPatternData[GameSetting.BOSS_PHASE];
             for (int p = 0; p < GameSetting.BOSS_PHASE; p++)
@@ -216,55 +200,41 @@ public class StageData : ScriptableObject
 
     EnemySpawnPatternData[] FindEnemyPatternData(int phase)
     {
-        // Debug.Log($"FindEnemyPatternData {phase}");
-        string path = Path.Combine(Application.dataPath, $"Json/EnemyPatternData/{difficulty}.csv");
-        if (!File.Exists(path)) { Debug.LogWarning($"[StageData] EnemyPatternData CSV 없음: {path}"); return null; }
-
-        string[] lines = File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        if (lines.Length < 2)
+        TableReader table = TableReader.Load($"EnemyPatternData/{difficulty}.csv");
+        if (table == null) return null;
+        if (table.rows.Count == 0)
         {
-            Debug.Log("FindEnemyPatternData if (lines.Length < 2)");
+            Debug.LogWarning($"[StageData] EnemyPatternData 행 없음: {table.path}");
             return null;
         }
 
-        string[] headers = lines[0].Split('\t');
-        for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
-
         // 헤더: phase / enemyType / WaveSpawnCounts(min/max) / WaveIntervalTimes(min/max)
-        int iPhase = System.Array.IndexOf(headers, "phase");
-        int iEnemy = System.Array.IndexOf(headers, "enemyType");
-        int iWaveSpawnCount = System.Array.IndexOf(headers, "WaveSpawnCounts");
-        int iWaveItvl = System.Array.IndexOf(headers, "WaveIntervalTimes");
-
-        if (iPhase < 0 || iEnemy < 0 || iWaveSpawnCount < 0 || iWaveItvl < 0)
+        if (!table.HasColumn("Phase") || !table.HasColumn("EnemyType") || !table.HasColumn("WaveSpawnCounts") || !table.HasColumn("WaveIntervalTimes"))
         {
-            Debug.LogWarning($"[StageData] EnemyPatternData 헤더 누락: {path}");
+            Debug.LogWarning($"[StageData] EnemyPatternData 헤더 누락: {table.path}");
             return null;
         }
 
         var waveList = new List<EnemySpawnPatternData>();
-        for (int i = 1; i < lines.Length; i++)
+        foreach (TableReader.Row row in table.rows)
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = lines[i].Split('\t');
-
             // 난이도별 파일이므로 phase 로 행 식별
-            if (!int.TryParse(Col(cols, iPhase), out int ph) || ph != phase) continue;
+            if (!row.TryGetInt("Phase", out int ph) || ph != phase) continue;
 
-            if (!System.Enum.TryParse(Col(cols, iEnemy), out EnemyType et))
+            if (!row.TryGetEnum("EnemyType", out EnemyType et))
             {
-                Debug.LogWarning($"[StageData] EnemyPatternData enemyType 파싱 실패: {Col(cols, iEnemy)} ({difficulty}.csv {i + 1}행)");
+                Debug.LogWarning($"[StageData] EnemyPatternData enemyType 파싱 실패: {row.Get("EnemyType")} ({difficulty}.csv {row.lineNumber}행)");
                 continue;
             }
 
-            if (TryParseCountRange(Col(cols, iWaveSpawnCount), out Vector2Int waveCount) &&
-                TryParseIntervalRange(Col(cols, iWaveItvl), out Vector2 waveItvl))
+            if (TryParseCountRange(row.Get("WaveSpawnCounts"), out Vector2Int waveCount) &&
+                TryParseIntervalRange(row.Get("WaveIntervalTimes"), out Vector2 waveItvl))
             {
                 waveList.Add(new EnemySpawnPatternData { enemyType = et, spawnCountRange = waveCount, intervalRange = waveItvl });
             }
             else
             {
-                Debug.LogWarning($"[StageData] EnemyPatternData 파싱 실패: {Col(cols, iWaveSpawnCount)} / {Col(cols, iWaveItvl)} ({difficulty}.csv {i + 1}행)");
+                Debug.LogWarning($"[StageData] EnemyPatternData 파싱 실패: {row.Get("WaveSpawnCounts")} / {row.Get("WaveIntervalTimes")} ({difficulty}.csv {row.lineNumber}행)");
             }
         }
 
@@ -299,29 +269,15 @@ public class StageData : ScriptableObject
 
     void LoadEventDatas()
     {
-        string path = Path.Combine(Application.dataPath, "Json/EventData.csv");
-        if (!File.Exists(path)) { Debug.LogWarning($"[StageData] EventData CSV 없음: {path}"); return; }
-
-        string[] lines = File.ReadAllLines(path, System.Text.Encoding.UTF8);
-        if (lines.Length < 2) return;
-
-        string[] headers = lines[0].Split('\t');
-        for (int i = 0; i < headers.Length; i++) headers[i] = headers[i].Trim();
-
-        int iTypes = System.Array.IndexOf(headers, "eventTypes");
-        int iChances = System.Array.IndexOf(headers, "chances");
-        int iTriggers = System.Array.IndexOf(headers, "triggers");
-        int iPhaseIdx = System.Array.IndexOf(headers, "phaseIdx");
+        TableReader table = TableReader.Load("EventData.csv");
+        if (table == null || table.rows.Count == 0) return;
 
         var list = new List<EventData>();
-        for (int i = 1; i < lines.Length; i++)
+        foreach (TableReader.Row row in table.rows)
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = lines[i].Split('\t');
-
             var d = new EventData();
 
-            string typesRaw = Col(cols, iTypes);
+            string typesRaw = row.Get("EventTypes");
             if (!string.IsNullOrEmpty(typesRaw))
             {
                 var typeList = new List<EventType>();
@@ -330,7 +286,7 @@ public class StageData : ScriptableObject
                 d.eventTypes = typeList.ToArray();
             }
 
-            string chancesRaw = Col(cols, iChances);
+            string chancesRaw = row.Get("Chances");
             if (!string.IsNullOrEmpty(chancesRaw))
             {
                 var chanceList = new List<float>();
@@ -339,7 +295,7 @@ public class StageData : ScriptableObject
                 d.chances = chanceList.ToArray();
             }
 
-            string triggersRaw = Col(cols, iTriggers);
+            string triggersRaw = row.Get("Triggers");
             if (!string.IsNullOrEmpty(triggersRaw))
             {
                 var trigList = new List<EventTrigger>();
@@ -348,7 +304,7 @@ public class StageData : ScriptableObject
                 d.triggers = trigList.ToArray();
             }
 
-            if (int.TryParse(Col(cols, iPhaseIdx), out int pi)) d.phaseIdx = pi;
+            if (row.TryGetInt("PhaseIdx", out int pi)) d.phaseIdx = pi;
 
             list.Add(d);
         }
@@ -356,8 +312,6 @@ public class StageData : ScriptableObject
         eventDatas = list.ToArray();
         Debug.Log($"[StageData] {key} EventData {list.Count}개 로드 완료");
     }
-
-    static string Col(string[] cols, int idx) => idx >= 0 && idx < cols.Length ? cols[idx].Trim() : "";
 
     public void Edit()
     {

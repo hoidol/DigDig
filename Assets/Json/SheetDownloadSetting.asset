@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1693d6b52d7714d61976b64043b856ce, type: 3}
+  m_Name: SheetDownloadSetting
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::SheetDownloadSetting
+  defaultSheetId: 1Y-bovBOgOlQgM5y6pn4SOQdC5OGJN3VEJ9N72nxN-xo
+  entries:
+  - enabled: 1
+    csvPath: Json/CharacterData.csv
+    sheetId: 
+    gid: 1244868266
+    range: 
+  - enabled: 1
+    csvPath: Json/EnemyData.csv
+    sheetId: 
+    gid: 148161990
+    range: A:H
+  - enabled: 1
+    csvPath: Json/EnemyPatternData/Hard.csv
+    sheetId: 
+    gid: 576911921
+    range: H:L
+  - enabled: 1
+    csvPath: Json/EnemyPatternData/Hell.csv
+    sheetId: 
+    gid: 576911921
+    range: O:S
+  - enabled: 1
+    csvPath: Json/EnemyPatternData/Normal.csv
+    sheetId: 
+    gid: 576911921
+    range: A:E
+  - enabled: 1
+    csvPath: Json/EquipmentData.csv
+    sheetId: 
+    gid: 383982687
+    range: 
+  - enabled: 0
+    csvPath: Json/EventData.csv
+    sheetId: 
+    gid: 
+    range: 
+  - enabled: 1
+    csvPath: Json/ItemData.csv
+    sheetId: 
+    gid: 1944029805
+    range: A:F
+  - enabled: 1
+    csvPath: Json/StageData.csv
+    sheetId: 
+    gid: 1419668517
+    range: A:F
+  - enabled: 1
+    csvPath: Json/EnhanceLevelInfo.csv
+    sheetId: 
+    gid: 741993365
+    range: A:O
+  - enabled: 1
+    csvPath: Resources/Json/DailyAchievement.csv
+    sheetId: 
+    gid: 1973607092
+    range: B:E
+  - enabled: 1
+    csvPath: Resources/Json/CumulativeAchievement.csv
+    sheetId: 
+    gid: 1973607092
+    range: J:N
+  - enabled: 1
+    csvPath: Json/Translate.csv
+    sheetId: 
+    gid: 768281207
+    range: A:C
+  slimeGid: 1109237000
+  slimeRange: A:E
+  slimeEnhanceGid: 1944598144
+  slimeEnhanceEntries:
+  - enabled: 1
+    key: Base
+    range: A:D
+  - enabled: 1
+    key: Boom
+    range: AP:AT
+  - enabled: 1
+    key: Bounce
+    range: U:Y
+  - enabled: 1
+    key: Flame
+    range: M:R
+  - enabled: 1
+    key: Heal
+    range: AV:BA
+  - enabled: 1
+    key: Ice
+    range: AB:AG
+  - enabled: 1
+    key: Lightning
+    range: BC:BG
+  - enabled: 1
+    key: Orbit
+    range: AJ:AN
+  - enabled: 1
+    key: Pierce
+    range: BJ:BN
+  - enabled: 1
+    key: Wacky
+    range: F:J

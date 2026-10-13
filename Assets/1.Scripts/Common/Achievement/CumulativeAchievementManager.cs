@@ -26,11 +26,11 @@ public class CumulativeAchievementManager : SubAchievementManager
 
         string[] lines = csv.text.Split('\n');
         string[] headers = lines[0].Trim().Split('\t');
-        int iType = System.Array.IndexOf(headers, "type");
-        int iInitGoal = System.Array.IndexOf(headers, "initGoal");
-        int iIncreaseGoal = System.Array.IndexOf(headers, "increaseGoal");
-        int iRewardType = System.Array.IndexOf(headers, "rewardType");
-        int iRewardValue = System.Array.IndexOf(headers, "rewardValue");
+        int iType = System.Array.IndexOf(headers, "Type");
+        int iInitGoal = System.Array.IndexOf(headers, "InitGoal");
+        int iIncreaseGoal = System.Array.IndexOf(headers, "IncreaseGoal");
+        int iRewardType = System.Array.IndexOf(headers, "RewardType");
+        int iRewardValue = System.Array.IndexOf(headers, "RewardValue");
 
         for (int i = 1; i < lines.Length; i++)
         {

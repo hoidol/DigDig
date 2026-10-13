@@ -21,6 +21,7 @@ public class CharacterStatManager
     public float CritChance => statDic[StatType.CritChance].value;
     public float CritPower => statDic[StatType.CritPower].value;
     public float Dodge => statDic[StatType.Dodge].value;
+    public float AttackRange => statDic[StatType.AttackRange].value;
     // public float AmmoEfficiency => statDic[StatType.AmmoEfficiency].value;
     // public int Bounce => (int)statDic[StatType.Bounce].value;
 
@@ -29,9 +30,9 @@ public class CharacterStatManager
 
     StatType[] usingStatTypes =
     {
-        StatType.MaxHp,StatType.AttackPower,StatType.MoveSpeed,
+        StatType.MaxHp,StatType.AttackPower,
         StatType.RecoveryHp,StatType.AttackSpeed,StatType.CritChance,
-        StatType.CritPower,StatType.Dodge
+        StatType.CritPower,StatType.Dodge,StatType.AttackRange
         // StatType.AmmoEfficiency,
         // StatType.Bounce
     };
@@ -166,6 +167,23 @@ public class CharacterStat
     public StatType statType;
     public float initValue; //CharacterData + EquipmentAbility
     public float value; //0~1
+
+    public string Title => statType.ToString();
+    public Sprite Thum
+    {
+        get
+        {
+            var sprite = Resources.Load<Sprite>($"Icon/Stat/{statType}");
+            return sprite;
+        }
+    }
+
+    // public string GetValueToString()
+    // {
+    //     return value.ToString();
+    // }
+
+
 }
 
 

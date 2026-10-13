@@ -61,6 +61,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public AllyType AllyType => AllyType.Character;
 
     public float MaxHp => statMgr.MaxHp;
+    // public GameObject rangeObj;
 
 
     public void AccumulateDamage(float d)
@@ -90,6 +91,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     void Start()
     {
+        // rangeObj.SetActive(false);
         statMgr = new CharacterStatManager(this, characterName);
 
         var statusEffectHandler = GetComponentInChildren<StatusEffectHandler>();
@@ -153,6 +155,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         {
             AddHp(diffMaxHp, false);
         }
+        // rangeObj.transform.localScale = Vector3.one * statMgr.AttackRange;
         GameEventBus.Publish(new CharacterUpdateEvent(this));
     }
 
@@ -212,15 +215,15 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     // 인벤토리가 가득 찼으면 교체 UI를 띄우고 결과를 기다림 (교체 시 ChangeItemCanvas에서 아이템 추가까지 처리)
     public async UniTask<bool> AddItem(string key, bool canChange = true)
     {
-        if (itemInventory.IsFull())
-        {
-            if (!canChange)
-                return false;
+        // if (itemInventory.IsFull())
+        // {
+        //     if (!canChange)
+        //         return false;
 
-            var tcs = new UniTaskCompletionSource<bool>();
-            ChangeItemCanvas.Instance.OpenCanvas(key, r => tcs.TrySetResult(r));
-            return await tcs.Task;
-        }
+        //     var tcs = new UniTaskCompletionSource<bool>();
+        //     ChangeItemCanvas.Instance.OpenCanvas(key, r => tcs.TrySetResult(r));
+        //     return await tcs.Task;
+        // }
 
         statMgr.AddItem(key, 1);
         itemInventory.AddItem(key);
@@ -229,14 +232,14 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         return true;
     }
 
-    public void RemoveItem(string key, int idx = -1)
-    {
-        statMgr.AddItem(key, -1);
+    // public void RemoveItem(string key, int idx = -1)
+    // {
+    //     statMgr.AddItem(key, -1);
 
-        itemInventory.RemoveItem(key, idx);
-        itemInventory.UpdateInventory();
-        UpdateCharacter();
-    }
+    //     itemInventory.RemoveItem(key, idx);
+    //     itemInventory.UpdateInventory();
+    //     UpdateCharacter();
+    // }
 
     public Slime AddSlime(string key, int lv = 0)
     {
@@ -300,10 +303,12 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     public void StartTarget()
     {
+        // rangeObj.SetActive(true);
     }
 
     public void EndTarget()
     {
+        // rangeObj.SetActive(false);
     }
 
 

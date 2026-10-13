@@ -1,4 +1,4 @@
-level	AttackPower	AttackSpeed	AttackRange	EnhanceAbility
+Level	AttackPower	AttackSpeed	AttackRange	EnhanceAbility
 0	10/10	30	5/0.2	
 1	10/10	35	5/0.2	
 2	11/11	35	5/0.2	공격력 10% 증가

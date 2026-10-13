@@ -13,7 +13,7 @@ public class GameSetting
 
    public const int WAVE_COUNT = 7;
    public const int BOSS_PHASE = 9;
-   public const float BREAK_TIME = 15;
+   public const float BREAK_TIME = 25;
    public const float WAVE_TIME = 60;
 
    public const float WAVE_INCREASE_TIME = 7.5f;
