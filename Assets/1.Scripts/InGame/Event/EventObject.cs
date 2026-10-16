@@ -20,8 +20,10 @@ public abstract class EventObject : MonoBehaviour
 
 
     public bool interacting;
-    public virtual void Appear(Vector2 spawnPos)
+    Action endCallback;
+    public virtual void Appear(Vector2 spawnPos, Action end)
     {
+        endCallback = end;
         curTimer = maxTime;
         interacting = false;
 
@@ -47,8 +49,10 @@ public abstract class EventObject : MonoBehaviour
 
     public virtual void Destroy()
     {
+        endCallback?.Invoke();
         EventManager.Instance?.RemoveEventObject(this);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        //Destroy(gameObject);
 
     }
 

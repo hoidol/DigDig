@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Armor
   itemName: "\uAC11\uC637"
-  desc: "\uCCB4\uB825 +40"
+  desc: "\uCCB4\uB825 +20"
   level: 1
   addPrice: 0
   maxCount: 2

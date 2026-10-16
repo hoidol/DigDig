@@ -9,12 +9,12 @@ public class SlimeStatPanel : MonoBehaviour
     public TMP_Text titleText;
     public TMP_Text valueText;
     public Image thumImage;
-    public void SetSlimeStat(SlimeStat slimeStat,int mergeLv)
+    public void SetSlimeStat(SlimeStat slimeStat,int mergeLv, float randomRatio = 0f)
     {
         if(thumImage != null)
             thumImage.sprite = slimeStat.Thum;
-            
+
         titleText.text = slimeStat.Title;
-        valueText.text = slimeStat.GetValueToString(mergeLv);
+        valueText.text = slimeStat.GetValueToString(mergeLv, randomRatio);
     }
 }

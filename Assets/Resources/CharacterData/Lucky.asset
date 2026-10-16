@@ -25,13 +25,13 @@ MonoBehaviour:
     value: 0
   - statType: 3
     initValue: 0
-    value: 1
+    value: 50
   - statType: 4
     initValue: 0
     value: 0
   - statType: 5
     initValue: 0
-    value: 5
+    value: 1
   - statType: 6
     initValue: 0
     value: 1.5

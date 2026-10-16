@@ -12,21 +12,29 @@ public class CoinText : MonoBehaviour
         if (coinTextPrefab == null)
             coinTextPrefab = UnityEngine.Resources.Load<CoinText>("UI/CoinText");
 
-        if (pool.Count > 0)
+        // 씬 전환 등으로 파괴된 오브젝트는 건너뜀 (static 풀이라 이전 씬 참조가 남을 수 있음)
+        while (pool.Count > 0)
         {
             CoinText gText = pool.Dequeue();
+            if (gText == null)
+                continue;
+
+            gText.inPool = false;
             gText.gameObject.SetActive(true);
             return gText;
         }
-        else
-        {
-            CoinText gText = UnityEngine.Object.Instantiate(coinTextPrefab);
-            return gText;
-        }
+
+        return UnityEngine.Object.Instantiate(coinTextPrefab);
     }
 
+    bool inPool;
     public void Release()
     {
+        if (inPool)
+            return;
+
+        inPool = true;
+        transform.DOKill();
         gameObject.SetActive(false);
         pool.Enqueue(this);
     }
@@ -60,12 +68,9 @@ public class CoinText : MonoBehaviour
         float popDuration = 0.08f;
 
         // DOTween 필요: using DG.Tweening;
+        transform.DOKill(); // 재사용 시 이전 트윈 정리
         transform.DOScale(randomSize, popDuration).SetEase(Ease.OutBack);
-        transform.DOMoveY(transform.position.y + 0.4f, duration).SetEase(Ease.OutSine).OnComplete(() =>
-        {
-
-            gameObject.SetActive(false);
-        });
+        transform.DOMoveY(transform.position.y + 0.4f, duration).SetEase(Ease.OutSine).OnComplete(Release);
 
     }
 }

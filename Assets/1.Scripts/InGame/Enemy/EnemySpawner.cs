@@ -48,19 +48,23 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
 
         enemy.gameObject.SetActive(true);
         activeEnemies.Add(enemy);
-        ActiveEnemyCount++;
+        ActiveEnemyCount = activeEnemies.Count;
         return enemy;
     }
 
     void ReleaseEnemy(Enemy enemy)
     {
+        enemy.gameObject.SetActive(false);
+
+        // 이미 회수된 적(EnemyDeadEvent 중복)이나 스포너 밖에서 생성된 적(보스)은 풀/카운트에 반영하지 않음
+        // → 같은 적이 풀에 두 번 들어가 카운트가 0이 안 되는 문제 방지
+        if (!activeEnemies.Remove(enemy))
+            return;
+
         if (!pool.ContainsKey(enemy.enemyType))
             pool[enemy.enemyType] = new Stack<Enemy>();
-
-        activeEnemies.Remove(enemy);
-        enemy.gameObject.SetActive(false);
         pool[enemy.enemyType].Push(enemy);
-        ActiveEnemyCount = Mathf.Max(0, ActiveEnemyCount - 1);
+        ActiveEnemyCount = activeEnemies.Count;
     }
 
     public void EnemyDeadEventListener(EnemyDeadEvent e)
@@ -97,9 +101,7 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     public Vector2 GetSpawnTopPosition(float howFar = -1)
     {
         if (howFar < 0)
-        {
-            
-            
+        {              
             howFar = InGameUtil.GetEndOutLength();
         }
 

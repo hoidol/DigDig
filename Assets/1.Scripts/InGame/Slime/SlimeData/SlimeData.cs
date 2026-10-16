@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="SlimeData",menuName ="SlimeData")]
 public class SlimeData : ScriptableObject
 {
-    public static readonly int MAX_LEVEL = 3;
+    public const int MAX_MERGE_LEVEL = 5; // mergeLevel 0 ~ MAX_MERGE_LEVEL
     public static readonly int MAX_ENHANCE_LEVEL = 15;
     public static int[] ABILITY_LEVELS ={2,5,8,11,14};
 
@@ -16,6 +16,22 @@ public class SlimeData : ScriptableObject
     // public string[] enhanceAbilityDescs;
     public int growth;
     public SlimeEnhanceInfo[] commonSlimeEnhanceInfos;
+
+    [Tooltip("공격력 랜덤 폭. 0이면 고정, 0.67이면 중간값 ±67% (9 → 3~15). 데이터에는 중간값만 입력")]
+    [Range(0f, 1f)] public float attackPowerRandomRatio;
+
+    public float GetRandomRatio(SlimeStatType statType)
+    {
+        return statType == SlimeStatType.AttackPower ? attackPowerRandomRatio : 0f;
+    }
+
+    // 중간값 기준 ±ratio 범위에서 랜덤
+    public static float ApplyRandomRatio(float mid, float ratio)
+    {
+        if (ratio <= 0f)
+            return mid;
+        return Random.Range(mid * (1f - ratio), mid * (1f + ratio));
+    }
 
 
     public Slime prefab;
@@ -237,30 +253,37 @@ public class SlimeStat
         }
     }
 
-    public string GetValueToString(int mergeLv)
+    // values 형식
+    // - 2개: "기본/증가량" → 기본 + 증가량 * mergeLv
+    // - 1개 또는 3개 이상: mergeLv별 값 (모자라면 마지막 값 사용)
+    bool IsLinear => values.Length == 2;
+
+    // randomRatio > 0이면 중간값 기준 "최소~최대"로 표시
+    public string GetValueToString(int mergeLv, float randomRatio = 0f)
     {
-        if(values[mergeLv].Contains("~"))
+        if (randomRatio > 0f)
         {
-            string[] parts = values[mergeLv].Split('~');
-            return parts[0] + "~" + parts[1];
+            float mid = GetValue<float>(mergeLv);
+            return $"{mid * (1f - randomRatio):0.#}~{mid * (1f + randomRatio):0.#}";
         }
-        return values[mergeLv].ToString();
+
+
+        if (IsLinear && !values[0].Contains("~"))
+            return (GetValue(values[0]) + GetValue(values[1]) * mergeLv).ToString("0.##");
+
+        return values.GetByMergeLevel(mergeLv);
     }
 
     public T GetValue<T>(int mergeLv)
     {
         float result;
-        if (values.Length == 2)
+        if (IsLinear)
         {
             result = GetValue(values[0]) + GetValue(values[1]) * mergeLv;
         }
-        else if (values.Length == 3)
-        {
-            result = GetValue(values[mergeLv]);
-        }
         else
         {
-            result = GetValue(values[0]);
+            result = GetValue(values.GetByMergeLevel(mergeLv));
         }
 
         if (typeof(T) == typeof(int))
@@ -307,4 +330,14 @@ public enum SlimeStatType
     EffectChance,
     // Bounce,
     Count
+}
+public static class MergeLevelExtensions
+{
+    // mergeLevel별 데이터 배열 조회. 배열이 짧으면 마지막 값을 사용 (MAX_MERGE_LEVEL 늘려도 IndexOutOfRange 방지)
+    public static T GetByMergeLevel<T>(this T[] array, int mergeLevel)
+    {
+        if (array == null || array.Length == 0)
+            return default;
+        return array[Mathf.Clamp(mergeLevel, 0, array.Length - 1)];
+    }
 }

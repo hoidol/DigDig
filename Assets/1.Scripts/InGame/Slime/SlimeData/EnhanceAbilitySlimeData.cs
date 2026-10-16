@@ -137,12 +137,11 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
     }
 
     // "5/7/10" 같은 슬래시 구분 값을 float[]로 변환한다.
-    // Slime.cs가 values[mergeLevel](0~2)로 직접 인덱싱하므로 항상 MAX_LEVEL 칸을 채워서 반환한다.
-    // 칸 수가 모자라면 마지막 값을 반복해서 채운다.
+    // 값 개수 규칙은 SlimeStat.GetValue 참고 (2개=기본/증가량, 그 외=mergeLevel별, 모자라면 마지막 값)
     protected static string[] ParseValues(string raw)
     {
         string[] parts = raw.Split('/');
-        // float[] values = new float[SlimeData.MAX_LEVEL];
+        // float[] values = new float[SlimeData.MAX_MERGE_LEVEL + 1];
         // for (int i = 0; i < values.Length; i++)
         //     float.TryParse(parts[Mathf.Min(i, parts.Length - 1)].Trim(), out values[i]);
         return parts;

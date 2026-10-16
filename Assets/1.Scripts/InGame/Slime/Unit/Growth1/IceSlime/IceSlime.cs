@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class IceSlime : SlimeGrowth1
@@ -20,8 +21,8 @@ public class IceSlime : SlimeGrowth1
     {
         iceBulletSpec = new IceBulletSpec();
 
-        iceDuration = iceSlimeData.durations[mergeLevel];
-        effectChance = float.Parse(iceSlimeData.GetUniqueStat(SlimeStatType.EffectChance).values[mergeLevel]);
+        iceDuration = iceSlimeData.durations.GetByMergeLevel(mergeLevel);
+        effectChance = iceSlimeData.GetUniqueStat(SlimeStatType.EffectChance).GetValue<float>(mergeLevel);
         base.InitSlime();
     }
 
@@ -40,6 +41,15 @@ public class IceSlime : SlimeGrowth1
         return iceBulletSpec.Instantiate(this);
     }
 
+
+    public override int ShootCount => iceSlimeData.shootCounts.GetByMergeLevel(mergeLevel);
+
+    public override List<Transform> FindTargets(int count)
+    {
+        // 타겟 탐색 능력: 이미 얼어있는 적은 후순위
+        string exceptEffect = targetSearcher.isActivate ? "Ice" : null;
+        return InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, count, exceptEffect);
+    }
 
     public override Transform FindTarget()
     {

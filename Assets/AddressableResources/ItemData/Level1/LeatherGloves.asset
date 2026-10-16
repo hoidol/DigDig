@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: LeatherGloves
   itemName: "\uAC00\uC8FD \uC7A5\uAC11"
-  desc: "\uACF5\uACA9\uC18D\uB3C4 \uC99D\uAC00 25%"
+  desc: "\uACF5\uACA9\uC18D\uB3C4 +10 \uC99D\uAC00"
   level: 1
   addPrice: 0
   maxCount: 2

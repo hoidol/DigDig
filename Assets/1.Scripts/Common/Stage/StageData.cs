@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_EDITOR
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using UnityEditor;
@@ -19,10 +19,16 @@ public class StageData : ScriptableObject
     public StageRewardData[] rewardDatas;
 
     public float stoneHp;
+    public float enemyHp;
+    public float addHpRatioPerPhase;
+    public float enemyAtk;
+    public float addAtkRatioPerPhase;
+    public float multiHpPerPhase = 1f;
+    public float multiAtkPerPhase = 1f;
     public Enemy[] enemyPrefabs; //해당 스테이지의 등장할 원거리, 근거리 엘리트 등 적 설정
     Dictionary<EnemyType, Enemy> enemyPrefabDic = new Dictionary<EnemyType, Enemy>();
-    public PhaseData phaseData;
-    public EventData[] eventDatas;
+    public PhaseData[] phaseDatas;
+    // public EventData[] eventDatas;
     public Boss boss;
 
     public bool ChekcUnlock()
@@ -111,12 +117,18 @@ public class StageData : ScriptableObject
             difficulty = dt;
             if (row.TryGetInt("Stage", out int st)) stage = st;
             if (row.TryGetFloat("StoneHp", out float shp)) stoneHp = shp;
+            if (row.TryGetFloat("EnemyHp", out float eh)) enemyHp = eh;
+            if (row.TryGetFloat("AddHpRatioPerPhase", out float ahr)) addHpRatioPerPhase = ahr;
+            if (row.TryGetFloat("EnemyAtk", out float ea)) enemyAtk = ea;
+            if (row.TryGetFloat("AddAtkRatioPerPhase", out float aar)) addAtkRatioPerPhase = aar;
+            if (row.TryGetFloat("MultiHpPerPhase", out float mh)) multiHpPerPhase = mh;
+            if (row.TryGetFloat("MultiAtkPerPhase", out float ma)) multiAtkPerPhase = ma;
             bossName = row.Get("BossName");
             break;
         }
 
         LoadPhaseDatas();
-        LoadEventDatas();
+        // LoadEventDatas();
         LoadEnemyPrefabs();
         LoadBossPrefab(bossName);
     }
@@ -161,41 +173,38 @@ public class StageData : ScriptableObject
         Debug.Log($"[StageData] {key} EnemyPrefabs {list.Count}개 로드 완료");
     }
 
+    // WaveData/{difficulty}.csv의 Phase 행마다 PhaseData 1개 (waveTypes + 해당 phase의 EnemyPatternData)
     void LoadPhaseDatas()
     {
-        TableReader table = TableReader.Load("PhaseData.csv");
-        if (table == null) return;
+        TableReader table = TableReader.Load($"WaveData/{difficulty}.csv");
+        if (table == null || table.rows.Count == 0) return;
 
-        bool found = false;
-
-        // order당 PhaseData는 1개만 사용 (hp/atk는 enemyIncrease* * GameManager.phase 로 실시간 스케일링됨)
+        var list = new List<PhaseData>();
         foreach (TableReader.Row row in table.rows)
         {
-            // key 형식: {difficulty}_{order} (ex. Normal_0)
-            string[] keyParts = row.Get("Key").Split('_');
-            if (keyParts.Length != 2) continue;
-            if (!System.Enum.TryParse(keyParts[0], out DifficultyType rowDifficulty) || rowDifficulty != difficulty) continue;
-            if (!int.TryParse(keyParts[1], out int rowOrder) || rowOrder != order) continue;
+            if (!row.TryGetInt("Phase", out int phase)) continue;
 
-            var d = new PhaseData();
-            if (row.TryGetFloat("EnemyHp", out float eh)) d.enemyHp = eh;
-            if (row.TryGetFloat("EnemyIncreaseHp", out float eih)) d.enemyIncreaseHp = eih;
-            if (row.TryGetFloat("EnemyAttackPower", out float ea)) d.enemyAttackPower = ea;
-            if (row.TryGetFloat("EnemyIncreaseAttackPower", out float eia)) d.enemyIncreaseAttackPower = eia;
-
-            d.enemyPatternData = new EnemyPatternData[GameSetting.BOSS_PHASE];
-            for (int p = 0; p < GameSetting.BOSS_PHASE; p++)
+            var d = new PhaseData { waveTypes = new List<WaveType>() };
+            string typesRaw = row.Get("WaveType");
+            if (!string.IsNullOrEmpty(typesRaw))
             {
-                d.enemyPatternData[p] = new EnemyPatternData { enemySpawnPatternDatas = FindEnemyPatternData(p) };
+                foreach (var t in typesRaw.Split('/'))
+                {
+                    if (System.Enum.TryParse(t.Trim(), out WaveType wt)) d.waveTypes.Add(wt);
+                    else Debug.LogWarning($"[StageData] WaveData WaveType 파싱 실패: {t} (phase={phase})");
+                }
             }
+            if (row.TryGetFloat("PeakCountMul", out float peak)) d.peakCountMultiplier = peak;
+            if (bool.TryParse(row.Get("SpecialPattern"), out bool special)) d.specialPattern = special;
+            d.enemySpawnPatternDatas = FindEnemyPatternData(phase);
 
-            phaseData = d;
-            found = true;
-            break;
+            // phase 순서대로 배치 (phaseDatas[phase])
+            while (list.Count <= phase) list.Add(null);
+            list[phase] = d;
         }
 
-        if (!found) { Debug.LogWarning($"[StageData] {key} PhaseData 없음 ({difficulty}_{order})"); return; }
-        Debug.Log($"[StageData] {key} PhaseData 로드 완료");
+        phaseDatas = list.ToArray();
+        Debug.Log($"[StageData] {key} PhaseData {phaseDatas.Length}개 로드 완료");
     }
 
     EnemySpawnPatternData[] FindEnemyPatternData(int phase)
@@ -267,51 +276,51 @@ public class StageData : ScriptableObject
         return true;
     }
 
-    void LoadEventDatas()
-    {
-        TableReader table = TableReader.Load("EventData.csv");
-        if (table == null || table.rows.Count == 0) return;
+    // void LoadEventDatas()
+    // {
+    //     TableReader table = TableReader.Load("EventData.csv");
+    //     if (table == null || table.rows.Count == 0) return;
 
-        var list = new List<EventData>();
-        foreach (TableReader.Row row in table.rows)
-        {
-            var d = new EventData();
+    //     var list = new List<EventData>();
+    //     foreach (TableReader.Row row in table.rows)
+    //     {
+    //         var d = new EventData();
 
-            string typesRaw = row.Get("EventTypes");
-            if (!string.IsNullOrEmpty(typesRaw))
-            {
-                var typeList = new List<EventType>();
-                foreach (var t in typesRaw.Split('/'))
-                    if (System.Enum.TryParse(t.Trim(), out EventType et)) typeList.Add(et);
-                d.eventTypes = typeList.ToArray();
-            }
+    //         string typesRaw = row.Get("EventTypes");
+    //         if (!string.IsNullOrEmpty(typesRaw))
+    //         {
+    //             var typeList = new List<EventType>();
+    //             foreach (var t in typesRaw.Split('/'))
+    //                 if (System.Enum.TryParse(t.Trim(), out EventType et)) typeList.Add(et);
+    //             d.eventTypes = typeList.ToArray();
+    //         }
 
-            string chancesRaw = row.Get("Chances");
-            if (!string.IsNullOrEmpty(chancesRaw))
-            {
-                var chanceList = new List<float>();
-                foreach (var c in chancesRaw.Split('/'))
-                    if (float.TryParse(c.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out float cv)) chanceList.Add(cv);
-                d.chances = chanceList.ToArray();
-            }
+    //         string chancesRaw = row.Get("Chances");
+    //         if (!string.IsNullOrEmpty(chancesRaw))
+    //         {
+    //             var chanceList = new List<float>();
+    //             foreach (var c in chancesRaw.Split('/'))
+    //                 if (float.TryParse(c.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out float cv)) chanceList.Add(cv);
+    //             d.chances = chanceList.ToArray();
+    //         }
 
-            string triggersRaw = row.Get("Triggers");
-            if (!string.IsNullOrEmpty(triggersRaw))
-            {
-                var trigList = new List<EventTrigger>();
-                foreach (var t in triggersRaw.Split('/'))
-                    if (System.Enum.TryParse(t.Trim(), out EventTrigger et)) trigList.Add(et);
-                d.triggers = trigList.ToArray();
-            }
+    //         string triggersRaw = row.Get("Triggers");
+    //         if (!string.IsNullOrEmpty(triggersRaw))
+    //         {
+    //             var trigList = new List<EventTrigger>();
+    //             foreach (var t in triggersRaw.Split('/'))
+    //                 if (System.Enum.TryParse(t.Trim(), out EventTrigger et)) trigList.Add(et);
+    //             d.triggers = trigList.ToArray();
+    //         }
 
-            if (row.TryGetInt("PhaseIdx", out int pi)) d.phaseIdx = pi;
+    //         if (row.TryGetInt("PhaseIdx", out int pi)) d.phaseIdx = pi;
 
-            list.Add(d);
-        }
+    //         list.Add(d);
+    //     }
 
-        eventDatas = list.ToArray();
-        Debug.Log($"[StageData] {key} EventData {list.Count}개 로드 완료");
-    }
+    //     eventDatas = list.ToArray();
+    //     Debug.Log($"[StageData] {key} EventData {list.Count}개 로드 완료");
+    // }
 
     public void Edit()
     {
@@ -323,17 +332,10 @@ public class StageData : ScriptableObject
 [System.Serializable]
 public class PhaseData
 {
-    public float enemyHp;
-    public float enemyIncreaseHp;
-    public float enemyAttackPower;
-    public float enemyIncreaseAttackPower;
-    public EnemyPatternData[] enemyPatternData; //총 9개가 되야함
-}
-
-[System.Serializable]
-public class EnemyPatternData
-{
     public EnemySpawnPatternData[] enemySpawnPatternDatas;
+    public List<WaveType> waveTypes; // 이 중 하나가 실행됨
+    public float peakCountMultiplier = 1f; // 웨이브 끝에 도달하는 스폰 수 배율
+    public bool specialPattern; // BattleWave 특수 스폰(specialEnemySpawners) 동작 여부
 }
 
 [System.Serializable]

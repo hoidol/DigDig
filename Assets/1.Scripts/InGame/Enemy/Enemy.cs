@@ -48,7 +48,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public virtual void Spawn(Vector2 pos)
     {
         gameObject.SetActive(gameObject);
-
+        statusEffectHandler?.Reset();
         Apear();
         transform.position = pos;
         maxHp = GetHp();
@@ -58,16 +58,42 @@ public abstract class Enemy : MonoBehaviour, IHittable
         damageData.damage = GetAttackPower();
     }
 
-    // 최종 체력 = stageData.enemyHp * 에너미 배율 * 층 배율 * 웨이브 배율
+    // 최종 체력 = (페이즈 체력 + (다음 페이즈 체력 - 페이즈 체력) * 도달률 * 웨이브 진행률) * 에너미 배율
     public float GetHp()
     {
-        return (GameManager.Instance.phaseData.enemyHp + GameManager.Instance.phaseData.enemyIncreaseHp * GameManager.Instance.phase)* enemyData.hpMultiplier;
+        int phase = GameManager.Instance.phase;
+        float hp = GetPhaseHp(phase);
+        float nextHp = GetPhaseHp(phase + 1);
+
+        // 10초 단위로 끊어서 웨이브 진행률 계산 (0~1)
+        float waveTime = GameManager.Instance.waveTime;
+        float progress = 0;
+        if (waveTime > 0)
+        {
+            int timeStep = Mathf.FloorToInt(GameManager.Instance.waveTimer / GameSetting.ENEMY_HP_INCREASE_INTERVAL);
+            progress = Mathf.Clamp01(timeStep * GameSetting.ENEMY_HP_INCREASE_INTERVAL / waveTime);
+        }
+
+        hp += (nextHp - hp) * GameSetting.ENEMY_HP_REACH_RATIO * progress;
+        return hp * enemyData.hpMultiplier;
     }
 
-    // 최종 공격력 = stageData.enemyAttackPower * 에너미 배율 * 층 배율 * 웨이브 배율
+    // 페이즈 시작 체력 = enemyHp * (1 + addHpRatioPerPhase * phase) * multiHpPerPhase^phase
+    float GetPhaseHp(int phase)
+    {
+        StageData stageData = GameManager.Instance.stageData;
+        float hp = stageData.enemyHp * (1 + stageData.addHpRatioPerPhase * phase);
+        return hp * Mathf.Pow(stageData.multiHpPerPhase, phase);
+    }
+
+    // 최종 공격력 = enemyAtk * (1 + addAtkRatioPerPhase * phase) * multiAtkPerPhase^phase * 에너미 배율
     public float GetAttackPower()
     {
-        return (GameManager.Instance.phaseData.enemyAttackPower + GameManager.Instance.phaseData.enemyIncreaseAttackPower * GameManager.Instance.phase)* enemyData.attackPowerMultiplier;
+        StageData stageData = GameManager.Instance.stageData;
+        int phase = GameManager.Instance.phase;
+        float atk = stageData.enemyAtk * (1 + stageData.addAtkRatioPerPhase * phase);
+        atk *= Mathf.Pow(stageData.multiAtkPerPhase, phase);
+        return atk * enemyData.attackPowerMultiplier;
     }
 
     const float APEAR_POP_DURATION = 0.15f;
@@ -136,6 +162,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         OnHpChanged();
         if (curHp < 1)
         {
+            curHp = 0; // 0~1 사이로 남으면 같은 프레임 다른 탄에 다시 죽어 EnemyDeadEvent가 중복 발행됨
             Reward();
             Destroy();
         }

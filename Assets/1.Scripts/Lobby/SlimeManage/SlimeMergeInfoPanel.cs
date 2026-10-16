@@ -65,7 +65,7 @@ public class SlimeMergeInfoPanel : MonoBehaviour
         mergeDownButton.SetActive(false);
         if(slimeData.growth == 1)
         {
-            if(mergeLevel < 2)
+            if(mergeLevel < SlimeData.MAX_MERGE_LEVEL)
                 mergeUpButton.SetActive(true);
             
             if(mergeLevel >0)
@@ -79,7 +79,7 @@ public class SlimeMergeInfoPanel : MonoBehaviour
         {
             if (i < slimeStats.Count)
             {
-                statPanels[i].SetSlimeStat(slimeStats[i], mergeLevel);
+                statPanels[i].SetSlimeStat(slimeStats[i], mergeLevel, slimeData.GetRandomRatio(slimeStats[i].statType));
                 statPanels[i].gameObject.SetActive(true);
             }
             else

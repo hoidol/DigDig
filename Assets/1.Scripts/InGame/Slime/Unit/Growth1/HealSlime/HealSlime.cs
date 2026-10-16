@@ -24,8 +24,8 @@ public class HealSlime : SlimeGrowth1
     public override void InitSlime()
     {
         allyBulletSpec = new AllyBulletSpec();
-        healCoolTime = healSlimeData.healCooltimes[mergeLevel];
-        healAmount = float.Parse(healSlimeData.GetUniqueStat(SlimeStatType.Heal).values[mergeLevel]);
+        healCoolTime = healSlimeData.healCooltimes.GetByMergeLevel(mergeLevel);
+        healAmount = healSlimeData.GetUniqueStat(SlimeStatType.Heal).GetValue<float>(mergeLevel);
         base.InitSlime();
     }
 

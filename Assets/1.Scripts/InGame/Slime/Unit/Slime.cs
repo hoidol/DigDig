@@ -16,7 +16,8 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
 
     public Dictionary<StatType, float> statDic = new Dictionary<StatType, float>();
 
-    public virtual float AttackPower => statDic[StatType.AttackPower];
+    // attackPowerRandomRatio > 0이면 매 공격마다 중간값 ±비율 범위 랜덤
+    public virtual float AttackPower => SlimeData.ApplyRandomRatio(statDic[StatType.AttackPower], slimeData.attackPowerRandomRatio);
     public float AttackSpeed => statDic[StatType.AttackSpeed];
     public float AttackRange => statDic[StatType.AttackRange];
 
@@ -176,18 +177,50 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     }
 
 
+    // 한 번 공격에 발사하는 탄 수 (2 이상이면 서로 다른 타겟을 노림)
+    public virtual int ShootCount => 1;
+
+    // 서로 다른 타겟 count개 (우선순위 순). 기본은 findTargetType 기준
+    public virtual List<Transform> FindTargets(int count)
+    {
+        return InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, count);
+    }
+
     public virtual void Fire(Vector2 dir)
     {
         if (dir == Vector2.zero)
             return;
 
+        int count = ShootCount;
+        List<Transform> targets = count > 1 ? FindTargets(count) : null;
+        if (targets == null || targets.Count == 0)
+        {
+            if (FireBullet(dir))
+                attackTimer = 0;
+            return;
+        }
+
+        // 타겟이 발사 수보다 적으면 앞 타겟부터 다시 순환
+        bool fired = false;
+        for (int i = 0; i < count; i++)
+        {
+            Transform target = targets[i % targets.Count];
+            fired |= FireBullet(((Vector2)(target.position - transform.position)).normalized);
+        }
+        if (fired)
+            attackTimer = 0;
+    }
+
+    // 지정 방향으로 1발 (멀티샷/타겟 탐색 없이)
+    protected bool FireBullet(Vector2 dir)
+    {
         AllyBulletObject baseBullet = GetBullet();
         if (baseBullet == null)
-            return;
+            return false;
 
         baseBullet.transform.position = transform.position;
         baseBullet.Shoot(dir, AttackPower);
-        attackTimer = 0;
+        return true;
     }
 
     public virtual async UniTask<(bool, string, int)> Merge(Slime target)
@@ -200,7 +233,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
             return (false, null, 0);
         if (target.key != key)
             return (false, null, 0);
-        if (mergeLevel == 2 || target.mergeLevel == 2)
+        if (mergeLevel >= SlimeData.MAX_MERGE_LEVEL || target.mergeLevel >= SlimeData.MAX_MERGE_LEVEL)
             return (false, null, 0);
 
         string pickedSlimeKey = null;

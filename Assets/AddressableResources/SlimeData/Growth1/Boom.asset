@@ -20,7 +20,7 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 4
+      - 3
       - 2
     - statType: 1
       values:
@@ -32,7 +32,7 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 4
+      - 3
       - 2
     - statType: 1
       values:
@@ -45,7 +45,7 @@ MonoBehaviour:
     - statType: 0
       values:
       - 4
-      - 3
+      - 2
     - statType: 1
       values:
       - 22
@@ -57,7 +57,7 @@ MonoBehaviour:
     - statType: 0
       values:
       - 4
-      - 3
+      - 2
     - statType: 1
       values:
       - 22
@@ -196,6 +196,7 @@ MonoBehaviour:
     - statType: 2
       values:
       - 4.8
+  attackPowerRandomRatio: 0
   prefab: {fileID: 3171748586308020387, guid: c37af5d36790b4a86a0810f86a1f347b, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
@@ -217,4 +218,7 @@ MonoBehaviour:
   - 1.5
   - 1.9
   - 2.3
+  - 2.6
+  - 2.9
+  - 3.2
   maxHitCount: 5

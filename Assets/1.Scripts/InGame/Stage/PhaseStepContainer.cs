@@ -12,7 +12,7 @@ public class PhaseStepContainer : MonoBehaviour
     void Start()
     {
         GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
-        GameEventBus.Subscribe<BreakStartEvent>(OnDayStartEvent);
+        GameEventBus.Subscribe<WaveStartEvent>(OnWaveStartEvent);
         GameEventBus.Subscribe<PhaseEndEvent>(OnPhaseEndEvent);
     }
 
@@ -23,10 +23,10 @@ public class PhaseStepContainer : MonoBehaviour
             phaseStepPanels[i].Init(i);
         }
     }
-    BreakStartEvent dayStartEvent;
-    void OnDayStartEvent(BreakStartEvent e)
+    int curPhaseIdx = -1;
+    void OnWaveStartEvent(WaveStartEvent e)
     {
-        dayStartEvent = e;
+        curPhaseIdx = e.phaseIdx;
         UpdateContainer();
     }
 
@@ -34,9 +34,9 @@ public class PhaseStepContainer : MonoBehaviour
     {
         for (int i = 0; i < phaseStepPanels.Length; i++)
         {
-            if (phaseStepPanels[i].idx == dayStartEvent.phaseIdx)
+            if (phaseStepPanels[i].idx == curPhaseIdx)
             {
-                phaseStepPanels[i].UpdatePanel(dayStartEvent.phaseIdx);
+                phaseStepPanels[i].UpdatePanel(curPhaseIdx);
             }
 
         }

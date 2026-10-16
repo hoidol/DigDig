@@ -19,7 +19,7 @@ public class OrbitSlime : SlimeGrowth1
 
     public override void InitSlime()
     {
-        orbitCount = orbitSlimeData.orbitCount[mergeLevel];
+        orbitCount = orbitSlimeData.orbitCount.GetByMergeLevel(mergeLevel);
         rotationSpeed = orbitSlimeData.orbitRotationSpeed;
         radius = orbitSlimeData.radius;
 

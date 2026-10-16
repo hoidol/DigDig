@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: Hone
   itemName: "\uC22B\uB3CC"
-  desc: "\uD0C4 \uAD00\uD1B5\uB825+2"
+  desc: "\uD0C4 \uAD00\uD1B5\uB825+1"
   level: 1
   addPrice: 0
   maxCount: 2

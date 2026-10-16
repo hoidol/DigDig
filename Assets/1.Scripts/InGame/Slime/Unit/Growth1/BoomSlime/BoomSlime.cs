@@ -18,7 +18,7 @@ public class BoomSlime : SlimeGrowth1
     public override void InitSlime()
     {
         boomBulletSpec = new BoomBulletSpec();
-        boomRange = boomSlimeData.ranges[mergeLevel];
+        boomRange = boomSlimeData.ranges.GetByMergeLevel(mergeLevel);
         maxHitCount = boomSlimeData.maxHitCount;
         
         base.InitSlime();

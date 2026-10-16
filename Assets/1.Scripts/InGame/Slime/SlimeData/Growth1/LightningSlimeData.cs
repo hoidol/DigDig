@@ -8,7 +8,7 @@ public class LightningSlimeData : EnhanceAbilitySlimeData
     public float searchRadius = 2f;
     public float initSearchRadius = 6f;
 
-    public int[] lightningCounts = {3,5,7};
+    public int[] lightningCounts = {3,4,5,6,7,8};
 
 
     public override string GetDescription(int level =0)

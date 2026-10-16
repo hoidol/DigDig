@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 // 화면 밖 특정 방향 하나에서 적을 뭉치(Bundle) 단위로 모아서, 일정 간격으로 여러 웨이브 소환
-public class BundleWaveEnemySpawner : SpecialEnemySpawner
+public class BundleWaveEnemySpawner : SpawnPattern
 {
     [SerializeField] EnemyType enemyType = EnemyType.Melee;
     // [SerializeField] int waveCount = 3;          // 웨이브 수
@@ -14,12 +14,13 @@ public class BundleWaveEnemySpawner : SpecialEnemySpawner
     [SerializeField] int enemyCountPerBundle = 8; // 뭉치당 적 수
     [SerializeField] float bundleRadius = 1.5f;  // 뭉치 퍼짐 반경
     [SerializeField] float spreadAngle = 40f;    // 방향 기준 뭉치들이 퍼지는 각도(도)
-    [SerializeField] float delay = 2f;           // 경고 표시 후 첫 웨이브까지 대기(초)
+    // [SerializeField] float delay = 2f;           // 경고 표시 후 첫 웨이브까지 대기(초)
     [SerializeField] float distance = -1;        // 0 이하면 화면 밖 기본 거리 사용
 
     CancellationTokenSource cts;
+    public bool showWarning;
 
-    public override void Spawn()
+    public override void StartPattern()
     {
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(enemyType);
         if (enemyPrefab == null) return;
@@ -27,17 +28,18 @@ public class BundleWaveEnemySpawner : SpecialEnemySpawner
         float dirAngle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(dirAngle), Mathf.Sin(dirAngle));
 
-        EndSpawn();
+        EndPattern();
         cts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
         SpawnWaves(enemyPrefab, direction, cts.Token).Forget();
     }
 
     async UniTaskVoid SpawnWaves(Enemy enemyPrefab, Vector2 direction, CancellationToken token)
     {
+        if(showWarning)
         WaveWarningCanvas.Instance.StartWaveWarning(WaveWarningType.Direction, direction);
-        if (await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token).SuppressCancellationThrow())
-            return;
-
+        
+        // if (await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token).SuppressCancellationThrow())
+        //     return;
 
         SpawnWave(enemyPrefab, direction);
         // for (int w = 0; w < waveCount; w++)
@@ -77,7 +79,7 @@ public class BundleWaveEnemySpawner : SpecialEnemySpawner
         }
     }
 
-    public override void EndSpawn()
+    public override void EndPattern()
     {
         if (cts == null) return;
         cts.Cancel();

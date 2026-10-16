@@ -24,6 +24,8 @@ public abstract class BaseGun : MonoBehaviour, IGun
     // public bool IsReloading { get; private set; }
     // public List<string> loadedBullets = new List<string>();
     readonly BulletFiredEvent bulletFiredEvent = new();
+    [SerializeField] float attackTimer;
+    public LayerMask targetLayerMask;
     public SFXPlayer sfxPlayer;
 
     // Player 및 의존 컴포넌트 참조 초기화
@@ -43,8 +45,6 @@ public abstract class BaseGun : MonoBehaviour, IGun
     {
 
     }
-
-    public LayerMask targetLayerMask;
     // public float attackFindRange = 10;
     // 가장 가까운 적 기준 공격 방향 계산
     public Vector2 GetAttackDirection()
@@ -52,7 +52,11 @@ public abstract class BaseGun : MonoBehaviour, IGun
         Transform targetTr = FindTarget();
 
         if (targetTr == null)
+        {
+            // Debug.Log("BaseGun GetAttackDirection if (targetTr == null)");
             return Vector2.zero;
+        }
+            
 
         return (targetTr.position - transform.position).normalized;
     }
@@ -61,6 +65,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         return InGameUtil.FindTarget(transform.position, Character.Instance.statMgr.AttackRange+0.3f, targetLayerMask, Character.Instance.findTargetType);
     }
 
+    
 
     // 매 프레임 호출: 조준 방향 갱신 + 자동 발사 판정
     public void UpdateWeapon()
@@ -73,26 +78,17 @@ public abstract class BaseGun : MonoBehaviour, IGun
         //         if (Input.GetMouseButton(0))
         //             dirTr.up = GetAttackDirection();    
         // #endif
-        UpdateAttackInternal();
-        // LastDir = dirTr.up;
-    }
-
-    float attackTimer;
-
-    // AttackSpeed 간격마다 Attack 호출
-    void UpdateAttackInternal()
-    {
-        //statMgr.AttackSpeed
+        
         attackTimer += Time.deltaTime * statMgr.AttackSpeed / 50;
-
-#if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         if (attackTimer >= 1)
+        {
+            // Debug.Log("BaseGun UpdateWeapon ");
             Attack(GetAttackDirection());
-#else
-        if (attackJoystick.Direction.magnitude > 0 && attackTimer >= 1)
-            Attack(attackJoystick.Direction.normalized);
-#endif
+        }
+            
     }
+
+
 
     // 다음 Attack에서 발사할 멀티샷 수 누적 (아이템/어빌리티에서 호출)
     // public void RequestMulti(int count) => pendingMultiShot += count;

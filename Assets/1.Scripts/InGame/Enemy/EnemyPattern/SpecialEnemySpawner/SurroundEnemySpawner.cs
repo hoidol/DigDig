@@ -9,8 +9,9 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
     [SerializeField] EnemyType enemyType = EnemyType.Melee;
     [SerializeField] int count = 40;
     [SerializeField] float radius = -1; // 0 이하면 화면 밖 기본 거리 사용
+    public bool showWarning;
     
-    public float delay=2;
+    // public float delay=2;
     public float interval =3f;
     public int spawnCount=1;
     public override void Spawn()
@@ -19,8 +20,10 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
     }
     IEnumerator SpawnCoroutine()
     {
-        WaveWarningCanvas.Instance.StartWaveWarning(WaveWarningType.Surround, Vector2.zero);
-        yield return new WaitForSeconds(delay);
+        if(showWarning)
+            WaveWarningCanvas.Instance.StartWaveWarning(WaveWarningType.Surround, Vector2.zero);
+
+        // yield return new WaitForSeconds(delay);
         for (int i = 0; i < spawnCount; i++)
         {
             SpawnEnemy();

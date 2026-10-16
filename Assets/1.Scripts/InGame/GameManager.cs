@@ -2,14 +2,15 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Linq;
 public class GameManager : MonoSingleton<GameManager>
-{
-    // public int phase;
+{    
     public int destroyStoneCount { get; private set; }
     public int killEnemyCount { get; private set; }
     public StageData stageData;
 
     public bool isPlaying;
+    public Wave[] waves;
     EnemySpawnerContainer enemySpawnerContainer;
     protected void Awake()
     {
@@ -23,15 +24,21 @@ public class GameManager : MonoSingleton<GameManager>
         private set;
     }
     public float breakTimer = 0f; // 낮 40초 <-> 밤 80초
-    public float waveTimer = 0f;
-    public float waveTime = 0f;
     public bool isBreak;
+
+    public Wave currentWave { get; private set; }
+    WaveTimer CurrentWaveTimer => currentWave is BattleWave battleWave ? battleWave.waveTimer : null;
+    // 현재 웨이브 경과 시간 / 전체 시간 (Enemy 체력 증가, 타이머 UI용)
+    public float waveTime => CurrentWaveTimer != null ? CurrentWaveTimer.waveTime : 0f;
+    public float waveTimer => CurrentWaveTimer != null ? CurrentWaveTimer.waveTime - CurrentWaveTimer.waveTimer : 0f;
     public int phase;
     public int slimeSpawnCount;
     public DifficultyType difficultyType;
 
     async void Start()
     {
+         
+
         await UniTask.WhenAll(
             StageManager.Instance.LoadTask,
             BulletManager.Instance.LoadTask,
@@ -43,16 +50,14 @@ public class GameManager : MonoSingleton<GameManager>
 
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
-        GameEventBus.Subscribe<BossDeadEvent>(OnBossDeadEvent);
         GameEventBus.Subscribe<CharacterHpChangedEvent>(OnPlayerHpChangedEvent);
         GameEventBus.Subscribe<SpawnMinieEvent>(OnSpawnMinieEvent);
 
         Debug.Log($"UserManager.STAGE_KEY {UserDataManager.STAGE_KEY}");
         stageData = StageManager.Instance.GetStageData(UserDataManager.STAGE_KEY);
         stageData.Init();
-        phaseData = stageData.phaseData;
         enemySpawnerContainer = Instantiate(stageData.enemySpawnerContainerPrefab);
-
+        waves = enemySpawnerContainer.GetComponentsInChildren<Wave>(true);
         GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
         FadeCanvs.Instance.FadeIn(stageData.Title, () =>
@@ -70,71 +75,65 @@ public class GameManager : MonoSingleton<GameManager>
         ProcessWave(phase).Forget();
     }
 
-    public PhaseData phaseData;
-    public void StartBreak(int phase)
+    async UniTaskVoid ProcessWave(int phase)
     {
-        isBreak = true;
-        // phase = GameSetting.BOSS_PHASE; //보스 테스트용 - 테스트 후 주석하기
-        Debug.Log($"GameManager StartPhase {phase}");
-        GameEventBus.Publish(new BreakStartEvent(phase));
+        this.phase = phase;
+        var waveType = WaveType.Normal;
+        var waveWayDirection = WaveWayDirection.Top;
+
+        if(phase != 0)
+        {
+            (waveType, waveWayDirection) = await SelectWaveCanvas.Instance.OpenCanvas(stageData.phaseDatas[phase]);
+        }
+
+        GameEventBus.Publish(new PhaseStartEvent(phase, stageData.phaseDatas[phase].enemySpawnPatternDatas));
+        // 웨이브 진행/종료는 각 Wave가 담당 (종료 시 Wave.MoveNextWave → EndWave)
+        StartWave(phase, waveType);
     }
-    public void StartWave(int phase)
+
+    public void StartWave(int phase, WaveType waveType = WaveType.Normal)
     {
         isBreak = false;
         // phase = GameSetting.BOSS_PHASE; //보스 테스트용 - 테스트 후 주석하기
         Debug.Log($"GameManager StartWave {phase}");
-
-        GameEventBus.Publish(new WaveStartEvent(phase));
-        if (phase == GameSetting.BOSS_PHASE)
+        currentWave = GetWave(waveType);
+        if (currentWave == null)
         {
-            StartBoss();
+            Debug.LogError($"GameManager {waveType} Wave 없음 → Normal로 대체");
+            waveType = WaveType.Normal;
+            currentWave = GetWave(waveType);
         }
+        currentWave.StartWave(phase);
+        GameEventBus.Publish(new WaveStartEvent(phase,waveType));
     }
 
-    async UniTaskVoid ProcessWave(int phase)
+    // Wave.MoveNextWave에서 호출 → 다음 phase 웨이브 선택으로
+    public void EndWave(int endPhase, WaveType waveType = WaveType.Normal)
     {
-        if (phase < GameSetting.BOSS_PHASE)
-        {
-            GameEventBus.Publish(new PhaseStartEvent(phase, stageData.phaseData.enemyPatternData[phase].enemySpawnPatternDatas));
-        }
+        if (!isPlaying || endPhase != phase)
+            return;
+
+        if (phase >= GameSetting.BOSS_PHASE)
+            return;
+        StartBreak(endPhase).Forget();
+        GameEventBus.Publish(new PhaseEndEvent(phase));
+    }
+
+    public async UniTaskVoid StartBreak(int endPhase)
+    {
+        isBreak = true;
+
+        Debug.Log($"GameManager StartPhase {phase}");
         
-        
 
-        //밤에 대한 시간 처리
-        StartWave(phase);
-        waveTimer = 0;
-
-        waveTime = GameSetting.WAVE_TIME + GameSetting.WAVE_INCREASE_TIME * phase;
-        if (waveTime >= GameSetting.MIX_WAVE_TIME)
-        {
-            waveTime = GameSetting.MIX_WAVE_TIME;
-        }
-
-        Debug.Log($"day {phase} waveTime {waveTime}");
-        while (waveTimer <= waveTime)
-        {
-            await UniTask.Yield();
-
-            if (!isPlaying)
-                continue;
-
-            waveTimer += Time.deltaTime;
-        }
-
-        breakTimer = 0;
-        StartBreak(phase);
-        float breakTime = GameSetting.BREAK_TIME;
-        while (breakTimer <= breakTime)
-        {
-            await UniTask.Yield();
-
-            if (!isPlaying)
-                continue;
-
-            breakTimer += Time.deltaTime;
-        }
-
-        EndWave();
+        endPhase++;
+        ProcessWave(endPhase).Forget();
+        GameEventBus.Publish(new BreakStartEvent(phase));
+    }
+    
+    Wave GetWave(WaveType waveType)
+    {
+        return waves.Where(e=>e.waveType == waveType).FirstOrDefault();
     }
 
     public void SkipBreak()
@@ -145,20 +144,6 @@ public class GameManager : MonoSingleton<GameManager>
         breakTimer = GameSetting.BREAK_TIME;
     }
 
-    public void EndWave()
-    {
-        if (phase == GameSetting.BOSS_PHASE)
-            return;
-
-        GameEventBus.Publish(new PhaseEndEvent(phase));
-        phase++;
-        ProcessWave(phase).Forget();
-    }
-
-    void StartBoss()
-    {
-        enemySpawnerContainer.bossSpawner.Spawn();
-    }
 
 
     void Update()
@@ -169,12 +154,6 @@ public class GameManager : MonoSingleton<GameManager>
         gameTimer += Time.deltaTime;
     }
 
-    void OnBossDeadEvent(BossDeadEvent e)
-    {
-        if (Character.Instance.CurHp <= 0)
-            return;
-        EndGame(true);
-    }
 
     const string ACCEPT_REVIEW_KEY = "ACCEPT_REVIEW_KEY";
 
@@ -273,10 +252,21 @@ public class BreakStartEvent
 public class WaveStartEvent
 {
     public int phaseIdx;
-
-    public WaveStartEvent(int p)
+    public WaveType waveType;
+    public WaveStartEvent(int p,WaveType waveType)
     {
         phaseIdx = p;
+        this.waveType = waveType;
+    }
+}
+public class WaveEndEvent
+{
+    public int phaseIdx;
+    public WaveType waveType;
+    public WaveEndEvent(int p,WaveType waveType)
+    {
+        phaseIdx = p;
+        this.waveType = waveType;
     }
 }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ItemShop : EventObject
@@ -8,10 +9,10 @@ public class ItemShop : EventObject
         GameEventBus.Subscribe<PurchaseItemEvent>(OnPurchaseItemEvent);
     }
     int purchaseCount;
-    public override void Appear(Vector2 spawnPos)
+    public override void Appear(Vector2 spawnPos, Action end)
     {
         purchaseCount = 0;
-        base.Appear(spawnPos);
+        base.Appear(spawnPos,end);
         ItemShopCanvas.Instance.Init();
         ItemShopCanvas.Instance.ResetItemShopProduct();
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="Pierce",menuName ="Growth1/Pierce")]
 public class PierceSlimeData : EnhanceAbilitySlimeData
 {
-    public int[] pierceCount = {2,4,6};
+    public int[] pierceCount = {2,3,4,5,6,7};
 
     public override string GetDescription(int level =0)
     {

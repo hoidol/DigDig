@@ -72,6 +72,43 @@ public static class InGameUtil
         return SelectTarget(normals.Count > 0 ? normals : effectings, pos, type);
     }
 
+    //범위 내 서로 다른 적 최대 count개를 type 우선순위 순으로 찾기, exceptEffect가 적용된 타겟은 후순위
+    public static List<Transform> FindTargets(Vector2 pos, float range, LayerMask layerMask, FindTargetType type, int count, string exceptEffect = null)
+    {
+        List<Transform> result = new List<Transform>(count);
+        Collider2D[] cols = Physics2D.OverlapCircleAll(pos, range, layerMask);
+        if (cols.Length == 0 || count <= 0)
+            return result;
+
+        List<Collider2D> normals = new List<Collider2D>(cols.Length);
+        List<Collider2D> effectings = new List<Collider2D>();
+        for (int i = 0; i < cols.Length; i++)
+        {
+            bool isEffecting = !string.IsNullOrEmpty(exceptEffect) && cols[i].TryGetComponent(out StatusEffectHandler handler) && handler.HasEffect(exceptEffect);
+            if (isEffecting)
+                effectings.Add(cols[i]);
+            else
+                normals.Add(cols[i]);
+        }
+
+        PickTargets(normals, pos, type, count, result);
+        PickTargets(effectings, pos, type, count, result);
+        return result;
+    }
+
+    // SelectTarget으로 하나씩 뽑고 후보에서 제거 → 중복 없이 우선순위 순
+    static void PickTargets(List<Collider2D> candidates, Vector2 pos, FindTargetType type, int count, List<Transform> result)
+    {
+        while (result.Count < count && candidates.Count > 0)
+        {
+            Transform picked = SelectTarget(candidates, pos, type);
+            if (picked == null)
+                return;
+            result.Add(picked);
+            candidates.RemoveAll(c => c.transform == picked);
+        }
+    }
+
     static Transform SelectTarget(IList<Collider2D> cols, Vector2 pos, FindTargetType type)
     {
         if (cols.Count == 0)
@@ -149,6 +186,18 @@ public static class InGameUtil
         }
 
         return endOutLength;
+    }
+
+
+    public static Vector2 GetSpawnTopPosition(float howFar = -1)
+    {
+        if (howFar < 0)
+        {              
+            howFar = GetEndOutLength();
+        }
+
+        Vector2 direction = Quaternion.Euler(0, 0, UnityEngine.Random.Range(60f, 120f)) * Vector2.right;
+        return MapManager.SnappedPosition(Vector2.zero + direction * howFar);
     }
 }
 public enum FindTargetType

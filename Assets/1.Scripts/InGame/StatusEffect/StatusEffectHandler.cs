@@ -49,6 +49,12 @@ public class StatusEffectHandler : MonoBehaviour
                 view.gameObject.SetActive(false);
             }
         }
+        Reset();
+    }
+
+    // 적용 중인 상태이상 전부 해제 (풀링 재소환 시 이전 상태이상이 남지 않도록)
+    public void Reset()
+    {
         for (int i = effects.Count - 1; i >= 0; i--)
         {
             effects[i].OnRemove(this);
@@ -56,6 +62,9 @@ public class StatusEffectHandler : MonoBehaviour
         }
         effects.Clear();
 
+        IsStunned = false;
+        IsShielded = false;
+        SlowRate = 1f;
     }
 
     public void Apply(StatusEffect effect)

@@ -6,7 +6,6 @@ using UnityEngine;
 // 30 - 10 ~ 50
 public class WackySlime : SlimeGrowth1
 {
-    public override float AttackPower => slimeData.GetSlimeStat(  SlimeStatType.AttackPower,userSlime.enhanceLevel).GetValue<float>(mergeLevel);
     public WackySlimeData wackySlimeData;
     // float fireTimer;
     AllyBulletSpec allyBulletSpec;
@@ -50,6 +49,8 @@ public class WackySlime : SlimeGrowth1
     //     }   
     // }
 
+    public override int ShootCount => wackySlimeData.shootCounts.GetByMergeLevel(mergeLevel);
+
     public override void Fire(Vector2 dir)
     { 
         if (dir == Vector2.zero)
@@ -76,8 +77,9 @@ public class WackySlime : SlimeGrowth1
         {
             float rad = (baseAngle + i * angleStep) * Mathf.Deg2Rad;
             Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-            base.Fire(dir);
+            FireBullet(dir); // 스킬은 원형 방향 그대로 (멀티 타겟 X)
         }
+        attackTimer = 0;
         skillCounter = 0;
     }
 

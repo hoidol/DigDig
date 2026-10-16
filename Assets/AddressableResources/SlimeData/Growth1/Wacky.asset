@@ -20,9 +20,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 3~15
-      - 6~30
-      - 9~50
+      - 5
+      - 5
     - statType: 1
       values:
       - 30
@@ -35,9 +34,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 3~15
-      - 6~30
-      - 9~50
+      - 5
+      - 5
     - statType: 1
       values:
       - 35
@@ -50,9 +48,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 4~16
-      - 7~31
-      - 10~51
+      - 6
+      - 6
     - statType: 1
       values:
       - 35
@@ -65,9 +62,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 4~16
-      - 7~31
-      - 10~51
+      - 6
+      - 6
     - statType: 1
       values:
       - 35
@@ -80,9 +76,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 5~17
-      - 8~32
-      - 11~52
+      - 7
+      - 7
     - statType: 1
       values:
       - 35
@@ -95,9 +90,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 5~17
-      - 8~32
-      - 11~52
+      - 7
+      - 7
     - statType: 1
       values:
       - 40
@@ -110,9 +104,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 6~18
-      - 9~33
-      - 12~53
+      - 8
+      - 8
     - statType: 1
       values:
       - 40
@@ -125,9 +118,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 6~18
-      - 9~33
-      - 12~53
+      - 8
+      - 8
     - statType: 1
       values:
       - 40
@@ -140,9 +132,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 6~18
-      - 9~33
-      - 12~53
+      - 8
+      - 8
     - statType: 1
       values:
       - 40
@@ -155,9 +146,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 7~19
-      - 10~34
-      - 13~54
+      - 9
+      - 9
     - statType: 1
       values:
       - 40
@@ -170,9 +160,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 7~19
-      - 10~34
-      - 13~54
+      - 9
+      - 9
     - statType: 1
       values:
       - 45
@@ -185,9 +174,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 7~19
-      - 10~34
-      - 13~54
+      - 9
+      - 9
     - statType: 1
       values:
       - 45
@@ -200,9 +188,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 8~20
-      - 11~35
-      - 14~55
+      - 10
+      - 10
     - statType: 1
       values:
       - 45
@@ -215,9 +202,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 8~20
-      - 11~35
-      - 14~55
+      - 10
+      - 10
     - statType: 1
       values:
       - 45
@@ -230,9 +216,8 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 8~20
-      - 11~35
-      - 14~55
+      - 10
+      - 10
     - statType: 1
       values:
       - 50
@@ -241,6 +226,7 @@ MonoBehaviour:
       values:
       - 5.8
       - 0.2
+  attackPowerRandomRatio: 0.67
   prefab: {fileID: 1358385290756183109, guid: 0b213b5c98b6a4260a2fa4adeea3a912, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
@@ -260,4 +246,4 @@ MonoBehaviour:
   - level: 14
     desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00 + \uACF5\uACA9\uC18D\uB3C4 10% \uC99D\uAC00"
   uniqueSlimeStats: []
-  damages: []
+  shootCounts: 010000000200000002000000030000000300000004000000

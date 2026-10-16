@@ -20,7 +20,7 @@ public class SlimeShortcutInfoPanel : MonoBehaviour
             if (i < slime.slimeData.displayStatTypes.Length)
             {
                 slimeStatPanels[i].gameObject.SetActive(true);
-                slimeStatPanels[i].SetSlimeStat(slime.slimeData.GetSlimeStat(slime.slimeData.displayStatTypes[i],slime.userSlime.enhanceLevel), slime.mergeLevel);
+                slimeStatPanels[i].SetSlimeStat(slime.slimeData.GetSlimeStat(slime.slimeData.displayStatTypes[i],slime.userSlime.enhanceLevel), slime.mergeLevel, slime.slimeData.GetRandomRatio(slime.slimeData.displayStatTypes[i]));
             }
             else
             {

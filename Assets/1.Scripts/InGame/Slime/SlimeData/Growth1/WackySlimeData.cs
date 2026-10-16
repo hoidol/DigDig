@@ -1,28 +1,17 @@
 using UnityEngine;
 
 
+// 데미지 범위가 넓은 슬라임: AttackPower에 중간값만 넣고 attackPowerRandomRatio(예: 0.67)로 최소~최대 결정
 [CreateAssetMenu(fileName ="Wacky",menuName ="Growth1/Wacky")]
 public class WackySlimeData : EnhanceAbilitySlimeData
 {
+    public int[] shootCounts = {1,2,2,3,3,4};
 
-// 10 - 3 ~ 15
-// 20 - 5 ~ 30
-// 30 - 10 ~ 50
-      public Vector2[] damages;
-
-
-    public override SlimeStat GetSlimeStat(SlimeStatType statType, int enhanceLv)
-    {
-        SlimeEnhanceInfo slimeEnhanceInfo =  GetCommonSlimeEnhanceInfo(enhanceLv);
-        if(statType == SlimeStatType.AttackPower)
-        {
-            
-        }
-        // if(statType == null)
-        return slimeEnhanceInfo.GetSlimeStat(statType);
-    }
     public override string GetDescription(int mergeLv =0)
     {
-        return string.Format(TranslateManager.GetText($"WackySlime_Desc"), damages[mergeLv].x, damages[mergeLv].y);
+        float mid = GetSlimeStat(SlimeStatType.AttackPower, 0).GetValue<float>(mergeLv);
+        return string.Format(TranslateManager.GetText($"WackySlime_Desc"),
+            Mathf.RoundToInt(mid * (1f - attackPowerRandomRatio)),
+            Mathf.RoundToInt(mid * (1f + attackPowerRandomRatio)));
     }
 }

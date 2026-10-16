@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: WoodSword
   itemName: "\uB098\uBB34\uAC80"
-  desc: "\uACF5\uACA9\uB825 +4"
+  desc: "\uACF5\uACA9\uB825 +4 \uC99D\uAC00"
   level: 1
   addPrice: 0
   maxCount: 2

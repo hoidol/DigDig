@@ -15,9 +15,11 @@ public class BounceSlime : SlimeGrowth1
         base.Spawn(pos, lv);
     }
 
+    public override int ShootCount => bounceSlimeData.shootCounts.GetByMergeLevel(mergeLevel);
+
     public override void InitSlime()
     {
-        bounceCount = bounceSlimeData.bounces[mergeLevel];
+        bounceCount = bounceSlimeData.bounces.GetByMergeLevel(mergeLevel);
         bounceBulletSpec = new BounceBulletSpec();
 
         base.InitSlime();

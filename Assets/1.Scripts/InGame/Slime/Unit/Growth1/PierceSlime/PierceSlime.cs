@@ -18,7 +18,7 @@ public class PierceSlime : SlimeGrowth1
     public override void InitSlime()
     {
         pierceBulletSpec = new PierceBulletSpec();
-        pierceCount = pierceSlimeData.pierceCount[mergeLevel];
+        pierceCount = pierceSlimeData.pierceCount.GetByMergeLevel(mergeLevel);
 
 
         base.InitSlime();

@@ -29,7 +29,7 @@ public class SlimeLevelPanel : MonoBehaviour
                 stars[i].gameObject.SetActive(false);
             }
 
-            for (int i = 0; i < slime.mergeLevel + 1; i++)
+            for (int i = 0; i < Mathf.Min(slime.mergeLevel + 1, stars.Length); i++)
             {
                 stars[i].gameObject.SetActive(true);
             }

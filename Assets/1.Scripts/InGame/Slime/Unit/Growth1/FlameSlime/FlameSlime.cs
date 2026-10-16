@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FlameSlime : SlimeGrowth1,IExecuteSkillSlime
@@ -22,7 +23,7 @@ public class FlameSlime : SlimeGrowth1,IExecuteSkillSlime
     public override void InitSlime()
     {       
         burnDuration = flameSlimeData.burnDuration;
-        burnDPS = float.Parse(flameSlimeData.GetUniqueStat(SlimeStatType.FlameDPS).values[mergeLevel]);
+        burnDPS = flameSlimeData.GetUniqueStat(SlimeStatType.FlameDPS).GetValue<float>(mergeLevel);
 
         base.InitSlime();
     }
@@ -56,6 +57,15 @@ public class FlameSlime : SlimeGrowth1,IExecuteSkillSlime
         skill1.Execute();
     }
 
+
+    public override int ShootCount => flameSlimeData.shootCounts.GetByMergeLevel(mergeLevel);
+
+    public override List<Transform> FindTargets(int count)
+    {
+        // 타겟 탐색 능력: 이미 불붙은 적은 후순위
+        string exceptEffect = targetSearcher.isActivate ? "Flame" : null;
+        return InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, count, exceptEffect);
+    }
 
     public override Transform FindTarget()
     {

@@ -21,7 +21,7 @@ public class LightningSlime : SlimeGrowth1
 
         initSearchRadius = lightningSlimeData.initSearchRadius;
         searchRadius = lightningSlimeData.searchRadius;
-        lightningCount = lightningSlimeData.lightningCounts[mergeLevel];
+        lightningCount = lightningSlimeData.lightningCounts.GetByMergeLevel(mergeLevel);
         lightningBulletSpec.hitLayerMask = targetLayerMask;
 
         base.InitSlime();
