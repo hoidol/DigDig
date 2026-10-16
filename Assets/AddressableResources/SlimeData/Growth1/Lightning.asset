@@ -17,6 +17,7 @@ MonoBehaviour:
     3\uAC1C\uC758 \uBAAC\uC2A4\uD130\uC5D0\uAC8C \uAC01\uAC01 100%, 70%, 30% [\uC804\uAE30]\uB370\uBBF8\uC9C0\uB97C
     \uC785\uD78C\uB2E4."
   growth: 1
+  attackType: 0
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:

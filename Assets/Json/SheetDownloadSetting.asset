@@ -23,18 +23,18 @@ MonoBehaviour:
     csvPath: Json/EnemyData.csv
     sheetId: 
     gid: 148161990
-    range: A:H
-  - enabled: 1
+    range: A:E
+  - enabled: 0
     csvPath: Json/EnemyPatternData/Hard.csv
     sheetId: 
     gid: 576911921
     range: H:K
-  - enabled: 1
+  - enabled: 0
     csvPath: Json/EnemyPatternData/Hell.csv
     sheetId: 
     gid: 576911921
     range: O:R
-  - enabled: 1
+  - enabled: 0
     csvPath: Json/EnemyPatternData/Normal.csv
     sheetId: 
     gid: 576911921
@@ -58,7 +58,7 @@ MonoBehaviour:
     csvPath: Json/StageData.csv
     sheetId: 
     gid: 1419668517
-    range: A:L
+    range: A:J
   - enabled: 1
     csvPath: Json/EnhanceLevelInfo.csv
     sheetId: 
@@ -83,17 +83,17 @@ MonoBehaviour:
     csvPath: Json/WaveData/Normal.csv
     sheetId: 
     gid: 1703370116
-    range: B:E
+    range: B:D
   - enabled: 1
     csvPath: Json/WaveData/Hard.csv
     sheetId: 
     gid: 1703370116
-    range: I:L
+    range: B:D
   - enabled: 1
     csvPath: Json/WaveData/Hell.csv
     sheetId: 
     gid: 1703370116
-    range: P:S
+    range: B:D
   slimeGid: 1109237000
   slimeRange: A:E
   slimeEnhanceGid: 1944598144

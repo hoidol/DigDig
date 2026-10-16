@@ -15,6 +15,7 @@ public class SlimeData : ScriptableObject
     public string desc;
     // public string[] enhanceAbilityDescs;
     public int growth;
+    public AttackType attackType;
     public SlimeEnhanceInfo[] commonSlimeEnhanceInfos;
 
     [Tooltip("공격력 랜덤 폭. 0이면 고정, 0.67이면 중간값 ±67% (9 → 3~15). 데이터에는 중간값만 입력")]
@@ -340,4 +341,12 @@ public static class MergeLevelExtensions
             return default;
         return array[Mathf.Clamp(mergeLevel, 0, array.Length - 1)];
     }
+}
+
+
+public enum AttackType
+{
+    Physic, //빨강
+    Magic, //파랑
+    Vibrational //노랑
 }

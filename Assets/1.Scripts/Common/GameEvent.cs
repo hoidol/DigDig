@@ -46,6 +46,15 @@ public class BossPhaseChangedEvent
     public BossPhaseChangedEvent(Boss boss, int phase) { this.boss = boss; this.phase = phase; }
 }
 
+public class BossSpawnEvent
+{
+    public Boss boss;
+    public BossSpawnEvent(Boss boss)
+    {
+        this.boss = boss;
+    }
+}
+
 public class BossDeadEvent
 {
     public Boss boss;

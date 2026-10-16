@@ -60,7 +60,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
         activeslimes.Remove(slime);
         if (TileManager.Instance != null)
-            TileManager.Instance.RemoveSlime(slime);
+            TileManager.Instance.RemoveTileObject(slime);
         slime.gameObject.SetActive(false);
         pool[slime.key].Push(slime);
         ActiveSlimeCount = Mathf.Max(0, ActiveSlimeCount - 1);
@@ -77,7 +77,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
     // public bool IsMerging { get; private set; }
 
-    [SerializeField] Slime dragSlime;
+    ITileObject dragObject; // 드래그 중인 타일 오브젝트 (슬라임 or 캐릭터)
     Vector3 originPos;
     Vector3 offset;
 
@@ -99,11 +99,11 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
             BeginDrag();
         }
-        else if (dragSlime != null && Input.GetMouseButton(0))
+        else if (dragObject != null && Input.GetMouseButton(0))
         {
-            dragSlime.transform.position = GetMouseWorldPos() + offset;
+            dragObject.Transform.position = GetMouseWorldPos() + offset;
         }
-        else if (dragSlime != null && Input.GetMouseButtonUp(0))
+        else if (dragObject != null && Input.GetMouseButtonUp(0))
         {
             EndDrag();
         }
@@ -113,61 +113,62 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
 
     IAllyUnit targetUnit; // 현재 선택된 아군 (슬라임 or 캐릭터)
-    // 클릭한 위치의 슬라임 드래그 시작, 캐릭터는 선택만
+    // 클릭한 위치의 슬라임 or 캐릭터를 선택하고 드래그 시작
     void BeginDrag()
     {
         Vector3 mousePos = GetMouseWorldPos();
-        Slime slime = FindSlime(mousePos, null);
+        ITileObject tileObject = FindSlime(mousePos, null);
+        if (tileObject == null && IsCharacterAt(mousePos))
+            tileObject = Character.Instance;
 
-        if (slime == null)
+        if (tileObject == null)
         {
-            // 캐릭터는 드래그 없이 선택만
-            if (IsCharacterAt(mousePos))
-                SetTarget(Character.Instance);
-            else
-                ReleaseTarget();
+            ReleaseTarget();
             return;
         }
 
-        SetTarget(slime);
-        slime.StartDrag();
-        dragSlime = slime;
-        originPos = slime.transform.position;
+        if (tileObject is IAllyUnit allyUnit)
+            SetTarget(allyUnit);
+        tileObject.StartDrag();
+        dragObject = tileObject;
+        originPos = tileObject.Transform.position;
         offset = originPos - mousePos;
         offset.z = 0;
     }
 
-    // 놓은 위치에 슬라임이 있으면 머지 시도, 빈 타일이면 이동, 그 외엔 원위치
+    // 슬라임끼리 놓으면 머지 시도, 빈 타일이면 이동, 그 외엔 원위치
     void EndDrag()
     {
-        Slime source = dragSlime;
-        dragSlime = null;
+        ITileObject source = dragObject;
+        dragObject = null;
 
-        // 드래그 중 슬라임이 사라진 경우
-        if (source == null || !source.gameObject.activeInHierarchy)
+        // 드래그 중 오브젝트가 사라진 경우
+        if (source == null || source.Transform == null || !source.Transform.gameObject.activeInHierarchy)
             return;
 
         Vector3 dropPos = GetMouseWorldPos();
-        Slime target = FindSlime(dropPos, source);
-        Tile tile = null;
-        if (target == null)
+        if (source is Slime sourceSlime)
         {
-            tile = TileManager.Instance.GetNearestTile(dropPos);
-            if (tile != null && tile.IsEmpty)
+            Slime target = FindSlime(dropPos, sourceSlime);
+            if (target != null)
             {
-                TileManager.Instance.RemoveSlime(source);
-                tile.SetSlime(source);
+                source.EndDrag(null);
+                Merge(sourceSlime, target, originPos).Forget();
+                return;
             }
-            else
-            {
-                source.transform.position = originPos;
-            }
-            source.EndDrag(tile);
-            return;
         }
 
+        Tile tile = TileManager.Instance.GetNearestTile(dropPos);
+        if (tile != null && tile.IsEmpty)
+        {
+            TileManager.Instance.RemoveTileObject(source);
+            tile.SetTileObject(source);
+        }
+        else
+        {
+            source.Transform.position = originPos;
+        }
         source.EndDrag(tile);
-        Merge(source, target, originPos).Forget();
     }
 
     Slime FindSlime(Vector2 pos, Slime exclude)
@@ -202,14 +203,14 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
         // 머지 결과는 타겟 슬라임이 있던 타일에 배치
         Tile tile = TileManager.Instance.GetTile(target);
-        TileManager.Instance.RemoveSlime(source);
-        TileManager.Instance.RemoveSlime(target);
+        TileManager.Instance.RemoveTileObject(source);
+        TileManager.Instance.RemoveTileObject(target);
 
         Character.Instance.RemoveSlime(source);
         Character.Instance.RemoveSlime(target);
         Slime merged = Character.Instance.AddSlime(mergeResultKey, lv);
         if (tile != null)
-            tile.SetSlime(merged);
+            tile.SetTileObject(merged);
 
         ReleaseTarget();
         CharacterManageCanvas.Instance.UpdateCanvas();

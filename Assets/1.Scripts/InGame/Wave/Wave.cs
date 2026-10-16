@@ -4,21 +4,13 @@ public abstract class Wave : MonoBehaviour
 {
     public WaveType waveType;
 
-    // void Start()
-    // {
-    //     GameEventBus.Subscribe<WaveStartEvent>(OnWaveStartEvent);
-    // }
-    
-    // void OnWaveStartEvent(WaveStartEvent e)
-    // {
-    //     if(e.waveType == waveType)
-    //     {
-    //         StartWave();
-    //     }
-    // }
-
     public abstract void StartWave(int phase);
-    public virtual  void EndWave()
+
+    // 다음 phase로 넘어가지 않고 웨이브만 중지 (부활 시 같은 phase 재시작용)
+    public virtual void StopWave()
+    {
+    }
+    public virtual void EndWave()
     {
         MoveNextWave();
     }
@@ -26,19 +18,13 @@ public abstract class Wave : MonoBehaviour
     public virtual void MoveNextWave()
     {
         Debug.Log($"Wave MoveNextWave() currrent {waveType}");
-        
-        GameEventBus.Publish(new WaveEndEvent(GameManager.Instance.phase, waveType));
-        GameManager.Instance.EndWave(GameManager.Instance.phase, waveType);
+        GameManager.Instance.EndWave(GameManager.Instance.phase);
     }
 }
 public enum WaveType
 {
     Normal,
     Hard,
-    Break, //체력 회복, 가끔 스네이크 나옴(체력 풀피 대신 + 패널티)
-    Break_Snake, //체력 회복, 가끔 스네이크 나옴(체력 풀피 대신 + 패널티)
-    Shop, //
     Elite,
-    MidBoss,
     Boss
 }

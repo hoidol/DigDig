@@ -26,6 +26,10 @@ public interface IAllyUnit
     {
         get;
     }
+    AttackType AttackType
+    {
+        get;
+    }
 }
 
 public enum AllyType

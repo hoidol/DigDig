@@ -20,6 +20,7 @@ public class ThunderBulletObject : AllyBulletObject
         
         DamageData damageData = new DamageData();
         damageData.damage = thunderBullet.damage;
+        damageData.attackType = allyUnit.AttackType;
         for(int i = 0; i < targets.Length; i++)
         {
             EffectManager.Instance.Play(EffectType.Spark, targets[i].transform.position);    

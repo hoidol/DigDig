@@ -145,7 +145,13 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     //     }
     //     await base.MoveTo(dir, delaySec);
     // }
-
+    protected override void ReachPathEnd()
+    {
+        rg2d.linearVelocity = Vector2.zero;
+        damageData.damage = 99999;
+        Character.Instance.TakeDamage(damageData);
+        
+    }
     public BossBehaviour GetBossBehaviour(string name)
     {
         return bossBehaviours.Where(e => e.behaviourName == name).FirstOrDefault();

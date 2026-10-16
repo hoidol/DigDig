@@ -75,6 +75,7 @@ public class LightningChainOnHitBehavior
 
         DamageData chainDamageData = new DamageData();
         chainDamageData.damage = damage;
+        chainDamageData.attackType = bullet.allyUnitDamageData.attackType;
 
         for (int i = 1; i < points.Count; i++)
         {

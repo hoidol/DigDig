@@ -20,31 +20,31 @@ public class RandomDropPattern : EnemyAttackPattern
     public async override UniTask Execute(IEnemySpecialAttackPattern enemy, Action onEnd)
     {
         await base.Execute(enemy, onEnd);
-        float baseDamage = enemy.Transform.GetComponent<Enemy>().GetAttackPower() * 0.8f;
+        // float baseDamage = enemy.Transform.GetComponent<Enemy>().GetAttackPower() * 0.8f;
 
-        activeWarnings.Clear();
+        // activeWarnings.Clear();
 
-        for (int i = 0; i < dropCount; i++)
-        {
-            Vector2 pos = GetRandomPos();
-            WarningIndicator warning = WarningIndicator.Instantiate(pos, dropSize);
-            activeWarnings.Add(warning);
-            warning.Play(warningDuration, (Action<WarningIndicator>)((indicator) =>
-            {
-                enemy.PlayAnim(readyAnimName);
-                Collider2D[] cols = Physics2D.OverlapBoxAll(indicator.transform.position, new Vector2(dropSize, dropSize), 0);
-                foreach (var col in cols)
-                {
-                    if (col.CompareTag("Player"))
-                    {
-                        Character.Instance.TakeDamage(new DamageData() { damage = baseDamage });
-                        break;
-                    }
-                }
-                indicator.Cancel();
-            }));
-            await UniTask.Delay(TimeSpan.FromSeconds(spawnInterval));
-        }
+        // for (int i = 0; i < dropCount; i++)
+        // {
+        //     Vector2 pos = GetRandomPos();
+        //     WarningIndicator warning = WarningIndicator.Instantiate(pos, dropSize);
+        //     activeWarnings.Add(warning);
+        //     warning.Play(warningDuration, (Action<WarningIndicator>)((indicator) =>
+        //     {
+        //         enemy.PlayAnim(readyAnimName);
+        //         Collider2D[] cols = Physics2D.OverlapBoxAll(indicator.transform.position, new Vector2(dropSize, dropSize), 0);
+        //         foreach (var col in cols)
+        //         {
+        //             if (col.CompareTag("Player"))
+        //             {
+        //                 Character.Instance.TakeDamage(new DamageData() { damage = baseDamage });
+        //                 break;
+        //             }
+        //         }
+        //         indicator.Cancel();
+        //     }));
+        //     await UniTask.Delay(TimeSpan.FromSeconds(spawnInterval));
+        // }
 
         // 모든 낙하 완료 대기
         await UniTask.Delay(TimeSpan.FromSeconds(duration));

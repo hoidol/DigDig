@@ -14,15 +14,9 @@ public class WaveTimer : MonoBehaviour
         working= true;
         endCallback = endCb;
 
-        waveTime = GameSetting.WAVE_TIME + GameSetting.WAVE_INCREASE_TIME * phase;
-
-        
-        if (waveTime >= GameSetting.MIX_WAVE_TIME)
-        {
-            waveTime = GameSetting.MIX_WAVE_TIME;
-        }
+        waveTime = GameSetting.WAVE_TIME;
         waveTimer = waveTime;
-        GameEventBus.Publish(new WaveTimerStartEvent(phase,this));
+        GameEventBus.Publish(new WaveTimerStartEvent(this));
     }
     void Update()
     {
@@ -39,13 +33,26 @@ public class WaveTimer : MonoBehaviour
         
         waveTimer -= Time.deltaTime;
     }
+
+    // 남은 시간을 0으로 → 다음 Update에서 종료 콜백 호출 (스킵용)
+    public void Finish()
+    {
+        if (working)
+            waveTimer = 0;
+    }
+
+    // 종료 콜백 없이 타이머 중지 (부활로 웨이브를 다시 시작할 때)
+    public void Stop()
+    {
+        working = false;
+        endCallback = null;
+    }
 }
 
 public class WaveTimerStartEvent
 {
-    public int phase;
     public WaveTimer waveTimer;
-    public WaveTimerStartEvent(int phase, WaveTimer timer)
+    public WaveTimerStartEvent(WaveTimer timer)
     {
         waveTimer = timer;
     }

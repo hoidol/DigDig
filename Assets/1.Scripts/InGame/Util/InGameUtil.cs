@@ -5,7 +5,7 @@ using UnityEngine;
 public static class InGameUtil
 {
     //범위 공격
-    public static void DamageEnemies(Vector2 center, float radius, float damage, LayerMask enemyLayer, int maxCount = 4)
+    public static void DamageEnemies(Vector2 center, float radius, float damage, AttackType attackType, LayerMask enemyLayer, int maxCount = 4)
     {
         int count = maxCount;
         Collider2D[] cols = Physics2D.OverlapCircleAll(center, radius, enemyLayer);
@@ -13,7 +13,7 @@ public static class InGameUtil
         {
             if (col.TryGetComponent(out IHittable h))
             {
-                h.TakeDamage(new DamageData() { damage = damage });
+                h.TakeDamage(new DamageData() { damage = damage, attackType = attackType });
                 if (maxCount > 0)
                 {
                     count--;

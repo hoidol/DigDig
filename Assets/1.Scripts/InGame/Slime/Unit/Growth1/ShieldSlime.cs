@@ -19,6 +19,7 @@ public class ShieldSlime : SlimeGrowth1
         base.Spawn(pos, lv);
 
         orbitMachine.damage = AttackPower;
+        orbitMachine.attackType = AttackType;
         orbitMachine.radius = 2.3f;
         orbitMachine.rotationSpeed = orbitRotationSpeed;
         for(int i = 0; i < mergeLevel + 1; i++)

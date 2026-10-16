@@ -33,12 +33,12 @@ public class CharacterHealth : MonoBehaviour, IHittable
         if (statusEffectHandler != null && statusEffectHandler.TryBlock())
             return;
         
-        if(UnityEngine.Random.value <= character.statMgr.Dodge)
-        {
-            //회피함
-            CharacterTakeDamageText.SetText(hpPoint.position, "회피");
-            return;
-        }
+        // if(UnityEngine.Random.value <= character.statMgr.Dodge)
+        // {
+        //     //회피함
+        //     CharacterTakeDamageText.SetText(hpPoint.position, "회피");
+        //     return;
+        // }
 
         curHp -= damageData.ApplyDamage(hpPoint.position);
         if (curHp <= 0)

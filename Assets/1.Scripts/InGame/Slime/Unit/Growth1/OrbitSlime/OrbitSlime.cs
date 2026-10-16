@@ -27,6 +27,7 @@ public class OrbitSlime : SlimeGrowth1
 
         //회전 머신 설정
         orbitMachine.damage = AttackPower;
+        orbitMachine.attackType = AttackType;
 
         Debug.Log($"OrbitSlime InitSlime() {key} MergeLevel {mergeLevel} AttackPower {AttackPower}");
         orbitMachine.radius = radius;

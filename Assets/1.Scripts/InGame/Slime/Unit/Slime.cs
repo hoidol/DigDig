@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 //플레이어가 공격하면 같이 방향으로 쏨
 //충돌 안하게 하자
-public abstract class Slime : MonoBehaviour, IAllyUnit
+public abstract class Slime : MonoBehaviour, IAllyUnit,ITileObject
 {
     public string key;
     public int mergeLevel;
@@ -38,6 +38,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit
     public Transform Transform => transform;
     public string Key => key;
     public AllyType AllyType => AllyType.Slime;
+    public AttackType AttackType => slimeData.attackType;
     public LayerMask targetLayerMask = 1 << 3;
 
 

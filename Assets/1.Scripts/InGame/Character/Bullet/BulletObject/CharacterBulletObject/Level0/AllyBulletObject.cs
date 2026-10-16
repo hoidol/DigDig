@@ -25,6 +25,7 @@ public class AllyBulletObject : BulletObject
 
         damage = allyBulletSpec.damage;
         allyUnitDamageData.damage = damage;
+        allyUnitDamageData.attackType = allyUnit.AttackType;
 
         ClearBehaviors();
         ClearBulletForce();

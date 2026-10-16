@@ -28,6 +28,7 @@ public class CharacterBulletObject : AllyBulletObject
 
         characterDamageData.Init();
         characterDamageData.damage = (bullet as CharacterBulletSpec).damage;
+        characterDamageData.attackType = AttackType.Physic; // 캐릭터 총알은 물리
 
         damageMultiplier = 1;
         characterDamageData.mustCrit = bullet.mustCrit;

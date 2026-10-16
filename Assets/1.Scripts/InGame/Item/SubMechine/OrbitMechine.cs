@@ -7,6 +7,7 @@ public class OrbitMachine : SubMachine
     public float radius = 2f;
     public float rotationSpeed = 80f; //충분히느리게 
     public float damage;
+    public AttackType attackType;
 
     public readonly List<OrbitOrb> orbitOrbs = new();
     readonly Queue<OrbitOrb> pool = new();

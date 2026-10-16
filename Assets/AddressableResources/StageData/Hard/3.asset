@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9d68eef31f674aceb2670508d91813f, type: 3}
   m_Name: 3
   m_EditorClassIdentifier: 
-  enemySpawnerContainerPrefab: {fileID: 700800661684834404, guid: 5374e2a20be1b476087b81a9ea6e5478,
+  enemySpawnerContainerPrefab: {fileID: -3282472581855398205, guid: f513683e5b4384e70af32bf348c8d9e5,
     type: 3}
   key: Hard_3
   order: 3
@@ -31,157 +31,51 @@ MonoBehaviour:
     value: Heal
     id: 
     phase: 10
-  stoneHp: 22
   enemyHp: 27
   addHpRatioPerPhase: 0.35
-  enemyAtk: 4.7
-  addAtkRatioPerPhase: 0.05
   multiHpPerPhase: 1.1
-  multiAtkPerPhase: 1.03
   enemyPrefabs: []
+  defenceTypes: 000000000100000002000000
+  defenceWaveTypes: 01000000010000000200000001000000000000000100000003000000
   phaseDatas:
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 2}
-      intervalRange: {x: 3, y: 5}
-    waveTypes: 00000000
-    peakCountMultiplier: 1.1
-    specialPattern: 0
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 2}
-      intervalRange: {x: 3, y: 5}
-    waveTypes: 000000000000000000000000
-    peakCountMultiplier: 1.15
-    specialPattern: 1
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 2}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 1}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 000000000000000001000000
-    peakCountMultiplier: 1.2
-    specialPattern: 1
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 3}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 1}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 0500000002000000
-    peakCountMultiplier: 1.25
-    specialPattern: 0
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 2}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 1}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 000000000000000001000000
-    peakCountMultiplier: 1.3
-    specialPattern: 1
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 3}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 1}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 000000000000000001000000
-    peakCountMultiplier: 1.35
-    specialPattern: 1
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 3}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 1}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 000000000000000001000000
-    peakCountMultiplier: 1.4
-    specialPattern: 1
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 1, y: 1}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 2}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 0200000004000000
-    peakCountMultiplier: 1.45
-    specialPattern: 0
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 3}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 2}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 06000000
-    peakCountMultiplier: 1.5
-    specialPattern: 0
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 3}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 2}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 0000000005000000
-    peakCountMultiplier: 1.55
-    specialPattern: 1
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 3}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 2}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 04000000
-    peakCountMultiplier: 1.6
-    specialPattern: 0
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 3}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 2}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 00000000000000000100000004000000
-    peakCountMultiplier: 1.7
-    specialPattern: 1
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 3}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 2}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 010000000000000005000000
-    peakCountMultiplier: 1.8
-    specialPattern: 1
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 2, y: 3}
-      intervalRange: {x: 3, y: 5}
-    - enemyType: 1
-      spawnCountRange: {x: 1, y: 2}
-      intervalRange: {x: 10, y: 12}
-    waveTypes: 02000000
-    peakCountMultiplier: 1.9
-    specialPattern: 0
-  - enemySpawnPatternDatas:
-    - enemyType: 0
-      spawnCountRange: {x: 1, y: 2}
-      intervalRange: {x: 10, y: 12}
-    - enemyType: 1
-      spawnCountRange: {x: 0, y: 0}
-      intervalRange: {x: 0, y: 0}
-    waveTypes: 07000000
-    peakCountMultiplier: 1
-    specialPattern: 0
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 1
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 2
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 1
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 2
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 1
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 2
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 1
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 0
+  - enemySpawnPatternDatas: []
+    waveType: 3
   boss: {fileID: 2323350187061452681, guid: e6611bd74967549bcb718b7ae82ef851, type: 3}

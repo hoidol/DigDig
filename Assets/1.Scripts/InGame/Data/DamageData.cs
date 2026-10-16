@@ -3,8 +3,10 @@ using UnityEngine;
 public class DamageData
 {
     public float damage;
-    public virtual float ApplyDamage(Vector2 pos)
+    public AttackType attackType;
+    public virtual float ApplyDamage(Vector2 pos, float multiplier = 1f)
     {
+        float damage = this.damage * multiplier;
         if (damage < 1)
             damage = 0;
 
@@ -17,8 +19,9 @@ public class DamageData
 [System.Serializable]
 public class EnemyDamageData : DamageData
 {
-    public override float ApplyDamage(Vector2 pos)
+    public override float ApplyDamage(Vector2 pos, float multiplier = 1f)
     {
+        float damage = this.damage * multiplier;
         if (damage < 1)
             damage = 1;
 
@@ -41,8 +44,9 @@ public class AllyUnitDamageData : DamageData
         isCrt = false;
     }
 
-    public override float ApplyDamage(Vector2 pos)
+    public override float ApplyDamage(Vector2 pos, float multiplier = 1f)
     {
+        float damage = this.damage * multiplier;
         if (damage < 1)
             damage = 0;
         string dText = $"-{(int)damage}";

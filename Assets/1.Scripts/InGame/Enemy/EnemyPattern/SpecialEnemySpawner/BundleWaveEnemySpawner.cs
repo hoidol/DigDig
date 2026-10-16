@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 // 화면 밖 특정 방향 하나에서 적을 뭉치(Bundle) 단위로 모아서, 일정 간격으로 여러 웨이브 소환
 public class BundleWaveEnemySpawner : SpawnPattern
 {
-    [SerializeField] EnemyType enemyType = EnemyType.Melee;
+    [SerializeField] EnemyType enemyType = EnemyType.Normal;
     // [SerializeField] int waveCount = 3;          // 웨이브 수
     // [SerializeField] float waveInterval = 3f;    // 웨이브 간격(초)
     [SerializeField] int bundleCountPerWave = 3; // 웨이브당 뭉치 수

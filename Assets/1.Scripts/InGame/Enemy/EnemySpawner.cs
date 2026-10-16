@@ -6,7 +6,7 @@ using UnityEngine;
 public class EnemySpawner : MonoSingleton<EnemySpawner>
 {
     readonly Dictionary<EnemyType, Stack<Enemy>> pool = new(); // 적 종류 별 풀링
-
+    public Transform[] paths;
     [field: SerializeField] public int ActiveEnemyCount { get; private set; }
 
     public readonly HashSet<Enemy> activeEnemies = new();
@@ -67,45 +67,22 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         ActiveEnemyCount = activeEnemies.Count;
     }
 
+    // 필드의 모든 적을 처치 이벤트/보상 없이 회수 (부활 시)
+    public void ClearAllEnemies()
+    {
+        foreach (Enemy enemy in new List<Enemy>(activeEnemies))
+            ReleaseEnemy(enemy);
+    }
+
     public void EnemyDeadEventListener(EnemyDeadEvent e)
     {
         ReleaseEnemy(e.enemy);
     }
-
-    // public Enemy GetEnemyInTileIndex(Vector2Int tileIdx)
-    // {
-    //     foreach (Enemy enemy in activeEnemies)
-    //     {
-    //         foreach (Vector2Int idx in enemy.TileIndexArr)
-    //         {
-    //             if (idx == tileIdx) return enemy;
-    //         }
-    //     }
-    //     return null;
-    // }
+    public Vector2 PathStartPosition => paths[0].position;
 
     public Vector2 GetSpawnPosition(float howFar = -1)
     {
-        if (howFar < 0)
-        {
-             howFar = InGameUtil.GetEndOutLength();
-        }
-
-        Vector2 pos = (Vector2)Character.Instance.transform.position + UnityEngine.Random.insideUnitCircle.normalized * howFar;
-        float xLimit = CameraManager.Instance.mainCamera.orthographicSize * CameraManager.Instance.mainCamera.aspect + 0.5f;
-        pos.x = Mathf.Clamp(pos.x, -xLimit, xLimit);
-        return pos;
+        return PathStartPosition;
     }
 
-
-    public Vector2 GetSpawnTopPosition(float howFar = -1)
-    {
-        if (howFar < 0)
-        {              
-            howFar = InGameUtil.GetEndOutLength();
-        }
-
-        Vector2 direction = Quaternion.Euler(0, 0, UnityEngine.Random.Range(60f, 120f)) * Vector2.right;
-        return MapManager.SnappedPosition(Vector2.zero + direction * howFar);
-    }
 }

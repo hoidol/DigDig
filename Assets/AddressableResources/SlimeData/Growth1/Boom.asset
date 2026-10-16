@@ -15,6 +15,7 @@ MonoBehaviour:
   key: Boom
   desc: "\uD3ED\uBC1C\uD0C4 \uBC1C\uC0AC(\uBC94\uC704 \uD53C\uD574)"
   growth: 1
+  attackType: 0
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:

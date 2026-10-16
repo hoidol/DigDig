@@ -20,7 +20,7 @@ public class HammerExplosionBehavior : IBulletBehavior
     {
         if (hit is Stone && Random.value <= chance)
         {
-            InGameUtil.DamageEnemies(bullet.transform.position, radius, damage, enemyLayer);
+            InGameUtil.DamageEnemies(bullet.transform.position, radius, damage,AttackType.Vibrational, enemyLayer);
         }
         return true;
     }

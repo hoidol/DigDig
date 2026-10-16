@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_EDITOR
-using System.Globalization;
 using System.IO;
 using UnityEditor;
 #endif
@@ -10,7 +9,7 @@ using UnityEditor;
 public class StageData : ScriptableObject
 {
     public EnemySpawnerContainer enemySpawnerContainerPrefab;
-
+    //Key	Order	Difficulty	Stage	BossName	EnemyHp	AddHpRatioPerPhase	MultiHpPerPhase	EnemyTypes	EnemySpawnOrder
     public string key;
     public int order;
     public string Title => key;
@@ -18,15 +17,13 @@ public class StageData : ScriptableObject
     public DifficultyType difficulty;
     public StageRewardData[] rewardDatas;
 
-    public float stoneHp;
     public float enemyHp;
     public float addHpRatioPerPhase;
-    public float enemyAtk;
-    public float addAtkRatioPerPhase;
     public float multiHpPerPhase = 1f;
-    public float multiAtkPerPhase = 1f;
-    public Enemy[] enemyPrefabs; //해당 스테이지의 등장할 원거리, 근거리 엘리트 등 적 설정
-    Dictionary<EnemyType, Enemy> enemyPrefabDic = new Dictionary<EnemyType, Enemy>();
+    public Enemy[] enemyPrefabs; //해당 스테이지의 적들
+    public DefenceType[] defenceTypes; // 해당 스테이지에서 등장하는 방어 타입
+    public DefenceWaveType[] defenceWaveTypes;// phase마다 순서대로 적용 (phase % 개수), 한 phase 안에서는 모두 같은 방어 타입
+    Dictionary<KeyValuePair<EnemyType, DefenceType>, Enemy> enemyPrefabDic = new Dictionary<KeyValuePair<EnemyType, DefenceType>, Enemy>();
     public PhaseData[] phaseDatas;
     // public EventData[] eventDatas;
     public Boss boss;
@@ -61,15 +58,44 @@ public class StageData : ScriptableObject
     }
     public void Init()
     {
+        enemyPrefabDic.Clear();
         for (int i = 0; i < enemyPrefabs.Length; i++)
         {
-            enemyPrefabDic.Add(enemyPrefabs[i].enemyType, enemyPrefabs[i]);
+            Enemy enemy = enemyPrefabs[i];
+            DefenceType defenceType = enemy.enemyData != null ? enemy.enemyData.defenceType : DefenceType.Normal;
+            var dicKey = new KeyValuePair<EnemyType, DefenceType>(enemy.enemyType, defenceType);
+            if (!enemyPrefabDic.TryAdd(dicKey, enemy))
+                Debug.LogWarning($"[StageData] {key} 중복 적 프리팹 무시: {enemy.name} ({enemy.enemyType}, {defenceType})");
         }
     }
 
-    public Enemy GetEnemyPrefab(EnemyType enemyType)
+    // 해당 방어 타입 프리팹이 없으면 Normal 방어 타입으로 대체
+    public Enemy GetEnemyPrefab(EnemyType enemyType, DefenceType defenceType = DefenceType.Normal)
     {
-        return enemyPrefabDic[enemyType];
+        if (enemyPrefabDic.TryGetValue(new KeyValuePair<EnemyType, DefenceType>(enemyType, defenceType), out Enemy enemy))
+            return enemy;
+
+        Debug.LogWarning($"[StageData] {key} 적 프리팹 없음 ({enemyType}, {defenceType}) → Normal로 대체");
+        enemyPrefabDic.TryGetValue(new KeyValuePair<EnemyType, DefenceType>(enemyType, DefenceType.Normal), out enemy);
+        return enemy;
+    }
+
+    // phase의 방어 타입. Random이면 defenceTypes 중 하나 (호출할 때마다 새로 뽑으므로 phase 시작 시 한 번만 호출)
+    public DefenceType GetPhaseDefenceType(int phase)
+    {
+        if (defenceWaveTypes == null || defenceWaveTypes.Length == 0)
+            return DefenceType.Normal;
+
+        DefenceWaveType waveType = defenceWaveTypes[phase % defenceWaveTypes.Length];
+        if (waveType == DefenceWaveType.Random)
+        {
+            if (defenceTypes == null || defenceTypes.Length == 0)
+                return DefenceType.Normal;
+            return defenceTypes[Random.Range(0, defenceTypes.Length)];
+        }
+
+        // DefenceWaveType은 Random 다음부터 DefenceType과 같은 이름 순서
+        return (DefenceType)System.Enum.Parse(typeof(DefenceType), waveType.ToString());
     }
 
     public static StageData GetStageData(string key)
@@ -116,13 +142,11 @@ public class StageData : ScriptableObject
             order = od;
             difficulty = dt;
             if (row.TryGetInt("Stage", out int st)) stage = st;
-            if (row.TryGetFloat("StoneHp", out float shp)) stoneHp = shp;
             if (row.TryGetFloat("EnemyHp", out float eh)) enemyHp = eh;
             if (row.TryGetFloat("AddHpRatioPerPhase", out float ahr)) addHpRatioPerPhase = ahr;
-            if (row.TryGetFloat("EnemyAtk", out float ea)) enemyAtk = ea;
-            if (row.TryGetFloat("AddAtkRatioPerPhase", out float aar)) addAtkRatioPerPhase = aar;
             if (row.TryGetFloat("MultiHpPerPhase", out float mh)) multiHpPerPhase = mh;
-            if (row.TryGetFloat("MultiAtkPerPhase", out float ma)) multiAtkPerPhase = ma;
+            defenceTypes = ParseEnumList<DefenceType>(row.Get("DefenceTypes"), "DefenceTypes");
+            defenceWaveTypes = ParseEnumList<DefenceWaveType>(row.Get("DefenceWaveTypes"), "DefenceWaveTypes");
             bossName = row.Get("BossName");
             break;
         }
@@ -131,6 +155,42 @@ public class StageData : ScriptableObject
         // LoadEventDatas();
         LoadEnemyPrefabs();
         LoadBossPrefab(bossName);
+        LoadEnemySpawnerContainerPrefab();
+    }
+
+    // "A/B/C" → enum 배열 (파싱 실패한 값은 경고 후 제외)
+    T[] ParseEnumList<T>(string raw, string column) where T : struct, System.Enum
+    {
+        var list = new List<T>();
+        if (string.IsNullOrEmpty(raw))
+            return list.ToArray();
+
+        foreach (var s in raw.Split('/'))
+        {
+            if (System.Enum.TryParse(s.Trim(), out T v)) list.Add(v);
+            else Debug.LogWarning($"[StageData] {key} {column} 파싱 실패: {s}");
+        }
+        return list.ToArray();
+    }
+
+    const string ENEMY_SPAWNER_CONTAINER_PREFAB_PATH = "Assets/3.Prefabs/Stage/EnemySpawnerContainer.prefab";
+
+    // enemySpawnerContainerPrefab이 비어 있으면 기본 프리팹으로 채움 (이미 지정돼 있으면 유지)
+    void LoadEnemySpawnerContainerPrefab()
+    {
+        if (enemySpawnerContainerPrefab != null)
+            return;
+
+        var go = AssetDatabase.LoadAssetAtPath<GameObject>(ENEMY_SPAWNER_CONTAINER_PREFAB_PATH);
+        var container = go != null ? go.GetComponent<EnemySpawnerContainer>() : null;
+        if (container == null)
+        {
+            Debug.LogWarning($"[StageData] {key} EnemySpawnerContainer 프리팹 없음: {ENEMY_SPAWNER_CONTAINER_PREFAB_PATH}");
+            return;
+        }
+
+        enemySpawnerContainerPrefab = container;
+        Debug.Log($"[StageData] {key} EnemySpawnerContainer 로드 완료");
     }
 
     const string BOSS_PREFAB_FOLDER = "Assets/3.Prefabs/Boss";
@@ -173,7 +233,7 @@ public class StageData : ScriptableObject
         Debug.Log($"[StageData] {key} EnemyPrefabs {list.Count}개 로드 완료");
     }
 
-    // WaveData/{difficulty}.csv의 Phase 행마다 PhaseData 1개 (waveTypes + 해당 phase의 EnemyPatternData)
+    // WaveData/{difficulty}.csv의 Phase 행마다 PhaseData 1개 (waveType)
     void LoadPhaseDatas()
     {
         TableReader table = TableReader.Load($"WaveData/{difficulty}.csv");
@@ -184,19 +244,9 @@ public class StageData : ScriptableObject
         {
             if (!row.TryGetInt("Phase", out int phase)) continue;
 
-            var d = new PhaseData { waveTypes = new List<WaveType>() };
-            string typesRaw = row.Get("WaveType");
-            if (!string.IsNullOrEmpty(typesRaw))
-            {
-                foreach (var t in typesRaw.Split('/'))
-                {
-                    if (System.Enum.TryParse(t.Trim(), out WaveType wt)) d.waveTypes.Add(wt);
-                    else Debug.LogWarning($"[StageData] WaveData WaveType 파싱 실패: {t} (phase={phase})");
-                }
-            }
-            if (row.TryGetFloat("PeakCountMul", out float peak)) d.peakCountMultiplier = peak;
-            if (bool.TryParse(row.Get("SpecialPattern"), out bool special)) d.specialPattern = special;
-            d.enemySpawnPatternDatas = FindEnemyPatternData(phase);
+            var d = new PhaseData();
+            if (row.TryGetEnum("WaveType", out WaveType wt)) d.waveType = wt;
+            else Debug.LogWarning($"[StageData] WaveData WaveType 파싱 실패: {row.Get("WaveType")} (phase={phase}) → Normal");
 
             // phase 순서대로 배치 (phaseDatas[phase])
             while (list.Count <= phase) list.Add(null);
@@ -205,75 +255,6 @@ public class StageData : ScriptableObject
 
         phaseDatas = list.ToArray();
         Debug.Log($"[StageData] {key} PhaseData {phaseDatas.Length}개 로드 완료");
-    }
-
-    EnemySpawnPatternData[] FindEnemyPatternData(int phase)
-    {
-        TableReader table = TableReader.Load($"EnemyPatternData/{difficulty}.csv");
-        if (table == null) return null;
-        if (table.rows.Count == 0)
-        {
-            Debug.LogWarning($"[StageData] EnemyPatternData 행 없음: {table.path}");
-            return null;
-        }
-
-        // 헤더: phase / enemyType / WaveSpawnCounts(min/max) / WaveIntervalTimes(min/max)
-        if (!table.HasColumn("Phase") || !table.HasColumn("EnemyType") || !table.HasColumn("WaveSpawnCounts") || !table.HasColumn("WaveIntervalTimes"))
-        {
-            Debug.LogWarning($"[StageData] EnemyPatternData 헤더 누락: {table.path}");
-            return null;
-        }
-
-        var waveList = new List<EnemySpawnPatternData>();
-        foreach (TableReader.Row row in table.rows)
-        {
-            // 난이도별 파일이므로 phase 로 행 식별
-            if (!row.TryGetInt("Phase", out int ph) || ph != phase) continue;
-
-            if (!row.TryGetEnum("EnemyType", out EnemyType et))
-            {
-                Debug.LogWarning($"[StageData] EnemyPatternData enemyType 파싱 실패: {row.Get("EnemyType")} ({difficulty}.csv {row.lineNumber}행)");
-                continue;
-            }
-
-            if (TryParseCountRange(row.Get("WaveSpawnCounts"), out Vector2Int waveCount) &&
-                TryParseIntervalRange(row.Get("WaveIntervalTimes"), out Vector2 waveItvl))
-            {
-                waveList.Add(new EnemySpawnPatternData { enemyType = et, spawnCountRange = waveCount, intervalRange = waveItvl });
-            }
-            else
-            {
-                Debug.LogWarning($"[StageData] EnemyPatternData 파싱 실패: {row.Get("WaveSpawnCounts")} / {row.Get("WaveIntervalTimes")} ({difficulty}.csv {row.lineNumber}행)");
-            }
-        }
-
-        if (waveList.Count == 0) { Debug.LogWarning($"[StageData] EnemyPatternData {difficulty} phase={phase} 데이터 없음"); return null; }
-
-        return waveList.ToArray();
-    }
-
-    // "min/max" 또는 단일 값 "n" 허용
-    static bool TryParseCountRange(string raw, out Vector2Int range)
-    {
-        range = default;
-        string[] parts = raw.Split('/');
-        if (parts.Length == 1 && int.TryParse(parts[0], out int single)) { range = new Vector2Int(single, single); return true; }
-        if (parts.Length != 2) return false;
-        if (!int.TryParse(parts[0], out int min)) return false;
-        if (!int.TryParse(parts[1], out int max)) return false;
-        range = new Vector2Int(min, max);
-        return true;
-    }
-
-    static bool TryParseIntervalRange(string raw, out Vector2 range)
-    {
-        range = default;
-        string[] parts = raw.Split('/');
-        if (parts.Length != 2) return false;
-        if (!float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float min)) return false;
-        if (!float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float max)) return false;
-        range = new Vector2(min, max);
-        return true;
     }
 
     // void LoadEventDatas()
@@ -332,21 +313,7 @@ public class StageData : ScriptableObject
 [System.Serializable]
 public class PhaseData
 {
-    public EnemySpawnPatternData[] enemySpawnPatternDatas;
-    public List<WaveType> waveTypes; // 이 중 하나가 실행됨
-    public float peakCountMultiplier = 1f; // 웨이브 끝에 도달하는 스폰 수 배율
-    public bool specialPattern; // BattleWave 특수 스폰(specialEnemySpawners) 동작 여부
-}
-
-[System.Serializable]
-public class EnemySpawnPatternData
-{
-    public EnemyType enemyType;
-    public Vector2Int spawnCountRange; //min/max (둘 다 포함)
-    public Vector2 intervalRange;
-
-    public int GetSpawnCount() => Random.Range(spawnCountRange.x, spawnCountRange.y + 1);
-
+    public WaveType waveType; // 이 phase에 실행되는 웨이브
 }
 
 [System.Serializable]
@@ -362,4 +329,16 @@ public enum DifficultyType : int
     Normal,
     Hard,
     Hell
+}
+
+
+public enum DefenceWaveType
+{
+    
+    Random,
+    Normal, //일반형 소환
+    Armored, //갑옷형 소환
+    Ethereal, //정령형 소환 
+    HeavyArmor, // 중갑형 소환
+    Organic, //생체형 소환
 }

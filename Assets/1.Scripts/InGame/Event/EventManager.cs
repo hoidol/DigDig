@@ -213,7 +213,7 @@ public class EventManager : MonoSingleton<EventManager>
     public Vector2 CalcSpawnPosition()
     {
         float farDistance = (MapManager.MIN_RANGE_RADIUS + 2);//+ spawnCount * 2.3f;
-        Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Character.Instance.distanceMaxDistanceDestroiedStone} farDistance {farDistance}");
+        // Debug.Log($"EventManager CalcSpawnPosition {spawnCount}. Player.Instance.distanceMaxDistanceDestroiedStone {Character.Instance.distanceMaxDistanceDestroiedStone} farDistance {farDistance}");
         //Vector2.right 를 0도 기준으로 60~120도 사이 랜덤 각도로 회전시킨 방향으로 farDistance만큼 떨어진 위치를 반환
         Vector2 direction = Quaternion.Euler(0, 0, Random.Range(60f, 120f)) * Vector2.right;
         return MapManager.SnappedPosition(Vector2.zero + direction * farDistance);
@@ -227,7 +227,7 @@ public enum EventType
     LifeFountain,   // 생명 분수 - 체력 증가
     ItemBox,
     StatStone,
-    ItemShop,
+    Shop,
     EnemyArea
 }
 

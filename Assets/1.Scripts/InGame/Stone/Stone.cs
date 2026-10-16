@@ -42,6 +42,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
     public float MaxHp => maxHp;
     public float CurHp => curHp;
     public int level;
+    public float baseHp = 10f; // 거리/레벨 보정 전 기본 체력 (StageData.stoneHp 제거 후 프리팹에서 설정)
 
     public SpriteRenderer innerSpriteRdr;
     public virtual void Init(int level, Color color, Vector2Int[,] idxArr)//, Vector2Int gridPos
@@ -58,7 +59,7 @@ public class Stone : MonoBehaviour, IHittable, ITile
         float disMulti = distance / 7f;
         if (disMulti <= 1)
             disMulti = 1;
-        float defaultHp = GameManager.Instance.stageData.stoneHp * disMulti;
+        float defaultHp = baseHp * disMulti;
         this.maxHp = defaultHp + defaultHp * level * 0.5f;
 
         curHp = maxHp;

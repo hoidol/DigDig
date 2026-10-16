@@ -1,5 +1,16 @@
-Type	AttackSpeed	AttackRange	HpMultiplier	AttackPowerMultiplier	Gold	MoveSpeed	Exp
-Melee	3	0.5	1	1	1	0.55	2
-Ranged	3	7	0.6	1	1	0.4	3
-Elite	5	4	0.6	1	10	0.2	3
-BonusElite	5	4	0.6	1	10	0.19	3
+Type	DefenceType	HpMultiplier	Gold	MoveSpeed
+Normal	Normal	1	1	0.8
+Normal	Armored	1.25	1	0.7
+Normal	Ethereal	0.7	1	1.1
+Normal	HeavyArmor	1.5	1	0.5
+Normal	Organic	0.8	1	1
+Elite	Normal	30	30	0.4
+Elite	Armored	35	30	0.35
+Elite	Ethereal	22	30	0.47
+Elite	HeavyArmor	40	30	0.3
+Elite	Organic	25	30	0.44
+BonusElite	Normal	25	30	0.4
+BonusElite	Armored	30	30	0.35
+BonusElite	Ethereal	17	30	0.47
+BonusElite	HeavyArmor	35	30	0.3
+BonusElite	Organic	20	30	0.44

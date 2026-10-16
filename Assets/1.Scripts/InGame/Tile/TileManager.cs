@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class TileManager : MonoSingleton<TileManager>
 {
+    public TileGroup[] tileGroups;
     public Tile[] tiles;
     readonly List<Tile> emptyTiles = new();
 
     void Awake()
     {
+        tileGroups = GetComponentsInChildren<TileGroup>();
         tiles = GetComponentsInChildren<Tile>();
         tileLayer = LayerMask.GetMask("Tile");
     }
@@ -40,19 +42,19 @@ public class TileManager : MonoSingleton<TileManager>
         return null;
     }
 
-    public Tile GetTile(Slime slime)
+    public Tile GetTile(ITileObject tileObject)
     {
         foreach (Tile tile in tiles)
         {
-            if (tile.slime == slime)
+            if (tile.tileObject == tileObject)
                 return tile;
         }
         return null;
     }
 
-    public void RemoveSlime(Slime slime)
+    public void RemoveTileObject(ITileObject tileObject)
     {
-        Tile tile = GetTile(slime);
+        Tile tile = GetTile(tileObject);
         if (tile != null)
             tile.Clear();
     }

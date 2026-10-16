@@ -56,7 +56,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         if(exp>0)
             UserDataManager.Instance.userMyInfoManager.AddExp(exp); 
         
-        int destroy = GameManager.Instance.destroyStoneCount + GameManager.Instance.killEnemyCount;
+        int destroy = GameManager.Instance.killEnemyCount;
         int gold = destroy / 10;  
         
         if(userStage.clearCount > 0)

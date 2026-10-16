@@ -23,7 +23,8 @@ public class FlameEnhance8Ability : SlimeEnhanceAbility, ISkillSlimeEnhanceAbili
                 
                 StatusEffectHandler handler = (hittable as Component)?.GetComponent<StatusEffectHandler>();
                 handler?.Apply(new FlameEffect(flameSlime.burnDuration, flameSlime.burnDPS));
-                hittable.TakeDamage(new DamageData { damage = Character.Instance.statMgr.AttackPower });
+                hittable.TakeDamage(new DamageData { damage = Character.Instance.statMgr.AttackPower ,
+                attackType = AttackType.Magic});
                 hitCount ++;
             }
         }

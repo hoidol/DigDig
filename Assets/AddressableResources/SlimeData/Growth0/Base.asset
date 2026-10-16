@@ -15,6 +15,7 @@ MonoBehaviour:
   key: Base
   desc: "\uAC00\uB2A5\uC131\uC774 \uD48D\uBD80\uD55C \uC791\uC740 \uC2AC\uB77C\uC784"
   growth: 0
+  attackType: 0
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:

@@ -7,11 +7,9 @@ using UnityEditor;
 public class EnemyData : ScriptableObject
 {
     public EnemyType type;
-    public float attackSpeed;
-    public float attackRange;
+    public DefenceType defenceType;
     public int exp;
     public float hpMultiplier;
-    public float attackPowerMultiplier;
     public int gold;
     public float moveSpeed = 1;
 
@@ -24,11 +22,8 @@ public class EnemyData : ScriptableObject
         foreach (TableReader.Row row in table.rows)
         {
             if (!row.TryGetEnum("Type", out EnemyType rowType) || rowType != type) continue;
-            if (row.TryGetFloat("AttackSpeed", out float v)) attackSpeed = v;
-            if (row.TryGetFloat("AttackRange", out v)) attackRange = v;
             if (row.TryGetInt("Exp", out int n)) exp = n;
-            if (row.TryGetFloat("HpMultiplier", out v)) hpMultiplier = v;
-            if (row.TryGetFloat("AttackPowerMultiplier", out v)) attackPowerMultiplier = v;
+            if (row.TryGetFloat("HpMultiplier", out float v)) hpMultiplier = v;
             if (row.TryGetInt("Gold", out n)) gold = n;
             if (row.TryGetFloat("MoveSpeed", out v)) moveSpeed = v;
 
@@ -43,9 +38,18 @@ public class EnemyData : ScriptableObject
 
 public enum EnemyType
 {
-    Melee,
-    Ranged,
+    Normal,
     Elite,
     BonusElite,
-    Boss
+    Boss,        
+}
+
+//갑옷(바위), 중갑(수정), 정령(진흙)
+public enum DefenceType
+{
+    Normal, //일반형 - 직관적으로 데미지 입음
+    Armored, //갑옷형 - 물리 -50% 마법+50% 진동0%
+    Ethereal, //정령형 - 물리 +50% 마법-50% 진동0%
+    HeavyArmor, // 중갑형 - 진동 +60% 물리 -30% 마법 -30%
+    Organic, //생체형 - 물리 +30% 마법 -30% 진동0%, 버프 무시
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using Cysharp.Threading.Tasks;
 
-public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
+public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable,ITileObject
 {
     public const int COMBO_ATTACK_INTERVAL_MS = 70;
 
@@ -46,9 +46,9 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public Transform attackPoint => weapon.AttackPoint;
     // public Vector2 MoveDirection => movement.MoveDirection;
     // public float maxDistance => movement.maxDistance;
-    public int destroyCount;
-    public float distanceMaxDistanceDestroiedStone;
-    public float distanceMinDistanceDestroiedStone;
+    // public int destroyCount;
+    // public float distanceMaxDistanceDestroiedStone;
+    // public float distanceMinDistanceDestroiedStone;
     public Vector2 AttackDir => weapon.GetAttackDirection();
 
 
@@ -59,6 +59,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public string Key => key;
 
     public AllyType AllyType => AllyType.Character;
+    public AttackType AttackType => AttackType.Physic;
 
     public float MaxHp => statMgr.MaxHp;
     // public GameObject rangeObj;
@@ -101,24 +102,6 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
         UpdateCharacter();
 
-        // bounce = 0;
-        destroyCount = 0;
-        distanceMaxDistanceDestroiedStone = MapManager.MIN_RANGE_RADIUS;
-        distanceMinDistanceDestroiedStone = float.MaxValue;
-        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
-    }
-
-    void OnDestroy()
-    {
-        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
-    }
-
-    void OnDestroyedStone(DestroyedStoneEvent e)
-    {
-        destroyCount++;
-        float dist = Vector2.Distance(transform.position, e.stone.transform.position);
-        if (dist > distanceMaxDistanceDestroiedStone) distanceMaxDistanceDestroiedStone = dist;
-        if (dist < distanceMinDistanceDestroiedStone) distanceMinDistanceDestroiedStone = dist;
     }
 
     void Update()
@@ -309,6 +292,14 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public void EndTarget()
     {
         // rangeObj.SetActive(false);
+    }
+
+    public void StartDrag()
+    {
+    }
+
+    public void EndDrag(Tile tile)
+    {
     }
 
 

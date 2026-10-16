@@ -16,6 +16,7 @@ MonoBehaviour:
   desc: "1\uD68C \uD295\uAE30\uB294 \uB3C4\uD0C4 \uBC1C\uC0AC/2\uD68C \uD295\uAE30\uB294
     \uB3C4\uD0C4 \uBC1C\uC0AC/4\uD68C \uD295\uAE30\uB294 \uB3C4\uD0C4 \uBC1C\uC0AC"
   growth: 1
+  attackType: 0
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:

@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ef2c155293ec43039d15ac0048b42be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyType: 4
+  enemyType: 3
   enemyData: {fileID: 11400000, guid: 66ab2fdb56864443f9c52971c7a1b7c7, type: 2}
   <statusEffectHandler>k__BackingField: {fileID: 7837982868996976849}
   maxHp: 0
@@ -251,7 +251,9 @@ MonoBehaviour:
   apearTime: 2
   damageData:
     damage: 0
+    attackType: 0
   hpText: {fileID: 8255142255019599821}
+  pathIdx: 0
   face: 0
   isPushing: 0
   bossState: 0

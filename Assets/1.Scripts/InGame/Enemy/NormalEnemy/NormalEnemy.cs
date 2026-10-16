@@ -7,8 +7,8 @@ public class NormalEnemy : Enemy
     public NormalEnemyState state { get; private set; } // 적 상태 - FSM 패턴
     public Vector3 HpUIPosition => hpPoint.position;
 
-    protected float attackTimer;
-    protected bool attacking;
+    // protected float attackTimer;
+    // protected bool attacking;
 
 
     [SerializeField] protected bool moving;
@@ -30,12 +30,9 @@ public class NormalEnemy : Enemy
         moving = false;
 
         root.localRotation = Quaternion.identity;
-        damageData.damage = GetAttackPower();
+        // damageData.damage = GetAttackPower();
 
         ChangeState(NormalEnemyState.Moving);
-
-        attackTimer = 0;
-        attacking = false;
     }
 
     public void ChangeState(NormalEnemyState state)
@@ -43,81 +40,8 @@ public class NormalEnemy : Enemy
         this.state = state;
     }
 
-    public override void Update()
-    {
-        if (!GameManager.Instance.isPlaying)
-        {
-            rg2d.linearVelocity = Vector2.zero;
-            return;
-        }
-
-        base.Update();
-
-        if (statusEffectHandler.IsStunned)
-        {
-            if (attacking)
-            {
-                CancelAttack();
-            }
-            return;
-        }
-
-        if (attackTimer < enemyData.attackSpeed)
-            attackTimer += Time.deltaTime;
-
-        if (attacking)
-            return;
-
-        if (state == NormalEnemyState.Moving) UpdateMoving();
-        else if (state == NormalEnemyState.Attack) UpdateAttack();
-    }
-
-    //상태가 Waiting 인 경우 처리
-    public virtual void UpdateMoving()
-    {
-        if (isPushing)
-            return;
-
-        Vector2 vec = Character.Instance.transform.position - transform.position;
-
-        if (vec.magnitude <= enemyData.attackRange)
-        {
-            ChangeState(NormalEnemyState.Attack);
-            return;
-        }
-
-        rg2d.linearVelocity = vec.normalized * enemyData.moveSpeed;
-        UpdateFacing(vec);
-    }
-
-
-    public virtual void UpdateAttack()
-    {
-        if (attackTimer < enemyData.attackSpeed)
-        {
-            ChangeState(NormalEnemyState.Moving);
-            return;
-        }
-
-
-        if (!attacking)
-        {
-            Vector2 vec = Character.Instance.transform.position - transform.position;
-            UpdateFacing(vec);
-            StartAttack();
-        }
-    }
-
-    public virtual void StartAttack()
-    {
-        attacking = true;
-        rg2d.linearVelocity = Vector2.zero;
-
-        attackTimer = 0;
-    }
     public override void Reward()
-    {
-        
+    {        
         Character.Instance.AddCoin(enemyData.gold);
         CoinText.Instantiate().SetCoinText(transform.position, $"+{enemyData.gold}");
         base.Reward();
@@ -126,25 +50,13 @@ public class NormalEnemy : Enemy
     public override void TakeDamage(DamageData damage)
     {
         base.TakeDamage(damage);
+        //일반형 - 직관적으로 데미지 입음
         root.DOKill();
         root.localRotation = Quaternion.identity;
         root.DOShakeRotation(0.2f, new Vector3(0f, 0f, 5f), 100, 90f, false).OnComplete(() =>
         {
             root.localRotation = Quaternion.identity;
         });
-    }
-
-    public override void CancelAttack()
-    {
-        base.CancelAttack();
-        rg2d.linearVelocity = Vector2.zero;
-    }
-    public virtual void EndAttack()
-    {
-        attacking = false;
-
-        rg2d.linearVelocity = Vector2.zero;
-        ChangeState(NormalEnemyState.Moving);
     }
 
     public override void Destroy()
@@ -159,8 +71,8 @@ public class NormalEnemy : Enemy
 
 public enum NormalEnemyState
 {
-    Idle,
+    // Idle,
     Moving,
-    Attack,
+    //Attack,
     Dead
 }

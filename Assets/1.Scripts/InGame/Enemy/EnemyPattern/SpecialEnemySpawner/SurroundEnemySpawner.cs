@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 // 플레이어를 원형으로 포위하도록 적을 일정 간격으로 소환
 public class SurroundEnemySpawner : SpecialEnemySpawner
 {
-    [SerializeField] EnemyType enemyType = EnemyType.Melee;
+    [SerializeField] EnemyType enemyType = EnemyType.Normal;
     [SerializeField] int count = 40;
     [SerializeField] float radius = -1; // 0 이하면 화면 밖 기본 거리 사용
     public bool showWarning;

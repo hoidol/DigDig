@@ -3,6 +3,7 @@ public abstract class StatusEffect
 {
     public float duration;        // 지속 시간
     public float remainingTimer;   // 남은 시간
+    public bool isBuff;
 
     public virtual string EffectKey => null; // 파티클 키, 없으면 null
     public abstract void OnApply(StatusEffect effect, StatusEffectHandler handler);

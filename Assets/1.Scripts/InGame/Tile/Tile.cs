@@ -2,19 +2,19 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    public Slime slime;
+    public ITileObject tileObject;
 
-    public bool IsEmpty => slime == null;
+    public bool IsEmpty => tileObject == null;
 
-    public void SetSlime(Slime s)
+    public void SetTileObject(ITileObject tileObject)
     {
-        slime = s;
-        if (slime != null)
-            slime.transform.position = transform.position;
+        this.tileObject = tileObject;
+        if (tileObject != null)
+            tileObject.Transform.position = transform.position;
     }
 
     public void Clear()
     {
-        slime = null;
+        tileObject = null;
     }
 }

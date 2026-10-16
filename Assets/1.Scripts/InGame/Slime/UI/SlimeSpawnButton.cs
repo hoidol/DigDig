@@ -42,7 +42,7 @@ public class SlimeSpawnButton : ButtonUI
         string randomSlimeKey = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, 5)].key;
         //Slime slime = Character.Instance.AddSlime("Base");
         Slime slime = Character.Instance.AddSlime(randomSlimeKey);        
-        tile.SetSlime(slime);
+        tile.SetTileObject(slime);
 
         CharacterManageCanvas.Instance.UpdateCanvas();
         UpdateButton();

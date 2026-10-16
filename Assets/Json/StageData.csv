@@ -1,16 +1,16 @@
-Key	Order	Difficulty	Stage	StoneHp	BossName	EnemyHp	AddHpRatioPerPhase	EnemyAtk	AddAtkRatioPerPhase	MultiHpPerPhase	MultiAtkPerPhase
-Normal_0	0	Normal	0	11	TigerWraithBoss	10	0.3	3	0.05	1.1	1.03
-Normal_1	1	Normal	1	13	TigerWraithBoss	12	0.3	3.2	0.05	1.1	1.03
-Normal_2	2	Normal	2	15	TigerWraithBoss	14	0.3	3.4	0.05	1.1	1.03
-Normal_3	3	Normal	3	17	TigerWraithBoss	16	0.3	3.6	0.05	1.1	1.03
-Normal_4	4	Normal	4	19	TigerWraithBoss	18	0.3	3.8	0.05	1.1	1.03
-Hard_0	0	Hard	0	13	TigerWraithBoss	15	0.35	3.5	0.05	1.1	1.03
-Hard_1	1	Hard	1	16	TigerWraithBoss	19	0.35	3.9	0.05	1.1	1.03
-Hard_2	2	Hard	2	19	TigerWraithBoss	23	0.35	4.3	0.05	1.1	1.03
-Hard_3	3	Hard	3	22	TigerWraithBoss	27	0.35	4.7	0.05	1.1	1.03
-Hard_4	4	Hard	4	25	TigerWraithBoss	31	0.35	5.1	0.05	1.1	1.03
-Hell_0	0	Hell	0	16	TigerWraithBoss	20	0.4	5	0.05	1.1	1.03
-Hell_1	1	Hell	1	20	TigerWraithBoss	26	0.4	5.5	0.05	1.1	1.03
-Hell_2	2	Hell	2	24	TigerWraithBoss	32	0.4	6	0.05	1.1	1.03
-Hell_3	3	Hell	3	28	TigerWraithBoss	38	0.4	6.5	0.05	1.1	1.03
-Hell_4	4	Hell	4	32	TigerWraithBoss	44	0.4	7	0.05	1.1	1.03
+Key	Order	Difficulty	Stage	BossName	EnemyHp	AddHpRatioPerPhase	MultiHpPerPhase	DefenceTypes	DefenceWaveTypes
+Normal_0	0	Normal	0	TigerWraithBoss	10	0.3	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Normal_1	1	Normal	1	TigerWraithBoss	12	0.3	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Normal_2	2	Normal	2	TigerWraithBoss	14	0.3	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Normal_3	3	Normal	3	TigerWraithBoss	16	0.3	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Normal_4	4	Normal	4	TigerWraithBoss	18	0.3	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hard_0	0	Hard	0	TigerWraithBoss	15	0.35	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hard_1	1	Hard	1	TigerWraithBoss	19	0.35	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hard_2	2	Hard	2	TigerWraithBoss	23	0.35	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hard_3	3	Hard	3	TigerWraithBoss	27	0.35	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hard_4	4	Hard	4	TigerWraithBoss	31	0.35	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hell_0	0	Hell	0	TigerWraithBoss	20	0.4	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hell_1	1	Hell	1	TigerWraithBoss	26	0.4	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hell_2	2	Hell	2	TigerWraithBoss	32	0.4	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hell_3	3	Hell	3	TigerWraithBoss	38	0.4	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Hell_4	4	Hell	4	TigerWraithBoss	44	0.4	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal

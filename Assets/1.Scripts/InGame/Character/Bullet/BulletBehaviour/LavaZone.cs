@@ -31,7 +31,7 @@ public class LavaZone : MonoBehaviour
         {
             tickTimer = TICK_INTERVAL;
             float damage = Character.Instance.statMgr.AttackPower * damageRate;
-            InGameUtil.DamageEnemies(transform.position, radius, damage, layer);
+            InGameUtil.DamageEnemies(transform.position, radius, damage, AttackType.Magic, layer);
         }
     }
 }

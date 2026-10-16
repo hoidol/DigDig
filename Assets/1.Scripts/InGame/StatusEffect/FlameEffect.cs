@@ -6,12 +6,15 @@ public class FlameEffect : StatusEffect
     float damageTimer;
     IHittable hittable;
     public override string EffectKey => "Flame";
+    DamageData damageData = new DamageData();
 
     public FlameEffect(float duration, float dps)
     {
         this.duration = duration;
         this.remainingTimer = duration;
         this.damagePerSecond = dps;
+        
+        damageData.attackType = AttackType.Magic;
     }
 
     public override void OnApply(StatusEffect effect, StatusEffectHandler handler)
@@ -35,7 +38,6 @@ public class FlameEffect : StatusEffect
     {
 
     }
-    DamageData damageData = new DamageData();
 
     public override void OnUpdate(StatusEffectHandler handler)
     {
