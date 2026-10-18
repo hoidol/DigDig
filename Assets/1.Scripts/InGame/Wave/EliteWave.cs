@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class EliteWave : BattleWave
 {
-    public override void StartWave(int phase)
+
+    public override void StartWave(int wIdx, DefenceType dType)
     {
-        base.StartWave(phase);
+        base.StartWave(wIdx, dType);
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Elite);
         Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-        enemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition());
+        enemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition(), wIdx);
     }
 }

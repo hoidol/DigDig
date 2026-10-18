@@ -8,14 +8,9 @@ public class SkipBreakButton : MonoBehaviour
     void Start()
     {
         childObject.SetActive(false);
-        GameEventBus.Subscribe<BreakStartEvent>(OnBreakStartEvent);
         GameEventBus.Subscribe<WaveStartEvent>(OnWaveStartEvent);
     }
 
-    void OnBreakStartEvent(BreakStartEvent e)
-    {
-        childObject.SetActive(true);
-    }
 
     void OnWaveStartEvent(WaveStartEvent e)
     {
@@ -28,6 +23,5 @@ public class SkipBreakButton : MonoBehaviour
             return;
 
         childObject.SetActive(false);
-        GameManager.Instance.SkipBreak();
     }
 }

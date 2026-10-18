@@ -256,21 +256,9 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         if (EventSystem.current == null)
             return false;
 
-        // 모바일 터치는 fingerId 기준으로 판정
-        bool isOver = Input.touchCount > 0
-            ? EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)
-            : EventSystem.current.IsPointerOverGameObject();
-
-        if (isOver)
-            LogPointerOverObjects();
-
-        return isOver;
-    }
-
-    // 디버그용: 포인터 아래에 걸린 UI 오브젝트 로그
-    readonly List<RaycastResult> raycastResults = new();
-    void LogPointerOverObjects()
-    {
+        // IsPointerOverGameObject(fingerId)는 터치 시작 프레임에 EventSystem이 아직 갱신 전이라 false가 나옴 (모바일)
+        // → UI를 눌러도 드래그/선택 해제가 먼저 돌아 패널이 꺼지고 버튼 onClick이 안 불림
+        // 그래서 현재 포인터 위치로 직접 UI 레이캐스트
         PointerEventData eventData = new PointerEventData(EventSystem.current)
         {
             position = Input.touchCount > 0 ? Input.GetTouch(0).position : (Vector2)Input.mousePosition
@@ -278,19 +266,10 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
         raycastResults.Clear();
         EventSystem.current.RaycastAll(eventData, raycastResults);
-
-        if (raycastResults.Count == 0)
-        {
-            Debug.Log("[IsPointerOverUI] 걸린 오브젝트 없음 (Raycast 결과 0개)");
-            return;
-        }
-
-        for (int i = 0; i < raycastResults.Count; i++)
-        {
-            GameObject go = raycastResults[i].gameObject;
-            Debug.Log($"[IsPointerOverUI] {i}: {GetHierarchyPath(go.transform)} (module: {(raycastResults[i].module != null ? raycastResults[i].module.GetType().Name : "null")})", go);
-        }
+        return raycastResults.Count > 0;
     }
+
+    readonly List<RaycastResult> raycastResults = new();
 
     string GetHierarchyPath(Transform tr)
     {

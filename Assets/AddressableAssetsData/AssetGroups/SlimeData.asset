@@ -28,13 +28,6 @@ MonoBehaviour:
     - Growth1SlimeData
     - SlimeData
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 30dc8ecb9b34c4a24bd18e7b6be7de01
-    m_Address: Growth2
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Growth2SlimeData
-    - SlimeData
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 36891a8ce2e00411ba0d808e50943482
     m_Address: D
     m_ReadOnly: 0

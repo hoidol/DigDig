@@ -21,7 +21,7 @@ MonoBehaviour:
     slimeStats:
     - statType: 0
       values:
-      - 5
+      - 7
       - 5
     - statType: 1
       values:
@@ -29,13 +29,13 @@ MonoBehaviour:
       - 3
     - statType: 2
       values:
-      - 5
-      - 0.2
+      - 3
+      - 0.3
   - level: 1
     slimeStats:
     - statType: 0
       values:
-      - 5
+      - 7
       - 5
     - statType: 1
       values:
@@ -43,13 +43,13 @@ MonoBehaviour:
       - 4
     - statType: 2
       values:
-      - 5
-      - 0.2
+      - 3
+      - 0.3
   - level: 2
     slimeStats:
     - statType: 0
       values:
-      - 6
+      - 8
       - 6
     - statType: 1
       values:
@@ -57,13 +57,13 @@ MonoBehaviour:
       - 4
     - statType: 2
       values:
-      - 5
-      - 0.2
+      - 3
+      - 0.3
   - level: 3
     slimeStats:
     - statType: 0
       values:
-      - 6
+      - 8
       - 6
     - statType: 1
       values:
@@ -71,13 +71,13 @@ MonoBehaviour:
       - 4
     - statType: 2
       values:
-      - 5.2
-      - 0.2
+      - 3
+      - 0.3
   - level: 4
     slimeStats:
     - statType: 0
       values:
-      - 7
+      - 9
       - 7
     - statType: 1
       values:
@@ -85,13 +85,13 @@ MonoBehaviour:
       - 4
     - statType: 2
       values:
-      - 5.2
-      - 0.2
+      - 3
+      - 0.3
   - level: 5
     slimeStats:
     - statType: 0
       values:
-      - 7
+      - 9
       - 7
     - statType: 1
       values:
@@ -99,13 +99,13 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 5.2
-      - 0.2
+      - 3
+      - 0.3
   - level: 6
     slimeStats:
     - statType: 0
       values:
-      - 8
+      - 10
       - 8
     - statType: 1
       values:
@@ -113,13 +113,13 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 5.2
-      - 0.2
+      - 3
+      - 0.3
   - level: 7
     slimeStats:
     - statType: 0
       values:
-      - 8
+      - 10
       - 8
     - statType: 1
       values:
@@ -127,13 +127,13 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 5.5
-      - 0.2
+      - 3
+      - 0.3
   - level: 8
     slimeStats:
     - statType: 0
       values:
-      - 8
+      - 10
       - 8
     - statType: 1
       values:
@@ -141,13 +141,13 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 5.5
-      - 0.2
+      - 3
+      - 0.3
   - level: 9
     slimeStats:
     - statType: 0
       values:
-      - 9
+      - 11
       - 9
     - statType: 1
       values:
@@ -155,13 +155,13 @@ MonoBehaviour:
       - 5
     - statType: 2
       values:
-      - 5.5
-      - 0.2
+      - 3
+      - 0.3
   - level: 10
     slimeStats:
     - statType: 0
       values:
-      - 9
+      - 11
       - 9
     - statType: 1
       values:
@@ -169,13 +169,13 @@ MonoBehaviour:
       - 6
     - statType: 2
       values:
-      - 5.5
-      - 0.2
+      - 3
+      - 0.3
   - level: 11
     slimeStats:
     - statType: 0
       values:
-      - 9
+      - 11
       - 9
     - statType: 1
       values:
@@ -183,13 +183,13 @@ MonoBehaviour:
       - 6
     - statType: 2
       values:
-      - 5.8
-      - 0.2
+      - 3
+      - 0.3
   - level: 12
     slimeStats:
     - statType: 0
       values:
-      - 10
+      - 12
       - 10
     - statType: 1
       values:
@@ -197,13 +197,13 @@ MonoBehaviour:
       - 6
     - statType: 2
       values:
-      - 5.8
-      - 0.2
+      - 3
+      - 0.3
   - level: 13
     slimeStats:
     - statType: 0
       values:
-      - 10
+      - 12
       - 10
     - statType: 1
       values:
@@ -211,13 +211,13 @@ MonoBehaviour:
       - 6
     - statType: 2
       values:
-      - 5.8
-      - 0.2
+      - 3
+      - 0.3
   - level: 14
     slimeStats:
     - statType: 0
       values:
-      - 10
+      - 12
       - 10
     - statType: 1
       values:
@@ -225,8 +225,8 @@ MonoBehaviour:
       - 7
     - statType: 2
       values:
-      - 5.8
-      - 0.2
+      - 3
+      - 0.3
   attackPowerRandomRatio: 0.67
   prefab: {fileID: 1358385290756183109, guid: 0b213b5c98b6a4260a2fa4adeea3a912, type: 3}
   unlockConditions: []

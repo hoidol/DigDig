@@ -1,33 +1,41 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class SlimeShortcutInfoPanel : MonoBehaviour
 {
-    
+
     // public TMP_Text descText;
 
     public SlimeStatPanel[] slimeStatPanels;
+    List<SlimeStatType> slimeStatTypes = new List<SlimeStatType>();
     public void SetSlime(Slime slime)
     {
         gameObject.SetActive(true);
         // descText.text = slime.slimeData.GetDescription(slime.mergeLevel); 
-        for(int i = 0; i < slimeStatPanels.Length; i++)
+        for (int i = 0; i < slimeStatPanels.Length; i++)
         {
             slimeStatPanels[i].gameObject.SetActive(false);
         }
-        for(int i = 0; i < slimeStatPanels.Length; i++)
+        slimeStatTypes.Clear();
+
+        slimeStatTypes.AddRange(slime.slimeData.displayStatTypes);
+        slimeStatTypes.Remove(SlimeStatType.AttackRange);
+        slimeStatTypes.Remove(SlimeStatType.AttackSpeed);
+
+        for (int i = 0; i < slimeStatPanels.Length; i++)
         {
             if (i < slime.slimeData.displayStatTypes.Length)
             {
                 slimeStatPanels[i].gameObject.SetActive(true);
-                slimeStatPanels[i].SetSlimeStat(slime.slimeData.GetSlimeStat(slime.slimeData.displayStatTypes[i],slime.userSlime.enhanceLevel), slime.mergeLevel, slime.slimeData.GetRandomRatio(slime.slimeData.displayStatTypes[i]));
+                slimeStatPanels[i].SetSlimeStat(slime.slimeData.GetSlimeStat(slime.slimeData.displayStatTypes[i], slime.userSlime.enhanceLevel), slime.mergeLevel, slime.slimeData.GetRandomRatio(slime.slimeData.displayStatTypes[i]));
             }
             else
             {
                 slimeStatPanels[i].gameObject.SetActive(false);
-                
+
             }
-            
+
         }
     }
 }

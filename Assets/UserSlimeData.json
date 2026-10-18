@@ -8,7 +8,7 @@
             "exp": 0
         },
         {
-            "key": "Bounce",
+            "key": "Ice",
             "equipedIdx": 1,
             "own": true,
             "enhanceLevel": 0,
@@ -29,7 +29,7 @@
             "exp": 0
         },
         {
-            "key": "Pierce",
+            "key": "Lightning",
             "equipedIdx": 4,
             "own": true,
             "enhanceLevel": 0,
@@ -45,7 +45,7 @@
             "exp": 0
         },
         {
-            "key": "Bounce",
+            "key": "Ice",
             "equipedIdx": 1,
             "own": true,
             "enhanceLevel": 0,
@@ -66,44 +66,9 @@
             "exp": 0
         },
         {
-            "key": "Pierce",
+            "key": "Lightning",
             "equipedIdx": 4,
             "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
-        },
-        {
-            "key": "Boom",
-            "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
-        },
-        {
-            "key": "Heal",
-            "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
-        },
-        {
-            "key": "Ice",
-            "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
-        },
-        {
-            "key": "Lightning",
-            "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
-        },
-        {
-            "key": "Base",
-            "equipedIdx": -1,
-            "own": false,
             "enhanceLevel": 0,
             "exp": 0
         }

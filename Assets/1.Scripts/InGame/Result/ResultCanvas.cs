@@ -24,28 +24,29 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         if (clear)
         {
             clearObj.SetActive(true);
-            
+
         }
         else
         {
-            failObj.SetActive(true);;   
+            failObj.SetActive(true); ;
         }
         UpdateCanvas();
     }
 
     void UpdateCanvas()
     {
-        UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(GameManager.Instance.stageData.key);        
+        UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(GameManager.Instance.stageData.key);
         UserStage curUserStage = UserDataManager.Instance.userStageManager.GetCurrentStage();
 
         stageText.text = GameManager.Instance.stageData.order.ToString();
 
-        
-        int exp =0;
-        if(userStage.clearCount <= 0)
+
+        int exp = 0;
+        if (userStage.clearCount <= 0)
         {
-            exp = GameManager.Instance.phase * 5;
-        }else
+            exp = GameManager.Instance.waveIdx * 5;
+        }
+        else
         {
             if (clear)
             {
@@ -53,20 +54,20 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             }
         }
 
-        if(exp>0)
-            UserDataManager.Instance.userMyInfoManager.AddExp(exp); 
-        
+        if (exp > 0)
+            UserDataManager.Instance.userMyInfoManager.AddExp(exp);
+
         int destroy = GameManager.Instance.killEnemyCount;
-        int gold = destroy / 10;  
-        
-        if(userStage.clearCount > 0)
+        int gold = destroy / 10;
+
+        if (userStage.clearCount > 0)
         {
-            int orderGap = (StageManager.Instance.GetStageData(curUserStage.key).order - GameManager.Instance.stageData.order)+1;
-            gold = (int)(gold/orderGap);
+            int orderGap = (StageManager.Instance.GetStageData(curUserStage.key).order - GameManager.Instance.stageData.order) + 1;
+            gold = (int)(gold / orderGap);
         }
 
-        if(gold>0)
-            UserDataManager.Instance.AddGold(gold);  
+        if (gold > 0)
+            UserDataManager.Instance.AddGold(gold);
 
         //최대 깊이에 따라서 보상 받게 하자
         // float distance = Vector2.Distance(Character.Instance.transform.position,Vector2.zero); 
@@ -78,15 +79,15 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         //     int orderGap = (StageManager.Instance.GetStageData(curUserStage.key).order - GameManager.Instance.stageData.order)+1;
         //     drawTicket = (int)(distance/orderGap);
         // }
-        
+
         // if(drawTicket>0)
         //     UserDataManager.Instance.AddDrawTicket(drawTicket);  
 
-        for(int i = 0; i < rewardPanels.Length; i++)
+        for (int i = 0; i < rewardPanels.Length; i++)
             rewardPanels[i].gameObject.SetActive(false);
-        
+
         List<RewardData> rewardDatas = new List<RewardData>();
-        if(exp > 0)
+        if (exp > 0)
         {
             rewardDatas.Add(new RewardData()
             {
@@ -102,8 +103,8 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         //         value = drawTicket.ToString()
         //     });
         // }
-        
-        if(gold > 0)
+
+        if (gold > 0)
         {
             rewardDatas.Add(new RewardData()
             {
@@ -112,15 +113,15 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             });
         }
 
-        for(int i = 0; i < rewardDatas.Count; i++)
+        for (int i = 0; i < rewardDatas.Count; i++)
         {
             if (i < rewardDatas.Count)
             {
-                rewardPanels[i].SetRewardData(rewardDatas[i],null);
+                rewardPanels[i].SetRewardData(rewardDatas[i], null);
             }
-        }        
+        }
 
-        UserDataManager.Instance.userStageManager.EndStage(GameManager.Instance.stageData.key, clear, clear? GameManager.Instance.phase-1 : GameSetting.BOSS_PHASE-1);
+        UserDataManager.Instance.userStageManager.EndStage(GameManager.Instance.stageData.key, clear, clear ? GameManager.Instance.waveIdx - 1 : GameSetting.BOSS_PHASE - 1);
     }
 
     public void OnClickedHome()

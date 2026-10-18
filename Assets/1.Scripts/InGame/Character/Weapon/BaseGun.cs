@@ -56,36 +56,36 @@ public abstract class BaseGun : MonoBehaviour, IGun
             // Debug.Log("BaseGun GetAttackDirection if (targetTr == null)");
             return Vector2.zero;
         }
-            
+
 
         return (targetTr.position - transform.position).normalized;
     }
     public virtual Transform FindTarget()
     {
-        return InGameUtil.FindTarget(transform.position, Character.Instance.statMgr.AttackRange+0.3f, targetLayerMask, Character.Instance.findTargetType);
+        return InGameUtil.FindTarget(transform.position, Character.Instance.statMgr.AttackRange + 0.3f, targetLayerMask, Character.Instance.findTargetType);
     }
 
-    
+
 
     // 매 프레임 호출: 조준 방향 갱신 + 자동 발사 판정
     public void UpdateWeapon()
     {
         if (!GameManager.Instance.isPlaying) return;
 
-        AttackDir = GetAttackDirection();
 
         // #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
         //         if (Input.GetMouseButton(0))
         //             dirTr.up = GetAttackDirection();    
         // #endif
-        
+
         attackTimer += Time.deltaTime * statMgr.AttackSpeed / 50;
         if (attackTimer >= 1)
         {
+            AttackDir = GetAttackDirection();
             // Debug.Log("BaseGun UpdateWeapon ");
             Attack(GetAttackDirection());
         }
-            
+
     }
 
 
@@ -117,7 +117,7 @@ public abstract class BaseGun : MonoBehaviour, IGun
         // var (bullet, shotOrder) = SpendBullet();
 
         BulletSpec bullet = new CharacterBulletSpec();
-
+        Character.Instance.bodyRootTr.localScale = new Vector3(AttackDir.x >= 0 ? 1 : -1, 1, 1);
         foreach (var e in player.itemInventory.preFires)
             e.OnPreFire(ref bullet, dir);
 

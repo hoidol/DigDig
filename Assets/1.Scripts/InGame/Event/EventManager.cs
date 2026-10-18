@@ -33,7 +33,7 @@ public class EventManager : MonoSingleton<EventManager>
     private void Start()
     {
         initDirection = Random.insideUnitCircle;
-        GameEventBus.Subscribe<PhaseEndEvent>(OnPhaseEndEvent);
+        // GameEventBus.Subscribe<PhaseEndEvent>(OnPhaseEndEvent);
         GameEventBus.Subscribe<StartGameEvent>(OnStartGameEvent);
         GameEventBus.Subscribe<BossSpawnEvent>(OnBossSpawnEvent);
         GameEventBus.Subscribe<EliteSpawnEvent>(OnEliteSpawnEvent);
@@ -58,7 +58,7 @@ public class EventManager : MonoSingleton<EventManager>
     }
     private void OnDestroy()
     {
-        GameEventBus.Unsubscribe<PhaseEndEvent>(OnPhaseEndEvent);
+        // GameEventBus.Unsubscribe<PhaseEndEvent>(OnPhaseEndEvent);
         GameEventBus.Unsubscribe<StartGameEvent>(OnStartGameEvent);
     }
     List<EventRepeatSpawner> eventRepeatSpawners = new();
@@ -101,28 +101,28 @@ public class EventManager : MonoSingleton<EventManager>
         return data.eventTypes[^1];
     }
 
-    private void OnPhaseEndEvent(PhaseEndEvent e)
-    {
-        foreach (var state in conditionStates)
-        {
-            if (AllTriggersSatisfied(state, e))
-                Spawn(state.eventType);
-        }
-    }
+    // private void OnPhaseEndEvent(PhaseEndEvent e)
+    // {
+    //     foreach (var state in conditionStates)
+    //     {
+    //         if (AllTriggersSatisfied(state, e))
+    //             Spawn(state.eventType);
+    //     }
+    // }
 
-    private bool AllTriggersSatisfied(ConditionState state, PhaseEndEvent e)
-    {
-        foreach (var trigger in state.triggers)
-        {
-            switch (trigger)
-            {
-                case EventTrigger.PhaseEnd:
-                    if (state.phaseIdx != e.phaseIdx) return false;
-                    break;
-            }
-        }
-        return true;
-    }
+    // private bool AllTriggersSatisfied(ConditionState state, PhaseEndEvent e)
+    // {
+    //     foreach (var trigger in state.triggers)
+    //     {
+    //         switch (trigger)
+    //         {
+    //             case EventTrigger.PhaseEnd:
+    //                 if (state.phaseIdx != e.phaseIdx) return false;
+    //                 break;
+    //         }
+    //     }
+    //     return true;
+    // }
 
 
     private void Update()
@@ -172,7 +172,7 @@ public class EventManager : MonoSingleton<EventManager>
 
         EventObject eventObject = Instantiate(prefab, pos, Quaternion.identity);
         activeEventObjects.Add(eventObject);
-        eventObject.Appear(pos,null);
+        eventObject.Appear(pos, null);
         spawnCount++;
         return eventObject;
     }

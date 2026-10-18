@@ -9,7 +9,7 @@ using UnityEditor;
 public class StageData : ScriptableObject
 {
     public EnemySpawnerContainer enemySpawnerContainerPrefab;
-    //Key	Order	Difficulty	Stage	BossName	EnemyHp	AddHpRatioPerPhase	MultiHpPerPhase	EnemyTypes	EnemySpawnOrder
+    //Key	Order	Difficulty	Stage	BossName	EnemyHp	AddHpRatioPerWave	MultiHpPerWave	EnemyTypes	EnemySpawnOrder
     public string key;
     public int order;
     public string Title => key;
@@ -18,13 +18,13 @@ public class StageData : ScriptableObject
     public StageRewardData[] rewardDatas;
 
     public float enemyHp;
-    public float addHpRatioPerPhase;
-    public float multiHpPerPhase = 1f;
+    public float addHpRatioPerWave;
+    public float multiHpPerWave = 1f;
     public Enemy[] enemyPrefabs; //해당 스테이지의 적들
     public DefenceType[] defenceTypes; // 해당 스테이지에서 등장하는 방어 타입
-    public DefenceWaveType[] defenceWaveTypes;// phase마다 순서대로 적용 (phase % 개수), 한 phase 안에서는 모두 같은 방어 타입
+    public DefenceWaveType[] defenceWaveTypes;// wave마다 순서대로 적용 (wave % 개수), 한 wave 안에서는 모두 같은 방어 타입
     Dictionary<KeyValuePair<EnemyType, DefenceType>, Enemy> enemyPrefabDic = new Dictionary<KeyValuePair<EnemyType, DefenceType>, Enemy>();
-    public PhaseData[] phaseDatas;
+    public WaveData[] waveDatas;
     // public EventData[] eventDatas;
     public Boss boss;
 
@@ -62,10 +62,14 @@ public class StageData : ScriptableObject
         for (int i = 0; i < enemyPrefabs.Length; i++)
         {
             Enemy enemy = enemyPrefabs[i];
-            DefenceType defenceType = enemy.enemyData != null ? enemy.enemyData.defenceType : DefenceType.Normal;
+
+            DefenceType defenceType = enemy.defenceType;
+            enemy.enemyData = EnemyManager.GetEnemyData(enemy.enemyType, defenceType);
             var dicKey = new KeyValuePair<EnemyType, DefenceType>(enemy.enemyType, defenceType);
             if (!enemyPrefabDic.TryAdd(dicKey, enemy))
                 Debug.LogWarning($"[StageData] {key} 중복 적 프리팹 무시: {enemy.name} ({enemy.enemyType}, {defenceType})");
+            else
+                Debug.Log($"[StageData] {key} 적 프리펩 딕셔너리 등록 : {enemy.name} ({enemy.enemyType}, {defenceType})");
         }
     }
 
@@ -80,13 +84,13 @@ public class StageData : ScriptableObject
         return enemy;
     }
 
-    // phase의 방어 타입. Random이면 defenceTypes 중 하나 (호출할 때마다 새로 뽑으므로 phase 시작 시 한 번만 호출)
-    public DefenceType GetPhaseDefenceType(int phase)
+    // wave의 방어 타입. Random이면 defenceTypes 중 하나 (호출할 때마다 새로 뽑으므로 wave 시작 시 한 번만 호출)
+    public DefenceType GetWaveDefenceType(int wave)
     {
         if (defenceWaveTypes == null || defenceWaveTypes.Length == 0)
             return DefenceType.Normal;
 
-        DefenceWaveType waveType = defenceWaveTypes[phase % defenceWaveTypes.Length];
+        DefenceWaveType waveType = defenceWaveTypes[wave % defenceWaveTypes.Length];
         if (waveType == DefenceWaveType.Random)
         {
             if (defenceTypes == null || defenceTypes.Length == 0)
@@ -143,15 +147,15 @@ public class StageData : ScriptableObject
             difficulty = dt;
             if (row.TryGetInt("Stage", out int st)) stage = st;
             if (row.TryGetFloat("EnemyHp", out float eh)) enemyHp = eh;
-            if (row.TryGetFloat("AddHpRatioPerPhase", out float ahr)) addHpRatioPerPhase = ahr;
-            if (row.TryGetFloat("MultiHpPerPhase", out float mh)) multiHpPerPhase = mh;
+            if (row.TryGetFloat("AddHpRatioPerWave", out float ahr)) addHpRatioPerWave = ahr;
+            if (row.TryGetFloat("MultiHpPerWave", out float mh)) multiHpPerWave = mh;
             defenceTypes = ParseEnumList<DefenceType>(row.Get("DefenceTypes"), "DefenceTypes");
             defenceWaveTypes = ParseEnumList<DefenceWaveType>(row.Get("DefenceWaveTypes"), "DefenceWaveTypes");
             bossName = row.Get("BossName");
             break;
         }
 
-        LoadPhaseDatas();
+        LoadWaveDatas();
         // LoadEventDatas();
         LoadEnemyPrefabs();
         LoadBossPrefab(bossName);
@@ -233,28 +237,28 @@ public class StageData : ScriptableObject
         Debug.Log($"[StageData] {key} EnemyPrefabs {list.Count}개 로드 완료");
     }
 
-    // WaveData/{difficulty}.csv의 Phase 행마다 PhaseData 1개 (waveType)
-    void LoadPhaseDatas()
+    // WaveData/{difficulty}.csv의 Wave 행마다 WaveData 1개 (waveType)
+    void LoadWaveDatas()
     {
         TableReader table = TableReader.Load($"WaveData/{difficulty}.csv");
         if (table == null || table.rows.Count == 0) return;
 
-        var list = new List<PhaseData>();
+        var list = new List<WaveData>();
         foreach (TableReader.Row row in table.rows)
         {
-            if (!row.TryGetInt("Phase", out int phase)) continue;
+            if (!row.TryGetInt("Wave", out int wave)) continue;
 
-            var d = new PhaseData();
+            var d = new WaveData();
             if (row.TryGetEnum("WaveType", out WaveType wt)) d.waveType = wt;
-            else Debug.LogWarning($"[StageData] WaveData WaveType 파싱 실패: {row.Get("WaveType")} (phase={phase}) → Normal");
+            else Debug.LogWarning($"[StageData] WaveData WaveType 파싱 실패: {row.Get("WaveType")} (wave={wave}) → Normal");
 
-            // phase 순서대로 배치 (phaseDatas[phase])
-            while (list.Count <= phase) list.Add(null);
-            list[phase] = d;
+            // wave 순서대로 배치 (waveDatas[wave])
+            while (list.Count <= wave) list.Add(null);
+            list[wave] = d;
         }
 
-        phaseDatas = list.ToArray();
-        Debug.Log($"[StageData] {key} PhaseData {phaseDatas.Length}개 로드 완료");
+        waveDatas = list.ToArray();
+        Debug.Log($"[StageData] {key} WaveData {waveDatas.Length}개 로드 완료");
     }
 
     // void LoadEventDatas()
@@ -294,7 +298,7 @@ public class StageData : ScriptableObject
     //             d.triggers = trigList.ToArray();
     //         }
 
-    //         if (row.TryGetInt("PhaseIdx", out int pi)) d.phaseIdx = pi;
+    //         if (row.TryGetInt("WaveIdx", out int pi)) d.waveIdx = pi;
 
     //         list.Add(d);
     //     }
@@ -311,9 +315,9 @@ public class StageData : ScriptableObject
 
 }
 [System.Serializable]
-public class PhaseData
+public class WaveData
 {
-    public WaveType waveType; // 이 phase에 실행되는 웨이브
+    public WaveType waveType; // 이 wave에 실행되는 웨이브
 }
 
 [System.Serializable]
@@ -321,7 +325,7 @@ public class StageRewardData : RewardData
 {
 
     public string id; //0-4_reward,0-7_reward,0-10_reward
-    public int phase; // 4 ,7, 10(클리어)
+    public int wave; // 4 ,7, 10(클리어)
 }
 
 public enum DifficultyType : int
@@ -334,7 +338,7 @@ public enum DifficultyType : int
 
 public enum DefenceWaveType
 {
-    
+
     Random,
     Normal, //일반형 소환
     Armored, //갑옷형 소환

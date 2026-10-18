@@ -18,6 +18,10 @@ public class TestCanvas : MonoBehaviour
     [Header("Play Time")]
     public TMP_Text playTimeText;
 
+
+    [Header("Wave")]
+    public Button nextWavedButton;
+
     int speed = 1;
     float playTime = 0;
     float lastTimeScale = 1;
@@ -33,6 +37,7 @@ public class TestCanvas : MonoBehaviour
         speedButton.onClick.AddListener(OnClickedSpeed);
         speedDownButton.onClick.AddListener(OnClickedSpeedDown);
         goldButton.onClick.AddListener(OnClickedGold);
+        nextWavedButton.onClick.AddListener(NextWave);
         SetSpeed(1);
     }
 
@@ -67,6 +72,10 @@ public class TestCanvas : MonoBehaviour
     void OnClickedSpeedDown()
     {
         SetSpeed(speed - 1);
+    }
+    public void NextWave()
+    {
+        GameManager.Instance.StartNextWave();
     }
 
     void OnClickedGold()

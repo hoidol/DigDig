@@ -4,7 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.WSA;
+
 
 public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
 {

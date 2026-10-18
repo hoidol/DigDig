@@ -21,16 +21,10 @@ public class CharacterShortcutInfoPanel : MonoBehaviour
         //공격 범위
         StatType[] displayStatTypes =
         {
-            StatType.AttackPower,
-            StatType.AttackSpeed,
-            StatType.MaxHp,
-            StatType.RecoveryHp,
-            StatType.Dodge,
-            StatType.CritChance,
-            StatType.CritPower,
+            StatType.AttackPower
         };
-        
-        for(int i = 0; i < statPanels.Length; i++)
+
+        for (int i = 0; i < statPanels.Length; i++)
         {
             if (i < displayStatTypes.Length)
             {

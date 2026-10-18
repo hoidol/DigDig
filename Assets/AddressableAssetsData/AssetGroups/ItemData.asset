@@ -15,13 +15,6 @@ MonoBehaviour:
   m_GroupName: ItemData
   m_GUID: e3bbc266543ae4fe989f7c9a3b033e54
   m_SerializeEntries:
-  - m_GUID: 693a3e77c06494611a22231777caf70e
-    m_Address: Level2
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - ItemData
-    - Level2ItemData
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ffefcb1c612d74dde935c0be8a22be27
     m_Address: Level1
     m_ReadOnly: 0

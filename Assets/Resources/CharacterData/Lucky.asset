@@ -19,7 +19,7 @@ MonoBehaviour:
     value: 8
   - statType: 1
     initValue: 0
-    value: 50
+    value: 20
   - statType: 2
     initValue: 0
     value: 0
@@ -40,6 +40,6 @@ MonoBehaviour:
     value: 0
   - statType: 8
     initValue: 0
-    value: 8
+    value: 4
   defaultBullets: 
   thum: {fileID: 0}

@@ -1,18 +1,8 @@
 {
     "userDailyAchievements": [
         {
-            "type": 0,
-            "value": 6377,
-            "getReward": true
-        },
-        {
             "type": 1,
-            "value": 8687,
-            "getReward": true
-        },
-        {
-            "type": 5,
-            "value": 0,
+            "value": 489,
             "getReward": false
         }
     ]

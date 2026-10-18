@@ -1,14 +1,16 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Linq;
+using System.Collections.Generic;
 public class GameManager : MonoSingleton<GameManager>
-{    
+{
     public int killEnemyCount { get; private set; }
     public StageData stageData;
 
     public bool isPlaying;
     public Wave[] waves;
     EnemySpawnerContainer enemySpawnerContainer;
+    // public WaveTimer waveTimer;
     protected void Awake()
     {
         GameEventBus.Clear();
@@ -20,16 +22,11 @@ public class GameManager : MonoSingleton<GameManager>
         get;
         private set;
     }
-    public float breakTimer = 0f; // 휴식 경과 시간 (0 ~ BREAK_TIME)
-    public bool isBreak;
-
-    public Wave currentWave { get; private set; }
-    WaveTimer CurrentWaveTimer => currentWave is BattleWave battleWave ? battleWave.waveTimer : null;
-    // 현재 웨이브 경과 시간 / 전체 시간 (Enemy 체력 증가, 타이머 UI용)
-    public float waveTime => CurrentWaveTimer != null ? CurrentWaveTimer.waveTime : 0f;
-    public float waveTimer => CurrentWaveTimer != null ? CurrentWaveTimer.waveTime - CurrentWaveTimer.waveTimer : 0f;
-    public int phase;
-    public DefenceType phaseDefenceType; // 이번 phase에 소환될 적의 방어 타입 (phase 시작 시 DefenceWaveTypes로 결정)
+    public float mainWaveTimer;
+    public bool isBreak; // 웨이브 종료 후 다음 웨이브까지 휴식 중
+    public float breakTimer;
+    public int waveIdx;
+    // public DefenceType waveDefenceType; // 이번 wave에 소환될 적의 방어 타입 (wave 시작 시 DefenceWaveTypes로 결정)
     public int slimeSpawnCount;
 
     async void Start()
@@ -52,6 +49,10 @@ public class GameManager : MonoSingleton<GameManager>
         stageData.Init();
         enemySpawnerContainer = Instantiate(stageData.enemySpawnerContainerPrefab);
         waves = enemySpawnerContainer.GetComponentsInChildren<Wave>(true);
+        for (int i = 0; i < waves.Length; i++)
+        {
+            waves[i].gameObject.SetActive(false);
+        }
 
         // 캐릭터를 임의의 빈 타일 위에 배치
         Tile characterTile = TileManager.Instance.GetRandomEmptyTile();
@@ -70,96 +71,113 @@ public class GameManager : MonoSingleton<GameManager>
 
     void StartGame()
     {
-        phase = 0;
+        waveIdx = 0;
         gameTimer = 0;
         isPlaying = true;
 
-        ProcessWave(phase);
+        StartWave(waveIdx);
+        ProcessWaveTimer().Forget();
     }
-
-    void ProcessWave(int phase)
+    public List<Wave> accWaves = new List<Wave>();//누적 웨이브
+    public List<int> clearWaveIdxes = new List<int>();
+    // mainWaveTimer를 WAVE_TIME → 0으로 낮춤 (StartWave에서 다시 WAVE_TIME으로 리셋)
+    // 휴식 중에는 breakTimer를 낮추고, 0이 되면 다음 wave 시작
+    // 게임 정지(사망 등) 중에는 멈춤. 보스 wave는 EndWave에서 막히므로 0에서 대기
+    public async UniTaskVoid ProcessWaveTimer()
     {
-        this.phase = phase;
-        phaseDefenceType = stageData.GetPhaseDefenceType(phase);
-        WaveType waveType = stageData.phaseDatas[phase].waveType;
-
-        GameEventBus.Publish(new PhaseStartEvent(phase));
-        // 웨이브 진행/종료는 각 Wave가 담당 (종료 시 Wave.MoveNextWave → EndWave)
-        StartWave(phase, waveType);
-    }
-
-    public void StartWave(int phase, WaveType waveType = WaveType.Normal)
-    {
-        isBreak = false;
-        Debug.Log($"GameManager StartWave {phase}");
-        currentWave = GetWave(waveType);
-        if (currentWave == null)
+        var token = destroyCancellationToken;
+        while (true)
         {
-            Debug.LogError($"GameManager {waveType} Wave 없음 → Normal로 대체");
-            waveType = WaveType.Normal;
-            currentWave = GetWave(waveType);
-        }
-        currentWave.StartWave(phase);
-        GameEventBus.Publish(new WaveStartEvent(phase,waveType));
-    }
-
-    // Wave.MoveNextWave에서 호출 → 다음 phase 웨이브 선택으로
-    public void EndWave(int endPhase)
-    {
-        if (!isPlaying || endPhase != phase || isBreak)
-            return;
-
-        if (phase >= GameSetting.BOSS_PHASE)
-            return;
-        GameEventBus.Publish(new PhaseEndEvent(phase));
-        StartBreak(endPhase).Forget();
-    }
-
-    // 웨이브 종료 → BREAK_TIME 휴식(SkipBreak로 스킵 가능) → 다음 phase 웨이브 선택
-    int breakId; // 부활 시 진행 중인 휴식을 무효화하기 위한 id
-
-    public async UniTaskVoid StartBreak(int endPhase)
-    {
-        int id = ++breakId;
-        isBreak = true;
-        breakTimer = 0;
-        Debug.Log($"GameManager StartBreak {endPhase}");
-        GameEventBus.Publish(new BreakStartEvent(endPhase));
-
-        while (breakTimer < GameSetting.BREAK_TIME)
-        {
-            await UniTask.Yield();
-            if (id != breakId)
+            if (await UniTask.Yield(PlayerLoopTiming.Update, token).SuppressCancellationThrow())
                 return;
             if (!isPlaying)
                 continue;
-            breakTimer += Time.deltaTime;
+
+            if (isBreak)
+            {
+                breakTimer -= Time.deltaTime;
+                if (breakTimer <= 0)
+                {
+                    isBreak = false;
+                    StartNextWave();
+                }
+                continue;
+            }
+
+            if (mainWaveTimer <= 0)
+                continue;
+
+            mainWaveTimer -= Time.deltaTime;
+            if (mainWaveTimer <= 0)
+            {
+                mainWaveTimer = 0;
+            }
         }
-
-        ProcessWave(endPhase + 1);
     }
 
-    // 전투 웨이브 스킵 (BattleWave.CanSkip 구간에서만)
-    public void SkipWave()
+    public void StartWave(int waveIdx)
     {
-        if (currentWave is BattleWave battleWave && !isBreak)
-            battleWave.Skip();
-    }
-    
-    Wave GetWave(WaveType waveType)
-    {
-        return waves.Where(e=>e.waveType == waveType).FirstOrDefault();
+        this.waveIdx = waveIdx;
+        mainWaveTimer = GameSetting.WAVE_TIME;
+        isBreak = false;
+
+        WaveType waveType = stageData.waveDatas[waveIdx].waveType;
+        DefenceType waveDefenceType = stageData.GetWaveDefenceType(waveIdx);
+
+        // 웨이브 진행/종료는 각 Wave가 담당 (종료 시 Wave.MoveNextWave → EndWave)
+        Debug.Log($"GameManager StartWave {waveIdx}");
+        Wave wave = GetWave(waveType);
+        wave.gameObject.SetActive(true);
+        accWaves.Add(wave);
+        wave.StartWave(waveIdx, waveDefenceType);
+        GameEventBus.Publish(new WaveStartEvent(waveIdx, waveType));
     }
 
-    public void SkipBreak()
+    // 현재 진행 중인 wave (가장 마지막에 시작한 wave)
+    // public Wave CurrentWave => accWaves.Count > 0 ? accWaves[accWaves.Count - 1] : null;
+
+    // 타이머 종료 시 호출 → endWaveIdx wave만 종료(스폰 중지), 현재 wave였으면 휴식 후 다음 wave 시작
+    public void EndWave(int endWaveIdx)
     {
-        if (!isBreak)
+        if (!isPlaying)
             return;
 
-        breakTimer = GameSetting.BREAK_TIME;
+        // 이미 종료된 wave면 리턴 (중복 호출로 wave를 두 칸 건너뛰는 것 방지)
+        if (clearWaveIdxes.Contains(endWaveIdx))
+            return;
+
+        clearWaveIdxes.Add(endWaveIdx);
+        GameEventBus.Publish(new WaveEndEvent(endWaveIdx));
+
+        // 스킵으로 이미 지나간 이전 wave가 끝난 경우엔 진행에 영향 없음
+        if (endWaveIdx == waveIdx && waveIdx < GameSetting.BOSS_PHASE)
+        {
+            isBreak = true;
+            breakTimer = GameSetting.BREAK_TIME;
+        }
     }
 
 
+    // 전투 웨이브 스킵. 이전 wave는 끄지 않으므로 남은 스폰이 다음 wave와 겹쳐서 진행 (누적)
+    public void StartNextWave()
+    {
+        if (waveIdx >= GameSetting.BOSS_PHASE)
+            return;
+        StartWave(waveIdx + 1);
+    }
+
+    // 스킵 가능: 전투 wave 진행 중 언제든 (휴식 중, 보스 wave 불가)
+    public bool CanSkipWave()
+    {
+        return isPlaying && !isBreak && waveIdx < GameSetting.BOSS_PHASE;
+    }
+
+    Wave GetWave(WaveType waveType)
+    {
+        Wave prefab = waves.Where(e => e.waveType == waveType).FirstOrDefault();
+        Wave wave = Instantiate(prefab);
+        return wave;
+    }
 
     void Update()
     {
@@ -211,22 +229,34 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    // 부활: 필드 정리 후 체력을 가득 채우고 마지막 phase를 처음부터 다시 시작
-    // 휴식 중에 죽었으면 직전 phase는 이미 끝났으므로 다음 phase부터
+    // 부활: 필드 정리 후 체력을 가득 채우고, 마지막으로 종료된 wave 다음 wave부터 다시 시작
+    // ex) 0 종료, 1 스킵(진행 중), 2 진행 중 사망 → 1, 2 제거 후 1부터 다시
     public void Resume()
     {
-        int restartPhase = isBreak ? phase + 1 : phase;
+        if (accWaves.Count > 0)
+        {
+            waveIdx = clearWaveIdxes.Count > 0 ? clearWaveIdxes[^1] + 1 : 0;
+        }
 
-        breakId++; // 진행 중인 휴식 중단
-        if (currentWave != null)
-            currentWave.StopWave();
+        for (int i = 0; i < accWaves.Count; i++)
+        {
+            if (accWaves[i].waveIdx >= waveIdx)
+            {
+                Wave w = accWaves[i];
+                accWaves[i].EndWave();
+                accWaves.Remove(w);
+                Destroy(w.gameObject);
+                i--;
+            }
+        }
+
         EnemySpawner.Instance.ClearAllEnemies();
 
         Character.Instance.AddHp(Character.Instance.health.MaxHp);
         isPlaying = true;
         GameEventBus.Publish(new ResumeEvent());
 
-        ProcessWave(restartPhase);
+        StartWave(waveIdx);
     }
 
     void OnCharacterHpChangedEvent(CharacterHpChangedEvent e)
@@ -262,43 +292,25 @@ public class StartBossEvent
 
 }
 
-public class BreakStartEvent
-{
-    public int phaseIdx;
-
-    public BreakStartEvent(int p)
-    {
-        phaseIdx = p;
-    }
-}
 public class WaveStartEvent
 {
-    public int phaseIdx;
+    public int waveIdx;
     public WaveType waveType;
-    public WaveStartEvent(int p,WaveType waveType)
+    public WaveStartEvent(int p, WaveType waveType)
     {
-        phaseIdx = p;
+        waveIdx = p;
         this.waveType = waveType;
     }
 }
-public class PhaseStartEvent
+public class WaveEndEvent
 {
-    public int phaseIdx;
-    public PhaseStartEvent(int phaseIdx)
+    public int waveIdx;
+    public WaveType waveType;
+    public WaveEndEvent(int p)
     {
-        this.phaseIdx = phaseIdx;
+        waveIdx = p;
     }
 }
-
-public class PhaseEndEvent
-{
-    public int phaseIdx;
-    public PhaseEndEvent(int p)
-    {
-        phaseIdx = p;
-    }
-}
-
 public class ClearStageEvent
 {
     public string key;
@@ -319,7 +331,7 @@ public class TryStageEvent
 
 public class ResumeEvent
 {
-    
+
 }
 
 /*

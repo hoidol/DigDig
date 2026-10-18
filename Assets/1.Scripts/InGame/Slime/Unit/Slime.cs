@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 //플레이어가 공격하면 같이 방향으로 쏨
 //충돌 안하게 하자
-public abstract class Slime : MonoBehaviour, IAllyUnit,ITileObject
+public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject
 {
     public string key;
     public int mergeLevel;
@@ -143,7 +143,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit,ITileObject
     public abstract AllyBulletObject GetBullet();
     public virtual void Update()
     {
-        if (AttackSpeed >= 0 && !isDraging)
+        if (AttackSpeed >= 0)//&& !isDraging
         {
             attackTimer += Time.deltaTime * AttackSpeed / 50;
             if (attackTimer >= 1)

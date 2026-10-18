@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using Cysharp.Threading.Tasks;
 
-public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable,ITileObject
+public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable, ITileObject
 {
     public const int COMBO_ATTACK_INTERVAL_MS = 70;
 
@@ -41,7 +41,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     // 기존 호출부 변경 없이 유지되는 convenience 프로퍼티/메서드
     public float CurHp => health.curHp;
     public float healMultiplier { get => health.healMultiplier; set => health.healMultiplier = value; }
-
+    public Transform rangeIndicatorTr;
 
     public Transform attackPoint => weapon.AttackPoint;
     // public Vector2 MoveDirection => movement.MoveDirection;
@@ -72,6 +72,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     private void Awake()
     {
+        rangeIndicatorTr.gameObject.SetActive(false);
         // moveJoystick = GameObject.Find("MoveJoystick").GetComponent<Joystick>();
         // attackJoystick = GameObject.Find("AttackJoystick").GetComponent<Joystick>();
 
@@ -111,10 +112,10 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         // movement.Move();
         weapon.UpdateWeapon();
 
-        if (weapon.AttackDir != Vector2.zero)
-        {
-            bodyRootTr.localScale = new Vector3(weapon.AttackDir.x >= 0 ? 1 : -1, 1, 1);
-        }
+        // if (weapon.AttackDir != Vector2.zero)
+        // {
+
+        // }
 
 #if UNITY_EDITOR
         // if (Input.GetKeyDown(KeyCode.L)) AddExp(10);
@@ -296,10 +297,13 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     public void StartDrag()
     {
+        rangeIndicatorTr.gameObject.SetActive(true);
+        rangeIndicatorTr.localScale = new Vector3(statMgr.AttackRange, statMgr.AttackRange, 1);
     }
 
     public void EndDrag(Tile tile)
     {
+        rangeIndicatorTr.gameObject.SetActive(false);
     }
 
 

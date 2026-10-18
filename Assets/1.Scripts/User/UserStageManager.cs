@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEditor.SceneManagement;
+
 [System.Serializable]
 public class UserStageManager : UserBaseManager
 {
@@ -43,20 +43,20 @@ public class UserStageManager : UserBaseManager
         }
     }
 
-    public void EndStage(string key, bool clear, int maxPhase)
+    public void EndStage(string key, bool clear, int maxWave)
     {
-        
+
         UserStage userStage = GetUserStage(key);
 
         if (clear)
         {
-            userStage.clearCount++;    
-            userStage.maxPhase = maxPhase;
+            userStage.clearCount++;
+            userStage.maxWave = maxWave;
         }
         else
         {
-            if(maxPhase > userStage.maxPhase)
-                userStage.maxPhase = maxPhase;
+            if (maxWave > userStage.maxWave)
+                userStage.maxWave = maxWave;
         }
 
         RequestSave();
@@ -91,7 +91,7 @@ public class UserStageManager : UserBaseManager
     public string GetMaxStage(DifficultyType difficultyType)
     {
         int order = 0;
-        for(int i = 0; i < userStageData.userStages.Count; i++)
+        for (int i = 0; i < userStageData.userStages.Count; i++)
         {
             if (userStageData.userStages[i].clearCount > 0)
             {
@@ -99,19 +99,19 @@ public class UserStageManager : UserBaseManager
             }
         }
         StageData stageData = StageManager.Instance.GetStageData(difficultyType, order);
-        if(stageData == null)
+        if (stageData == null)
         {
             StageData[] difficultyStageDatas = StageManager.Instance.GetStageDatas(difficultyType);
-            stageData = StageManager.Instance.GetStageData(difficultyType, difficultyStageDatas.Length-1);
+            stageData = StageManager.Instance.GetStageData(difficultyType, difficultyStageDatas.Length - 1);
         }
 
         return stageData.key;
     }
 
-    public void ReceiveReward(StageData stageData , string id)
+    public void ReceiveReward(StageData stageData, string id)
     {
         UserStage userStage = GetUserStage(stageData.key);
-        userStage.GetUserStageReward(id).gotten =true;
+        userStage.GetUserStageReward(id).gotten = true;
         RequestSave();
     }
 }
@@ -122,7 +122,7 @@ public class UserStageData
 
     // public DifficultyType difficultyType;// 유저가 현재 선택한 난이도
     public List<UserStage> userStages = new List<UserStage>();
-    
+
 }
 [System.Serializable]
 public class UserStage
@@ -130,11 +130,11 @@ public class UserStage
     public string key;
     public int tryCount;
     public int clearCount;
-    public int maxPhase;
+    public int maxWave;
     public List<UserStageReward> userStageRewards = new List<UserStageReward>();
     public UserStageReward GetUserStageReward(string id)
     {
-        return userStageRewards.Where(e => e.id ==id).FirstOrDefault();
+        return userStageRewards.Where(e => e.id == id).FirstOrDefault();
     }
 
 

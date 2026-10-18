@@ -9,6 +9,8 @@ using TMPro;
 public abstract class Enemy : MonoBehaviour, IHittable
 {
     public EnemyType enemyType; // 적 종류 구분
+
+    public DefenceType defenceType;
     public EnemyData enemyData; //게임 데이터
     [field: SerializeField]
     public StatusEffectHandler statusEffectHandler
@@ -37,6 +39,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public EnemyDamageData damageData = new EnemyDamageData();
     public TMP_Text hpText;
     public int pathIdx; // 경로 모드에서 다음에 향할 EnemySpawner.paths 인덱스
+    Vector2 moveDir; // pathIdx 지점으로 전환할 때 캐싱한 이동 방향 (목표 지점을 지나쳤는지 판정용)
+    int moveDirIdx = -1; // moveDir가 어느 pathIdx 기준인지. -1이면 다시 계산
     public virtual void Awake()
     {
         rg2d = GetComponent<Rigidbody2D>();
@@ -45,11 +49,14 @@ public abstract class Enemy : MonoBehaviour, IHittable
         statusEffectHandler?.Init();
     }
     //적 생성 시 호출
-    public virtual void Spawn(Vector2 pos)
+    int wave;
+    public virtual void Spawn(Vector2 pos, int wave)
     {
+        this.wave = wave;
         gameObject.SetActive(gameObject);
         statusEffectHandler?.Reset();
         pathIdx = 0;
+        moveDirIdx = -1;
         Apear();
         transform.position = pos;
         maxHp = GetHp();
@@ -59,41 +66,42 @@ public abstract class Enemy : MonoBehaviour, IHittable
         // damageData.damage = GetAttackPower();
     }
 
-    // 최종 체력 = (페이즈 체력 + (다음 페이즈 체력 - 페이즈 체력) * 도달률 * 웨이브 진행률) * 에너미 배율
+    // 최종 체력 = 페이즈 체력 * 에너미 배율
     public float GetHp()
     {
-        int phase = GameManager.Instance.phase;
-        float hp = GetPhaseHp(phase);
-        float nextHp = GetPhaseHp(phase + 1);
+        float hp = GetWaveHp(wave);
 
-        // 10초 단위로 끊어서 웨이브 진행률 계산 (0~1)
-        float waveTime = GameManager.Instance.waveTime;
-        float progress = 0;
-        if (waveTime > 0)
-        {
-            int timeStep = Mathf.FloorToInt(GameManager.Instance.waveTimer / GameSetting.ENEMY_HP_INCREASE_INTERVAL);
-            progress = Mathf.Clamp01(timeStep * GameSetting.ENEMY_HP_INCREASE_INTERVAL / waveTime);
-        }
+        // 시간에 따른 체력 증가 (주석 처리)
+        // float nextHp = GetWaveHp(wave + 1);
+        // // 10초 단위로 끊어서 웨이브 진행률 계산 (0~1)
+        // float elapsed = GameSetting.WAVE_TIME - GameManager.Instance.mainWaveTimer;
+        // int timeStep = Mathf.FloorToInt(elapsed / GameSetting.ENEMY_HP_INCREASE_INTERVAL);
+        // float progress = Mathf.Clamp01(timeStep * GameSetting.ENEMY_HP_INCREASE_INTERVAL / GameSetting.WAVE_TIME);
+        // hp += (nextHp - hp) * GameSetting.ENEMY_HP_REACH_RATIO * progress;
 
-        hp += (nextHp - hp) * GameSetting.ENEMY_HP_REACH_RATIO * progress;
         return hp * enemyData.hpMultiplier;
     }
 
-    // 페이즈 시작 체력 = enemyHp * (1 + addHpRatioPerPhase * phase) * multiHpPerPhase^phase
-    float GetPhaseHp(int phase)
+    // 페이즈 시작 체력 = enemyHp * (1 + addHpRatioPerWave * wave) * multiHpPerWave^wave
+    float GetWaveHp(int wave)
     {
+
         StageData stageData = GameManager.Instance.stageData;
-        float hp = stageData.enemyHp * (1 + stageData.addHpRatioPerPhase * phase);
-        return hp * Mathf.Pow(stageData.multiHpPerPhase, phase);
+
+        // float hp = stageData.enemyHp + (stageData.enemyHp * (1f + stageData.addHpRatioPerWave) * (float)wave);
+        // float hp = stageData.enemyHp + stageData.enemyHp * ((1 + stageData.addHpRatioPerWave) * wave);
+        float hp = stageData.enemyHp * (1 + stageData.addHpRatioPerWave * wave);
+
+        return hp * Mathf.Pow(stageData.multiHpPerWave, wave);
     }
 
-    // 최종 공격력 = enemyAtk * (1 + addAtkRatioPerPhase * phase) * multiAtkPerPhase^phase * 에너미 배율
+    // 최종 공격력 = enemyAtk * (1 + addAtkRatioPerWave * wave) * multiAtkPerWave^wave * 에너미 배율
     // public float GetAttackPower()
     // {
     //     StageData stageData = GameManager.Instance.stageData;
-    //     int phase = GameManager.Instance.phase;
-    //     float atk = stageData.enemyAtk * (1 + stageData.addAtkRatioPerPhase * phase);
-    //     atk *= Mathf.Pow(stageData.multiAtkPerPhase, phase);
+    //     int wave = GameManager.Instance.wave;
+    //     float atk = stageData.enemyAtk * (1 + stageData.addAtkRatioPerWave * wave);
+    //     atk *= Mathf.Pow(stageData.multiAtkPerWave, wave);
     //     return atk * enemyData.attackPowerMultiplier;
     // }
 
@@ -128,6 +136,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
             if (rg2d.linearVelocity.magnitude < 0.1f)
             {
                 isPushing = false;
+                moveDirIdx = -1; // 밀려서 경로를 벗어났으므로 현재 위치 기준으로 방향 다시 계산
             }
         }
 
@@ -140,6 +149,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
     const float PATH_ARRIVE_DISTANCE = 0.1f;
 
     // paths[pathIdx]를 향해 이동, 도착하면 다음 지점으로. 마지막 지점 도착 시 ReachPathEnd
+    // 방향은 지점 전환 시 한 번만 계산(moveDir)하고, 남은 거리를 그 방향으로 투영해서
+    // 0 이하(= 지나침)거나 이번 프레임 이동량 이하면 지점에 스냅 후 다음 지점으로 → 목표를 넘어가지 않음
     public virtual void UpdateMoving()
     {
         if (isPushing)
@@ -147,13 +158,23 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
         Transform[] paths = EnemySpawner.Instance.paths;
         float speed = enemyData.moveSpeed * (statusEffectHandler != null ? statusEffectHandler.SlowRate : 1f);
+        float arriveDist = Mathf.Max(PATH_ARRIVE_DISTANCE, speed * Time.deltaTime);
 
-        Vector2 vec = Vector2.zero;
+        Vector2 pos = transform.position;
         while (pathIdx < paths.Length)
         {
-            vec = paths[pathIdx].position - transform.position;
-            if (vec.magnitude > Mathf.Max(PATH_ARRIVE_DISTANCE, speed * Time.deltaTime))
+            Vector2 target = paths[pathIdx].position;
+            if (moveDirIdx != pathIdx)
+            {
+                moveDir = (target - pos).normalized;
+                moveDirIdx = pathIdx;
+            }
+
+            if (Vector2.Dot(target - pos, moveDir) > arriveDist)
                 break;
+
+            pos = target;
+            transform.position = target;
             pathIdx++;
         }
 
@@ -163,8 +184,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
             return;
         }
 
-        rg2d.linearVelocity = vec.normalized * speed;
-        UpdateFacing(vec);
+        rg2d.linearVelocity = moveDir * speed;
+        UpdateFacing(moveDir);
     }
 
     // 경로 끝 도착: 캐릭터 체력 감소 후 제거 (보상 없음)
@@ -201,7 +222,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (curHp <= 0)
             return;
 
-        
+
         curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, GetDamageMultiplier(damage.attackType)));
         if (curHp > 1)
             hpText.text = ((int)curHp).ToString();

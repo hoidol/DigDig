@@ -38,8 +38,8 @@ public class StartSetting
             "AchievementManager",
             "EnergeManager",
 //공용
-            "InAppPurchaseManager",
-            "AdManager",
+            // "InAppPurchaseManager",
+            // "AdManager",
 
 //UI --------
             "FadeCanvas",

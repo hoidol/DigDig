@@ -92,6 +92,7 @@ MonoBehaviour:
   key: Lightning
   allyUnitDamageData:
     damage: 0
+    attackType: 0
     isCrt: 0
   lineRenderer: {fileID: 319167143352742010}
 --- !u!120 &319167143352742010
@@ -139,8 +140,8 @@ LineRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -44025399
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Positions:

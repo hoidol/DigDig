@@ -18,13 +18,13 @@ public class BattleCanvas : BaseLobbyCanvas
     public GameObject stageLockedGO;
     void Start()
     {
-       GameEventBus.Subscribe<ChangedDifficultyEvent>(OnChangedDifficultyEvent);  
+        GameEventBus.Subscribe<ChangedDifficultyEvent>(OnChangedDifficultyEvent);
     }
 
     void OnChangedDifficultyEvent(ChangedDifficultyEvent e)
     {
-        StageData changedStageData = StageManager.Instance.GetStageData(UserDataManager.difficultyType, stageData.order );
-        
+        StageData changedStageData = StageManager.Instance.GetStageData(UserDataManager.difficultyType, stageData.order);
+
         UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(changedStageData.key);
         SetUserStage(userStage);
         UpdateCanvas();
@@ -63,7 +63,7 @@ public class BattleCanvas : BaseLobbyCanvas
         nextStageButton.SetActive(false);
         preStageButton.SetActive(false);
 
-        if (nextStageData != null )//&& curUserStage.clearCount > 0
+        if (nextStageData != null)//&& curUserStage.clearCount > 0
         {
             nextStageButton.SetActive(true);
         }
@@ -91,16 +91,16 @@ public class BattleCanvas : BaseLobbyCanvas
         UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(stageKey);
         SetUserStage(userStage);
     }
-    
+
     public void OnClickedBtn()
     {
-        #if UNITY_EDITOR
-        if(UserDataManager.Instance.userData.energe <GameSetting.PLAY_COST_ENERGE)
-        {
-            ToastCanvas.Toast( TranslateManager.GetText("Not enough energe"));
-            return;
-        }
-        #endif
+        // #if !UNITY_EDITOR
+        // if(UserDataManager.Instance.userData.energe <GameSetting.PLAY_COST_ENERGE)
+        // {
+        //     ToastCanvas.Toast( TranslateManager.GetText("Not enough energe"));
+        //     return;
+        // }
+        // #endif
         UserDataManager.STAGE_KEY = curUserStage.key;
         SceneManager.LoadScene("InGame");
         UserDataManager.Instance.AddEnerge(-GameSetting.PLAY_COST_ENERGE);

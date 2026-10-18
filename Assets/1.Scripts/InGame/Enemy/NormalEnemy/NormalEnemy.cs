@@ -22,9 +22,9 @@ public class NormalEnemy : Enemy
         animator = GetComponentInChildren<Animator>();
     }
 
-    public override void Spawn(Vector2 pos)
+    public override void Spawn(Vector2 pos, int wave)
     {
-        base.Spawn(pos);
+        base.Spawn(pos, wave);
         // moveTimer = MOVE_SPEED;
         //apearTime 초 후에 등장
         moving = false;
@@ -41,7 +41,7 @@ public class NormalEnemy : Enemy
     }
 
     public override void Reward()
-    {        
+    {
         Character.Instance.AddCoin(enemyData.gold);
         CoinText.Instantiate().SetCoinText(transform.position, $"+{enemyData.gold}");
         base.Reward();

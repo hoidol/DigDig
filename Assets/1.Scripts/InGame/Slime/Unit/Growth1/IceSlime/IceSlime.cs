@@ -6,7 +6,7 @@ public class IceSlime : SlimeGrowth1
     IceBulletSpec iceBulletSpec;
     IceSlimeData iceSlimeData;
     public float iceDuration;
-    public float effectChance;
+    // public float effectChance;
     public IceEnhance8Ability bounceAbility;//각성 능력 
     public IceEnhance11Ability targetSearcher; //타겟 탐색
 
@@ -22,7 +22,7 @@ public class IceSlime : SlimeGrowth1
         iceBulletSpec = new IceBulletSpec();
 
         iceDuration = iceSlimeData.durations.GetByMergeLevel(mergeLevel);
-        effectChance = iceSlimeData.GetUniqueStat(SlimeStatType.EffectChance).GetValue<float>(mergeLevel);
+        // effectChance = iceSlimeData.GetUniqueStat(SlimeStatType.EffectChance).GetValue<float>(mergeLevel);
         base.InitSlime();
     }
 
@@ -30,7 +30,7 @@ public class IceSlime : SlimeGrowth1
     {
         iceBulletSpec.damage = AttackPower;
         iceBulletSpec.duration = iceDuration;
-        iceBulletSpec.chance = effectChance;
+        iceBulletSpec.chance = 1;
 
         iceBulletSpec.StartBulletSpec();
         if (bounceAbility.isActivate)

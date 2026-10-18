@@ -30,8 +30,8 @@ public class EliteSpecialEnemySpawner : SpecialEnemySpawner
         // Vector2Int startTileArr = MapManager.PositionToTileIndex(rPoint);
         // MapManager.GetTileArray(startTileArr, enemyData.size, out Vector2Int[,] spawnTileArray);
 
-        eliteEnemy = EnemySpawner.Instance.Instantiate(eliteEnemyPrefab) as EliteEnemy;
-        eliteEnemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition());
+        // eliteEnemy = EnemySpawner.Instance.Instantiate(eliteEnemyPrefab) as EliteEnemy;
+        // eliteEnemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition());
         GameEventBus.Publish(new EliteSpawnEvent(eliteEnemy));
     }
 

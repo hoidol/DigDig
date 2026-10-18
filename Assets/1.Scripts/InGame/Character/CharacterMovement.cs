@@ -42,7 +42,7 @@ public class CharacterMovement : MonoBehaviour
         float y = Input.GetAxisRaw("Vertical");
         MoveDirection = new Vector2(x, y).normalized;
 #else
-        MoveDirection = moveJoystick.Direction;
+        // MoveDirection = moveJoystick.Direction;
 #endif
         if (MoveDirection.magnitude > 0.1f)
         {

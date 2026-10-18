@@ -1,4 +1,4 @@
-Phase	EnemyType	WaveSpawnCounts	WaveIntervalTimes
+Wave	EnemyType	WaveSpawnCounts	WaveIntervalTimes
 0	Melee	2/3	3/5
 1	Melee	2/3	3/5
 2	Melee	2/3	3/5

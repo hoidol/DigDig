@@ -1,2 +1,2 @@
 Key	AttackPower	MaxHp	RecoveryHp	AttackSpeed	CritChance	CritPower	AttackRange
-Lucky	8	50	0	50	1	1.5	8
+Lucky	8	20	0	50	1	1.5	4

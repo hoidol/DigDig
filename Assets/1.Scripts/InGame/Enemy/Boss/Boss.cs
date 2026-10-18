@@ -24,7 +24,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     }
 
 
-    public override void Spawn(Vector2 pos)
+    public override void Spawn(Vector2 pos, int wave)
     {
         for (int i = 0; i < phases.Length; i++)
         {
@@ -32,7 +32,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
         }
         EnterBossState(BossState.Intro);
         currentPhase = 0;
-        base.Spawn(pos);
+        base.Spawn(pos, wave);
         GameEventBus.Publish(new BossSpawnEvent(this));
     }
 
@@ -150,7 +150,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
         rg2d.linearVelocity = Vector2.zero;
         damageData.damage = 99999;
         Character.Instance.TakeDamage(damageData);
-        
+
     }
     public BossBehaviour GetBossBehaviour(string name)
     {

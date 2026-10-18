@@ -37,7 +37,10 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
     public Enemy Instantiate(Enemy prefab)
     {
         // EnemyData data = EnemyManager.enemyDataDic[prefab.enemyType];
-
+        if (prefab == null)
+        {
+            Debug.Log("EnemySPawner Instantiate() if(prefab == null)");
+        }
         if (!pool.ContainsKey(prefab.enemyType))
             pool[prefab.enemyType] = new Stack<Enemy>();
 

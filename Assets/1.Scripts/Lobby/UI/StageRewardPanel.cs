@@ -37,7 +37,7 @@ public class StageRewardPanel : MonoBehaviour
         if (userStageReward.gotten)
             return;
 
-        if (userStage.maxPhase < stageRewardData.phase)
+        if (userStage.maxWave < stageRewardData.wave)
         {
             return;
         }

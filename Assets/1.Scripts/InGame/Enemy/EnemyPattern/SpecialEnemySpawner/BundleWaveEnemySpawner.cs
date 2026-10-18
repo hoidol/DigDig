@@ -35,16 +35,16 @@ public class BundleWaveEnemySpawner : SpawnPattern
 
     async UniTaskVoid SpawnWaves(Enemy enemyPrefab, Vector2 direction, CancellationToken token)
     {
-        if(showWarning)
-        WaveWarningCanvas.Instance.StartWaveWarning(WaveWarningType.Direction, direction);
-        
+        if (showWarning)
+            WaveWarningCanvas.Instance.StartWaveWarning(WaveWarningType.Direction, direction);
+
         // if (await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token).SuppressCancellationThrow())
         //     return;
 
         SpawnWave(enemyPrefab, direction);
         // for (int w = 0; w < waveCount; w++)
         // {
-            
+
 
         //     if (w < waveCount - 1)
         //     {
@@ -74,7 +74,7 @@ public class BundleWaveEnemySpawner : SpawnPattern
             {
                 Vector2 pos = bundleCenter + Random.insideUnitCircle * bundleRadius;
                 Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-                enemy?.Spawn(pos);
+                // enemy?.Spawn(pos);
             }
         }
     }

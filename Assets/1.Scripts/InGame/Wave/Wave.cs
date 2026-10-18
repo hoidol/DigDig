@@ -3,23 +3,44 @@ using UnityEngine;
 public abstract class Wave : MonoBehaviour
 {
     public WaveType waveType;
+    public int waveIdx;
+    public DefenceType waveDefenceType;
+    public bool isEnd;
 
-    public abstract void StartWave(int phase);
-
-    // 다음 phase로 넘어가지 않고 웨이브만 중지 (부활 시 같은 phase 재시작용)
-    public virtual void StopWave()
+    public virtual void StartWave(int wIdx, DefenceType defenceType)
     {
+        waveIdx = wIdx;
+        isEnd = false;
+        waveDefenceType = defenceType;
+        waveTimer = GameSetting.WAVE_TIME;
     }
+
+    public float waveTimer;
+    void Update()
+    {
+        if (isEnd)
+            return;
+
+        if (!GameManager.Instance.isPlaying)
+            return;
+
+        if (waveTimer <= 0)
+        {
+            EndWave();
+            return;
+        }
+
+        waveTimer -= Time.deltaTime;
+    }
+
     public virtual void EndWave()
     {
-        MoveNextWave();
+        Debug.Log($"Wave EndWave {waveIdx}");
+        isEnd = true;
+        gameObject.SetActive(false);
+        GameManager.Instance.EndWave(waveIdx);
     }
 
-    public virtual void MoveNextWave()
-    {
-        Debug.Log($"Wave MoveNextWave() currrent {waveType}");
-        GameManager.Instance.EndWave(GameManager.Instance.phase);
-    }
 }
 public enum WaveType
 {

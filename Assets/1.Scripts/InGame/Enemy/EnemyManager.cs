@@ -1,13 +1,11 @@
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
-using Mono.Cecil;
 using UnityEngine;
 
 public class EnemyManager : MonoSingleton<EnemyManager>, ILoadData
 {
-    public static readonly Dictionary<EnemyType, EnemyData> enemyDataDic = new(); //적 종류 별 게임 데이터
+    public static readonly Dictionary<(EnemyType, DefenceType), EnemyData> enemyDataDic = new(); //적 종류 + 방어 타입 별 게임 데이터
 
     // [field: SerializeField] public int ActiveEnemyCount { get; private set; }
 
@@ -24,13 +22,13 @@ public class EnemyManager : MonoSingleton<EnemyManager>, ILoadData
        {
            EnemyData[] enemyDatas = dates;
            foreach (EnemyData enemyData in enemyDatas)
-               enemyDataDic[enemyData.type] = enemyData;
+               enemyDataDic[(enemyData.type, enemyData.defenceType)] = enemyData;
        });
     }
 
-    public static EnemyData GetEnemyData(EnemyType type)
+    public static EnemyData GetEnemyData(EnemyType type, DefenceType defenceType)
     {
-        return enemyDataDic[type];
+        return enemyDataDic[(type, defenceType)];
     }
 
 

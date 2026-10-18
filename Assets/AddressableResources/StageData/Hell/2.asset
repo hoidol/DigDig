@@ -22,60 +22,40 @@ MonoBehaviour:
   - rewardType: 1
     value: 100
     id: 
-    phase: 3
+    wave: 0
   - rewardType: 2
     value: 2
     id: 
-    phase: 6
+    wave: 0
   - rewardType: 0
     value: Heal
     id: 
-    phase: 10
+    wave: 0
   enemyHp: 32
-  addHpRatioPerPhase: 0.4
-  multiHpPerPhase: 1.1
+  addHpRatioPerWave: 0.4
+  multiHpPerWave: 1.1
   enemyPrefabs: []
   defenceTypes: 000000000100000002000000
   defenceWaveTypes: 01000000010000000200000001000000000000000100000003000000
-  phaseDatas:
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 1
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 2
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 1
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 2
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 1
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 2
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 1
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 0
-  - enemySpawnPatternDatas: []
-    waveType: 3
+  waveDatas:
+  - waveType: 0
+  - waveType: 0
+  - waveType: 1
+  - waveType: 0
+  - waveType: 2
+  - waveType: 0
+  - waveType: 1
+  - waveType: 0
+  - waveType: 0
+  - waveType: 2
+  - waveType: 0
+  - waveType: 1
+  - waveType: 0
+  - waveType: 0
+  - waveType: 2
+  - waveType: 0
+  - waveType: 1
+  - waveType: 0
+  - waveType: 0
+  - waveType: 3
   boss: {fileID: 2323350187061452681, guid: e6611bd74967549bcb718b7ae82ef851, type: 3}

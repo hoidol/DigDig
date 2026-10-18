@@ -10,17 +10,17 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
     [SerializeField] int count = 40;
     [SerializeField] float radius = -1; // 0 이하면 화면 밖 기본 거리 사용
     public bool showWarning;
-    
+
     // public float delay=2;
-    public float interval =3f;
-    public int spawnCount=1;
+    public float interval = 3f;
+    public int spawnCount = 1;
     public override void Spawn()
     {
         StartCoroutine(SpawnCoroutine());
     }
     IEnumerator SpawnCoroutine()
     {
-        if(showWarning)
+        if (showWarning)
             WaveWarningCanvas.Instance.StartWaveWarning(WaveWarningType.Surround, Vector2.zero);
 
         // yield return new WaitForSeconds(delay);
@@ -29,7 +29,7 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
             SpawnEnemy();
             yield return new WaitForSeconds(interval);
         }
-    }   
+    }
     void SpawnEnemy()
     {
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(enemyType);
@@ -46,7 +46,7 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
             Vector2 pos = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * r;
 
             Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-            enemy?.Spawn(pos + Random.insideUnitCircle*0.3f);
+            // enemy?.Spawn(pos + Random.insideUnitCircle*0.3f);
         }
     }
     public override void EndSpawn()

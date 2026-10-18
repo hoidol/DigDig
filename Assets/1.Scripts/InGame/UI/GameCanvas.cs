@@ -6,13 +6,13 @@ public class GameCanvas : MonoBehaviour
     public TMP_Text waveText;
     void Start()
     {
-        
+
         waveText.text = $"WAVE 1";
-        GameEventBus.Subscribe<PhaseStartEvent>(OnPhaseStartEvent);
+        GameEventBus.Subscribe<WaveStartEvent>(OnWaveStartEvent);
     }
-    void OnPhaseStartEvent(PhaseStartEvent e)
+    void OnWaveStartEvent(WaveStartEvent e)
     {
-        
-        waveText.text = $"WAVE {e.phaseIdx+1}";
+
+        waveText.text = $"WAVE {e.waveIdx + 1}";
     }
 }
