@@ -8,24 +8,14 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 {
     readonly Dictionary<string, Stack<Slime>> pool = new(); // 적 종류 별 풀링
 
-    [field: SerializeField] public int ActiveSlimeCount { get; private set; }
+    // [field: SerializeField] public int ActiveSlimeCount { get; private set; }
 
     public readonly HashSet<Slime> activeslimes = new();
-    // public int slimeSlotCount;
-    void Start()
-    {
-        // slimeSlotCount = GameSetting.MIN_SLIME_SLOT_COUNT;
-    }
-    public void PurchaseSlot(int idx)
-    {
-        // slimeSlotCount++;
-    }
-    // int initPrice = 50;
-    // int increasePrice = 50;
-    // public int GetSlotPrice()
-    // {
-    //     return initPrice + increasePrice * (slimeSlotCount - GameSetting.MIN_SLIME_SLOT_COUNT);
-    // }
+    public int slimeMaxCount;
+    public int mergeCount;
+    public int reinforceCount;
+    public int mergeCoinGetCounter;
+    
     public Slime Instantiate(string key)
     {
         SlimeData data = SlimeManager.Instance.slimeDataDic[key];
@@ -35,12 +25,12 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
         Slime slime = pool[data.prefab.key].Count > 0
             ? pool[data.prefab.key].Pop()
-            : GameObject.Instantiate(data.prefab);
+            : Instantiate(data.prefab);
 
 
         slime.gameObject.SetActive(true);
         activeslimes.Add(slime);
-        ActiveSlimeCount++;
+        // ActiveSlimeCount++;
         return slime;
     }
 
@@ -53,18 +43,18 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         return slime;
     }
 
-    public void Release(Slime slime)
-    {
-        if (!pool.ContainsKey(slime.key))
-            pool[slime.key] = new Stack<Slime>();
+    // public void Release(Slime slime)
+    // {
+    //     if (!pool.ContainsKey(slime.key))
+    //         pool[slime.key] = new Stack<Slime>();
 
-        activeslimes.Remove(slime);
-        if (TileManager.Instance != null)
-            TileManager.Instance.RemoveTileObject(slime);
-        slime.gameObject.SetActive(false);
-        pool[slime.key].Push(slime);
-        ActiveSlimeCount = Mathf.Max(0, ActiveSlimeCount - 1);
-    }
+    //     activeslimes.Remove(slime);
+    //     if (TileManager.Instance != null)
+    //         TileManager.Instance.RemoveTileObject(slime);
+    //     slime.gameObject.SetActive(false);
+    //     pool[slime.key].Push(slime);
+    //     // ActiveSlimeCount = Mathf.Max(0, ActiveSlimeCount - 1);
+    // }
 
     public async UniTask<(bool, string, int)> Merge(Slime slime1, Slime slime2)
     {
@@ -83,6 +73,8 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
     void Awake()
     {
+        slimeMaxCount = GameSetting.SLIME_MIN_EXIST_COUNT;
+
         if (slimeLayer == 0)
             slimeLayer = LayerMask.GetMask("Slime");
         if (characterLayer == 0)
@@ -130,6 +122,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         if (tileObject is IAllyUnit allyUnit)
             SetTarget(allyUnit);
         tileObject.StartDrag();
+        GameEventBus.Publish(new DragStartEvent(tileObject));
         dragObject = tileObject;
         originPos = tileObject.Transform.position;
         offset = originPos - mousePos;
@@ -144,7 +137,11 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
         // 드래그 중 오브젝트가 사라진 경우
         if (source == null || source.Transform == null || !source.Transform.gameObject.activeInHierarchy)
+        {
+            if (source != null)
+                GameEventBus.Publish(new DragEndEvent(source, null));
             return;
+        }
 
         Vector3 dropPos = GetMouseWorldPos();
         if (source is Slime sourceSlime)
@@ -153,6 +150,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
             if (target != null)
             {
                 source.EndDrag(null);
+                GameEventBus.Publish(new DragEndEvent(source, null));
                 Merge(sourceSlime, target, originPos).Forget();
                 return;
             }
@@ -169,6 +167,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
             source.Transform.position = originPos;
         }
         source.EndDrag(tile);
+        GameEventBus.Publish(new DragEndEvent(source, tile));
     }
 
     Slime FindSlime(Vector2 pos, Slime exclude)
@@ -211,7 +210,14 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         Slime merged = Character.Instance.AddSlime(mergeResultKey, lv);
         if (tile != null)
             tile.SetTileObject(merged);
-
+        mergeCount++;
+        mergeCoinGetCounter++;
+        if(mergeCoinGetCounter >= GameSetting.MERGE_REINFORCE_MAX_EXP)
+        {
+            mergeCoinGetCounter =0;
+            Character.Instance.AddMergeCoin(1);
+        }
+        GameEventBus.Publish(new MergedSlimeEvent()); 
         ReleaseTarget();
         CharacterManageCanvas.Instance.UpdateCanvas();
     }
@@ -236,8 +242,9 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
         ReleaseTarget();
         targetUnit = unit;
-        AllySettingPanel.Instance.SetSlime(targetUnit);
+        // AllySettingPanel.Instance.SetSlime(targetUnit);
         targetUnit.StartTarget();
+        GameEventBus.Publish(new SetTargetEvent(targetUnit));
     }
 
     void ReleaseTarget()
@@ -245,9 +252,11 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         if (targetUnit == null)
             return;
 
+        IAllyUnit releasedUnit = targetUnit;
         targetUnit.EndTarget();
         targetUnit = null;
-        AllySettingPanel.Instance.SetSlime(null);
+        // AllySettingPanel.Instance.SetSlime(null);
+        GameEventBus.Publish(new ReleaseTargetEvent(releasedUnit));
     }
 
 
@@ -290,4 +299,37 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
     }
 
 
+}
+
+// 슬라임 or 캐릭터 드래그 시작
+public class DragStartEvent
+{
+    public ITileObject tileObject;
+    public DragStartEvent(ITileObject tileObject) { this.tileObject = tileObject; }
+}
+
+// 슬라임 or 캐릭터 드래그 종료
+public class DragEndEvent
+{
+    public ITileObject tileObject;
+    public Tile tile; // 놓은 위치에서 가장 가까운 타일. 머지했거나 드래그 중 사라졌으면 null
+    public DragEndEvent(ITileObject tileObject, Tile tile) { this.tileObject = tileObject; this.tile = tile; }
+}
+
+// 슬라임 or 캐릭터 선택됨
+public class SetTargetEvent
+{
+    public IAllyUnit unit;
+    public SetTargetEvent(IAllyUnit unit) { this.unit = unit; }
+}
+
+// 슬라임 or 캐릭터 선택 해제됨
+public class ReleaseTargetEvent
+{
+    public IAllyUnit unit; // 해제된 대상
+    public ReleaseTargetEvent(IAllyUnit unit) { this.unit = unit; }
+}
+
+public class MergedSlimeEvent
+{
 }

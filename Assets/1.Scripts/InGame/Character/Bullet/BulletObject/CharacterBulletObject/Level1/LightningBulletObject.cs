@@ -20,16 +20,11 @@ public class LightningBulletObject : AllyBulletObject
         }
         base.SetBullet(bullet, allyUnit);
         lightningBulletSpec = bullet as LightningBulletSpec;
-        // lightningChainOnHitBehavior = new LightningChainOnHitBehavior(
-        //     lightningBullet.initSearchRadius,
-        //     lightningBullet.searchRadius,
-        //     lightningBullet.lightningCount,
-        //     lightningBullet.damage,
-        //     lightningBullet.hitLayerMask);
     }
 
     public override void Shoot(Vector2 dir, float damage)
     {
+        base.Shoot(dir, damage); // 발사 정보 저장 (연발 타일이 같은 탄을 다시 쏠 때 사용)
         allyUnitDamageData.damage = damage;
         lineRenderer.positionCount = 0;
         OnHit(allyUnit.Transform.position);
@@ -107,7 +102,21 @@ public class LightningBulletObject : AllyBulletObject
             // 레이저가 도달한 순간 데미지 적용
             IHittable target = hitTargets[i - 1];
             EffectManager.Instance.Play(EffectType.Spark, target.Transform.position);
-            target.TakeDamage(allyUnitDamageData);
+            
+            float finalDamage = damage * damageMultiplier;
+            for (int j = 0; j < forces.Count; j++)
+                finalDamage += forces[j].GetMultiDamage(this, target, default, direction);
+            if (finalDamage < 1f)
+                finalDamage = 1f;
+
+            // Init은 하지 않음: OnFired에서 넣은 타일 효과(치명타, 만능 등)가 지워짐
+            allyUnit.AccumulateDamage(finalDamage);
+            allyUnitDamageData.damage = finalDamage;
+            target.TakeDamage(allyUnitDamageData); // 데미지 표시(ApplyDamage)는 TakeDamage 안에서 처리
+
+            // 적중 후 효과 (타일의 둔화, 스턴, 처치 코인 등). 연쇄 탄이라 Release 여부는 무시
+            foreach (var b in behaviors)
+                b.OnHit(this, target, default, direction);
         }
 
         yield return new WaitForSeconds(LINE_DURATION);

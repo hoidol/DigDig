@@ -16,7 +16,6 @@ public class IceSlime : SlimeGrowth1
         base.Spawn(pos, lv);
     }
 
-
     public override void InitSlime()
     {
         iceBulletSpec = new IceBulletSpec();
@@ -42,7 +41,7 @@ public class IceSlime : SlimeGrowth1
     }
 
 
-    public override int ShootCount => iceSlimeData.shootCounts.GetByMergeLevel(mergeLevel);
+    // public override int ShootCount => iceSlimeData.shootCounts.GetByMergeLevel(mergeLevel);
 
     public override List<Transform> FindTargets(int count)
     {

@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 
 public class CharacterBulletObject : AllyBulletObject
 {
-    public CharacterDamageData characterDamageData;
+    bool mustCrit;
 
     // [field: SerializeField] public float damageMultiplier { get; set; } = 1f;
 
@@ -17,21 +17,19 @@ public class CharacterBulletObject : AllyBulletObject
         this.damage = damage;
         lifetimeTimer = 5; //Player.Instance.statMgr.AmmoDuration;
 
-        characterDamageData.Init(Character.Instance);
+        // 캐릭터 치명타 스탯 (타일 치명타는 이후 OnFired에서 확률이 더해짐)
+        allyUnitDamageData.critChance = mustCrit ? 100f : Character.Instance.statMgr.CritChance;
+        allyUnitDamageData.critPower = Character.Instance.statMgr.CritPower;
     }
 
     public override void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
         base.SetBullet(bullet, allyUnit);
-        if (characterDamageData == null)
-            characterDamageData = new CharacterDamageData();
-
-        characterDamageData.Init();
-        characterDamageData.damage = (bullet as CharacterBulletSpec).damage;
-        characterDamageData.attackType = AttackType.Physic; // 캐릭터 총알은 물리
+        allyUnitDamageData.damage = (bullet as CharacterBulletSpec).damage;
+        allyUnitDamageData.attackType = AttackType.Physic; // 캐릭터 총알은 물리
 
         damageMultiplier = 1;
-        characterDamageData.mustCrit = bullet.mustCrit;
+        mustCrit = bullet.mustCrit;
     }
 
     public override void Update()
@@ -46,47 +44,4 @@ public class CharacterBulletObject : AllyBulletObject
         Move();
         CheckHit();
     }
-
-    public override IHittable Hit(RaycastHit2D hit2D)
-    {
-        IHittable hit = hit2D.collider.GetComponent<IHittable>();
-        if (hit == null)
-            return null;
-
-        if (preTarget == hit)
-            return null;
-
-        preTarget = hit;
-
-        float finalDamage = damage * damageMultiplier;
-
-        for (int i = 0; i < forces.Count; i++)
-        {
-            finalDamage += forces[i].GetMultiDamage(this, hit, hit2D, direction);
-        }
-        if (finalDamage < 1f)
-            finalDamage = 1f;
-
-        characterDamageData.Calculate(finalDamage);
-        characterDamageData.hit2D = hit2D;
-        hit.TakeDamage(characterDamageData);
-
-        bool shouldRelease = true;
-        foreach (var b in behaviors)
-        {
-            shouldRelease = b.OnHit(this, hit, hit2D, direction); //입사 벡터, 법선 벡터, 전달 필요 
-            if (!shouldRelease)
-                break;
-        }
-
-        if (shouldRelease)
-        {
-            Release();
-        }
-        return hit;
-    }
-
-
-
 }
-

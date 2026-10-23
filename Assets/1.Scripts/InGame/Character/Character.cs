@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using Cysharp.Threading.Tasks;
 
-public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable, ITileObject
+public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable, ITileObject, IBuffable, IShotModifiable
 {
     public const int COMBO_ATTACK_INTERVAL_MS = 70;
 
@@ -36,7 +36,9 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     public TileChecker[] tileCheckers;
     public CharacterHealth health;
     // public CharacterMovement movement;
-    public BaseGun weapon;
+    public Weapon weapon;
+    public ShotModifier shotModifier = new ShotModifier(); // 타일 아이템의 발사 방식 효과 (Weapon에서 사용)
+    public ShotModifier ShotModifier => shotModifier;
 
     // 기존 호출부 변경 없이 유지되는 convenience 프로퍼티/메서드
     public float CurHp => health.curHp;
@@ -54,6 +56,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     public Transform Transform => transform;
     public int coin;
+    public int mergeCoin;
     public float AccumulatedDamage { get; set; }
     public string key;
     public string Key => key;
@@ -83,7 +86,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         // statInventory = GetComponentInChildren<StatInventory>();
         health = GetComponentInChildren<CharacterHealth>();
         // movement = GetComponentInChildren<CharacterMovement>();
-        weapon = GetComponentInChildren<BaseGun>();
+        weapon = GetComponentInChildren<Weapon>();
 
 
         tileCheckers = GetComponentsInChildren<TileChecker>();
@@ -199,31 +202,12 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
     // 인벤토리가 가득 찼으면 교체 UI를 띄우고 결과를 기다림 (교체 시 ChangeItemCanvas에서 아이템 추가까지 처리)
     public async UniTask<bool> AddItem(string key, bool canChange = true)
     {
-        // if (itemInventory.IsFull())
-        // {
-        //     if (!canChange)
-        //         return false;
-
-        //     var tcs = new UniTaskCompletionSource<bool>();
-        //     ChangeItemCanvas.Instance.OpenCanvas(key, r => tcs.TrySetResult(r));
-        //     return await tcs.Task;
-        // }
-
         statMgr.AddItem(key, 1);
         itemInventory.AddItem(key);
         itemInventory.UpdateInventory();
         UpdateCharacter();
         return true;
     }
-
-    // public void RemoveItem(string key, int idx = -1)
-    // {
-    //     statMgr.AddItem(key, -1);
-
-    //     itemInventory.RemoveItem(key, idx);
-    //     itemInventory.UpdateInventory();
-    //     UpdateCharacter();
-    // }
 
     public Slime AddSlime(string key, int lv = 0)
     {
@@ -234,7 +218,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         slimeInventory.AddSlime(slime);
         slimeInventory.UpdateInventory();
 
-        GameEventBus.Publish(new SpawnMinieEvent(key, lv));
+        GameEventBus.Publish(new SpawnSlimeEvent(key, lv));
         UpdateCharacter();
         return slime;
     }
@@ -246,12 +230,20 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         slimeInventory.RemoveSlime(slime);
         slimeInventory.UpdateInventory();
         UpdateCharacter();
+
+
+        GameEventBus.Publish(new RemoveSlimeEvent(slime.key));
     }
 
     public void AddCoin(int count)
     {
         coin += count;
         GameEventBus.Publish(new CoinEvent(coin));
+    }
+    public void AddMergeCoin(int count)
+    {
+        mergeCoin += count;
+        GameEventBus.Publish(new MergeCoinEvent(mergeCoin));
     }
 
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
@@ -287,23 +279,25 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     public void StartTarget()
     {
-        // rangeObj.SetActive(true);
-    }
-
-    public void EndTarget()
-    {
-        // rangeObj.SetActive(false);
-    }
-
-    public void StartDrag()
-    {
         rangeIndicatorTr.gameObject.SetActive(true);
         rangeIndicatorTr.localScale = new Vector3(statMgr.AttackRange, statMgr.AttackRange, 1);
     }
 
+    public void EndTarget()
+    {
+        
+        rangeIndicatorTr.gameObject.SetActive(false);
+    }
+
+    public void StartDrag()
+    {
+        // rangeIndicatorTr.gameObject.SetActive(true);
+        // rangeIndicatorTr.localScale = new Vector3(statMgr.AttackRange, statMgr.AttackRange, 1);
+    }
+
     public void EndDrag(Tile tile)
     {
-        rangeIndicatorTr.gameObject.SetActive(false);
+        // rangeIndicatorTr.gameObject.SetActive(false);
     }
 
 
@@ -339,9 +333,14 @@ public class CharacterUpdateEvent
     public Character character;
     public CharacterUpdateEvent(Character character) { this.character = character; }
 }
-
 public class CoinEvent
 {
     public int curCoin;
     public CoinEvent(int curCoin) { this.curCoin = curCoin; }
+}
+
+public class MergeCoinEvent
+{
+    public int curCoin;
+    public MergeCoinEvent(int curCoin) { this.curCoin = curCoin; }
 }

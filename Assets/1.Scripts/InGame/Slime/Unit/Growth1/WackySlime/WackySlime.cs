@@ -49,7 +49,7 @@ public class WackySlime : SlimeGrowth1
     //     }   
     // }
 
-    public override int ShootCount => wackySlimeData.shootCounts.GetByMergeLevel(mergeLevel);
+    // public override int ShootCount => wackySlimeData.shootCounts.GetByMergeLevel(mergeLevel);
 
     public override void Fire(Vector2 dir)
     { 

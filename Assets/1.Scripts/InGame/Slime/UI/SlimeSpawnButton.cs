@@ -38,6 +38,13 @@ public class SlimeSpawnButton : ButtonUI
             return;
         }
 
+        if(SlimeSpawner.Instance.slimeMaxCount <= Character.Instance.slimeInventory.curSlimes.Count)
+        {
+            ToastCanvas.Toast("Max Slime");
+            return;
+        }
+        
+
         Character.Instance.AddCoin(-GetSpawnPrice());
         string randomSlimeKey = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, 5)].key;
         //Slime slime = Character.Instance.AddSlime("Base");
@@ -49,14 +56,23 @@ public class SlimeSpawnButton : ButtonUI
 
     }
 }
-public class SpawnMinieEvent
+public class SpawnSlimeEvent
 {
     public string key;
     public int reinforce;
-    public SpawnMinieEvent(string k, int r)
+    public SpawnSlimeEvent(string k, int r)
     {
         key = k;
         reinforce = r;
+    }
+
+}
+public class RemoveSlimeEvent
+{
+    public string key;
+    public RemoveSlimeEvent(string k)
+    {
+        key = k;
     }
 
 }

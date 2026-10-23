@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2840333861134451506}
   - component: {fileID: 846820399948610366}
+  - component: {fileID: 7417920115114708065}
   m_Layer: 0
   m_Name: Hat
   m_TagString: Untagged
@@ -91,6 +92,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &7417920115114708065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964415078859829557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1f415b94cdf94b6991bafba4dee2504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteForStatusEffect
 --- !u!1 &4777025793983260328
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,6 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2364848264081792601}
   - component: {fileID: 4911945839710773759}
+  - component: {fileID: 8337530114671861931}
   m_Layer: 0
   m_Name: Body (2)
   m_TagString: Untagged
@@ -232,6 +246,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &8337530114671861931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4908651290481595310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1f415b94cdf94b6991bafba4dee2504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteForStatusEffect
 --- !u!1 &6602446230950223363
 GameObject:
   m_ObjectHideFlags: 0
@@ -571,6 +597,7 @@ Transform:
   - {fileID: 8553044135037665800}
   - {fileID: 9135191519818829126}
   - {fileID: 1785538122060063186}
+  - {fileID: 6201239135234239440}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &7536888476502838592
@@ -613,6 +640,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 1
+  defenceType: 0
   enemyData: {fileID: 11400000, guid: bbdaafbb62f16490dbed594e13531637, type: 2}
   <statusEffectHandler>k__BackingField: {fileID: 4281134898832954647}
   maxHp: 0
@@ -626,9 +654,9 @@ MonoBehaviour:
     attackType: 0
   hpText: {fileID: 196730089043889122}
   pathIdx: 0
+  wave: 0
   face: 0
   isPushing: 0
-  defenceType: 0
   moving: 0
   animator: {fileID: 0}
   patternCoolTime: 0
@@ -751,6 +779,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3791652224057926362}
   - component: {fileID: 2584474649162734012}
+  - component: {fileID: 6800434497882251065}
   m_Layer: 0
   m_Name: Weapon
   m_TagString: Untagged
@@ -832,3 +861,89 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &6800434497882251065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8737410436960018392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1f415b94cdf94b6991bafba4dee2504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpriteForStatusEffect
+--- !u!1001 &4134791487677713283
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2067649798771837938}
+    m_Modifications:
+    - target: {fileID: 4431111716479497483, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_Name
+      value: StatusEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cd87c0ae3df394ff69cf67f302fc27e0, type: 3}
+--- !u!4 &6201239135234239440 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8029496817525055571, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+    type: 3}
+  m_PrefabInstance: {fileID: 4134791487677713283}
+  m_PrefabAsset: {fileID: 0}

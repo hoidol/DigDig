@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 //플레이어가 공격하면 같이 방향으로 쏨
 //충돌 안하게 하자
-public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject
+public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, IShotModifiable
 {
     public string key;
     public int mergeLevel;
@@ -45,6 +45,8 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject
     public Action<Transform> onTargetListener;
     public SlimeData slimeData;
     public List<Buff> activeBuffs = new List<Buff>();
+    public ShotModifier shotModifier = new ShotModifier(); // 타일 아이템의 발사 방식 효과
+    public ShotModifier ShotModifier => shotModifier;
     public virtual void Awake()
     {
         slimeEnhanceAbilities = GetComponentsInChildren<SlimeEnhanceAbility>();
@@ -86,8 +88,6 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject
         statDic[StatType.AttackPower] = slimeData.GetSlimeStat(SlimeStatType.AttackPower, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
         statDic[StatType.AttackSpeed] = slimeData.GetSlimeStat(SlimeStatType.AttackSpeed, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
         statDic[StatType.AttackRange] = slimeData.GetSlimeStat(SlimeStatType.AttackRange, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
-
-        rangeTr.localScale = Vector3.one * statDic[StatType.AttackRange];
     }
 
     public virtual void UpdateSlime()
@@ -98,6 +98,9 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject
         {
             statDic[buff.statType] = buff.Apply(statDic[buff.statType]);
         }
+
+        // 사거리 버프까지 반영된 값으로 표시
+        rangeTr.localScale = Vector3.one * statDic[StatType.AttackRange];
     }
 
     public SlimeEnhanceAbility GetSlimeEnhanceAbility(int lv)
@@ -145,10 +148,19 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject
     {
         if (AttackSpeed >= 0)//&& !isDraging
         {
-            attackTimer += Time.deltaTime * AttackSpeed / 50;
+            attackTimer += Time.deltaTime * AttackSpeed / GameSetting.ATTACK_SPEED_PER_SECOND;
             if (attackTimer >= 1)
             {
+                // 랜덤 타겟 차례면 이번 공격만 타겟 방식을 Random으로 (하위 클래스 FindTarget(s)도 그대로 적용됨)
+                FindTargetType prevType = findTargetType;
+                if (shotModifier.IsRandomShotTurn)
+                    findTargetType = FindTargetType.Random;
+
                 Fire(AttackDirecton());
+                findTargetType = prevType;
+
+                if (attackTimer == 0) // 발사에 성공해야 타이머가 리셋됨
+                    shotModifier.CountAttack();
             }
         }
 
@@ -192,22 +204,27 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject
         if (dir == Vector2.zero)
             return;
 
-        int count = ShootCount;
+        int count = ShootCount + shotModifier.bonusShootCount;
         List<Transform> targets = count > 1 ? FindTargets(count) : null;
+        List<Vector2> dirs = new List<Vector2>();
         if (targets == null || targets.Count == 0)
         {
-            if (FireBullet(dir))
-                attackTimer = 0;
-            return;
+            dirs.Add(dir);
+        }
+        else
+        {
+            // 타겟이 발사 수보다 적으면 앞 타겟부터 다시 순환
+            for (int i = 0; i < count; i++)
+            {
+                Transform target = targets[i % targets.Count];
+                dirs.Add(((Vector2)(target.position - transform.position)).normalized);
+            }
         }
 
-        // 타겟이 발사 수보다 적으면 앞 타겟부터 다시 순환
         bool fired = false;
-        for (int i = 0; i < count; i++)
-        {
-            Transform target = targets[i % targets.Count];
-            fired |= FireBullet(((Vector2)(target.position - transform.position)).normalized);
-        }
+        foreach (Vector2 d in dirs)
+            fired |= FireBullet(d);
+
         if (fired)
             attackTimer = 0;
     }
@@ -221,6 +238,8 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject
 
         baseBullet.transform.position = transform.position;
         baseBullet.Shoot(dir, AttackPower);
+        if (shotModifier.tileItem != null)
+            shotModifier.tileItem.OnFired(baseBullet);
         return true;
     }
 

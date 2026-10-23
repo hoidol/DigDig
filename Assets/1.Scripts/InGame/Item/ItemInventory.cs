@@ -8,21 +8,14 @@ public class ItemInventory : MonoBehaviour
     public List<Item> curItems = new List<Item>();
 
     // public readonly static int MAX_ITEM_COUNT = 4; // 최대 보유 아이템 개수 
-    public List<string> ownItemKeys = new List<string>();
+    // public List<string> ownItemKeys = new List<string>();
 
     // 인터페이스별 캐시 - 장착/해제 시점에만 갱신
-    public List<IPreFire> preFires = new List<IPreFire>();
-    public List<IFired> fireds = new List<IFired>();
-    public List<IComboFire> comboFires = new List<IComboFire>();
-    public List<IBullet> bullets = new List<IBullet>();
-
-    void RefreshCache()
-    {
-        preFires = curItems.OfType<IPreFire>().ToList();
-        fireds = curItems.OfType<IFired>().ToList();
-        comboFires = curItems.OfType<IComboFire>().ToList();
-        bullets = curItems.OfType<IBullet>().ToList();
-    }
+    // public List<IPreFire> preFires = new List<IPreFire>();
+    // public List<IFired> fireds = new List<IFired>();
+    // public List<IComboFire> comboFires = new List<IComboFire>();
+    // public List<IBullet> bullets = new List<IBullet>();
+    // public List<Tile> setupTiles = new List<Tile>(); //아이템이 적용된 타일
 
     void Awake()
     {
@@ -54,22 +47,23 @@ public class ItemInventory : MonoBehaviour
 
     public void AddItem(string key)
     {
-        ownItemKeys.Add(key);
+        // ownItemKeys.Add(key);
 
         ItemData itemData = ItemData.GetItemData(key);
+        Item item = Instantiate(itemData.itemPrefab, transform);
+        item.OnEquip();
+        curItems.Add(item);
+        
         GameEventBus.Publish(new AddedItemEvent(itemData));
     }
 
     // idx를 모르면(-1) key로 슬롯을 찾아서 비움
-    // public void RemoveItem(string key, int idx = -1)
-    // {
-    //     if (idx < 0)
-    //         idx = System.Array.LastIndexOf(ownItemKeys, key);
-    //     if (idx < 0 || idx >= ownItemKeys.Length)
-    //         return;
-
-    //     ownItemKeys[idx] = null;
-    // }
+    public void RemoveItem(TileItem tileItem)
+    {
+        tileItem.OnUnequip();
+        Destroy(tileItem.gameObject);
+        curItems.Remove(tileItem);
+    }
 
 
     public void UpdateInventory()
@@ -82,57 +76,12 @@ public class ItemInventory : MonoBehaviour
             curItems.Remove(item);
         }
 
-        foreach (var data in Character.Instance.statMgr.itemStatDic)
+        foreach (var item in curItems)
         {
-            Item item = GetItem(data.Value.key);
-            if (item == null && data.Value.count > 0)
-            {
-                ItemData itemData = ItemData.GetItemData(data.Value.key);
-                item = Instantiate(itemData.itemPrefab, transform);
-                item.key = itemData.key;
-                item.count = data.Value.count;
-                curItems.Add(item);
-
-                item.OnEquip();
-                GameEventBus.Publish(new AddedItemEvent(itemData));
-            }
-            else if (item != null && data.Value.count == 0)
-            {
-                item.OnUnequip();
-                Destroy(item.gameObject);
-                curItems.Remove(item);
-            }
-
-            if (item != null)
-                item.UpdateItem();
+            // 타일 아이템은 보유 개수만큼 객체를 따로 만든다 (객체마다 다른 타일에 설치)
+            item.UpdateItem();
         }
-
-        SortingItem();
     }
-
-    // public bool IsFull()
-    // {
-    //     for (int i = 0; i < ownItemKeys.Length; i++)
-    //     {
-    //         if (string.IsNullOrEmpty(ownItemKeys[i]))
-    //         {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
-
-    // public int GetItemCount(string key)
-    // {
-    //     return ownItems.Count(e => e == key);
-    // }
-
-    public void SortingItem()
-    {
-        curItems = curItems.OrderBy(e => e.itemData.applyOrder).ToList();
-        RefreshCache();
-    }
-
 
     public Item GetItem(string key)
     {
@@ -141,7 +90,7 @@ public class ItemInventory : MonoBehaviour
 
     public bool CheckOwn(string key)
     {
-        return GetItem(key).count > 0;
+        return GetItem(key) != null; // 보유 개수가 0이 되면 UpdateInventory에서 객체가 제거됨
     }
 
 #if UNITY_EDITOR

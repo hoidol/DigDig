@@ -4,7 +4,7 @@ using UnityEngine;
 public class CharacterManageCanvas : CanvasUI<CharacterManageCanvas>
 {
     public SlimeSlotPanel[] slimeSlotPanels;
-    public OwnItemPanel[] ownItemPanels;
+    // public OwnItemPanel[] ownItemPanels;
 
 
     void OnEnable()
@@ -25,7 +25,7 @@ public class CharacterManageCanvas : CanvasUI<CharacterManageCanvas>
 
         init = true;
         slimeSlotPanels = GetComponentsInChildren<SlimeSlotPanel>();
-        ownItemPanels = GetComponentsInChildren<OwnItemPanel>();
+        // ownItemPanels = GetComponentsInChildren<OwnItemPanel>();
         for (int i = 0; i < slimeSlotPanels.Length; i++)
         {
             slimeSlotPanels[i].idx = i;
@@ -70,9 +70,9 @@ public class CharacterManageCanvas : CanvasUI<CharacterManageCanvas>
             slimeSlotPanels[i].UpdatePanel();
         }
 
-        for (int i = 0; i < ownItemPanels.Length; i++)
-        {
-            ownItemPanels[i].SetItem(Character.Instance.itemInventory.GetItem(Character.Instance.itemInventory.ownItemKeys[i]), i);
-        }
+        // for (int i = 0; i < ownItemPanels.Length; i++)
+        // {
+        //     ownItemPanels[i].SetItem(Character.Instance.itemInventory.GetItem(Character.Instance.itemInventory.ownItemKeys[i]), i);
+        // }
     }
 }

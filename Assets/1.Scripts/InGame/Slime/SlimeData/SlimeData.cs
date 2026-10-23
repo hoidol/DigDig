@@ -346,7 +346,9 @@ public static class MergeLevelExtensions
 
 public enum AttackType
 {
+    AllRounder,
     Physic, //빨강
     Magic, //파랑
-    Vibrational //노랑
+    Vibrational, //노랑
+    
 }

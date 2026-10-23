@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 
 // 전투 웨이브 스킵 버튼
-// 전투 웨이브 중 언제든 스킵 가능 (휴식 중엔 숨김), 스킵하면 SKIP_WAVE_GOLD 고정 획득
+// 전투 웨이브 시작 SKIP_SHOW_DELAY초 후부터 스킵 가능 (휴식 중, 보스 직전/보스 wave엔 숨김), 스킵하면 SKIP_WAVE_GOLD 고정 획득
 public class StartNextWaveButton : MonoBehaviour
 {
     public GameObject childObject;

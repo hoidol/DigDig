@@ -3,7 +3,7 @@ using UnityEngine.UI;
 public class ItemPanelOnlyImage : MonoBehaviour
 {
     // public Image bgImage;
-    [SerializeField] protected ItemData itemData;
+    [SerializeField] public ItemData itemData;
     public Image thumImage;
     public virtual void SetItemData(ItemData itemData)
     {

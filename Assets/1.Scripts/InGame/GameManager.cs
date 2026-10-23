@@ -8,7 +8,6 @@ public class GameManager : MonoSingleton<GameManager>
     public StageData stageData;
 
     public bool isPlaying;
-    public Wave[] waves;
     EnemySpawnerContainer enemySpawnerContainer;
     // public WaveTimer waveTimer;
     protected void Awake()
@@ -42,17 +41,13 @@ public class GameManager : MonoSingleton<GameManager>
 
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
         GameEventBus.Subscribe<CharacterHpChangedEvent>(OnCharacterHpChangedEvent);
-        GameEventBus.Subscribe<SpawnMinieEvent>(OnSpawnMinieEvent);
+        GameEventBus.Subscribe<SpawnSlimeEvent>(OnSpawnMinieEvent);
 
         Debug.Log($"UserManager.STAGE_KEY {UserDataManager.STAGE_KEY}");
         stageData = StageManager.Instance.GetStageData(UserDataManager.STAGE_KEY);
         stageData.Init();
         enemySpawnerContainer = Instantiate(stageData.enemySpawnerContainerPrefab);
-        waves = enemySpawnerContainer.GetComponentsInChildren<Wave>(true);
-        for (int i = 0; i < waves.Length; i++)
-        {
-            waves[i].gameObject.SetActive(false);
-        }
+        enemySpawnerContainer.Init();
 
         // 캐릭터를 임의의 빈 타일 위에 배치
         Tile characterTile = TileManager.Instance.GetRandomEmptyTile();
@@ -99,6 +94,8 @@ public class GameManager : MonoSingleton<GameManager>
                 if (breakTimer <= 0)
                 {
                     isBreak = false;
+
+                    GameEventBus.Publish(new BreakEndEvent(waveIdx+1));
                     StartNextWave();
                 }
                 continue;
@@ -126,7 +123,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         // 웨이브 진행/종료는 각 Wave가 담당 (종료 시 Wave.MoveNextWave → EndWave)
         Debug.Log($"GameManager StartWave {waveIdx}");
-        Wave wave = GetWave(waveType);
+        Wave wave = enemySpawnerContainer.GetWave(waveType);
         wave.gameObject.SetActive(true);
         accWaves.Add(wave);
         wave.StartWave(waveIdx, waveDefenceType);
@@ -154,6 +151,7 @@ public class GameManager : MonoSingleton<GameManager>
         {
             isBreak = true;
             breakTimer = GameSetting.BREAK_TIME;
+            GameEventBus.Publish(new BreakStartEvent(endWaveIdx+1));
         }
     }
 
@@ -166,17 +164,11 @@ public class GameManager : MonoSingleton<GameManager>
         StartWave(waveIdx + 1);
     }
 
-    // 스킵 가능: 전투 wave 진행 중 언제든 (휴식 중, 보스 wave 불가)
+    // 스킵 가능: 전투 wave 시작 후 SKIP_SHOW_DELAY초부터 (휴식 중, 보스 직전 wave, 보스 wave 불가)
     public bool CanSkipWave()
     {
-        return isPlaying && !isBreak && waveIdx < GameSetting.BOSS_PHASE;
-    }
-
-    Wave GetWave(WaveType waveType)
-    {
-        Wave prefab = waves.Where(e => e.waveType == waveType).FirstOrDefault();
-        Wave wave = Instantiate(prefab);
-        return wave;
+        return isPlaying && !isBreak && waveIdx < GameSetting.BOSS_PHASE - 1
+            && GameSetting.WAVE_TIME - mainWaveTimer >= GameSetting.SKIP_SHOW_DELAY;
     }
 
     void Update()
@@ -272,9 +264,18 @@ public class GameManager : MonoSingleton<GameManager>
         killEnemyCount++;
     }
 
-    public void OnSpawnMinieEvent(SpawnMinieEvent e)
+    public void OnSpawnMinieEvent(SpawnSlimeEvent e)
     {
         slimeSpawnCount++;
+    }
+    public Wave GetWave(int wIdx)
+    {
+        for(int i = 0; i < accWaves.Count; i++)
+        {
+            if(accWaves[i].waveIdx == wIdx)
+            return accWaves[i];
+        }
+        return null;
     }
 }
 
@@ -292,6 +293,22 @@ public class StartBossEvent
 
 }
 
+public class BreakStartEvent
+{
+    public int nextWaveIdx;
+    public BreakStartEvent(int w)
+    {
+        nextWaveIdx = w;
+    }
+}
+public class BreakEndEvent
+{
+    public int nextWaveIdx;
+    public BreakEndEvent(int w)
+    {
+        nextWaveIdx = w;
+    }
+}
 public class WaveStartEvent
 {
     public int waveIdx;

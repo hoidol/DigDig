@@ -8,6 +8,7 @@ public class OrbitMachine : SubMachine
     public float rotationSpeed = 80f; //충분히느리게 
     public float damage;
     public AttackType attackType;
+    public IAllyUnit owner; // 적중 시 타일 효과 기준 유닛 (OrbitSlime)
 
     public readonly List<OrbitOrb> orbitOrbs = new();
     readonly Queue<OrbitOrb> pool = new();

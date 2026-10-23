@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HuntingGun : BaseGun
+public class HuntingGun : Weapon
 {
 
 }

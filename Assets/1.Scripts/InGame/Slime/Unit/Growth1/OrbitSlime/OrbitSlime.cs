@@ -20,7 +20,6 @@ public class OrbitSlime : SlimeGrowth1
     public override void InitSlime()
     {
         orbitCount = orbitSlimeData.orbitCount.GetByMergeLevel(mergeLevel);
-        rotationSpeed = orbitSlimeData.orbitRotationSpeed;
         radius = orbitSlimeData.radius;
 
         base.InitSlime();
@@ -28,10 +27,10 @@ public class OrbitSlime : SlimeGrowth1
         //회전 머신 설정
         orbitMachine.damage = AttackPower;
         orbitMachine.attackType = AttackType;
+        orbitMachine.owner = this;
 
         Debug.Log($"OrbitSlime InitSlime() {key} MergeLevel {mergeLevel} AttackPower {AttackPower}");
         orbitMachine.radius = radius;
-        orbitMachine.rotationSpeed = rotationSpeed;
         for (int i = 0; i < orbitCount; i++)
         {
             OrbitOrb orbitOrb = orbitMachine.AddOrbit();
@@ -57,6 +56,9 @@ public class OrbitSlime : SlimeGrowth1
     {
         base.UpdateSlime();
         orbitMachine.damage = AttackPower;
+        // 회전 속도 = 공속 (버프 반영 후 값). 공격 타이머와 같은 기준: AttackSpeed가 ATTACK_SPEED_PER_SECOND일 때 orbitRotationSpeed
+        rotationSpeed = orbitSlimeData.orbitRotationSpeed * AttackSpeed / GameSetting.ATTACK_SPEED_PER_SECOND;
+        orbitMachine.rotationSpeed = rotationSpeed;
         Debug.Log($"OrbitSlime UpdateSlime() {key} MergeLevel {mergeLevel} AttackPower {AttackPower}");
         orbitMachine.UpdateOrbitMachine();
     }

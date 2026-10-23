@@ -51,25 +51,8 @@ public static class InGameUtil
     //범위 내 적을 type 기준으로 찾기, exceptEffect가 있으면 해당 이펙트가 적용된 타겟은 후순위
     public static Transform FindTarget(Vector2 pos, float range, LayerMask layerMask, FindTargetType type, string exceptEffect = null)
     {
-        Collider2D[] cols = Physics2D.OverlapCircleAll(pos, range, layerMask);
-        if (cols.Length == 0)
-            return null;
-
-        if (string.IsNullOrEmpty(exceptEffect))
-            return SelectTarget(cols, pos, type);
-
-        List<Collider2D> normals = new List<Collider2D>(cols.Length);
-        List<Collider2D> effectings = new List<Collider2D>();
-        for (int i = 0; i < cols.Length; i++)
-        {
-            bool isEffecting = cols[i].TryGetComponent(out StatusEffectHandler handler) && handler.HasEffect(exceptEffect);
-            if (isEffecting)
-                effectings.Add(cols[i]);
-            else
-                normals.Add(cols[i]);
-        }
-
-        return SelectTarget(normals.Count > 0 ? normals : effectings, pos, type);
+        List<Transform> targets = FindTargets(pos, range, layerMask, type, 1, exceptEffect);
+        return targets.Count > 0 ? targets[0] : null;
     }
 
     //범위 내 서로 다른 적 최대 count개를 type 우선순위 순으로 찾기, exceptEffect가 적용된 타겟은 후순위
@@ -158,6 +141,30 @@ public static class InGameUtil
                     return lowest != null ? lowest.transform : SelectTarget(cols, pos, FindTargetType.Closest);
                 }
 
+
+            case FindTargetType.HighHp:
+                {
+                    //체력이 같으면 가까운 적 우선
+                    Collider2D highest = null;
+                    float highestHp = float.MinValue;
+                    float highestSqrDist = float.MaxValue;
+                    for (int i = 0; i < cols.Count; i++)
+                    {
+                        if (!cols[i].TryGetComponent(out IHittable h))
+                            continue;
+
+                        float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
+                        if (h.CurHp > highestHp || (h.CurHp == highestHp && sqrDist < highestSqrDist))
+                        {
+                            highest = cols[i];
+                            highestHp = h.CurHp;
+                            highestSqrDist = sqrDist;
+                        }
+                    }
+                    //체력 정보가 없으면 가까운 적
+                    return highest != null ? highest.transform : SelectTarget(cols, pos, FindTargetType.Closest);
+                }
+
             case FindTargetType.Closest:
             default:
                 {
@@ -206,6 +213,7 @@ public enum FindTargetType
     Farthest, //먼
     Random, //랜덤 
     LowHp,
+    HighHp,
     //높은 체력
 
     Count

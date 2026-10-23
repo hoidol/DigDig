@@ -3,9 +3,18 @@ using UnityEngine;
 
 public class CoinPanel : MonoBehaviour
 {
-    public TMP_Text orePieceText;
-    public void Update()
+    public TMP_Text coinText;
+    void Start()
     {
-        orePieceText.text = Character.Instance.coin.ToString();
+        GameEventBus.Subscribe<CoinEvent>(OnCoinEvent);
+        UpdatePanel();
+    }
+    void OnCoinEvent(CoinEvent e)
+    {
+        UpdatePanel();
+    }
+    public void UpdatePanel()
+    {
+        coinText.text = Character.Instance.coin.ToString();
     }
 }

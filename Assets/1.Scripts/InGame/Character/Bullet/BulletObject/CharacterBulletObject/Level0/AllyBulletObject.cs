@@ -12,9 +12,18 @@ public class AllyBulletObject : BulletObject
     protected List<IBulletForce> forces = new List<IBulletForce>();
     [SerializeField] public AllyUnitDamageData allyUnitDamageData;
     public IAllyUnit allyUnit;
+    public AllyUnitDamageData DamageData => allyUnitDamageData;
+
+    // 발사 정보 (연발 등에서 같은 탄을 다시 쏠 때 사용)
+    public BulletSpec spec;
+    public Vector2 shootPos;
+    public Vector2 shootDir;
+    public float shootDamage;
+
     public virtual void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
         this.allyUnit = allyUnit;
+        spec = bullet;
         AllyBulletSpec allyBulletSpec = bullet as AllyBulletSpec;
         transform.localScale = Vector3.one;
 
@@ -22,6 +31,7 @@ public class AllyBulletObject : BulletObject
         {
             allyUnitDamageData = new AllyUnitDamageData();
         }
+        allyUnitDamageData.Init(allyUnit); // 풀링 재사용 시 이전 타일 효과 초기화
 
         damage = allyBulletSpec.damage;
         allyUnitDamageData.damage = damage;
@@ -40,6 +50,14 @@ public class AllyBulletObject : BulletObject
         {
             AddBulletForce(bullet.bulletForces[i]);
         }
+    }
+
+    public override void Shoot(Vector2 dir, float damage)
+    {
+        base.Shoot(dir, damage);
+        shootPos = transform.position;
+        shootDir = dir;
+        shootDamage = damage;
     }
 
     public override IHittable Hit(RaycastHit2D hit2D)

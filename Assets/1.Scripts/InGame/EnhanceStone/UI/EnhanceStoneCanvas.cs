@@ -8,7 +8,7 @@ public class EnhanceStoneCanvas : CanvasUI<EnhanceStoneCanvas>
     // 3. 아이템 뽑기
     public LevelUpSlimeButton levelUpSlimeButton;
     // public MergeSlimeButton mergeSlimeButton;
-    public DrawItemButton drawItemButton;
+    // public DrawItemButton drawItemButton;
     public void OnEnable()
     {
         Time.timeScale = 0;
@@ -30,7 +30,7 @@ public class EnhanceStoneCanvas : CanvasUI<EnhanceStoneCanvas>
     {
         // mergeSlimeButton.UpdateButton();
         levelUpSlimeButton.UpdateButton();
-        drawItemButton.UpdateButton();
+        // drawItemButton.UpdateButton();
     }
 
 }

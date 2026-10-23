@@ -1,12 +1,6 @@
 using UnityEngine;
 
-[System.Flags]
-public enum AcquireMethod
-{
-    Select = 1 << 1,
-    Merge = 1 << 2,
 
-}
 
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
@@ -15,12 +9,13 @@ public class ItemData : ScriptableObject
     public string Title => itemName;
     public string itemName;
     public string desc;
+    public ItemApplyType itemApplyType;
     // public int consumeHp;
     public int level;
-    public int addPrice; //추가 금액
+    // public int addPrice; //추가 금액
     public int maxCount = 2; //최대 보유 개수
 
-    public string valueInfo;
+    // public string valueInfo;
     public Item itemPrefab;
     public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
     public int applyOrder; // 아이템 적용 순서
@@ -74,8 +69,8 @@ public class ItemData : ScriptableObject
             desc = row.Get("Desc");
         if (row.TryGetInt("Level", out int lv))
             level = lv;
-        if (row.TryGetInt("AddPrice", out int ap))
-            addPrice = ap;
+        // if (row.TryGetInt("AddPrice", out int ap))
+        //     addPrice = ap;
         if (row.TryGetInt("MaxCount", out int mc))
             maxCount = mc;
 
@@ -175,4 +170,11 @@ public class {className} : Item
         return filePath;
     }
 #endif
+}
+
+public enum ItemApplyType
+{
+    Tile,
+    Character,
+    None
 }

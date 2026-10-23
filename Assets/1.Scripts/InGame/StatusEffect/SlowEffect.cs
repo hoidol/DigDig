@@ -1,6 +1,6 @@
 public class SlowEffect : StatusEffect
 {
-    const float RATE = 0.6f; // 이동속도 60%로 고정
+    const float RATE = 0.5f; // 이동속도 60%로 고정
 
     public SlowEffect(float duration)
     {

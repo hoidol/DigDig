@@ -9,9 +9,13 @@ public class SlimeShortcutInfoPanel : MonoBehaviour
 
     public SlimeStatPanel[] slimeStatPanels;
     List<SlimeStatType> slimeStatTypes = new List<SlimeStatType>();
+    public TMP_Text nameText;
+    public TMP_Text descText;
     public void SetSlime(Slime slime)
     {
         gameObject.SetActive(true);
+        nameText.text = slime.slimeData.Title;
+        descText.text = slime.slimeData.GetDescription(slime.mergeLevel);
         // descText.text = slime.slimeData.GetDescription(slime.mergeLevel); 
         for (int i = 0; i < slimeStatPanels.Length; i++)
         {

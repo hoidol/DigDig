@@ -8,52 +8,55 @@ using UnityEngine;
 
 public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
 {
-    [SerializeField] ItemShopProductPanel[] itemShopProductPanels;
-    [SerializeField] OwnItemPanel[] ownItemPanels;
+    [SerializeField] ItemProductInfoPanel  infoPanel;
+    [SerializeField] ItemProductPanel[] itemProductPanels;
+    public GameObject mainCloseButton;
 
     public override void Init()
     {
         if (init)
             return;
         init = true;
-        itemShopProductPanels = GetComponentsInChildren<ItemShopProductPanel>();
-        ownItemPanels = GetComponentsInChildren<OwnItemPanel>();
+        itemProductPanels = GetComponentsInChildren<ItemProductPanel>();
     }
 
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
         UpdateCanvas();
-    }
-    void OnEnable()
-    {
-        Time.timeScale = 0;
-    }
-
-    void OnDisable()
-    {
-        Time.timeScale = 1;
-    }
-    void Start()
+    }    void Start()
     {
         GameEventBus.Subscribe<PurchaseItemEvent>(OnPurchaseItemEvent);
     }
+    
     void OnPurchaseItemEvent(PurchaseItemEvent e)
     {
-        for (int i = 0; i < itemShopProductPanels.Length; i++)
+        UpdateCanvas();
+        for (int i = 0; i < itemProductPanels.Length; i++)
         {
-            if (!itemShopProductPanels[i].purchased)
+            if (!itemProductPanels[i].purchased)
             {
                 return;
             }
         }
-        // ResetItemShopProduct();
+
+        ResetItemShopProduct();
     }
+
+    public void ShowItemInfo(ItemProductPanel iPPanel)
+    {
+        mainCloseButton.SetActive(false);
+        infoPanel.ShowItemInfo(iPPanel, () =>
+        {
+            mainCloseButton.SetActive(true);
+        });
+    }
+
     public void UpdateCanvas()
     {
-        for (int i = 0; i < itemShopProductPanels.Length; i++)
+        for (int i = 0; i < itemProductPanels.Length; i++)
         {
-            itemShopProductPanels[i].UpdatePanel();
+            itemProductPanels[i].UpdatePanel();
         }
     }
 
@@ -64,7 +67,7 @@ public class ItemShopCanvas : CanvasUI<ItemShopCanvas>
         for (int i = 0; i < itemDatas.Count; i++)
         {
             Debug.Log($"ItemShopCanvas ResetItemShopProduct() itemDatas[i] {itemDatas[i].key}");
-            itemShopProductPanels[i].SetItemData(itemDatas[i]);
+            itemProductPanels[i].SetItemData(itemDatas[i]);
         }
 
         GameEventBus.Publish(new RefreshItemShopEvent());

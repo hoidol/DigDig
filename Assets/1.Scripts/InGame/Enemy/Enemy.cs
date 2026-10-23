@@ -49,10 +49,12 @@ public abstract class Enemy : MonoBehaviour, IHittable
         statusEffectHandler?.Init();
     }
     //적 생성 시 호출
-    int wave;
+    public int wave;
+    public AllyUnitDamageData killedBy; // 처치한 공격 (코인 타일이 처치한 유닛인지 확인. 지급 후 null)
     public virtual void Spawn(Vector2 pos, int wave)
     {
         this.wave = wave;
+        killedBy = null;
         gameObject.SetActive(gameObject);
         statusEffectHandler?.Reset();
         pathIdx = 0;
@@ -141,7 +143,11 @@ public abstract class Enemy : MonoBehaviour, IHittable
         }
 
         if (statusEffectHandler != null && statusEffectHandler.IsStunned)
+        {
+            rg2d.linearVelocity = Vector2.zero;
             return;
+        }
+            
 
         UpdateMoving();
     }
@@ -222,8 +228,12 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (curHp <= 0)
             return;
 
-
-        curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, GetDamageMultiplier(damage.attackType)));
+        // 만능 공격 타일: 방어 타입 배율 무시 (모든 방어 타입에 100%)
+        float multiplier = damage is AllyUnitDamageData { ignoreDefence: true } ? 1f : GetDamageMultiplier(damage.attackType);
+        // 거인 사냥 타일: 엘리트/보스 추가 배율
+        if (damage is AllyUnitDamageData ad && (this is EliteEnemy || this is Boss))
+            multiplier *= ad.eliteBossDamageMul;
+        curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, multiplier));
         if (curHp > 1)
             hpText.text = ((int)curHp).ToString();
         else if (0 < curHp && curHp <= 1)
@@ -233,6 +243,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (curHp < 1)
         {
             curHp = 0; // 0~1 사이로 남으면 같은 프레임 다른 탄에 다시 죽어 EnemyDeadEvent가 중복 발행됨
+            killedBy = damage as AllyUnitDamageData;
             Reward();
             Destroy();
         }
@@ -243,7 +254,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     // 공격 속성 × 방어 타입 배율 (DefenceTable). 방어형별 특수 처리가 필요하면 override
     protected virtual float GetDamageMultiplier(AttackType attackType)
     {
-        return DefenceTable.Get(attackType, DefenceType);
+        return DefenceInfo.Get(attackType, DefenceType);
     }
 
     public int face;

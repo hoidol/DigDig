@@ -10,3 +10,16 @@ Bow	활	1초마다 랜덤방향으로 탄 발사됨	1	0	2
 Mirror	거울	탄이 1번 튕깁니다.	1	0	2
 Bandage	밴드	30초마다 HP 3 회복	1	0	2
 RedEye	붉은 눈	적 처치 시 즉시 발사	1	0	2
+AttackPowerTile	공격력 타일	공격력 50% 증가	1	0	3
+AttackSpeedTile	공격속도 타일	공격속도 30% 증가	1	0	3
+BurstShotTile	연발 타일	연속으로 발사	1	0	3
+MultiTargetTile	다중 타겟 타일	공격 대상 +1 추가됩니다.	1	0	3
+RangeUpTile	사거리 타일	사정거리 +2	1	0	3
+SlowTile	둔화 타일	10% 확률로 적에게 슬로우 효과 적용	1	0	3
+StunTile	스턴 타일	2% 확률로 0.3초간 스턴	1	0	3
+CriticalTile	치명타 타일	치명타 확률 +10% 증가 데미지 2배	1	0	3
+TrueDamageTile	만능 공격 타일	모든 방어 타입에 데미지 100% 적용	1	0	3
+GoldTile	코인 타일	적 처치 시 코인 +1	1	0	3
+PioneerTile	개척 타일	막힌 칸 해제	1	0	3
+BerserkTile	광폭 타일	공격력 +100% 사거리 -50%	1	0	3
+GiantSlayerTile	거인 사냥 타일	엘리트, 보스에게 데미지 2배	1	0	3

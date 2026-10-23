@@ -58,7 +58,7 @@ public class FlameSlime : SlimeGrowth1,IExecuteSkillSlime
     }
 
 
-    public override int ShootCount => flameSlimeData.shootCounts.GetByMergeLevel(mergeLevel);
+    // public override int ShootCount => flameSlimeData.shootCounts.GetByMergeLevel(mergeLevel);
 
     public override List<Transform> FindTargets(int count)
     {

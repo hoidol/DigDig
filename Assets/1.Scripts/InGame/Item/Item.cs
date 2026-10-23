@@ -5,8 +5,6 @@ public abstract class Item : MonoBehaviour
 {
     public string Key=>key;
     public string key;
-    public int count;
-    public ReinforceType ReinforceType => ReinforceType.Item;
     public virtual string GetDescription()
     {
         return itemData.desc;
@@ -29,18 +27,8 @@ public abstract class Item : MonoBehaviour
 
     public virtual void UpdateItem()
     {
-        count = Character.Instance.statMgr.itemStatDic[key].count;
-        // count = Character.Instance.itemInventory.GetItemCount(key);//.itemStatDic[key].count;
+        
     }
 
 
-    public int GetCount()
-    {
-        return Character.Instance.statMgr.GetCharacterItemStat(key).count;
-    }
-
-    public bool IsMaxLevel()
-    {
-        return count >= itemData.maxCount;
-    }
 }

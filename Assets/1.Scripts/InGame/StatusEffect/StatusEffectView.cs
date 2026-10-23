@@ -4,11 +4,11 @@ public class StatusEffectView : MonoBehaviour
 {
     public string effectKey;
 
-    public void Play()
+    public virtual void Play()
     {
         gameObject.SetActive(true);
     }
-    public void Stop()
+    public virtual void Stop()
     {
         gameObject.SetActive(false);
     }

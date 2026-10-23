@@ -12,15 +12,12 @@ public class GameSetting
    public static int MAX_ENERGE = 30;
 
    public const int BOSS_PHASE = 19; //총 20 Phase
-   // public const float BREAK_TIME = 20;
 
    public const float WAVE_TIME = 30;
    public const float BREAK_TIME = 10;
 
-   // public const float CAN_START_NEXT_PHASE_TIME = 30; //해당 초가 지나면 바로 스킵 가능, 스킵 시 보상
    public const int SKIP_WAVE_GOLD = 5; // 스킵하면 받는 골드 (고정)
-   // public const float SKIP_WAVE_END_BEFORE = 5; // 웨이브 종료 n초 전부터 스킵 불가
-   // public const float ENEMY_MAX_SPAWN_TIME = 30;
+   public const float SKIP_SHOW_DELAY = 5; // 웨이브 시작 후 스킵 버튼이 보이기까지 시간
    public const float ENEMY_SPAWN_INTERVAL = 1.25f;
 
    public const float ENEMY_HP_INCREASE_INTERVAL = 10f; // 페이즈 시작 후 이 시간(초)마다 체력 증가
@@ -32,12 +29,12 @@ public class GameSetting
    public const int INCREASE_SPAWN_PRICE = 1;
    public const int BLOCKED_TILE_COUNT = 3; // 게임 시작 시 랜덤으로 막는 타일 수
 
-
-
-   // public const int MIN_SLIME_SLOT_COUNT = 6;
-   // public const int MAX_SLIME_SLOT_COUNT = 9;
    public const int LEVEL_TO_GROWUP2 = 2;//0,1,2 되어야됌
+   public const int SLIME_MIN_EXIST_COUNT = 10;
 
+   public static float ATTACK_SPEED_PER_SECOND = 50f; // AttackSpeed가 이 값이면 초당 1회 공격 (Orbit은 이때 orbitRotationSpeed로 회전)
+
+   public const int MERGE_REINFORCE_MAX_EXP =3;
 
 
 }

@@ -1,0 +1,23 @@
+using UnityEngine;
+
+//35프로 확률로 랜덤 방향으로 추가 발사
+public class WackyItem : Item, IFired
+{
+    float PROBS = 0.5f;
+
+
+    public override string GetDescription()
+    {
+        return $"{PROBS * 100:0}% 확률로 랜덤 방향으로 탄 발사";
+        // return string.Format(TranslateManager.GetText("{key}_Desc"),$"{PROBS * 100:0}");
+    }
+
+    public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
+    {
+        if (Random.value >= PROBS)
+            return;
+        Vector2 randomDir = Random.insideUnitCircle.normalized;
+        Character.Instance.Shoot(new CharacterBulletSpec(), randomDir);
+        // Character.Instance.AddHp(-itemData.consumeHp);
+    }
+}

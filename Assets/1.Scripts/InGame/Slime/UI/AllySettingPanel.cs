@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AllySettingPanel : MonoSingleton<AllySettingPanel>
+public class AllySettingPanel : MonoBehaviour
 {
     public GameObject obj;
     public SetFindTargetButton setFindTargetButton;
@@ -10,6 +10,7 @@ public class AllySettingPanel : MonoSingleton<AllySettingPanel>
     // public Image thumImage;
     public CharacterShortcutInfoPanel characterShortcutInfoPanel;
     public SlimeShortcutInfoPanel slimeShortcutInfoPanel;
+    public AttackTypePanel attackTypePanel;
 
     IAllyUnit targetSlime;
     void Start()
@@ -32,6 +33,8 @@ public class AllySettingPanel : MonoSingleton<AllySettingPanel>
             CharacterData characterData = CharacterManager.Instance.GetCharacterData(Character.Instance.characterName );
             // thumImage.sprite = characterData.thum;
             // nameText.text = characterData.Title;
+            
+            attackTypePanel.SetAttackType(Character.Instance.weapon.attackType);
             characterShortcutInfoPanel.SetCharacter(Character.Instance);
         }
         else
@@ -39,6 +42,7 @@ public class AllySettingPanel : MonoSingleton<AllySettingPanel>
             Slime slime = allyUnit.Transform.GetComponent<Slime>();
             // thumImage.sprite = slime.slimeData.thum;
             // nameText.text = slime.slimeData.Title;
+            attackTypePanel.SetAttackType(slime.slimeData.attackType);
             slimeShortcutInfoPanel.SetSlime(slime);
         }
         obj.SetActive(true);

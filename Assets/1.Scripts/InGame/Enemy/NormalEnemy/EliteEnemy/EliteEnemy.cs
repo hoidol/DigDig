@@ -12,11 +12,6 @@ public class EliteEnemy : NormalEnemy
     [SerializeField] EnemyAttackPattern enemyAttackPattern;
     CancellationTokenSource cts;
 
-    public void Spawn(Vector2 pos, int waveIdx, int spawnCount)
-    {
-        base.Spawn(pos, waveIdx);
-        maxHp = GetHp() * (1 + spawnCount);
-    }
 
     public override void Reward()
     {

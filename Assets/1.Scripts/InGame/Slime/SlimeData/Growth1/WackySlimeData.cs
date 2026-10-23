@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="Wacky",menuName ="Growth1/Wacky")]
 public class WackySlimeData : EnhanceAbilitySlimeData
 {
-    public int[] shootCounts = {1,2,2,3,3,4};
+    // public int[] shootCounts = {1,2,2,3,3,4};
 
     public override string GetDescription(int mergeLv =0)
     {

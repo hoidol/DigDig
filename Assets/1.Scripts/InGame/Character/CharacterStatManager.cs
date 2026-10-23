@@ -197,6 +197,5 @@ public class CharacterLevelUpStat
 public class CharacterItemStat
 {
     public string key;
-    public int count; //현재
-    // public int sum;//누적
+    public int count; //현재 총 누적 개수
 }
