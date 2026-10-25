@@ -14,8 +14,8 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
     public int slimeMaxCount;
     public int mergeCount;
     public int reinforceCount;
-    public int mergeCoinGetCounter;
-    
+    // public int mergeCoinGetCounter;
+
     public Slime Instantiate(string key)
     {
         SlimeData data = SlimeManager.Instance.slimeDataDic[key];
@@ -211,13 +211,8 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         if (tile != null)
             tile.SetTileObject(merged);
         mergeCount++;
-        mergeCoinGetCounter++;
-        if(mergeCoinGetCounter >= GameSetting.MERGE_REINFORCE_MAX_EXP)
-        {
-            mergeCoinGetCounter =0;
-            Character.Instance.AddMergeCoin(1);
-        }
-        GameEventBus.Publish(new MergedSlimeEvent()); 
+        Character.Instance.AddMergeCoin(1);
+        GameEventBus.Publish(new MergedSlimeEvent());
         ReleaseTarget();
         CharacterManageCanvas.Instance.UpdateCanvas();
     }

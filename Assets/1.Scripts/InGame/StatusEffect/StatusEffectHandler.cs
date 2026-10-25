@@ -5,9 +5,9 @@ using System.Linq;
 using System;
 public class StatusEffectHandler : MonoBehaviour
 {
-    public bool IsStunned { get; set; }
-    public bool IsShielded { get; set; }
-    public float SlowRate { get; set; } = 1f;
+    [field: SerializeField] public bool IsStunned { get; set; }
+    [field: SerializeField] public bool IsShielded { get; set; }
+    [field: SerializeField] public float SlowRate { get; set; } = 1f;
 
     // 방어막 소모 시도. 막으면 true 반환
     public bool TryBlock()

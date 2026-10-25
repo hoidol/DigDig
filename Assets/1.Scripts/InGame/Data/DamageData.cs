@@ -4,13 +4,15 @@ public class DamageData
 {
     public float damage;
     public AttackType attackType;
+    // 만능(AllRounder) 공격은 방어 타입 배율 무시 (Enemy.TakeDamage에서 확인)
+    public virtual bool IgnoreDefence => attackType == AttackType.AllRounder;
     public virtual float ApplyDamage(Vector2 pos, float multiplier = 1f)
     {
         float damage = this.damage * multiplier;
         if (damage < 1)
             damage = 0;
 
-        string dText = $"-{(int)damage}";
+        string dText = $"{(int)damage}";
         DamageText.SetText(pos, dText, ColorSetting.enemyDamageColor);
         return damage;
     }
@@ -25,7 +27,7 @@ public class EnemyDamageData : DamageData
         if (damage < 1)
             damage = 1;
 
-        string dText = $"-{(int)damage}";
+        string dText = $"{(int)damage}";
         CharacterTakeDamageText.SetText(pos, dText);
         return damage;
     }
@@ -39,8 +41,10 @@ public class AllyUnitDamageData : DamageData
     // 발사 시 설정 (캐릭터 탄: 캐릭터 치명타 스탯, 타일 아이템: TileItem.ModifyDamageData)
     public float critChance;    // % 단위, 적중마다 판정
     public float critPower = 2f;
-    public bool ignoreDefence;  // 만능 공격: 방어 타입 배율 무시
+    public bool ignoreDefence;  // 만능 공격 타일: 원래 속성과 상관없이 AllRounder처럼 방어 타입 배율 무시
     public float eliteBossDamageMul = 1f; // 엘리트/보스에게 주는 데미지 배율 (Enemy.TakeDamage에서 확인)
+
+    public override bool IgnoreDefence => ignoreDefence || base.IgnoreDefence;
 
     public void Init(IAllyUnit allyUnit)
     {
@@ -62,7 +66,7 @@ public class AllyUnitDamageData : DamageData
 
         if (damage < 1)
             damage = 0;
-        string dText = $"-{(int)damage}";
+        string dText = $"{(int)damage}";
 
         if (!crt)
         {

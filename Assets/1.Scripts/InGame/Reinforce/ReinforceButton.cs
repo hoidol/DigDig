@@ -7,18 +7,18 @@ public class ReinforceButton : ButtonUI
     public Image expBar;
     void Start()
     {
-      GameEventBus.Subscribe<MergeCoinEvent>(OnMergeCoinEvent);  
+        //   GameEventBus.Subscribe<MergeCoinEvent>(OnMergeCoinEvent);  
     }
-    void OnMergeCoinEvent(MergeCoinEvent e)
-    {
-        UpdateButton();
-        
-    }
-    public void UpdateButton()
-    {
-        expText.text = $"{SlimeSpawner.Instance.mergeCoinGetCounter}/{GameSetting.MERGE_REINFORCE_MAX_EXP}";
-        expBar.fillAmount = (float)SlimeSpawner.Instance.mergeCoinGetCounter/(float)GameSetting.MERGE_REINFORCE_MAX_EXP;
-    }
+    // void OnMergeCoinEvent(MergeCoinEvent e)
+    // {
+    //     UpdateButton();
+
+    // }
+    // public void UpdateButton()
+    // {
+    //     expText.text = $"{SlimeSpawner.Instance.mergeCoinGetCounter}/{GameSetting.MERGE_REINFORCE_MAX_EXP}";
+    //     expBar.fillAmount = (float)SlimeSpawner.Instance.mergeCoinGetCounter/(float)GameSetting.MERGE_REINFORCE_MAX_EXP;
+    // }
 
     public override void OnClickedBtn()
     {

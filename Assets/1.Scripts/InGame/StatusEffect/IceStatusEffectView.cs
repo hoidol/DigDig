@@ -12,9 +12,12 @@ public class IceStatusEffectView : StatusEffectView
         base.Play();
         if (sprites == null)
             sprites = GetComponentInParent<StatusEffectHandler>()?.GetComponentsInChildren<SpriteForStatusEffect>(true);
+        if (sprites != null)
+        {
+            foreach (var sprite in sprites)
+                sprite.SetTint(tintColor);
+        }
 
-        foreach (var sprite in sprites)
-            sprite.SetTint(tintColor);
     }
 
     public override void Stop()

@@ -10,6 +10,8 @@ public class AttackInfo : ScriptableObject
     {
         switch (attackType)
         {
+            case AttackType.AllRounder:
+             return "만능형";
             case AttackType.Physic:
              return "물리형";
             case AttackType.Magic:

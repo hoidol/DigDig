@@ -10,7 +10,7 @@ public class DefenceInfo : ScriptableObject
     public class Row
     {
         public DefenceType defenceType;
-        public float[] multipliers; // AttackType 순서 (Physic, Magic, Vibrational)
+        public float[] multipliers; // AttackType 순서 (AllRounder, Physic, Magic, Vibrational). AllRounder는 표와 상관없이 항상 1
     }
 
     public Row[] rows;
@@ -55,6 +55,8 @@ public class DefenceInfo : ScriptableObject
     // 기획 기본값 (에셋 Reset 시, 에셋이 없을 때 사용)
     public static float GetDefault(AttackType attackType, DefenceType defenceType)
     {
+        if (attackType == AttackType.AllRounder) // 만능: 모든 방어 타입에 100%
+            return 1f;
         switch (defenceType)
         {
             case DefenceType.Armored: // 갑옷형 - 물리 -50% 마법 +100% 진동 0%

@@ -44,6 +44,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 
 ## 타일 아이템 (2026-10-22)
 - 아이템 획득: `DrawItemButton`을 누르면 **TileItem 중에서만** 랜덤 1개를 뽑아 바로 랜덤 타일에 설치한다(선택 UI 없음).
+  - 뽑기 가격(2026-10-25): **처음 10코인, 뽑을 때마다 +2** (`INIT_DRAW_ITEM_PRICE`/`INCREASE_DRAW_ITEM_PRICE`, 횟수는 `GameManager.drawItemCount`).
 - 타일 아이템(`TileItem`)은 획득하면 랜덤 타일에 설치되고, 그 타일에 슬라임이나 캐릭터가 올라와 있는 동안만 효과가 적용된다(`OnEnter`/`OnExit`).
 - **타일 하나에 아이템은 하나만** 설치한다. 설치할 때 위에 오브젝트가 있어도 되고, 그러면 바로 적용된다.
 - 수치는 **타일(객체)마다 고정**이다. 같은 아이템을 또 얻으면 count를 올리지 않고 **객체를 하나 더** 만들어 다른 타일에 설치한다.
@@ -94,6 +95,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 적의 방어 타입 기준은 프리팹이 참조하는 **EnemyData.defenceType**.
 - 공격 속성(Physic/Magic/Vibrational) × 방어 타입 배율은 `Resources/DefenceTable` 에셋 한 곳에서 관리 (인스펙터 표). 방어형 클래스마다 계산을 따로 두지 않는다.
   - 기본값: 갑옷 물0.5/마1.5/진1 · 정령 1.5/0.5/1 · 중갑 0.7/0.7/1.6 · 생체 1.3/0.7/1 · 일반 1/1/1
+  - **만능(`AttackType.AllRounder`)은 방어 타입 배율 무시(항상 100%)** (2026-10-25). TrueDamageTile의 `AllyUnitDamageData.ignoreDefence`도 같은 취급 → 판정은 `DamageData.IgnoreDefence` 한 곳.
 
 ## 데이터 파이프라인
 - **SlimeData 배열 필드(bounces, shootCounts 등)는 에셋에 직렬화된 값이 코드 초기값보다 우선.** 코드 기본값만 바꾸면 기존 에셋엔 반영 안 됨 → 에셋도 같이 수정.

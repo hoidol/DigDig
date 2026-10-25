@@ -25,6 +25,8 @@ public class GameSetting
 
    public const int INIT_ITEM_PRICE = 10;
    public const int INCREASE_ITEM_PRICE = 5;
+   public const int INIT_DRAW_ITEM_PRICE = 10;
+   public const int INCREASE_DRAW_ITEM_PRICE = 2;
    public const int INIT_SPAWN_PRICE = 10;
    public const int INCREASE_SPAWN_PRICE = 1;
    public const int BLOCKED_TILE_COUNT = 3; // 게임 시작 시 랜덤으로 막는 타일 수
@@ -34,7 +36,7 @@ public class GameSetting
 
    public static float ATTACK_SPEED_PER_SECOND = 50f; // AttackSpeed가 이 값이면 초당 1회 공격 (Orbit은 이때 orbitRotationSpeed로 회전)
 
-   public const int MERGE_REINFORCE_MAX_EXP =3;
+   // public const int MERGE_REINFORCE_MAX_EXP =3;
 
 
 }

@@ -9,7 +9,6 @@ public class ItemData : ScriptableObject
     public string Title => itemName;
     public string itemName;
     public string desc;
-    public ItemApplyType itemApplyType;
     // public int consumeHp;
     public int level;
     // public int addPrice; //추가 금액
@@ -82,9 +81,20 @@ public class ItemData : ScriptableObject
 
     public void Edit()
     {
-        if (string.IsNullOrEmpty(key) || key != name)
-            key = name;
+        if (string.IsNullOrEmpty(key))
+        {
+            Debug.LogError("ItemData Edit() key 널 입력하세요");
+        }
 
+        string assetPath = UnityEditor.AssetDatabase.GetAssetPath(this);
+        if (string.IsNullOrEmpty(assetPath))
+            name = key;
+        else if (name != key)
+        {
+            string error = UnityEditor.AssetDatabase.RenameAsset(assetPath, key);
+            if (!string.IsNullOrEmpty(error))
+                Debug.LogError($"[ItemData] 이름 변경 실패: {error}");
+        }
         string prefabRootFolder = $"Assets/3.Prefabs/Item/Level{level}";
 
         // 기존 프리팹 탐색 (grade 폴더 → 루트 폴더 순)
@@ -100,6 +110,7 @@ public class ItemData : ScriptableObject
             {
                 itemPrefab = prefab;
                 itemPrefab.key = key;
+                UnityEditor.EditorUtility.SetDirty(itemPrefab); // 프리팹 key도 저장되도록
                 UnityEditor.EditorUtility.SetDirty(this);
                 Debug.Log($"[ItemData] {key}Item prefab 연결 완료: {path}");
                 return;
@@ -135,6 +146,7 @@ public class ItemData : ScriptableObject
 
         itemPrefab = newPrefab.GetComponent<Item>();
         itemPrefab.key = key;
+        UnityEditor.EditorUtility.SetDirty(itemPrefab);
         UnityEditor.EditorUtility.SetDirty(this);
         Debug.Log($"[ItemData] {key} 새 prefab 생성 완료: {prefabRootFolder}");
     }

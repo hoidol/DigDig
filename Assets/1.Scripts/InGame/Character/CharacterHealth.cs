@@ -32,7 +32,7 @@ public class CharacterHealth : MonoBehaviour, IHittable
     {
         if (statusEffectHandler != null && statusEffectHandler.TryBlock())
             return;
-        
+
         // if(UnityEngine.Random.value <= character.statMgr.Dodge)
         // {
         //     //회피함
@@ -59,7 +59,7 @@ public class CharacterHealth : MonoBehaviour, IHittable
         if (showDmg)
         {
             if (heal > 0)
-                HealText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, ((int)heal).ToString(), ColorSetting.healColor);
+                HealText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, $"+{(int)heal}", ColorSetting.healColor);
             else if (heal < 0)
                 DamageText.SetText((Vector2)hpPoint.position + UnityEngine.Random.insideUnitCircle * 0.2f, $"{(int)heal}", ColorSetting.enemyDamageColor);
         }

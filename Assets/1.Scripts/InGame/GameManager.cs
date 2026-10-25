@@ -27,6 +27,7 @@ public class GameManager : MonoSingleton<GameManager>
     public int waveIdx;
     // public DefenceType waveDefenceType; // 이번 wave에 소환될 적의 방어 타입 (wave 시작 시 DefenceWaveTypes로 결정)
     public int slimeSpawnCount;
+    public int drawItemCount;
 
     async void Start()
     {

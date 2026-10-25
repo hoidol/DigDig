@@ -21,7 +21,6 @@ public class IceSlime : SlimeGrowth1
         iceBulletSpec = new IceBulletSpec();
 
         iceDuration = iceSlimeData.durations.GetByMergeLevel(mergeLevel);
-        // effectChance = iceSlimeData.GetUniqueStat(SlimeStatType.EffectChance).GetValue<float>(mergeLevel);
         base.InitSlime();
     }
 
@@ -29,7 +28,6 @@ public class IceSlime : SlimeGrowth1
     {
         iceBulletSpec.damage = AttackPower;
         iceBulletSpec.duration = iceDuration;
-        iceBulletSpec.chance = 1;
 
         iceBulletSpec.StartBulletSpec();
         if (bounceAbility.isActivate)

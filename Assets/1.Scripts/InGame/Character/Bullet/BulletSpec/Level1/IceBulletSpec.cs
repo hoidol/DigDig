@@ -3,7 +3,7 @@ using UnityEngine;
 public class IceBulletSpec : AllyBulletSpec
 {
     public float duration;
-    public float chance;
+    // public float chance;
 
     public IceBulletSpec()
     {
@@ -14,9 +14,9 @@ public class IceBulletSpec : AllyBulletSpec
     public override void StartBulletSpec()
     {
         base.StartBulletSpec();
-        AddBulletBehaviour(new IceOnHitBehavior(duration,chance));
+        AddBulletBehaviour(new IceOnHitBehavior(duration, 1));
     }
-    
+
 
     // public override void OnBulletFired(PlayerBulletObject bullet)
     // {

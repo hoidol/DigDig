@@ -3,12 +3,12 @@ using System.Linq;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName ="SlimeData",menuName ="SlimeData")]
+[CreateAssetMenu(fileName = "SlimeData", menuName = "SlimeData")]
 public class SlimeData : ScriptableObject
 {
     public const int MAX_MERGE_LEVEL = 5; // mergeLevel 0 ~ MAX_MERGE_LEVEL
     public static readonly int MAX_ENHANCE_LEVEL = 15;
-    public static int[] ABILITY_LEVELS ={2,5,8,11,14};
+    public static int[] ABILITY_LEVELS = { 2, 5, 8, 11, 14 };
 
     public string key;
     public string Title => TranslateManager.GetText(key);
@@ -43,7 +43,7 @@ public class SlimeData : ScriptableObject
     public SlimeEnhanceInfo GetCommonSlimeEnhanceInfo(int lv)
     {
         return commonSlimeEnhanceInfos.Where(e => e.level == lv).FirstOrDefault();
-    }    
+    }
 
 
     // UI에 노출할 스탯 종류와 순서. 에셋별 인스펙터에서 설정한다. (예: Flame은 FlameDuration은 빼고 FlameDPS까지만)
@@ -63,7 +63,7 @@ public class SlimeData : ScriptableObject
 
     public virtual SlimeStat GetSlimeStat(SlimeStatType statType, int enhanceLv)
     {
-        SlimeEnhanceInfo slimeEnhanceInfo =  GetCommonSlimeEnhanceInfo(enhanceLv);
+        SlimeEnhanceInfo slimeEnhanceInfo = GetCommonSlimeEnhanceInfo(enhanceLv);
         return slimeEnhanceInfo.GetSlimeStat(statType);
     }
 
@@ -83,7 +83,7 @@ public class SlimeData : ScriptableObject
         return unlocked;
     }
 
-    public virtual string GetDescription(int mergeLv =0)
+    public virtual string GetDescription(int mergeLv = 0)
     {
         return desc;
     }
@@ -235,7 +235,7 @@ public class SlimeEnhanceInfo
     public SlimeStat[] slimeStats;
     public SlimeStat GetSlimeStat(SlimeStatType slimeStatType)
     {
-        return slimeStats.Where(e=>e.statType == slimeStatType).FirstOrDefault();
+        return slimeStats.Where(e => e.statType == slimeStatType).FirstOrDefault();
     }
 }
 
@@ -346,9 +346,9 @@ public static class MergeLevelExtensions
 
 public enum AttackType
 {
-    AllRounder,
+    AllRounder, // 만능 모든 공격 타입 100
     Physic, //빨강
     Magic, //파랑
     Vibrational, //노랑
-    
+
 }

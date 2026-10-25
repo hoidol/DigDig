@@ -3,7 +3,7 @@ using UnityEngine;
 
 // 타일 위에 설치되는 아이템. 획득할 때마다 객체가 하나씩 새로 생겨 랜덤 타일에 설치된다.
 // 수치는 타일(객체)마다 고정 → count로 강해지지 않음
-public abstract class TileItem  : Item,ITileItem
+public abstract class TileItem : Item, ITileItem
 {
     public Tile tile;
 
@@ -17,6 +17,7 @@ public abstract class TileItem  : Item,ITileItem
         }
         tile.AddTileItem(this);
         transform.SetParent(tile.transform, false); // 하이어라키에서 설치된 타일 아래에 둠 (타일 위치 기준)
+        transform.localScale = Vector3.one;
     }
     public override void OnUnequip()
     {

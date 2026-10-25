@@ -47,13 +47,13 @@ public class ItemInventory : MonoBehaviour
 
     public void AddItem(string key)
     {
-        // ownItemKeys.Add(key);
-
+        Debug.Log($"ItemInventory AddItem {key}");
         ItemData itemData = ItemData.GetItemData(key);
         Item item = Instantiate(itemData.itemPrefab, transform);
+        item.key = key; // 프리팹 key가 비어 있으면 UpdateInventory에서 itemStatDic에 없다고 바로 Destroy됨
         item.OnEquip();
         curItems.Add(item);
-        
+
         GameEventBus.Publish(new AddedItemEvent(itemData));
     }
 

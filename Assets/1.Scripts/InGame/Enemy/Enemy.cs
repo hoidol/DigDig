@@ -228,8 +228,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (curHp <= 0)
             return;
 
-        // 만능 공격 타일: 방어 타입 배율 무시 (모든 방어 타입에 100%)
-        float multiplier = damage is AllyUnitDamageData { ignoreDefence: true } ? 1f : GetDamageMultiplier(damage.attackType);
+        // 만능 공격(AllRounder 속성 / 만능 공격 타일): 방어 타입 배율 무시 (모든 방어 타입에 100%)
+        float multiplier = damage.IgnoreDefence ? 1f : GetDamageMultiplier(damage.attackType);
         // 거인 사냥 타일: 엘리트/보스 추가 배율
         if (damage is AllyUnitDamageData ad && (this is EliteEnemy || this is Boss))
             multiplier *= ad.eliteBossDamageMul;
