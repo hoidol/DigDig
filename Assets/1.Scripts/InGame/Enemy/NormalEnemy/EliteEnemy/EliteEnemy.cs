@@ -10,15 +10,6 @@ public class EliteEnemy : NormalEnemy
 {
     [SerializeField] float patternCoolTime;
     [SerializeField] EnemyAttackPattern enemyAttackPattern;
-    CancellationTokenSource cts;
-
-
-    public override void Reward()
-    {
-        base.Reward();
-        //ItemBox 드랍 -> 클릭으로 열기
-        EventManager.Instance.Spawn(EventType.ItemBox, transform.position);
-    }
 
 
     protected override void ReachPathEnd()

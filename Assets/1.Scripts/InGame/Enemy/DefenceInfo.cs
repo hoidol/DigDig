@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 // 공격 속성(AttackType) × 방어 타입(DefenceType) 피해 배율 표
@@ -59,14 +60,14 @@ public class DefenceInfo : ScriptableObject
             return 1f;
         switch (defenceType)
         {
-            case DefenceType.Armored: // 갑옷형 - 물리 -50% 마법 +100% 진동 0%
-                return attackType == AttackType.Physic ? 0.5f : attackType == AttackType.Magic ? 2f : 1f;
-            case DefenceType.Ethereal: // 정령형 - 물리 +100% 마법 -50% 진동 0%
-                return attackType == AttackType.Physic ? 2f : attackType == AttackType.Magic ? 0.5f : 1f;
-            case DefenceType.HeavyArmor: // 중갑형 - 진동 +60% 물리 -50% 마법 -50%
-                return attackType == AttackType.Vibrational ? 2f : 0.5f;
-            case DefenceType.Organic: // 생체형 - 물리 +50% 마법 -50% 진동 0%
-                return attackType == AttackType.Physic ? 1.5f : attackType == AttackType.Magic ? 0.5f : 1f;
+            case DefenceType.Armored: // 갑옷형 - 물리 -80% 마법 +100% 진동 0%
+                return attackType == AttackType.Physic ? 0.2f : attackType == AttackType.Magic ? 2.0f : 1f;
+            case DefenceType.Ethereal: // 정령형 - 물리 +100% 마법 -80% 진동 0%
+                return attackType == AttackType.Physic ? 2.0f : attackType == AttackType.Magic ? 0.2f : 1f;
+            case DefenceType.HeavyArmor: // 중갑형 - 진동 +100% 물리 -80% 마법 -80%
+                return attackType == AttackType.Vibrational ? 2.0f : 0.2f;
+            case DefenceType.Organic: // 생체형 - 물리 +50% 마법 -50% 진동 -50%
+                return attackType == AttackType.Physic ? 1.5f : 0.5f;
             default: // 일반형
                 return 1f;
         }
@@ -118,24 +119,34 @@ public class DefenceInfo : ScriptableObject
         return "일반형";
     }
 
+    // 배율 표 값으로 생성 → 표를 고치면 설명도 따라감
+    // 약점: 피해를 더 받는 공격 타입(배율 > 1), 내성: 덜 받는 공격 타입(배율 < 1). 1배는 생략
     public static string Desc(DefenceType defenceType)
     {
-        
-        switch (defenceType)
+        List<string> weak = new List<string>();
+        List<string> resist = new List<string>();
+        foreach (AttackType attackType in Enum.GetValues(typeof(AttackType)))
         {
-            case DefenceType.Normal:
-             return "모든 공격 타입 +100%";
-            case DefenceType.Armored:
-             return "물리 <color=#FF0000>-50%</color>\n마법 <color=#00FF00>+200%</color>";
-            case DefenceType.Ethereal:
-             return "물리 <color=#00FF00>+200%</color>\n마법 <color=#FF0000>-50%</color>";
-            case DefenceType.HeavyArmor:
-             return "물리,마법 <color=#00FF00>-50%</color>\n진동 <color=#FF0000>+200%</color>";
-            case DefenceType.Organic:
-             return "물리 <color=#00FF00>+150%</color>\n마법 <color=#FF0000>-50%</color>";
+            if (attackType == AttackType.AllRounder)
+                continue;
+            float mul = Get(attackType, defenceType);
+            if (mul > 1f)
+                weak.Add(AttackInfo.Title(attackType));
+            else if (mul < 1f)
+                resist.Add(AttackInfo.Title(attackType));
         }
-        return "물리 <color=#FF0000>-50%</color>\n마법 <color=#00FF00>+100%</color>";
+
+        if (weak.Count == 0 && resist.Count == 0)
+            return "약점/내성 없음";
+
+        List<string> lines = new List<string>();
+        if (weak.Count > 0)
+            lines.Add($"약점:<color=#00FF00>{string.Join(", ", weak)}</color>");
+        if (resist.Count > 0)
+            lines.Add($"내성:<color=#FF0000>{string.Join(", ", resist)}</color>");
+        return string.Join("\n", lines);
     }
+
     public static Sprite GetSprite(DefenceType dType)
     {
         return Resources.Load<Sprite>($"Icons/DefenceType/{dType}");

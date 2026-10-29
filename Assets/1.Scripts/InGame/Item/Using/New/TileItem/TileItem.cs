@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 // 타일 위에 설치되는 아이템. 획득할 때마다 객체가 하나씩 새로 생겨 랜덤 타일에 설치된다.
@@ -18,9 +19,18 @@ public abstract class TileItem : Item, ITileItem
         tile.AddTileItem(this);
         transform.SetParent(tile.transform, false); // 하이어라키에서 설치된 타일 아래에 둠 (타일 위치 기준)
         transform.localScale = Vector3.one;
+
+        // 캐릭터 위치에서 타일로 점프해서 날아감
+        transform.DOKill();
+        transform.position = Character.Instance.transform.position;
+        transform.DOLocalJump(Vector3.zero, JUMP_POWER, 1, JUMP_DURATION).SetEase(Ease.OutQuad);
     }
+    const float JUMP_POWER = 1.5f;
+    const float JUMP_DURATION = 0.5f;
+
     public override void OnUnequip()
     {
+        transform.DOKill();
         if (tile != null)
             tile.RemoveTileItem(this);
         tile = null;

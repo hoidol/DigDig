@@ -79,6 +79,9 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
             slimeLayer = LayerMask.GetMask("Slime");
         if (characterLayer == 0)
             characterLayer = LayerMask.GetMask("Character");
+
+        GameEventBus.Subscribe<TileObjectChangedEvent>(e => RefreshSelectedTile(e.tile));
+        GameEventBus.Subscribe<TileItemChangedEvent>(e => RefreshSelectedTile(e.tile));
     }
 
     void Update()
@@ -105,7 +108,8 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
 
     IAllyUnit targetUnit; // 현재 선택된 아군 (슬라임 or 캐릭터)
-    // 클릭한 위치의 슬라임 or 캐릭터를 선택하고 드래그 시작
+    Tile selectedTile; // 정보를 보여주는 타일 (빈 타일 포함). 위에 유닛이 있으면 그 유닛이 targetUnit
+    // 클릭한 타일을 선택하고, 위에 슬라임 or 캐릭터가 있으면 드래그 시작
     void BeginDrag()
     {
         Vector3 mousePos = GetMouseWorldPos();
@@ -113,14 +117,13 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         if (tileObject == null && IsCharacterAt(mousePos))
             tileObject = Character.Instance;
 
-        if (tileObject == null)
-        {
-            ReleaseTarget();
-            return;
-        }
+        // 유닛을 눌렀으면 유닛이 서 있는 타일, 아니면 누른 위치의 타일 (타일 밖이면 null → 선택 해제)
+        Tile tile = tileObject != null ? TileManager.Instance.GetTile(tileObject) : null;
+        SelectTile(tile ?? TileManager.Instance.GetNearestTile(mousePos));
 
-        if (tileObject is IAllyUnit allyUnit)
-            SetTarget(allyUnit);
+        if (tileObject == null)
+            return;
+
         tileObject.StartDrag();
         GameEventBus.Publish(new DragStartEvent(tileObject));
         dragObject = tileObject;
@@ -140,6 +143,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         {
             if (source != null)
                 GameEventBus.Publish(new DragEndEvent(source, null));
+            SelectTile(null);
             return;
         }
 
@@ -168,6 +172,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         }
         source.EndDrag(tile);
         GameEventBus.Publish(new DragEndEvent(source, tile));
+        SelectTile(TileManager.Instance.GetTile(source)); // 선택은 옮긴 유닛을 따라감 (원위치면 원래 타일)
     }
 
     Slime FindSlime(Vector2 pos, Slime exclude)
@@ -197,6 +202,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         if (!result)
         {
             source.transform.position = sourceOriginPos;
+            SelectTile(TileManager.Instance.GetTile(source));
             return;
         }
 
@@ -213,7 +219,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         mergeCount++;
         Character.Instance.AddMergeCoin(1);
         GameEventBus.Publish(new MergedSlimeEvent());
-        ReleaseTarget();
+        SelectTile(tile); // 합성 결과 슬라임 선택
         CharacterManageCanvas.Instance.UpdateCanvas();
     }
 
@@ -228,6 +234,32 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
                 return true;
         }
         return false;
+    }
+
+    // 타일 선택 (null이면 해제). 위에 아군 유닛이 있으면 그 유닛도 타겟으로 지정
+    // 같은 타일을 다시 선택해도 이벤트를 다시 보내 정보 UI가 갱신되게 함
+    void SelectTile(Tile tile)
+    {
+        selectedTile = tile;
+        if (tile == null)
+        {
+            ReleaseTarget();
+            GameEventBus.Publish(new TileDeselectedEvent());
+            return;
+        }
+
+        if (tile.tileObject is IAllyUnit unit)
+            SetTarget(unit);
+        else
+            ReleaseTarget();
+        GameEventBus.Publish(new TileSelectedEvent(tile));
+    }
+
+    // 선택된 타일의 내용이 바뀌면 (빈 타일에 소환, 아이템 설치 등) 정보 갱신
+    void RefreshSelectedTile(Tile tile)
+    {
+        if (tile != null && tile == selectedTile)
+            SelectTile(tile);
     }
 
     void SetTarget(IAllyUnit unit)
@@ -326,5 +358,17 @@ public class ReleaseTargetEvent
 }
 
 public class MergedSlimeEvent
+{
+}
+
+// 타일 선택됨 (빈 타일 포함). 위 유닛은 tile.tileObject, 아이템은 tile.tileItem
+public class TileSelectedEvent
+{
+    public Tile tile;
+    public TileSelectedEvent(Tile tile) { this.tile = tile; }
+}
+
+// 타일 선택 해제됨
+public class TileDeselectedEvent
 {
 }

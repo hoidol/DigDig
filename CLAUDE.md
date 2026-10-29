@@ -6,6 +6,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 핵심 루프
 - 적 처치 → 코인 획득 → 슬라임 소환(뽑기) → 칸이 차면 합성 → 빈 칸에 다시 소환
 - 돈이 계속 쌓이는 만큼 계속 강해질 수 있어야 한다.
+- **2026-10-27 문제의식: 강해지는 과정이 일방향이라 고민할 게 없다.** 목표는 **고민하고 전략적으로 배치하는 재미**.
+  - 새 기능은 "이걸로 플레이어가 무엇을 고민하게 되는가(배치·선택의 트레이드오프)"를 기준으로 판단한다. 단순히 수치만 올리는 성장은 지양.
+- **2026-10-28 의도: 골드 소비에 확률(약 50%) 포인트를 둔다.** 50% 확률 보상의 짜릿함(도파민). 단 순수 동전 던지기가 아니라 "안전하게 쓸지 / 걸어볼지"를 플레이어가 고르는 선택이어야 한다.
 
 ## 적 이동 (2026-10-16 기획 변경)
 - 적은 플레이어를 쫓지 않고 `EnemySpawner.paths` 경로를 따라 이동 (`Enemy.pathIdx` = 다음 목표 지점).
@@ -42,10 +45,16 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 아이템 공통 (2026-10-23)
 - **보유 개수에 따른 능력치 증가는 없다.** `Item.count`/`GetCount()` 삭제. 아이템 효과는 개수와 무관하게 고정 수치(개수 1 기준). 보유 개수는 `statMgr.itemStatDic`에서 뽑기 상한(MaxCount) 판단에만 쓴다.
 
+## 타일 선택 / 정보 표시 (2026-10-26)
+- 선택 단위는 **유닛이 아니라 Tile**. 슬라임·캐릭터·아이템 타일을 클릭하면 정보가 뜬다. 타일 밖을 누르면 해제.
+- `TilePointer`는 선택된 타일 위치 표시만 담당(입력 판정은 `SlimeSpawner` 한 곳). **빈 타일(유닛·아이템 없음)은 반응 없음**: 포인터·정보 패널(`TileItemInfoPanel` 등) 모두 숨기고 버튼은 그대로(선택 해제와 같은 화면). `TileItemInfoPanel`은 **아이템이 설치된 타일에서만** 뜬다(유닛만 있는 타일은 유닛 정보만). 드래그 중엔 숨기고, 선택은 옮긴 유닛을 따라간다(머지 시 결과 슬라임 선택).
+
 ## 타일 아이템 (2026-10-22)
 - 아이템 획득: `DrawItemButton`을 누르면 **TileItem 중에서만** 랜덤 1개를 뽑아 바로 랜덤 타일에 설치한다(선택 UI 없음).
   - 뽑기 가격(2026-10-25): **처음 10코인, 뽑을 때마다 +2** (`INIT_DRAW_ITEM_PRICE`/`INCREASE_DRAW_ITEM_PRICE`, 횟수는 `GameManager.drawItemCount`).
+  - 성공 확률(2026-10-28): **처음 100%, 성공할 때마다 -5%** (최소 10%, `INIT/DECREASE/MIN_DRAW_ITEM_CHANCE`). 코인은 먼저 내고 실패하면 코인만 소모, 가격·확률은 그대로. → 골드 소비의 확률 포인트(뒤로 갈수록 "걸어볼지" 고민).
 - 타일 아이템(`TileItem`)은 획득하면 랜덤 타일에 설치되고, 그 타일에 슬라임이나 캐릭터가 올라와 있는 동안만 효과가 적용된다(`OnEnter`/`OnExit`).
+- 아이템 제거(2026-10-28): 아이템 타일을 선택하면 `TileItemInfoPanel`의 `SellTileItemButton`으로 그 타일 아이템 객체 하나만 판매 → **10코인 고정**(`SELL_TILE_ITEM_PRICE`). 같은 key의 다른 타일 객체는 유지.
 - **타일 하나에 아이템은 하나만** 설치한다. 설치할 때 위에 오브젝트가 있어도 되고, 그러면 바로 적용된다.
 - 수치는 **타일(객체)마다 고정**이다. 같은 아이템을 또 얻으면 count를 올리지 않고 **객체를 하나 더** 만들어 다른 타일에 설치한다.
 - 스탯 버프형(공격력, 공속, 사거리)과 발사 방식형(BurstShot, MultiTarget, CycleRandomShot) 모두 슬라임과 캐릭터에 적용된다.
@@ -56,6 +65,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   AttackPowerTile(공 +50%), AttackSpeedTile(공속 +30%), BurstShotTile, MultiTargetTile, RangeUpTile(사거리 +2),
   SlowTile(10% 슬로우), StunTile(2% 0.3초 스턴), CriticalTile(10% 2배), TrueDamageTile(방어 배율 무시 → 항상 100%),
   GoldTile(처치 시 코인 +1), PioneerTile(획득 즉시 막힌 칸 1개 해제, 설치 안 함, 막힌 칸 없으면 안 나옴), BerserkTile(공 ×2, 사거리 ×0.5), GiantSlayerTile(엘리트·보스에게 데미지 ×2, 방어 배율과 곱연산).
+- 공격 타입 변경 타일 (2026-10-27): PhysicTile / MagicTile / VibrationalTile = 올라간 유닛의 공격 타입을 해당 속성으로 바꿈(`AttackTypeTileItem`).
+  - 의도: 방어 타입 상성을 **배치로 맞추는 수단**. 슬라임 속성은 랜덤 소환이라 못 고르지만, 타일 위로 옮겨서 이번 wave 상성에 맞출 수 있다.
+  - 범위: 유닛의 주 공격(탄·Orbit 적중, 그 탄에서 이어지는 번개 체인/낙뢰). 폭발 등 고유 속성이 정해진 부가 효과는 그대로.
 - 적중형 효과는 **발사 시점에 탄에 붙인다** (`TileItem.OnFired`, 슬라임 `FireBullet`·캐릭터 `Weapon.Shoot`에서 호출). 유닛이 올라간 타일의 아이템은 `ShotModifier.tileItem`(Tile이 연결/해제)으로 찾는다. `ShotModifier`는 발사 방식 값만 두고 가볍게 유지.
   - 아군 데미지 데이터는 `AllyUnitDamageData` 하나로 통일(2026-10-23, CharacterDamageData 삭제). 치명타는 `critChance/critPower`로 적중마다 판정하며, 캐릭터 탄은 발사 시 캐릭터 치명타 스탯을 넣고 타일 치명타는 확률을 더한다.
   - 데미지 수정(치명타, 만능)은 `ModifyDamageData` → `AllyUnitDamageData` 플래그, 적중 후 효과(슬로우, 스턴, 처치 코인)는 `HitBehavior`(IBulletBehavior).
@@ -73,11 +85,11 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - WaveType: Normal, Hard, Elite, Boss. wave마다 `Wave` 인스턴스를 새로 생성(`GameManager.accWaves`에 누적).
 - 전투 웨이브 흐름: **웨이브 30초**(`WAVE_TIME`, 30초 내내 1초마다 1마리 스폰) → **휴식 10초**(`BREAK_TIME`) → 다음 wave.
   - 각 Wave가 자기 타이머를 가지고, 시간이 다 되면 스스로 종료(스폰 중지) → `GameManager.EndWave` → 휴식(`GameManager.isBreak`).
-  - 휴식 중에는 스킵 버튼·TimeBar 숨기고 "다음 웨이브까지 N초" 카운트다운 표시.
+  - 휴식 중에는 TimeBar 숨기고 "다음 웨이브까지 N초" 카운트다운 + 다음 웨이브 시작 버튼 표시.
   - 끝날 때 필드에 남은 적은 제거하지 않고 계속 이동.
-- **웨이브 스킵**: 전투 wave **시작 5초 후부터** 가능(`SKIP_SHOW_DELAY`, 2026-10-23. 연타로 여러 wave가 한꺼번에 겹치는 것 방지 + 새 wave를 보고 판단할 시간). 휴식 중 불가. 누르면 휴식 없이 바로 다음 wave. 보상은 **고정 골드**(`SKIP_WAVE_GOLD`, 시간에 따라 줄지 않음). **보스 직전 wave(18)와 보스 wave에서는 스킵 불가**(남은 스폰이 보스전에 겹치지 않도록).
-  - **스킵해도 이전 wave는 끄지 않는다** → 이전 wave의 남은 스폰이 다음 wave와 겹쳐서 진행(누적). 빨리 넘기는 만큼 위험을 감수하는 구조.
-  - 이전 wave가 나중에 끝나도 진행에는 영향 없음(현재 wave가 끝날 때만 다음 wave 시작). 같은 wave의 중복 종료는 무시.
+- **다음 웨이브 바로 시작(`StartNextWaveButton`, 2026-10-28)**: **한 wave의 소환이 모두 끝나면**(= wave 종료 → 휴식) 버튼이 나온다. 누르면 남은 휴식을 건너뛰고 바로 다음 wave(`GameManager.EndBreak`). 전투 중에는 안 나오므로 wave 스폰이 겹치지 않는다. 스킵 보상 골드 없음.
+  - (이전 기획: 전투 wave 시작 5초 후 스킵 → 이전 wave 남은 스폰과 겹쳐 진행 + `SKIP_WAVE_GOLD`. 폐기)
+  - 같은 wave의 중복 종료는 무시.
 - **보스 wave**: 시간으로 끝나지 않는다. **보스 처치 시 `GameManager.EndGame(true)`** → 스테이지 클리어.
 - **부활(Resume)**: 필드 적 전부 제거(처치 보상 없음) → 체력 가득 → **마지막으로 종료된 wave의 다음 wave부터 다시 시작**. 그 이후 wave(스킵으로 겹쳐 진행 중이던 것 포함)는 모두 제거.
   - 예) 0 종료, 1 진행 중 스킵 → 2 진행 중 사망 → 1, 2 제거 후 **1을 처음부터**.
@@ -94,7 +106,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - **한 wave 안에서는 모든 일반 적이 같은 방어 타입.** wave가 바뀌면 다음 칸. `Random`은 DefenceTypes 중 하나를 wave 시작 시 한 번 뽑음.
 - 적의 방어 타입 기준은 프리팹이 참조하는 **EnemyData.defenceType**.
 - 공격 속성(Physic/Magic/Vibrational) × 방어 타입 배율은 `Resources/DefenceTable` 에셋 한 곳에서 관리 (인스펙터 표). 방어형 클래스마다 계산을 따로 두지 않는다.
-  - 기본값: 갑옷 물0.5/마1.5/진1 · 정령 1.5/0.5/1 · 중갑 0.7/0.7/1.6 · 생체 1.3/0.7/1 · 일반 1/1/1
+  - 기본값(2026-10-27): 갑옷 물0.2/마2.5/진1 · 정령 2.5/0.2/1 · 중갑 0.2/0.2/2.5 · 생체 1.5/0.5/0.5 · 일반 1/1/1
+  - 방어 타입 설명(`DefenceInfo.Desc`)은 배율 표에서 자동 생성 → 표만 고치면 UI 설명도 맞춰짐. 수치 대신 `약점 : 마법형`(배율 >1, 잘 통함) / `내성 : 물리형`(배율 <1, 안 통함) 두 줄로 표기(1배는 생략).
+  - **2026-10-27 의도: 방어 타입을 크게 체감되는 판단 요소로 만든다.** wave마다 "어떤 공격 속성 슬라임을 좋은 칸/킹 오라/아이템 칸에 둘지" 다시 고민하게 하는 장치. (현재 슬라임 에셋 attackType이 전부 AllRounder라 효과 없음 → 속성 부여 필요)
   - **만능(`AttackType.AllRounder`)은 방어 타입 배율 무시(항상 100%)** (2026-10-25). TrueDamageTile의 `AllyUnitDamageData.ignoreDefence`도 같은 취급 → 판정은 `DamageData.IgnoreDefence` 한 곳.
 
 ## 데이터 파이프라인
@@ -102,4 +116,5 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 기획 데이터는 `Assets/Json/**/*.csv`(엑셀 → TSV). 에디터에서 `LoadData`(DataTableImporter)를 실행해야 에셋(`AddressableResources`)에 반영됨.
   - WaveData/{난이도}.csv: Phase, WaveType(phase당 1개)
   - (EnemyPatternData/{난이도}.csv는 2026-10-16부터 코드에서 사용 안 함. 일반 스폰은 1초마다 1마리 고정)
+  - SlimeData.csv: Key, Desc, Grade, AttackType(enum 이름 그대로: Physic/Magic/Vibrational/AllRounder)
   - SlimeEnhance/{key}.csv: 강화 레벨별 AttackPower/AttackSpeed/AttackRange(`/`로 mergeLv 값) + 고유 스탯 컬럼

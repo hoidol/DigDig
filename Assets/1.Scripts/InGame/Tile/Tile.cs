@@ -57,6 +57,7 @@ public class Tile : MonoBehaviour
             item.OnEnter(tileObject);  // 이미 누가 올라가 있으면 바로 적용
             LinkTileItem(tileObject);
         }
+        GameEventBus.Publish(new TileItemChangedEvent(this));
         return true;
     }
 
@@ -70,6 +71,7 @@ public class Tile : MonoBehaviour
             UnlinkTileItem(tileObject);
         }
         tileItem = null;
+        GameEventBus.Publish(new TileItemChangedEvent(this));
     }
 
     // 유닛이 발사할 때 이 타일 아이템의 OnFired를 부를 수 있도록 연결
@@ -98,4 +100,11 @@ public class TileObjectChangedEvent
         this.prev = prev;
         this.cur = cur;
     }
+}
+
+// 타일 아이템 설치/제거됨
+public class TileItemChangedEvent
+{
+    public Tile tile;
+    public TileItemChangedEvent(Tile tile) { this.tile = tile; }
 }

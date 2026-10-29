@@ -11,25 +11,38 @@ public abstract class ReinforceSlotContainer : MonoBehaviour
     public ReinforceSlot[] reinforceSlots;//3개 있음
     public ReinforceSlot curSlot;
 
+    public float spacing = 200f; // 슬롯 간 세로 간격 (px)
+    public float centerY = 0f; // 가운데(curSlot) 위치 (컨테이너 기준 anchoredPosition.y)
     public float spinSpeed = 3000f; // 정속 회전 속도 (px/s)
     public float spinTime = 1.5f; // 정속으로 도는 시간
     public float stopTime = 0.8f; // 감속해서 멈추는 시간
     public int stopExtraSlots = 3; // 감속 중에 더 지나가는 슬롯 수
 
     RectTransform[] slotRects;
-    float spacing; // 슬롯 간 세로 간격
-    float centerY; // 가운데(curSlot) 위치
     public bool IsSpinning { get; private set; }
 
-    void Awake()
+    // Awake 대신 처음 쓸 때 초기화 (캔버스 OpenCanvas → SetSlot/Spin이 Awake보다 먼저 불릴 수 있음)
+    void Init()
     {
+        if (slotRects != null)
+            return;
         slotRects = reinforceSlots.Select(s => (RectTransform)s.transform).ToArray();
-        centerY = ((RectTransform)curSlot.transform).anchoredPosition.y;
-
-        float[] ys = slotRects.Select(r => r.anchoredPosition.y).OrderByDescending(y => y).ToArray();
-        spacing = ys[0] - ys[1];
+        ResetPosition();
     }
-    protected string[] keys; // 이 릴에 나올 수 있는 값 목록
+
+    // 씬 배치와 상관없이 가운데 기준 spacing 간격으로 위→아래 정렬 (reinforceSlots[0]이 맨 위), 가운데 슬롯이 curSlot
+    void ResetPosition()
+    {
+        float half = (slotRects.Length - 1) * 0.5f;
+        for (int i = 0; i < slotRects.Length; i++)
+        {
+            Vector2 pos = slotRects[i].anchoredPosition;
+            pos.y = centerY + (half - i) * spacing;
+            slotRects[i].anchoredPosition = pos;
+        }
+        curSlot = reinforceSlots[slotRects.Length / 2];
+    }
+    [SerializeField] protected string[] keys; // 이 릴에 나올 수 있는 값 목록
     public string ResultKey => curSlot.key; // 멈춘 뒤 가운데 칸 값
 
     // 릴에 나올 값 목록 (종류별 컨테이너가 정함)
@@ -41,6 +54,8 @@ public abstract class ReinforceSlotContainer : MonoBehaviour
     // 캔버스 열 때 호출: 값 목록 갱신 + 칸마다 랜덤 값 채우기
     public virtual void SetSlot()
     {
+        Init();
+        ResetPosition();
         keys = GetKeys();
         foreach (ReinforceSlot slot in reinforceSlots)
             SetRandomSlot(slot);
@@ -61,6 +76,7 @@ public abstract class ReinforceSlotContainer : MonoBehaviour
     {
         if (IsSpinning)
             return;
+        Init();
         IsSpinning = true;
 
         // 정속 회전
@@ -93,10 +109,16 @@ public abstract class ReinforceSlotContainer : MonoBehaviour
         IsSpinning = false;
     }
 
-    // 모든 슬롯을 아래로 이동, 맨 아래를 벗어난 슬롯은 맨 위로 올리고 내용 새로 뽑기
+    // 모든 슬롯을 아래로 이동, 바닥 Y(맨 아래 칸보다 반 칸 아래)보다 낮아진 슬롯은 맨 위로 올리고 내용 새로 뽑기
+    // 한 프레임 이동량이 커도 간격이 유지되도록 Repeat로 감싸서 처리
     void Move(float delta)
     {
-        float bottom = centerY - spacing * 1.5f;
+        if (spacing <= 0f)
+        {
+            Debug.LogError($"{name} ReinforceSlotContainer spacing이 0 이하 ({spacing})");
+            return;
+        }
+        float bottom = centerY - spacing * slotRects.Length * 0.5f;
         float loop = spacing * slotRects.Length;
         for (int i = 0; i < slotRects.Length; i++)
         {
@@ -104,7 +126,7 @@ public abstract class ReinforceSlotContainer : MonoBehaviour
             pos.y -= delta;
             if (pos.y < bottom)
             {
-                pos.y += loop;
+                pos.y = bottom + Mathf.Repeat(pos.y - bottom, loop);
                 SetRandomSlot(reinforceSlots[i]);
             }
             slotRects[i].anchoredPosition = pos;

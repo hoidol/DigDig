@@ -34,7 +34,7 @@ public class AllySettingPanel : MonoBehaviour
             // thumImage.sprite = characterData.thum;
             // nameText.text = characterData.Title;
             
-            attackTypePanel.SetAttackType(Character.Instance.weapon.attackType);
+            attackTypePanel.SetAttackType(GetAttackType(Character.Instance.weapon.attackType, Character.Instance.shotModifier));
             characterShortcutInfoPanel.SetCharacter(Character.Instance);
         }
         else
@@ -42,10 +42,16 @@ public class AllySettingPanel : MonoBehaviour
             Slime slime = allyUnit.Transform.GetComponent<Slime>();
             // thumImage.sprite = slime.slimeData.thum;
             // nameText.text = slime.slimeData.Title;
-            attackTypePanel.SetAttackType(slime.slimeData.attackType);
+            attackTypePanel.SetAttackType(GetAttackType(slime.slimeData.attackType, slime.shotModifier));
             slimeShortcutInfoPanel.SetSlime(slime);
         }
         obj.SetActive(true);
         setFindTargetButton.SetSlime(targetSlime);
+    }
+
+    // 공격 타입 변경 타일 위에 있으면 바뀐 타입을 표시
+    AttackType GetAttackType(AttackType baseType, ShotModifier shotModifier)
+    {
+        return shotModifier.tileItem is AttackTypeTileItem attackTypeTileItem ? attackTypeTileItem.AttackType : baseType;
     }
 }

@@ -9,6 +9,12 @@ public class ReinforceValueSlotContainer : ReinforceSlotContainer
 
     protected override string[] GetKeys()
     {
+        values = new string[4];
+        
+        values[0] = "20%";
+        values[1] = "25%";
+        values[2] = "30%";
+        values[3] = "35%";
         return values;
     }
 

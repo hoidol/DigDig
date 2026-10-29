@@ -20,7 +20,7 @@ public class ThunderBulletObject : AllyBulletObject
         
         DamageData damageData = new DamageData();
         damageData.damage = thunderBullet.damage;
-        damageData.attackType = allyUnit.AttackType;
+        damageData.attackType = DamageData.attackType; // 타일 아이템으로 바뀐 공격 타입 반영
         for(int i = 0; i < targets.Length; i++)
         {
             EffectManager.Instance.Play(EffectType.Spark, targets[i].transform.position);    

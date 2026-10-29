@@ -15,7 +15,7 @@ MonoBehaviour:
   key: Heal
   desc: "10\uCD08\uB9C8\uB2E4 \uCCB4\uB825 1\uC529 \uD68C\uBCF5\uC2DC\uD0B4"
   growth: 1
-  attackType: 0
+  attackType: 2
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:

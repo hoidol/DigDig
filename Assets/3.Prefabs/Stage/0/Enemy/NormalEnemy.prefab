@@ -443,6 +443,13 @@ MonoBehaviour:
   hpText: {fileID: 7405565396758039830}
   pathIdx: 0
   wave: 0
+  killedBy:
+    damage: 0
+    attackType: 0
+    critChance: 0
+    critPower: 2
+    ignoreDefence: 0
+    eliteBossDamageMul: 1
   face: 0
   isPushing: 0
   moving: 0
@@ -459,6 +466,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c65d0d46a4b6436cb4f70984c168354, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <IsStunned>k__BackingField: 0
+  <IsShielded>k__BackingField: 0
+  <SlowRate>k__BackingField: 1
 --- !u!61 &7676507085402204964
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -588,8 +598,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: a396799f72a704a178b64525ac036069, type: 3}
-  m_Color: {r: 1, g: 0.6862745, b: 0.972549, a: 1}
+  m_Sprite: {fileID: 21300000, guid: b11e80e0fcd2cf944afaef1a67bbf87b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

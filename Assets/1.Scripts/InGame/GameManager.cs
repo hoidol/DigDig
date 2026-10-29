@@ -93,12 +93,7 @@ public class GameManager : MonoSingleton<GameManager>
             {
                 breakTimer -= Time.deltaTime;
                 if (breakTimer <= 0)
-                {
-                    isBreak = false;
-
-                    GameEventBus.Publish(new BreakEndEvent(waveIdx+1));
-                    StartNextWave();
-                }
+                    EndBreak();
                 continue;
             }
 
@@ -165,11 +160,20 @@ public class GameManager : MonoSingleton<GameManager>
         StartWave(waveIdx + 1);
     }
 
-    // 스킵 가능: 전투 wave 시작 후 SKIP_SHOW_DELAY초부터 (휴식 중, 보스 직전 wave, 보스 wave 불가)
+    // 휴식 종료 → 다음 wave 시작 (휴식 타이머 만료 또는 StartNextWaveButton)
+    public void EndBreak()
+    {
+        if (!isBreak)
+            return;
+        isBreak = false;
+        GameEventBus.Publish(new BreakEndEvent(waveIdx + 1));
+        StartNextWave();
+    }
+
+    // 스킵 가능: 현재 wave의 소환이 모두 끝난 뒤(= wave 종료 후 휴식 중)
     public bool CanSkipWave()
     {
-        return isPlaying && !isBreak && waveIdx < GameSetting.BOSS_PHASE - 1
-            && GameSetting.WAVE_TIME - mainWaveTimer >= GameSetting.SKIP_SHOW_DELAY;
+        return isPlaying && isBreak;
     }
 
     void Update()

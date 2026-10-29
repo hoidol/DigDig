@@ -16,7 +16,7 @@ MonoBehaviour:
   desc: "1\uD68C \uD295\uAE30\uB294 \uB3C4\uD0C4 \uBC1C\uC0AC/2\uD68C \uD295\uAE30\uB294
     \uB3C4\uD0C4 \uBC1C\uC0AC/4\uD68C \uD295\uAE30\uB294 \uB3C4\uD0C4 \uBC1C\uC0AC"
   growth: 1
-  attackType: 0
+  attackType: 3
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:
@@ -233,4 +233,3 @@ MonoBehaviour:
     desc: "\uD295\uAE30\uB294 \uD69F\uC218 +1"
   uniqueSlimeStats: []
   bounces: 020000000200000003000000030000000400000004000000
-  shootCounts: 010000000200000002000000030000000300000004000000

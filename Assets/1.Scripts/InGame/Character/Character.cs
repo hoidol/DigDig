@@ -209,6 +209,15 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         return true;
     }
 
+    // 타일 아이템 객체 하나 제거 (같은 key의 다른 타일 객체는 유지)
+    public void RemoveItem(TileItem tileItem)
+    {
+        itemInventory.RemoveItem(tileItem); // curItems에서 먼저 빼야 UpdateInventory가 다른 객체를 건드리지 않음
+        statMgr.AddItem(tileItem.key, -1);
+        itemInventory.UpdateInventory();
+        UpdateCharacter();
+    }
+
     public Slime AddSlime(string key, int lv = 0)
     {
         Slime slime = SlimeSpawner.Instance.Instantiate(key);

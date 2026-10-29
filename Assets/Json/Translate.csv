@@ -33,3 +33,8 @@ BoomItem_Desc	{0}발사마다 폭탄 발사 (최대 2번 튕김)
 New Slime	새로운 슬라임	
 Not enough exp	경험치가 부족합니다.	
 Not enough energe	에너지가 부족합니다. 에너지를 1분마다 1개씩 충전됩니다.	
+DefenceType.Normal	일반형	Normal
+DefenceType.Armored	갑옷형	Armored
+DefenceType.Ethereal	정령형	Ethereal
+DefenceType.HeavyArmor	중갑형	HeavyArmor
+DefenceType.Organic	생체형	Organic

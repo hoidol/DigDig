@@ -15,7 +15,7 @@ MonoBehaviour:
   key: Flame
   desc: "\uD654\uC5FC\uD0C4\uC7441\uAC1C \uBC1C\uC0AC/"
   growth: 1
-  attackType: 0
+  attackType: 2
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:
@@ -252,4 +252,3 @@ MonoBehaviour:
     - 2
     - 3
   burnDuration: 4
-  shootCounts: 010000000200000002000000030000000300000004000000

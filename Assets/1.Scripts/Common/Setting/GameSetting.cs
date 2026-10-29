@@ -16,7 +16,7 @@ public class GameSetting
    public const float WAVE_TIME = 30;
    public const float BREAK_TIME = 10;
 
-   public const int SKIP_WAVE_GOLD = 5; // 스킵하면 받는 골드 (고정)
+   // public const int SKIP_WAVE_GOLD = 5; // 스킵하면 받는 골드 (고정)
    public const float SKIP_SHOW_DELAY = 5; // 웨이브 시작 후 스킵 버튼이 보이기까지 시간
    public const float ENEMY_SPAWN_INTERVAL = 1.25f;
 
@@ -27,6 +27,10 @@ public class GameSetting
    public const int INCREASE_ITEM_PRICE = 5;
    public const int INIT_DRAW_ITEM_PRICE = 10;
    public const int INCREASE_DRAW_ITEM_PRICE = 2;
+   public const int INIT_DRAW_ITEM_CHANCE = 100; // 아이템 뽑기 성공 확률(%). 성공할 때마다 감소
+   public const int DECREASE_DRAW_ITEM_CHANCE = 5;
+   public const int MIN_DRAW_ITEM_CHANCE = 10;
+   public const int SELL_TILE_ITEM_PRICE = 10; // 타일 아이템 판매 시 받는 코인
    public const int INIT_SPAWN_PRICE = 10;
    public const int INCREASE_SPAWN_PRICE = 1;
    public const int BLOCKED_TILE_COUNT = 3; // 게임 시작 시 랜덤으로 막는 타일 수

@@ -1,14 +1,14 @@
-Key	Name	Desc	Level	MaxCount
-AttackPowerTile	공격력 타일	공격력 50% 증가	1	3
-AttackSpeedTile	공격속도 타일	공격속도 30% 증가	1	3
-BurstShotTile	연발 타일	연속으로 발사	1	3
-MultiTargetTile	다중 타겟 타일	공격 대상 +1 추가됩니다.	1	3
-RangeUpTile	사거리 타일	사정거리 +2	1	3
-SlowTile	둔화 타일	10% 확률로 적에게 슬로우 효과 적용	1	3
-StunTile	스턴 타일	2% 확률로 0.3초간 스턴	1	3
-CriticalTile	치명타 타일	치명타 확률 +10% 증가 데미지 2배	1	3
-TrueDamageTile	만능 공격 타일	모든 방어 타입에 데미지 100% 적용	1	3
-GoldTile	코인 타일	적 처치 시 코인 +1	1	3
-PioneerTile	개척 타일	막힌 칸 해제	1	3
-BerserkTile	광폭 타일	공격력 +100% 사거리 -50%	1	3
-GiantSlayerTileItem	거인 사냥 타일	엘리트 또는 보스에게 데미지 2배	1	3
+Key	Name	Desc	Level	MaxCount	
+AttackPowerTile	공격력 타일	공격력 50% 증가	1	3	
+AttackSpeedTile	공격속도 타일	공격속도 30% 증가	1	3	
+BurstShotTile	연발 타일	연속으로 발사	1	3	
+MultiTargetTile	다중 타겟 타일	공격 대상 +1 추가됩니다.	1	3	
+RangeUpTile	사거리 타일	사정거리 +2	1	3	
+SlowTile	둔화 타일	10% 확률로 적에게 슬로우 효과 적용	1	3	
+StunTile	스턴 타일	2% 확률로 0.3초간 스턴	1	3	
+CriticalTile	치명타 타일	치명타 확률 +10% 증가 데미지 2배	1	3	
+TrueDamageTile	만능 공격 타일	모든 방어 타입에 데미지 100% 적용	1	3	
+GoldTile	코인 타일	적 처치 시 코인 +1	1	3	
+PioneerTile	개척 타일	막힌 칸 해제	1	3	
+BerserkTile	광폭 타일	공격력 +100% 사거리 -50%	1	3	
+GiantSlayerTileItem	거인 사냥 타일	엘리트 또는 보스에게 데미지 2배	1	3	

@@ -10,7 +10,7 @@ public class DefenceTypePanel : MonoBehaviour
     public void SetDefenceType(DefenceType defenceType)
     {
         
-        titleText.text = DefenceInfo.Title(defenceType) ;
+        titleText.text = $"유형:{DefenceInfo.Title(defenceType)}";
         descText.text = DefenceInfo.Desc(defenceType);
         thumImage.sprite = DefenceInfo.GetSprite(defenceType);
     }

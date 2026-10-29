@@ -10,6 +10,7 @@ public class CameraManager : MonoSingleton<CameraManager>
     private CinemachineBasicMultiChannelPerlin perlin;
     private float shakeTimer;
     public const int INIT_ORTHOGRAPHIC_SIZE = 10;
+    public Transform endRightTr;
     void Awake()
     {
         mainCamera= Camera.main;
@@ -19,6 +20,18 @@ public class CameraManager : MonoSingleton<CameraManager>
     {
         perlin = cinemachineCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
         perlin.AmplitudeGain = 0f;
+        AlignRightEdge();
+    }
+
+    // 카메라 위치는 가운데 고정, 화면 비율에 맞춰 OrthographicSize만 조절 → 카메라 오른쪽 끝을 endRightTr에 맞춤
+    public void AlignRightEdge()
+    {
+        if (endRightTr == null) return;
+
+        float aspect = (float)Screen.width / Screen.height;
+        float halfWidth = endRightTr.position.x - cinemachineCamera.transform.position.x;
+
+        cinemachineCamera.Lens.OrthographicSize = halfWidth / aspect;
     }
 
     public void Shake(float intensity, float duration)

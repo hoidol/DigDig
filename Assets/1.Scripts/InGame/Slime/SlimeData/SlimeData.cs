@@ -115,6 +115,13 @@ public class SlimeData : ScriptableObject
             growth = lv;
         if (row.TryGetEnum("Grade", out GradeType parsedGrade))
             grade = parsedGrade;
+        if (table.HasColumn("AttackType"))
+        {
+            if (row.TryGetEnum("AttackType", out AttackType parsedAttackType))
+                attackType = parsedAttackType;
+            else
+                Debug.LogWarning($"[SlimeData] {key} AttackType '{row.Get("AttackType")}' 파싱 실패");
+        }
 
         prefab = FindAssetByName<Slime>($"Assets/3.Prefabs/Slime/Growth{growth}", $"{key}Slime");
         thum = FindAssetByName<Sprite>($"Assets/2.Sprites/Slime/Growth{growth}", key);

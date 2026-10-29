@@ -17,4 +17,4 @@ MonoBehaviour:
   exp: 2
   hpMultiplier: 0.7
   gold: 1
-  moveSpeed: 2
+  moveSpeed: 2.5

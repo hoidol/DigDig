@@ -15,7 +15,7 @@ MonoBehaviour:
   key: Wacky
   desc: "{0}~{1} \uD53C\uD574\uB97C \uAC00\uC9C4 \uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
   growth: 1
-  attackType: 0
+  attackType: 1
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:
@@ -247,4 +247,3 @@ MonoBehaviour:
   - level: 14
     desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00 + \uACF5\uACA9\uC18D\uB3C4 10% \uC99D\uAC00"
   uniqueSlimeStats: []
-  shootCounts: 010000000200000002000000030000000300000004000000
