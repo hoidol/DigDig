@@ -36,35 +36,16 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
     void UpdateCanvas()
     {
         UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(GameManager.Instance.stageData.key);
-        UserStage curUserStage = UserDataManager.Instance.userStageManager.GetCurrentStage();
 
-        stageText.text = GameManager.Instance.stageData.order.ToString();
+        stageText.text = GameManager.Instance.stageData.Title;
 
 
-        int exp = 0;
-        if (userStage.clearCount <= 0)
-        {
-            exp = GameManager.Instance.waveIdx * 5;
-        }
-        else
-        {
-            if (clear)
-            {
-                exp = 10;
-            }
-        }
+        int exp = GameManager.Instance.waveIdx;
 
-        if (exp > 0)
-            UserDataManager.Instance.userMyInfoManager.AddExp(exp);
+        UserDataManager.Instance.userMyInfoManager.AddExp(exp);
 
         int destroy = GameManager.Instance.killEnemyCount;
         int gold = destroy / 10;
-
-        if (userStage.clearCount > 0)
-        {
-            int orderGap = (StageManager.Instance.GetStageData(curUserStage.key).order - GameManager.Instance.stageData.order) + 1;
-            gold = (int)(gold / orderGap);
-        }
 
         if (gold > 0)
             UserDataManager.Instance.AddGold(gold);
@@ -95,14 +76,6 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
                 value = exp.ToString()
             });
         }
-        // if(drawTicket > 0)
-        // {
-        //     rewardDatas.Add(new RewardData()
-        //     {
-        //         rewardType = RewardType.DrawTicket,
-        //         value = drawTicket.ToString()
-        //     });
-        // }
 
         if (gold > 0)
         {
@@ -121,7 +94,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             }
         }
 
-        UserDataManager.Instance.userStageManager.EndStage(GameManager.Instance.stageData.key, clear, clear ? GameManager.Instance.waveIdx - 1 : GameSetting.BOSS_PHASE - 1);
+        UserDataManager.Instance.userStageManager.EndStage(GameManager.Instance.stageData.key, GameManager.Instance.waveIdx - 1); // 무한 웨이브: 마지막으로 넘긴 wave
     }
 
     public void OnClickedHome()

@@ -16,8 +16,6 @@ public class AttackInfo : ScriptableObject
              return "물리형";
             case AttackType.Magic:
              return "마법형";
-            case AttackType.Vibrational:
-             return "진동형";
         }
         return "물리형";
     }

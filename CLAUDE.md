@@ -65,7 +65,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   AttackPowerTile(공 +50%), AttackSpeedTile(공속 +30%), BurstShotTile, MultiTargetTile, RangeUpTile(사거리 +2),
   SlowTile(10% 슬로우), StunTile(2% 0.3초 스턴), CriticalTile(10% 2배), TrueDamageTile(방어 배율 무시 → 항상 100%),
   GoldTile(처치 시 코인 +1), PioneerTile(획득 즉시 막힌 칸 1개 해제, 설치 안 함, 막힌 칸 없으면 안 나옴), BerserkTile(공 ×2, 사거리 ×0.5), GiantSlayerTile(엘리트·보스에게 데미지 ×2, 방어 배율과 곱연산).
-- 공격 타입 변경 타일 (2026-10-27): PhysicTile / MagicTile / VibrationalTile = 올라간 유닛의 공격 타입을 해당 속성으로 바꿈(`AttackTypeTileItem`).
+- 공격 타입 변경 타일 (2026-10-27): PhysicTile / MagicTile = 올라간 유닛의 공격 타입을 해당 속성으로 바꿈(`AttackTypeTileItem`).
   - 의도: 방어 타입 상성을 **배치로 맞추는 수단**. 슬라임 속성은 랜덤 소환이라 못 고르지만, 타일 위로 옮겨서 이번 wave 상성에 맞출 수 있다.
   - 범위: 유닛의 주 공격(탄·Orbit 적중, 그 탄에서 이어지는 번개 체인/낙뢰). 폭발 등 고유 속성이 정해진 부가 효과는 그대로.
 - 적중형 효과는 **발사 시점에 탄에 붙인다** (`TileItem.OnFired`, 슬라임 `FireBullet`·캐릭터 `Weapon.Shoot`에서 호출). 유닛이 올라간 타일의 아이템은 `ShotModifier.tileItem`(Tile이 연결/해제)으로 찾는다. `ShotModifier`는 발사 방식 값만 두고 가볍게 유지.
@@ -81,8 +81,13 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 효과가 직관적으로 보여야 한다(범위 칸 하이라이트, 버프 받는 슬라임 표시 등. 아직 미구현).
 
 ## 웨이브 (2026-10-17 phase → wave / 2026-10-18 휴식 10초 부활)
-- wave 0~19 (총 20), 19 = 보스 (`GameSetting.BOSS_PHASE`). 각 wave의 WaveType은 WaveData에 **하나로 고정**, 선택 없이 바로 진행.
-- WaveType: Normal, Hard, Elite, Boss. wave마다 `Wave` 인스턴스를 새로 생성(`GameManager.accWaves`에 누적).
+- **2026-10-30: 무한 웨이브.** 끝 wave 없이 계속 진행, 게임은 사망으로만 끝난다. WaveType은 WaveData(CSV)가 아니라 `GameManager.GetWaveType`이 번호로 결정:
+  - wave 번호(waveIdx+1)가 **20의 배수 = 보스**(`BOSS_WAVE_INTERVAL`), **5의 배수 = 엘리트**(`ELITE_WAVE_INTERVAL`), 나머지 = 일반 전투(Battle). 보스 우선.
+  - 엘리트 wave = 일반 전투 + 그 wave 방어 타입의 엘리트 1마리.
+  - 보스 wave는 시간으로 안 넘어감(타이머 0에서 대기). **보스 처치 시 바로 다음 wave** (이전엔 스테이지 클리어).
+  - 아래 "0~19 / 보스 처치 시 클리어" 내용은 이전 기획.
+- wave 0~19 (총 20), 19 = 보스. 각 wave의 WaveType은 WaveData에 **하나로 고정**, 선택 없이 바로 진행.
+- WaveType: Battle, Elite, Boss (2026-10-30, 이전 Normal/Hard/Elite/Boss). wave마다 `Wave` 인스턴스를 새로 생성(`GameManager.accWaves`에 누적).
 - **2026-10-30: 휴식(break time) 없음.** UI(`WaveTimerPanel`)는 `GameManager.mainWaveTimer` 기준 현재 wave 남은 시간을 `분:초`로만 표시. 아래 휴식 관련 내용은 이전 기획.
   - 적 스폰은 wave 시작 후 **`WAVE_SPAWN_TIME`초 동안만**, 남은 시간(`WAVE_TIME`까지)은 스폰 없이 남은 적 처리.
   - `StartNextWaveButton`은 **현재 wave의 소환이 끝나면**(`Wave.isSpawnEnd`) 노출 → 남은 시간을 기다리지 않고 다음 wave 시작. 보스 wave에서는 안 나옴.
@@ -105,20 +110,27 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 전투 웨이브의 특수 스폰(BundleWave 등 랜덤 스포너 호출)은 2026-10-16 제거. 일반 스폰만 사용.
 
 ### 적 방어 타입 (2026-10-16)
-- StageData.csv `DefenceTypes`: 그 스테이지에 나오는 방어 타입 목록. `DefenceWaveTypes`: wave마다 순서대로 적용(`wave % 개수`).
+- (2026-10-30) 방어 타입 설정은 **WaveData/{난이도}.csv의 구간 단위**: 행마다 `StartWave`(waveIdx), `DefenceTypes`(등장 목록), `DefenceWaveTypes`(구간 시작부터 순서대로, `(wave - StartWave) % 개수`). wave에는 `StartWave <= wave`인 가장 늦은 행이 적용(예: 0/9/19 → wave 18은 9 행). 마지막 행은 무한히 반복.
 - **한 wave 안에서는 모든 일반 적이 같은 방어 타입.** wave가 바뀌면 다음 칸. `Random`은 DefenceTypes 중 하나를 wave 시작 시 한 번 뽑음.
 - 적의 방어 타입 기준은 **프리팹의 `Enemy.defenceType`** (2026-10-30, 이전엔 EnemyData.defenceType). 적 프리팹은 `Stage/{order}/Enemy` 폴더(하위 Elite/BonusElite 포함)에 종류×방어 타입별로 두고, EnemyData는 (종류, 방어 타입) 데이터가 없으면 같은 종류의 Normal 데이터를 공유(엘리트는 Normal 하나).
-- 공격 속성(Physic/Magic/Vibrational) × 방어 타입 배율은 `Resources/DefenceTable` 에셋 한 곳에서 관리 (인스펙터 표). 방어형 클래스마다 계산을 따로 두지 않는다.
+- **2026-10-30: 공격 속성은 물리(Physic)·마법(Magic) 두 가지 + 만능.** 진동(Vibrational) 삭제 → 진동형이던 Bounce/Pierce/Boom은 물리로, 진동 약점뿐이던 **중갑형(HeavyArmor) 방어 타입도 삭제**(enum 번호는 비워 둠: DefenceType 3, DefenceWaveType 4).
+- 공격 속성(Physic/Magic) × 방어 타입 배율은 `Resources/DefenceInfo` 에셋 한 곳에서 관리 (인스펙터 표). 방어형 클래스마다 계산을 따로 두지 않는다.
   - (2026-10-30) 적 프리팹의 `EnemyDefence` 컴포넌트(방어 타입별 하위 클래스)가 `CalculateDamage`로 최종 피해 배율(표 배율·만능 무시·거인 사냥 포함)을 반환, `Enemy.TakeDamage`는 이것만 호출. 수치는 여전히 표에서 가져오고, 하위 클래스는 방어형별 특수 처리 자리. 프리팹에 컴포넌트가 없으면 `Enemy.Awake`에서 `enemyData.defenceType`에 맞는 것을 붙인다.
-  - 기본값(2026-10-27): 갑옷 물0.2/마2.5/진1 · 정령 2.5/0.2/1 · 중갑 0.2/0.2/2.5 · 생체 1.5/0.5/0.5 · 일반 1/1/1
+  - 기본값(물/마): 갑옷 0.2/2.5 · 정령 2.5/0.2 · 생체 1.5/0.5 · 일반 1/1
   - 방어 타입 설명(`DefenceInfo.Desc`)은 배율 표에서 자동 생성 → 표만 고치면 UI 설명도 맞춰짐. 수치 대신 `약점 : 마법형`(배율 >1, 잘 통함) / `내성 : 물리형`(배율 <1, 안 통함) 두 줄로 표기(1배는 생략).
   - **2026-10-27 의도: 방어 타입을 크게 체감되는 판단 요소로 만든다.** wave마다 "어떤 공격 속성 슬라임을 좋은 칸/킹 오라/아이템 칸에 둘지" 다시 고민하게 하는 장치. (현재 슬라임 에셋 attackType이 전부 AllRounder라 효과 없음 → 속성 부여 필요)
   - **만능(`AttackType.AllRounder`)은 방어 타입 배율 무시(항상 100%)** (2026-10-25). TrueDamageTile의 `AllyUnitDamageData.ignoreDefence`도 같은 취급 → 판정은 `DamageData.IgnoreDefence` 한 곳.
 
+## 스테이지 (2026-10-30)
+- **난이도(Normal/Hard/Hell)마다 스테이지 하나.** 스테이지 순서(order) 개념 없음, key = 난이도 이름(`Normal`/`Hard`/`Hell`).
+- 에셋은 `AddressableResources/StageData/{난이도}.asset`, 파일명으로 StageData.csv 행(Difficulty)을 찾는다. 적 프리팹은 난이도 공용 `3.Prefabs/Stage/0/Enemy`.
+- 해금: Normal은 항상, 그 외는 한 단계 낮은 난이도 clearCount > 0. (무한 웨이브라 클리어 조건은 아직 미정)
+- 이전 저장 데이터의 `{난이도}_0` 기록은 새 key로 옮기고, `_1~_4` 기록은 버린다(`UserStageManager.MigrateStageKeys`).
+
 ## 데이터 파이프라인
 - **SlimeData 배열 필드(bounces, shootCounts 등)는 에셋에 직렬화된 값이 코드 초기값보다 우선.** 코드 기본값만 바꾸면 기존 에셋엔 반영 안 됨 → 에셋도 같이 수정.
 - 기획 데이터는 `Assets/Json/**/*.csv`(엑셀 → TSV). 에디터에서 `LoadData`(DataTableImporter)를 실행해야 에셋(`AddressableResources`)에 반영됨.
-  - WaveData/{난이도}.csv: Phase, WaveType(phase당 1개)
+  - WaveData/{난이도}.csv: StartWave, DefenceTypes, DefenceWaveTypes (WaveType은 번호로 결정, 위 웨이브 섹션)
   - (EnemyPatternData/{난이도}.csv는 2026-10-16부터 코드에서 사용 안 함. 일반 스폰은 1초마다 1마리 고정)
-  - SlimeData.csv: Key, Desc, Grade, AttackType(enum 이름 그대로: Physic/Magic/Vibrational/AllRounder)
+  - SlimeData.csv: Key, Desc, Grade, AttackType(enum 이름 그대로: Physic/Magic/AllRounder)
   - SlimeEnhance/{key}.csv: 강화 레벨별 AttackPower/AttackSpeed/AttackRange(`/`로 mergeLv 값) + 고유 스탯 컬럼

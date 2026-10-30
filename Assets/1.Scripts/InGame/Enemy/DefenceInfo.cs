@@ -11,7 +11,7 @@ public class DefenceInfo : ScriptableObject
     public class Row
     {
         public DefenceType defenceType;
-        public float[] multipliers; // AttackType 순서 (AllRounder, Physic, Magic, Vibrational). AllRounder는 표와 상관없이 항상 1
+        public float[] multipliers; // AttackType 순서 (AllRounder, Physic, Magic). AllRounder는 표와 상관없이 항상 1
     }
 
     public Row[] rows;
@@ -60,13 +60,11 @@ public class DefenceInfo : ScriptableObject
             return 1f;
         switch (defenceType)
         {
-            case DefenceType.Armored: // 갑옷형 - 물리 -80% 마법 +100% 진동 0%
+            case DefenceType.Armored: // 갑옷형 - 물리 -80% 마법 +100%
                 return attackType == AttackType.Physic ? 0.2f : attackType == AttackType.Magic ? 2.0f : 1f;
-            case DefenceType.Ethereal: // 정령형 - 물리 +100% 마법 -80% 진동 0%
+            case DefenceType.Ethereal: // 정령형 - 물리 +100% 마법 -80%
                 return attackType == AttackType.Physic ? 2.0f : attackType == AttackType.Magic ? 0.2f : 1f;
-            case DefenceType.HeavyArmor: // 중갑형 - 진동 +100% 물리 -80% 마법 -80%
-                return attackType == AttackType.Vibrational ? 2.0f : 0.2f;
-            case DefenceType.Organic: // 생체형 - 물리 +50% 마법 -50% 진동 -50%
+            case DefenceType.Organic: // 생체형 - 물리 +50% 마법 -50%
                 return attackType == AttackType.Physic ? 1.5f : 0.5f;
             default: // 일반형
                 return 1f;
@@ -111,8 +109,6 @@ public class DefenceInfo : ScriptableObject
              return "갑옷형";
             case DefenceType.Ethereal:
              return "정령형";
-            case DefenceType.HeavyArmor:
-             return "중갑형";
             case DefenceType.Organic:
              return "생체형";
         }

@@ -2,7 +2,27 @@
     "userCumulativeAchievements": [
         {
             "type": 1,
-            "value": 2265,
+            "value": 0,
+            "clearCount": 0
+        },
+        {
+            "type": 2,
+            "value": 0,
+            "clearCount": 0
+        },
+        {
+            "type": 4,
+            "value": 0,
+            "clearCount": 0
+        },
+        {
+            "type": 6,
+            "value": 0,
+            "clearCount": 0
+        },
+        {
+            "type": 7,
+            "value": 0,
             "clearCount": 0
         }
     ]

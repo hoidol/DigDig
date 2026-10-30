@@ -33,7 +33,6 @@ public abstract class EnemyDefence : MonoBehaviour
         {
             case DefenceType.Armored: return typeof(ArmoredEnemyDefence);
             case DefenceType.Ethereal: return typeof(EtherealEnemyDefence);
-            case DefenceType.HeavyArmor: return typeof(HeavyArmorEnemyDefence);
             case DefenceType.Organic: return typeof(OrganicEnemyDefence);
             default: return typeof(NormalEnemyDefence);
         }

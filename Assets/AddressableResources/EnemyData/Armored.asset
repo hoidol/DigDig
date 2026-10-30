@@ -16,5 +16,4 @@ MonoBehaviour:
   defenceType: 1
   exp: 2
   hpMultiplier: 1.25
-  gold: 1
   moveSpeed: 2

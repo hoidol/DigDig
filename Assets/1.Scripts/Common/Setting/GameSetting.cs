@@ -4,14 +4,16 @@ public class GameSetting
 {
    // public const int MAX_EQUIPT_BULLET_COUNT = 5;
    // public const int MAX_MF_GROUP_POINT = 5; //MemoryFragment
-   public static string FIRST_STAGE_KEY = "Normal_0";
+   public static string FIRST_STAGE_KEY = "Normal"; // 난이도마다 스테이지 하나, key = 난이도 이름
    public static CharacterName INIT_CHARACTER_NAME = CharacterName.Lucky;
    public static string[] INIT_SLIME_KEYS = { "Flame", "Ice", "Wacky", "Orbit", "Lightning" };
    public static int SLIME_SLOT_COUNT = 5;
    public static int PLAY_COST_ENERGE = 5;
    public static int MAX_ENERGE = 30;
 
-   public const int BOSS_PHASE = 19; //총 20 Phase
+   // 무한 웨이브: N번째 wave(1부터)가 BOSS_WAVE_INTERVAL의 배수면 보스, ELITE_WAVE_INTERVAL의 배수면 엘리트 (보스 우선)
+   public const int ELITE_WAVE_INTERVAL = 5;
+   public const int BOSS_WAVE_INTERVAL = 20;
 
    public const float WAVE_TIME = 60;
    public const float WAVE_SPAWN_TIME = 40;

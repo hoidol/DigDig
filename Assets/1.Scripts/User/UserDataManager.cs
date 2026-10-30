@@ -6,7 +6,7 @@ using System;
 public class UserDataManager : MonoSingleton<UserDataManager>
 {
     public const string UserDataFileName = "UserData";
-    public static string STAGE_KEY = GameSetting.FIRST_STAGE_KEY;// "Gateway1";
+    // public static string STAGE_KEY = GameSetting.FIRST_STAGE_KEY;// "Gateway1";
 
     public static DifficultyType difficultyType = DifficultyType.Normal;
 

@@ -184,7 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6d1e2786b3d9487ab6e1f70a3309944, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossWave
-  waveType: 3
+  waveType: 2
 --- !u!1 &8472549776320922250
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b48b25a45b6f48d3ab749aaf183f26c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EliteWave
-  waveType: 2
+  waveType: 1
   showTimer: 1
   waveTimer: {fileID: 1831298467794394350}
   phaseSpawnPattern: {fileID: 7597576836724928112}
@@ -327,7 +327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc41b0573c56f4edd9498323f9270cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HardWave
-  waveType: 1
+  waveType: 0
   showTimer: 1
   waveTimer: {fileID: 1831298467794394350}
   phaseSpawnPattern: {fileID: 7597576836724928112}

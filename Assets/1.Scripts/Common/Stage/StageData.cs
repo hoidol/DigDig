@@ -11,50 +11,29 @@ public class StageData : ScriptableObject
     public EnemySpawnerContainer enemySpawnerContainerPrefab;
     //Key	Order	Difficulty	Stage	BossName	EnemyHp	AddHpRatioPerWave	MultiHpPerWave	EnemyTypes	EnemySpawnOrder
     public string key;
-    public int order;
+    // public int order;
     public string Title => key;
-    public int stage; //Mode
+    // public int stage; //Mode
     public DifficultyType difficulty;
     public StageRewardData[] rewardDatas;
 
     public float enemyHp;
     public float addHpRatioPerWave;
     public float multiHpPerWave = 1f;
-    public Enemy[] enemyPrefabs; //해당 스테이지의 적들
-    public DefenceType[] defenceTypes; // 해당 스테이지에서 등장하는 방어 타입
-    public DefenceWaveType[] defenceWaveTypes;// wave마다 순서대로 적용 (wave % 개수), 한 wave 안에서는 모두 같은 방어 타입
+    public Enemy[] enemyPrefabs; //해당 스테이지의 적들    
     Dictionary<KeyValuePair<EnemyType, DefenceType>, Enemy> enemyPrefabDic = new Dictionary<KeyValuePair<EnemyType, DefenceType>, Enemy>();
     public WaveData[] waveDatas;
     // public EventData[] eventDatas;
     public Boss boss;
 
+    // 난이도마다 스테이지 하나. Normal은 항상 열림, 그 외는 한 단계 낮은 난이도를 클리어해야 열림
     public bool ChekcUnlock()
     {
-        if (difficulty == DifficultyType.Normal && order == 0)
-        {
+        if (difficulty == DifficultyType.Normal)
             return true;
-        }
 
-        UserStage preStageUserStage = UserDataManager.Instance.userStageManager.GetUserStage(difficulty, order - 1);
-        //이전 단계했는지 확인
-        if (order > 0)
-        {
-            if (preStageUserStage.clearCount <= 0)
-                return false;
-        }
-
-        int difficultyNum = (int)difficulty;
-
-        //낮은 난이도 깼는지 확인
-        if (difficultyNum > 0)
-        {
-            UserStage lowDifficultyUserStage = UserDataManager.Instance.userStageManager.GetUserStage((DifficultyType)difficultyNum - 1, order);
-            if (lowDifficultyUserStage.clearCount <= 0)
-                return false;
-        }
-
-        return true;
-
+        UserStage lowDifficultyUserStage = UserDataManager.Instance.userStageManager.GetUserStage(difficulty - 1);
+        return lowDifficultyUserStage != null && lowDifficultyUserStage.maxWave >= 49;
     }
     public void Init()
     {
@@ -84,31 +63,37 @@ public class StageData : ScriptableObject
         return enemy;
     }
 
-    // wave의 방어 타입. Random이면 defenceTypes 중 하나 (호출할 때마다 새로 뽑으므로 wave 시작 시 한 번만 호출)
-    public DefenceType GetWaveDefenceType(int wave)
+    // wave에 적용할 구간: startWave <= wave 인 것 중 가장 늦게 시작하는 구간 (waveDatas는 startWave 오름차순)
+    // ex) startWave 0, 9, 19 → wave 18은 9 구간
+    public WaveData GetWaveData(int wave)
     {
-        if (defenceWaveTypes == null || defenceWaveTypes.Length == 0)
-            return DefenceType.Normal;
+        if (waveDatas == null || waveDatas.Length == 0)
+            return null;
 
-        DefenceWaveType waveType = defenceWaveTypes[wave % defenceWaveTypes.Length];
-        if (waveType == DefenceWaveType.Random)
+        WaveData result = waveDatas[0];
+        foreach (WaveData waveData in waveDatas)
         {
-            if (defenceTypes == null || defenceTypes.Length == 0)
-                return DefenceType.Normal;
-            return defenceTypes[Random.Range(0, defenceTypes.Length)];
+            if (waveData.startWave > wave)
+                break;
+            result = waveData;
         }
-
-        // DefenceWaveType은 Random 다음부터 DefenceType과 같은 이름 순서
-        return (DefenceType)System.Enum.Parse(typeof(DefenceType), waveType.ToString());
+        return result;
     }
 
-    public static StageData GetStageData(string key)
+    // wave의 방어 타입. Random이면 구간의 defenceTypes 중 하나 (호출할 때마다 새로 뽑으므로 wave 시작 시 한 번만 호출)
+    public DefenceType GetWaveDefenceType(int wave)
+    {
+        WaveData waveData = GetWaveData(wave);
+        return waveData != null ? waveData.GetDefenceType(wave) : DefenceType.Normal;
+    }
+
+    public static StageData GetStageData(DifficultyType difficultyType)
     {
         if (StageManager.Instance != null)
         {
-            return StageManager.Instance.GetStageData(key);
+            return StageManager.Instance.GetStageData(difficultyType);
         }
-        return Resources.Load<StageData>($"StageData/{key}");
+        return Resources.Load<StageData>($"StageData/{difficultyType}");
     }
 
 #if UNITY_EDITOR
@@ -125,32 +110,26 @@ public class StageData : ScriptableObject
         TableReader table = TableReader.Load("StageData.csv");
         if (table == null || table.rows.Count == 0) return;
 
-        // 에셋 경로(Assets/.../StageData/{Difficulty}/{order}.asset)로 CSV 행을 식별
-        // (key 필드는 CSV의 복합 key 컬럼과 형식이 달라 게임 전역 조회용 값을 유지해야 하므로 매칭에 쓰지 않음)
+        // 난이도마다 스테이지 하나: 에셋 파일명(Assets/.../StageData/{Difficulty}.asset)으로 CSV 행을 식별, key = 난이도 이름
         string assetPath = AssetDatabase.GetAssetPath(this);
         string fileName = Path.GetFileNameWithoutExtension(assetPath);
-        string folderName = Path.GetFileName(Path.GetDirectoryName(assetPath));
 
-        if (!int.TryParse(fileName, out int expectedOrder) || !System.Enum.TryParse(folderName, out DifficultyType expectedDifficulty))
+        if (!System.Enum.TryParse(fileName, out DifficultyType expectedDifficulty))
         {
-            Debug.LogWarning($"[StageData] 에셋 경로에서 order/difficulty 파싱 실패: {assetPath}");
+            Debug.LogWarning($"[StageData] 에셋 파일명에서 difficulty 파싱 실패: {assetPath}");
             return;
         }
 
         string bossName = "";
         foreach (TableReader.Row row in table.rows)
         {
-            if (!row.TryGetInt("Order", out int od) || od != expectedOrder) continue;
             if (!row.TryGetEnum("Difficulty", out DifficultyType dt) || dt != expectedDifficulty) continue;
 
-            order = od;
             difficulty = dt;
-            if (row.TryGetInt("Stage", out int st)) stage = st;
+            key = dt.ToString();
             if (row.TryGetFloat("EnemyHp", out float eh)) enemyHp = eh;
             if (row.TryGetFloat("AddHpRatioPerWave", out float ahr)) addHpRatioPerWave = ahr;
             if (row.TryGetFloat("MultiHpPerWave", out float mh)) multiHpPerWave = mh;
-            defenceTypes = ParseEnumList<DefenceType>(row.Get("DefenceTypes"), "DefenceTypes");
-            defenceWaveTypes = ParseEnumList<DefenceWaveType>(row.Get("DefenceWaveTypes"), "DefenceWaveTypes");
             bossName = row.Get("BossName");
             break;
         }
@@ -221,9 +200,11 @@ public class StageData : ScriptableObject
         Debug.Log($"[StageData] {key} BossPrefab 로드 완료: {boss.name}");
     }
 
+    const string ENEMY_PREFAB_FOLDER = "Assets/3.Prefabs/Stage/0/Enemy"; // 모든 난이도 공용 (난이도 차이는 체력 배율로)
+
     void LoadEnemyPrefabs()
     {
-        string folderPath = $"Assets/3.Prefabs/Stage/{order}/Enemy";
+        string folderPath = ENEMY_PREFAB_FOLDER;
         string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { folderPath });
         var list = new List<Enemy>();
         foreach (string guid in guids)
@@ -237,7 +218,7 @@ public class StageData : ScriptableObject
         Debug.Log($"[StageData] {key} EnemyPrefabs {list.Count}개 로드 완료");
     }
 
-    // WaveData/{difficulty}.csv의 Wave 행마다 WaveData 1개 (waveType)
+    // WaveData/{difficulty}.csv 한 행 = startWave부터 시작하는 구간 1개 (StartWave, DefenceTypes, DefenceWaveTypes)
     void LoadWaveDatas()
     {
         TableReader table = TableReader.Load($"WaveData/{difficulty}.csv");
@@ -246,67 +227,19 @@ public class StageData : ScriptableObject
         var list = new List<WaveData>();
         foreach (TableReader.Row row in table.rows)
         {
-            if (!row.TryGetInt("Wave", out int wave)) continue;
+            if (!row.TryGetInt("StartWave", out int startWave)) continue;
 
             var d = new WaveData();
-            if (row.TryGetEnum("WaveType", out WaveType wt)) d.waveType = wt;
-            else Debug.LogWarning($"[StageData] WaveData WaveType 파싱 실패: {row.Get("WaveType")} (wave={wave}) → Normal");
-
-            // wave 순서대로 배치 (waveDatas[wave])
-            while (list.Count <= wave) list.Add(null);
-            list[wave] = d;
+            d.startWave = startWave;
+            d.defenceTypes = ParseEnumList<DefenceType>(row.Get("DefenceTypes"), "DefenceTypes");
+            d.defenceWaveTypes = ParseEnumList<DefenceWaveType>(row.Get("DefenceWaveTypes"), "DefenceWaveTypes");
+            list.Add(d);
         }
 
+        list.Sort((a, b) => a.startWave.CompareTo(b.startWave)); // GetWaveData가 오름차순 전제
         waveDatas = list.ToArray();
         Debug.Log($"[StageData] {key} WaveData {waveDatas.Length}개 로드 완료");
     }
-
-    // void LoadEventDatas()
-    // {
-    //     TableReader table = TableReader.Load("EventData.csv");
-    //     if (table == null || table.rows.Count == 0) return;
-
-    //     var list = new List<EventData>();
-    //     foreach (TableReader.Row row in table.rows)
-    //     {
-    //         var d = new EventData();
-
-    //         string typesRaw = row.Get("EventTypes");
-    //         if (!string.IsNullOrEmpty(typesRaw))
-    //         {
-    //             var typeList = new List<EventType>();
-    //             foreach (var t in typesRaw.Split('/'))
-    //                 if (System.Enum.TryParse(t.Trim(), out EventType et)) typeList.Add(et);
-    //             d.eventTypes = typeList.ToArray();
-    //         }
-
-    //         string chancesRaw = row.Get("Chances");
-    //         if (!string.IsNullOrEmpty(chancesRaw))
-    //         {
-    //             var chanceList = new List<float>();
-    //             foreach (var c in chancesRaw.Split('/'))
-    //                 if (float.TryParse(c.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out float cv)) chanceList.Add(cv);
-    //             d.chances = chanceList.ToArray();
-    //         }
-
-    //         string triggersRaw = row.Get("Triggers");
-    //         if (!string.IsNullOrEmpty(triggersRaw))
-    //         {
-    //             var trigList = new List<EventTrigger>();
-    //             foreach (var t in triggersRaw.Split('/'))
-    //                 if (System.Enum.TryParse(t.Trim(), out EventTrigger et)) trigList.Add(et);
-    //             d.triggers = trigList.ToArray();
-    //         }
-
-    //         if (row.TryGetInt("WaveIdx", out int pi)) d.waveIdx = pi;
-
-    //         list.Add(d);
-    //     }
-
-    //     eventDatas = list.ToArray();
-    //     Debug.Log($"[StageData] {key} EventData {list.Count}개 로드 완료");
-    // }
-
     public void Edit()
     {
 
@@ -314,11 +247,7 @@ public class StageData : ScriptableObject
 #endif
 
 }
-[System.Serializable]
-public class WaveData
-{
-    public WaveType waveType; // 이 wave에 실행되는 웨이브
-}
+
 
 [System.Serializable]
 public class StageRewardData : RewardData
@@ -343,6 +272,6 @@ public enum DefenceWaveType
     Normal, //일반형 소환
     Armored, //갑옷형 소환
     Ethereal, //정령형 소환 
-    HeavyArmor, // 중갑형 소환
-    Organic, //생체형 소환
+    // 4: 중갑형(HeavyArmor) 삭제. 기존 직렬화 값 유지를 위해 번호 비워둠
+    Organic = 5, //생체형 소환
 }

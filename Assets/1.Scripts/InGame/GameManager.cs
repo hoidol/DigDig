@@ -44,8 +44,8 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Subscribe<CharacterHpChangedEvent>(OnCharacterHpChangedEvent);
         GameEventBus.Subscribe<SpawnSlimeEvent>(OnSpawnMinieEvent);
 
-        Debug.Log($"UserManager.STAGE_KEY {UserDataManager.STAGE_KEY}");
-        stageData = StageManager.Instance.GetStageData(UserDataManager.STAGE_KEY);
+        Debug.Log($"UserManager.STAGE_KEY {UserDataManager.difficultyType}");
+        stageData = StageManager.Instance.GetStageData(UserDataManager.difficultyType);
         stageData.Init();
         enemySpawnerContainer = Instantiate(stageData.enemySpawnerContainerPrefab);
         enemySpawnerContainer.Init();
@@ -76,9 +76,8 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public List<Wave> accWaves = new List<Wave>();//누적 웨이브
     public List<int> clearWaveIdxes = new List<int>();
-    // mainWaveTimer를 WAVE_TIME → 0으로 낮춤 (StartWave에서 다시 WAVE_TIME으로 리셋)
-    // 휴식 중에는 breakTimer를 낮추고, 0이 되면 다음 wave 시작
-    // 게임 정지(사망 등) 중에는 멈춤. 보스 wave는 EndWave에서 막히므로 0에서 대기
+    // mainWaveTimer를 WAVE_TIME → 0으로 낮춤 (StartWave에서 다시 WAVE_TIME으로 리셋), 0이 되면 다음 wave 시작
+    // 게임 정지(사망 등) 중에는 멈춤. 보스 wave는 시간으로 넘어가지 않고 0에서 대기 → 보스 처치 시 BossWave가 다음 wave 시작
     public async UniTaskVoid ProcessWaveTimer()
     {
         var token = destroyCancellationToken;
@@ -97,7 +96,8 @@ public class GameManager : MonoSingleton<GameManager>
             if (mainWaveTimer <= 0)
             {
                 mainWaveTimer = 0;
-                StartNextWave();
+                if (CurrentWave == null || CurrentWave.waveType != WaveType.Boss)
+                    StartNextWave();
             }
         }
     }
@@ -107,7 +107,7 @@ public class GameManager : MonoSingleton<GameManager>
         this.waveIdx = waveIdx;
         mainWaveTimer = GameSetting.WAVE_TIME;
 
-        WaveType waveType = stageData.waveDatas[waveIdx].waveType;
+        WaveType waveType = GetWaveType(waveIdx);
         DefenceType waveDefenceType = stageData.GetWaveDefenceType(waveIdx);
 
         // 웨이브 진행/종료는 각 Wave가 담당 (종료 시 Wave.MoveNextWave → EndWave)
@@ -119,8 +119,19 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Publish(new WaveStartEvent(waveIdx, waveType));
     }
 
+    // 무한 웨이브. wave 번호(waveIdx + 1)가 BOSS_WAVE_INTERVAL 배수면 보스, ELITE_WAVE_INTERVAL 배수면 엘리트, 나머지는 일반 전투
+    public static WaveType GetWaveType(int waveIdx)
+    {
+        int waveNum = waveIdx + 1;
+        if (waveNum % GameSetting.BOSS_WAVE_INTERVAL == 0)
+            return WaveType.Boss;
+        if (waveNum % GameSetting.ELITE_WAVE_INTERVAL == 0)
+            return WaveType.Elite;
+        return WaveType.Battle;
+    }
+
     // 현재 진행 중인 wave (가장 마지막에 시작한 wave)
-    // public Wave CurrentWave => accWaves.Count > 0 ? accWaves[accWaves.Count - 1] : null;
+    public Wave CurrentWave => accWaves.Count > 0 ? accWaves[^1] : null;
 
     // 타이머 종료 시 호출 → endWaveIdx wave만 종료(스폰 중지), 현재 wave였으면 휴식 후 다음 wave 시작
     public void EndWave(int endWaveIdx)
@@ -137,21 +148,21 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
 
-    // 전투 웨이브 스킵. 이전 wave는 끄지 않으므로 남은 스폰이 다음 wave와 겹쳐서 진행 (누적)
+    // 다음 wave 시작 (무한). 이전 wave는 끄지 않으므로 남은 적은 다음 wave와 겹쳐서 진행
     public void StartNextWave()
     {
-        if (waveIdx >= GameSetting.BOSS_PHASE)
+        if (!isPlaying)
             return;
         StartWave(waveIdx + 1);
     }
 
 
-    // 스킵 가능: 현재 진행 중인 wave(마지막에 시작한 wave)의 소환이 모두 끝난 뒤. 보스 wave는 소환 종료가 없어서 안 나옴
+    // 스킵 가능: 현재 진행 중인 wave의 소환이 모두 끝난 뒤. 보스 wave는 소환 종료가 없어서 안 나옴 (보스 처치 시 자동으로 다음 wave)
     public bool CanSkipWave()
     {
-        if (!isPlaying || accWaves.Count == 0 || waveIdx >= GameSetting.BOSS_PHASE)
+        if (!isPlaying || CurrentWave == null)
             return false;
-        return accWaves[accWaves.Count - 1].isSpawnEnd;
+        return CurrentWave.isSpawnEnd;
     }
 
     void Update()
@@ -184,8 +195,8 @@ public class GameManager : MonoSingleton<GameManager>
             int accept = PlayerPrefs.GetInt(ACCEPT_REVIEW_KEY, 0);
             if (accept == 0)
             {
-                StageData maxStageData = StageManager.Instance.GetStageData(UserDataManager.Instance.userStageManager.GetMaxStage(UserDataManager.difficultyType));
-                if (maxStageData.order >= 2)
+                // 리뷰 요청: Normal보다 높은 난이도를 클리어했을 때 (이전: 3번째 스테이지 이상)
+                if (stageData.difficulty != DifficultyType.Normal)
                 {
                     YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("review_title"), TranslateManager.GetText("review_body"), (accept) =>
                     {

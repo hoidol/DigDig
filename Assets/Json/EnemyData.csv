@@ -2,15 +2,12 @@ Type	DefenceType	HpMultiplier	Gold	MoveSpeed
 Normal	Normal	1	1	2
 Normal	Armored	1.25	1	2
 Normal	Ethereal	0.7	1	2.5
-Normal	HeavyArmor	1.5	1	2
 Normal	Organic	0.8	1	2.5
 Elite	Normal	15	30	0.8
 Elite	Armored	18	30	0.65
 Elite	Ethereal	11	30	1
-Elite	HeavyArmor	20	30	0.5
 Elite	Organic	12.5	30	0.8
 BonusElite	Normal	15	30	0.8
 BonusElite	Armored	18	30	0.65
 BonusElite	Ethereal	11	30	1
-BonusElite	HeavyArmor	20	30	0.5
 BonusElite	Organic	12.5	30	0.8

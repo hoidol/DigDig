@@ -19,7 +19,7 @@ public class BoomBehaviour : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        InGameUtil.DamageEnemies(bullet.transform.position, radius, damage, AttackType.Vibrational, layer, maxHitCount);
+        InGameUtil.DamageEnemies(bullet.transform.position, radius, damage, AttackType.Physic, layer, maxHitCount);
         return true;
     }
 

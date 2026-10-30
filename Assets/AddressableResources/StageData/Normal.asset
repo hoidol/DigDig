@@ -10,13 +10,11 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9d68eef31f674aceb2670508d91813f, type: 3}
-  m_Name: 0
+  m_Name: Normal
   m_EditorClassIdentifier: 
   enemySpawnerContainerPrefab: {fileID: -3282472581855398205, guid: f513683e5b4384e70af32bf348c8d9e5,
     type: 3}
-  key: Normal_0
-  order: 0
-  stage: 0
+  key: Normal
   difficulty: 0
   rewardDatas:
   - rewardType: 1
@@ -38,39 +36,32 @@ MonoBehaviour:
   - {fileID: -6271259298118201455, guid: 31b80da535408400eb25396f283ccbf4, type: 3}
   - {fileID: -623162833200235267, guid: 5b353b12eeac6474aa9971afb7070acf, type: 3}
   - {fileID: -623162833200235267, guid: ec5647d81003c4f15916f58c2b355191, type: 3}
-  - {fileID: -623162833200235267, guid: 61da6579c188b4ff4a75e50818849fb7, type: 3}
   - {fileID: -623162833200235267, guid: a4539bd405902458e82cf81911974cb7, type: 3}
   - {fileID: -623162833200235267, guid: 311505ae6803641d1b632102cc78dfbb, type: 3}
   - {fileID: -623162833200235267, guid: 98b25ab69ed93415288dab6a9c3f8280, type: 3}
   - {fileID: -623162833200235267, guid: e1c08d95fc92448afad0e9f9f2838cd3, type: 3}
-  - {fileID: -623162833200235267, guid: 1337e2561ab1e4fb79dd2c114feb1987, type: 3}
   - {fileID: -623162833200235267, guid: 1d3cacd36ecba40c3b55703eee730486, type: 3}
   - {fileID: -623162833200235267, guid: 5bbbd56d3205447aca5a7b58ac3b49a2, type: 3}
   - {fileID: 1619089377376098210, guid: e4f19c58fc7744578b1af087510c831f, type: 3}
-  - {fileID: 4905354612542336865, guid: 349d51443c70a4599987e9d1c1953d8e, type: 3}
   - {fileID: 612178615639581777, guid: 3a8d8d3d2470d4bd39362b9e494ccf5b, type: 3}
   - {fileID: 6442451577174540892, guid: 53111ba9d3a3c448292190fbb81179e2, type: 3}
-  defenceTypes: 000000000100000002000000
-  defenceWaveTypes: 01000000010000000200000001000000000000000100000003000000
   waveDatas:
-  - waveType: 0
-  - waveType: 0
-  - waveType: 1
-  - waveType: 0
-  - waveType: 2
-  - waveType: 0
-  - waveType: 1
-  - waveType: 0
-  - waveType: 0
-  - waveType: 2
-  - waveType: 0
-  - waveType: 1
-  - waveType: 0
-  - waveType: 0
-  - waveType: 2
-  - waveType: 0
-  - waveType: 1
-  - waveType: 0
-  - waveType: 0
-  - waveType: 3
+  - startWave: 0
+    defenceTypes: 0000000001000000
+    defenceWaveTypes: 0100000001000000010000000100000002000000
+  - startWave: 9
+    defenceTypes: 0000000001000000
+    defenceWaveTypes: 010000000100000001000000020000000100000000000000
+  - startWave: 19
+    defenceTypes: 0000000001000000
+    defenceWaveTypes: 01000000010000000100000002000000010000000000000002000000
+  - startWave: 29
+    defenceTypes: 000000000100000002000000
+    defenceWaveTypes: 0300000001000000010000000200000001000000
+  - startWave: 39
+    defenceTypes: 000000000100000002000000
+    defenceWaveTypes: 03000000010000000100000002000000010000000000000001000000
+  - startWave: 69
+    defenceTypes: 00000000010000000200000004000000
+    defenceWaveTypes: 05000000010000000100000003000000010000000100000002000000010000000100000000000000
   boss: {fileID: 2323350187061452681, guid: e6611bd74967549bcb718b7ae82ef851, type: 3}

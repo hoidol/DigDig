@@ -2,13 +2,14 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+// 난이도(Normal/Hard/Hell)마다 스테이지 하나. key = 난이도 이름
 public class StageManager : MonoSingleton<StageManager>, ILoadData
 {
     public StageData[] allStageDatas;
     public Dictionary<string,StageData> stageDataDict = new Dictionary<string, StageData>();
-    public StageData[] normalStageDatas;
-    public StageData[] hardStageDatas;
-    public StageData[] hellStageDatas;    
+    public StageData normalStageData;
+    public StageData hardStageData;
+    public StageData hellStageData;
 
     public UniTask LoadTask { get; private set; }
 
@@ -28,38 +29,30 @@ public class StageManager : MonoSingleton<StageManager>, ILoadData
                 stageDataDict.Add(allStageDatas[i].key,allStageDatas[i]);
             }
 
-            normalStageDatas = dates.Where(e=>e.difficulty == DifficultyType.Normal).ToArray();
-            hardStageDatas = dates.Where(e=>e.difficulty == DifficultyType.Hard).ToArray();
-            hellStageDatas = dates.Where(e=>e.difficulty == DifficultyType.Hell).ToArray();
-            
-            normalStageDatas = normalStageDatas.OrderBy(e => e.order).ToArray();
-            hardStageDatas = hardStageDatas.OrderBy(e => e.order).ToArray();
-            hellStageDatas = hellStageDatas.OrderBy(e => e.order).ToArray();
-
+            normalStageData = dates.FirstOrDefault(e => e.difficulty == DifficultyType.Normal);
+            hardStageData = dates.FirstOrDefault(e => e.difficulty == DifficultyType.Hard);
+            hellStageData = dates.FirstOrDefault(e => e.difficulty == DifficultyType.Hell);
         });
     }
 
-    public StageData GetStageData(string key)
-    {
-        return stageDataDict[key];
-    }
-    public StageData[] GetStageDatas(DifficultyType difficultyType)
+    // public StageData GetStageData(string key)
+    // {
+    //     stageDataDict.TryGetValue(key, out StageData stageData);
+    //     return stageData;
+    // }
+    public StageData GetStageData(DifficultyType difficultyType)
     {
         if(difficultyType == DifficultyType.Normal)
         {
-            return normalStageDatas;
+            return normalStageData;
         }else if(difficultyType == DifficultyType.Hard)
         {
-            return hardStageDatas;
+            return hardStageData;
         }else if(difficultyType == DifficultyType.Hell)
         {
-            return hellStageDatas;
+            return hellStageData;
         }
         return null;
     }
-    
-    public StageData GetStageData(DifficultyType difficultyType,int order)
-    {
-        return GetStageDatas(difficultyType).Where(e => e.order == order).FirstOrDefault();
-    }
+
 }

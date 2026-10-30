@@ -12,21 +12,16 @@ public class UserStageManager : UserBaseManager
         get; private set;
     }
 
+    // 현재 선택한 난이도의 스테이지 (난이도마다 스테이지 하나)
     public UserStage GetCurrentStage()
     {
-        for (int i = 0; i < userStageData.userStages.Count; i++)
-        {
-            if (userStageData.userStages[i].clearCount > 0)
-                continue;
-            return userStageData.userStages[i];
-        }
-
-        return userStageData.userStages[userStageData.userStages.Count - 1]; //마지막거 보내주기
+        return GetUserStage(UserDataManager.difficultyType);
     }
 
-    public UserStage GetUserStage(DifficultyType difficultyType, int order)
+    // 난이도마다 스테이지 하나, key = 난이도 이름
+    public UserStage GetUserStage(DifficultyType difficultyType)
     {
-        return userStageData.userStages.Where(e => StageData.GetStageData(e.key).order == order).FirstOrDefault();
+        return GetUserStage(difficultyType.ToString());
     }
 
     public override void LoadData()
@@ -41,23 +36,39 @@ public class UserStageManager : UserBaseManager
             userStageData.userStages.Add(userStage);
             RequestSave();
         }
+        MigrateStageKeys();
     }
 
-    public void EndStage(string key, bool clear, int maxWave)
+    // 이전 저장 데이터: 난이도별 여러 스테이지("Normal_0" ~ "Normal_4") → 난이도당 하나("Normal").
+    // "{난이도}_0" 기록은 새 key로 옮기고 나머지 스테이지 기록은 제거
+    void MigrateStageKeys()
+    {
+        bool changed = false;
+        for (int i = userStageData.userStages.Count - 1; i >= 0; i--)
+        {
+            UserStage userStage = userStageData.userStages[i];
+            if (System.Enum.TryParse(userStage.key, out DifficultyType _))
+                continue;
+
+            string[] split = userStage.key.Split('_');
+            bool isFirst = split.Length == 2 && split[1] == "0" && System.Enum.TryParse(split[0], out DifficultyType _);
+            if (isFirst && !userStageData.userStages.Any(e => e.key == split[0]))
+                userStage.key = split[0];
+            else
+                userStageData.userStages.RemoveAt(i);
+            changed = true;
+        }
+        if (changed)
+            RequestSave();
+    }
+
+    public void EndStage(string key,  int maxWave)
     {
 
         UserStage userStage = GetUserStage(key);
 
-        if (clear)
-        {
-            userStage.clearCount++;
+        if (maxWave > userStage.maxWave)
             userStage.maxWave = maxWave;
-        }
-        else
-        {
-            if (maxWave > userStage.maxWave)
-                userStage.maxWave = maxWave;
-        }
 
         RequestSave();
     }
@@ -77,7 +88,6 @@ public class UserStageManager : UserBaseManager
             userStage = new UserStage();
             userStage.key = key;
             userStageData.userStages.Add(userStage);
-            userStageData.userStages = userStageData.userStages.OrderBy(e => StageData.GetStageData(key).order).ToList();
             RequestSave();
         }
         return userStage;
@@ -86,26 +96,6 @@ public class UserStageManager : UserBaseManager
     public override void SaveData()
     {
         SaveManager.SaveData(UserDataFileName, userStageData);
-    }
-
-    public string GetMaxStage(DifficultyType difficultyType)
-    {
-        int order = 0;
-        for (int i = 0; i < userStageData.userStages.Count; i++)
-        {
-            if (userStageData.userStages[i].clearCount > 0)
-            {
-                order++;
-            }
-        }
-        StageData stageData = StageManager.Instance.GetStageData(difficultyType, order);
-        if (stageData == null)
-        {
-            StageData[] difficultyStageDatas = StageManager.Instance.GetStageDatas(difficultyType);
-            stageData = StageManager.Instance.GetStageData(difficultyType, difficultyStageDatas.Length - 1);
-        }
-
-        return stageData.key;
     }
 
     public void ReceiveReward(StageData stageData, string id)
@@ -129,7 +119,6 @@ public class UserStage
 {
     public string key;
     public int tryCount;
-    public int clearCount;
     public int maxWave;
     public List<UserStageReward> userStageRewards = new List<UserStageReward>();
     public UserStageReward GetUserStageReward(string id)
