@@ -359,9 +359,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2067649798771837938}
   - component: {fileID: 7536888476502838592}
-  - component: {fileID: 6107780251709163079}
+  - component: {fileID: -6271259298118201455}
   - component: {fileID: 4281134898832954647}
   - component: {fileID: 7676507085402204964}
+  - component: {fileID: 5069569099175630239}
   m_Layer: 3
   m_Name: ArmoredEnemy
   m_TagString: Enemy
@@ -415,7 +416,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6107780251709163079
+--- !u!114 &-6271259298118201455
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -424,9 +425,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7420967802149043619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d17bf5d45e7845398f3ddf745d561fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 45fa5f880ca554b81974dd87ad8b8fa2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ArmoredEnemy
+  m_EditorClassIdentifier: Assembly-CSharp::NormalEnemy
   enemyType: 0
   defenceType: 1
   enemyData: {fileID: 0}
@@ -442,6 +443,7 @@ MonoBehaviour:
     attackType: 0
   hpText: {fileID: 7405565396758039830}
   pathIdx: 0
+  enemyDefence: {fileID: 0}
   wave: 0
   killedBy:
     damage: 0
@@ -515,6 +517,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.38, y: 1.38}
   m_EdgeRadius: 0
+--- !u!114 &5069569099175630239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7420967802149043619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: feff93e9e82514135a62b228ebddc24e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArmoredEnemyDefence
 --- !u!1 &8681444321001831292
 GameObject:
   m_ObjectHideFlags: 0

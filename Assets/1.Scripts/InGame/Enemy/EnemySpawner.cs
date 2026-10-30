@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoSingleton<EnemySpawner>
 {
-    readonly Dictionary<EnemyType, Stack<Enemy>> pool = new(); // 적 종류 별 풀링
+    readonly Dictionary<(EnemyType, DefenceType), Stack<Enemy>> pool = new(); // 적 종류 + 방어 타입 별 풀링 (방어 타입마다 프리팹이 다름)
     public Transform[] paths;
     [field: SerializeField] public int ActiveEnemyCount { get; private set; }
 
@@ -41,11 +41,12 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         {
             Debug.Log("EnemySPawner Instantiate() if(prefab == null)");
         }
-        if (!pool.ContainsKey(prefab.enemyType))
-            pool[prefab.enemyType] = new Stack<Enemy>();
+        var key = (prefab.enemyType, prefab.defenceType);
+        if (!pool.ContainsKey(key))
+            pool[key] = new Stack<Enemy>();
 
-        Enemy enemy = pool[prefab.enemyType].Count > 0
-            ? pool[prefab.enemyType].Pop()
+        Enemy enemy = pool[key].Count > 0
+            ? pool[key].Pop()
             : GameObject.Instantiate(prefab);
 
 
@@ -64,9 +65,10 @@ public class EnemySpawner : MonoSingleton<EnemySpawner>
         if (!activeEnemies.Remove(enemy))
             return;
 
-        if (!pool.ContainsKey(enemy.enemyType))
-            pool[enemy.enemyType] = new Stack<Enemy>();
-        pool[enemy.enemyType].Push(enemy);
+        var key = (enemy.enemyType, enemy.defenceType);
+        if (!pool.ContainsKey(key))
+            pool[key] = new Stack<Enemy>();
+        pool[key].Push(enemy);
         ActiveEnemyCount = activeEnemies.Count;
     }
 

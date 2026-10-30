@@ -6,11 +6,13 @@ public abstract class Wave : MonoBehaviour
     public int waveIdx;
     public DefenceType waveDefenceType;
     public bool isEnd;
+    public bool isSpawnEnd; // 이 wave의 소환이 모두 끝남 → 다음 wave 바로 시작 가능
 
     public virtual void StartWave(int wIdx, DefenceType defenceType)
     {
         waveIdx = wIdx;
         isEnd = false;
+        isSpawnEnd = false;
         waveDefenceType = defenceType;
         waveTimer = GameSetting.WAVE_TIME;
     }
@@ -44,8 +46,7 @@ public abstract class Wave : MonoBehaviour
 }
 public enum WaveType
 {
-    Normal,
-    Hard,
+    Battle,
     Elite,
     Boss
 }

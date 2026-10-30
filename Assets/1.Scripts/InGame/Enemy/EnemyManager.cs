@@ -26,9 +26,15 @@ public class EnemyManager : MonoSingleton<EnemyManager>, ILoadData
        });
     }
 
+    // 해당 방어 타입 데이터가 없으면 같은 종류의 Normal 방어 타입 데이터로 대체 (엘리트는 방어 타입별 데이터 없이 Normal 하나만 사용)
     public static EnemyData GetEnemyData(EnemyType type, DefenceType defenceType)
     {
-        return enemyDataDic[(type, defenceType)];
+        if (enemyDataDic.TryGetValue((type, defenceType), out EnemyData data))
+            return data;
+        if (enemyDataDic.TryGetValue((type, DefenceType.Normal), out data))
+            return data;
+        Debug.LogWarning($"[EnemyManager] EnemyData 없음 ({type}, {defenceType})");
+        return null;
     }
 
 

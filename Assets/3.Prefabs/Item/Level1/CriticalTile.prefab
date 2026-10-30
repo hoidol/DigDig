@@ -122,5 +122,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CriticalTileItem
   key: CriticalTile
   tile: {fileID: 0}
-  chance: 10
+  chance: 30
   critPower: 2

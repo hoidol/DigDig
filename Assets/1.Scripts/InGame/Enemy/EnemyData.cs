@@ -10,7 +10,7 @@ public class EnemyData : ScriptableObject
     public DefenceType defenceType;
     public int exp;
     public float hpMultiplier;
-    public int gold;
+    // public int gold;
     public float moveSpeed = 1;
 
 #if UNITY_EDITOR
@@ -27,7 +27,7 @@ public class EnemyData : ScriptableObject
             if (hasDefenceColumn && (!row.TryGetEnum("DefenceType", out DefenceType rowDefence) || rowDefence != defenceType)) continue;
             if (row.TryGetInt("Exp", out int n)) exp = n;
             if (row.TryGetFloat("HpMultiplier", out float v)) hpMultiplier = v;
-            if (row.TryGetInt("Gold", out n)) gold = n;
+            // if (row.TryGetInt("Gold", out n)) gold = n;
             if (row.TryGetFloat("MoveSpeed", out v)) moveSpeed = v;
 
             EditorUtility.SetDirty(this);

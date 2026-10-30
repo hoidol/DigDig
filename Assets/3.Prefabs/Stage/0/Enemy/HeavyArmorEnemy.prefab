@@ -358,7 +358,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2067649798771837938}
-  - component: {fileID: 3656861047555854956}
+  - component: {fileID: 4905354612542336865}
+  - component: {fileID: 1852825628780023920}
   - component: {fileID: 7536888476502838592}
   - component: {fileID: 4281134898832954647}
   - component: {fileID: 7676507085402204964}
@@ -388,7 +389,7 @@ Transform:
   - {fileID: 2899134448239993369}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3656861047555854956
+--- !u!114 &4905354612542336865
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -397,9 +398,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7420967802149043619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7f4e95a8989c4d0a9373b7941471d87, type: 3}
+  m_Script: {fileID: 11500000, guid: 45fa5f880ca554b81974dd87ad8b8fa2, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeavyArmorEnemy
+  m_EditorClassIdentifier: Assembly-CSharp::NormalEnemy
   enemyType: 0
   defenceType: 3
   enemyData: {fileID: 0}
@@ -415,6 +416,7 @@ MonoBehaviour:
     attackType: 0
   hpText: {fileID: 7405565396758039830}
   pathIdx: 0
+  enemyDefence: {fileID: 0}
   wave: 0
   killedBy:
     damage: 0
@@ -427,6 +429,18 @@ MonoBehaviour:
   isPushing: 0
   moving: 0
   animator: {fileID: 0}
+--- !u!114 &1852825628780023920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7420967802149043619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e8ad869c489b4d999d7819a834a83b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeavyArmorEnemyDefence
 --- !u!50 &7536888476502838592
 Rigidbody2D:
   serializedVersion: 5

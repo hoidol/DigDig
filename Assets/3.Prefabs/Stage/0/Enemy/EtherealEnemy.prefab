@@ -451,7 +451,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2067649798771837938}
   - component: {fileID: 7536888476502838592}
-  - component: {fileID: 3680646073850561757}
+  - component: {fileID: 919092251348469780}
+  - component: {fileID: 1619089377376098210}
   - component: {fileID: 4281134898832954647}
   - component: {fileID: 7676507085402204964}
   m_Layer: 3
@@ -507,7 +508,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3680646073850561757
+--- !u!114 &919092251348469780
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -516,9 +517,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 7420967802149043619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 258f28d2ba18148a0883eea65c1509d4, type: 3}
+  m_Script: {fileID: 11500000, guid: bb2808dcc86fa4da3b6beddf5e9be19e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EtherealEnemy
+  m_EditorClassIdentifier: Assembly-CSharp::EtherealEnemyDefence
+--- !u!114 &1619089377376098210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7420967802149043619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45fa5f880ca554b81974dd87ad8b8fa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NormalEnemy
   enemyType: 0
   defenceType: 2
   enemyData: {fileID: 11400000, guid: 1c61f3553bc7143269c6e8f661bc537e, type: 2}
@@ -534,6 +547,7 @@ MonoBehaviour:
     attackType: 0
   hpText: {fileID: 7405565396758039830}
   pathIdx: 0
+  enemyDefence: {fileID: 0}
   wave: 0
   killedBy:
     damage: 0

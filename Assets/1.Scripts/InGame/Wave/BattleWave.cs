@@ -45,16 +45,17 @@ public abstract class BattleWave : Wave
 
     CancellationTokenSource cts;
 
-    // 시작 즉시 1마리, 이후 spawnInterval마다 1마리. 웨이브 종료(취소)까지 계속
+    // 시작 즉시 1마리, 이후 spawnInterval마다 1마리. wave 시작 후 WAVE_SPAWN_TIME초까지만 (경과 시간은 정지 중 멈추는 waveTimer 기준)
     async UniTaskVoid SpawnLoop(CancellationToken token)
     {
-        while (true)
+        while (GameSetting.WAVE_TIME - waveTimer < GameSetting.WAVE_SPAWN_TIME)
         {
             Spawn(EnemyType.Normal);
 
             if (await UniTask.Delay(TimeSpan.FromSeconds(GameSetting.ENEMY_SPAWN_INTERVAL), cancellationToken: token).SuppressCancellationThrow())
                 return;
         }
+        EndSpawnEnemy();
     }
 
     public void Spawn(EnemyType type)
@@ -67,6 +68,7 @@ public abstract class BattleWave : Wave
 
     public virtual void EndSpawnEnemy()
     {
+        isSpawnEnd = true;
     }
 
 

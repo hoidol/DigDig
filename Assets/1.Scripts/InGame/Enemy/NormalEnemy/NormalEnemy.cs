@@ -42,9 +42,14 @@ public class NormalEnemy : Enemy
 
     public override void Reward()
     {
-        Character.Instance.AddCoin(enemyData.gold);
-        CoinText.Instantiate().SetCoinText(transform.position, $"+{enemyData.gold}");
-        base.Reward();
+        if (Random.Range(0f, 10f) < 1)
+        {
+            Character.Instance.AddDiceCoin(1);
+            DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{1}");    
+        }
+        int gold = 1+ Mathf.RoundToInt(wave/5);
+        Character.Instance.AddCoin(gold);
+        CoinText.Instantiate().SetCoinText(transform.position, $"+{gold}");
     }
 
     public override void TakeDamage(DamageData damage)

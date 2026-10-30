@@ -9,6 +9,6 @@ public class AttackPowerTileItem  : StatBuffTileItem //타일 위에 설치되�
     void Reset()
     {
         opType = StatOpType.Multiply;
-        value = 1.5f;
+        value = 1.7f;
     }
 }

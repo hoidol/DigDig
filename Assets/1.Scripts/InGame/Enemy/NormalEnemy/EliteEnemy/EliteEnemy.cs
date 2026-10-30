@@ -1,10 +1,5 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Cysharp.Threading.Tasks;
-using System.Threading;
-using DG.Tweening;
 using UnityEngine;
-using System;
+
 
 public class EliteEnemy : NormalEnemy
 {
@@ -18,5 +13,14 @@ public class EliteEnemy : NormalEnemy
         damageData.damage = 10;
         Character.Instance.TakeDamage(damageData);
         Destroy();
+    }
+    public override void Reward()
+    {
+        int gold = 100;
+
+        Character.Instance.AddDiceCoin(2);
+        DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{2}");    
+        Character.Instance.AddCoin(gold);
+        CoinText.Instantiate().SetCoinText(transform.position, $"+{gold}");
     }
 }

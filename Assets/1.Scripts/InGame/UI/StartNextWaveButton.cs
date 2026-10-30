@@ -33,6 +33,6 @@ public class StartNextWaveButton : MonoBehaviour
             return;
 
         childObject.SetActive(false);
-        GameManager.Instance.EndBreak();
+        GameManager.Instance.StartNextWave();
     }
 }

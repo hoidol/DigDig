@@ -83,6 +83,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 웨이브 (2026-10-17 phase → wave / 2026-10-18 휴식 10초 부활)
 - wave 0~19 (총 20), 19 = 보스 (`GameSetting.BOSS_PHASE`). 각 wave의 WaveType은 WaveData에 **하나로 고정**, 선택 없이 바로 진행.
 - WaveType: Normal, Hard, Elite, Boss. wave마다 `Wave` 인스턴스를 새로 생성(`GameManager.accWaves`에 누적).
+- **2026-10-30: 휴식(break time) 없음.** UI(`WaveTimerPanel`)는 `GameManager.mainWaveTimer` 기준 현재 wave 남은 시간을 `분:초`로만 표시. 아래 휴식 관련 내용은 이전 기획.
+  - 적 스폰은 wave 시작 후 **`WAVE_SPAWN_TIME`초 동안만**, 남은 시간(`WAVE_TIME`까지)은 스폰 없이 남은 적 처리.
+  - `StartNextWaveButton`은 **현재 wave의 소환이 끝나면**(`Wave.isSpawnEnd`) 노출 → 남은 시간을 기다리지 않고 다음 wave 시작. 보스 wave에서는 안 나옴.
 - 전투 웨이브 흐름: **웨이브 30초**(`WAVE_TIME`, 30초 내내 1초마다 1마리 스폰) → **휴식 10초**(`BREAK_TIME`) → 다음 wave.
   - 각 Wave가 자기 타이머를 가지고, 시간이 다 되면 스스로 종료(스폰 중지) → `GameManager.EndWave` → 휴식(`GameManager.isBreak`).
   - 휴식 중에는 TimeBar 숨기고 "다음 웨이브까지 N초" 카운트다운 + 다음 웨이브 시작 버튼 표시.
@@ -104,8 +107,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ### 적 방어 타입 (2026-10-16)
 - StageData.csv `DefenceTypes`: 그 스테이지에 나오는 방어 타입 목록. `DefenceWaveTypes`: wave마다 순서대로 적용(`wave % 개수`).
 - **한 wave 안에서는 모든 일반 적이 같은 방어 타입.** wave가 바뀌면 다음 칸. `Random`은 DefenceTypes 중 하나를 wave 시작 시 한 번 뽑음.
-- 적의 방어 타입 기준은 프리팹이 참조하는 **EnemyData.defenceType**.
+- 적의 방어 타입 기준은 **프리팹의 `Enemy.defenceType`** (2026-10-30, 이전엔 EnemyData.defenceType). 적 프리팹은 `Stage/{order}/Enemy` 폴더(하위 Elite/BonusElite 포함)에 종류×방어 타입별로 두고, EnemyData는 (종류, 방어 타입) 데이터가 없으면 같은 종류의 Normal 데이터를 공유(엘리트는 Normal 하나).
 - 공격 속성(Physic/Magic/Vibrational) × 방어 타입 배율은 `Resources/DefenceTable` 에셋 한 곳에서 관리 (인스펙터 표). 방어형 클래스마다 계산을 따로 두지 않는다.
+  - (2026-10-30) 적 프리팹의 `EnemyDefence` 컴포넌트(방어 타입별 하위 클래스)가 `CalculateDamage`로 최종 피해 배율(표 배율·만능 무시·거인 사냥 포함)을 반환, `Enemy.TakeDamage`는 이것만 호출. 수치는 여전히 표에서 가져오고, 하위 클래스는 방어형별 특수 처리 자리. 프리팹에 컴포넌트가 없으면 `Enemy.Awake`에서 `enemyData.defenceType`에 맞는 것을 붙인다.
   - 기본값(2026-10-27): 갑옷 물0.2/마2.5/진1 · 정령 2.5/0.2/1 · 중갑 0.2/0.2/2.5 · 생체 1.5/0.5/0.5 · 일반 1/1/1
   - 방어 타입 설명(`DefenceInfo.Desc`)은 배율 표에서 자동 생성 → 표만 고치면 UI 설명도 맞춰짐. 수치 대신 `약점 : 마법형`(배율 >1, 잘 통함) / `내성 : 물리형`(배율 <1, 안 통함) 두 줄로 표기(1배는 생략).
   - **2026-10-27 의도: 방어 타입을 크게 체감되는 판단 요소로 만든다.** wave마다 "어떤 공격 속성 슬라임을 좋은 칸/킹 오라/아이템 칸에 둘지" 다시 고민하게 하는 장치. (현재 슬라임 에셋 attackType이 전부 AllRounder라 효과 없음 → 속성 부여 필요)

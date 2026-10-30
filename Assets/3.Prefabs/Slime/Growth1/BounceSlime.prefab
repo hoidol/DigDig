@@ -416,6 +416,10 @@ MonoBehaviour:
     m_Bits: 8
   slimeData: {fileID: 0}
   activeBuffs: []
+  shotModifier:
+    bonusShootCount: 0
+    randomShotInterval: 0
+    tileItem: {fileID: 0}
   userSlime:
     key: 
     equipedIdx: -1

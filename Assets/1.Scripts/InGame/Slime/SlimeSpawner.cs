@@ -217,7 +217,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         if (tile != null)
             tile.SetTileObject(merged);
         mergeCount++;
-        Character.Instance.AddMergeCoin(1);
+        // Character.Instance.AddMergeCoin(1);
         GameEventBus.Publish(new MergedSlimeEvent());
         SelectTile(tile); // 합성 결과 슬라임 선택
         CharacterManageCanvas.Instance.UpdateCanvas();

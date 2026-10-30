@@ -4,51 +4,37 @@ using TMPro;
 
 public class WaveTimerPanel : MonoBehaviour
 {
-    public GameObject waveObject;
-    public Image waveTimeBar;
-    public TMP_Text breakText; // 휴식 중 "다음 웨이브까지 N초"
+    // public GameObject waveObject;
+    // public Image waveTimeBar;
+    public TMP_Text timeText; // 현재 wave 남은 시간 "분:초"
     // WaveTimer waveTimer;
 
     void Start()
     {
         GameEventBus.Subscribe<WaveStartEvent>(OnWaveStartEvent);
 
-        waveObject.SetActive(false);
-        waveTimeBar.fillAmount = 0;
-        breakText.gameObject.SetActive(false);
+        timeText.gameObject.SetActive(false);
     }
 
     void OnWaveStartEvent(WaveStartEvent e)
     {
-        waveObject.SetActive(true);
-        waveTimeBar.fillAmount = 1;
+        timeText.gameObject.SetActive(true);
     }
 
-    int breakSec = -1;
+    int shownSec = -1;
 
     void Update()
     {
         if (!GameManager.Instance.isPlaying)
             return;
-
-        // 휴식 중: TimeBar 숨기고 카운트다운 표시
-        bool isBreak = GameManager.Instance.isBreak;
-        if (waveObject.gameObject.activeSelf == isBreak)
-            waveObject.gameObject.SetActive(!isBreak);
-        if (breakText.gameObject.activeSelf != isBreak)
-            breakText.gameObject.SetActive(isBreak);
-
-        if (isBreak)
-        {
-            int sec = Mathf.CeilToInt(GameManager.Instance.breakTimer);
-            if (breakSec != sec)
-            {
-                breakSec = sec;
-                breakText.text = $"다음 웨이브까지 {sec}초";
-            }
+        if (!timeText.gameObject.activeSelf)
             return;
-        }
 
-        waveTimeBar.fillAmount = GameManager.Instance.mainWaveTimer / GameSetting.WAVE_TIME;
+        int remainSec = Mathf.CeilToInt(GameManager.Instance.mainWaveTimer);
+        if (shownSec != remainSec)
+        {
+            shownSec = remainSec;
+            timeText.text = $"{remainSec / 60}:{remainSec % 60:00}";
+        }
     }
 }

@@ -41,12 +41,17 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public int pathIdx; // 경로 모드에서 다음에 향할 EnemySpawner.paths 인덱스
     Vector2 moveDir; // pathIdx 지점으로 전환할 때 캐싱한 이동 방향 (목표 지점을 지나쳤는지 판정용)
     int moveDirIdx = -1; // moveDir가 어느 pathIdx 기준인지. -1이면 다시 계산
+    [SerializeField] private  EnemyDefence enemyDefence;
     public virtual void Awake()
     {
         rg2d = GetComponent<Rigidbody2D>();
         col2d = GetComponent<Collider2D>();
         statusEffectHandler = GetComponent<StatusEffectHandler>();
         statusEffectHandler?.Init();
+        enemyDefence = GetComponent<EnemyDefence>();
+        // 프리팹에 방어 컴포넌트가 없으면 defenceType에 맞는 것을 붙임
+        if (enemyDefence == null)
+            enemyDefence = (EnemyDefence)gameObject.AddComponent(EnemyDefence.GetDefenceClass(DefenceType));
     }
     //적 생성 시 호출
     public int wave;
@@ -227,12 +232,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
     {
         if (curHp <= 0)
             return;
-
-        // 만능 공격(AllRounder 속성 / 만능 공격 타일): 방어 타입 배율 무시 (모든 방어 타입에 100%)
-        float multiplier = damage.IgnoreDefence ? 1f : GetDamageMultiplier(damage.attackType);
-        // 거인 사냥 타일: 엘리트/보스 추가 배율
-        if (damage is AllyUnitDamageData ad && (this is EliteEnemy || this is Boss))
-            multiplier *= ad.eliteBossDamageMul;
+        // 방어 타입 배율, 만능 공격, 거인 사냥 배율은 EnemyDefence에서 계산
+        float multiplier = enemyDefence.CalculateDamage(damage);
         curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, multiplier));
         if (curHp > 1)
             hpText.text = ((int)curHp).ToString();
@@ -249,13 +250,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         }
     }
 
-    public DefenceType DefenceType => enemyData != null ? enemyData.defenceType : DefenceType.Normal;
-
-    // 공격 속성 × 방어 타입 배율 (DefenceTable). 방어형별 특수 처리가 필요하면 override
-    protected virtual float GetDamageMultiplier(AttackType attackType)
-    {
-        return DefenceInfo.Get(attackType, DefenceType);
-    }
+    // 프리팹에 지정된 방어 타입 (StageData 적 프리팹 딕셔너리 키와 같은 값). 엘리트는 EnemyData를 Normal로 공유하므로 enemyData 기준이 아님
+    public DefenceType DefenceType => defenceType;
 
     public int face;
     public void UpdateFacing(Vector2 vec)
@@ -271,11 +267,11 @@ public abstract class Enemy : MonoBehaviour, IHittable
     }
     public virtual void Reward()
     {
-        //Exp.Instantiate(transform.position, enemyData.exp, 1);
-        EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
+        
     }
     public virtual void Destroy()
     {
+        EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
         GameEventBus.Publish(new EnemyDeadEvent(this));
     }
     public bool CanHit()

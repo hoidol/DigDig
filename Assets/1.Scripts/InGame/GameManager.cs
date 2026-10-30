@@ -22,8 +22,8 @@ public class GameManager : MonoSingleton<GameManager>
         private set;
     }
     public float mainWaveTimer;
-    public bool isBreak; // 웨이브 종료 후 다음 웨이브까지 휴식 중
-    public float breakTimer;
+    // public bool isBreak; // 웨이브 종료 후 다음 웨이브까지 휴식 중
+    // public float breakTimer;
     public int waveIdx;
     // public DefenceType waveDefenceType; // 이번 wave에 소환될 적의 방어 타입 (wave 시작 시 DefenceWaveTypes로 결정)
     public int slimeSpawnCount;
@@ -89,13 +89,6 @@ public class GameManager : MonoSingleton<GameManager>
             if (!isPlaying)
                 continue;
 
-            if (isBreak)
-            {
-                breakTimer -= Time.deltaTime;
-                if (breakTimer <= 0)
-                    EndBreak();
-                continue;
-            }
 
             if (mainWaveTimer <= 0)
                 continue;
@@ -104,6 +97,7 @@ public class GameManager : MonoSingleton<GameManager>
             if (mainWaveTimer <= 0)
             {
                 mainWaveTimer = 0;
+                StartNextWave();
             }
         }
     }
@@ -112,7 +106,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         this.waveIdx = waveIdx;
         mainWaveTimer = GameSetting.WAVE_TIME;
-        isBreak = false;
 
         WaveType waveType = stageData.waveDatas[waveIdx].waveType;
         DefenceType waveDefenceType = stageData.GetWaveDefenceType(waveIdx);
@@ -141,14 +134,6 @@ public class GameManager : MonoSingleton<GameManager>
 
         clearWaveIdxes.Add(endWaveIdx);
         GameEventBus.Publish(new WaveEndEvent(endWaveIdx));
-
-        // 스킵으로 이미 지나간 이전 wave가 끝난 경우엔 진행에 영향 없음
-        if (endWaveIdx == waveIdx && waveIdx < GameSetting.BOSS_PHASE)
-        {
-            isBreak = true;
-            breakTimer = GameSetting.BREAK_TIME;
-            GameEventBus.Publish(new BreakStartEvent(endWaveIdx+1));
-        }
     }
 
 
@@ -160,20 +145,13 @@ public class GameManager : MonoSingleton<GameManager>
         StartWave(waveIdx + 1);
     }
 
-    // 휴식 종료 → 다음 wave 시작 (휴식 타이머 만료 또는 StartNextWaveButton)
-    public void EndBreak()
-    {
-        if (!isBreak)
-            return;
-        isBreak = false;
-        GameEventBus.Publish(new BreakEndEvent(waveIdx + 1));
-        StartNextWave();
-    }
 
-    // 스킵 가능: 현재 wave의 소환이 모두 끝난 뒤(= wave 종료 후 휴식 중)
+    // 스킵 가능: 현재 진행 중인 wave(마지막에 시작한 wave)의 소환이 모두 끝난 뒤. 보스 wave는 소환 종료가 없어서 안 나옴
     public bool CanSkipWave()
     {
-        return isPlaying && isBreak;
+        if (!isPlaying || accWaves.Count == 0 || waveIdx >= GameSetting.BOSS_PHASE)
+            return false;
+        return accWaves[accWaves.Count - 1].isSpawnEnd;
     }
 
     void Update()
@@ -298,22 +276,6 @@ public class StartBossEvent
 
 }
 
-public class BreakStartEvent
-{
-    public int nextWaveIdx;
-    public BreakStartEvent(int w)
-    {
-        nextWaveIdx = w;
-    }
-}
-public class BreakEndEvent
-{
-    public int nextWaveIdx;
-    public BreakEndEvent(int w)
-    {
-        nextWaveIdx = w;
-    }
-}
 public class WaveStartEvent
 {
     public int waveIdx;

@@ -15,18 +15,16 @@ public class TileItemInfoPanel : MonoBehaviour
     {
         obj.SetActive(false);
     }
-
     public void SetTile(Tile tile)
     {
-        if (sellTileItemButton != null)
-            sellTileItemButton.SetTile(tile);
-
         // 아이템이 설치된 타일만 표시 (위에 유닛이 있어도 아이템 없으면 숨김)
         if (tile == null || tile.tileItem is not TileItem item)
         {
             obj.SetActive(false);
             return;
         }
+        if (sellTileItemButton != null)
+            sellTileItemButton.SetTile(tile);
 
         ItemData data = item.itemData;
         nameText.text = data.Title;
@@ -34,5 +32,9 @@ public class TileItemInfoPanel : MonoBehaviour
         thumImage.sprite = data.thum;
         thumImage.gameObject.SetActive(data.thum != null);
         obj.SetActive(true);
+    }
+    public void UpdatePanel()
+    {
+        
     }
 }

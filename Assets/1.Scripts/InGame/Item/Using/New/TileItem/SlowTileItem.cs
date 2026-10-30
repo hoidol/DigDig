@@ -3,8 +3,8 @@ using UnityEngine;
 // 둔화: 발사 시 chance% 확률로 그 탄에 슬로우(duration초)를 붙임. 붙은 탄은 맞는 적마다 슬로우
 public class SlowTileItem : TileItem //타일 위에 설치되는 아이템
 {
-    public float chance = 10f;
-    public float duration = 1f;
+    public float chance = 30f;
+    public float duration = 2f;
 
     SlowOnHitBehavior slowBehavior;
 

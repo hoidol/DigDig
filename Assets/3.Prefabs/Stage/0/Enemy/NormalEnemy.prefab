@@ -361,6 +361,7 @@ GameObject:
   - component: {fileID: 2067649798771837938}
   - component: {fileID: 7536888476502838592}
   - component: {fileID: 612178615639581777}
+  - component: {fileID: 3146973144483575909}
   - component: {fileID: 4281134898832954647}
   - component: {fileID: 7676507085402204964}
   m_Layer: 3
@@ -442,6 +443,7 @@ MonoBehaviour:
     attackType: 0
   hpText: {fileID: 7405565396758039830}
   pathIdx: 0
+  enemyDefence: {fileID: 0}
   wave: 0
   killedBy:
     damage: 0
@@ -454,6 +456,18 @@ MonoBehaviour:
   isPushing: 0
   moving: 0
   animator: {fileID: 0}
+--- !u!114 &3146973144483575909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7420967802149043619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8007a9f4f38204b42aada233a254a12c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NormalEnemyDefence
 --- !u!114 &4281134898832954647
 MonoBehaviour:
   m_ObjectHideFlags: 0

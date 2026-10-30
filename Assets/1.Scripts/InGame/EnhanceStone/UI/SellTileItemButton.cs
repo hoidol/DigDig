@@ -18,5 +18,6 @@ public class SellTileItemButton : ButtonUI
 
         Character.Instance.RemoveItem(item);
         Character.Instance.AddCoin(GameSetting.SELL_TILE_ITEM_PRICE);
+        GetComponentInParent<TileItemInfoPanel>().SetTile(null);
     }
 }

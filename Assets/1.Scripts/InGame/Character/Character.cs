@@ -56,7 +56,7 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
     public Transform Transform => transform;
     public int coin;
-    public int mergeCoin;
+    public int diceCoin;
     public float AccumulatedDamage { get; set; }
     public string key;
     public string Key => key;
@@ -249,10 +249,11 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
         coin += count;
         GameEventBus.Publish(new CoinEvent(coin));
     }
-    public void AddMergeCoin(int count)
+
+    public void AddDiceCoin(int count)
     {
-        mergeCoin += count;
-        GameEventBus.Publish(new MergeCoinEvent(mergeCoin));
+        diceCoin += count;
+        GameEventBus.Publish(new DiceCoinEvent(diceCoin));
     }
 
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
@@ -348,8 +349,8 @@ public class CoinEvent
     public CoinEvent(int curCoin) { this.curCoin = curCoin; }
 }
 
-public class MergeCoinEvent
+public class DiceCoinEvent
 {
     public int curCoin;
-    public MergeCoinEvent(int curCoin) { this.curCoin = curCoin; }
+    public DiceCoinEvent(int curCoin) { this.curCoin = curCoin; }
 }

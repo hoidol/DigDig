@@ -13,12 +13,10 @@ public class GameSetting
 
    public const int BOSS_PHASE = 19; //총 20 Phase
 
-   public const float WAVE_TIME = 30;
-   public const float BREAK_TIME = 10;
-
-   // public const int SKIP_WAVE_GOLD = 5; // 스킵하면 받는 골드 (고정)
+   public const float WAVE_TIME = 60;
+   public const float WAVE_SPAWN_TIME = 40;
    public const float SKIP_SHOW_DELAY = 5; // 웨이브 시작 후 스킵 버튼이 보이기까지 시간
-   public const float ENEMY_SPAWN_INTERVAL = 1.25f;
+   public const float ENEMY_SPAWN_INTERVAL = 1f;
 
    public const float ENEMY_HP_INCREASE_INTERVAL = 10f; // 페이즈 시작 후 이 시간(초)마다 체력 증가
    public const float ENEMY_HP_REACH_RATIO = 0.5f; // 웨이브 끝에 (다음 페이즈 체력 - 현재 페이즈 체력)의 10%까지 도달

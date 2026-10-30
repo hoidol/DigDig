@@ -79,7 +79,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 20
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 70d91f6a343c19446b658edb8977a1cf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -361,7 +361,8 @@ GameObject:
   - component: {fileID: 7536888476502838592}
   - component: {fileID: 4281134898832954647}
   - component: {fileID: 7676507085402204964}
-  - component: {fileID: 6897338208591962833}
+  - component: {fileID: 2749284230910186105}
+  - component: {fileID: 6442451577174540892}
   m_Layer: 3
   m_Name: OrganicEnemy
   m_TagString: Enemy
@@ -476,7 +477,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.38, y: 1.38}
   m_EdgeRadius: 0
---- !u!114 &6897338208591962833
+--- !u!114 &2749284230910186105
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -485,9 +486,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 7420967802149043619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31ce4424418de49128b537f216985964, type: 3}
+  m_Script: {fileID: 11500000, guid: 40bf9c06c2bb842b790195907a23147f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OrganicEnemy
+  m_EditorClassIdentifier: Assembly-CSharp::OrganicEnemyDefence
+--- !u!114 &6442451577174540892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7420967802149043619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45fa5f880ca554b81974dd87ad8b8fa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NormalEnemy
   enemyType: 0
   defenceType: 4
   enemyData: {fileID: 0}
@@ -503,6 +516,7 @@ MonoBehaviour:
     attackType: 0
   hpText: {fileID: 7405565396758039830}
   pathIdx: 0
+  enemyDefence: {fileID: 0}
   wave: 0
   killedBy:
     damage: 0

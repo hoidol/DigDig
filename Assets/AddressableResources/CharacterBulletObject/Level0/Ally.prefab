@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8b303186f28540ddb5889ed1ed86a09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NormalBulletObject
-  moveSpeed: 10
+  moveSpeed: 20
   bulletRadius: 0.1
   direction: {x: 0, y: 0, z: 0}
   hitLayerMask:
@@ -183,4 +183,11 @@ MonoBehaviour:
   key: Ally
   allyUnitDamageData:
     damage: 0
-    isCrt: 0
+    attackType: 0
+    critChance: 0
+    critPower: 2
+    ignoreDefence: 0
+    eliteBossDamageMul: 1
+  shootPos: {x: 0, y: 0}
+  shootDir: {x: 0, y: 0}
+  shootDamage: 0

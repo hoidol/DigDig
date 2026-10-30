@@ -9,6 +9,6 @@ public class RangeUpTileItem  : StatBuffTileItem //타일 위에 설치되는 �
     void Reset()
     {
         opType = StatOpType.Add;
-        value = 2f;
+        value = 3f;
     }
 }

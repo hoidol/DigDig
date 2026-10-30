@@ -356,6 +356,4 @@ public enum AttackType
     AllRounder, // 만능 모든 공격 타입 100
     Physic, //빨강
     Magic, //파랑
-    Vibrational, //노랑
-
 }
