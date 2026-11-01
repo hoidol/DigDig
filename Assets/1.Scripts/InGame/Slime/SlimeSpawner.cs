@@ -84,8 +84,21 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         GameEventBus.Subscribe<TileItemChangedEvent>(e => RefreshSelectedTile(e.tile));
     }
 
+    public System.Action<Tile> tilePickCallback; // 있으면 타일 선택 모드: 드래그/선택 대신 누른 타일을 전달 (SelectItemCanvas)
+
     void Update()
     {
+        if (tilePickCallback != null)
+        {
+            if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
+            {
+                Tile tile = TileManager.Instance.GetNearestTile(GetMouseWorldPos());
+                if (tile != null)
+                    tilePickCallback(tile);
+            }
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             // UI 위를 클릭한 경우 드래그 시작하지 않음
@@ -253,6 +266,11 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         else
             ReleaseTarget();
         GameEventBus.Publish(new TileSelectedEvent(tile));
+    }
+
+    public void DeselectTile()
+    {
+        SelectTile(null);
     }
 
     // 선택된 타일의 내용이 바뀌면 (빈 타일에 소환, 아이템 설치 등) 정보 갱신

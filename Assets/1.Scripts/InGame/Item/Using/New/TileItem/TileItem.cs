@@ -6,11 +6,12 @@ using UnityEngine;
 // 수치는 타일(객체)마다 고정 → count로 강해지지 않음
 public abstract class TileItem : Item, ITileItem
 {
-    public Tile tile;
+    public Tile tile; // 장착 전에 지정되어 있으면 그 타일에 설치, 없으면 랜덤 타일
 
     public override void OnEquip()
     {
-        tile = TileManager.Instance.GetRandomTileForItem();
+        if (tile == null)
+            tile = TileManager.Instance.GetRandomTileForItem();
         if (tile == null)
         {
             Debug.LogWarning($"TileItem {key} 설치할 타일 없음");
@@ -36,8 +37,11 @@ public abstract class TileItem : Item, ITileItem
         tile = null;
     }
 
-    // 뽑기 후보로 나올 수 있는지 (ItemManager.GetDrawTileItem)
+    // 뽑기 후보로 나올 수 있는지 (ItemManager.GetDrawTileItems)
     public virtual bool CanDraw() => true;
+
+    // 획득할 때 설치할 타일을 골라야 하는지 (SelectItemCanvas)
+    public virtual bool NeedTile => true;
 
     // 위에 올라간 유닛이 탄을 쏠 때마다 호출 (Slime.FireBullet, Weapon.Shoot). 발사 직후라 데미지 데이터 초기화가 끝난 상태
     public virtual void OnFired(AllyBulletObject bullet)

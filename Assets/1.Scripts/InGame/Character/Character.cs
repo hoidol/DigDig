@@ -200,10 +200,10 @@ public class Character : MonoSingleton<Character>, IPicker, IAllyUnit, IHittable
 
 
     // 인벤토리가 가득 찼으면 교체 UI를 띄우고 결과를 기다림 (교체 시 ChangeItemCanvas에서 아이템 추가까지 처리)
-    public async UniTask<bool> AddItem(string key)
+    public async UniTask<bool> AddItem(string key, Tile tile = null)
     {
         statMgr.AddItem(key, 1);
-        itemInventory.AddItem(key);
+        itemInventory.AddItem(key, tile);
         itemInventory.UpdateInventory();
         UpdateCharacter();
         return true;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class SlimeMergeInfoPanel : MonoBehaviour
 {
-    public SlimeStatPanel[] statPanels;
+    public Lobby.SlimeStatPanel[] statPanels;
     public GameObject mergeUpButton;
     public GameObject mergeDownButton;
     public GameObject growth0StarObject;
@@ -22,37 +22,39 @@ public class SlimeMergeInfoPanel : MonoBehaviour
         growth0StarObject.SetActive(false);
         growth1StarsObject.SetActive(false);
         growth2StarObject.SetActive(false);
-        
-        if(slimeData.growth == 0)
+
+        if (slimeData.growth == 0)
         {
             growth0StarObject.SetActive(true);
-        }else if(slimeData.growth == 1)
+        }
+        else if (slimeData.growth == 1)
         {
             growth1StarsObject.SetActive(true);
             UpdateStar();
-        }else if(slimeData.growth == 2)
+        }
+        else if (slimeData.growth == 2)
         {
             growth2StarObject.SetActive(true);
         }
 
         UpdatePanel();
-    }   
+    }
 
     void UpdateStar()
     {
-        if(slimeData.growth != 1)
+        if (slimeData.growth != 1)
         {
-            return;            
+            return;
         }
 
-        for(int i = 0; i < growth1Stars.Length; i++)
+        for (int i = 0; i < growth1Stars.Length; i++)
         {
             growth1Stars[i].SetActive(false);
         }
-        
-        for(int i = 0; i < growth1Stars.Length; i++)
+
+        for (int i = 0; i < growth1Stars.Length; i++)
         {
-            if(mergeLevel >= i)
+            if (mergeLevel >= i)
             {
                 growth1Stars[i].SetActive(true);
             }
@@ -63,12 +65,12 @@ public class SlimeMergeInfoPanel : MonoBehaviour
     {
         mergeUpButton.SetActive(false);
         mergeDownButton.SetActive(false);
-        if(slimeData.growth == 1)
+        if (slimeData.growth == 1)
         {
-            if(mergeLevel < SlimeData.MAX_MERGE_LEVEL)
+            if (mergeLevel < SlimeData.MAX_MERGE_LEVEL)
                 mergeUpButton.SetActive(true);
-            
-            if(mergeLevel >0)
+
+            if (mergeLevel > 0)
                 mergeDownButton.SetActive(true);
 
             UpdateStar();
@@ -86,7 +88,7 @@ public class SlimeMergeInfoPanel : MonoBehaviour
             {
                 statPanels[i].gameObject.SetActive(false);
             }
-            
+
         }
     }
 

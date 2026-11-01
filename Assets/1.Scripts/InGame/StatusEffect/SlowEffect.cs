@@ -1,6 +1,7 @@
+// 적중할 때마다 슬로우 중첩 +1 (효과 하나당 최대 MAX_SLOW_STACK), 재적용 시 시간 갱신. 끝나면 쌓은 중첩을 한 번에 해제
 public class SlowEffect : StatusEffect
 {
-    const float RATE = 0.5f; // 이동속도 60%로 고정
+    int stackCount;
 
     public SlowEffect(float duration)
     {
@@ -13,11 +14,16 @@ public class SlowEffect : StatusEffect
         if (effect != this && remainingTimer < effect.duration)
             remainingTimer = effect.duration;
 
-        handler.SlowRate *= RATE;
+        if (stackCount >= StatusEffectHandler.MAX_SLOW_STACK)
+            return;
+
+        stackCount++;
+        handler.SlowStack++;
     }
 
     public override void OnRemove(StatusEffectHandler handler)
     {
-        handler.SlowRate /= RATE;
+        handler.SlowStack -= stackCount;
+        stackCount = 0;
     }
 }

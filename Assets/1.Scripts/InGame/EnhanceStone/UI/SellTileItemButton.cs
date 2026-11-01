@@ -10,7 +10,7 @@ public class SellTileItemButton : ButtonUI
         this.tile = tile;
     }
 
-    // 제거 후 Tile이 TileItemChangedEvent를 보내 선택 정보가 갱신됨 (아이템 패널 숨김)
+    // 판매 후 타일 선택 해제 (TilePointer·정보 패널 숨김, 위에 유닛이 있어도 동일)
     public override void OnClickedBtn()
     {
         if (tile == null || tile.tileItem is not TileItem item)
@@ -18,6 +18,6 @@ public class SellTileItemButton : ButtonUI
 
         Character.Instance.RemoveItem(item);
         Character.Instance.AddCoin(GameSetting.SELL_TILE_ITEM_PRICE);
-        GetComponentInParent<TileItemInfoPanel>().SetTile(null);
+        SlimeSpawner.Instance.DeselectTile();
     }
 }

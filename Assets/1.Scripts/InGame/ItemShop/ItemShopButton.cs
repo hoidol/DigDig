@@ -6,6 +6,6 @@ public class ItemShopButton : ButtonUI
 {
     public override void OnClickedBtn()
     {
-        ItemShopCanvas.Instance.OpenCanvas();
+        // ItemShopCanvas.Instance.OpenCanvas();
     }
 }

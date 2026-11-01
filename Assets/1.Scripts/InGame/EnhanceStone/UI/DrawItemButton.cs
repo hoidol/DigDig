@@ -31,8 +31,7 @@ public class DrawItemButton : ButtonUI
         return Mathf.Max(chance, GameSetting.MIN_DRAW_ITEM_CHANCE);
     }
 
-    // 코인을 내고 확률 판정 → 성공하면 TileItem 중 랜덤 1개를 바로 지급(ItemInventory가 객체를 만들어 랜덤 타일에 설치)
-    // 실패하면 코인만 소모되고 가격/확률은 그대로
+    // 코인을 내고 SelectItemCanvas를 연다 (확률 판정 → 아이템 3개 중 선택 → 타일 선택)
     public override void OnClickedBtn()
     {
         if (Character.Instance.coin < GetDrawPrice())
@@ -46,23 +45,13 @@ public class DrawItemButton : ButtonUI
             ToastCanvas.Toast("적용 가능한 타일이 없습니다.");
             return;
         }
-        ItemData itemData = ItemManager.Instance.GetDrawTileItem();
-        if (itemData == null)
+        if (ItemManager.Instance.GetDrawTileItems(1).Count == 0)
         {
             Debug.Log("DrawItemButton 뽑을 타일 아이템이 없거나 설치할 타일 없음");
             return;
         }
-        Character.Instance.AddCoin(-GetDrawPrice());
-        if (Random.Range(0, 100) >= GetDrawChance())
-        {
-            ToastCanvas.Toast("뽑기 실패");
-            return;
-        }
-        Debug.Log($"DrawITemButton OnClickedBtn() {itemData.key}");
-        GameManager.Instance.drawItemCount++;
-        Character.Instance.AddItem(itemData.key).Forget();
 
-        // CharacterManageCanvas.Instance.UpdateCanvas();
-        UpdateButton();
+        Character.Instance.AddCoin(-GetDrawPrice());
+        SelectItemCanvas.Instance.OpenDraw(GetDrawChance(), UpdateButton);
     }
 }

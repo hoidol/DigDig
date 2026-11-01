@@ -50,6 +50,9 @@ public class GameManager : MonoSingleton<GameManager>
         enemySpawnerContainer = Instantiate(stageData.enemySpawnerContainerPrefab);
         enemySpawnerContainer.Init();
 
+        // 타일 위치는 GridLayoutGroup이 정함. 로드가 바로 끝나면 첫 레이아웃 계산 전이라 먼저 강제 계산
+        Canvas.ForceUpdateCanvases();
+
         // 캐릭터를 임의의 빈 타일 위에 배치
         Tile characterTile = TileManager.Instance.GetRandomEmptyTile();
         if (characterTile != null)

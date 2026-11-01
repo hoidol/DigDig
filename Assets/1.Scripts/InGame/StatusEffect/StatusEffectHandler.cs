@@ -7,7 +7,10 @@ public class StatusEffectHandler : MonoBehaviour
 {
     [field: SerializeField] public bool IsStunned { get; set; }
     [field: SerializeField] public bool IsShielded { get; set; }
-    [field: SerializeField] public float SlowRate { get; set; } = 1f;
+    public const int MAX_SLOW_STACK = 3;
+    const float SLOW_RATE_PER_STACK = 0.5f;
+    [field: SerializeField] public int SlowStack { get; set; } // 슬로우 + 빙결 중첩 합계
+    public float SlowRate => Mathf.Pow(SLOW_RATE_PER_STACK, Mathf.Min(SlowStack, MAX_SLOW_STACK));
 
     // 방어막 소모 시도. 막으면 true 반환
     public bool TryBlock()
@@ -64,7 +67,7 @@ public class StatusEffectHandler : MonoBehaviour
 
         IsStunned = false;
         IsShielded = false;
-        SlowRate = 1f;
+        SlowStack = 0;
     }
 
     public void Apply(StatusEffect effect)

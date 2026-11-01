@@ -2,7 +2,7 @@
     "userStages": [
         {
             "key": "Normal",
-            "tryCount": 0,
+            "tryCount": 1,
             "maxWave": 0,
             "userStageRewards": []
         }

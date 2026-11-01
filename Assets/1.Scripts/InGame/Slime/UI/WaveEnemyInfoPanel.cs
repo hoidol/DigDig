@@ -10,14 +10,14 @@ public class WaveEnemyInfoPanel : MonoBehaviour
     public TMP_Text waveText;
     // public TMP_Text defenceTypeDesc;
     // public Image thumImage;
-    
+
     void Start()
     {
-        obj.SetActive(false);  
+        obj.SetActive(false);
         GameEventBus.Subscribe<WaveStartEvent>(OnWaveStartEvent);
 
     }
-    const float SHOW_TIME = 5f;
+    const float SHOW_TIME = 10f;
     Coroutine showCo;
 
     void OnWaveStartEvent(WaveStartEvent e)
@@ -38,8 +38,8 @@ public class WaveEnemyInfoPanel : MonoBehaviour
     }
 
     public void SetWaveInfo(int w)
-    {        
-        waveText.text = $"Wave {w} 적 정보";
-        defenceTypePanel.SetDefenceType(GameManager.Instance.GetWave(w).waveDefenceType);    
+    {
+        waveText.text = $"Wave {w+1} 적 정보";
+        defenceTypePanel.SetDefenceType(GameManager.Instance.GetWave(w).waveDefenceType);
     }
 }

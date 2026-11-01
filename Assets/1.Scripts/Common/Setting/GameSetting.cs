@@ -25,8 +25,8 @@ public class GameSetting
 
    public const int INIT_ITEM_PRICE = 10;
    public const int INCREASE_ITEM_PRICE = 5;
-   public const int INIT_DRAW_ITEM_PRICE = 10;
-   public const int INCREASE_DRAW_ITEM_PRICE = 2;
+   public const int INIT_DRAW_ITEM_PRICE = 5;
+   public const int INCREASE_DRAW_ITEM_PRICE = 1;
    public const int INIT_DRAW_ITEM_CHANCE = 100; // 아이템 뽑기 성공 확률(%). 성공할 때마다 감소
    public const int DECREASE_DRAW_ITEM_CHANCE = 5;
    public const int MIN_DRAW_ITEM_CHANCE = 10;

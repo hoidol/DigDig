@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SlimeData", menuName = "SlimeData")]
 public class SlimeData : ScriptableObject
 {
-    public const int MAX_MERGE_LEVEL = 5; // mergeLevel 0 ~ MAX_MERGE_LEVEL
+    public const int MAX_MERGE_LEVEL = 4; // mergeLevel 0 ~ MAX_MERGE_LEVEL
     public static readonly int MAX_ENHANCE_LEVEL = 15;
     public static int[] ABILITY_LEVELS = { 2, 5, 8, 11, 14 };
 
@@ -270,16 +270,21 @@ public class SlimeStat
     public string GetValueToString(int mergeLv, float randomRatio = 0f)
     {
         if (randomRatio > 0f)
-        {
-            float mid = GetValue<float>(mergeLv);
-            return $"{mid * (1f - randomRatio):0.#}~{mid * (1f + randomRatio):0.#}";
-        }
-
+            return FormatValue(GetValue<float>(mergeLv), randomRatio);
 
         if (IsLinear && !values[0].Contains("~"))
-            return (GetValue(values[0]) + GetValue(values[1]) * mergeLv).ToString("0.##");
+            return FormatValue(GetValue(values[0]) + GetValue(values[1]) * mergeLv);
 
         return values.GetByMergeLevel(mergeLv);
+    }
+
+    // 이미 계산된 값(공격력 등 스탯 값)을 같은 표시 형식으로 변환
+    public static string FormatValue(float value, float randomRatio = 0f)
+    {
+        if (randomRatio > 0f)
+            return $"{value * (1f - randomRatio):0.#}~{value * (1f + randomRatio):0.#}";
+
+        return value.ToString("0.##");
     }
 
     public T GetValue<T>(int mergeLv)

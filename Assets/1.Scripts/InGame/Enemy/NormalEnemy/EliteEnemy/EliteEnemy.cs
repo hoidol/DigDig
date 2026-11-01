@@ -16,10 +16,10 @@ public class EliteEnemy : NormalEnemy
     }
     public override void Reward()
     {
-        int gold = 100;
-
         Character.Instance.AddDiceCoin(2);
-        DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{2}");    
+        DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{2}");
+
+        int gold = 100;
         Character.Instance.AddCoin(gold);
         CoinText.Instantiate().SetCoinText(transform.position, $"+{gold}");
     }

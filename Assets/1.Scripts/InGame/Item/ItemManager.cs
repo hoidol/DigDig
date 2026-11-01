@@ -78,24 +78,20 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
         return result.OrderBy(i => Random.value).Take(count).ToList();
     }
 
-    // 뽑기 버튼용: TileItem 중 랜덤 1개 (해금 안 됨 / 최대 보유 개수 도달은 제외). 설치할 타일이 없거나 후보가 없으면 null
-    public ItemData GetDrawTileItem()
+    // 뽑기용: TileItem 중 겹치지 않게 랜덤 count개 (해금 안 됨 / 최대 보유 개수 도달은 제외). 설치할 타일이 없으면 빈 리스트
+    public List<ItemData> GetDrawTileItems(int count)
     {
         if (TileManager.Instance.GetRandomTileForItem() == null)
-            return null;
+            return new List<ItemData>();
 
-        List<ItemData> candidates = allItemDatas.Where(data =>
+        return allItemDatas.Where(data =>
         {
             if (!(data.itemPrefab is TileItem tileItem) || !tileItem.CanDraw() || !data.CheckUnlock())
                 return false;
             if (Character.Instance.statMgr.itemStatDic.TryGetValue(data.key, out CharacterItemStat stat) && stat.count >= data.maxCount)
                 return false;
             return true;
-        }).ToList();
-
-        if (candidates.Count == 0)
-            return null;
-        return candidates[Random.Range(0, candidates.Count)];
+        }).OrderBy(data => Random.value).Take(count).ToList();
     }
 
     public ItemData GetItemData(string key)

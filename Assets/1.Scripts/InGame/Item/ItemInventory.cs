@@ -45,12 +45,15 @@ public class ItemInventory : MonoBehaviour
     }
 #endif
 
-    public void AddItem(string key)
+    // tile: 타일 아이템을 설치할 타일 (null이면 랜덤)
+    public void AddItem(string key, Tile tile = null)
     {
         Debug.Log($"ItemInventory AddItem {key}");
         ItemData itemData = ItemData.GetItemData(key);
         Item item = Instantiate(itemData.itemPrefab, transform);
         item.key = key; // 프리팹 key가 비어 있으면 UpdateInventory에서 itemStatDic에 없다고 바로 Destroy됨
+        if (item is TileItem tileItem)
+            tileItem.tile = tile;
         item.OnEquip();
         curItems.Add(item);
 

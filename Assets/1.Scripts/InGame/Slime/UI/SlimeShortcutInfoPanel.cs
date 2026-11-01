@@ -7,7 +7,7 @@ public class SlimeShortcutInfoPanel : MonoBehaviour
 
     // public TMP_Text descText;
 
-    public SlimeStatPanel[] slimeStatPanels;
+    public InGame.SlimeStatPanel[] slimeStatPanels;
     List<SlimeStatType> slimeStatTypes = new List<SlimeStatType>();
     public TMP_Text nameText;
     public TMP_Text descText;
@@ -32,7 +32,7 @@ public class SlimeShortcutInfoPanel : MonoBehaviour
             if (i < slime.slimeData.displayStatTypes.Length)
             {
                 slimeStatPanels[i].gameObject.SetActive(true);
-                slimeStatPanels[i].SetSlimeStat(slime.slimeData.GetSlimeStat(slime.slimeData.displayStatTypes[i], slime.userSlime.enhanceLevel), slime.mergeLevel, slime.slimeData.GetRandomRatio(slime.slimeData.displayStatTypes[i]));
+                slimeStatPanels[i].SetSlimeStat(slime, slime.slimeData.displayStatTypes[i]);
             }
             else
             {

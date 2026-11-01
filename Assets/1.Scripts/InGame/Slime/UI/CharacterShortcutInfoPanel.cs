@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CharacterShortcutInfoPanel : MonoBehaviour
 {
-    public SlimeStatPanel[] statPanels;
+    public InGame.SlimeStatPanel[] statPanels;
     // public OwnItemPanel[] ownItemPanels;
     public void SetCharacter(Character character)
     {

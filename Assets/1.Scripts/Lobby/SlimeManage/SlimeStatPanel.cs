@@ -3,18 +3,22 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SlimeStatPanel : MonoBehaviour
+namespace Lobby
 {
-    // public SlimeStatType statType;
-    public TMP_Text titleText;
-    public TMP_Text valueText;
-    public Image thumImage;
-    public void SetSlimeStat(SlimeStat slimeStat,int mergeLv, float randomRatio = 0f)
+    public class SlimeStatPanel : MonoBehaviour
     {
-        if(thumImage != null)
-            thumImage.sprite = slimeStat.Thum;
+        // public SlimeStatType statType;
+        public TMP_Text titleText;
+        public TMP_Text valueText;
+        public Image thumImage;
+        public void SetSlimeStat(SlimeStat slimeStat, int mergeLv, float randomRatio = 0f)
+        {
+            if (thumImage != null)
+                thumImage.sprite = slimeStat.Thum;
 
-        titleText.text = slimeStat.Title;
-        valueText.text = slimeStat.GetValueToString(mergeLv, randomRatio);
+            titleText.text = slimeStat.Title;
+            valueText.text = slimeStat.GetValueToString(mergeLv, randomRatio);
+        }
     }
+
 }
