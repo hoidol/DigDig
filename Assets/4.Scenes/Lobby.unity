@@ -78747,6 +78747,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 505765967390743bbaf8ab7749dd35d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FirebaseLoginCanvas
+  init: 0
+  statusText: {fileID: 0}
+  anonyLoginButton: {fileID: 0}
+  googleLoginButton: {fileID: 0}
+  appleLoginButton: {fileID: 0}
+  logoutButton: {fileID: 0}
 --- !u!114 &1022338630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88749,7 +88755,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1119347543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132578,6 +132584,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 616b843bb150a4c309067b31f03e5ce9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FirebaseManager
+  firebaseAuth: {fileID: 0}
+  firebaseDB: {fileID: 0}
 --- !u!4 &1692582542
 Transform:
   m_ObjectHideFlags: 0
