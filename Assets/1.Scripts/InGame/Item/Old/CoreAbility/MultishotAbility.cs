@@ -10,7 +10,7 @@ public class MultishotAbility : Ability//, IPreAttack
         return $"{PROB * 100:0}% 확률로 멀티샷 발사";
     }
 
-    public override void OnUnequip(Character player) { }
+    public override void OnUnequip(KingSlime player) { }
 
     public void OnPreAttack(ref BulletSpec bullet, Vector2 dir)
     {

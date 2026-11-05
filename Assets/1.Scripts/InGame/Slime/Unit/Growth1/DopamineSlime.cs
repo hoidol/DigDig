@@ -54,7 +54,7 @@ public class DopamineSlime : SlimeGrowth1
         for (int i = 0; i < mergeLevel+1; i++)
         {
             Fire(AttackDirecton());
-            await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+            await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
         }
         coolTimer = coolTime;
     }

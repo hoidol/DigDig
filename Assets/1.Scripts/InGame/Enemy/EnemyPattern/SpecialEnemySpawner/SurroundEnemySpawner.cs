@@ -35,7 +35,7 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(enemyType);
         if (enemyPrefab == null || count <= 0) return;
 
-        Vector2 center = Character.Instance.transform.position;
+        Vector2 center = KingSlime.Instance.transform.position;
         float r = radius > 0 ? radius : CameraManager.Instance.mainCamera.orthographicSize + 1.5f;
         float startAngle = Random.Range(0f, 360f);
         float step = 360f / count;

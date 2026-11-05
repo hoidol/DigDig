@@ -16,12 +16,12 @@ public class MutantSlime : SlimeGrowth1
     }
     public void OnBulletFiredEvent(BulletFiredEvent e)
     {
-        float dis = Vector2.Distance(Character.Instance.transform.position, transform.position);
+        float dis = Vector2.Distance(KingSlime.Instance.transform.position, transform.position);
         if (dis <= healRange)
         {
             if (Random.value <= healChance)
             {
-                Character.Instance.AddHp(1);
+                KingSlime.Instance.AddHp(1);
             }
         }
     }

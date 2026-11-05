@@ -46,11 +46,11 @@ public class FirelanceItem : Item
 
     void Fire()
     {
-        Vector2 dir = Character.Instance.weapon.GetAttackDirection();
+        Vector2 dir = KingSlime.Instance.weapon.GetAttackDirection();
 
         Firelance firelance = Instantiate(firelancePrefab);
-        firelance.transform.position = Character.Instance.transform.position;
-        firelance.damage = Character.Instance.statMgr.AttackPower;
+        firelance.transform.position = KingSlime.Instance.transform.position;
+        firelance.damage = KingSlime.Instance.statMgr.AttackPower;
         firelance.duration = duration;
         firelance.dps = dp;
         firelance.Shoot(dir);

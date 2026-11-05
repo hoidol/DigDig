@@ -25,7 +25,7 @@ public class HealSlime : SlimeGrowth1
     {
         allyBulletSpec = new AllyBulletSpec();
         healCoolTime = healSlimeData.healCooltimes.GetByMergeLevel(mergeLevel);
-        healAmount = healSlimeData.GetUniqueStat(SlimeStatType.Heal).GetValue<float>(mergeLevel);
+        // healAmount = healSlimeData.GetUniqueStat(SlimeStatType.Heal).GetValue<float>(mergeLevel);
         base.InitSlime();
     }
 
@@ -49,9 +49,9 @@ public class HealSlime : SlimeGrowth1
             float totalAmount = healAmount;
             if (healEnhance8Ability.isActivate)
             {
-                totalAmount += Character.Instance.statMgr.MaxHp * healEnhance8Ability.percent;
+                totalAmount += KingSlime.Instance.statMgr.MaxHp * healEnhance8Ability.percent;
             }
-            Character.Instance.AddHp(totalAmount);
+            KingSlime.Instance.AddHp(totalAmount);
         }
     }
 

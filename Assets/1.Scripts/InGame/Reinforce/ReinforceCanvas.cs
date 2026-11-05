@@ -64,7 +64,7 @@ public class ReinforceCanvas : CanvasUI<ReinforceCanvas>
         Debug.Log($"ReinforceCanvas ApplyReinforce target {target} buffType {buffType} value {value}");
         if (target == ReinforceSlot.NONE_KEY || buffType == ReinforceSlot.NONE_KEY)
             return; // 꽝
-        if(target == Character.Instance.characterName.ToString())
+        if(target == KingSlime.Instance.kingslimeName.ToString())
         {
             
         }

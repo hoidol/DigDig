@@ -25,6 +25,6 @@ public abstract class MiningMachineItemBase : Item
 
     protected virtual float GetAttackPower()
     {
-        return Character.Instance.statMgr.AttackPower * 0.5f;
+        return KingSlime.Instance.statMgr.AttackPower * 0.5f;
     }
 }

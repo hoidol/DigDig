@@ -8,12 +8,12 @@ public class UnequalExchangeAbility : Ability
         return $"골드를 획득할 때마다 {CHANCE}% 확률로 총알 1발 충전";
     }
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         // GameEventBus.Subscribe<GoldChangedEvent>(OnGoldChanged);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         // GameEventBus.Unsubscribe<GoldChangedEvent>(OnGoldChanged);
     }

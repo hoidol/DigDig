@@ -10,9 +10,9 @@ public class BoundShootAbility : Ability, IBullet
         return $"{PROB * 100:0}% 확률로 도탄 발사 (튕김 +1)";
     }
 
-    public override void OnUnequip(Character player) { }
+    public override void OnUnequip(KingSlime player) { }
 
-    public void OnBulletFired(CharacterBulletObject bullet)
+    public void OnBulletFired(KingSlimeBulletObject bullet)
     {
         // if (Random.value < PROB)
         //     bullet.AddBehavior(new BounceBehavior(1));

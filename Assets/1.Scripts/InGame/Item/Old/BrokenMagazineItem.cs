@@ -6,11 +6,11 @@ public class BrokenMagazineItem : Item
     public override void OnEquip()
     {
         // buff = new Buff(StatType.BulletCount, -5, StatOpType.Add);
-        Character.Instance.AddBuff(buff);
+        KingSlime.Instance.AddBuff(buff);
     }
 
     public override void OnUnequip()
     {
-        Character.Instance.RemoveBuff(buff);
+        KingSlime.Instance.RemoveBuff(buff);
     }
 }

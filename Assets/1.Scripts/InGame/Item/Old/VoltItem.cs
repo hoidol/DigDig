@@ -23,9 +23,9 @@ public class VoltItem : TriggerCycleItem
 
     public override void OnEquip()
     {
-        transform.SetParent(Character.Instance.transform);
+        transform.SetParent(KingSlime.Instance.transform);
         transform.localRotation = Quaternion.identity;
-        transform.position = Character.Instance.transform.position;
+        transform.position = KingSlime.Instance.transform.position;
 
         base.OnEquip();
     }

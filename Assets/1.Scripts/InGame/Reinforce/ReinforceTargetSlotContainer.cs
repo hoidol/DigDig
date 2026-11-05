@@ -27,8 +27,8 @@ public class ReinforceTargetSlotContainer : ReinforceSlotContainer
         if (SlimeManager.Instance.slimeDataDic.TryGetValue(key, out SlimeData slimeData))
             return slimeData.thum;
 
-        if (Enum.TryParse(key, out CharacterName characterName))
-            return CharacterManager.Instance.GetCharacterData(characterName).thum;
+        if (Enum.TryParse(key, out KingSlimeName characterName))
+            return KingSlimeManager.Instance.GetKingSlimeData(characterName).thum;
 
         Debug.LogWarning($"ReinforceTargetSlotContainer 알 수 없는 key {key}");
         return noneThum;

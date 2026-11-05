@@ -7,8 +7,11 @@ public class TapContainer : MonoBehaviour
     public int selectedIdx;
     private void Awake()
     {
-        //tapButtons = GetComponentsInChildren<TapButton>(true);
-        //tapPanels = GetComponentsInChildren<TapPanel>(true);
+        
+    }
+    public void OnEnable()
+    {
+        // Switch(0);
     }
     private void Start()
     {

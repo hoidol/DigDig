@@ -6,10 +6,10 @@ public class SlimeMergeInfoPanel : MonoBehaviour
     public Lobby.SlimeStatPanel[] statPanels;
     public GameObject mergeUpButton;
     public GameObject mergeDownButton;
-    public GameObject growth0StarObject;
-    public GameObject growth1StarsObject;
-    public GameObject[] growth1Stars;
-    public GameObject growth2StarObject;
+    
+    public GameObject starsObject;
+    public GameObject[] stars;
+    public GameObject maxStarObject;
     public int mergeLevel;
     UserSlime userSlime;
     SlimeData slimeData;
@@ -19,45 +19,37 @@ public class SlimeMergeInfoPanel : MonoBehaviour
         this.slimeData = slimeData;
 
         mergeLevel = 0;
-        growth0StarObject.SetActive(false);
-        growth1StarsObject.SetActive(false);
-        growth2StarObject.SetActive(false);
-
-        if (slimeData.growth == 0)
-        {
-            growth0StarObject.SetActive(true);
-        }
-        else if (slimeData.growth == 1)
-        {
-            growth1StarsObject.SetActive(true);
-            UpdateStar();
-        }
-        else if (slimeData.growth == 2)
-        {
-            growth2StarObject.SetActive(true);
-        }
+        
+        
 
         UpdatePanel();
     }
 
     void UpdateStar()
     {
+        starsObject.SetActive(false);
+        maxStarObject.SetActive(false);
         if (slimeData.growth != 1)
         {
             return;
         }
-
-        for (int i = 0; i < growth1Stars.Length; i++)
+        for (int i = 0; i < stars.Length; i++)
         {
-            growth1Stars[i].SetActive(false);
+            stars[i].SetActive(false);
         }
 
-        for (int i = 0; i < growth1Stars.Length; i++)
+        if(mergeLevel <= 3)
         {
-            if (mergeLevel >= i)
+            starsObject.SetActive(true);
+            for (int i = 0; i < stars.Length; i++)
             {
-                growth1Stars[i].SetActive(true);
+                if(i <= mergeLevel)
+                    stars[i].SetActive(true);
             }
+        }
+        else
+        {
+            maxStarObject.SetActive(true);
         }
     }
 

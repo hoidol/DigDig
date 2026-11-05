@@ -11,7 +11,7 @@ public class FlameEnhance8Ability : SlimeEnhanceAbility, ISkillSlimeEnhanceAbili
     
     public void Execute()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(Character.Instance.transform.position, radius, LayerMask.GetMask("Hittable"));
+        Collider2D[] hits = Physics2D.OverlapCircleAll(KingSlime.Instance.transform.position, radius, LayerMask.GetMask("Hittable"));
         int hitCount=0;
         FlameSlime flameSlime = slime as FlameSlime;
         for (int i = 0; i < hits.Length; i++)
@@ -23,7 +23,7 @@ public class FlameEnhance8Ability : SlimeEnhanceAbility, ISkillSlimeEnhanceAbili
                 
                 StatusEffectHandler handler = (hittable as Component)?.GetComponent<StatusEffectHandler>();
                 handler?.Apply(new FlameEffect(flameSlime.burnDuration, flameSlime.burnDPS));
-                hittable.TakeDamage(new DamageData { damage = Character.Instance.statMgr.AttackPower ,
+                hittable.TakeDamage(new DamageData { damage = KingSlime.Instance.statMgr.AttackPower ,
                 attackType = AttackType.Magic});
                 hitCount ++;
             }

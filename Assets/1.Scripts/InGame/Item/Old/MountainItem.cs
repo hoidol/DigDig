@@ -19,13 +19,13 @@ public class MountainItem : Item
     void Release()
     {
         if (maxHpBuff != null)
-            Character.Instance.RemoveBuff(maxHpBuff);
+            KingSlime.Instance.RemoveBuff(maxHpBuff);
 
         if (attackPowerBuff != null)
-            Character.Instance.RemoveBuff(attackPowerBuff);
+            KingSlime.Instance.RemoveBuff(attackPowerBuff);
 
         if (attackPowerBuff != null)
-            Character.Instance.RemoveBuff(attackPowerBuff);
+            KingSlime.Instance.RemoveBuff(attackPowerBuff);
 
     }
     public override void UpdateItem()
@@ -34,11 +34,11 @@ public class MountainItem : Item
         Release();
         //최대 체력
         maxHpBuff = new Buff(StatType.MaxHp, maxHp, StatOpType.Add);
-        Character.Instance.AddBuff(maxHpBuff);
+        KingSlime.Instance.AddBuff(maxHpBuff);
 
         //공격 효율
         attackPowerBuff = new Buff(StatType.AttackPower, attackPower, StatOpType.Add);
-        Character.Instance.AddBuff(attackPowerBuff);
+        KingSlime.Instance.AddBuff(attackPowerBuff);
 
         //초당 회복력
         // recoveryHpBuff = new Buff(StatType.RecoveryHp, recoveryHp*count, StatOpType.Add);

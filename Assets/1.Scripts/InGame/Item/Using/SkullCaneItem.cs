@@ -12,13 +12,13 @@ public class SkullCaneItem : Item
         float addCritChance =  critChance;
         //크리티컬 확률
         critChanceBuff = new Buff(StatType.CritChance, addCritChance, StatOpType.Add);
-        Character.Instance.AddBuff(critChanceBuff);
+        KingSlime.Instance.AddBuff(critChanceBuff);
 
     }
     void Release()
     {
         if (critChanceBuff != null)
-            Character.Instance.RemoveBuff(critChanceBuff);
+            KingSlime.Instance.RemoveBuff(critChanceBuff);
     }
 
 

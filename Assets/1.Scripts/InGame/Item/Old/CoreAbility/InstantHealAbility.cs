@@ -7,15 +7,15 @@ public class InstantHealAbility : Ability
         return $"최대 체력의 {HEAL_RATIO * 100}% 만큼 즉시 회복";
     }
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         Heal();
     }
 
-    public override void OnUnequip(Character player) { }
+    public override void OnUnequip(KingSlime player) { }
     void Heal()
     {
 
-        Character.Instance.AddHp(Character.Instance.statMgr.MaxHp * HEAL_RATIO);
+        KingSlime.Instance.AddHp(KingSlime.Instance.statMgr.MaxHp * HEAL_RATIO);
     }
 }

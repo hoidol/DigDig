@@ -73,11 +73,11 @@ public class BossDeadEvent
 //     }
 // }
 
-public class CharacterHpChangedEvent
+public class KingSlimeHpChangedEvent
 {
     public float curHp;
     public float maxHp;
-    public CharacterHpChangedEvent(float curHp, float maxHp)
+    public KingSlimeHpChangedEvent(float curHp, float maxHp)
     {
         this.curHp = curHp;
         this.maxHp = maxHp;

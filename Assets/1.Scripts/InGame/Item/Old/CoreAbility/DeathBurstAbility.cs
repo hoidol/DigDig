@@ -11,12 +11,12 @@ public class DeathBurstAbility : Ability
         return $"발사한 총알로 적 처치 시 {SPLIT_COUNT}방향으로 총알 분열 (데미지 {DAMAGE_RATE * 100:0}%)";
     }
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDead);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDead);
     }

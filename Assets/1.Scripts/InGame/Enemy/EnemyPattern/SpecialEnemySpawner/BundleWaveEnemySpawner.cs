@@ -57,7 +57,7 @@ public class BundleWaveEnemySpawner : SpawnPattern
 
     void SpawnWave(Enemy enemyPrefab, Vector2 direction)
     {
-        Vector2 center = Character.Instance.transform.position;
+        Vector2 center = KingSlime.Instance.transform.position;
         float d = distance > 0 ? distance : CameraManager.Instance.mainCamera.orthographicSize + 1.5f + bundleRadius;
 
         // 지정 방향 기준 spreadAngle 범위를 뭉치 수만큼 균등 분할 후 약간 흔듦

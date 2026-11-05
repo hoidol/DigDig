@@ -10,12 +10,12 @@ public class BloodScentAbility : Ability, IBullet
         return $"적 처치 시 크리티컬 확률 {BONUS_CRIT}% 상승";
     }
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDead);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDead);
         applyNext = false;
@@ -23,7 +23,7 @@ public class BloodScentAbility : Ability, IBullet
 
     void OnEnemyDead(EnemyDeadEvent e) => applyNext = true;
 
-    public void OnBulletFired(CharacterBulletObject bullet)
+    public void OnBulletFired(KingSlimeBulletObject bullet)
     {
         if (!applyNext) return;
         applyNext = false;

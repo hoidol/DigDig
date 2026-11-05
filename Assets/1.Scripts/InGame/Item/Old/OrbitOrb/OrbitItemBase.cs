@@ -15,9 +15,9 @@ public abstract class OrbitItemBase : TriggerCycleItem
     public override void OnEquip()
     {
         base.OnEquip();
-        transform.SetParent(Character.Instance.bodyCenterTr);
+        transform.SetParent(KingSlime.Instance.bodyCenterTr);
         transform.localRotation = Quaternion.identity;
-        transform.position = Character.Instance.bodyCenterTr.position;
+        transform.position = KingSlime.Instance.bodyCenterTr.position;
         //transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         RebuildOrbs();
         UpdateItem();

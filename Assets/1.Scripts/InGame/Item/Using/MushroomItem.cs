@@ -22,7 +22,7 @@ public class MushroomItem : Item
         if (Random.Range(0f, 100f) >= recoverChance)
             return;
 
-        Character.Instance.AddHp(recoverHp);
+        KingSlime.Instance.AddHp(recoverHp);
     }
 
     public override string GetDescription()

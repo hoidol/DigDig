@@ -5,7 +5,7 @@ public class GameSetting
    // public const int MAX_EQUIPT_BULLET_COUNT = 5;
    // public const int MAX_MF_GROUP_POINT = 5; //MemoryFragment
    public static string FIRST_STAGE_KEY = "Normal"; // 난이도마다 스테이지 하나, key = 난이도 이름
-   public static CharacterName INIT_CHARACTER_NAME = CharacterName.Lucky;
+   public static KingSlimeName INIT_CHARACTER_NAME = KingSlimeName.Lucky;
    public static string[] INIT_SLIME_KEYS = { "Flame", "Ice", "Wacky", "Orbit", "Lightning" };
    public static int SLIME_SLOT_COUNT = 5;
    public static int PLAY_COST_ENERGE = 5;
@@ -33,12 +33,15 @@ public class GameSetting
    public const int SELL_TILE_ITEM_PRICE = 10; // 타일 아이템 판매 시 받는 코인
    public const int INIT_SPAWN_PRICE = 10;
    public const int INCREASE_SPAWN_PRICE = 1;
+   public const int REINFORCE_PRICE_PER_LEVEL = 30; // 슬라임 종 강화 가격 = 30 × (현재 reinforceLevel + 1) → 30, 60, 90... (최대 레벨 없음)
    public const int BLOCKED_TILE_COUNT = 3; // 게임 시작 시 랜덤으로 막는 타일 수
 
    public const int LEVEL_TO_GROWUP2 = 2;//0,1,2 되어야됌
-   public const int SLIME_MIN_EXIST_COUNT = 10;
+   public const int SLIME_MIN_EXIST_COUNT = 12;
 
    public static float ATTACK_SPEED_PER_SECOND = 50f; // AttackSpeed가 이 값이면 초당 1회 공격 (Orbit은 이때 orbitRotationSpeed로 회전)
+   public static string REMOVE_AD_KEY = "RemoveAd";
+   public static string GAME_SPEED_UP_KEY = "GameSpeedUp"; // 구매하면 인게임 배속 5배까지
 
    // public const int MERGE_REINFORCE_MAX_EXP =3;
 

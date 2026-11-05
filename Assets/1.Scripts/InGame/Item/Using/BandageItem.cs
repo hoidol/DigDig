@@ -14,7 +14,7 @@ public class BandageItem : TriggerItem
     {
         base.OnTrigger();
         Debug.Log("BandageItem OnTrigger()");
-        Character.Instance.AddHp(healAmount);
+        KingSlime.Instance.AddHp(healAmount);
     }
 
     public override string GetDescription()

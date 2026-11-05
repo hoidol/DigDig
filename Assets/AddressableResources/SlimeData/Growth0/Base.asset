@@ -22,17 +22,18 @@ MonoBehaviour:
     - statType: 0
       values:
       - 3
-    - statType: 1
+    - statType: 2
       values:
       - 25
-    - statType: 2
+    - statType: 5
       values:
       - 4.5
   attackPowerRandomRatio: 0
+  reinforceAttackPowerPercent: 10
   prefab: {fileID: 6691824415162859709, guid: 6d1966787a2b24e05ac00d3f489c1193, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
   grade: 0
-  displayStatTypes: 000000000100000002000000
+  displayStatTypes: 000000000200000005000000
   enhanceAbilityInfos: []
   uniqueSlimeStats: []

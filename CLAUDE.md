@@ -34,6 +34,12 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - Orbit: 발사가 없으므로 **공속 = 회전 속도**(2026-10-23). `orbitRotationSpeed × AttackSpeed / GameSetting.ATTACK_SPEED_PER_SECOND`(=50, 초당 1회 공격 기준. 슬라임·캐릭터 공격 타이머도 같은 값 사용) → 공속 강화/버프(타일 아이템, 킹 오라)가 회전 속도로 반영됨.
 - 랜덤 데미지(Wacky 등): 데이터에는 **중간값만** 입력, SlimeData의 `attackPowerRandomRatio`로 `중간값 × (1 ± 비율)` 범위 결정. `3~15` 같은 범위 직접 입력은 쓰지 않는다.
 
+## 인게임 직접 강화 (2026-11-04)
+- 코인으로 **종(key) 단위** 강화(`ReinforcePanel`, 가격 30×(lv+1)). 레벨은 `KingSlimeStatManager.slimeDic`의 `reinforceLevel`.
+- 효과는 주로 **공격력 %**: 레벨당 `SlimeData.reinforceAttackPowerPercent`(SlimeData.csv `ReinforceAttackPower`, 기본 10) 합연산. **%는 종마다 다르게** 준다.
+- **슬라임 특성의 시각적 변화(탄 수, Orbit 체인 수 등)는 강화가 아니라 머지 레벨업으로** 준다. 강화는 수치 담당.
+- 그 종이 필드에서 잠깐 0마리가 돼도(머지 등) 강화 레벨은 유지(`slimeDic` 항목을 지우지 않음).
+
 ## 머지 코인 강화 (2026-10-23 기획 중)
 - 슬라임을 **머지 3회마다 머지 코인 1개** 획득 → 머지 코인을 소모해 인게임 강화.
 - 강화 대상은 **슬라임 개체가 아니라 종(key) 단위**. 한 종을 강화하면 필드의 그 종 전체(+이후 소환분)에 적용 → 합성으로 투자가 사라지지 않음.
@@ -41,6 +47,15 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - **2026-10-23 방향: 킹슬라임(캐릭터)의 필요성을 높인다.** 머지 코인 강화 = **킹 자신 강화 + 킹 주변 슬라임 강화(오라)**.
   - 투자는 킹에 쌓이고 주변 버프는 위치로 결정 → 슬라임 개체에 투자가 묶이지 않아 합성과 충돌 없음.
   - (Grant 아이템은 폐기됐지만, 주변 강화는 아이템이 아니라 킹 고유 능력으로 들어오는 것)
+
+## 킹슬라임 로비 업그레이드 (2026-11-03)
+- 로비에서 재화(Gold 또는 Dia)로 킹슬라임 스탯을 **StatType별로** 영구 업그레이드(`UserKingSlimeManager`, Lv 저장).
+- 데이터는 `Json/KSUpgradeData.csv`(구글 시트) 한 행 = StatType 하나 → `Resources/KSUpgradeData.asset`. **StatType이 추가돼도 행만 추가**하면 인게임에 반영(UI는 `KSUpgradeContainer` 하위에 그 StatType의 `KSUpgradePanel`을 직접 배치). 행이 없는 StatType은 업그레이드 불가, 패널도 숨김.
+  - 재화는 StatType마다 하나로 고정(`CurrencyType`). `MaxLv` 0 = 무제한.
+  - 증가는 **더하기**: Lv × `ValuePerLv`.
+  - 가격(lv → lv+1) = `(BasePrice + PriceAddPerLv × lv) × PriceMulPerLv^lv` (반올림). 선형/지수 모두 이 식으로 조절.
+- 최종 스탯 = 기본값(KingSlimeData) + 장비 + 업그레이드, 계산은 `KingSlimeManager.GetTotalStatValue` 한 곳(로비 표시·인게임 `KingSlimeStatManager` 공용).
+  - StartGold = 게임 시작 시 코인, WaveClearGold = wave 종료마다 코인(보스 wave는 보스 처치 시. 무한 상승 게임이라 보스도 지급), MaxSlimeCount = `SlimeSpawner.slimeMaxCount`(기본 `SLIME_MIN_EXIST_COUNT`)에 더함.
 
 ## 아이템 공통 (2026-10-23)
 - **보유 개수에 따른 능력치 증가는 없다.** `Item.count`/`GetCount()` 삭제. 아이템 효과는 개수와 무관하게 고정 수치(개수 1 기준). 보유 개수는 `statMgr.itemStatDic`에서 뽑기 상한(MaxCount) 판단에만 쓴다.
@@ -54,6 +69,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 
 ## 타일 아이템 (2026-10-22)
 - 아이템 획득(2026-11-01): `DrawItemButton`으로 코인을 내면 `SelectItemCanvas`가 열린다. **Draw**(확률 연출, `drawDuration` 0이면 생략) → **SelectItem**(TileItem 중 겹치지 않는 랜덤 3개, 반드시 하나 선택) → **SelectTile**(눌러서 설치, 이미 아이템이 있는 타일은 불가). 열려 있는 동안 일시정지. 설치 칸을 직접 고르는 것이 배치 고민 포인트. PioneerTile은 설치가 없어 타일 선택 생략. (이전: 랜덤 1개를 랜덤 타일에 바로 설치)
+  - 선택지 갱신(2026-11-04): SelectItem 단계에서 `AdRefreshItemButton`으로 광고를 보면 선택지 3개를 다시 뽑는다(가능하면 지금 보이는 것 제외). **한 판에 2번**(`REFRESH_COUNT_PER_GAME`), 광고 제거 구매자는 광고 없이 갱신.
   - 뽑기 가격(2026-10-25): **처음 10코인, 뽑을 때마다 +2** (`INIT_DRAW_ITEM_PRICE`/`INCREASE_DRAW_ITEM_PRICE`, 횟수는 `GameManager.drawItemCount`).
   - 성공 확률(2026-10-28): **처음 100%, 성공할 때마다 -5%** (최소 10%, `INIT/DECREASE/MIN_DRAW_ITEM_CHANCE`). 코인은 먼저 내고 실패하면 코인만 소모, 가격·확률은 그대로. → 골드 소비의 확률 포인트(뒤로 갈수록 "걸어볼지" 고민).
 - 타일 아이템(`TileItem`)은 획득하면 고른 타일에 설치되고, 그 타일에 슬라임이나 캐릭터가 올라와 있는 동안만 효과가 적용된다(`OnEnter`/`OnExit`).
@@ -67,6 +83,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 2026-10-23 목록 (Key = 클래스명에서 `Item` 뺀 것, ItemData.csv에 행 추가):
   AttackPowerTile(공 +50%), AttackSpeedTile(공속 +30%), BurstShotTile, MultiTargetTile, RangeUpTile(사거리 +2),
   SlowTile(10% 슬로우), StunTile(2% 0.3초 스턴), CriticalTile(10% 2배), TrueDamageTile(방어 배율 무시 → 항상 100%),
+  IgnoreCountingTile(2026-11-04, 올라간 슬라임은 최대 슬라임 수에 안 셈 → `SlimeSpawner.ignoreSlimeCount`/`CountedSlimeCount`. 최대치 12마리 막힘을 푸는 수단),
   GoldTile(처치 시 코인 +1), PioneerTile(획득 즉시 막힌 칸 1개 해제, 설치 안 함, 막힌 칸 없으면 안 나옴), BerserkTile(공 ×2, 사거리 ×0.5), GiantSlayerTile(엘리트·보스에게 데미지 ×2, 방어 배율과 곱연산).
 - 공격 타입 변경 타일 (2026-10-27): PhysicTile / MagicTile = 올라간 유닛의 공격 타입을 해당 속성으로 바꿈(`AttackTypeTileItem`).
   - 의도: 방어 타입 상성을 **배치로 맞추는 수단**. 슬라임 속성은 랜덤 소환이라 못 고르지만, 타일 위로 옮겨서 이번 wave 상성에 맞출 수 있다.
@@ -136,4 +153,5 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   - WaveData/{난이도}.csv: StartWave, DefenceTypes, DefenceWaveTypes (WaveType은 번호로 결정, 위 웨이브 섹션)
   - (EnemyPatternData/{난이도}.csv는 2026-10-16부터 코드에서 사용 안 함. 일반 스폰은 1초마다 1마리 고정)
   - SlimeData.csv: Key, Desc, Grade, AttackType(enum 이름 그대로: Physic/Magic/AllRounder)
-  - SlimeEnhance/{key}.csv: 강화 레벨별 AttackPower/AttackSpeed/AttackRange(`/`로 mergeLv 값) + 고유 스탯 컬럼
+  - SlimeEnhance/{key}.csv: **Level / AttackPower / AttackSpeed / AttackRange / EnhanceAbility 만** 읽음(`/`로 mergeLv 값). 그 외 컬럼은 무시.
+  - (2026-11-04) SlimeStatType은 StatType으로 통합. 슬라임 고유 스탯(`uniqueSlimeStats`)은 CSV가 아니라 **각 슬라임 SlimeData의 `LoadData` 재정의**에서 `SetUniqueStat`으로 입력.

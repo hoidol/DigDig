@@ -9,7 +9,7 @@ public class WackySlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv =0)
     {
-        float mid = GetSlimeStat(SlimeStatType.AttackPower, 0).GetValue<float>(mergeLv);
+        float mid = GetSlimeStat(StatType.AttackPower, 0).GetValue<float>(mergeLv);
         return string.Format(TranslateManager.GetText($"WackySlime_Desc"),
             Mathf.RoundToInt(mid * (1f - attackPowerRandomRatio)),
             Mathf.RoundToInt(mid * (1f + attackPowerRandomRatio)));

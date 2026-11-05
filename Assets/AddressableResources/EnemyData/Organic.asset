@@ -16,4 +16,4 @@ MonoBehaviour:
   defenceType: 4
   exp: 2
   hpMultiplier: 0.8
-  moveSpeed: 2.8
+  moveSpeed: 2.5

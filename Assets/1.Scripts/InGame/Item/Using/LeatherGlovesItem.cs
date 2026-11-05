@@ -10,13 +10,13 @@ public class LeatherGlovesItem : Item
         float addAttackSpeed =  attackSpeed;
         //공격속도
         attackSpeedBuff = new Buff(StatType.AttackSpeed, addAttackSpeed, StatOpType.Add);
-        Character.Instance.AddBuff(attackSpeedBuff);
+        KingSlime.Instance.AddBuff(attackSpeedBuff);
 
     }
     void Release()
     {
         if (attackSpeedBuff != null)
-            Character.Instance.RemoveBuff(attackSpeedBuff);
+            KingSlime.Instance.RemoveBuff(attackSpeedBuff);
     }
 
 

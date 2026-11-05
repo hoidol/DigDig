@@ -22,7 +22,7 @@ public class MergeSlimeCanvas : CanvasUI<MergeSlimeCanvas>
 
     void UpdateCanvas()
     {
-        string[] level2Slimes = Character.Instance.slimeInventory.curSlimes
+        string[] level2Slimes = KingSlime.Instance.slimeInventory.curSlimes
             .Where(slime => slime.mergeLevel == SlimeData.MAX_MERGE_LEVEL)
             .Select(slime => slime.key)
             .ToArray();

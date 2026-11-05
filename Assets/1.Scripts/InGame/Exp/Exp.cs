@@ -72,7 +72,7 @@ public class Exp : MonoBehaviour, IPickable
 
         if (collision.CompareTag("Player"))
         {
-            Take(Character.Instance);
+            Take(KingSlime.Instance);
         }
     }
 }

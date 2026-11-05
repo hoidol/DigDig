@@ -22,6 +22,14 @@ public class CurrencyPanel : MonoBehaviour
         currencyPanelDict[currencyType].Remove(this);
     }
 
+    public static void UpdatePanels(CurrencyType currencyType)
+    {
+        if (!currencyPanelDict.TryGetValue(currencyType, out var panels))
+            return;
+        foreach (var panel in panels)
+            panel.UpdatePanel();
+    }
+
     public virtual void UpdatePanel()
     {
         currencyText.text= UserDataManager.Instance.userData.GetCurrency(currencyType).ToString();

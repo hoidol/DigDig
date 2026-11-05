@@ -8,10 +8,10 @@ public class Shadow : MonoBehaviour
     void Update()
     {
         // 플레이어 위치 + offset 추적
-        transform.position = (Vector2)Character.Instance.transform.position + offset;
+        transform.position = (Vector2)KingSlime.Instance.transform.position + offset;
 
         // 플레이어 방향 미러링
-        transform.localScale = Character.Instance.bodyRootTr.localScale;
+        transform.localScale = KingSlime.Instance.bodyRootTr.localScale;
     }
 
     public void Shoot(Vector2 dir, float damage)

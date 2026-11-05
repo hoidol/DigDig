@@ -19,7 +19,7 @@ public class BurstShotTileItem : TileItem //타일 위에 설치되는 아이템
         var token = this.GetCancellationTokenOnDestroy();
         for (int i = 0; i < burstCount; i++)
         {
-            if (await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: token).SuppressCancellationThrow())
+            if (await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: token).SuppressCancellationThrow())
                 return;
             if (allyUnit is Object unit && unit == null) // 쏜 유닛이 합성 등으로 사라짐
                 return;

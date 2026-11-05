@@ -10,9 +10,9 @@ public class MiningPierceAbility : Ability, IBullet
         return $"{PROB * 100:0}% 확률로 관통탄 발사 (관통 +1)";
     }
 
-    public override void OnUnequip(Character player) { }
+    public override void OnUnequip(KingSlime player) { }
 
-    public void OnBulletFired(CharacterBulletObject bullet)
+    public void OnBulletFired(KingSlimeBulletObject bullet)
     {
         // if (Random.value < PROB)
         //     bullet.AddBehavior(new PierceBehavior(1));

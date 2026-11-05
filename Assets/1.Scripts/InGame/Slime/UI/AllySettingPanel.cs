@@ -8,7 +8,7 @@ public class AllySettingPanel : MonoBehaviour
     public SetFindTargetButton setFindTargetButton;
     // public TMP_Text nameText;
     // public Image thumImage;
-    public CharacterShortcutInfoPanel characterShortcutInfoPanel;
+    public KingSlimeShortcutInfoPanel characterShortcutInfoPanel;
     public SlimeShortcutInfoPanel slimeShortcutInfoPanel;
     public AttackTypePanel attackTypePanel;
 
@@ -30,12 +30,12 @@ public class AllySettingPanel : MonoBehaviour
         slimeShortcutInfoPanel.gameObject.SetActive(false);
         if (allyUnit.AllyType == AllyType.Character)
         {
-            CharacterData characterData = CharacterManager.Instance.GetCharacterData(Character.Instance.characterName );
+            KingSlimeData characterData = KingSlimeManager.Instance.GetKingSlimeData(KingSlime.Instance.kingslimeName );
             // thumImage.sprite = characterData.thum;
             // nameText.text = characterData.Title;
             
-            attackTypePanel.SetAttackType(GetAttackType(Character.Instance.weapon.attackType, Character.Instance.shotModifier));
-            characterShortcutInfoPanel.SetCharacter(Character.Instance);
+            attackTypePanel.SetAttackType(GetAttackType(KingSlime.Instance.weapon.attackType, KingSlime.Instance.shotModifier));
+            characterShortcutInfoPanel.SetCharacter(KingSlime.Instance);
         }
         else
         {

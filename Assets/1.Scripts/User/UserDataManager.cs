@@ -7,7 +7,8 @@ public class UserDataManager : MonoSingleton<UserDataManager>
 {
     public const string UserDataFileName = "UserData";
     // public static string STAGE_KEY = GameSetting.FIRST_STAGE_KEY;// "Gateway1";
-
+    public bool isAdRemoved = false;
+    public bool IsGameSpeedUp => userPurchaseManager.HasPurchased(GameSetting.GAME_SPEED_UP_KEY);
     public static DifficultyType difficultyType = DifficultyType.Normal;
 
     [field: SerializeField]
@@ -21,6 +22,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     public UserSlimeManager userSlimeManager;
     public UserPurchaseManager userPurchaseManager;
     public UserMyInfoManager userMyInfoManager;
+    public UserKingSlimeManager userKingSlimeManager;
 
     private readonly List<UserBaseManager> dirtySaveManagers = new List<UserBaseManager>();
 
@@ -30,6 +32,11 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     }
 
     void LateUpdate()
+    {
+        FlushDirtySaves();
+    }
+
+    void FlushDirtySaves()
     {
         if (dirtySaveManagers.Count == 0)
             return;
@@ -45,12 +52,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     {
         Application.targetFrameRate = 60;
 
-        userData = SaveManager.LoadData<UserData>(UserDataFileName);
-        if (userData == null)
-        {
-            userData = new UserData();
-            userData.energe = GameSetting.MAX_ENERGE;
-        }
         Debug.Log("UserManager Awake()");
 
         userStageManager = new UserStageManager();
@@ -58,14 +59,70 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userPurchaseManager = new UserPurchaseManager();
         userSlimeManager = new UserSlimeManager();
         userMyInfoManager = new UserMyInfoManager();
+        userKingSlimeManager = new UserKingSlimeManager();
+
+        LoadAll();
+    }
+
+    // 로컬 저장 파일에서 전부 다시 읽음 (Awake, 클라우드 불러오기 후)
+    void LoadAll()
+    {
+        userData = SaveManager.LoadData<UserData>(UserDataFileName);
+        if (userData == null)
+        {
+            userData = new UserData();
+            userData.energe = GameSetting.MAX_ENERGE;
+        }
 
         userStageManager.LoadData();
         userEquipmentManager.LoadData();
         userPurchaseManager.LoadData();
         userSlimeManager.LoadData();
         userMyInfoManager.LoadData();
-
+        userKingSlimeManager.LoadData();
+        isAdRemoved = userPurchaseManager.HasPurchased(GameSetting.REMOVE_AD_KEY);
     }
+
+    // 클라우드 저장용 묶음 (FirebaseDatabase)
+    public UserCloudData GetCloudData()
+    {
+        // 대기 중인 저장을 먼저 반영해 메모리와 파일을 맞춤
+        FlushDirtySaves();
+        return new UserCloudData
+        {
+            userData = userData,
+            userStageData = userStageManager.userStageData,
+            userEquipmentData = userEquipmentManager.userEquipmentData,
+            userPurchaseData = userPurchaseManager.userPurchaseData,
+            userSlimeData = userSlimeManager.userSlimeData,
+            userMyInfoData = userMyInfoManager.userMyInfoData,
+            userKSData = userKingSlimeManager.userKSData,
+        };
+    }
+
+    // 클라우드 데이터로 로컬 파일을 덮어쓰고 다시 로드. UI 갱신은 호출한 쪽에서 (씬 재로드 등)
+    public void ApplyCloudData(UserCloudData data)
+    {
+        // 메모리의 이전 데이터가 덮어쓴 파일을 다시 덮지 않게 대기 중인 저장은 버림
+        dirtySaveManagers.Clear();
+
+        SaveIfNotNull(UserDataFileName, data.userData);
+        SaveIfNotNull(UserStageManager.UserDataFileName, data.userStageData);
+        SaveIfNotNull(UserEquipmentManager.UserDataFileName, data.userEquipmentData);
+        SaveIfNotNull(UserPurchaseManager.UserDataFileName, data.userPurchaseData);
+        SaveIfNotNull(UserSlimeManager.UserDataFileName, data.userSlimeData);
+        SaveIfNotNull(UserMyInfoManager.UserDataFileName, data.userMyInfoData);
+        SaveIfNotNull(UserKingSlimeManager.UserDataFileName, data.userKSData);
+
+        LoadAll();
+    }
+
+    static void SaveIfNotNull<T>(string fileName, T data) where T : class
+    {
+        if (data != null)
+            SaveManager.SaveData(fileName, data);
+    }
+
     void Save()
     {
         SaveManager.SaveData(UserDataFileName, userData);
@@ -95,6 +152,33 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         Save();
     }
 
+    // 잔액이 모자라면 false (차감 안 함). 성공 시 저장 + CurrencyPanel 갱신
+    public bool TryUseCurrency(CurrencyType currencyType, int count)
+    {
+        if (userData.GetCurrency(currencyType) < count)
+            return false;
+
+        switch (currencyType)
+        {
+            case CurrencyType.Gold:
+                userData.gold -= count;
+                break;
+            case CurrencyType.Dia:
+                userData.dia -= count;
+                break;
+            case CurrencyType.Energe:
+                userData.energe -= count;
+                GameEventBus.Publish(new ChangedEnergeEvent(userData.energe, -count));
+                break;
+            case CurrencyType.DrawTicket:
+                userData.drawTicket -= count;
+                break;
+        }
+        Save();
+        CurrencyPanel.UpdatePanels(currencyType);
+        return true;
+    }
+
 
 }
 
@@ -105,6 +189,7 @@ public class UserData
     public int dia; //던전 수정 조작 느낌으로
     public int energe;
     public int drawTicket;
+    // public bool isAdRemoved;
 
     public int GetCurrency(CurrencyType currencyType)
     {
@@ -122,9 +207,22 @@ public class UserData
         return 0;
     }
     public string characterName = "Lucky";
-    public CharacterName CharacterName => Enum.Parse<CharacterName>(characterName);
+    public KingSlimeName CharacterName => Enum.Parse<KingSlimeName>(characterName);
 }
+// 클라우드(Firebase) 저장 단위. 로컬 저장 파일들을 하나로 묶은 것
+[System.Serializable]
+public class UserCloudData
+{
+    public UserData userData;
+    public UserStageData userStageData;
+    public UserEquipmentData userEquipmentData;
+    public UserPurchaseData userPurchaseData;
+    public UserSlimeData userSlimeData;
+    public UserMyInfoData userMyInfoData;
+    public UserKSData userKSData;
+}
+
 public enum CurrencyType
 {
-    Gold, Dia, Energe, DrawTicket
+    Gold, Dia, Energe, DrawTicket,Ad, InApp
 }

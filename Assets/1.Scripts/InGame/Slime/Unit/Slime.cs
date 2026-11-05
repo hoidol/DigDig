@@ -50,7 +50,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     public virtual void Awake()
     {
         slimeEnhanceAbilities = GetComponentsInChildren<SlimeEnhanceAbility>();
-        // movement = GetComponent<SlimeMovement>();
+        
         if (rootTr == null)
             rootTr = transform.Find("Root");
 
@@ -85,15 +85,16 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
 
     public virtual void InitSlimeStat()
     {
-        statDic[StatType.AttackPower] = slimeData.GetSlimeStat(SlimeStatType.AttackPower, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
-        statDic[StatType.AttackSpeed] = slimeData.GetSlimeStat(SlimeStatType.AttackSpeed, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
-        statDic[StatType.AttackRange] = slimeData.GetSlimeStat(SlimeStatType.AttackRange, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackPower] = slimeData.GetSlimeStat(StatType.AttackPower, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackSpeed] = slimeData.GetSlimeStat(StatType.AttackSpeed, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackRange] = slimeData.GetSlimeStat(StatType.AttackRange, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
     }
 
     public virtual void UpdateSlime()
     {
         InitSlimeStat();
-
+        UpdateReinforce();
+        
         foreach (var buff in activeBuffs)
         {
             statDic[buff.statType] = buff.Apply(statDic[buff.statType]);
@@ -118,7 +119,16 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
+        GameEventBus.Subscribe<SlimeLevelUpReinforceEvent>(OnSlimeLevelUpReinforceEvent);
     }
+
+    public virtual void OnDisable()
+    {
+        GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
+        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
+        GameEventBus.Unsubscribe<SlimeLevelUpReinforceEvent>(OnSlimeLevelUpReinforceEvent);
+    }
+
     void OnEnemyDeadEvent(EnemyDeadEvent e)
     {
         CheckTarget(e.enemy);
@@ -127,6 +137,15 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     {
         CheckTarget(e.stone);
     }
+
+    void OnSlimeLevelUpReinforceEvent(SlimeLevelUpReinforceEvent e)
+    {
+        if (slimeData.key == e.key)
+        {
+            UpdateSlime();            
+        }
+    }
+
     void CheckTarget(IHittable hittable)
     {
         if (targetTr != null)
@@ -138,9 +157,12 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
         }
     }
 
-    public virtual void OnDisable()
+    // 인게임 직접 강화(종 단위): 레벨당 공격력 +reinforceAttackPowerPercent% (합연산, 버프 적용 전)
+    // 시각적 변화(탄 수, 체인 수 등)는 강화가 아니라 머지 레벨로 준다
+    public virtual void UpdateReinforce()
     {
-
+        int reinforceLevel = KingSlime.Instance.statMgr.GetReinforceLevel(slimeData.key);
+        statDic[StatType.AttackPower] *= 1f + slimeData.reinforceAttackPowerPercent / 100f * reinforceLevel;
     }
 
     public abstract AllyBulletObject GetBullet();

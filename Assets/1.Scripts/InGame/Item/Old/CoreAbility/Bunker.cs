@@ -23,13 +23,13 @@ public class Bunker : MonoBehaviour//, IHittable
     public void Spawn(Vector2 pos)
     {
         transform.position = pos;
-        maxHp = Character.Instance.statMgr.MaxHp * 0.4f;
+        maxHp = KingSlime.Instance.statMgr.MaxHp * 0.4f;
         curHp = maxHp;
         isMounted = false;
-        playerStatusHandler = Character.Instance.GetComponentInChildren<StatusEffectHandler>();
+        playerStatusHandler = KingSlime.Instance.GetComponentInChildren<StatusEffectHandler>();
 
         // Player 직속 자식 GameObjects 캐싱
-        var playerTr = Character.Instance.transform;
+        var playerTr = KingSlime.Instance.transform;
 
         playerDirectChildren = new GameObject[2];
         playerDirectChildren[0] = playerTr.Find("Canvas").gameObject;
@@ -57,7 +57,7 @@ public class Bunker : MonoBehaviour//, IHittable
         // }
 
         // 탑승 중 위치 고정
-        Character.Instance.rg.linearVelocity = Vector2.zero;
+        KingSlime.Instance.rg.linearVelocity = Vector2.zero;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -80,8 +80,8 @@ public class Bunker : MonoBehaviour//, IHittable
         // 플레이어 직속 자식 비활성화
         foreach (var child in playerDirectChildren)
             child.SetActive(false);
-        Character.Instance.rg.position = transform.position;
-        Character.Instance.GetComponent<Collider2D>().enabled = false;
+        KingSlime.Instance.rg.position = transform.position;
+        KingSlime.Instance.GetComponent<Collider2D>().enabled = false;
         // 무적 상태 적용
         if (playerStatusHandler != null)
         {
@@ -94,7 +94,7 @@ public class Bunker : MonoBehaviour//, IHittable
     {
         Debug.Log("Bunker Dismount()");
         isMounted = false;
-        Character.Instance.GetComponent<Collider2D>().enabled = true;
+        KingSlime.Instance.GetComponent<Collider2D>().enabled = true;
         // 플레이어 직속 자식 재활성화
         foreach (var child in playerDirectChildren)
             child.SetActive(true);
@@ -111,7 +111,7 @@ public class Bunker : MonoBehaviour//, IHittable
         curHp -= damageData.damage;
         // damageData.Applyed(transform.position);
 
-        CharacterTakeDamageText.SetText(transform.position + Vector3.up * 2
+        KingSlimeTakeDamageText.SetText(transform.position + Vector3.up * 2
         + (Vector3)UnityEngine.Random.insideUnitCircle, $"-{((int)damageData.damage).ToString()}");
         curHp -= damageData.damage;
         if (curHp <= 0)

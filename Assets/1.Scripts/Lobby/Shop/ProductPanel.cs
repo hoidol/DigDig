@@ -1,21 +1,29 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ProductPanel : MonoBehaviour 
 {
     public string key;
     public ProductData productData;
     public TMP_Text titleText;
-    public TMP_Text priceText;
+    public ProductPurchaseButton purchaseButton;
+    
     public virtual void OpenPanel()
     {
+        // purchaseButton = GetComponentInChildren<ProductPurchaseButton>();
+        if(purchaseButton != null)
+        {
+            purchaseButton.GetComponent<Button>().onClick.AddListener(OnClickedPurchase);    
+        }
+        
         productData = ProductManager.Instance.GetProductData(key);
         if(productData == null)
             gameObject.SetActive(false);
 
         gameObject.SetActive(true);
         titleText.text = productData.key;
-        priceText.text = productData.GetPriceToString();
+        // priceText.text = productData.GetPriceToString();
         
     }
     public virtual void UpdatePanel()

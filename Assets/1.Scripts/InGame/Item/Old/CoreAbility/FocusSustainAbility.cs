@@ -8,12 +8,12 @@ public class FocusSustainAbility : Ability
         return "적 처치 시 다음 공격 시 1번 추가탄 발사";
     }
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDead);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDead);
     }

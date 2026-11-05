@@ -14,7 +14,7 @@ public class MiningLaser : MiningMachine
     protected override void Update()
     {
         // 플레이어 위치 추적
-        transform.position = Character.Instance.transform.position;
+        transform.position = KingSlime.Instance.transform.position;
 
         base.Update();
 

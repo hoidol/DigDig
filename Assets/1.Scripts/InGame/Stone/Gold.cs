@@ -63,7 +63,7 @@ public class Gold : MonoBehaviour, IPickable
 
         if (other.gameObject.name == "Player")
         {
-            Take(Character.Instance);
+            Take(KingSlime.Instance);
 
         }
     }

@@ -17,7 +17,7 @@ public class WackyItem : Item, IFired
         if (Random.value >= PROBS)
             return;
         Vector2 randomDir = Random.insideUnitCircle.normalized;
-        Character.Instance.Shoot(new CharacterBulletSpec(), randomDir);
+        KingSlime.Instance.Shoot(new KingSlimeBulletSpec(), randomDir);
         // Character.Instance.AddHp(-itemData.consumeHp);
     }
 }

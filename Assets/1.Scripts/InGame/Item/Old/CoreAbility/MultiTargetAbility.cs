@@ -12,12 +12,12 @@ public class MultiTargetAbility : Ability
         return $"매 발사 시 주변 적 최대 {MAX_TARGETS}명 추가 공격";
     }
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         GameEventBus.Subscribe<BulletFiredEvent>(OnBulletFired);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         GameEventBus.Unsubscribe<BulletFiredEvent>(OnBulletFired);
     }
@@ -27,10 +27,10 @@ public class MultiTargetAbility : Ability
         // if (!e.fromPlayer) return;
 
         Collider2D[] cols = Physics2D.OverlapCircleAll(
-            Character.Instance.transform.position, SEARCH_RADIUS,
+            KingSlime.Instance.transform.position, SEARCH_RADIUS,
             LayerMask.GetMask("Hittable"));
 
-        Vector2 origin = Character.Instance.transform.position;
+        Vector2 origin = KingSlime.Instance.transform.position;
         System.Array.Sort(cols, (a, b) =>
             ((Vector2)a.transform.position - origin).sqrMagnitude
             .CompareTo(((Vector2)b.transform.position - origin).sqrMagnitude));
@@ -39,10 +39,10 @@ public class MultiTargetAbility : Ability
         foreach (var col in cols)
         {
             if (fired >= MAX_TARGETS) break;
-            Vector2 dir = ((Vector2)col.transform.position - (Vector2)Character.Instance.attackPoint.position).normalized;
+            Vector2 dir = ((Vector2)col.transform.position - (Vector2)KingSlime.Instance.attackPoint.position).normalized;
             if (Vector2.Angle(e.dir, dir) < EXCLUDE_ANGLE) continue;
 
-            Character.Instance.weapon.Shoot(new AllyBulletSpec(), dir);
+            KingSlime.Instance.weapon.Shoot(new AllyBulletSpec(), dir);
             fired++;
         }
     }

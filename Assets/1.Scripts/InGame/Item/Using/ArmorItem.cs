@@ -10,13 +10,13 @@ public class ArmorItem : Item
         float addMaxHp =  hp;
         //최대 체력
         maxHpBuff = new Buff(StatType.MaxHp, addMaxHp, StatOpType.Add);
-        Character.Instance.AddBuff(maxHpBuff);
+        KingSlime.Instance.AddBuff(maxHpBuff);
 
     }
     void Release()
     {
         if (maxHpBuff != null)
-            Character.Instance.RemoveBuff(maxHpBuff);
+            KingSlime.Instance.RemoveBuff(maxHpBuff);
     }
 
 

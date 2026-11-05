@@ -12,13 +12,13 @@ public class WoodSwordItem : Item
         float addAP =  attackPower;
         //공격력
         atkPowerBuff = new Buff(StatType.AttackPower, addAP, StatOpType.Add);
-        Character.Instance.AddBuff(atkPowerBuff);
+        KingSlime.Instance.AddBuff(atkPowerBuff);
 
     }
     void Release()
     {
         if (atkPowerBuff != null)
-            Character.Instance.RemoveBuff(atkPowerBuff);
+            KingSlime.Instance.RemoveBuff(atkPowerBuff);
     }
 
 

@@ -3,10 +3,10 @@ public class HunterMarkAbility : Ability, IBullet
 {
     static readonly float bonusRatio = 0.3f;
 
-    public override void OnEquip(Character player) { }
-    public override void OnUnequip(Character player) { }
+    public override void OnEquip(KingSlime player) { }
+    public override void OnUnequip(KingSlime player) { }
 
-    public void OnBulletFired(CharacterBulletObject bullet)
+    public void OnBulletFired(KingSlimeBulletObject bullet)
     {
         var force = new HunterMarkForce(bonusRatio);
         bullet.AddBulletForce(force);

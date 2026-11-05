@@ -1,0 +1,10 @@
+StatType	MaxLv	ValuePerLv	CurrencyType	BasePrice	PriceAddPerLv	PriceMulPerLv
+AttackPower	0	1	Gold	100	50	1
+MaxHp	0	5	Gold	100	50	1
+AttackSpeed	0	1	Gold	150	75	1
+CritChance	100	0.1	Gold	10	5	1
+CritPower	0	0.05	Gold	10	5	1
+AttackRange	10	0.1	Gold	50	50	1
+MaxSlimeCount	5	1	Dia	15	15	1
+StartGold	0	2	Gold	200	100	1
+WaveClearGold	0	1	Gold	300	150	1

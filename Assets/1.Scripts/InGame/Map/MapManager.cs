@@ -174,7 +174,7 @@ public class MapManager : MonoSingleton<MapManager>
         while (true)
         {
             await UniTask.Delay(2000);
-            SpawnTile(Character.Instance.transform.position, MAX_RANGE_RADIUS);
+            SpawnTile(KingSlime.Instance.transform.position, MAX_RANGE_RADIUS);
         }
     }
     public static Vector2 SnappedPosition(Vector2 pos)

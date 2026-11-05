@@ -17,13 +17,13 @@ public class WildInstinctAbility : Ability
         return $"적 처치 시 공격속도 {BONUS_PER_STACK * 100}% 증가 (최대 {MAX_STACK}중첩, {STACK_DURATION}초 유지)";
     }
 
-    public override void OnEquip(Character character)
+    public override void OnEquip(KingSlime character)
     {
         buff = new Buff(StatType.AttackSpeed, 1f, StatOpType.Multiply);
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDead);
     }
 
-    public override void OnUnequip(Character character)
+    public override void OnUnequip(KingSlime character)
     {
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDead);
         cts?.Cancel();
@@ -41,9 +41,9 @@ public class WildInstinctAbility : Ability
     void RefreshBuff()
     {
         buff.value = 1f + BONUS_PER_STACK * stackCount;
-        Character.Instance.RemoveBuff(buff);
-        Character.Instance.AddBuff(buff);
-        Character.Instance.UpdateCharacter();
+        KingSlime.Instance.RemoveBuff(buff);
+        KingSlime.Instance.AddBuff(buff);
+        KingSlime.Instance.UpdateCharacter();
     }
 
     void ResetDecayTimer()
@@ -61,8 +61,8 @@ public class WildInstinctAbility : Ability
             await UniTask.Delay(System.TimeSpan.FromSeconds(STACK_DURATION), cancellationToken: token);
             if (token.IsCancellationRequested) return;
             stackCount = 0;
-            Character.Instance.RemoveBuff(buff);
-            Character.Instance.UpdateCharacter();
+            KingSlime.Instance.RemoveBuff(buff);
+            KingSlime.Instance.UpdateCharacter();
         }
     }
 }

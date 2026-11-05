@@ -54,7 +54,7 @@ public class RandomDropPattern : EnemyAttackPattern
 
     Vector2 GetRandomPos()
     {
-        Vector2 playerPos = Character.Instance.transform.position;
+        Vector2 playerPos = KingSlime.Instance.transform.position;
         Vector2 offset = UnityEngine.Random.insideUnitCircle.normalized * UnityEngine.Random.Range(1f, spawnRadius);
         return playerPos + offset;
     }

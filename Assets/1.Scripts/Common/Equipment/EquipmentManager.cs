@@ -54,10 +54,4 @@ public class EquipmentManager : MonoSingleton<EquipmentManager>
         return sumAbility;
     }
 
-    public float GetTotalStatValue(CharacterData characterData, StatType statType)
-    {
-        float baseValue = characterData.GetCharacterStat(statType)?.value ?? 0f;
-        return baseValue + GetSumEquipmentAbility(statType).value;
-    }
-
 }

@@ -21,9 +21,9 @@ public class SlimeData : ScriptableObject
     [Tooltip("공격력 랜덤 폭. 0이면 고정, 0.67이면 중간값 ±67% (9 → 3~15). 데이터에는 중간값만 입력")]
     [Range(0f, 1f)] public float attackPowerRandomRatio;
 
-    public float GetRandomRatio(SlimeStatType statType)
+    public float GetRandomRatio(StatType statType)
     {
-        return statType == SlimeStatType.AttackPower ? attackPowerRandomRatio : 0f;
+        return statType == StatType.AttackPower ? attackPowerRandomRatio : 0f;
     }
 
     // 중간값 기준 ±ratio 범위에서 랜덤
@@ -34,6 +34,9 @@ public class SlimeData : ScriptableObject
         return Random.Range(mid * (1f - ratio), mid * (1f + ratio));
     }
 
+
+    [Tooltip("인게임 직접 강화 1레벨당 공격력 증가(%). 종마다 다름 (SlimeData.csv ReinforceAttackPower)")]
+    public float reinforceAttackPowerPercent = 10f;
 
     public Slime prefab;
     public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
@@ -47,12 +50,12 @@ public class SlimeData : ScriptableObject
 
 
     // UI에 노출할 스탯 종류와 순서. 에셋별 인스펙터에서 설정한다. (예: Flame은 FlameDuration은 빼고 FlameDPS까지만)
-    public SlimeStatType[] displayStatTypes = { SlimeStatType.AttackPower, SlimeStatType.AttackSpeed, SlimeStatType.AttackRange };
+    public List<StatType> displayStatTypes;
 
-    public List<SlimeStat> GetDisplaySlimeStats(int enhanceLv)
+    public virtual List<SlimeStat> GetDisplaySlimeStats(int enhanceLv)
     {
         var result = new List<SlimeStat>();
-        foreach (SlimeStatType statType in displayStatTypes)
+        foreach (StatType statType in displayStatTypes)
         {
             SlimeStat stat = GetSlimeStat(statType, enhanceLv);
             if (stat != null)
@@ -61,7 +64,7 @@ public class SlimeData : ScriptableObject
         return result;
     }
 
-    public virtual SlimeStat GetSlimeStat(SlimeStatType statType, int enhanceLv)
+    public virtual SlimeStat GetSlimeStat(StatType statType, int enhanceLv)
     {
         SlimeEnhanceInfo slimeEnhanceInfo = GetCommonSlimeEnhanceInfo(enhanceLv);
         return slimeEnhanceInfo.GetSlimeStat(statType);
@@ -108,7 +111,7 @@ public class SlimeData : ScriptableObject
             Debug.LogWarning($"[SlimeData] CSV에서 '{key}' 를 찾지 못함");
             return;
         }
-
+        displayStatTypes = new List<StatType> { StatType.AttackPower, StatType.AttackSpeed, StatType.AttackRange };
         if (table.HasColumn("Desc"))
             desc = row.Get("Desc");
         if (row.TryGetInt("Growth", out int lv))
@@ -122,6 +125,8 @@ public class SlimeData : ScriptableObject
             else
                 Debug.LogWarning($"[SlimeData] {key} AttackType '{row.Get("AttackType")}' 파싱 실패");
         }
+        if (row.TryGetFloat("ReinforceAttackPower", out float reinforcePercent))
+            reinforceAttackPowerPercent = reinforcePercent;
 
         prefab = FindAssetByName<Slime>($"Assets/3.Prefabs/Slime/Growth{growth}", $"{key}Slime");
         thum = FindAssetByName<Sprite>($"Assets/2.Sprites/Slime/Growth{growth}", key);
@@ -240,7 +245,7 @@ public class SlimeEnhanceInfo
 {
     public int level;
     public SlimeStat[] slimeStats;
-    public SlimeStat GetSlimeStat(SlimeStatType slimeStatType)
+    public SlimeStat GetSlimeStat(StatType slimeStatType)
     {
         return slimeStats.Where(e => e.statType == slimeStatType).FirstOrDefault();
     }
@@ -249,7 +254,7 @@ public class SlimeEnhanceInfo
 [System.Serializable]
 public class SlimeStat
 {
-    public SlimeStatType statType;
+    public StatType statType;
     public string[] values;
     public string Title => statType.ToString();
     public Sprite Thum
@@ -330,20 +335,14 @@ public class SlimeStat
 }
 
 
-public enum SlimeStatType
-{
-    AttackPower, //float
-    AttackSpeed, //float 10초동안 몇발 쏘는지
-    AttackRange,
-    FlameDPS,
-    Duration,
-    SkillCooltime,
-    Heal,
-    OrbitSpeed,
-    EffectChance,
-    // Bounce,
-    Count
-}
+// public enum StatType
+// {
+//     AttackPower, //float
+//     AttackSpeed, //float 10초동안 몇발 쏘는지
+//     AttackRange,
+//     FlameDPS,
+//     Count
+// }
 public static class MergeLevelExtensions
 {
     // mergeLevel별 데이터 배열 조회. 배열이 짧으면 마지막 값을 사용 (MAX_MERGE_LEVEL 늘려도 IndexOutOfRange 방지)

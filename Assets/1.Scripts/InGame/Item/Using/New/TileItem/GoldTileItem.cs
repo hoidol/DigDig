@@ -29,7 +29,7 @@ public class KillCoinBehavior : IBulletBehavior
             return true;
 
         enemy.killedBy = null;
-        Character.Instance.AddCoin(item.addCoin);
+        KingSlime.Instance.AddCoin(item.addCoin);
         CoinText.Instantiate().SetCoinText(hit.Transform.position + Vector3.up * 0.4f, $"+{item.addCoin}");
         return true;
     }

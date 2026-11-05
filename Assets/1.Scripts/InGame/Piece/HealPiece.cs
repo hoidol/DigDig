@@ -33,7 +33,7 @@ public class HealPiece : MonoBehaviour, IPickable
 
     public void PickedUp()
     {
-        Character.Instance.AddHp(5);
+        KingSlime.Instance.AddHp(5);
         poolingSystem.Return(this);
     }
 
@@ -72,7 +72,7 @@ public class HealPiece : MonoBehaviour, IPickable
 
         if (collision.CompareTag("Player"))
         {
-            Take(Character.Instance);
+            Take(KingSlime.Instance);
         }
     }
 }

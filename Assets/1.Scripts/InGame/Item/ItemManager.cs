@@ -63,9 +63,9 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
             //     continue;
             // }
 
-            if (Character.Instance.statMgr.itemStatDic.ContainsKey(level1ItemDatas[i].key))
+            if (KingSlime.Instance.statMgr.itemStatDic.ContainsKey(level1ItemDatas[i].key))
             {
-                if (Character.Instance.statMgr.itemStatDic[level1ItemDatas[i].key].count >= level1ItemDatas[i].maxCount)
+                if (KingSlime.Instance.statMgr.itemStatDic[level1ItemDatas[i].key].count >= level1ItemDatas[i].maxCount)
                     continue;
             }
 
@@ -79,7 +79,8 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
     }
 
     // 뽑기용: TileItem 중 겹치지 않게 랜덤 count개 (해금 안 됨 / 최대 보유 개수 도달은 제외). 설치할 타일이 없으면 빈 리스트
-    public List<ItemData> GetDrawTileItems(int count)
+    // avoid: 가능하면 빼고 뽑을 아이템 (갱신 시 지금 보이는 것). 후보가 모자라면 avoid에서 채움
+    public List<ItemData> GetDrawTileItems(int count, ICollection<ItemData> avoid = null)
     {
         if (TileManager.Instance.GetRandomTileForItem() == null)
             return new List<ItemData>();
@@ -88,10 +89,10 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
         {
             if (!(data.itemPrefab is TileItem tileItem) || !tileItem.CanDraw() || !data.CheckUnlock())
                 return false;
-            if (Character.Instance.statMgr.itemStatDic.TryGetValue(data.key, out CharacterItemStat stat) && stat.count >= data.maxCount)
+            if (KingSlime.Instance.statMgr.itemStatDic.TryGetValue(data.key, out CharacterItemStat stat) && stat.count >= data.maxCount)
                 return false;
             return true;
-        }).OrderBy(data => Random.value).Take(count).ToList();
+        }).OrderBy(data => avoid != null && avoid.Contains(data)).ThenBy(data => Random.value).Take(count).ToList();
     }
 
     public ItemData GetItemData(string key)
@@ -110,8 +111,8 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
         List<MergeItemData> mergeItemList = mergeItemDatas.Where(e => e.childItemKeys.Contains(itemKey)).ToList();
         for (int i = 0; i < mergeItemList.Count; i++)
         {
-            Item child1 = Character.Instance.itemInventory.GetItem(mergeItemList[i].childItemKeys[0]);
-            Item child2 = Character.Instance.itemInventory.GetItem(mergeItemList[i].childItemKeys[1]);
+            Item child1 = KingSlime.Instance.itemInventory.GetItem(mergeItemList[i].childItemKeys[0]);
+            Item child2 = KingSlime.Instance.itemInventory.GetItem(mergeItemList[i].childItemKeys[1]);
 
             if (child1 != null && child2 != null)
                 return true;
@@ -127,8 +128,8 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
         List<MergeItemData> curMergeItemDataList = new List<MergeItemData>();
         for (int i = 0; i < mergeItemDataList.Count; i++)
         {
-            Item child1 = Character.Instance.itemInventory.GetItem(mergeItemDataList[i].childItemKeys[0]);
-            Item child2 = Character.Instance.itemInventory.GetItem(mergeItemDataList[i].childItemKeys[1]);
+            Item child1 = KingSlime.Instance.itemInventory.GetItem(mergeItemDataList[i].childItemKeys[0]);
+            Item child2 = KingSlime.Instance.itemInventory.GetItem(mergeItemDataList[i].childItemKeys[1]);
 
             if (child1 != null && child2 != null)
                 curMergeItemDataList.Add(mergeItemDataList[i]);
@@ -139,7 +140,7 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
 
     public List<MergeItemData> GetMergeItemDataList()
     {
-        return mergeItemDatas.Where(e => e.childItemKeys.All(key => Character.Instance.itemInventory.GetItem(key) != null)).ToList();
+        return mergeItemDatas.Where(e => e.childItemKeys.All(key => KingSlime.Instance.itemInventory.GetItem(key) != null)).ToList();
     }
 
 

@@ -9,14 +9,14 @@ public class LeatherBootsItem : Item
         Release();
         float addMoveSpeed =  moveSpeed;
         //이동속도
-        moveSpeedBuff = new Buff(StatType.MoveSpeed, addMoveSpeed, StatOpType.Add);
-        Character.Instance.AddBuff(moveSpeedBuff);
+        // moveSpeedBuff = new Buff(StatType.MoveSpeed, addMoveSpeed, StatOpType.Add);
+        KingSlime.Instance.AddBuff(moveSpeedBuff);
 
     }
     void Release()
     {
         if (moveSpeedBuff != null)
-            Character.Instance.RemoveBuff(moveSpeedBuff);
+            KingSlime.Instance.RemoveBuff(moveSpeedBuff);
     }
 
 

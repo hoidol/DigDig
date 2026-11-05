@@ -11,16 +11,16 @@ public class EliteEnemy : NormalEnemy
     {
         rg2d.linearVelocity = Vector2.zero;
         damageData.damage = 10;
-        Character.Instance.TakeDamage(damageData);
+        KingSlime.Instance.TakeDamage(damageData);
         Destroy();
     }
     public override void Reward()
     {
-        Character.Instance.AddDiceCoin(2);
+        KingSlime.Instance.AddDiceCoin(2);
         DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{2}");
 
         int gold = 100;
-        Character.Instance.AddCoin(gold);
+        KingSlime.Instance.AddCoin(gold);
         CoinText.Instantiate().SetCoinText(transform.position, $"+{gold}");
     }
 }

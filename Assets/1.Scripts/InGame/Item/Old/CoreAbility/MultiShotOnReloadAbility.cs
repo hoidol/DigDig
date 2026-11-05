@@ -10,12 +10,12 @@ public class MultiShotOnReloadAbility : Ability//, IPreAttack
         return "장전 후 첫발 멀티샷";
     }
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         GameEventBus.Subscribe<ReloadEndEvent>(OnReloadEnd);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         GameEventBus.Unsubscribe<ReloadEndEvent>(OnReloadEnd);
         firstShot = false;

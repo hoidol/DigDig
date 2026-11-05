@@ -54,7 +54,7 @@ public class FreeSlimeMovement : SlimeMovement
         dirTimer -= Time.deltaTime;
         if (dirTimer <= 0f)
         {
-            Vector2 toPlayer = (Vector2)Character.Instance.transform.position - (Vector2)transform.position;
+            Vector2 toPlayer = (Vector2)KingSlime.Instance.transform.position - (Vector2)transform.position;
             if (toPlayer.magnitude > leashRange)
             {
                 dir = toPlayer.normalized;

@@ -88,10 +88,11 @@ public class UpdaterMergeRecommendItemEvent
 }
 
 [System.Serializable]
-public class CharacterSlimeData
+public class InGameUserSlimeData
 {
     public string key;
     public int count;
+    public int reinforceLevel;
 }
 
 public class AddedSlimeEvent

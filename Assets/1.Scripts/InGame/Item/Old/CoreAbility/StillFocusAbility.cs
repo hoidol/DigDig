@@ -15,7 +15,7 @@ public class StillFocusAbility : Ability
         return $"{WAIT_TIME}초 이상 이동하지 않으면 공격 속도 100% 증가";
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         RemoveBuff();
         stillTimer = 0;
@@ -23,7 +23,7 @@ public class StillFocusAbility : Ability
 
     void Update()
     {
-        bool stopped = Character.Instance.rg.linearVelocity.sqrMagnitude < 0.01f;
+        bool stopped = KingSlime.Instance.rg.linearVelocity.sqrMagnitude < 0.01f;
         if (stopped)
         {
             stillTimer += Time.deltaTime;
@@ -40,14 +40,14 @@ public class StillFocusAbility : Ability
     void ApplyBuff()
     {
         buff = new Buff(StatType.AttackSpeed, SPEED_MULTIPLIER, StatOpType.Multiply);
-        Character.Instance.AddBuff(buff);
+        KingSlime.Instance.AddBuff(buff);
         buffApplied = true;
     }
 
     void RemoveBuff()
     {
         if (!buffApplied) return;
-        Character.Instance.RemoveBuff(buff);
+        KingSlime.Instance.RemoveBuff(buff);
         buffApplied = false;
     }
 }

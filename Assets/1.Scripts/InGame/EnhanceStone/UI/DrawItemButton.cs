@@ -25,7 +25,7 @@ public class DrawItemButton : ButtonUI
     }
 
     // 성공 확률(%): 처음 100%, 성공할 때마다 5%씩 감소 (최소 MIN_DRAW_ITEM_CHANCE)
-    int GetDrawChance()
+    public static int GetDrawChance()
     {
         int chance = GameSetting.INIT_DRAW_ITEM_CHANCE - GameManager.Instance.drawItemCount * GameSetting.DECREASE_DRAW_ITEM_CHANCE;
         return Mathf.Max(chance, GameSetting.MIN_DRAW_ITEM_CHANCE);
@@ -34,7 +34,7 @@ public class DrawItemButton : ButtonUI
     // 코인을 내고 SelectItemCanvas를 연다 (확률 판정 → 아이템 3개 중 선택 → 타일 선택)
     public override void OnClickedBtn()
     {
-        if (Character.Instance.coin < GetDrawPrice())
+        if (KingSlime.Instance.coin < GetDrawPrice())
         {
             ToastCanvas.Toast("Not enough coin");
             return;
@@ -51,7 +51,7 @@ public class DrawItemButton : ButtonUI
             return;
         }
 
-        Character.Instance.AddCoin(-GetDrawPrice());
+        KingSlime.Instance.AddCoin(-GetDrawPrice());
         SelectItemCanvas.Instance.OpenDraw(GetDrawChance(), UpdateButton);
     }
 }

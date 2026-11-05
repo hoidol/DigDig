@@ -15,6 +15,6 @@ public class DiceCoinPanel : MonoBehaviour
     }
     public void UpdatePanel()
     {
-        coinText.text = Character.Instance.diceCoin.ToString();
+        coinText.text = KingSlime.Instance.diceCoin.ToString();
     }
 }

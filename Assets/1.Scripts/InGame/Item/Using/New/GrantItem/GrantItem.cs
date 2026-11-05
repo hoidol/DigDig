@@ -39,7 +39,7 @@ public abstract class GrantItem : Item
     public List<Slime> GetTargets()
     {
         List<Slime> targets = new List<Slime>();
-        Tile center = TileManager.Instance.GetTile(Character.Instance);
+        Tile center = TileManager.Instance.GetTile(KingSlime.Instance);
         foreach (Tile tile in TileManager.Instance.GetTilesAround(center, AreaOffsets))
         {
             if (tile.tileGroup != center.tileGroup) // 바로 옆 칸이라도 그룹이 다르면 영향 없음

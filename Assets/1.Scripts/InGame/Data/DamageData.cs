@@ -28,7 +28,7 @@ public class EnemyDamageData : DamageData
             damage = 1;
 
         string dText = $"{(int)damage}";
-        CharacterTakeDamageText.SetText(pos, dText);
+        KingSlimeTakeDamageText.SetText(pos, dText);
         return damage;
     }
 }

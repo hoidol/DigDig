@@ -33,7 +33,7 @@ public class DrainItem : Item
         if (Random.value > healChance)
             return;
 
-        Character.Instance.AddHp(healAmount);
+        KingSlime.Instance.AddHp(healAmount);
     }
 
     public override string GetDescription()

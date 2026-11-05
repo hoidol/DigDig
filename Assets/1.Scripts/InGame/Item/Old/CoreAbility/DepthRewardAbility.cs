@@ -4,7 +4,7 @@ using UnityEngine;
 public class DepthRewardAbility : Ability
 {
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         // Player.Instance.AddGold(RewardGold(GameManager.Instance.ordealClearCount));
     }

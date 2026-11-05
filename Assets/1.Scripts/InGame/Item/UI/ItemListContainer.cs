@@ -25,7 +25,7 @@ public class ItemListContainer : MonoBehaviour
 
     void UpdateContainer()
     {
-        List<Item> items = Character.Instance.itemInventory.curItems;
+        List<Item> items = KingSlime.Instance.itemInventory.curItems;
         for (int i = 0; i < itemNotifyEffectPanels.Length; i++)
         {
             if (i < items.Count)

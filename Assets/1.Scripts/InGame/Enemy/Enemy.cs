@@ -203,7 +203,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     protected virtual void ReachPathEnd()
     {
         rg2d.linearVelocity = Vector2.zero;
-        Character.Instance.TakeDamage(damageData);
+        KingSlime.Instance.TakeDamage(damageData);
         Destroy();
     }
 

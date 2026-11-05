@@ -27,7 +27,7 @@ public class ShadowItem : Item//, IAttack
 
     public void OnAttack(Vector2 dir)
     {
-        float damage = Character.Instance.statMgr.AttackPower * damageRate;
+        float damage = KingSlime.Instance.statMgr.AttackPower * damageRate;
         foreach (var s in shadows)
             s.Shoot(dir, damage);
     }

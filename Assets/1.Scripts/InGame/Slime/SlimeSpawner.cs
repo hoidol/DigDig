@@ -11,7 +11,9 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
     // [field: SerializeField] public int ActiveSlimeCount { get; private set; }
 
     public readonly HashSet<Slime> activeslimes = new();
+    public int ignoreSlimeCount =0; //씬 상에는 있지만 카운딩 안되는 슬라임 개수
     public int slimeMaxCount;
+    public int CountedSlimeCount => KingSlime.Instance.slimeInventory.curSlimes.Count - ignoreSlimeCount; // 최대 수 판정에 쓰는 슬라임 수
     public int mergeCount;
     public int reinforceCount;
     // public int mergeCoinGetCounter;
@@ -38,8 +40,8 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
     {
         string key = s.key;
         int level = s.mergeLevel;
-        Character.Instance.RemoveSlime(s);
-        Slime slime = Character.Instance.AddSlime(key, level + 1);
+        KingSlime.Instance.RemoveSlime(s);
+        Slime slime = KingSlime.Instance.AddSlime(key, level + 1);
         return slime;
     }
 
@@ -73,7 +75,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
     void Awake()
     {
-        slimeMaxCount = GameSetting.SLIME_MIN_EXIST_COUNT;
+        slimeMaxCount = GameSetting.SLIME_MIN_EXIST_COUNT + UserDataManager.Instance.userKingSlimeManager.GetUpgrade(StatType.MaxSlimeCount).lv;
 
         if (slimeLayer == 0)
             slimeLayer = LayerMask.GetMask("Slime");
@@ -128,7 +130,7 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         Vector3 mousePos = GetMouseWorldPos();
         ITileObject tileObject = FindSlime(mousePos, null);
         if (tileObject == null && IsCharacterAt(mousePos))
-            tileObject = Character.Instance;
+            tileObject = KingSlime.Instance;
 
         // 유닛을 눌렀으면 유닛이 서 있는 타일, 아니면 누른 위치의 타일 (타일 밖이면 null → 선택 해제)
         Tile tile = tileObject != null ? TileManager.Instance.GetTile(tileObject) : null;
@@ -224,26 +226,26 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         TileManager.Instance.RemoveTileObject(source);
         TileManager.Instance.RemoveTileObject(target);
 
-        Character.Instance.RemoveSlime(source);
-        Character.Instance.RemoveSlime(target);
-        Slime merged = Character.Instance.AddSlime(mergeResultKey, lv);
+        KingSlime.Instance.RemoveSlime(source);
+        KingSlime.Instance.RemoveSlime(target);
+        Slime merged = KingSlime.Instance.AddSlime(mergeResultKey, lv);
         if (tile != null)
             tile.SetTileObject(merged);
         mergeCount++;
         // Character.Instance.AddMergeCoin(1);
         GameEventBus.Publish(new MergedSlimeEvent());
         SelectTile(tile); // 합성 결과 슬라임 선택
-        CharacterManageCanvas.Instance.UpdateCanvas();
+        KingSlimeManageCanvas.Instance.UpdateCanvas();
     }
 
     bool IsCharacterAt(Vector2 pos)
     {
-        if (Character.Instance == null)
+        if (KingSlime.Instance == null)
             return false;
 
         foreach (Collider2D col in Physics2D.OverlapPointAll(pos, characterLayer))
         {
-            if (col.GetComponentInParent<Character>() == Character.Instance)
+            if (col.GetComponentInParent<KingSlime>() == KingSlime.Instance)
                 return true;
         }
         return false;

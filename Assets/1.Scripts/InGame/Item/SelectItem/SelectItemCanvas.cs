@@ -9,7 +9,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 {
     const int SELECT_ITEM_COUNT = 3;
 
-    public GameObject startDrawContainer;
+    public DrawTileItemContainer drawTileItemContainer;
     public GameObject selectItemContainer;
     public GameObject selectTileContainer; // 타일을 눌러야 하므로 레이캐스트로 필드를 가리면 안 됨
     public SelectItemPanel[] selectItemPanels;
@@ -17,7 +17,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     public float drawDuration = 1f; // Draw 연출 시간(초). 0이면 연출 없이 바로 판정
 
     ItemData selectedItem;
-    float prevTimeScale;
+    List<ItemData> shownItems = new(); // 지금 선택지 (갱신 시 겹치지 않게)
 
     // 확률 판정 없이 아이템 선택부터 시작
     public override void OpenCanvas(Action closeCallback = null)
@@ -36,22 +36,19 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     void Open(Action closeCallback)
     {
         base.OpenCanvas(closeCallback);
-        prevTimeScale = Time.timeScale;
-        Time.timeScale = 0;
         selectItemPanels = GetComponentsInChildren<SelectItemPanel>(true);
     }
 
     public override void CloseCanvas()
     {
         SlimeSpawner.Instance.tilePickCallback = null;
-        Time.timeScale = prevTimeScale;
         base.CloseCanvas();
     }
 
     void SetStep(SelectItemStep step)
     {
         this.step = step;
-        startDrawContainer.SetActive(step == SelectItemStep.Draw);
+        drawTileItemContainer.gameObject.SetActive(step == SelectItemStep.Draw);
         selectItemContainer.SetActive(step == SelectItemStep.SelectItem);
         selectTileContainer.SetActive(step == SelectItemStep.SelectTile);
     }
@@ -60,6 +57,8 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     async UniTaskVoid Draw(int chance)
     {
         SetStep(SelectItemStep.Draw);
+        bool isSuccess = UnityEngine.Random.Range(0, 100) < chance;
+        drawTileItemContainer.StartDraw();
         if (drawDuration > 0f)
         {
             bool canceled = await UniTask.Delay(TimeSpan.FromSeconds(drawDuration), ignoreTimeScale: true, cancellationToken: this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow();
@@ -67,25 +66,39 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
                 return;
         }
 
-        if (UnityEngine.Random.Range(0, 100) >= chance)
+        if (!isSuccess)
         {
             ToastCanvas.Toast("뽑기 실패");
             CloseCanvas();
             return;
+        }
+        else
+        {
+            ToastCanvas.Toast("뽑기 성공!");
         }
 
         GameManager.Instance.drawItemCount++;
         ShowSelectItem();
     }
 
-    void ShowSelectItem()
+    // 선택 단계에서 선택지 다시 뽑기 (AdRefreshItemButton). 가능하면 지금 보이는 아이템은 빼고 뽑는다
+    public bool RefreshItems()
     {
-        List<ItemData> items = ItemManager.Instance.GetDrawTileItems(SELECT_ITEM_COUNT);
+        if (step != SelectItemStep.SelectItem)
+            return false;
+        ShowSelectItem(shownItems);
+        return true;
+    }
+
+    void ShowSelectItem(ICollection<ItemData> avoid = null)
+    {
+        List<ItemData> items = ItemManager.Instance.GetDrawTileItems(SELECT_ITEM_COUNT, avoid);
         if (items.Count == 0)
         {
             CloseCanvas();
             return;
         }
+        shownItems = items;
 
         SetStep(SelectItemStep.SelectItem);
         for (int i = 0; i < selectItemPanels.Length; i++)
@@ -122,7 +135,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 
     void Install(Tile tile)
     {
-        Character.Instance.AddItem(selectedItem.key, tile).Forget();
+        KingSlime.Instance.AddItem(selectedItem.key, tile).Forget();
         CloseCanvas();
     }
 }

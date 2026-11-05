@@ -41,7 +41,7 @@ public class GameManager : MonoSingleton<GameManager>
         );
 
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
-        GameEventBus.Subscribe<CharacterHpChangedEvent>(OnCharacterHpChangedEvent);
+        GameEventBus.Subscribe<KingSlimeHpChangedEvent>(OnCharacterHpChangedEvent);
         GameEventBus.Subscribe<SpawnSlimeEvent>(OnSpawnMinieEvent);
 
         Debug.Log($"UserManager.STAGE_KEY {UserDataManager.difficultyType}");
@@ -56,9 +56,11 @@ public class GameManager : MonoSingleton<GameManager>
         // 캐릭터를 임의의 빈 타일 위에 배치
         Tile characterTile = TileManager.Instance.GetRandomEmptyTile();
         if (characterTile != null)
-            characterTile.SetTileObject(Character.Instance);
+            characterTile.SetTileObject(KingSlime.Instance);
         else
             Debug.LogWarning("GameManager 캐릭터를 올릴 빈 타일 없음");
+
+        SlimeSpawner.Instance.slimeMaxCount += (int)KingSlime.Instance.statMgr.GetValue(StatType.MaxSlimeCount);
 
         GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
@@ -74,6 +76,7 @@ public class GameManager : MonoSingleton<GameManager>
         gameTimer = 0;
         isPlaying = true;
 
+        KingSlime.Instance.AddCoin((int)KingSlime.Instance.statMgr.GetValue(StatType.StartGold));
         StartWave(waveIdx);
         ProcessWaveTimer().Forget();
     }
@@ -147,6 +150,7 @@ public class GameManager : MonoSingleton<GameManager>
             return;
 
         clearWaveIdxes.Add(endWaveIdx);
+        KingSlime.Instance.AddCoin((int)KingSlime.Instance.statMgr.GetValue(StatType.WaveClearGold));
         GameEventBus.Publish(new WaveEndEvent(endWaveIdx));
     }
 
@@ -241,14 +245,14 @@ public class GameManager : MonoSingleton<GameManager>
 
         EnemySpawner.Instance.ClearAllEnemies();
 
-        Character.Instance.AddHp(Character.Instance.health.MaxHp);
+        KingSlime.Instance.AddHp(KingSlime.Instance.health.MaxHp);
         isPlaying = true;
         GameEventBus.Publish(new ResumeEvent());
 
         StartWave(waveIdx);
     }
 
-    void OnCharacterHpChangedEvent(CharacterHpChangedEvent e)
+    void OnCharacterHpChangedEvent(KingSlimeHpChangedEvent e)
     {
         if (e.curHp <= 0)
         {

@@ -18,7 +18,7 @@ public class Coin : MonoBehaviour, IPickable
 
     public static void Instantiate(Vector2 pos, int count, float size)
     {
-        if (Random.value > Character.Instance.coinChance)//OreItem 10% 확률로 드랍
+        if (Random.value > KingSlime.Instance.coinChance)//OreItem 10% 확률로 드랍
             return;
 
         for (int i = 0; i < count; i++)
@@ -38,7 +38,7 @@ public class Coin : MonoBehaviour, IPickable
 
     public void PickedUp()
     {
-        Character.Instance.AddCoin(1);
+        KingSlime.Instance.AddCoin(1);
         poolingSystem.Return(this);
     }
 
@@ -76,7 +76,7 @@ public class Coin : MonoBehaviour, IPickable
 
         if (collision.CompareTag("Player"))
         {
-            Take(Character.Instance);
+            Take(KingSlime.Instance);
         }
     }
 }

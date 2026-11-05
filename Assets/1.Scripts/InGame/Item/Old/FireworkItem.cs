@@ -31,7 +31,7 @@ public class FireworkItem : TriggerCycleItem, IFired
     {
         IsActive = true;
         attackSpeedBuff = new Buff(StatType.AttackSpeed, attackSpeed, StatOpType.Multiply);
-        Character.Instance.AddBuff(attackSpeedBuff);
+        KingSlime.Instance.AddBuff(attackSpeedBuff);
 
         // Character.Instance.AddHp(-itemData.consumeHp);
     }
@@ -46,7 +46,7 @@ public class FireworkItem : TriggerCycleItem, IFired
     public override void OnDeactivate()
     {
         if (attackSpeedBuff != null)
-            Character.Instance.RemoveBuff(attackSpeedBuff);
+            KingSlime.Instance.RemoveBuff(attackSpeedBuff);
 
         attackSpeedBuff = null;
         IsActive = false;
@@ -62,6 +62,6 @@ public class FireworkItem : TriggerCycleItem, IFired
         flameBullet.burnDPS = burnDPS;
 
         Vector2 randomDir = Random.insideUnitCircle.normalized;
-        Character.Instance.Shoot(flameBullet, randomDir);
+        KingSlime.Instance.Shoot(flameBullet, randomDir);
     }
 }

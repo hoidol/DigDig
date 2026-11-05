@@ -3,6 +3,8 @@ public class ProductData
 {
     public string key;
     public string productId; //인앱 결제용
+    // public string adId; //광고용
+    public CurrencyType currencyType;
     public int price;
     public string GetPriceToString()
     {

@@ -27,7 +27,7 @@ public class BossWave : Wave
         boss = null;
         GameEventBus.Unsubscribe<BossDeadEvent>(OnBossDeadEvent);
 
-        if (Character.Instance.CurHp <= 0)
+        if (KingSlime.Instance.CurHp <= 0)
             return;
 
         isSpawnEnd = true;

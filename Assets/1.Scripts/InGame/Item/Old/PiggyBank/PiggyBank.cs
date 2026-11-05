@@ -59,7 +59,7 @@ public class PiggyBank : MonoBehaviour, IPicker
 
     void MoveToIdlePosition()
     {
-        Vector3 target = Character.Instance.transform.position + IDLE_OFFSET;
+        Vector3 target = KingSlime.Instance.transform.position + IDLE_OFFSET;
         transform.position = Vector2.MoveTowards(transform.position, target, moveSpeed * Time.deltaTime);
     }
 

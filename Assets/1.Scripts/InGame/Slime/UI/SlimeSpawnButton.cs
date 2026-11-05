@@ -25,7 +25,7 @@ public class SlimeSpawnButton : ButtonUI
         //     return;
 
         // }
-        if (Character.Instance.coin < GetSpawnPrice())
+        if (KingSlime.Instance.coin < GetSpawnPrice())
         {
             ToastCanvas.Toast("Not enough coin");
             return;
@@ -38,20 +38,20 @@ public class SlimeSpawnButton : ButtonUI
             return;
         }
 
-        if(SlimeSpawner.Instance.slimeMaxCount <= Character.Instance.slimeInventory.curSlimes.Count)
+        if(SlimeSpawner.Instance.slimeMaxCount <= SlimeSpawner.Instance.CountedSlimeCount)
         {
             ToastCanvas.Toast("Max Slime");
             return;
         }
         
 
-        Character.Instance.AddCoin(-GetSpawnPrice());
+        KingSlime.Instance.AddCoin(-GetSpawnPrice());
         string randomSlimeKey = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, 5)].key;
         //Slime slime = Character.Instance.AddSlime("Base");
-        Slime slime = Character.Instance.AddSlime(randomSlimeKey);        
+        Slime slime = KingSlime.Instance.AddSlime(randomSlimeKey);        
         tile.SetTileObject(slime);
 
-        CharacterManageCanvas.Instance.UpdateCanvas();
+        KingSlimeManageCanvas.Instance.UpdateCanvas();
         UpdateButton();
 
     }

@@ -16,8 +16,8 @@ public class SellTileItemButton : ButtonUI
         if (tile == null || tile.tileItem is not TileItem item)
             return;
 
-        Character.Instance.RemoveItem(item);
-        Character.Instance.AddCoin(GameSetting.SELL_TILE_ITEM_PRICE);
+        KingSlime.Instance.RemoveItem(item);
+        KingSlime.Instance.AddCoin(GameSetting.SELL_TILE_ITEM_PRICE);
         SlimeSpawner.Instance.DeselectTile();
     }
 }

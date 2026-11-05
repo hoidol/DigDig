@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 64586572820564774}
   - component: {fileID: 3320628442481369038}
   - component: {fileID: 3660896067352363799}
-  - component: {fileID: 3590665082818933829}
+  - component: {fileID: 3990318485251157823}
   m_Layer: 5
   m_Name: StatPanel
   m_TagString: Untagged
@@ -79,7 +79,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3590665082818933829
+--- !u!114 &3990318485251157823
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,9 +88,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 607589813531276489}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2fa003d85b2f49b59bafaf75e9c6e54, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
   titleText: {fileID: 7927660349094455021}
   valueText: {fileID: 6707597937904232154}
   thumImage: {fileID: 2609040982999632766}

@@ -28,7 +28,7 @@ public class SpreadItem : Item, IFired
             int sign = (i % 2 == 0) ? 1 : -1;
             float offset = (i / 2 + 1) * 40f;
             float rad = (baseAngle + sign * offset) * Mathf.Deg2Rad;
-            Character.Instance.weapon.Shoot(bullet, new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)));
+            KingSlime.Instance.weapon.Shoot(bullet, new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)));
         }
 
 

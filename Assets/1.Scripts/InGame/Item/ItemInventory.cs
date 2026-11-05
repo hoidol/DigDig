@@ -72,7 +72,7 @@ public class ItemInventory : MonoBehaviour
     public void UpdateInventory()
     {
         // itemStatDic에는 없는데 curItems에 있는 아이템 Destroy
-        foreach (var item in curItems.Where(i => !Character.Instance.statMgr.itemStatDic.ContainsKey(i.key)).ToList())
+        foreach (var item in curItems.Where(i => !KingSlime.Instance.statMgr.itemStatDic.ContainsKey(i.key)).ToList())
         {
             item.OnUnequip();
             Destroy(item.gameObject);

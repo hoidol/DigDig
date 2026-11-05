@@ -12,9 +12,9 @@ public class MisfireItem : TriggerItem
 
     public override void OnEquip()
     {
-        transform.SetParent(Character.Instance.transform);
+        transform.SetParent(KingSlime.Instance.transform);
         transform.localRotation = Quaternion.identity;
-        transform.position = Character.Instance.transform.position;
+        transform.position = KingSlime.Instance.transform.position;
 
         base.OnEquip();
     }
@@ -28,7 +28,7 @@ public class MisfireItem : TriggerItem
     {
         base.OnTrigger();
         effect.Play();
-        Collider2D[] hits = Physics2D.OverlapCircleAll(Character.Instance.transform.position, radiuse, LayerMask.GetMask("Hittable"));
+        Collider2D[] hits = Physics2D.OverlapCircleAll(KingSlime.Instance.transform.position, radiuse, LayerMask.GetMask("Hittable"));
         int hitCount=0;
         for (int i = 0; i < hits.Length; i++)
         {
@@ -39,7 +39,7 @@ public class MisfireItem : TriggerItem
                 
                 StatusEffectHandler handler = (hittable as Component)?.GetComponent<StatusEffectHandler>();
                 handler?.Apply(new FlameEffect(duration ,DPS));
-                hittable.TakeDamage(new DamageData { damage = Character.Instance.statMgr.AttackPower });
+                hittable.TakeDamage(new DamageData { damage = KingSlime.Instance.statMgr.AttackPower });
                 hitCount ++;
             }
         }

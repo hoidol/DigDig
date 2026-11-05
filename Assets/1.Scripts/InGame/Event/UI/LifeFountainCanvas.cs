@@ -14,8 +14,8 @@ public class LifeFountainCanvas : CanvasUI<LifeFountainCanvas>
 
     public void OnClickAccept()
     {
-        float healAmount = Character.Instance.statMgr.MaxHp * 0.3f;
-        Character.Instance.AddHp(healAmount);
+        float healAmount = KingSlime.Instance.statMgr.MaxHp * 0.3f;
+        KingSlime.Instance.AddHp(healAmount);
         lifeFountain.Destroy();
         CloseCanvas();
     }

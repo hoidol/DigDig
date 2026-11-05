@@ -20,8 +20,8 @@ public class NatureItem : Item
 
         float addRecoveryHp =  recoveryHp;
         //초당 회복력
-        recoveryHpBuff = new Buff(StatType.RecoveryHp, addRecoveryHp, StatOpType.Add);
-        Character.Instance.AddBuff(recoveryHpBuff);
+        // recoveryHpBuff = new Buff(StatType.RecoveryHp, addRecoveryHp, StatOpType.Add);
+        KingSlime.Instance.AddBuff(recoveryHpBuff);
     }
 
 
@@ -29,7 +29,7 @@ public class NatureItem : Item
     {
 
         if (recoveryHpBuff != null)
-            Character.Instance.RemoveBuff(recoveryHpBuff);
+            KingSlime.Instance.RemoveBuff(recoveryHpBuff);
     }
 
 

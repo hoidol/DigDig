@@ -39,7 +39,7 @@ public class BoomItem : Item, IFired, IComboFire
     {
         if (triggerCounter < triggerCount)
             return;
-        await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+        await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
 
         BoomBulletSpec boomBullet = new BoomBulletSpec();
         boomBullet.boomRange = boomRange;
@@ -47,7 +47,7 @@ public class BoomItem : Item, IFired, IComboFire
         Vector2 shootDir = new Vector2(
             dir.x * Mathf.Cos(angleOffset) - dir.y * Mathf.Sin(angleOffset),
             dir.x * Mathf.Sin(angleOffset) + dir.y * Mathf.Cos(angleOffset));
-        Character.Instance.Shoot(boomBullet, shootDir);
+        KingSlime.Instance.Shoot(boomBullet, shootDir);
 
         // Character.Instance.AddHp(-itemData.consumeHp);
         

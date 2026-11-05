@@ -10,7 +10,7 @@ public class QuickFireAbility : Ability//, IAttack
         return $"{PROB * 100:0}% 확률로 연속 발사";
     }
 
-    public override void OnUnequip(Character player) { }
+    public override void OnUnequip(KingSlime player) { }
 
     public void OnAttack(Vector2 dir)
     {

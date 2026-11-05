@@ -8,7 +8,7 @@ public class SlimeShortcutInfoPanel : MonoBehaviour
     // public TMP_Text descText;
 
     public InGame.SlimeStatPanel[] slimeStatPanels;
-    List<SlimeStatType> slimeStatTypes = new List<SlimeStatType>();
+    List<StatType> slimeStatTypes = new List<StatType>();
     public TMP_Text nameText;
     public TMP_Text descText;
     public void SetSlime(Slime slime)
@@ -24,12 +24,12 @@ public class SlimeShortcutInfoPanel : MonoBehaviour
         slimeStatTypes.Clear();
 
         slimeStatTypes.AddRange(slime.slimeData.displayStatTypes);
-        slimeStatTypes.Remove(SlimeStatType.AttackRange);
-        slimeStatTypes.Remove(SlimeStatType.AttackSpeed);
+        slimeStatTypes.Remove(StatType.AttackRange);
+        slimeStatTypes.Remove(StatType.AttackSpeed);
 
         for (int i = 0; i < slimeStatPanels.Length; i++)
         {
-            if (i < slime.slimeData.displayStatTypes.Length)
+            if (i < slime.slimeData.displayStatTypes.Count)
             {
                 slimeStatPanels[i].gameObject.SetActive(true);
                 slimeStatPanels[i].SetSlimeStat(slime, slime.slimeData.displayStatTypes[i]);

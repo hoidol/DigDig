@@ -6,18 +6,18 @@ public class EagleEyeAbility : SynergyAbility, IBullet
     static readonly float maxBonusRatio = 1f;
     float MAX_RANGE = 10f;
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
-        UpdateEnhancement();
+        // UpdateEnhancement();
     }
-    public override void OnUnequip(Character player) { }
+    public override void OnUnequip(KingSlime player) { }
 
-    public override void UpdateEnhancement()
-    {
-        Camera mainCamera = Camera.main;
-        MAX_RANGE = mainCamera.orthographicSize * mainCamera.aspect;
-    }
-    public void OnBulletFired(CharacterBulletObject bullet)
+    // public override void UpdateEnhancement()
+    // {
+    //     Camera mainCamera = Camera.main;
+    //     MAX_RANGE = mainCamera.orthographicSize * mainCamera.aspect;
+    // }
+    public void OnBulletFired(KingSlimeBulletObject bullet)
     {
         bullet.AddBulletForce(new EagleEyeForce(maxBonusRatio, MAX_RANGE));
     }
@@ -41,8 +41,8 @@ public class EagleEyeForce : IBulletForce
 
     public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        float dist = Vector2.Distance(Character.Instance.transform.position, hit2D.point);
+        float dist = Vector2.Distance(KingSlime.Instance.transform.position, hit2D.point);
         float ratio = Mathf.Clamp01(dist / maxRange);
-        return Character.Instance.statMgr.AttackPower * maxBonusRatio * ratio;
+        return KingSlime.Instance.statMgr.AttackPower * maxBonusRatio * ratio;
     }
 }

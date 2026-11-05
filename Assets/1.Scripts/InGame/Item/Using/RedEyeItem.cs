@@ -54,8 +54,8 @@ public class RedEyeItem : Item
         if (coolTimer > 0)
             return;
 
-        Character.Instance.weapon.Shoot(null, Character.Instance.weapon.GetAttackDirection());
-        await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+        KingSlime.Instance.weapon.Shoot(null, KingSlime.Instance.weapon.GetAttackDirection());
+        await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
         // Character.Instance.AddHp(-count);
         coolTimer = coolTime;
     }

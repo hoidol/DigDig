@@ -25,17 +25,32 @@ public class UserPurchaseManager : UserBaseManager
     }
 
 
-    public UserPurchase AddUserPurchase(ProductData productData)
+    public UserPurchase AddUserPurchase(ProductData productData) => AddUserPurchase(productData.key, productData.productId);
+
+    public UserPurchase AddUserPurchase(string key, string productId = null)
     {
+        if(key == GameSetting.REMOVE_AD_KEY)
+        {
+            UserDataManager.Instance.isAdRemoved = true;
+        }
         UserPurchase userPurchase = new UserPurchase();
-        userPurchase.productId = productData.productId;
-        userPurchase.key = productData.key;
+        userPurchase.productId = productId;
+        userPurchase.key = key;
         userPurchase.purchaseTime = TimeManager.NowToString();
         userPurchaseData.userPurchases.Add(userPurchase);
         RequestSave();
         return userPurchase;
     }
 
+    public int GetPurchaseCount(string key) => userPurchaseData.userPurchases.Count(p => p.key == key);
+
+    // 오늘(기기 날짜 기준) 구매 횟수. 하루 제한 상품용
+    public int GetTodayPurchaseCount(string key)
+    {
+        System.DateTime today = TimeManager.Now.Date;
+        return userPurchaseData.userPurchases.Count(p => p.key == key && TimeManager.StringToDateTime(p.purchaseTime).Date == today);
+    }
+    public bool HasPurchased(string key) => userPurchaseData.userPurchases.Any(p => p.key == key );
     public override void SaveData()
     {
         SaveManager.SaveData(UserDataFileName, userPurchaseData);

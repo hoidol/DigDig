@@ -11,7 +11,7 @@ public class IronNestAbility : SynergyAbility
     bool bunkerActive;
     bool buttonShown;
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         oreDestroyCount = 0;
         bunkerActive = false;
@@ -21,7 +21,7 @@ public class IronNestAbility : SynergyAbility
         // GameEventBus.Subscribe<UndergroundStartEvent>(OnUndergroundStartEvent);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
         GameEventBus.Unsubscribe<IronNestSpawnRequestEvent>(OnSpawnRequested);
@@ -52,7 +52,7 @@ public class IronNestAbility : SynergyAbility
         if (bunkerPrefab == null || bunkerActive) return;
 
         bunkerActive = true;
-        Vector2 pos = Character.Instance.transform.position;
+        Vector2 pos = KingSlime.Instance.transform.position;
         var bunker = Instantiate(bunkerPrefab, pos, Quaternion.identity);
         bunker.Spawn(pos);
         bunker.onDestroyed += () => bunkerActive = false;

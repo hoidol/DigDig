@@ -145,11 +145,39 @@ public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
             if (success)
             {
                 Debug.Log("[IAP] 구매 복원 완료");
+                RestoreOwnedProducts();
             }
             else
             {
                 Debug.LogError($"[IAP] 구매 복원 실패 : {error}");
             }
         });
+    }
+
+    // 스토어에 보유 기록이 있는 비소모성 상품을 inapp id마다 확인해, 유저 구매 기록이 없으면 다시 남긴다
+    private void RestoreOwnedProducts()
+    {
+        HashSet<string> ownedIds = storeController.GetPurchases()
+            .Where(order => order is ConfirmedOrder or PendingOrder)
+            .SelectMany(order => order.CartOrdered.Items())
+            .Select(item => item.Product.definition.id)
+            .ToHashSet();
+
+        UserPurchaseManager userPurchaseManager = UserDataManager.Instance.userPurchaseManager;
+        for (int i = 0; i < productList.Count; i++)
+        {
+            IAPProductInfo info = productList[i];
+            if (info.productType != ProductType.NonConsumable || !ownedIds.Contains(info.productId))
+                continue;
+
+            ProductData productData = ProductManager.Instance.productDatas.FirstOrDefault(p => p.productId == info.productId);
+            if (productData == null || userPurchaseManager.HasPurchased(productData.key))
+                continue;
+
+            userPurchaseManager.AddUserPurchase(productData);
+            Debug.Log($"[IAP] 구매 복원 : {info.productId}");
+        }
+
+        UserDataManager.Instance.isAdRemoved = userPurchaseManager.HasPurchased(GameSetting.REMOVE_AD_KEY);
     }
 }

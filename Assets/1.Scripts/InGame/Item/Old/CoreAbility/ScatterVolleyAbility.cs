@@ -7,21 +7,21 @@ public class ScatterVolleyAbility : SynergyAbility//, IAttack
     static readonly int bulletCount = 5;
     static readonly float ratio = 0.3f;
 
-    public override void OnEquip(Character player) { }
-    public override void OnUnequip(Character player) { }
+    public override void OnEquip(KingSlime player) { }
+    public override void OnUnequip(KingSlime player) { }
 
     public void OnAttack(Vector2 dir)
     {
         if (Random.value > prob) return;
 
-        float dmg = Character.Instance.statMgr.AttackPower * ratio;
+        float dmg = KingSlime.Instance.statMgr.AttackPower * ratio;
         float angleStep = 360f / bulletCount;
         for (int i = 0; i < bulletCount; i++)
         {
             float rad = i * angleStep * Mathf.Deg2Rad;
             Vector2 bulletDir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
             // var bullet = Player.Instance.Shoot(bulletDir, Vector2.zero);
-            var bullet = Character.Instance.Shoot(new AllyBulletSpec(), bulletDir);
+            var bullet = KingSlime.Instance.Shoot(new AllyBulletSpec(), bulletDir);
             bullet.allyUnitDamageData.damage = dmg;
         }
     }

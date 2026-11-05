@@ -6,12 +6,12 @@ public class FrenzyHuntAbility : SynergyAbility
     static readonly float damageRatio = 0.5f;
     const int BULLET_COUNT = 3;
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDead);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDead);
     }

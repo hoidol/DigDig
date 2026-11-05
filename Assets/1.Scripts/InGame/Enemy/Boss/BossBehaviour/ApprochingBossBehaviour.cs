@@ -11,7 +11,7 @@ public class ApprochingBossBehaviour : BossBehaviour
     }
     public async override UniTask StartBehaviour()
     {
-        while (Vector2.Distance(transform.position, Character.Instance.transform.position) > distance)
+        while (Vector2.Distance(transform.position, KingSlime.Instance.transform.position) > distance)
         {
             Debug.Log("TigerWraithBoss Approaching ToPlayer");
             // Vector2Int[] dirs = Enemy.FindPath(transform.position, Character.Instance.transform.position);

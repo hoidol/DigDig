@@ -24,10 +24,10 @@ MonoBehaviour:
       values:
       - 5
       - 5
-    - statType: 1
+    - statType: 2
       values:
       - 30
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -37,10 +37,10 @@ MonoBehaviour:
       values:
       - 5
       - 5
-    - statType: 1
+    - statType: 2
       values:
       - 35
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -50,10 +50,10 @@ MonoBehaviour:
       values:
       - 6
       - 6
-    - statType: 1
+    - statType: 2
       values:
       - 35
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -63,10 +63,10 @@ MonoBehaviour:
       values:
       - 6
       - 6
-    - statType: 1
+    - statType: 2
       values:
       - 35
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -76,10 +76,10 @@ MonoBehaviour:
       values:
       - 7
       - 7
-    - statType: 1
+    - statType: 2
       values:
       - 35
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -89,10 +89,10 @@ MonoBehaviour:
       values:
       - 7
       - 7
-    - statType: 1
+    - statType: 2
       values:
       - 40
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -102,10 +102,10 @@ MonoBehaviour:
       values:
       - 8
       - 8
-    - statType: 1
+    - statType: 2
       values:
       - 40
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -115,10 +115,10 @@ MonoBehaviour:
       values:
       - 8
       - 8
-    - statType: 1
+    - statType: 2
       values:
       - 40
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -128,10 +128,10 @@ MonoBehaviour:
       values:
       - 8
       - 8
-    - statType: 1
+    - statType: 2
       values:
       - 40
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -141,10 +141,10 @@ MonoBehaviour:
       values:
       - 9
       - 9
-    - statType: 1
+    - statType: 2
       values:
       - 40
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -154,10 +154,10 @@ MonoBehaviour:
       values:
       - 9
       - 9
-    - statType: 1
+    - statType: 2
       values:
       - 45
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -167,10 +167,10 @@ MonoBehaviour:
       values:
       - 9
       - 9
-    - statType: 1
+    - statType: 2
       values:
       - 45
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -180,10 +180,10 @@ MonoBehaviour:
       values:
       - 10
       - 10
-    - statType: 1
+    - statType: 2
       values:
       - 45
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -193,10 +193,10 @@ MonoBehaviour:
       values:
       - 10
       - 10
-    - statType: 1
+    - statType: 2
       values:
       - 45
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
@@ -206,19 +206,20 @@ MonoBehaviour:
       values:
       - 10
       - 10
-    - statType: 1
+    - statType: 2
       values:
       - 50
-    - statType: 2
+    - statType: 5
       values:
       - 3
       - 0.3
   attackPowerRandomRatio: 0
+  reinforceAttackPowerPercent: 10
   prefab: {fileID: 3525381018257742225, guid: 2f000a40b38ba435a8af18a9489199b3, type: 3}
   unlockConditions: []
   thum: {fileID: 0}
   grade: 1
-  displayStatTypes: 000000000100000002000000
+  displayStatTypes: 000000000200000005000000
   enhanceAbilityInfos:
   - level: 2
     desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00"

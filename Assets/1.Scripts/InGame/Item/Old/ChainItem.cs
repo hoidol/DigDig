@@ -37,8 +37,8 @@ public class ChainItem : Item, IFired, IComboFire
             return;
 
         active = false;
-        await UniTask.Delay(Character.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
-        Character.Instance.Shoot(bullet, dir);
+        await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+        KingSlime.Instance.Shoot(bullet, dir);
 
         // Character.Instance.AddHp(-itemData.consumeHp);
         triggerCounter = 0;

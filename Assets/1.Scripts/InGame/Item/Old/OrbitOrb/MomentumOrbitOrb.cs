@@ -11,7 +11,7 @@ public class MomentumOrbitOrb : OrbitOrb
         //적이면 밖으로 밀리기
         if(other.TryGetComponent<Enemy>(out Enemy enemy))
         {
-            enemy.Push((enemy.transform.position - Character.Instance.transform.position).normalized, pushPower);
+            enemy.Push((enemy.transform.position - KingSlime.Instance.transform.position).normalized, pushPower);
         }
     }
 }

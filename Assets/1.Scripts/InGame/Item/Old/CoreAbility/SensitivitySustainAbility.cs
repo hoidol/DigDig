@@ -8,12 +8,12 @@ public class SensitivitySustainAbility : Ability
         return "광석 제거 후 1회 연속 발사";
     }
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStone);
     }

@@ -23,7 +23,7 @@ public class FlameSlime : SlimeGrowth1,IExecuteSkillSlime
     public override void InitSlime()
     {       
         burnDuration = flameSlimeData.burnDuration;
-        burnDPS = flameSlimeData.GetUniqueStat(SlimeStatType.FlameDPS).GetValue<float>(mergeLevel);
+        burnDPS = flameSlimeData.burnDPSES[mergeLevel];
 
         base.InitSlime();
     }

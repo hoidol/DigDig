@@ -80,6 +80,6 @@ public class TestCanvas : MonoBehaviour
 
     void OnClickedGold()
     {
-        Character.Instance.AddCoin(goldAmount);
+        KingSlime.Instance.AddCoin(goldAmount);
     }
 }

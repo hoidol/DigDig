@@ -11,7 +11,7 @@ public class Bow2Item : Item, IFired
     async UniTaskVoid Shoot(Vector2 dir )
     {
         await UniTask.Delay(Weapon.COMBO_ATTACK_INTERVAL_MS);
-        Character.Instance.weapon.Shoot(null, dir);           
+        KingSlime.Instance.weapon.Shoot(null, dir);           
     }
 
     public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)

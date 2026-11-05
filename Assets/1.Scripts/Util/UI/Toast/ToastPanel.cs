@@ -15,7 +15,7 @@ public class ToastPanel : MonoBehaviour
 
         rectTransform.DOKill();
         rectTransform.anchoredPosition = ToastCanvas.Instance.initRectTr.anchoredPosition;
-        rectTransform.DOAnchorPos(rectTransform.anchoredPosition + new Vector2(0, 150), 3f).SetUpdate(true).OnComplete(() =>
+        rectTransform.DOAnchorPos(rectTransform.anchoredPosition + new Vector2(0, 150), 2.2f).SetUpdate(true).OnComplete(() =>
         {
             onComplete?.Invoke(this);
         });

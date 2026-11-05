@@ -32,7 +32,7 @@ public class StartSetting
             "StageManager",
             "EnemyManager",
             "EquipmentManager",
-            "CharacterManager",
+            "KingSlimeManager",
             "SlimeManager",
             "SoundManager",
             "AchievementManager",
@@ -67,7 +67,9 @@ public class StartSetting
     {
 
 #if !PLATFORM_STANDALONE_WIN
-        //createSingleton(PrefabPath_FirebaseMGR);
+        // 프리팹 없이 생성 (설정할 인스펙터 값 없음)
+        if (FirebaseManager.Instance == null)
+            new GameObject(nameof(FirebaseManager)).AddComponent<FirebaseManager>();
 #endif
 
     }

@@ -8,12 +8,12 @@ public class HealBoostAbility : Ability
         return $"체력 회복 시 {(MULTIPLIER - 1) * 100:0}% 추가 회복";
     }
 
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         player.healMultiplier *= MULTIPLIER;
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         player.healMultiplier /= MULTIPLIER;
     }

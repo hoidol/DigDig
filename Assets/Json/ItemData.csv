@@ -12,3 +12,4 @@ GoldTile	코인 타일	적 처치 시 코인 +1	1	3
 PioneerTile	개척 타일	막힌 칸 해제	1	3	
 BerserkTile	광폭 타일	공격력 +100% 사거리 -50%	1	3	
 GiantSlayerTileItem	거인 사냥 타일	엘리트 또는 보스에게 데미지 2배	1	3	
+IgnoreCountingTile	카운팅 제외 타일	올라간 슬라임은 최대 슬라임 수에 포함되지 않음	1	3	

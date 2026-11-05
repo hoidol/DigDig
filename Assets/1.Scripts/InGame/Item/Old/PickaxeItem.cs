@@ -42,7 +42,7 @@ public class PickaxeItem : Item
         }
         candidates.Sort((a, b) => a.dist.CompareTo(b.dist));
 
-        float damage = Character.Instance.statMgr.AttackPower/2f;
+        float damage = KingSlime.Instance.statMgr.AttackPower/2f;
         int hitCount = Mathf.Min(CHAIN_COUNT, candidates.Count);
         for (int i = 0; i < hitCount; i++)
         {

@@ -15,7 +15,7 @@ public class BowItem : TriggerItem
         Debug.Log("BowItem OnTrigger()");
         float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
         Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-        Character.Instance.weapon.Shoot(new CharacterBulletSpec(), dir);
+        KingSlime.Instance.weapon.Shoot(new KingSlimeBulletSpec(), dir);
 
     }
 

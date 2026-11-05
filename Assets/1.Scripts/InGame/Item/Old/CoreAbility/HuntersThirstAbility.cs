@@ -7,12 +7,12 @@ public class HuntersThirstAbility : SynergyAbility
     {
         return "적 처치 시 5% 확률로 최대 체력의 1% 추가 회복";
     }
-    public override void OnEquip(Character player)
+    public override void OnEquip(KingSlime player)
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDead);
     }
 
-    public override void OnUnequip(Character player)
+    public override void OnUnequip(KingSlime player)
     {
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDead);
     }
@@ -22,8 +22,8 @@ public class HuntersThirstAbility : SynergyAbility
         if (Random.Range(0f, 100f) <= 5)
         {
             Debug.Log("HuntersThirstAbility 체력 회복");
-            float healAmount = Character.Instance.statMgr.MaxHp * 0.01f;
-            Character.Instance.AddHp(healAmount);
+            float healAmount = KingSlime.Instance.statMgr.MaxHp * 0.01f;
+            KingSlime.Instance.AddHp(healAmount);
         }
 
     }

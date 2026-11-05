@@ -23,8 +23,8 @@ public abstract class TileItem : Item, ITileItem
 
         // 캐릭터 위치에서 타일로 점프해서 날아감
         transform.DOKill();
-        transform.position = Character.Instance.transform.position;
-        transform.DOLocalJump(Vector3.zero, JUMP_POWER, 1, JUMP_DURATION).SetEase(Ease.OutQuad);
+        transform.position = KingSlime.Instance.transform.position;
+        transform.DOJump(tile.transform.position, JUMP_POWER, 1, JUMP_DURATION).SetEase(Ease.OutQuad);
     }
     const float JUMP_POWER = 1.5f;
     const float JUMP_DURATION = 0.5f;

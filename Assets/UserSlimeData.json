@@ -71,6 +71,34 @@
             "own": true,
             "enhanceLevel": 0,
             "exp": 0
+        },
+        {
+            "key": "Boom",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Bounce",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Heal",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Pierce",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
         }
     ]
 }

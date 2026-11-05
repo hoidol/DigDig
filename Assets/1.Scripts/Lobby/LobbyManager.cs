@@ -25,10 +25,8 @@ namespace Lobby
             EnemyManager.Instance.LoadTask,
             EquipmentManager.Instance.LoadTask,
             SlimeManager.Instance.LoadTask
-
         );
-
-            StartLobby();
+        StartLobby();
         FadeCanvs.Instance.FadeIn("", () =>
         {
         });
@@ -38,9 +36,12 @@ namespace Lobby
     {        
         OpenCanvas(LobbyState.Battle);
         LobbyCanvas.Instance.UpdateCanvas();
+        // 레벨업 창을 닫아야 다음 레벨업 (여러 레벨이 한 번에 올라도 하나씩 보여줌)
         while (UserDataManager.Instance.userMyInfoManager.LevelUp())
         {
-            UserLevelUpCanvas.Instance.OpenCanvas();
+            var closed = new UniTaskCompletionSource();
+            UserLevelUpCanvas.Instance.OpenCanvas(() => closed.TrySetResult());
+            await closed.Task;
         }
     }
 
@@ -75,5 +76,5 @@ public enum LobbyState
     Shop,
     Slime,
     Battle,
-    Equipment,
+    KingSlimeManagement,
 }

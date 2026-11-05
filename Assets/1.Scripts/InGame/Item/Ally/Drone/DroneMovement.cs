@@ -23,7 +23,7 @@ public class DroneMovement : MonoBehaviour
 
     void SetTargetPosition()
     {
-        Vector2 playerPos = Character.Instance.transform.position;
+        Vector2 playerPos = KingSlime.Instance.transform.position;
 
         for (int i = 0; i < MAX_CANDIDATE; i++)
         {

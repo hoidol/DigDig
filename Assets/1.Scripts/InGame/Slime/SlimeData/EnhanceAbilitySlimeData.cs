@@ -9,15 +9,14 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
     public EnhanceAbilityInfo[] enhanceAbilityInfos;
 
     // commonSlimeEnhanceInfos: 강화 레벨(1~15)마다 달라지는 공용 스탯(AttackPower/AttackSpeed/AttackRange) + EnhanceAbility 설명
-    // uniqueSlimeStats: FlameDPS, FlameDuration처럼 강화 레벨에 상관없이 고정인 슬라임 고유 스탯 (머지레벨 0~2 값만 가짐)
-    public SlimeStat[] uniqueSlimeStats;
-    public SlimeStat GetUniqueStat(SlimeStatType statType)
+    // uniqueSlimeStats: 강화 레벨에 상관없이 고정인 슬라임 고유 스탯 (mergeLv별 값). CSV가 아니라 각 슬라임 SlimeData의 LoadData 재정의에서 SetUniqueStat으로 입력
+    public List<SlimeStat> uniqueSlimeStats =new List<SlimeStat>();
+    public SlimeStat GetUniqueStat(StatType statType)
     {
         return uniqueSlimeStats.FirstOrDefault(e => e.statType == statType);
     }
 
-
-    public override SlimeStat GetSlimeStat(SlimeStatType statType, int enhanceLv)
+    public override SlimeStat GetSlimeStat(StatType statType, int enhanceLv)
     {
         SlimeStat slimeStat = base.GetSlimeStat(statType,enhanceLv);
         if(slimeStat == null)
@@ -29,12 +28,13 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
     }
 
 #if UNITY_EDITOR
-    // csv 공용 컬럼(level, AttackPower, AttackSpeed, AttackRange, EnhanceAbility)을 읽어
-    // commonSlimeEnhanceInfos, enhanceAbilityInfos 배열을 채운다.
-    // 슬라임별 고유 스탯(FlameDPS 등)은 자식 클래스에서 SetUniqueStat으로 uniqueSlimeStats에 설정한다.
+    // SlimeEnhance/{key}.csv는 Level, AttackPower, AttackSpeed, AttackRange, EnhanceAbility 컬럼만 읽어
+    // commonSlimeEnhanceInfos, enhanceAbilityInfos 배열을 채운다. (그 외 컬럼은 무시)
+    // 슬라임별 고유 스탯은 자식 클래스에서 LoadData를 재정의해 base.LoadData() 뒤에 SetUniqueStat으로 넣는다.
     public override void LoadData()
     {
         base.LoadData();
+        uniqueSlimeStats.Clear(); // 자식 LoadData에서 다시 채움
 
         string relativePath = $"SlimeEnhance/{key}.csv";
         if (!System.IO.File.Exists(TableReader.GetFullPath(relativePath)))
@@ -54,9 +54,9 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
                 continue;
 
             var stats = new List<SlimeStat>();
-            AddStat(stats, SlimeStatType.AttackPower, row.Get("AttackPower"));
-            AddStat(stats, SlimeStatType.AttackSpeed, row.Get("AttackSpeed"));
-            AddStat(stats, SlimeStatType.AttackRange, row.Get("AttackRange"));
+            AddStat(stats, StatType.AttackPower, row.Get("AttackPower"));
+            AddStat(stats, StatType.AttackSpeed, row.Get("AttackSpeed"));
+            AddStat(stats, StatType.AttackRange, row.Get("AttackRange"));
             enhanceInfos.Add(new SlimeEnhanceInfo { level = level, slimeStats = stats.ToArray() });
 
             string desc = row.Get("EnhanceAbility");
@@ -66,25 +66,6 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
 
         commonSlimeEnhanceInfos = enhanceInfos.ToArray();
         enhanceAbilityInfos = abilityInfos.ToArray();
-
-        // 공용 컬럼 외에 헤더명이 SlimeStatType과 일치하는 컬럼(FlameDPS, SkillCooltime 등)은
-        // 강화 레벨에 상관없는 고유 스탯으로 보고, 첫 번째로 값이 있는 행을 uniqueSlimeStats에 설정한다.
-        string[] commonColumns = { "Level", "AttackPower", "AttackSpeed", "AttackRange", "EnhanceAbility" };
-        uniqueSlimeStats = System.Array.Empty<SlimeStat>();
-        for (int h = 0; h < table.headers.Length; h++)
-        {
-            if (System.Array.Exists(commonColumns, c => string.Equals(c, table.headers[h], System.StringComparison.OrdinalIgnoreCase))) continue;
-            if (!System.Enum.TryParse(table.headers[h], true, out SlimeStatType statType)) continue;
-
-            foreach (TableReader.Row row in table.rows)
-            {
-                string raw = row.Get(h);
-                if (string.IsNullOrWhiteSpace(raw)) continue;
-
-                SetUniqueStat(statType, raw);
-                break;
-            }
-        }
 
         UnityEditor.EditorUtility.SetDirty(this);
         Debug.Log($"[EnhanceAbilitySlimeData] {key} 강화 데이터 LoadData 완료 ({commonSlimeEnhanceInfos.Length}레벨)");
@@ -103,21 +84,20 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
         Debug.LogWarning($"[EnhanceAbilitySlimeData] CSV 파일 없어서 임시 생성: {path}");
     }
 
-    // 강화 레벨에 상관없이 고정인 슬라임 고유 스탯(FlameDPS 등)을 uniqueSlimeStats에 설정한다. (한 번만 호출)
-    protected void SetUniqueStat(SlimeStatType type, string raw)
+    // 강화 레벨에 상관없이 고정인 슬라임 고유 스탯을 uniqueSlimeStats에 설정한다. 같은 type이 있으면 덮어씀
+    // raw는 CSV와 같은 "1/2/3" 형식 (mergeLv별 값, 2개면 기본/증가량)
+    protected void SetUniqueStat(StatType type, string raw)
     {
         if (string.IsNullOrWhiteSpace(raw)) return;
 
-        var stats = new List<SlimeStat>(uniqueSlimeStats ?? System.Array.Empty<SlimeStat>());
-        int index = stats.FindIndex(s => s.statType == type);
         SlimeStat stat = new SlimeStat { statType = type, values = ParseValues(raw) };
-        if (index >= 0) stats[index] = stat;
-        else stats.Add(stat);
-        uniqueSlimeStats = stats.ToArray();
+        int index = uniqueSlimeStats.FindIndex(s => s.statType == type);
+        if (index >= 0) uniqueSlimeStats[index] = stat;
+        else uniqueSlimeStats.Add(stat);
     }
 
     // 드물게 슬라임 고유 스탯이 강화 레벨에 따라 달라지는 경우, 해당 레벨의 commonSlimeEnhanceInfos에 직접 덧붙인다.
-    protected void AppendStat(int level, SlimeStatType type, string raw)
+    protected void AppendStat(int level, StatType type, string raw)
     {
         if (string.IsNullOrWhiteSpace(raw)) return;
         SlimeEnhanceInfo info = GetCommonSlimeEnhanceInfo(level);
@@ -130,7 +110,7 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
         info.slimeStats = stats.ToArray();
     }
 
-    protected static void AddStat(List<SlimeStat> stats, SlimeStatType type, string raw)
+    protected static void AddStat(List<SlimeStat> stats, StatType type, string raw)
     {
         if (string.IsNullOrWhiteSpace(raw)) return;
         stats.Add(new SlimeStat { statType = type, values = ParseValues(raw) });

@@ -44,11 +44,11 @@ public class NormalEnemy : Enemy
     {
         if (Random.Range(0f, 10f) < 1)
         {
-            Character.Instance.AddDiceCoin(1);
+            KingSlime.Instance.AddDiceCoin(1);
             DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{1}");    
         }
-        int gold = 1+ Mathf.RoundToInt(wave/5);
-        Character.Instance.AddCoin(gold);
+        int gold = 1+ Mathf.RoundToInt(wave/10);
+        KingSlime.Instance.AddCoin(gold);
         CoinText.Instantiate().SetCoinText(transform.position, $"+{gold}");
     }
 
