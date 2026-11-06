@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: SlowTile
   itemName: "\uB454\uD654 \uD0C0\uC77C"
-  desc: "10% \uD655\uB960\uB85C \uC801\uC5D0\uAC8C \uC2AC\uB85C\uC6B0 \uD6A8\uACFC
+  desc: "30% \uD655\uB960\uB85C \uC801\uC5D0\uAC8C \uC2AC\uB85C\uC6B0 \uD6A8\uACFC
     \uC801\uC6A9"
   level: 1
   maxCount: 3

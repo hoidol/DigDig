@@ -22,3 +22,8 @@ public abstract class SlimeEnhanceAbility : MonoBehaviour
     }
     //public void 
 }
+
+// public enum EnhanceLevel
+// {
+//     LV2,LV5,LV8,LV11,LV14
+// }

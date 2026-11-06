@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: AttackSpeedTile
   itemName: "\uACF5\uACA9\uC18D\uB3C4 \uD0C0\uC77C"
-  desc: "\uACF5\uACA9\uC18D\uB3C4 30% \uC99D\uAC00"
+  desc: "\uACF5\uACA9\uC18D\uB3C4 50% \uC99D\uAC00"
   level: 1
   maxCount: 3
   itemPrefab: {fileID: 2049730276868978371, guid: 26e3e462200ba4ecaac81eca0c128a08,

@@ -11,6 +11,18 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     public string key;
     public int mergeLevel;
 
+    // 진화 (EvolutionTileItem: 최대 머지 레벨 슬라임이 올라가면 진화). 진화 내용은 추후 기획 → 지금은 표시만
+    public bool isEvolved;
+    public virtual bool CanEvolve => mergeLevel >= SlimeData.MAX_MERGE_LEVEL && !isEvolved;
+    public virtual void Evolve()
+    {
+        if (!CanEvolve)
+            return;
+        isEvolved = true;
+        Debug.Log($"[Evolve] {key} 진화 (머지 레벨 {mergeLevel})");
+        // TODO: 진화 효과 (기획 확정 후 슬라임별 재정의 or 공용 처리)
+    }
+
     public SlimeEnhanceAbility[] slimeEnhanceAbilities;
     // public SlimeMovement movement;
 
@@ -20,6 +32,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     public virtual float AttackPower => SlimeData.ApplyRandomRatio(statDic[StatType.AttackPower], slimeData.attackPowerRandomRatio);
     public float AttackSpeed => statDic[StatType.AttackSpeed];
     public float AttackRange => statDic[StatType.AttackRange];
+    public float CritChance => statDic[StatType.CritChance]; // % 단위. 기본값은 SlimeData.csv CritChance, 버프(설의 등)로 오름
 
     public Transform rootTr;
     public SlimeData SlimeData => SlimeManager.Instance.GetSlimeData(key);
@@ -67,11 +80,13 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
         transform.position = pos;
         this.mergeLevel = mLv;
         isDraging = false;
+        isEvolved = false; // 풀링 재사용 · 합성/교체로 새로 생긴 슬라임은 진화 안 된 상태
 
         statDic.Clear();
         statDic.Add(StatType.AttackPower, 0);
         statDic.Add(StatType.AttackSpeed, 0);
         statDic.Add(StatType.AttackRange, 0);
+        statDic.Add(StatType.CritChance, 0);
         rangeTr.gameObject.SetActive(false);
 
         InitSlime();
@@ -86,8 +101,16 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     public virtual void InitSlimeStat()
     {
         statDic[StatType.AttackPower] = slimeData.GetSlimeStat(StatType.AttackPower, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
-        statDic[StatType.AttackSpeed] = slimeData.GetSlimeStat(StatType.AttackSpeed, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
-        statDic[StatType.AttackRange] = slimeData.GetSlimeStat(StatType.AttackRange, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackSpeed] = GetDataStat(StatType.AttackSpeed); // SlimeData.csv (강화·머지 레벨 무관)
+        statDic[StatType.AttackRange] = GetDataStat(StatType.AttackRange);
+        statDic[StatType.CritChance] = GetDataStat(StatType.CritChance); // % 단위. SlimeData.csv (기본 0)
+    }
+
+    // 데이터 스탯 값 (없으면 0)
+    float GetDataStat(StatType statType)
+    {
+        SlimeStat stat = slimeData.GetSlimeStat(statType, userSlime.enhanceLevel);
+        return stat != null ? stat.GetValue<float>(mergeLevel) : 0f;
     }
 
     public virtual void UpdateSlime()
@@ -97,7 +120,8 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
         
         foreach (var buff in activeBuffs)
         {
-            statDic[buff.statType] = buff.Apply(statDic[buff.statType]);
+            statDic.TryGetValue(buff.statType, out float cur); // 없는 스탯 버프도 예외 없이 (기본 0)
+            statDic[buff.statType] = buff.Apply(cur);
         }
 
         // 사거리 버프까지 반영된 값으로 표시

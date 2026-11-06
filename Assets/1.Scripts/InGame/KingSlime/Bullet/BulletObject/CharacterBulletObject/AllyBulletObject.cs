@@ -1,0 +1,138 @@
+using UnityEngine;
+
+using System.Collections.Generic;
+using System.Linq;
+
+
+public class AllyBulletObject : BulletObject
+{
+    public string key;
+
+    protected List<IBulletBehavior> behaviors = new List<IBulletBehavior>();
+    protected List<IBulletForce> forces = new List<IBulletForce>();
+    [SerializeField] public AllyUnitDamageData allyUnitDamageData;
+    public IAllyUnit allyUnit;
+    public AllyUnitDamageData DamageData => allyUnitDamageData;
+
+    // 발사 정보 (연발 등에서 같은 탄을 다시 쏠 때 사용)
+    public BulletSpec spec;
+    public Vector2 shootPos;
+    public Vector2 shootDir;
+    public float shootDamage;
+
+    public virtual void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
+    {
+        this.allyUnit = allyUnit;
+        spec = bullet;
+        AllyBulletSpec allyBulletSpec = bullet as AllyBulletSpec;
+        transform.localScale = Vector3.one;
+
+        if (allyUnitDamageData == null)
+        {
+            allyUnitDamageData = new AllyUnitDamageData();
+        }
+        allyUnitDamageData.Init(allyUnit); // 풀링 재사용 시 이전 타일 효과 초기화
+
+        damage = allyBulletSpec.damage;
+        allyUnitDamageData.damage = damage;
+        allyUnitDamageData.attackType = allyUnit.AttackType;
+        if (bullet.mustCrit)
+            allyUnitDamageData.critChance = 100f; // 확정 치명타 (사냥꾼 저격탄 등)
+
+        ClearBehaviors();
+        ClearBulletForce();
+
+
+        for (int i = 0; i < bullet.bulletBehaviors.Count; i++)
+        {
+            AddBehavior(bullet.bulletBehaviors[i]);
+        }
+
+        for (int i = 0; i < bullet.bulletForces.Count; i++)
+        {
+            AddBulletForce(bullet.bulletForces[i]);
+        }
+    }
+
+    public override void Shoot(Vector2 dir, float damage)
+    {
+        base.Shoot(dir, damage);
+        shootPos = transform.position;
+        shootDir = dir;
+        shootDamage = damage;
+    }
+
+    public override IHittable Hit(RaycastHit2D hit2D)
+    {
+        IHittable hit = hit2D.collider.GetComponent<IHittable>();
+        if (hit == null)
+            return null;
+
+        if (preTarget == hit)
+            return null;
+
+        preTarget = hit;
+
+        float finalDamage = damage * damageMultiplier;
+
+        for (int i = 0; i < forces.Count; i++)
+        {
+            finalDamage += forces[i].GetMultiDamage(this, hit, hit2D, direction);
+        }
+        if (finalDamage < 1f)
+            finalDamage = 1f;
+
+        allyUnit.AccumulateDamage(finalDamage);
+        allyUnitDamageData.damage = finalDamage;
+        hit.TakeDamage(allyUnitDamageData);
+
+        bool shouldRelease = true;
+        foreach (var b in behaviors)
+        {
+            shouldRelease = b.OnHit(this, hit, hit2D, direction); //입사 벡터, 법선 벡터, 전달 필요 
+            if (!shouldRelease)
+                break;
+        }
+
+        if (shouldRelease)
+        {
+            Release();
+        }
+        return hit;
+    }
+
+
+    public void AddBehavior(IBulletBehavior b)
+    {
+        behaviors.Add(b);
+        behaviors = behaviors.OrderBy(e => e.ApplyOrder).ToList();
+    }
+    public void ClearBehaviors() => behaviors.Clear();
+    public void AddBulletForce(IBulletForce b)
+    {
+        forces.Add(b);
+
+    }
+    public void RemoveBulletForce(IBulletForce b)
+    {
+        forces.Remove(b);
+    }
+    public void ClearBulletForce() => forces.Clear();
+
+
+
+    public override void Bounce(RaycastHit2D hit2D)
+    {
+        Vector2 dir = Vector2.Reflect(direction, hit2D.normal);
+        if (dir != Vector2.zero)
+            direction = dir;
+
+        transform.right = direction;
+    }
+    public override void Release()
+    {
+        base.Release();
+        BulletSpawner.Instance.ReturnPlayerBulletObject(key, this);
+    }
+}
+

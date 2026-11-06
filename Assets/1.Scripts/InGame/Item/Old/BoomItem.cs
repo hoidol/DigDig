@@ -41,7 +41,7 @@ public class BoomItem : Item, IFired, IComboFire
             return;
         await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
 
-        BoomBulletSpec boomBullet = new BoomBulletSpec();
+        MortarBulletSpec boomBullet = new MortarBulletSpec();
         boomBullet.boomRange = boomRange;
         float angleOffset = Random.Range(-10f, 10f) * Mathf.Deg2Rad;
         Vector2 shootDir = new Vector2(

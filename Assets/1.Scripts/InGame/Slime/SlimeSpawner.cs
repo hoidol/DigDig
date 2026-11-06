@@ -60,7 +60,45 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
     public async UniTask<(bool, string, int)> Merge(Slime slime1, Slime slime2)
     {
+        // 희생 슬라임은 끌어온 쪽이든 놓인 쪽이든 희생 규칙(상대 종으로 +1)으로 합성
+        if (slime2 is SacrificeSlime && slime1 is not SacrificeSlime)
+            return await slime2.Merge(slime1);
         return await slime1.Merge(slime2);
+    }
+
+    // 필드의 슬라임 제거 (조커 변신 실패 등). 선택 중이던 타일이면 선택 해제
+    public void RemoveFieldSlime(Slime slime)
+    {
+        Tile tile = TileManager.Instance.GetTile(slime);
+        bool wasSelected = tile != null && tile == selectedTile;
+        if (ReferenceEquals(dragObject, slime))
+            dragObject = null;
+
+        TileManager.Instance.RemoveTileObject(slime);
+        KingSlime.Instance.RemoveSlime(slime);
+        if (wasSelected)
+            SelectTile(null);
+        KingSlimeManageCanvas.Instance.UpdateCanvas();
+    }
+
+    // 필드의 슬라임을 다른 슬라임으로 교체 (같은 타일). 성장·조커 변신 등
+    // 선택 중이던 타일이면 새 슬라임이 선택됨
+    public Slime ReplaceSlime(Slime old, string key, int lv)
+    {
+        Tile tile = TileManager.Instance.GetTile(old);
+        bool wasSelected = tile != null && tile == selectedTile;
+        if (ReferenceEquals(dragObject, old))
+            dragObject = null;
+
+        TileManager.Instance.RemoveTileObject(old);
+        KingSlime.Instance.RemoveSlime(old);
+        Slime slime = KingSlime.Instance.AddSlime(key, lv);
+        if (tile != null)
+            tile.SetTileObject(slime);
+        if (wasSelected)
+            SelectTile(tile);
+        KingSlimeManageCanvas.Instance.UpdateCanvas();
+        return slime;
     }
 
     public LayerMask slimeLayer;
@@ -107,7 +145,18 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
             if (IsPointerOverUI())
                 return;
 
+            if (TryBeginHandleDrag())
+                return;
             BeginDrag();
+        }
+        else if (dragHandle != null && Input.GetMouseButton(0))
+        {
+            dragHandle.DragTo(GetMouseWorldPos() + handleOffset);
+        }
+        else if (dragHandle != null && Input.GetMouseButtonUp(0))
+        {
+            dragHandle.EndHandleDrag();
+            dragHandle = null;
         }
         else if (dragObject != null && Input.GetMouseButton(0))
         {
@@ -145,6 +194,30 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         originPos = tileObject.Transform.position;
         offset = originPos - mousePos;
         offset.z = 0;
+    }
+
+    DragHandle dragHandle; // 드래그 중인 손잡이 (폭격 슬라임 깃발 등)
+    Vector3 handleOffset;
+
+    // 손잡이 드래그: 선택된 유닛의 손잡이는 유닛보다 우선, 다른 손잡이는 유닛이 없는 자리에서만 잡힘
+    // 잡으면 손잡이 주인 유닛의 타일을 선택 (범위 표시)
+    bool TryBeginHandleDrag()
+    {
+        Vector3 mousePos = GetMouseWorldPos();
+        DragHandle handle = DragHandle.FindAt(mousePos, targetUnit);
+        if (handle == null || handle.Owner == null)
+            return false;
+        if (handle.Owner != targetUnit && (FindSlime(mousePos, null) != null || IsCharacterAt(mousePos)))
+            return false;
+
+        if (handle.Owner != targetUnit && handle.Owner is ITileObject ownerObject)
+            SelectTile(TileManager.Instance.GetTile(ownerObject));
+
+        dragHandle = handle;
+        handleOffset = handle.transform.position - mousePos;
+        handleOffset.z = 0;
+        handle.BeginHandleDrag();
+        return true;
     }
 
     // 슬라임끼리 놓으면 머지 시도, 빈 타일이면 이동, 그 외엔 원위치
@@ -231,6 +304,11 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
         Slime merged = KingSlime.Instance.AddSlime(mergeResultKey, lv);
         if (tile != null)
             tile.SetTileObject(merged);
+
+        // 희생 슬라임 강화: 합성 결과 슬라임 버프 (희생끼리 합성은 제외)
+        SacrificeSlime sacrifice = source as SacrificeSlime ?? target as SacrificeSlime;
+        if (sacrifice != null && !(source is SacrificeSlime && target is SacrificeSlime))
+            sacrifice.ApplyResultBuffs(merged);
         mergeCount++;
         // Character.Instance.AddMergeCoin(1);
         GameEventBus.Publish(new MergedSlimeEvent());

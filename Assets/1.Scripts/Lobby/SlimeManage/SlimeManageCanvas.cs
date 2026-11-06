@@ -9,7 +9,7 @@ namespace Lobby
     {
         public SlimeEquipedSlotPanel[] equipedSlotPanels;
         public Growth1SlimeEntryPanel[] growth1SlimeEntryPanels;
-        public Growth2SlimeEntryPanel[] growth2SlimeEntryPanels;
+        // public Growth2SlimeEntryPanel[] growth2SlimeEntryPanels;
 
         public override void Init()
         {
@@ -19,7 +19,7 @@ namespace Lobby
 
             equipedSlotPanels = GetComponentsInChildren<SlimeEquipedSlotPanel>();
             growth1SlimeEntryPanels = GetComponentsInChildren<Growth1SlimeEntryPanel>();
-            growth2SlimeEntryPanels = GetComponentsInChildren<Growth2SlimeEntryPanel>();
+            // growth2SlimeEntryPanels = GetComponentsInChildren<Growth2SlimeEntryPanel>();
         }
 
         public override void OpenCanvas(Action closeCallback = null)
@@ -36,7 +36,7 @@ namespace Lobby
                 equipedSlotPanels[i].idx = i;
             }
 
-            SlimeData[] growth1SlimeDatas = SlimeManager.Instance.growth1SlimeDatas.OrderBy(e =>
+            SlimeData[] slimeDatas = SlimeManager.Instance.allSlimeDatas.OrderBy(e =>
             {
                 if (UserDataManager.Instance.userSlimeManager.GetUserSlime(e.key).own)
                     return 0;
@@ -46,9 +46,9 @@ namespace Lobby
 
             for (int i = 0; i < growth1SlimeEntryPanels.Length; i++)
             {
-                if (i < growth1SlimeDatas.Length)
+                if (i < slimeDatas.Length)
                 {
-                    growth1SlimeEntryPanels[i].SetData(growth1SlimeDatas[i]);
+                    growth1SlimeEntryPanels[i].SetData(slimeDatas[i]);
                 }
                 else
                 {
@@ -56,17 +56,17 @@ namespace Lobby
                 }
             }
 
-            for (int i = 0; i < growth2SlimeEntryPanels.Length; i++)
-            {
-                if (i < SlimeManager.Instance.growth2SlimeDatas.Length)
-                {
-                    growth2SlimeEntryPanels[i].SetData(SlimeManager.Instance.growth2SlimeDatas[i]);
-                }
-                else
-                {
-                    growth2SlimeEntryPanels[i].SetData(null);
-                }
-            }
+            // for (int i = 0; i < growth2SlimeEntryPanels.Length; i++)
+            // {
+            //     if (i < SlimeManager.Instance.growth2SlimeDatas.Length)
+            //     {
+            //         growth2SlimeEntryPanels[i].SetData(SlimeManager.Instance.growth2SlimeDatas[i]);
+            //     }
+            //     else
+            //     {
+            //         growth2SlimeEntryPanels[i].SetData(null);
+            //     }
+            // }
             UpdateCanvas();
         }
 
@@ -111,20 +111,20 @@ namespace Lobby
                 growth1SlimeEntryPanels[i].UpdatePanel();
             }
 
-            for (int i = 0; i < growth2SlimeEntryPanels.Length; i++)
-            {
-                growth2SlimeEntryPanels[i].UpdatePanel();
-            }
+            // for (int i = 0; i < growth2SlimeEntryPanels.Length; i++)
+            // {
+            //     growth2SlimeEntryPanels[i].UpdatePanel();
+            // }
 
-            growth2SlimeEntryPanels = growth2SlimeEntryPanels
-                .OrderByDescending(panel => panel.canSpawn)
-                .ThenBy(panel => panel.selling)
-                .ToArray();
+            // growth2SlimeEntryPanels = growth2SlimeEntryPanels
+            //     .OrderByDescending(panel => panel.canSpawn)
+            //     .ThenBy(panel => panel.selling)
+            //     .ToArray();
 
-            for (int i = 0; i < growth2SlimeEntryPanels.Length; i++)
-            {
-                growth2SlimeEntryPanels[i].transform.SetSiblingIndex(i);
-            }
+            // for (int i = 0; i < growth2SlimeEntryPanels.Length; i++)
+            // {
+            //     growth2SlimeEntryPanels[i].transform.SetSiblingIndex(i);
+            // }
         }
     }
 }

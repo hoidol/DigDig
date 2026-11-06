@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class SlowOnHitBehavior : IBulletBehavior
 {
-public int ApplyOrder => 0;    readonly float chance;
+    public int ApplyOrder => 0;    
+    readonly float chance;
     readonly float duration;
 
     public SlowOnHitBehavior(float chance, float duration)

@@ -42,15 +42,16 @@ public class AllyUnitDamageData : DamageData
     public float critChance;    // % 단위, 적중마다 판정
     public float critPower = 2f;
     public bool ignoreDefence;  // 만능 공격 타일: 원래 속성과 상관없이 AllRounder처럼 방어 타입 배율 무시
-    public float eliteBossDamageMul = 1f; // 엘리트/보스에게 주는 데미지 배율 (Enemy.TakeDamage에서 확인)
+    public float eliteBossDamageMul = 1f; // 엘리트/보스에게 주는 데미지 배율 (거인 사냥 타일, EnemyDefence에서 적용). 강철 슬라임은 BigEnemyDamageForce
 
     public override bool IgnoreDefence => ignoreDefence || base.IgnoreDefence;
 
     public void Init(IAllyUnit allyUnit)
     {
         this.allyUnit = allyUnit;
-        critChance = 0;
-        critPower = 2f;
+        // 슬라임 치명타 확률 스탯(설의 버프 등). 연발 탄도 SetBullet → Init을 거치므로 같이 적용됨. 캐릭터 탄은 KingSlimeBulletObject에서 덮어씀
+        critChance = allyUnit is Slime slime ? slime.CritChance : 0;
+        critPower = allyUnit is Slime ? GameSetting.INIT_CRIT_POWER : 2f; // 슬라임 치명타 배율 (캐릭터 탄은 발사 시 캐릭터 스탯으로 덮어씀)
         ignoreDefence = false;
         eliteBossDamageMul = 1f;
     }

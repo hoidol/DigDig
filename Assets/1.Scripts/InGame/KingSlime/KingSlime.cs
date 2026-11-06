@@ -327,6 +327,7 @@ public enum StatType
     StartGold, 
     WaveClearGold,
     BurnDPS,
+    
     Count
 }
 

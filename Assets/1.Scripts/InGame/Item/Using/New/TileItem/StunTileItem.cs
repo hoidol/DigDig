@@ -24,7 +24,7 @@ public class ChanceStunBehavior : IBulletBehavior
 
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        if (hit is Boss || hit.CurHp <= 0)
+        if (hit.CurHp <= 0) // 엘리트/보스도 걸림 (StatusEffectHandler에서 시간 절반)
             return true;
         if (Random.Range(0f, 100f) < chance)
             hit.ApplyStatusEffect(new StunEffect(duration));

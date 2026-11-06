@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: c70b05342caf14c448ee64e6346a3bd3
   m_currentHash:
     serializedVersion: 2
-    Hash: 8dff73edb8149ac72c885dd18d9a76f4
+    Hash: 4fc19838b9cf2fe785e5dac77688eb86
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -116,9 +116,6 @@ MonoBehaviour:
     - Level1ItemData
     - Level2ItemData
     - EquipmentData
-    - Growth0SlimeData
-    - Growth1SlimeData
-    - Growth2SlimeData
     - SlimeData
     - SlimeMergeData
     - EnhanceGradeInfo

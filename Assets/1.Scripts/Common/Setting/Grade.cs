@@ -7,10 +7,10 @@ public class Grade
     {
         switch (grade)
         {
-            case GradeType.D:
-                return Color.white;
+            // case GradeType.D:
+            //     return Color.white;
             case GradeType.C:
-                return Color.green;
+                return Color.white; //green
             case GradeType.B:
                 return Color.blue;
             case GradeType.A:
@@ -29,8 +29,6 @@ public class Grade
     {
         switch (grade)
         {
-            case GradeType.D:
-                return "베이스";
             case GradeType.C:
                 return "노말";
             case GradeType.B:
@@ -57,5 +55,5 @@ public class Grade
 
 public enum GradeType : int
 {
-    D, C, B, A, S, SS, SSS
+    C, B, A, S, SS, SSS
 }

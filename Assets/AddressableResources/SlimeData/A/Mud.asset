@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f595453195fc432ebaa2d26a02f01b6, type: 3}
+  m_Name: Mud
+  m_EditorClassIdentifier: Assembly-CSharp::MudSlimeData
+  key: Mud
+  desc: "Orbit(\uB2FF\uC73C\uBA74 \uC2AC\uB85C\uC6B0)"
+  growth: 1
+  attackType: 2
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 3
+      - 1
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 4
+      - 1
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 4
+      - 2
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 4
+      - 2
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 2
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 2
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 3
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 3
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 3
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 3
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 3
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 3
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 3
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 4
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 4
+  attackPowerRandomRatio: 0
+  reinforceAttackPowerPercent: 5
+  prefab: {fileID: 1358385290756183109, guid: f98d02af75ee43c1a8a2c7282b532448, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  grade: 2
+  displayStatTypes: 000000000200000005000000
+  baseSlimeStats:
+  - statType: 2
+    values:
+    - 30
+  - statType: 5
+    values:
+    - 3
+  - statType: 3
+    values:
+    - 0
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 +5% \uC99D\uAC00"
+  - level: 5
+    desc: "\uC9C4\uD759 \uC9C0\uC18D \uC2DC\uAC04 +0.5\uCD08"
+  - level: 8
+    desc: "[\uAC01\uC131] \uC9C4\uD759 \uAD6C\uC2AC \uCD5C\uB300 \uC218 +1"
+  - level: 11
+    desc: "\uD68C\uC804 \uBC18\uACBD 15% \uC99D\uAC00"
+  - level: 14
+    desc: "\uACF5\uACA9 \uC18D\uB3C4 +5% \uC99D\uAC00"
+  uniqueSlimeStats: []
+  maxOrbCounts: 0100000002000000030000000400000005000000
+  splashRadius: 0.5
+  maxHitCount: 5
+  orbitRotationSpeed: 120
+  radius: 2
+  mudDuration: 3

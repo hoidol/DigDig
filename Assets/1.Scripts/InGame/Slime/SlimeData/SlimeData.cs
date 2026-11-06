@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "SlimeData", menuName = "SlimeData")]
+[CreateAssetMenu(fileName = "SlimeData", menuName = "SlimeData/SlimeData")]
 public class SlimeData : ScriptableObject
 {
     public const int MAX_MERGE_LEVEL = 4; // mergeLevel 0 ~ MAX_MERGE_LEVEL
@@ -64,10 +64,18 @@ public class SlimeData : ScriptableObject
         return result;
     }
 
+    // 강화 레벨과 상관없는 기본 스탯 (SlimeData.csv의 AttackSpeed, AttackRange, CritChance 열. 값 하나 = 머지 레벨 무관 고정)
+    public List<SlimeStat> baseSlimeStats = new List<SlimeStat>();
+    public SlimeStat GetBaseStat(StatType statType) => baseSlimeStats?.FirstOrDefault(e => e.statType == statType);
+
+    // 기본 스탯(SlimeData.csv) → 강화 레벨별 스탯(SlimeEnhance csv) 순서로 찾음
     public virtual SlimeStat GetSlimeStat(StatType statType, int enhanceLv)
     {
+        SlimeStat baseStat = GetBaseStat(statType);
+        if (baseStat != null)
+            return baseStat;
         SlimeEnhanceInfo slimeEnhanceInfo = GetCommonSlimeEnhanceInfo(enhanceLv);
-        return slimeEnhanceInfo.GetSlimeStat(statType);
+        return slimeEnhanceInfo?.GetSlimeStat(statType);
     }
 
     public bool CheckUnlock()
@@ -102,6 +110,10 @@ public class SlimeData : ScriptableObject
 #if UNITY_EDITOR
     public virtual void LoadData()
     {
+        // 새로 만든 에셋은 key가 비어 있음 → 파일명(= Key)으로 채운다 (Edit과 같은 규칙)
+        if (string.IsNullOrEmpty(key))
+            key = name;
+
         TableReader table = TableReader.Load("SlimeData.csv");
         if (table == null) return;
 
@@ -128,11 +140,56 @@ public class SlimeData : ScriptableObject
         if (row.TryGetFloat("ReinforceAttackPower", out float reinforcePercent))
             reinforceAttackPowerPercent = reinforcePercent;
 
-        prefab = FindAssetByName<Slime>($"Assets/3.Prefabs/Slime/Growth{growth}", $"{key}Slime");
+        // 강화 레벨과 상관없는 기본 스탯 (2026-11-06 SlimeEnhance에서 이동). 값 하나 = 머지 레벨과 상관없이 고정
+        baseSlimeStats = new List<SlimeStat>();
+        foreach (StatType statType in new[] { StatType.AttackSpeed, StatType.AttackRange, StatType.CritChance })
+        {
+            string raw = table.HasColumn(statType.ToString()) ? row.Get(statType.ToString()) : null;
+            if (string.IsNullOrWhiteSpace(raw))
+                continue;
+            baseSlimeStats.Add(new SlimeStat
+            {
+                statType = statType,
+                values = raw.Split('/').Select(v => v.Trim()).ToArray(),
+            });
+        }
+
+        prefab = FindPrefab();
         thum = FindAssetByName<Sprite>($"Assets/2.Sprites/Slime/Growth{growth}", key);
 
         UnityEditor.EditorUtility.SetDirty(this);
         Debug.Log($"[SlimeData] {key} LoadData 완료");
+    }
+
+    // 슬라임 프리팹 폴더: 등급별 (3.Prefabs/Slime/{C,B,A,S}/{key}Slime.prefab). grade는 CSV Grade 컬럼
+    const string PREFAB_ROOT = "Assets/3.Prefabs/Slime";
+    string PrefabFolder => $"{PREFAB_ROOT}/{grade}";
+
+    // 등급 폴더에서 찾고, 없으면 슬라임 프리팹 전체에서 찾아 등급 폴더와 다르다고 경고 (등급 변경 후 프리팹을 안 옮긴 경우)
+    Slime FindPrefab()
+    {
+        string fileName = $"{key}Slime";
+        string expectedPath = $"{PrefabFolder}/{fileName}.prefab";
+        Slime found = UnityEditor.AssetDatabase.LoadAssetAtPath<Slime>(expectedPath);
+        if (found != null)
+            return found;
+
+        foreach (string guid in UnityEditor.AssetDatabase.FindAssets($"{fileName} t:Prefab", new[] { PREFAB_ROOT }))
+        {
+            string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+            if (System.IO.Path.GetFileNameWithoutExtension(path) != fileName)
+                continue;
+
+            found = UnityEditor.AssetDatabase.LoadAssetAtPath<Slime>(path);
+            if (found != null)
+            {
+                Debug.LogWarning($"[SlimeData] {key} 프리팹이 등급 폴더에 없음 (등급 {grade}) → {path} 사용. {PrefabFolder}로 옮겨 주세요.");
+                return found;
+            }
+        }
+
+        Debug.LogWarning($"[SlimeData] {key} 프리팹 없음 : {expectedPath}");
+        return null;
     }
 
     // folder 안에서 파일명이 fileName과 일치하는 T 타입 에셋을 찾는다.
@@ -165,7 +222,7 @@ public class SlimeData : ScriptableObject
         if (string.IsNullOrEmpty(key) || key != name)
             key = name;
 
-        string prefabRootFolder = $"Assets/3.Prefabs/Slime/Growth{growth}";
+        string prefabRootFolder = PrefabFolder;
         string prefabPath = $"{prefabRootFolder}/{key}Slime.prefab";
 
         // 이미 해당 경로에 프리팹이 있으면 그대로 연결만 하고 덮어쓰지 않는다.
@@ -220,7 +277,8 @@ public class SlimeData : ScriptableObject
 
     string CreateSlimeScript(string className)
     {
-        string scriptFolder = $"Assets/1.Scripts/InGame/Character/Slime/Growth{growth}";
+        string scriptFolder = $"Assets/1.Scripts/InGame/Slime/Unit/{grade}/{className}";
+        System.IO.Directory.CreateDirectory(scriptFolder);
         string filePath = $"{scriptFolder}/{className}.cs";
 
         if (System.IO.File.Exists(filePath))

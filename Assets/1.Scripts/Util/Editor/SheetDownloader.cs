@@ -41,7 +41,6 @@ public static class SheetDownloader
         public string sheetId;
         public string gid;
         public string range;
-        public string blockKey; // range가 비어 있으면 1행에서 이 key의 블록을 찾는다
     }
 
     static List<Job> BuildJobs(SheetDownloadSetting setting, out int skipCount)
@@ -67,26 +66,6 @@ public static class SheetDownloader
         if (!string.IsNullOrWhiteSpace(setting.slimeGid))
             jobs.Add(new Job { csvPath = SheetDownloadSetting.SLIME_CSV_PATH, sheetId = defaultSheetId, gid = setting.slimeGid.Trim(), range = setting.slimeRange });
 
-        if (!string.IsNullOrWhiteSpace(setting.slimeEnhanceGid))
-        {
-            foreach (SheetDownloadSetting.SlimeEnhanceEntry entry in setting.slimeEnhanceEntries)
-            {
-                if (!entry.enabled || string.IsNullOrWhiteSpace(entry.key))
-                {
-                    skipCount++;
-                    continue;
-                }
-                string key = entry.key.Trim();
-                jobs.Add(new Job
-                {
-                    csvPath = $"{SheetDownloadSetting.SLIME_ENHANCE_CSV_FOLDER}{key}.csv",
-                    sheetId = defaultSheetId,
-                    gid = setting.slimeEnhanceGid.Trim(),
-                    range = entry.range,
-                    blockKey = key,
-                });
-            }
-        }
         return jobs;
     }
 
@@ -114,10 +93,7 @@ public static class SheetDownloader
                         if (!tabCache.TryGetValue(tabKey, out List<string[]> grid))
                             tabCache[tabKey] = grid = ParseTsv(Fetch(client, entry.sheetId, entry.gid));
 
-                        string range = string.IsNullOrWhiteSpace(entry.range) && entry.blockKey != null
-                            ? FindBlockRange(grid, entry.blockKey)
-                            : entry.range;
-                        string content = ToTsv(Crop(grid, range));
+                        string content = ToTsv(Crop(grid, entry.range));
                         string fullPath = Path.Combine(Application.dataPath, entry.csvPath);
                         if (File.Exists(fullPath) && File.ReadAllText(fullPath, Encoding.UTF8) == content)
                         {
@@ -211,33 +187,6 @@ public static class SheetDownloader
         return result;
     }
 
-    // 1행에서 key와 같은 칸을 찾아, 2행(헤더)이 이어지는 열까지를 한 블록으로 본다. → "F2:J" (행은 끝까지, 빈 행은 Crop에서 제거)
-    static string FindBlockRange(List<string[]> grid, string key)
-    {
-        if (grid.Count < 2)
-            throw new Exception("블록 탐색 실패: 탭에 1행(key), 2행(헤더)이 필요합니다.");
-
-        int startCol = Array.FindIndex(grid[0], cell => cell.Trim() == key);
-        if (startCol < 0)
-            throw new Exception($"1행에서 '{key}' 블록을 찾지 못함");
-
-        string[] headerRow = grid[1];
-        int endCol = startCol;
-        while (endCol + 1 < headerRow.Length && !string.IsNullOrWhiteSpace(headerRow[endCol + 1]))
-            endCol++;
-
-        return $"{ToColumnName(startCol)}2:{ToColumnName(endCol)}";
-    }
-
-    // 0 → A, 25 → Z, 26 → AA
-    static string ToColumnName(int col)
-    {
-        string name = "";
-        for (col++; col > 0; col = (col - 1) / 26)
-            name = (char)('A' + (col - 1) % 26) + name;
-        return name;
-    }
-
     // "A1:H20" / "A:H" / "A3:H" → 0 기반 행/열. 끝 행이 없으면 row1 = -1 (끝까지)
     static bool TryParseRange(string range, out int row0, out int col0, out int row1, out int col1)
     {
@@ -287,16 +236,9 @@ public static class SheetDownloader
             .ToArray();
 
         setting.entries = csvPaths
-            .Where(p => p != SheetDownloadSetting.SLIME_CSV_PATH && !p.StartsWith(SheetDownloadSetting.SLIME_ENHANCE_CSV_FOLDER))
+            .Where(p => p != SheetDownloadSetting.SLIME_CSV_PATH)
             .Select(p => new SheetDownloadSetting.Entry { csvPath = p })
             .ToArray();
-        setting.slimeEnhanceEntries = csvPaths
-            .Where(p => p.StartsWith(SheetDownloadSetting.SLIME_ENHANCE_CSV_FOLDER))
-            .Select(p => Path.GetFileNameWithoutExtension(p))
-            .Where(key => key.Length > 0)
-            .Select(key => new SheetDownloadSetting.SlimeEnhanceEntry { key = key })
-            .ToArray();
-
         AssetDatabase.CreateAsset(setting, SheetDownloadSetting.DEFAULT_ASSET_PATH);
         AssetDatabase.SaveAssets();
         Debug.Log($"[SheetDownloader] 설정 생성: {SheetDownloadSetting.DEFAULT_ASSET_PATH} ({setting.entries.Length}개 CSV 경로 등록)");

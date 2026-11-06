@@ -21,15 +21,14 @@ MonoBehaviour:
     m_SerializedLabels:
     - EnhanceExpInfo
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 21342a686269c4c188b3e8c64a258671
-    m_Address: Growth1
+  - m_GUID: 1bba28fc7da2448e98ddbcecf9ab3c98
+    m_Address: A
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Growth1SlimeData
     - SlimeData
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 36891a8ce2e00411ba0d808e50943482
-    m_Address: D
+  - m_GUID: 2c82241a70baa492f96d1e89505271f9
+    m_Address: EnhanceExpInfo
     m_ReadOnly: 0
     m_SerializedLabels:
     - EnhanceExpInfo
@@ -46,17 +45,22 @@ MonoBehaviour:
     m_SerializedLabels:
     - EnhanceExpInfo
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d4dee921141b4c039416622efea077b
+    m_Address: S
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SlimeData
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 90dc379e75f914501b698b3211bc7a7a
     m_Address: C
     m_ReadOnly: 0
     m_SerializedLabels:
     - EnhanceExpInfo
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 95312c7989bed4b0493be3916be8951a
-    m_Address: Growth0
+  - m_GUID: ad76db37676054decb35194f35c1e67f
+    m_Address: B
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Growth0SlimeData
     - SlimeData
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d5297e98a00cf42fcafc45effd60a74b
@@ -64,6 +68,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - EnhanceExpInfo
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd68700f4531b4ee08127e75328f703c
+    m_Address: C
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SlimeData
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e9a0180b3d26f4ed3a8015ec93616018
     m_Address: SlimeMergeData

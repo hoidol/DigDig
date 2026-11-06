@@ -37,6 +37,7 @@ public class StartSetting
             "SoundManager",
             "AchievementManager",
             "EnergeManager",
+            //"FirebaseManager"
 //공용
             // "InAppPurchaseManager",
             // "AdManager",

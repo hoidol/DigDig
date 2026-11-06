@@ -3,6 +3,14 @@ Key	EquipmentType	EquipPartType	Grade	StatType1	StatValue1	StatType2	StatValue2	
 	L_Hand	L_Hand	D												
 	Head	Helmet	D												
 	Accessory	Face	D												
+	R_Hand	R_Hand	D												
+	L_Hand	L_Hand	D												
+	Head	Helmet	D												
+	Accessory	Face	D												
+	R_Hand	R_Hand	B												
+	L_Hand	L_Hand	B												
+	Head	Helmet	B												
+	Accessory	Face	B												
 	R_Hand	R_Hand	B												
 	L_Hand	L_Hand	B												
 	Head	Helmet	B												
@@ -11,15 +19,15 @@ Key	EquipmentType	EquipPartType	Grade	StatType1	StatValue1	StatType2	StatValue2	
 	L_Hand	L_Hand	A												
 	Head	Helmet	A												
 	Accessory	Face	A												
+	R_Hand	R_Hand	A												
+	L_Hand	L_Hand	A												
+	Head	Helmet	A												
+	Accessory	Face	A												
 	R_Hand	R_Hand	S												
 	L_Hand	L_Hand	S												
 	Head	Helmet	S												
 	Accessory	Face	S												
-	R_Hand	R_Hand	SS												
-	L_Hand	L_Hand	SS												
-	Head	Helmet	SS												
-	Accessory	Face	SS												
-	R_Hand	R_Hand	SSS												
-	L_Hand	L_Hand	SSS												
-	Head	Helmet	SSS												
-	Accessory	Face	SSS												
+	R_Hand	R_Hand	S												
+	L_Hand	L_Hand	S												
+	Head	Helmet	S												
+	Accessory	Face	S												

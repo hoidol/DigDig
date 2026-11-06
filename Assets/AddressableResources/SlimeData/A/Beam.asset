@@ -1,0 +1,144 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4e80160f752143ef861a61898d646ce, type: 3}
+  m_Name: Beam
+  m_EditorClassIdentifier: Assembly-CSharp::BeamSlimeData
+  key: Beam
+  desc: "\uB808\uC774\uC800\uAC00 \uC5F0\uACB0\uB428"
+  growth: 1
+  attackType: 2
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 5
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 5
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 6
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 6
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 7
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 7
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  attackPowerRandomRatio: 0
+  reinforceAttackPowerPercent: 5
+  prefab: {fileID: 1358385290756183109, guid: 67ee70915d284a4d8f1898ea4e8f84aa, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  grade: 2
+  displayStatTypes: 000000000200000005000000
+  baseSlimeStats:
+  - statType: 2
+    values:
+    - 30
+  - statType: 5
+    values:
+    - 3
+  - statType: 3
+    values:
+    - 0
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 5% \uC99D\uAC00"
+  - level: 8
+    desc: "[\uAC01\uC131] \uB808\uC774\uC800\uC5D0 \uB2FF\uC740 \uC801 \uAC10\uC18D
+      (\uD53C\uD574 \uD2F1\uB9C8\uB2E4 slowDuration \uC2AC\uB85C\uC6B0)"
+  - level: 11
+    desc: "\uC5F0\uACB0\uB420\uC218\uB85D \uC904\uC5B4\uB4DC\uB294 \uD53C\uD574 \uAC10\uC18C\uC728
+      \uC644\uD654 (\uB808\uC774\uC800 1\uAC1C\uB2F9 \uAC10\uC18C\uC728 \xD7 reductionMul)"
+  uniqueSlimeStats: []
+  lineWidths:
+  - 0.15
+  - 0.2
+  - 0.25
+  - 0.3
+  - 0.35
+  damageReductionPerLine: 0.1
+  minLineDamageMul: 0.3

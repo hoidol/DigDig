@@ -117,6 +117,44 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         LoadAll();
     }
 
+    // 클라우드 항목별 저장용 : key = 로컬 저장 파일명(각 매니저 UserDataFileName), value = JSON
+    public Dictionary<string, string> GetCloudSections()
+    {
+        UserCloudData data = GetCloudData();
+        return new Dictionary<string, string>
+        {
+            { UserDataFileName, JsonUtility.ToJson(data.userData) },
+            { UserStageManager.UserDataFileName, JsonUtility.ToJson(data.userStageData) },
+            { UserEquipmentManager.UserDataFileName, JsonUtility.ToJson(data.userEquipmentData) },
+            { UserPurchaseManager.UserDataFileName, JsonUtility.ToJson(data.userPurchaseData) },
+            { UserSlimeManager.UserDataFileName, JsonUtility.ToJson(data.userSlimeData) },
+            { UserMyInfoManager.UserDataFileName, JsonUtility.ToJson(data.userMyInfoData) },
+            { UserKingSlimeManager.UserDataFileName, JsonUtility.ToJson(data.userKSData) },
+        };
+    }
+
+    // 서버에 있는 항목만 덮어씀 (없는 항목은 로컬 유지)
+    public void ApplyCloudSections(IReadOnlyDictionary<string, string> sections)
+    {
+        ApplyCloudData(new UserCloudData
+        {
+            userData = FromSection<UserData>(sections, UserDataFileName),
+            userStageData = FromSection<UserStageData>(sections, UserStageManager.UserDataFileName),
+            userEquipmentData = FromSection<UserEquipmentData>(sections, UserEquipmentManager.UserDataFileName),
+            userPurchaseData = FromSection<UserPurchaseData>(sections, UserPurchaseManager.UserDataFileName),
+            userSlimeData = FromSection<UserSlimeData>(sections, UserSlimeManager.UserDataFileName),
+            userMyInfoData = FromSection<UserMyInfoData>(sections, UserMyInfoManager.UserDataFileName),
+            userKSData = FromSection<UserKSData>(sections, UserKingSlimeManager.UserDataFileName),
+        });
+    }
+
+    static T FromSection<T>(IReadOnlyDictionary<string, string> sections, string key) where T : class
+    {
+        return sections.TryGetValue(key, out string json) && !string.IsNullOrEmpty(json)
+            ? JsonUtility.FromJson<T>(json)
+            : null;
+    }
+
     static void SaveIfNotNull<T>(string fileName, T data) where T : class
     {
         if (data != null)
@@ -126,6 +164,15 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     void Save()
     {
         SaveManager.SaveData(UserDataFileName, userData);
+    }
+
+    // Firebase 로그인 uid 기록 (로그인할 때마다 FirebaseAuth가 맞춤). 기록용이며 서버 경로는 Firebase uid를 직접 쓴다
+    public void SetUid(string uid)
+    {
+        if (string.IsNullOrEmpty(uid) || userData.uid == uid)
+            return;
+        userData.uid = uid;
+        Save();
     }
 
     public void AddGold(int count)
@@ -185,6 +232,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
 [System.Serializable]
 public class UserData
 {
+    public string uid;
     public int gold; //던전 수정 조작 느낌으로
     public int dia; //던전 수정 조작 느낌으로
     public int energe;

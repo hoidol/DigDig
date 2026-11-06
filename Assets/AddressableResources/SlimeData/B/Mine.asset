@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d889c3276d6b641b49e201626ea847c2, type: 3}
+  m_Name: Mine
+  m_EditorClassIdentifier: Assembly-CSharp::MineSlimeData
+  key: Mine
+  desc: "\uAC00\uAE4C\uC6B4 \uC801 \uC774\uB3D9 \uACBD\uB85C\uC5D0 \uC9C0\uB8B0 \uC124\uCE58"
+  growth: 1
+  attackType: 1
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 5
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 5
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 6
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 6
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 7
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 7
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  attackPowerRandomRatio: 0
+  reinforceAttackPowerPercent: 5
+  prefab: {fileID: 1358385290756183109, guid: 14135158638b4e5d919713aed86525db, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  grade: 1
+  displayStatTypes: 000000000200000005000000
+  baseSlimeStats:
+  - statType: 2
+    values:
+    - 30
+  - statType: 5
+    values:
+    - 3
+  - statType: 3
+    values:
+    - 0
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00"
+  - level: 5
+    desc: "\uC9C0\uB8B0 \uD3ED\uBC1C \uBC94\uC704 15% \uC99D\uAC00"
+  - level: 8
+    desc: "\uC9C0\uB8B0 2\uAC1C\uC529 \uC124\uCE58"
+  - level: 11
+    desc: "\uC9C0\uB8B0 \uCD5C\uB300 \uC124\uCE58 \uC218 +2"
+  - level: 14
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00, \uACF5\uACA9 \uC18D\uB3C4 10% \uC99D\uAC00"
+  uniqueSlimeStats: []
+  maxMineCounts: 0300000004000000050000000600000007000000
+  explodeRadiuses:
+  - 1
+  - 1.1
+  - 1.2
+  - 1.3
+  - 1.4
+  maxHitCount: 4
+  triggerRadius: 0.4
+  mineLifetime: 20

@@ -84,7 +84,7 @@ public class FirebaseAuth : MonoBehaviour
         if (auth.CurrentUser != null)
         {
             Debug.Log($"[FirebaseAuth] 자동 로그인 : {auth.CurrentUser.UserId} ({CurrentLoginType})");
-            OnSignedIn?.Invoke(auth.CurrentUser);
+            NotifySignedIn(auth.CurrentUser);
         }
         else
         {
@@ -112,8 +112,27 @@ public class FirebaseAuth : MonoBehaviour
         return await SignInAnonymouslyAsync() ? UserId : null;
     }
 
+    // 로그인 함수 공통 : onComplete(성공 여부)는 성공·실패 모두 호출된다
+    public UniTask<bool> SignInAnonymouslyAsync(Action<bool> onComplete = null) => WithCallback(SignInAnonymouslyCoreAsync(), onComplete);
+    public UniTask<bool> SignInWithGoogleAsync(Action<bool> onComplete = null) => WithCallback(SignInWithGoogleCoreAsync(), onComplete);
+    public UniTask<bool> SignInWithAppleAsync(Action<bool> onComplete = null) => WithCallback(SignInWithAppleCoreAsync(), onComplete);
+
+    static async UniTask<bool> WithCallback(UniTask<bool> task, Action<bool> onComplete)
+    {
+        bool success = await task;
+        try
+        {
+            onComplete?.Invoke(success);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[FirebaseAuth] 로그인 콜백 오류 : {e}");
+        }
+        return success;
+    }
+
     #region 익명
-    public async UniTask<bool> SignInAnonymouslyAsync()
+    async UniTask<bool> SignInAnonymouslyCoreAsync()
     {
         if (!CanStartSignIn())
             return false;
@@ -137,7 +156,7 @@ public class FirebaseAuth : MonoBehaviour
     #endregion
 
     #region Google (GPGS)
-    public async UniTask<bool> SignInWithGoogleAsync()
+    async UniTask<bool> SignInWithGoogleCoreAsync()
     {
         if (!CanStartSignIn())
             return false;
@@ -189,7 +208,7 @@ public class FirebaseAuth : MonoBehaviour
     #endregion
 
     #region Apple
-    public async UniTask<bool> SignInWithAppleAsync()
+    async UniTask<bool> SignInWithAppleCoreAsync()
     {
         if (!CanStartSignIn())
             return false;
@@ -299,8 +318,16 @@ public class FirebaseAuth : MonoBehaviour
             return false;
 
         Debug.Log($"[FirebaseAuth] 로그인 성공 : {user.UserId} ({GetLoginType(user)})");
-        OnSignedIn?.Invoke(user);
+        NotifySignedIn(user);
         return true;
+    }
+
+    // 로그인 확정 시 공통 처리 (자동 로그인 포함)
+    void NotifySignedIn(FirebaseUser user)
+    {
+        if (UserDataManager.Instance != null)
+            UserDataManager.Instance.SetUid(user.UserId);
+        OnSignedIn?.Invoke(user);
     }
 
     static LoginType GetLoginType(FirebaseUser user)

@@ -13,6 +13,7 @@ public class SheetDownloadSetting : ScriptableObject
     [Tooltip("항목의 sheetId가 비어 있으면 사용. 시트 URL의 /d/ 와 /edit 사이 값")]
     public string defaultSheetId;
     //public string gId = "1244868266";
+    // 슬라임 강화 데이터는 등급별 탭 → entries에 Json/SlimeEnhance/SlimeEnhance_{등급}.csv로 각각 등록
     public Entry[] entries = Array.Empty<Entry>();
 
     // 슬라임 전용 (sheetId는 defaultSheetId 사용, gid를 비우면 건너뜀)
@@ -21,13 +22,8 @@ public class SheetDownloadSetting : ScriptableObject
     public string slimeGid = "1109237000";
     [Tooltip("Slime 탭에서 받을 범위 (A열 별명 제외)")]
     public string slimeRange = "B1:F";
-    [Tooltip("SlimeEnhance 탭 gid → " + SLIME_ENHANCE_CSV_FOLDER + "{key}.csv")]
-    public string slimeEnhanceGid = "1944598144";
-    [Tooltip("SlimeEnhance 탭에서 1행에 key, 2행에 헤더(level ...)가 있는 블록을 자동으로 찾는다")]
-    public SlimeEnhanceEntry[] slimeEnhanceEntries = Array.Empty<SlimeEnhanceEntry>();
 
     public const string SLIME_CSV_PATH = "Json/SlimeData.csv";
-    public const string SLIME_ENHANCE_CSV_FOLDER = "Json/SlimeEnhance/";
 
     [Serializable]
     public class Entry
@@ -40,16 +36,6 @@ public class SheetDownloadSetting : ScriptableObject
         [Tooltip("탭 ID. 시트 URL의 #gid= 뒤 숫자")]
         public string gid;
         [Tooltip("A1 표기 범위. 비우면 탭 전체 (ex. A1:H20, A:H, A3:H)")]
-        public string range;
-    }
-
-    [Serializable]
-    public class SlimeEnhanceEntry
-    {
-        public bool enabled = true;
-        [Tooltip("슬라임 key (SlimeEnhance 탭 1행 블록 제목과 같아야 함)")]
-        public string key;
-        [Tooltip("비우면 블록 자동 탐색. 직접 지정하려면 헤더 행부터 (ex. F2:J17)")]
         public string range;
     }
 }

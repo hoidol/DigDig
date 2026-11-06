@@ -56,6 +56,17 @@ public abstract class Enemy : MonoBehaviour, IHittable
     //적 생성 시 호출
     public int wave;
     public AllyUnitDamageData killedBy; // 처치한 공격 (코인 타일이 처치한 유닛인지 확인. 지급 후 null)
+    // 이동 막기 (철벽 슬라임 방패 등). 막는 쪽이 여러 개일 수 있어 개수로 관리, 0이면 이동
+    int blockerCount;
+    public bool IsBlocked => CanBeBlocked && blockerCount > 0;
+    // 엘리트/보스는 막기 무시 (방패에 닿아도 계속 이동, 막기 슬롯도 차지하지 않음)
+    public virtual bool CanBeBlocked => !IsEliteOrBoss;
+    public bool IsEliteOrBoss => this is EliteEnemy || this is Boss;
+    public void AddBlocker() => blockerCount++;
+    public void RemoveBlocker() => blockerCount = Mathf.Max(0, blockerCount - 1);
+    // 풀링 재사용 구분용 (Spawn마다 증가). 막는 쪽이 이전 생애의 적을 해제하지 않도록 확인
+    public int SpawnId { get; private set; }
+
     public virtual void Spawn(Vector2 pos, int wave)
     {
         this.wave = wave;
@@ -64,6 +75,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         statusEffectHandler?.Reset();
         pathIdx = 0;
         moveDirIdx = -1;
+        blockerCount = 0;
+        SpawnId++;
         Apear();
         transform.position = pos;
         maxHp = GetHp();
@@ -138,21 +151,12 @@ public abstract class Enemy : MonoBehaviour, IHittable
             return;
         }
 
-        if (isPushing)
-        {
-            if (rg2d.linearVelocity.magnitude < 0.1f)
-            {
-                isPushing = false;
-                moveDirIdx = -1; // 밀려서 경로를 벗어났으므로 현재 위치 기준으로 방향 다시 계산
-            }
-        }
-
-        if (statusEffectHandler != null && statusEffectHandler.IsStunned)
+        if ((statusEffectHandler != null && statusEffectHandler.IsStunned) || IsBlocked)
         {
             rg2d.linearVelocity = Vector2.zero;
             return;
         }
-            
+
 
         UpdateMoving();
     }
@@ -164,9 +168,6 @@ public abstract class Enemy : MonoBehaviour, IHittable
     // 0 이하(= 지나침)거나 이번 프레임 이동량 이하면 지점에 스냅 후 다음 지점으로 → 목표를 넘어가지 않음
     public virtual void UpdateMoving()
     {
-        if (isPushing)
-            return;
-
         Transform[] paths = EnemySpawner.Instance.paths;
         float speed = enemyData.moveSpeed * (statusEffectHandler != null ? statusEffectHandler.SlowRate : 1f);
         float arriveDist = Mathf.Max(PATH_ARRIVE_DISTANCE, speed * Time.deltaTime);
@@ -234,6 +235,9 @@ public abstract class Enemy : MonoBehaviour, IHittable
             return;
         // 방어 타입 배율, 만능 공격, 거인 사냥 배율은 EnemyDefence에서 계산
         float multiplier = enemyDefence.CalculateDamage(damage);
+        // 낙인 중첩만큼 받는 피해 증가 (모든 공격)
+        if (statusEffectHandler != null)
+            multiplier *= statusEffectHandler.StigmaDamageMul;
         curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, multiplier));
         if (curHp > 1)
             hpText.text = ((int)curHp).ToString();
@@ -277,13 +281,6 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public bool CanHit()
     {
         return curHp > 0;
-    }
-
-    public bool isPushing;
-    public void Push(Vector2 dir, float power)
-    {
-        isPushing = true;
-        rg2d.AddForce(dir * power, ForceMode2D.Impulse);
     }
 
 }

@@ -14,7 +14,7 @@ public class OrbitMachine : SubMachine
     readonly Queue<OrbitOrb> pool = new();
 
     // ── 풀링 ──────────────────────────────────────────────
-    OrbitOrb GetFromPool()
+    protected OrbitOrb GetFromPool()
     {
         if (pool.Count > 0)
         {
@@ -25,14 +25,14 @@ public class OrbitMachine : SubMachine
         return Instantiate(orbitOrbPrefab, transform);
     }
 
-    void ReturnToPool(OrbitOrb obj)
+    protected void ReturnToPool(OrbitOrb obj)
     {
         obj.gameObject.SetActive(false);
         pool.Enqueue(obj);
     }
 
     // ── 추가 / 제거 ────────────────────────────────────────
-    public OrbitOrb AddOrbit()
+    public virtual OrbitOrb AddOrbit()
     {
         OrbitOrb obj = GetFromPool();
         obj.Spawn(this);
@@ -42,7 +42,7 @@ public class OrbitMachine : SubMachine
         return obj;
     }
 
-    public void RemoveOrbitBullet(OrbitOrb obj)
+    public virtual void RemoveOrbitBullet(OrbitOrb obj)
     {
         orbitOrbs.Remove(obj);
         ReturnToPool(obj);
@@ -51,7 +51,7 @@ public class OrbitMachine : SubMachine
 
     // ── Sorting ────────────────────────────────────────────
     // 첫 번째 인덱스의 현재 회전 기준으로 나머지를 localPosition 균등 배치
-    void Sorting()
+    protected virtual void Sorting()
     {
         int count = orbitOrbs.Count;
         if (count == 0) return;
@@ -75,7 +75,7 @@ public class OrbitMachine : SubMachine
 
     // ── Update ─────────────────────────────────────────────
     // 부모 오브젝트 자체를 회전 → 자식들이 자동으로 공전
-    void Update()
+    protected virtual void Update()
     {
         transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
     }

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "327107647483",
+    "firebase_url": "https://dreamofslime-37cb2-default-rtdb.firebaseio.com",
+    "project_id": "dreamofslime-37cb2",
+    "storage_bucket": "dreamofslime-37cb2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327107647483:android:7ef74f22296cc08ba21d5e",
+        "android_client_info": {
+          "package_name": "com.BEI.KingSlime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327107647483-hj58sakqlj59r74publ7gr485bv7f5dn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdoUHgT5CDVzYF4JHGJb6jipBrncp8Nbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327107647483-hj58sakqlj59r74publ7gr485bv7f5dn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

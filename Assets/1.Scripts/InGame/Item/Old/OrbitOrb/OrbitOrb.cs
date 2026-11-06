@@ -16,7 +16,7 @@ public class OrbitOrb : MonoBehaviour
         public IHittable hittable;
         public float cooltime;
     }
-    OrbitMachine orbitMachine;
+    protected OrbitMachine orbitMachine;
     public void Spawn(OrbitMachine orbitMachine)
     {
         this.orbitMachine = orbitMachine;
@@ -53,7 +53,10 @@ public class OrbitOrb : MonoBehaviour
 
         // 탄을 쏘지 않으므로 타일 아이템 효과를 적중마다 직접 적용
         TileItem tileItem = orbitMachine.owner is IShotModifiable m ? m.ShotModifier.tileItem : null;
-        AllyUnitDamageData damageData = new AllyUnitDamageData { damage = damage, attackType = orbitMachine.attackType, allyUnit = orbitMachine.owner };
+        AllyUnitDamageData damageData = new AllyUnitDamageData();
+        damageData.Init(orbitMachine.owner); // 슬라임 치명타 확률(설의 버프 등) 반영
+        damageData.damage = damage;
+        damageData.attackType = orbitMachine.attackType;
         if (tileItem != null)
             tileItem.ModifyDamageData(damageData);
         hittable.TakeDamage(damageData);

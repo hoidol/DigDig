@@ -1,13 +1,28 @@
-Key	Name	Desc	Grade	AttackType	ReinforceAttackPower
-Wacky	엉뚱한	{0}~{1} 피해를 가진 탄을 발사합니다.	C	Physic	10
-Bounce	탄성	1회 튕기는 도탄 발사/2회 튕기는 도탄 발사/4회 튕기는 도탄 발사	C	Physic	10
-Flame	화염	화염탄을1개 발사/	C	Magic	10
-Orbit	궤도	궤도 생성 (3초마다 체력 -1체력)	B	Physic	10
-Pierce	관통	탄 4번 쏠때마다 관통탄 추가 발사 (랜덤 방향) +3 > +5 > +7	B	Physic	10
-Ice	얼음	20% 확률로 빙결되는 얼음을 발사합니다.	C	Magic	10
-Thunder	썬더	쏠때마다 랜덤한 위치에 번개가 떨어짐	B	Magic	10
-Lightning	라이트닝	몬스터 공격 시 타겟을 포함한 3개의 몬스터에게 각각 100%, 70%, 30% [전기]데미지를 입힌다.	A	Magic	10
-Dopamine	도파민	처지 시 한발 더 발사함	A	Physic	10
-Heal	치료	10초마다 체력 1씩 회복시킴	A	Magic	10
-Boom	폭발	폭발탄 발사(범위 피해)	S	Physic	10
-Shield	방패	원거리 공격 방어, 체력 +25	S	Physic	10
+Key	Name	Desc	Grade	AttackType	Growth	AttackSpeed	AttackRange	CritChance	ReinforceAttackPower	ReinforceAttackSpeed
+Random	랜덤	{0}~{1} 피해를 가진 탄을 발사합니다.	C	Physic	1	30	3	0	10	0
+Bounce	탄성	1회 튕기는 도탄 발사/2회 튕기는 도탄 발사/4회 튕기는 도탄 발사	C	Physic	1	30	3	0	7	0
+Flame	화염	화염탄을1개 발사	C	Magic	1	30	3	0	5	0
+Orbit	궤도	궤도 생성 (3초마다 체력 -1체력)	C	Physic	1	30	3	0	5	0
+Ice	얼음	20% 확률로 빙결되는 얼음을 발사합니다.	C	Magic	1	30	3	0	5	0
+Lightning	라이트닝	몬스터 공격 시 타겟을 포함한 3개의 몬스터에게 각각 100%, 70%, 30% [전기]데미지를 입힌다.	C	Magic	1	30	3	0	5	0
+Pierce	관통	관통탄 발사합니다.	C	Physic	1	30	3	0	5	0
+Iron	강철	엘리트, 보스에게 2배 데미지	C	Physic	1	30	3	0	5	0
+Thunder	천둥	번개를 떨어드려 주변 데미지	C	Magic	1	30	3	0	5	0
+Shield	철벽	Orbit 적의 이동을 막는 방패가 회전합니다. 방패 당 적 3기까지 적용	B	Physic	1	30	3	0	5	0
+Dopamine	광란	주변에서 적 죽으면 한발 더 발사함	B	Physic	1	30	3	0	5	0
+Mine	지뢰	가까운 적 이동 경로에 지뢰 설치	B	Physic	1	30	3	0	5	0
+Breeze	산들바람	십자범위 4칸 주사위에게 [공격속도 증가] 버프를 준다. 	B	Magic	1	30	3	0	5	0
+Rage	격노	십자범위 4칸 주사위에게 [공격력 증가] 버프를 준다. 	B	Physic	1	30	3	0	5	0
+Stigma	낙인	빈틈을 찾아서 흔적 (3회 중첩, 중첩 당 5% 추가 데미지)	B	Physic	1	30	3	0	5	0
+Mud	진흙	Orbit(닿으면 슬로우)	A	Magic	1	30	3	0	5	0
+Beam	광선 링크	레이저가 연결됨	A	Magic	1	30	3	0	5	0
+Berserker	버서커	가까이서 적이 죽을때 마다 공속도 상승(최대 중첩 10회)	A	Physic	1	30	3	0	5	0
+Mortar	박격포	깃발 위치에 폭탄 포격	A	Physic	1	30	3	0	5	0
+Hail	빙석	타일그룹을 회전하는 눈 소환	A	Magic	1	30	3	0	5	0
+Inferno	지옥	타일그룹에 있는 적 화염 데미지	A	Magic	1	30	3	0	5	0
+Keen	설의	십자범위 4칸 주사위에게 [크리티컬 증가] 버프를 준다. 	A	Physic	1	30	3	0	5	0
+Sacrifice	희생	합치면 동일한 슬라임으로	S	Magic	1	30	3	0	5	0
+GrowUp	성장	25초 후 랜덤한 슬라임으로 성장합니다.	S	Physic	1	30	3	0	5	0
+Scavenger	수확	주변에서 적이 죽으면 1골드 획득	S	Physic	1	30	3	0	5	0
+Joker	조커	원하는 슬라임으로 변함	S	Magic	1	30	3	0	5	0
+Hunter	사냥꾼	3회 공격마다 저격 관통탄 발사하여 스턴 0.2초 + 치명 피해를 줍니다.	S	Physic	1	30	3	0	5	0

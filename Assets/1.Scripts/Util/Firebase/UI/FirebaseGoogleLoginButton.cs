@@ -4,5 +4,5 @@ using Cysharp.Threading.Tasks;
 public class FirebaseGoogleLoginButton : FirebaseLoginButtonBase
 {
     protected override string LoginName => "Google";
-    protected override UniTask<bool> SignInAsync(FirebaseAuth auth) => auth.SignInWithGoogleAsync();
+    protected override UniTask<bool> SignInAsync(FirebaseAuth auth) => auth.SignInWithGoogleAsync(OnSignInCompleted);
 }

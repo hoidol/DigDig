@@ -7,9 +7,9 @@ public class SlimeManager : MonoSingleton<SlimeManager>
     public Dictionary<string, SlimeData> slimeDataDic = new Dictionary<string, SlimeData>();
     public Dictionary<GradeType, List<string>> gradeGroupGrowth1SlimeDic = new Dictionary<GradeType, List<string>>();
     public SlimeData[] allSlimeDatas;
-    public SlimeData growth0SlimeData;
-    public SlimeData[] growth1SlimeDatas;
-    public SlimeData[] growth2SlimeDatas;
+    // public SlimeData growth0SlimeData;
+    // public SlimeData[] growth1SlimeDatas;
+    // public SlimeData[] growth2SlimeDatas;
 
     public Dictionary<GradeType, EnhanceExpInfo> enhanceExpInfoDic = new Dictionary<GradeType, EnhanceExpInfo>();
     public SlimeMergeData[] slimeMergeDatas;
@@ -35,31 +35,6 @@ public class SlimeManager : MonoSingleton<SlimeManager>
 
         });
 
-        await AddressableMgr.LoadAllByLabel<SlimeData>("Growth0SlimeData", (dates) =>
-        {
-            growth0SlimeData = dates[0];
-
-        });
-        await AddressableMgr.LoadAllByLabel<SlimeData>("Growth1SlimeData", (dates) =>
-        {
-            growth1SlimeDatas = dates;
-
-            foreach (SlimeData slimeData in growth1SlimeDatas)
-            {
-                if (!gradeGroupGrowth1SlimeDic.ContainsKey(slimeData.grade))
-                {
-                    gradeGroupGrowth1SlimeDic.Add(slimeData.grade, new List<string>());
-                }
-                gradeGroupGrowth1SlimeDic[slimeData.grade].Add(slimeData.key);
-
-            }
-
-        });
-        await AddressableMgr.LoadAllByLabel<SlimeData>("Growth2SlimeData", (dates) =>
-        {
-            growth2SlimeDatas = dates;
-
-        });
 
         await AddressableMgr.LoadAllByLabel<SlimeMergeData>("SlimeMergeData", (dates) =>
         {

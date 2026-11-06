@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ac6b568422fa470f9a60c684eb83d5a, type: 3}
+  m_Name: Scavenger
+  m_EditorClassIdentifier: Assembly-CSharp::ScavengerSlimeData
+  key: Scavenger
+  desc: "\uC8FC\uBCC0\uC5D0\uC11C \uC801\uC774 \uC8FD\uC73C\uBA74 1\uACE8\uB4DC \uD68D\uB4DD"
+  growth: 1
+  attackType: 1
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 5
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 5
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 6
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 6
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 7
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 7
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  attackPowerRandomRatio: 0
+  reinforceAttackPowerPercent: 5
+  prefab: {fileID: 1358385290756183109, guid: 963b0989232e43fdb2768248e52246ca, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  grade: 3
+  displayStatTypes: 000000000200000005000000
+  baseSlimeStats:
+  - statType: 2
+    values:
+    - 30
+  - statType: 5
+    values:
+    - 3
+  - statType: 3
+    values:
+    - 0
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00"
+  - level: 5
+    desc: "\uACE8\uB4DC \uD68D\uB4DD \uBC94\uC704 15% \uC99D\uAC00"
+  - level: 8
+    desc: "[\uAC01\uC131] \uC5D8\uB9AC\uD2B8, \uBCF4\uC2A4 \uCC98\uCE58 \uC2DC 30\uACE8\uB4DC
+      \uCD94\uAC00"
+  - level: 11
+    desc: "20% \uD655\uB960\uB85C \uACE8\uB4DC 2\uBC30"
+  - level: 14
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00"
+  uniqueSlimeStats: []
+  coinPerKill: 1

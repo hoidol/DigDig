@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ad7152e4b33644c696ac1bad0b62baf, type: 3}
+  m_Name: Breeze
+  m_EditorClassIdentifier: Assembly-CSharp::BreezeSlimeData
+  key: Breeze
+  desc: "\uC2ED\uC790\uBC94\uC704 4\uCE78 \uC8FC\uC0AC\uC704\uC5D0\uAC8C [\uACF5\uACA9\uC18D\uB3C4
+    \uC99D\uAC00] \uBC84\uD504\uB97C \uC900\uB2E4."
+  growth: 1
+  attackType: 2
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 5
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 5
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 6
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 6
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 7
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 7
+      - 7
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 8
+      - 8
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 9
+      - 9
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 10
+      - 10
+  attackPowerRandomRatio: 0
+  reinforceAttackPowerPercent: 5
+  prefab: {fileID: 1358385290756183109, guid: 001e46b1f7db4c40996616aef8c6b681, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  grade: 1
+  displayStatTypes: 000000000200000005000000
+  baseSlimeStats:
+  - statType: 2
+    values:
+    - 30
+  - statType: 5
+    values:
+    - 3
+  - statType: 3
+    values:
+    - 0
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 10% \uC99D\uAC00"
+  - level: 5
+    desc: "\uD295\uAE30\uB294 \uD69F\uC218 +1"
+  - level: 8
+    desc: "[\uAC01\uC131] \uD295\uAE38 \uB54C\uB9C8\uB2E4 \uD53C\uD574\uB7C9 10%
+      \uC99D\uAC00"
+  - level: 11
+    desc: "\uBC1C\uC0AC \uC18D\uB3C4 10% \uC99D\uAC00"
+  - level: 14
+    desc: "\uD295\uAE30\uB294 \uD69F\uC218 +1"
+  uniqueSlimeStats: []
+  buffOpType: 1
+  buffValues:
+  - 1.2
+  - 1.3
+  - 1.4
+  - 1.5
+  - 1.6

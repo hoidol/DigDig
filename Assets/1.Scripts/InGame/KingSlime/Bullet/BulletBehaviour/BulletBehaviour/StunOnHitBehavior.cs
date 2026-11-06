@@ -1,16 +1,23 @@
 using UnityEngine;
 
-// 보스/엘리트 제외하고 적중 시 스턴
+// 적중 시 chance(0~1) 확률로 스턴 (chance 생략 시 항상). 엘리트/보스는 시간 절반 (StatusEffectHandler)
 public class StunOnHitBehavior : IBulletBehavior
-{public int ApplyOrder => 0;
-    float duration;
-    public StunOnHitBehavior(float d)
+{
+    public int ApplyOrder => 0;
+    readonly float duration;
+    readonly float chance;
+
+    public StunOnHitBehavior(float d, float chance = 1f)
     {
         duration = d;
+        this.chance = chance;
     }
+
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
-        if (hit is Enemy enemy && hit is not Boss)
+        if (chance < 1f && Random.value >= chance)
+            return true;
+        if (hit is Enemy enemy) // 엘리트/보스는 StatusEffectHandler에서 시간 절반
             enemy.GetComponent<StatusEffectHandler>()?.Apply(new StunEffect(duration));
         return true;
     }

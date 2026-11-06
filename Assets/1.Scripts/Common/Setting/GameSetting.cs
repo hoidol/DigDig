@@ -6,7 +6,7 @@ public class GameSetting
    // public const int MAX_MF_GROUP_POINT = 5; //MemoryFragment
    public static string FIRST_STAGE_KEY = "Normal"; // 난이도마다 스테이지 하나, key = 난이도 이름
    public static KingSlimeName INIT_CHARACTER_NAME = KingSlimeName.Lucky;
-   public static string[] INIT_SLIME_KEYS = { "Flame", "Ice", "Wacky", "Orbit", "Lightning" };
+   public static string[] INIT_SLIME_KEYS = { "Flame", "Ice", "Random", "Orbit", "Lightning" };
    public static int SLIME_SLOT_COUNT = 5;
    public static int PLAY_COST_ENERGE = 5;
    public static int MAX_ENERGE = 30;
@@ -45,5 +45,5 @@ public class GameSetting
 
    // public const int MERGE_REINFORCE_MAX_EXP =3;
 
-
+   public static float INIT_CRIT_POWER =1.5f;
 }

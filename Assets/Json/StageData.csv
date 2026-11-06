@@ -1,4 +1,4 @@
-Key	Order	Difficulty	Stage	BossName	EnemyHp	AddHpRatioPerWave	MultiHpPerWave	DefenceTypes	DefenceWaveTypes
-Normal	0	Normal	0	TigerWraithBoss	10	0.3	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
-Hard	0	Hard	0	TigerWraithBoss	15	0.35	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
-Hell	0	Hell	0	TigerWraithBoss	20	0.4	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal
+Key	Difficulty	EnemyHp	AddHpRatioPerWave	MultiHpPerWave	DefenceTypes	DefenceWaveTypes			
+Normal	Normal	10	0.3	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal			
+Hard	Hard	15	0.35	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal			
+Hell	Hell	20	0.4	1.1	Normal/Armored/Ethereal	Normal/Normal/Armored/Normal/Random/Normal/Ethereal			

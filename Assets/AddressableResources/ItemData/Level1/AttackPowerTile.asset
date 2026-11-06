@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: AttackPowerTile
   itemName: "\uACF5\uACA9\uB825 \uD0C0\uC77C"
-  desc: "\uACF5\uACA9\uB825 50% \uC99D\uAC00"
+  desc: "\uACF5\uACA9\uB825 70% \uC99D\uAC00"
   level: 1
   maxCount: 3
   itemPrefab: {fileID: 7770114647235554288, guid: f253208175c7640f286f09ae20053beb,

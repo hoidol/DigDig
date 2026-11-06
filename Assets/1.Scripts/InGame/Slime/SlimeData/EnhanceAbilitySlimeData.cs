@@ -8,7 +8,7 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
 {
     public EnhanceAbilityInfo[] enhanceAbilityInfos;
 
-    // commonSlimeEnhanceInfos: 강화 레벨(1~15)마다 달라지는 공용 스탯(AttackPower/AttackSpeed/AttackRange) + EnhanceAbility 설명
+    // commonSlimeEnhanceInfos: 강화 레벨(1~15)마다 달라지는 공용 스탯(AttackPower. AttackSpeed·AttackRange·CritChance는 SlimeData.csv의 baseSlimeStats) + EnhanceAbility 설명
     // uniqueSlimeStats: 강화 레벨에 상관없이 고정인 슬라임 고유 스탯 (mergeLv별 값). CSV가 아니라 각 슬라임 SlimeData의 LoadData 재정의에서 SetUniqueStat으로 입력
     public List<SlimeStat> uniqueSlimeStats =new List<SlimeStat>();
     public SlimeStat GetUniqueStat(StatType statType)
@@ -28,7 +28,13 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
     }
 
 #if UNITY_EDITOR
-    // SlimeEnhance/{key}.csv는 Level, AttackPower, AttackSpeed, AttackRange, EnhanceAbility 컬럼만 읽어
+    // 강화 데이터는 등급별 표(SlimeEnhance/SlimeEnhance_{등급}.csv, 시트 탭도 등급별).
+    // 읽을 때는 등급과 상관없이 SlimeEnhance_*.csv 전체에서 내 key 블록을 찾는다 → 등급이 바뀌어도 행만 옮기면 됨
+    // 표 안에서 Key는 블록 첫 행에만 쓰고 아래 행은 비워 두면 위 Key를 이어받는다
+    public const string SLIME_ENHANCE_FOLDER = "SlimeEnhance";
+    public const string SLIME_ENHANCE_FILE_PATTERN = "SlimeEnhance_*.csv";
+
+    // 내 key 블록의 Level, AttackPower, EnhanceAbility 컬럼만 읽어 (AttackSpeed 열이 있어도 무시)
     // commonSlimeEnhanceInfos, enhanceAbilityInfos 배열을 채운다. (그 외 컬럼은 무시)
     // 슬라임별 고유 스탯은 자식 클래스에서 LoadData를 재정의해 base.LoadData() 뒤에 SetUniqueStat으로 넣는다.
     public override void LoadData()
@@ -36,27 +42,44 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
         base.LoadData();
         uniqueSlimeStats.Clear(); // 자식 LoadData에서 다시 채움
 
-        string relativePath = $"SlimeEnhance/{key}.csv";
-        if (!System.IO.File.Exists(TableReader.GetFullPath(relativePath)))
+        List<TableReader.Row> myRows = null;
+        string foundFile = null;
+        string folder = TableReader.GetFullPath(SLIME_ENHANCE_FOLDER);
+        string[] files = System.IO.Directory.Exists(folder)
+            ? System.IO.Directory.GetFiles(folder, SLIME_ENHANCE_FILE_PATTERN)
+            : new string[0];
+        foreach (string file in files.OrderBy(f => f))
         {
-            CreateTempCsv(TableReader.GetFullPath(relativePath));
+            string relativePath = $"{SLIME_ENHANCE_FOLDER}/{System.IO.Path.GetFileName(file)}";
+            List<TableReader.Row> rows = FindKeyRows(TableReader.Load(relativePath));
+            if (rows.Count == 0)
+                continue;
+            if (myRows != null)
+            {
+                Debug.LogWarning($"[EnhanceAbilitySlimeData] '{key}' 블록이 {foundFile}, {relativePath} 두 곳에 있음 → {foundFile} 사용");
+                continue;
+            }
+            myRows = rows;
+            foundFile = relativePath;
         }
 
-        TableReader table = TableReader.Load(relativePath);
-        if (table == null || table.rows.Count == 0) return;
+        if (myRows == null)
+        {
+            // 기존 데이터를 지우지 않음 (표에 아직 안 넣은 슬라임)
+            Debug.LogWarning($"[EnhanceAbilitySlimeData] {SLIME_ENHANCE_FOLDER}/{SLIME_ENHANCE_FILE_PATTERN}에 '{key}' 블록 없음");
+            return;
+        }
 
         var enhanceInfos = new List<SlimeEnhanceInfo>();
         var abilityInfos = new List<EnhanceAbilityInfo>();
 
-        foreach (TableReader.Row row in table.rows)
+        foreach (TableReader.Row row in myRows)
         {
             if (!row.TryGetInt("Level", out int level))
                 continue;
 
             var stats = new List<SlimeStat>();
             AddStat(stats, StatType.AttackPower, row.Get("AttackPower"));
-            AddStat(stats, StatType.AttackSpeed, row.Get("AttackSpeed"));
-            AddStat(stats, StatType.AttackRange, row.Get("AttackRange"));
             enhanceInfos.Add(new SlimeEnhanceInfo { level = level, slimeStats = stats.ToArray() });
 
             string desc = row.Get("EnhanceAbility");
@@ -68,20 +91,26 @@ public abstract class EnhanceAbilitySlimeData : SlimeData
         enhanceAbilityInfos = abilityInfos.ToArray();
 
         UnityEditor.EditorUtility.SetDirty(this);
-        Debug.Log($"[EnhanceAbilitySlimeData] {key} 강화 데이터 LoadData 완료 ({commonSlimeEnhanceInfos.Length}레벨)");
+        Debug.Log($"[EnhanceAbilitySlimeData] {key} 강화 데이터 LoadData 완료 ({foundFile}, {commonSlimeEnhanceInfos.Length}레벨)");
     }
 
-    // 강화 CSV가 없을 때 level 1~MAX_ENHANCE_LEVEL 공용 컬럼만 채운 임시 CSV를 만든다. (값은 전부 플레이스홀더)
-    void CreateTempCsv(string path)
+    // 표에서 내 key 블록의 행만 (Key가 빈 행은 위 Key를 이어받음)
+    List<TableReader.Row> FindKeyRows(TableReader table)
     {
-        var sb = new System.Text.StringBuilder();
-        sb.Append("level\tAttackPower\tAttackSpeed\tAttackRange\tEnhanceAbility\n");
-        for (int lv = 1; lv <= MAX_ENHANCE_LEVEL; lv++)
-            sb.Append($"{lv}\t0/0\t0/0\t0/0\t\n");
+        var result = new List<TableReader.Row>();
+        if (table == null)
+            return result;
 
-        System.IO.File.WriteAllText(path, sb.ToString(), System.Text.Encoding.UTF8);
-        UnityEditor.AssetDatabase.Refresh();
-        Debug.LogWarning($"[EnhanceAbilitySlimeData] CSV 파일 없어서 임시 생성: {path}");
+        string curKey = null;
+        foreach (TableReader.Row row in table.rows)
+        {
+            string rowKey = row.Get("Key");
+            if (!string.IsNullOrEmpty(rowKey))
+                curKey = rowKey;
+            if (curKey == key)
+                result.Add(row);
+        }
+        return result;
     }
 
     // 강화 레벨에 상관없이 고정인 슬라임 고유 스탯을 uniqueSlimeStats에 설정한다. 같은 type이 있으면 덮어씀

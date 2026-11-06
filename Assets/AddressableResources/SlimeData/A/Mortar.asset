@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acaf7d05fec6b495897f8d988c756361, type: 3}
+  m_Name: Mortar
+  m_EditorClassIdentifier: Assembly-CSharp::MortarSlimeData
+  key: Mortar
+  desc: "\uAE43\uBC1C \uC704\uCE58\uC5D0 \uD3ED\uD0C4 \uD3EC\uACA9"
+  growth: 1
+  attackType: 1
+  commonSlimeEnhanceInfos:
+  - level: 0
+    slimeStats:
+    - statType: 0
+      values:
+      - 3
+      - 2
+  - level: 1
+    slimeStats:
+    - statType: 0
+      values:
+      - 3
+      - 2
+  - level: 2
+    slimeStats:
+    - statType: 0
+      values:
+      - 4
+      - 2
+  - level: 3
+    slimeStats:
+    - statType: 0
+      values:
+      - 4
+      - 2
+  - level: 4
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 3
+  - level: 5
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 3
+  - level: 6
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 4
+  - level: 7
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 4
+  - level: 8
+    slimeStats:
+    - statType: 0
+      values:
+      - 5
+      - 4
+  - level: 9
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 4
+  - level: 10
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 4
+  - level: 11
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 4
+  - level: 12
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 4
+  - level: 13
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 5
+  - level: 14
+    slimeStats:
+    - statType: 0
+      values:
+      - 6
+      - 5
+  attackPowerRandomRatio: 0
+  reinforceAttackPowerPercent: 5
+  prefab: {fileID: 3171748586308020387, guid: c37af5d36790b4a86a0810f86a1f347b, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  grade: 2
+  displayStatTypes: 000000000200000005000000
+  baseSlimeStats:
+  - statType: 2
+    values:
+    - 30
+  - statType: 5
+    values:
+    - 3
+  - statType: 3
+    values:
+    - 0
+  enhanceAbilityInfos:
+  - level: 2
+    desc: "\uACF5\uACA9\uB825 +4% \uC99D\uAC00"
+  - level: 5
+    desc: "\uD3ED\uBC1C \uBC94\uC704(boomRange) 15% \uC99D\uAC00"
+  - level: 8
+    desc: "[\uAC01\uC131] \uD3ED\uBC1C \uC2DC 50\uD504\uB85C \uD655\uB960\uB85C \uC2AC\uB85C\uC6B0
+      \uD6A8\uACFC \uD65C\uC131\uD654"
+  - level: 11
+    desc: "\uD3ED\uBC1C \uC2DC \uCD5C\uB300 \uD0C0\uACA9 \uAC1C\uC218 \uC99D\uAC00"
+  - level: 14
+    desc: "\uACF5\uACA9\uB825 +3 \uC99D\uAC00"
+  uniqueSlimeStats: []
+  ranges:
+  - 1.5
+  - 1.9
+  - 2.3
+  - 2.6
+  - 2.9
+  - 3.2
+  maxHitCount: 5
+  slowChance: 0.25
+  slowDuration: 1
+  flightTime: 0.6
+  arcHeight: 1.5

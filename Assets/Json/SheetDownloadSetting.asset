@@ -63,7 +63,7 @@ MonoBehaviour:
     csvPath: Json/EnhanceLevelInfo.csv
     sheetId: 
     gid: 741993365
-    range: A:O
+    range: A:M
   - enabled: 1
     csvPath: Resources/Json/DailyAchievement.csv
     sheetId: 
@@ -94,37 +94,25 @@ MonoBehaviour:
     sheetId: 
     gid: 1703370116
     range: B:D
-  slimeGid: 1109237000
-  slimeRange: A:E
-  slimeEnhanceGid: 1944598144
-  slimeEnhanceEntries:
   - enabled: 1
-    key: Base
+    csvPath: Json/SlimeEnhance/SlimeEnhance_C.csv
+    sheetId: 
+    gid: 1944598144
     range: A:D
   - enabled: 1
-    key: Boom
-    range: AP:AT
+    csvPath: Json/SlimeEnhance/SlimeEnhance_B.csv
+    sheetId: 
+    gid: 1615882530
+    range: A:D
   - enabled: 1
-    key: Bounce
-    range: U:Y
+    csvPath: Json/SlimeEnhance/SlimeEnhance_A.csv
+    sheetId: 
+    gid: 1014026992
+    range: A:D
   - enabled: 1
-    key: Flame
-    range: M:R
-  - enabled: 1
-    key: Heal
-    range: AV:BA
-  - enabled: 1
-    key: Ice
-    range: AB:AG
-  - enabled: 1
-    key: Lightning
-    range: BC:BG
-  - enabled: 1
-    key: Orbit
-    range: AJ:AN
-  - enabled: 1
-    key: Pierce
-    range: BJ:BN
-  - enabled: 1
-    key: Wacky
-    range: F:J
+    csvPath: Json/SlimeEnhance/SlimeEnhance_S.csv
+    sheetId: 
+    gid: 547841506
+    range: A:D
+  slimeGid: 1109237000
+  slimeRange: A:K

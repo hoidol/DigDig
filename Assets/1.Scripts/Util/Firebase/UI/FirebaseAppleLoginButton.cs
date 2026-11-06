@@ -4,5 +4,5 @@ using Cysharp.Threading.Tasks;
 public class FirebaseAppleLoginButton : FirebaseLoginButtonBase
 {
     protected override string LoginName => "Apple";
-    protected override UniTask<bool> SignInAsync(FirebaseAuth auth) => auth.SignInWithAppleAsync();
+    protected override UniTask<bool> SignInAsync(FirebaseAuth auth) => auth.SignInWithAppleAsync(OnSignInCompleted);
 }

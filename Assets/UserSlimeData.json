@@ -15,7 +15,7 @@
             "exp": 0
         },
         {
-            "key": "Wacky",
+            "key": "Random",
             "equipedIdx": 2,
             "own": true,
             "enhanceLevel": 0,
@@ -52,7 +52,7 @@
             "exp": 0
         },
         {
-            "key": "Wacky",
+            "key": "Random",
             "equipedIdx": 2,
             "own": true,
             "enhanceLevel": 0,
@@ -73,6 +73,13 @@
             "exp": 0
         },
         {
+            "key": "",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
             "key": "Boom",
             "equipedIdx": -1,
             "own": false,
@@ -87,7 +94,7 @@
             "exp": 0
         },
         {
-            "key": "Heal",
+            "key": "Iron",
             "equipedIdx": -1,
             "own": false,
             "enhanceLevel": 0,
@@ -95,6 +102,111 @@
         },
         {
             "key": "Pierce",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Thunder",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Beam",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Berserker",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Hail",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Inferno",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Mud",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "GrowUp",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Joker",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Sacrifice",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Scavenger",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Breeze",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Keen",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Mine",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Rage",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Stigma",
             "equipedIdx": -1,
             "own": false,
             "enhanceLevel": 0,
