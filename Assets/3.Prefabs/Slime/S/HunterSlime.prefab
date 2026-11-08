@@ -202,7 +202,7 @@ MonoBehaviour:
   slimeEnhanceInfo:
     level: 0
     slimeStats: []
-  rangeTr: {fileID: 0}
+  rangeTr: {fileID: 3666465616053016388}
   targetTr: {fileID: 0}
   snipeInterval: 0
   snipeStunDuration: 0

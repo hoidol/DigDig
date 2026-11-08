@@ -11,13 +11,13 @@ public class AttackInfo : ScriptableObject
         switch (attackType)
         {
             case AttackType.AllRounder:
-             return "만능형";
+             return TranslateManager.GetText("AttackType.AllRounder");
             case AttackType.Physic:
-             return "물리형";
+             return TranslateManager.GetText("AttackType.Physic");
             case AttackType.Magic:
-             return "마법형";
+             return TranslateManager.GetText("AttackType.Magic");
         }
-        return "물리형";
+        return TranslateManager.GetText("AttackType.Physic");
     }
 
     // public static string Desc(AttackType attackType)

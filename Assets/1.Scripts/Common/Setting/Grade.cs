@@ -30,17 +30,17 @@ public class Grade
         switch (grade)
         {
             case GradeType.C:
-                return "노말";
+                return TranslateManager.GetText("Grade.C");
             case GradeType.B:
-                return "레어";
+                return TranslateManager.GetText("Grade.B");
             case GradeType.A:
-                return "유니크";
+                return TranslateManager.GetText("Grade.A");
             case GradeType.S:
-                return "레전드";
+                return TranslateManager.GetText("Grade.S");
             case GradeType.SS:
-                return "신화"; 
+                return TranslateManager.GetText("Grade.SS"); 
             case GradeType.SSS: 
-                return "초월";// Transcendence
+                return TranslateManager.GetText("Grade.SSS");// Transcendence
             default:
                 return null;
         }

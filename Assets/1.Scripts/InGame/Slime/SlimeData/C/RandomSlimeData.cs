@@ -10,7 +10,7 @@ public class RandomSlimeData : EnhanceAbilitySlimeData
     public override string GetDescription(int mergeLv =0)
     {
         float mid = GetSlimeStat(StatType.AttackPower, 0).GetValue<float>(mergeLv);
-        return string.Format(TranslateManager.GetText($"RandomSlime_Desc"),
+        return string.Format(TranslateManager.GetText("Slime.Random.Desc"),
             Mathf.RoundToInt(mid * (1f - attackPowerRandomRatio)),
             Mathf.RoundToInt(mid * (1f + attackPowerRandomRatio)));
     }

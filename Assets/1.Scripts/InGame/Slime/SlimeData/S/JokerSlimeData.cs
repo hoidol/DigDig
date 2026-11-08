@@ -9,6 +9,6 @@ public class JokerSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"원하는 슬라임으로 변신합니다. {levelDownChance * 100f:0}% 확률로 실패해 별이 1 떨어집니다(별 1이면 사라짐).";
+        return string.Format(TranslateManager.GetText("Slime.Joker.Desc"), levelDownChance * 100f);
     }
 }

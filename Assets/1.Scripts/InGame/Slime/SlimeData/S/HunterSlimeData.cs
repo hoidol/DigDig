@@ -11,6 +11,6 @@ public class HunterSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"{snipeInterval}회 공격마다 저격 관통탄을 발사해 {snipeStunDuration}초 스턴 + 치명 피해를 줍니다.";
+        return string.Format(TranslateManager.GetText("Slime.Hunter.Desc"), snipeInterval, snipeStunDuration);
     }
 }

@@ -15,6 +15,6 @@ public class MineSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"적 이동 경로에 지뢰를 설치합니다. 밟으면 폭발해 주변 적에게 피해를 줍니다. (최대 {maxMineCounts.GetByMergeLevel(mergeLv)}개, 범위 {explodeRadiuses.GetByMergeLevel(mergeLv)}, 최대 {maxHitCount}기)";
+        return string.Format(TranslateManager.GetText("Slime.Mine.Desc"), maxMineCounts.GetByMergeLevel(mergeLv), explodeRadiuses.GetByMergeLevel(mergeLv), maxHitCount);
     }
 }

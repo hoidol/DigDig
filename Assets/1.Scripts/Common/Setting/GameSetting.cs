@@ -14,6 +14,8 @@ public class GameSetting
    // 무한 웨이브: N번째 wave(1부터)가 BOSS_WAVE_INTERVAL의 배수면 보스, ELITE_WAVE_INTERVAL의 배수면 엘리트 (보스 우선)
    public const int ELITE_WAVE_INTERVAL = 5;
    public const int BOSS_WAVE_INTERVAL = 20;
+   // N번째 wave가 DEFENCE_WAVE_INTERVAL의 배수면 일반 적이 Ethereal → Armored 순서로 번갈아 등장, 나머지는 Normal
+   public const int DEFENCE_WAVE_INTERVAL = 4;
 
    public const float WAVE_TIME = 60;
    public const float WAVE_SPAWN_TIME = 40;

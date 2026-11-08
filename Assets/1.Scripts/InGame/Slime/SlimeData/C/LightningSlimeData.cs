@@ -13,7 +13,7 @@ public class LightningSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int level = 0)
     {
-        return $"{lightningCounts.GetByMergeLevel(level)}기 적에게 체인 데미지를 입힙니다.";
+        return string.Format(TranslateManager.GetText("Slime.Lightning.Desc"), lightningCounts.GetByMergeLevel(level));
     }
 
 }

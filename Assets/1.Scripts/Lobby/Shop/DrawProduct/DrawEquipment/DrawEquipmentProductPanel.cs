@@ -9,44 +9,20 @@ public class DrawEquipmentProductPanel : DrawProductPanel
     //어떤것들이 나올지 설정해야지
     public DrawEquipment drawEquipment;
     protected virtual string[] Draw(int count) => drawEquipment.Draw(count);
+
+    // 구매 버튼 onPurchased에 등록 (인스펙터에서 뽑기 횟수 입력)
     public virtual void Purchased(int count)
     {
-        base.Purchased();
-        drawEquipment.count = count;
-        string[] keys = drawEquipment.Draw(count);
+        string[] keys = Draw(count);
+        LastDrawKeys = keys;
         for(int i = 0; i < keys.Length; i++)
         {
-            UserDataManager.Instance.userSlimeManager.AddUserSlime(keys[i]);
+            UserDataManager.Instance.userEquipmentManager.AddUserEquipment(keys[i]);
         }
-        Lobby.DrawSlimeResultCanvas.Instance.OpenCanvas(keys);
-        UpdatePanel();
-    }
-    public virtual void OnTryToPurchaseDraw3()
-    {
-        //광고 시청으로 뽑음 기회 하루에 3회
-        BlockCanvas.Instance.OpenCanvas("구매중...");
-        ProductManager.Instance.TryToBuy(productData, (success) =>
-        {
-            if (success)
-            {
-                Purchased(3); // Example: Draw 10 slimes
-            }
-            BlockCanvas.Instance.CloseCanvas();
-        });
-    }
-
-    public virtual void OnTryToPurchaseDraw10()
-    {
-        //DrawTicket 30개 소비
-        BlockCanvas.Instance.OpenCanvas("구매중...");
-        ProductManager.Instance.TryToBuy(productData, (success) =>
-        {
-            if (success)
-            {
-                Purchased(10); // Example: Draw 30 slimes
-            }
-            BlockCanvas.Instance.CloseCanvas();
-        });
-        
+        // 결과 창이 씬에 없으면 지급만 하고 토스트
+        if (Lobby.DrawEquipmentResultCanvas.Instance != null)
+            Lobby.DrawEquipmentResultCanvas.Instance.OpenCanvas(keys);
+        else
+            ToastCanvas.Toast(string.Format(TranslateManager.GetText("Draw_Equipment_Get"), keys.Length));
     }
 }

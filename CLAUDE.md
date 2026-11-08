@@ -2,6 +2,7 @@
 
 Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 사용자가 새 의도를 설명하면 이 파일을 갱신한다.
 코드에서 바로 알 수 있는 구현 세부는 적지 않고, **왜 그렇게 하는지(의도)** 위주로 적는다.
+- **사용자에게 답할 때는 항상 한글로 답한다.**
 
 ## 핵심 루프
 - 적 처치 → 코인 획득 → 슬라임 소환(뽑기) → 칸이 차면 합성 → 빈 칸에 다시 소환
@@ -14,6 +15,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 적은 플레이어를 쫓지 않고 `EnemySpawner.paths` 경로를 따라 이동 (`Enemy.pathIdx` = 다음 목표 지점).
 - 경로 **마지막 지점에 도착하면 캐릭터 체력 감소** 후 사라짐 (보상 없음). → 디펜스 구조: 경로 위에서 처치해야 함.
 - 스폰 위치는 `paths[0]`. `paths`가 비어 있으면 이전 방식(플레이어 추적)으로 동작.
+- (2026-11-08) **적 애니메이션**: 적 프리팹 자식의 스프라이트 프리팹(Layer Lab) Animator. **Walk가 기본**(스폰·풀 재사용 시 Walk부터). **처치되면 Dead 재생 → 한 번 끝나면 비활성화 후 풀로**(Dead 클립이 루프여도 1회, 최대 `Enemy.DEAD_ANIM_MAX_TIME`). Dead 중엔 충돌·이동·피해 없음, `EnemyDeadEvent`(보상·처치 감지)는 죽는 즉시 발행되고 활성 적 수에서도 바로 빠진다. **경로 끝 도착은 Dead 없이 바로 비활성화.** Dead 상태가 없는 프리팹(현재 보스)은 바로 비활성화. 테스트 `EnemyAnimPlayTest`.
 
 ## 슬라임 소환 / 합성
 - 소환 버튼: **10코인**, 장착한 **5종 중 1종이 랜덤**으로 mergeLv 0으로 **16칸** 중 빈 칸에 등장.
@@ -84,7 +86,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   - 증가는 **더하기**: Lv × `ValuePerLv`.
   - 가격(lv → lv+1) = `(BasePrice + PriceAddPerLv × lv) × PriceMulPerLv^lv` (반올림). 선형/지수 모두 이 식으로 조절.
 - 최종 스탯 = 기본값(KingSlimeData) + 장비 + 업그레이드, 계산은 `KingSlimeManager.GetTotalStatValue` 한 곳(로비 표시·인게임 `KingSlimeStatManager` 공용).
-  - StartGold = 게임 시작 시 코인, WaveClearGold = wave 종료마다 코인(보스 wave는 보스 처치 시. 무한 상승 게임이라 보스도 지급), MaxSlimeCount = `SlimeSpawner.slimeMaxCount`(기본 `SLIME_MIN_EXIST_COUNT`)에 더함.
+  - StartGold = 게임 시작 시 코인, WaveClearGold = wave 종료마다 코인(보스 wave는 보스 처치 시. 무한 상승 게임이라 보스도 지급), MaxSlimeCount = `SlimeSpawner.slimeMaxCount`(기본 `SLIME_MIN_EXIST_COUNT`)에 더함. **더하는 곳은 GameManager 한 곳**(킹 스탯 값, 2026-11-07 SlimeSpawner.Awake에서도 Lv을 더해 두 번 적용되던 버그 수정).
+  - 로비 KSManagementCanvas 능력치 표시(`KSStatStateContainer.currentKSAbilityInfoPanels`)는 업그레이드 StatType 전부(최대 슬라임 수·시작 코인·wave 종료 코인 포함). 표시 단위: 치명타 확률은 인게임과 같은 %(값 그대로), 공속은 `ATTACK_SPEED_PER_SECOND` 기준 10초당 발 수.
+  - 테스트 `KSUpgradePlayTest`: StatType별 업그레이드(Lv·재화·스탯·표시, 재화 부족/최대 Lv), 로비에서 올린 값이 인게임 킹 스탯·체력·최대 슬라임 수·시작/wave 종료 코인에 반영.
 
 ## 아이템 공통 (2026-10-23)
 - **보유 개수에 따른 능력치 증가는 없다.** `Item.count`/`GetCount()` 삭제. 아이템 효과는 개수와 무관하게 고정 수치(개수 1 기준). 보유 개수는 `statMgr.itemStatDic`에서 뽑기 상한(MaxCount) 판단에만 쓴다.
@@ -98,7 +102,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - (2026-11-06) **넉백(적 밀어내기, `Enemy.Push`/`PushBehavior`)은 삭제.** 적 이동 방해는 슬로우·빙결·스턴·철벽 막기로만. Orbit 각성은 넉백 대신 **회전에 닿은 적 3% 확률 0.1초 스턴**. **스턴은 모든 출처 공통으로 엘리트/보스도 걸리고 시간만 절반**(`StatusEffectHandler.Apply`).
 
 ## 타일 아이템 (2026-10-22)
-- 아이템 획득(2026-11-01): `DrawItemButton`으로 코인을 내면 `SelectItemCanvas`가 열린다. **Draw**(확률 연출, `drawDuration` 0이면 생략) → **SelectItem**(TileItem 중 겹치지 않는 랜덤 3개, 반드시 하나 선택) → **SelectTile**(눌러서 설치, 이미 아이템이 있는 타일은 불가). 열려 있는 동안 일시정지. 설치 칸을 직접 고르는 것이 배치 고민 포인트. PioneerTile은 설치가 없어 타일 선택 생략. (이전: 랜덤 1개를 랜덤 타일에 바로 설치)
+- 아이템 획득(2026-11-01): `DrawItemButton`으로 코인을 내면 `SelectItemCanvas`가 열린다. **Draw**(확률 연출, `drawDuration` 0이면 생략) → **SelectItem**(TileItem 중 겹치지 않는 랜덤 3개, 반드시 하나 선택) → **SelectTile**(눌러서 설치, 이미 아이템이 있는 타일은 불가). **열려 있어도 게임은 멈추지 않는다**(2026-11-07 확인, 이전엔 일시정지). 설치 칸을 직접 고르는 것이 배치 고민 포인트. PioneerTile은 설치가 없어 타일 선택 생략. (이전: 랜덤 1개를 랜덤 타일에 바로 설치)
   - 선택지 갱신(2026-11-04): SelectItem 단계에서 `AdRefreshItemButton`으로 광고를 보면 선택지 3개를 다시 뽑는다(가능하면 지금 보이는 것 제외). **한 판에 2번**(`REFRESH_COUNT_PER_GAME`), 광고 제거 구매자는 광고 없이 갱신.
   - 뽑기 가격(2026-10-25): **처음 10코인, 뽑을 때마다 +2** (`INIT_DRAW_ITEM_PRICE`/`INCREASE_DRAW_ITEM_PRICE`, 횟수는 `GameManager.drawItemCount`).
   - 성공 확률(2026-10-28): **처음 100%, 성공할 때마다 -5%** (최소 10%, `INIT/DECREASE/MIN_DRAW_ITEM_CHANCE`). 코인은 먼저 내고 실패하면 코인만 소모, 가격·확률은 그대로. → 골드 소비의 확률 포인트(뒤로 갈수록 "걸어볼지" 고민).
@@ -135,7 +139,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 웨이브 (2026-10-17 phase → wave / 2026-10-18 휴식 10초 부활)
 - **2026-10-30: 무한 웨이브.** 끝 wave 없이 계속 진행, 게임은 사망으로만 끝난다. WaveType은 WaveData(CSV)가 아니라 `GameManager.GetWaveType`이 번호로 결정:
   - wave 번호(waveIdx+1)가 **20의 배수 = 보스**(`BOSS_WAVE_INTERVAL`), **5의 배수 = 엘리트**(`ELITE_WAVE_INTERVAL`), 나머지 = 일반 전투(Battle). 보스 우선.
-  - 엘리트 wave = 일반 전투 + 그 wave 방어 타입의 엘리트 1마리.
+  - (2026-11-07 확정) 보스는 20 wave마다, **보스 wave에는 엘리트가 나오지 않는다**(보스 우선 → 20/40…은 BossWave만).
+  - (2026-11-07) **보스는 체력에 따른 페이즈가 없다.** 스킬(EnemyAttackPattern, 보스 자식)은 여러 개 들 수 있고 어떤 스킬을 쓸지는 보스 행동(`StartBehaviour`)이 정한다(`Boss.GetAttackPattern(key)`). BossPhase·BossPhaseChangedEvent 삭제.
+  - 엘리트 wave = 일반 전투 + 엘리트 1마리. (2026-11-07) **엘리트·보너스 엘리트·보스는 항상 Normal 방어 타입**(wave 방어 타입은 일반 적에만 적용). 갑옷·정령 엘리트 프리팹·CSV 행 삭제.
   - 보스 wave는 시간으로 안 넘어감(타이머 0에서 대기). **보스 처치 시 바로 다음 wave** (이전엔 스테이지 클리어).
   - 아래 "0~19 / 보스 처치 시 클리어" 내용은 이전 기획.
 - wave 0~19 (총 20), 19 = 보스. 각 wave의 WaveType은 WaveData에 **하나로 고정**, 선택 없이 바로 진행.
@@ -150,7 +156,11 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - **다음 웨이브 바로 시작(`StartNextWaveButton`, 2026-10-28)**: **한 wave의 소환이 모두 끝나면**(= wave 종료 → 휴식) 버튼이 나온다. 누르면 남은 휴식을 건너뛰고 바로 다음 wave(`GameManager.EndBreak`). 전투 중에는 안 나오므로 wave 스폰이 겹치지 않는다. 스킵 보상 골드 없음.
   - (이전 기획: 전투 wave 시작 5초 후 스킵 → 이전 wave 남은 스폰과 겹쳐 진행 + `SKIP_WAVE_GOLD`. 폐기)
   - 같은 wave의 중복 종료는 무시.
-- **보스 wave**: 시간으로 끝나지 않는다. **보스 처치 시 `GameManager.EndGame(true)`** → 스테이지 클리어.
+- **보스 wave**: 시간으로 끝나지 않는다. (이전: 보스 처치 시 `GameManager.EndGame(true)` → 스테이지 클리어. 지금은 무한 웨이브라 다음 wave)
+- (2026-11-07) **사망 → FailCanvas**: 광고 보고 부활 = **하루 5회**(`FailCanvas.MAX_DAILY_RESURRECTION_COUNT`, PlayerPrefs에 오늘 남은 횟수 + 날짜, 날짜 바뀌면 다시 5). 광고 성공 시에만 차감, 광고 제거 구매자는 광고 없이. 취소 → ResultCanvas.
+  - 광고 호출은 `AdManager.Show` 한 곳. **AdManager가 없으면(실제 광고 연결 전, StartSetting에서 생성 안 함) 광고 없이 성공 처리.**
+- (2026-11-07) **결과 화면(ResultCanvas)이 나올 때** 도전 횟수(`TryStage`) +1 → 부활해도 한 판. 보상: 골드 = `waveIdx`(최종 wave 번호 - 1, 1 wave당 1골드), 경험치 = waveIdx/2, 뽑기권 = 합성 횟수. 최고 wave 기록(`EndStage`).
+- wave 종료 코인(`WaveClearGold`)·시작 코인(`StartGold`)은 기본 0, **로비 업그레이드로만** 얻는다.
 - **부활(Resume)**: 필드 적 전부 제거(처치 보상 없음) → 체력 가득 → **마지막으로 종료된 wave의 다음 wave부터 다시 시작**. 그 이후 wave(스킵으로 겹쳐 진행 중이던 것 포함)는 모두 제거.
   - 예) 0 종료, 1 진행 중 스킵 → 2 진행 중 사망 → 1, 2 제거 후 **1을 처음부터**.
 - Normal vs Hard: 스포너 설정(인스펙터 값)과 배율만 다르게, 코드는 공유하는 방향.
@@ -162,13 +172,15 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 전투 웨이브의 특수 스폰(BundleWave 등 랜덤 스포너 호출)은 2026-10-16 제거. 일반 스폰만 사용.
 
 ### 적 방어 타입 (2026-10-16)
+- (2026-11-08) **일반 적 방어 타입 = wave 번호가 4의 배수(`DEFENCE_WAVE_INTERVAL`)면 Ethereal → Armored 순서로 번갈아(4=정령, 8=갑옷, 12=정령…), 나머지는 Normal** (`GameManager.GetWaveDefenceType`). WaveData의 DefenceTypes/DefenceWaveTypes는 사용 안 함(아래는 이전 기획).
 - (2026-10-30) 방어 타입 설정은 **WaveData/{난이도}.csv의 구간 단위**: 행마다 `StartWave`(waveIdx), `DefenceTypes`(등장 목록), `DefenceWaveTypes`(구간 시작부터 순서대로, `(wave - StartWave) % 개수`). wave에는 `StartWave <= wave`인 가장 늦은 행이 적용(예: 0/9/19 → wave 18은 9 행). 마지막 행은 무한히 반복.
 - **한 wave 안에서는 모든 일반 적이 같은 방어 타입.** wave가 바뀌면 다음 칸. `Random`은 DefenceTypes 중 하나를 wave 시작 시 한 번 뽑음.
-- 적의 방어 타입 기준은 **프리팹의 `Enemy.defenceType`** (2026-10-30, 이전엔 EnemyData.defenceType). 적 프리팹은 `Stage/{order}/Enemy` 폴더(하위 Elite/BonusElite 포함)에 종류×방어 타입별로 두고, EnemyData는 (종류, 방어 타입) 데이터가 없으면 같은 종류의 Normal 데이터를 공유(엘리트는 Normal 하나).
+- 적의 방어 타입 기준은 **프리팹의 `Enemy.defenceType`** (2026-10-30, 이전엔 EnemyData.defenceType). 적 프리팹은 `Stage/{order}/Enemy` 폴더(하위 Elite/BonusElite 포함)에 종류×방어 타입별로 두고(엘리트·보스는 Normal만), EnemyData는 (종류, 방어 타입) 데이터가 없으면 같은 종류의 Normal 데이터를 공유(엘리트는 Normal 하나).
 - **2026-10-30: 공격 속성은 물리(Physic)·마법(Magic) 두 가지 + 만능.** 진동(Vibrational) 삭제 → 진동형이던 Bounce/Pierce/Boom은 물리로, 진동 약점뿐이던 **중갑형(HeavyArmor) 방어 타입도 삭제**(enum 번호는 비워 둠: DefenceType 3, DefenceWaveType 4).
 - 공격 속성(Physic/Magic) × 방어 타입 배율은 `Resources/DefenceInfo` 에셋 한 곳에서 관리 (인스펙터 표). 방어형 클래스마다 계산을 따로 두지 않는다.
   - (2026-10-30) 적 프리팹의 `EnemyDefence` 컴포넌트(방어 타입별 하위 클래스)가 `CalculateDamage`로 최종 피해 배율(표 배율·만능 무시·거인 사냥 포함)을 반환, `Enemy.TakeDamage`는 이것만 호출. 수치는 여전히 표에서 가져오고, 하위 클래스는 방어형별 특수 처리 자리. 프리팹에 컴포넌트가 없으면 `Enemy.Awake`에서 `enemyData.defenceType`에 맞는 것을 붙인다.
-  - 기본값(물/마): 갑옷 0.2/2.5 · 정령 2.5/0.2 · 생체 1.5/0.5 · 일반 1/1
+  - 기본값(물/마): 갑옷 0.2/2.5 · 정령 2.5/0.2 · 일반 1/1
+  - (2026-11-07) **생체형(Organic) 방어 타입 삭제**(enum 번호 비워 둠: DefenceType 4, DefenceWaveType 5). 프리팹·EnemyData 에셋·CSV 행(EnemyData, WaveData 69 구간)도 삭제.
   - 방어 타입 설명(`DefenceInfo.Desc`)은 배율 표에서 자동 생성 → 표만 고치면 UI 설명도 맞춰짐. 수치 대신 `약점 : 마법형`(배율 >1, 잘 통함) / `내성 : 물리형`(배율 <1, 안 통함) 두 줄로 표기(1배는 생략).
   - **2026-10-27 의도: 방어 타입을 크게 체감되는 판단 요소로 만든다.** wave마다 "어떤 공격 속성 슬라임을 좋은 칸/킹 오라/아이템 칸에 둘지" 다시 고민하게 하는 장치. (현재 슬라임 에셋 attackType이 전부 AllRounder라 효과 없음 → 속성 부여 필요)
   - **만능(`AttackType.AllRounder`)은 방어 타입 배율 무시(항상 100%)** (2026-10-25). TrueDamageTile의 `AllyUnitDamageData.ignoreDefence`도 같은 취급 → 판정은 `DamageData.IgnoreDefence` 한 곳.
@@ -176,8 +188,22 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 스테이지 (2026-10-30)
 - **난이도(Normal/Hard/Hell)마다 스테이지 하나.** 스테이지 순서(order) 개념 없음, key = 난이도 이름(`Normal`/`Hard`/`Hell`).
 - 에셋은 `AddressableResources/StageData/{난이도}.asset`, 파일명으로 StageData.csv 행(Difficulty)을 찾는다. 적 프리팹은 난이도 공용 `3.Prefabs/Stage/0/Enemy`.
-- 해금: Normal은 항상, 그 외는 한 단계 낮은 난이도 clearCount > 0. (무한 웨이브라 클리어 조건은 아직 미정)
+- (2026-11-08) 해금: Normal은 항상, 그 외는 **한 단계 낮은 난이도에서 wave 100(표시 번호) 이상 도달**(`StageData.UNLOCK_WAVE`, 저장값 `maxWave`는 waveIdx라 99 이상). Normal 100 → Hard, Hard 100 → Hell. 잠긴 난이도는 시작 버튼을 눌러도 토스트만.
 - 이전 저장 데이터의 `{난이도}_0` 기록은 새 key로 옮기고, `_1~_4` 기록은 버린다(`UserStageManager.MigrateStageKeys`).
+
+## 로비 상점 (2026-11-07)
+- **상품 구분(ProductData key)은 패널이 아니라 버튼마다**(`ProductPurchaseButton.key`). 한 패널에 10회·30회·광고 버튼처럼 상품이 여러 개.
+- 버튼 클릭 → `ProductManager.TryToBuy`(재화 = 잔액 확인 후 차감 / 인앱 = 결제 완료 / 광고 = 시청 완료, 광고 제거 구매자는 광고 없이) → **구매 기록(버튼 key)** → `onPurchased`(인스펙터에서 패널 함수 등록, 뽑기는 `Purchased(int)`에 횟수) → 상위 `ProductPanel.UpdatePanel`.
+- 하루 구매 제한은 버튼 `dailyLimit`(0 = 없음, 오늘 구매 기록 수로 판단). 광고 뽑기 = 광고 상품 + dailyLimit (이전 Normal…ProductPanel의 광고 전용 코드는 삭제).
+- 특별 뽑기 카운트(N회마다 A등급 이상)는 **Unique 뽑기 패널 하위 버튼의 구매 횟수 합만** (`DrawProductPanel.PurchaseCount`, specialDrawInterval > 0인 패널만 사용).
+- `ProductContainer.productPanels`를 비워 두면 하위 패널 전부.
+- 뽑기(`DrawSO.Draw`): 확률표 등급 중 **아이템이 없는 등급은 빼고 남은 확률로** 뽑는다(지금 SS 슬라임·장비 없음, 장비는 C 1개뿐). 슬라임 등급 목록은 `SlimeManager.gradeGroupGrowth1SlimeDic`(로드 시 growth 1 슬라임으로 채움).
+- 뽑기 결과 창(DrawSlimeResultCanvas / DrawEquipmentResultCanvas, 공용 `DrawResultCanvas`): 카드(`DrawResultCard`)를 **5열 그리드**(30장이면 스크롤)에 깔고 순서대로 뒤집어 공개(간격 `revealInterval` 0.12초, 뒤집기 0.3초, DOTween·실시간). **S 등급 이상(`revealShakeGrade`)은 뒤집기 전에 0.5초 흔들림**, 흔들리는 동안 다음 카드는 기다림. **닫기 버튼(`closeButton`, 결과 패널 하단)은 전부 공개된 뒤에만 보임.** 카드는 `cardTemplate`(뒷면 + 앞면 = 슬라임 칸 / 장비 썸네일)을 복사해서 씀.
+- 결과 창이 씬에 없으면 지급 후 토스트만. 패널 `LastDrawKeys` = 마지막 결과.
+- 테스트 `DrawShopPlayTest`: 실제 뽑기 버튼 6개(재화 차감·지급 개수·기록), 광고 뽑기 하루 3회, 고급 슬라임 상자 N회차 S 이상, 슬라임 관리 화면(모든 슬라임 1칸씩·보유 먼저·미보유 표시).
+- 출시 전이라 이전 패널 key 구매 기록은 옮기지 않음.
+- 재화 상품(`CurrencyProductPanel` → `DiaProductPanel`/`GoldProductPanel`): 패널 `amount`만큼 지급, 제목은 `{재화} {amount}` 자동. 상품 가격은 CSV에서.
+- (2026-11-07) 상품 데이터 = `Json/ProductData.csv`(key, productId, currencyType, price) → DataTableImporter(`Tools/Data/Import ProductData`, Play 시 자동) → `Resources/ProductData.asset`(`ProductDataTable`) → `ProductManager.Awake`에서 불러옴(씬 인스펙터 `productDatas`는 무시). price는 float: 재화 상품 = 개수(정수), 인앱 = 스토어 가격을 못 받을 때 표시용 달러. **인앱 상품은 productId가 있어야 결제**(없으면 재화 차감으로 처리돼 구매 불가, `ProductDataTableTest`가 검사).
 
 ## 서버 (Firebase RTDB, 2026-11-05)
 - 인스턴스 URL은 `FirebaseDatabaseConfig` 한 곳에서 관리(asia-southeast1). 랭킹 = 인스턴스 1개, 유저 데이터 = 여러 인스턴스(샤드, 나중에 확장).
@@ -185,13 +211,40 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 유저 데이터는 **항목별 저장**: `users/{uid}/data/{항목}` = JSON 문자열(항목 = 각 매니저 `UserDataFileName`), `users/{uid}/savedAt`. 저장 시 바뀐 항목만 올림, 불러오기는 서버에 있는 항목만 덮어씀.
 - Dev 서버는 `DEV_SERVER` define으로 같은 프로젝트의 dev 인스턴스 사용(URL 미정).
 
+## 멀티플레이 (2026-11-07 기획 메모, 아직 구현 안 함)
+- **싱글은 그대로 유지하고, 멀티는 나중에 추가 기능으로** 붙인다. 지금은 기록만, 작업하지 않는다.
+- 방식: **비동기 대전, 최대 8인 참여.** 실시간 서버(Photon 등) 없이 Firebase로 처리하는 방향(Photon 자체 호스팅(EC2)은 초기 규모에선 비용 이득 없음).
+- 다른 플레이어의 상태를 UI로 확인할 수 있다. 기록(공유)할 항목:
+  - 어떤 타일에 어떤 슬라임을 배치했는지(key, 머지 레벨 등)
+  - 어떤 타일에 어떤 타일 아이템을 설치해 두었는지
+  - 현재 wave, 킹 체력
+  - 생존 / 사망 여부
+
 ## 랭킹 (2026-11-05)
 - Firebase Realtime Database, **난이도별 랭킹**(`rankings/{난이도}/{uid}` = nickname, wave, updatedAt). 기준은 그 난이도 최고 wave(`UserStage.maxWave + 1`), 같은 wave면 먼저 달성한 사람이 위. 플레이 기록 없는 난이도는 안 올림.
 - 화면은 **상위 100명**, 내 순위가 밖이면 `100+`. 닉네임이 기본값(GUID)이면 `Guest#uid앞4자리`로 올린다(닉네임 변경 기능 생기면 그대로 반영).
 - RankingButton: 로그인 안 돼 있으면 FirebaseLoginCanvas → 로그인 성공 시 RankingCanvas.
 - 갱신: 열 때마다 내 기록을 먼저 올리고(서버보다 높을 때만 씀) 목록은 **난이도별 10분 캐시**(캔버스를 껐다 켜도 유지). 단 내 최고 wave가 올라 업로드한 경우는 바로 다시 불러온다.
 
+## 테스트 (2026-11-07)
+- **테스트는 메인 에디터가 아니라 테스트 전용 복사본(`~/KingSlime-Test`, git worktree)에서 돌린다** (2026-11-08). `Tools/run-tests.sh [필터]` = 메인의 커밋 + 작업 중 변경을 복사본에 동기화(`Tools/sync-test-project.sh`) → 복사본 에디터가 열려 있으면 그 에디터에서, 아니면 배치모드로 실행. 백그라운드로 돌리고 끝나면 결과를 알려준다. 메인 씬·저장 파일을 건드리지 않으므로 작업 중에도 가능.
+- EditMode 테스트는 `Assets/Tests/Editor/`(asmdef 없음 → `Assembly-CSharp-Editor`라서 게임 코드를 바로 참조). 게임 스크립트에 asmdef가 없으므로 테스트에도 asmdef를 만들지 않는다.
+- 기획 규칙은 **씬·싱글톤 없이 계산할 수 있는 static 함수**로 빼서 테스트한다(예: `Slime.CanMerge`, `SacrificeSlime.CanSacrificeMerge`, `DrawItemButton.GetDrawChance(int)`). 기획이 바뀌면 `GameRuleTest.cs`의 기대값도 같이 고친다.
+- 플레이 테스트(`SlimePlayTest`): EditMode 테스트에서 InGame 씬을 열고 `EnterPlayMode`로 들어가 실제 게임을 돌린다(PlayMode asmdef 없이). 로비 없이 InGame 씬만으로 시작 가능. 로드된 **모든 SlimeData key × 머지 레벨 0/4**를 하나씩 소환해 배속(×4)으로 싸우게 하고 에러·예외가 없는지 본다. 새 슬라임은 SlimeData 에셋만 있으면 자동으로 대상이 된다.
+  - 에디터용 Firebase 네이티브 라이브러리가 없어 플레이마다 `DllNotFoundException: FirebaseCppApp`이 난다 → 테스트에서는 무시 목록(`IGNORE_ERRORS`)으로 거른다.
+  - 사망 시 `EndGame`에서 유저 데이터가 저장되므로 테스트 중엔 킹 체력을 계속 채워 죽지 않게 한다.
+  - 콘솔 Error Pause가 켜져 있으면 에러에서 멈추므로 테스트가 일시정지를 풀면서 진행한다.
+  - **테스트 중엔 광고·인앱 결제를 띄우지 않고 바로 성공**(`AdManager.SkipAdForTest`, `ProductManager.SkipInAppPurchaseForTest`). 테스트 기본 클래스가 플레이 진입 후(`WaitGameStart`/`WaitLobbyStart`) 켜고 TearDown에서 끔. 기본값 false라 실제 게임엔 영향 없음.
+  - 공용 준비는 `InGamePlayTestBase`(씬 열기, 에러 수집, 저장 파일 `Assets/User*.json` 백업·복원 — 플레이 중 업적 처치 수 등이 저장되기 때문).
+  - `TileItemPlayTest`: 타일 index 6*6 중복 없음, 모든 타일 아이템 설치→전투→판매, 스탯 타일 효과, 버프 범위 확장(대각선 버프). `DrawItemButtonPlayTest`: 뽑기 버튼 성공/실패/코인 부족 흐름(실패는 `Random.InitState` 시드로 고정).
+  - `WaveResultPlayTest`: wave를 강제로 넘겨(`waveTimer`/`mainWaveTimer` = 0) 엘리트·보스 주기, 보스 wave는 시간으로 안 넘어감, 보스 처치 → 다음 wave + 종료 코인. 사망 → 실패 화면 → 결과 화면 보상(골드 = waveIdx, 경험치 = waveIdx/2, 뽑기권 = 합성 횟수)·최고 wave 기록·홈 → 로비. 부활 흐름.
+  - **도메인 리로드 후 테스트 이터레이터는 직렬화로 복원되는데 람다가 캡처한 지역 변수(클로저)는 null이 된다** → 플레이 모드 진입 뒤 본문은 별도 이터레이터(`XxxBody()`)로 분리.
+- 새 데이터 추가 시 주의 (테스트로 잡힌 실수):
+  - ItemData 에셋을 **복사해서 만들면 key·itemPrefab이 원본 그대로** 남는다(`ItemData.LoadData`는 기존 key로 CSV 행을 찾고 프리팹은 안 채움) → key와 itemPrefab을 직접 바꾸고 프리팹도 만들 것.
+  - 슬라임 데이터 에셋은 **`{Key}SlimeData`(EnhanceAbilitySlimeData 계열)** 로 만들어야 LoadData가 SlimeEnhance CSV를 읽는다. 기본 `SlimeData`로 만들면 강화 데이터가 비어 소환 시 NullReference.
+
 ## 데이터 파이프라인
+- (2026-11-08) **번역**: `Json/Translate.csv`(시트 Key / Kr / En) → DataTableImporter(`Tools/Data/Import TranslateData`, Play 시 자동) → `Resources/TranslateData.asset` → `TranslateManager.GetText`가 처음 호출될 때 로드. 한국어 기기 = Kr, 그 외 = En, 칸이 비면 Kr로 대체, key가 없으면 `*key`. 코드에서 보여주는 문구는 한글 리터럴 대신 key로(조합 key: `Difficulty.{난이도}`, `Slime.{Key}`/`Slime.{Key}.Desc`, `{StatType}_title`, `Grade.{등급}`). `TranslateDataTest`가 코드 key가 시트에 다 있는지 검사. 씬에 박힌 고정 텍스트는 아직 `TranslateText` 미적용. 슬라임 설명 중 CSV Desc를 그대로 쓰는 종(Bounce, Orbit 등)과 아이템 이름·설명(ItemData.csv)은 아직 번역 안 됨.
 - **SlimeData 배열 필드(bounces, shootCounts 등)는 에셋에 직렬화된 값이 코드 초기값보다 우선.** 코드 기본값만 바꾸면 기존 에셋엔 반영 안 됨 → 에셋도 같이 수정.
 - 기획 데이터는 `Assets/Json/**/*.csv`(엑셀 → TSV). 에디터에서 `LoadData`(DataTableImporter)를 실행해야 에셋(`AddressableResources`)에 반영됨.
   - WaveData/{난이도}.csv: StartWave, DefenceTypes, DefenceWaveTypes (WaveType은 번호로 결정, 위 웨이브 섹션)

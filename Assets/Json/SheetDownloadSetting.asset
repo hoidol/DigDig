@@ -15,7 +15,7 @@ MonoBehaviour:
   defaultSheetId: 1Y-bovBOgOlQgM5y6pn4SOQdC5OGJN3VEJ9N72nxN-xo
   entries:
   - enabled: 1
-    csvPath: Json/CharacterData.csv
+    csvPath: Json/KingSlimeData.csv
     sheetId: 
     gid: 1244868266
     range: 

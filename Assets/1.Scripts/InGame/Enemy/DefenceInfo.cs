@@ -64,8 +64,6 @@ public class DefenceInfo : ScriptableObject
                 return attackType == AttackType.Physic ? 0.2f : attackType == AttackType.Magic ? 2.0f : 1f;
             case DefenceType.Ethereal: // 정령형 - 물리 +100% 마법 -80%
                 return attackType == AttackType.Physic ? 2.0f : attackType == AttackType.Magic ? 0.2f : 1f;
-            case DefenceType.Organic: // 생체형 - 물리 +50% 마법 -50%
-                return attackType == AttackType.Physic ? 1.5f : 0.5f;
             default: // 일반형
                 return 1f;
         }
@@ -104,15 +102,13 @@ public class DefenceInfo : ScriptableObject
         switch (defenceType)
         {
             case DefenceType.Normal:
-             return "일반형";
+             return TranslateManager.GetText("DefenceType.Normal");
             case DefenceType.Armored:
-             return "갑옷형";
+             return TranslateManager.GetText("DefenceType.Armored");
             case DefenceType.Ethereal:
-             return "정령형";
-            case DefenceType.Organic:
-             return "생체형";
+             return TranslateManager.GetText("DefenceType.Ethereal");
         }
-        return "일반형";
+        return TranslateManager.GetText("DefenceType.Normal");
     }
 
     // 배율 표 값으로 생성 → 표를 고치면 설명도 따라감
@@ -133,13 +129,13 @@ public class DefenceInfo : ScriptableObject
         }
 
         if (weak.Count == 0 && resist.Count == 0)
-            return "약점/내성 없음";
+            return TranslateManager.GetText("Defence_None");
 
         List<string> lines = new List<string>();
         if (weak.Count > 0)
-            lines.Add($"약점:<color=#00FF00>{string.Join(", ", weak)}</color>");
+            lines.Add(string.Format(TranslateManager.GetText("Defence_Weak"), string.Join(", ", weak)));
         if (resist.Count > 0)
-            lines.Add($"내성:<color=#FF0000>{string.Join(", ", resist)}</color>");
+            lines.Add(string.Format(TranslateManager.GetText("Defence_Resist"), string.Join(", ", resist)));
         return string.Join("\n", lines);
     }
 

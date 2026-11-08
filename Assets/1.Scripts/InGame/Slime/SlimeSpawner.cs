@@ -113,7 +113,8 @@ public class SlimeSpawner : MonoSingleton<SlimeSpawner>
 
     void Awake()
     {
-        slimeMaxCount = GameSetting.SLIME_MIN_EXIST_COUNT + UserDataManager.Instance.userKingSlimeManager.GetUpgrade(StatType.MaxSlimeCount).lv;
+        // 로비 업그레이드·장비는 GameManager에서 킹 스탯(MaxSlimeCount)으로 더함 (여기서 또 더하면 두 번 적용됨)
+        slimeMaxCount = GameSetting.SLIME_MIN_EXIST_COUNT;
 
         if (slimeLayer == 0)
             slimeLayer = LayerMask.GetMask("Slime");

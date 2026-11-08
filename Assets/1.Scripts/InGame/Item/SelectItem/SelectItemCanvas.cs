@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 // Draw(확률 연출) → SelectItem(랜덤 3개 중 선택) → SelectTile(타일을 눌러 설치)
-// 아이템 하나 반드시 선택해야됌. 열려 있는 동안 게임은 일시정지 (고민해서 배치하도록)
+// 아이템 하나 반드시 선택해야됌. 열려 있어도 게임은 멈추지 않음
 public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 {
     const int SELECT_ITEM_COUNT = 3;
@@ -68,13 +68,13 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 
         if (!isSuccess)
         {
-            ToastCanvas.Toast("뽑기 실패");
+            ToastCanvas.Toast(TranslateManager.GetText("Draw_Fail"));
             CloseCanvas();
             return;
         }
         else
         {
-            ToastCanvas.Toast("뽑기 성공!");
+            ToastCanvas.Toast(TranslateManager.GetText("Draw_Success"));
         }
 
         GameManager.Instance.drawItemCount++;
@@ -127,7 +127,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     {
         if (!tile.CanAddTileItem)
         {
-            ToastCanvas.Toast("이미 아이템이 설치된 타일입니다.");
+            ToastCanvas.Toast(TranslateManager.GetText("TileItem_AlreadyInstalled"));
             return;
         }
         Install(tile);

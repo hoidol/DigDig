@@ -40,6 +40,8 @@ public static class DataTableImporter
         new Entry("EquipmentData", new[] { "EquipmentData.csv" }, () => LoadAll<EquipmentData>(d => d.Edit())),
         new Entry("EnhanceExpInfo", new[] { "EnhanceLevelInfo.csv" }, () => LoadAll<EnhanceExpInfo>(d => d.LoadData())),
         new Entry("KSUpgradeData", new[] { "KSUpgradeData.csv" }, KSUpgradeData.ImportAsset),
+        new Entry("ProductData", new[] { "ProductData.csv" }, ProductDataTable.ImportAsset),
+        new Entry("TranslateData", new[] { "Translate.csv" }, TranslateDataTable.ImportAsset),
     };
 
     static string PrefKey(string name) => $"DataTableImporter:{Application.dataPath}:{name}";
@@ -84,6 +86,12 @@ public static class DataTableImporter
 
     [MenuItem(MENU_ROOT + "Import ItemData", priority = 43)]
     static void ImportItemData() => ImportByName("ItemData");
+
+    [MenuItem(MENU_ROOT + "Import ProductData", priority = 44)]
+    static void ImportProductData() => ImportByName("ProductData");
+
+    [MenuItem(MENU_ROOT + "Import TranslateData", priority = 45)]
+    static void ImportTranslateData() => ImportByName("TranslateData");
 
     static void ImportByName(string name) => Import(entries.Where(e => e.name == name), true);
 

@@ -4,4 +4,5 @@ StartWave	DefenceTypes	DefenceWaveTypes
 19	Normal/Armored	Normal/Normal/Normal/Armored/Normal/Random/Armored
 29	Normal/Armored/Ethereal	Ethereal/Normal/Normal/Armored/Normal
 39	Normal/Armored/Ethereal	Ethereal/Normal/Normal/Armored/Normal/Random/Normal
-69	Normal/Armored/Ethereal/Organic	Organic/Normal/Normal/Ethereal/Normal/Normal/Armored/Normal/Normal/Random
+69	Normal/Armored/Ethereal	Normal/Normal/Ethereal/Normal/Normal/Armored/Normal/Normal/Random
+	41220	

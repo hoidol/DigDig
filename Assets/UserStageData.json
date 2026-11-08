@@ -5,6 +5,18 @@
             "tryCount": 0,
             "maxWave": 0,
             "userStageRewards": []
+        },
+        {
+            "key": "Hard",
+            "tryCount": 0,
+            "maxWave": 0,
+            "userStageRewards": []
+        },
+        {
+            "key": "Hell",
+            "tryCount": 0,
+            "maxWave": 0,
+            "userStageRewards": []
         }
     ]
 }

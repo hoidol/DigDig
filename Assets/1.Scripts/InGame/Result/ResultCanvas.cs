@@ -6,51 +6,37 @@ using UnityEngine.SceneManagement;
 
 public class ResultCanvas : CanvasUI<ResultCanvas>
 {
-    public GameObject clearObj;
-    public GameObject failObj;
     public TMP_Text curWaveText;
     public TMP_Text bestWaveText;
     public GameObject newRecordObj;
-    // public TMP_Text distanceText;
-    // public TMP_Text memorPieceCountText;
     public RewardPanel[] rewardPanels;
 
-    bool clear;
 
-    public void OpenCanvas(bool clear, Action closeCallback = null)
+
+    public override void OpenCanvas(Action closeCallback = null)
     {
-        this.clear = clear;
-        base.OpenCanvas(closeCallback);
-        clearObj.SetActive(false);
-        failObj.SetActive(false);
-        if (clear)
-        {
-            clearObj.SetActive(true);
 
-        }
-        else
-        {
-            failObj.SetActive(true); ;
-        }
+        base.OpenCanvas(closeCallback);
+
         UpdateCanvas();
     }
 
     void UpdateCanvas()
     {
-        UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(GameManager.Instance.stageData.key);
-        curWaveText.text = $"Current Wave: {GameManager.Instance.waveIdx+1}";
-        bestWaveText.text = $"Best Wave: {userStage.maxWave+1}";
+        string stageKey = GameManager.Instance.stageData.key;
+        // 한 판 = 결과 화면까지 (부활해도 같은 판)
+        UserDataManager.Instance.userStageManager.TryStage(stageKey);
+        GameEventBus.Publish(new TryStageEvent(stageKey));
 
-        if(GameManager.Instance.waveIdx > userStage.maxWave)
-        {
-            newRecordObj.SetActive(true);
+        UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(stageKey);
+        // wave 표시 UI가 씬에 없어도 보상은 지급되도록 (없으면 표시만 생략). 제목(최종/최고 웨이브)은 UI에 있으므로 숫자만
+        if (curWaveText != null)
+            curWaveText.text = (GameManager.Instance.waveIdx + 1).ToString();
+        if (bestWaveText != null)
+            bestWaveText.text = (Mathf.Max(userStage.maxWave, GameManager.Instance.waveIdx) + 1).ToString();
+        if (newRecordObj != null)
+            newRecordObj.SetActive(GameManager.Instance.waveIdx > userStage.maxWave);
 
-        }
-        else
-        {
-            newRecordObj.SetActive(false);
-        }
-        
 
         int gold = GameManager.Instance.waveIdx;
 
@@ -66,7 +52,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
 
         List<RewardData> rewardDatas = new List<RewardData>();
 
-        int exp = GameManager.Instance.waveIdx/2;
+        int exp = GameManager.Instance.waveIdx / 2;
         UserDataManager.Instance.userMyInfoManager.AddExp(exp);
         if (exp > 0)
         {
@@ -80,7 +66,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         int drawTicket = SlimeSpawner.Instance.mergeCount;
         if (drawTicket > 0)
         {
-            UserDataManager.Instance.AddDrawTicket(drawTicket);  
+            UserDataManager.Instance.AddDrawTicket(drawTicket);
 
             rewardDatas.Add(new RewardData()
             {
@@ -102,6 +88,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         {
             if (i < rewardDatas.Count)
             {
+                rewardPanels[i].gameObject.SetActive(true);
                 rewardPanels[i].SetRewardData(rewardDatas[i], null);
             }
             else

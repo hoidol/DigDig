@@ -100,7 +100,7 @@ public class EquipmentAbility
 {
     public StatType statType;
     public float value;
-    public string Title => statType.ToString();
+    public string Title => StatData.GetTitle(statType);
     public string GetValueToString() => value.ToString("0.#");
     public T GetValue<T>()
     {

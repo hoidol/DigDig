@@ -12,9 +12,4 @@ public class GameSpeedUpProduct : ProductPanel
             purchasedObject.SetActive(UserDataManager.Instance.IsGameSpeedUp);
     }
 
-    public override void Purchased()
-    {
-        base.Purchased();
-        UpdatePanel();
-    }
 }

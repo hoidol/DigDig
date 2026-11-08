@@ -30,7 +30,8 @@ public static class GameEventBus
         Type type = typeof(T);
         if (!handlers.ContainsKey(type)) return;
 
-        foreach (Delegate handler in handlers[type])
+        // 핸들러 안에서 구독/해제해도 되도록 복사본으로 순회 (BossWave가 BossDeadEvent 처리 중 구독 해제)
+        foreach (Delegate handler in handlers[type].ToArray())
             (handler as Action<T>)?.Invoke(evt);
     }
 

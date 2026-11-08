@@ -31,6 +31,12 @@ public class SlimeManager : MonoSingleton<SlimeManager>
             foreach (SlimeData slimeData in allSlimeDatas)
             {
                 slimeDataDic[slimeData.key] = slimeData;
+                // 뽑기(DrawSlime)용 등급별 목록 (growth 1 슬라임만)
+                if (slimeData.growth != 1)
+                    continue;
+                if (!gradeGroupGrowth1SlimeDic.ContainsKey(slimeData.grade))
+                    gradeGroupGrowth1SlimeDic.Add(slimeData.grade, new List<string>());
+                gradeGroupGrowth1SlimeDic[slimeData.grade].Add(slimeData.key);
             }
 
         });

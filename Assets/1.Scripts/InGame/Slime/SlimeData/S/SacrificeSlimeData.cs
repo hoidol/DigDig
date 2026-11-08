@@ -7,6 +7,6 @@ public class SacrificeSlimeData : EnhanceAbilitySlimeData
 {
     public override string GetDescription(int mergeLv = 0)
     {
-        return "같은 별의 아무 슬라임과 합치면 그 슬라임으로 강화됩니다.";
+        return TranslateManager.GetText("Slime.Sacrifice.Desc");
     }
 }

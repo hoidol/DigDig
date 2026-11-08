@@ -39,13 +39,6 @@ public class ReloadStartEvent
 
 public class ReloadEndEvent { }
 
-public class BossPhaseChangedEvent
-{
-    public Boss boss;
-    public int phase;
-    public BossPhaseChangedEvent(Boss boss, int phase) { this.boss = boss; this.phase = phase; }
-}
-
 public class BossSpawnEvent
 {
     public Boss boss;

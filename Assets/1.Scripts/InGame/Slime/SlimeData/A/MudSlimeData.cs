@@ -17,6 +17,6 @@ public class MudSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"진흙 구슬(최대 {maxOrbCounts.GetByMergeLevel(mergeLv)}개)이 주변을 돌다 적에 닿으면 터져 주변에 진흙을 묻힙니다. 진흙 중첩당 이동속도 {MudEffect.SLOW_PER_STACK * 100:0}% 감소 (최대 {MudEffect.MAX_SLOW * 100:0}%, 엘리트·보스 {MudEffect.MAX_SLOW_BIG * 100:0}%)";
+        return string.Format(TranslateManager.GetText("Slime.Mud.Desc"), maxOrbCounts.GetByMergeLevel(mergeLv), MudEffect.SLOW_PER_STACK * 100, MudEffect.MAX_SLOW * 100, MudEffect.MAX_SLOW_BIG * 100);
     }
 }

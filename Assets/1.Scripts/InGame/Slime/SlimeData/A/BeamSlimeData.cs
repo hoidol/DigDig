@@ -15,6 +15,6 @@ public class BeamSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"다른 광선 슬라임과 레이저로 연결됩니다. 레이저에 닿은 적에게 {BeamLinkNetwork.TICK_INTERVAL}초마다 피해 (혼자면 기본 공격)";
+        return string.Format(TranslateManager.GetText("Slime.Beam.Desc"), BeamLinkNetwork.TICK_INTERVAL);
     }
 }

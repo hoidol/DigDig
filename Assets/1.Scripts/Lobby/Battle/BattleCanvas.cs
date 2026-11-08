@@ -8,7 +8,7 @@ public class BattleCanvas : BaseLobbyCanvas
 {
     // public GameObject nextStageButton;
     // public GameObject preStageButton;
-    public StageRewardContainer stageRewardContainer;
+    // public StageRewardContainer stageRewardContainer;
 
     [SerializeField] UserStage curUserStage;
     public StageData stageData;
@@ -39,7 +39,7 @@ public class BattleCanvas : BaseLobbyCanvas
     public void SetUserStage(UserStage userStage)
     {
         curUserStage = userStage;
-        stageData = StageManager.Instance.GetStageData(Enum.Parse<DifficultyType>(curUserStage.key) );
+        stageData = StageManager.Instance.GetStageData(Enum.Parse<DifficultyType>(curUserStage.key));
         // stageRewardContainer.SetStageData(curUserStage, stageData);
         UpdateCanvas();
 
@@ -47,7 +47,7 @@ public class BattleCanvas : BaseLobbyCanvas
 
     public override void UpdateCanvas()
     {
-        stageRewardContainer.UpdateContainer();
+        // stageRewardContainer.UpdateContainer();
         titleText.text = stageData.Title;
 
         // 난이도마다 스테이지 하나라 이전/다음 스테이지 이동 없음
@@ -60,6 +60,11 @@ public class BattleCanvas : BaseLobbyCanvas
 
     public void OnClickedBtn()
     {
+        if (!stageData.ChekcUnlock())
+        {
+            ToastCanvas.Toast(string.Format(TranslateManager.GetText("Difficulty_Locked"), StageData.UNLOCK_WAVE));
+            return;
+        }
         // #if !UNITY_EDITOR
         // if(UserDataManager.Instance.userData.energe <GameSetting.PLAY_COST_ENERGE)
         // {

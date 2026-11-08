@@ -14,7 +14,7 @@ namespace InGame
         public void SetSlimeStat(Slime slime, StatType type)
         {
             if (thumImage != null)
-                thumImage.sprite = slime.slimeData.thum;
+                thumImage.sprite = StatData.GetThum(type);
 
             float randomRatio = slime.slimeData.GetRandomRatio(type);
             SlimeStat slimeStat = slime.slimeData.GetSlimeStat(type, slime.userSlime.enhanceLevel);

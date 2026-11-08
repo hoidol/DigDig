@@ -42,8 +42,21 @@ public abstract class Enemy : MonoBehaviour, IHittable
     Vector2 moveDir; // pathIdx 지점으로 전환할 때 캐싱한 이동 방향 (목표 지점을 지나쳤는지 판정용)
     int moveDirIdx = -1; // moveDir가 어느 pathIdx 기준인지. -1이면 다시 계산
     [SerializeField] private  EnemyDefence enemyDefence;
+
+    // 스프라이트 프리팹(자식)의 Animator. Walk = 기본(이동), 죽으면 Dead 재생 후 끝나면 비활성화
+    public Animator animator;
+    public static readonly int WALK_ANIM_HASH = Animator.StringToHash("Walk");
+    public static readonly int DEAD_ANIM_HASH = Animator.StringToHash("Dead");
+    // Dead 애니메이션이 끝나지 않는 경우(상태 없음·속도 0 등) 대비 최대 대기 시간
+    public const float DEAD_ANIM_MAX_TIME = 3f;
+    // 처치되어 Dead 애니메이션 재생 중 (충돌·이동 없음, 끝나면 비활성화 후 풀로)
+    public bool IsDying { get; private set; }
+    float dyingTimer;
+
     public virtual void Awake()
     {
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>(true);
         rg2d = GetComponent<Rigidbody2D>();
         col2d = GetComponent<Collider2D>();
         statusEffectHandler = GetComponent<StatusEffectHandler>();
@@ -71,7 +84,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
     {
         this.wave = wave;
         killedBy = null;
-        gameObject.SetActive(gameObject);
+        IsDying = false;
+        gameObject.SetActive(true);
         statusEffectHandler?.Reset();
         pathIdx = 0;
         moveDirIdx = -1;
@@ -82,6 +96,9 @@ public abstract class Enemy : MonoBehaviour, IHittable
         maxHp = GetHp();
         curHp = maxHp;
         hpText.text = ((int)curHp).ToString();
+        hpText.gameObject.SetActive(true);
+        // 풀에서 재사용될 때 Dead 상태에 멈춰 있지 않도록 Walk부터
+        PlayAnim(WALK_ANIM_HASH);
 
         // damageData.damage = GetAttackPower();
     }
@@ -133,11 +150,13 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (col2d != null)
             col2d.enabled = false;
 
+        transform.DOKill();
         transform.localScale = Vector3.zero;
         transform.DOScale(1f, APEAR_POP_DURATION).SetEase(Ease.OutBack)
             .OnComplete(() =>
             {
-                if (col2d != null)
+                // 등장 중에 죽었으면 충돌을 다시 켜지 않음
+                if (col2d != null && !IsDying)
                     col2d.enabled = true;
             });
     }
@@ -145,6 +164,12 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
     public virtual void Update()
     {
+        if (IsDying)
+        {
+            UpdateDying();
+            return;
+        }
+
         if (!GameManager.Instance.isPlaying)
         {
             rg2d.linearVelocity = Vector2.zero;
@@ -273,14 +298,70 @@ public abstract class Enemy : MonoBehaviour, IHittable
     {
         
     }
+    // 처치(체력 0) 또는 경로 끝 도착 시. 처치면 Dead 애니메이션 후 비활성화, 경로 끝이면 바로 비활성화
     public virtual void Destroy()
     {
+        if (IsDying)
+            return;
         EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
         GameEventBus.Publish(new EnemyDeadEvent(this));
+
+        if (curHp <= 0 && HasAnimState(DEAD_ANIM_HASH))
+            StartDying();
+        else
+            Deactivate();
     }
+
+    void StartDying()
+    {
+        IsDying = true;
+        dyingTimer = 0;
+        if (col2d != null)
+            col2d.enabled = false;
+        rg2d.linearVelocity = Vector2.zero;
+        hpText.gameObject.SetActive(false);
+        PlayAnim(DEAD_ANIM_HASH);
+    }
+
+    // Dead 상태의 재생이 한 번 끝나면(normalizedTime >= 1) 비활성화. Dead 클립이 루프여도 한 번만 보여줌
+    void UpdateDying()
+    {
+        rg2d.linearVelocity = Vector2.zero;
+        dyingTimer += Time.deltaTime;
+        if (dyingTimer >= DEAD_ANIM_MAX_TIME || IsDeadAnimEnd())
+            Deactivate();
+    }
+
+    bool IsDeadAnimEnd()
+    {
+        if (animator == null || !animator.isActiveAndEnabled)
+            return true;
+        if (animator.IsInTransition(0))
+            return false;
+        AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
+        return info.shortNameHash == DEAD_ANIM_HASH && info.normalizedTime >= 1f;
+    }
+
+    // 비활성화 후 스포너 풀로 반환 (스포너가 만든 적이 아니면 비활성화만)
+    public void Deactivate()
+    {
+        IsDying = false;
+        gameObject.SetActive(false);
+        if (EnemySpawner.Instance != null)
+            EnemySpawner.Instance.ReturnToPool(this);
+    }
+
+    bool HasAnimState(int hash) => animator != null && animator.runtimeAnimatorController != null && animator.HasState(0, hash);
+
+    void PlayAnim(int hash)
+    {
+        if (HasAnimState(hash))
+            animator.Play(hash, 0, 0f);
+    }
+
     public bool CanHit()
     {
-        return curHp > 0;
+        return curHp > 0 && !IsDying;
     }
 
 }

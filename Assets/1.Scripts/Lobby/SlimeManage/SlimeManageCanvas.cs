@@ -9,6 +9,8 @@ namespace Lobby
     {
         public SlimeEquipedSlotPanel[] equipedSlotPanels;
         public Growth1SlimeEntryPanel[] growth1SlimeEntryPanels;
+        public Transform ownContainer;
+        public Transform unownContainer;
         // public Growth2SlimeEntryPanel[] growth2SlimeEntryPanels;
 
         public override void Init()
@@ -17,8 +19,9 @@ namespace Lobby
                 return;
             init = true;
 
-            equipedSlotPanels = GetComponentsInChildren<SlimeEquipedSlotPanel>();
-            growth1SlimeEntryPanels = GetComponentsInChildren<Growth1SlimeEntryPanel>();
+            // 칸은 SetData에서 켜고 끄므로 꺼져 있는 칸도 포함 (안 그러면 켜진 칸만 잡혀 슬라임이 일부만 보임)
+            equipedSlotPanels = GetComponentsInChildren<SlimeEquipedSlotPanel>(true);
+            growth1SlimeEntryPanels = GetComponentsInChildren<Growth1SlimeEntryPanel>(true);
             // growth2SlimeEntryPanels = GetComponentsInChildren<Growth2SlimeEntryPanel>();
         }
 
@@ -109,6 +112,19 @@ namespace Lobby
             for (int i = 0; i < growth1SlimeEntryPanels.Length; i++)
             {
                 growth1SlimeEntryPanels[i].UpdatePanel();
+            }
+
+            // 보유 여부에 따라 컨테이너를 나눔 (패널 순서 = slimeDatas 정렬 순서 유지)
+            for (int i = 0; i < growth1SlimeEntryPanels.Length; i++)
+            {
+                Growth1SlimeEntryPanel panel = growth1SlimeEntryPanels[i];
+                if (panel.slimeData == null)
+                    continue;
+
+                Transform container = panel.userSlime.own ? ownContainer : unownContainer;
+                if (panel.transform.parent != container)
+                    panel.transform.SetParent(container, false);
+                panel.transform.SetAsLastSibling();
             }
 
             // for (int i = 0; i < growth2SlimeEntryPanels.Length; i++)

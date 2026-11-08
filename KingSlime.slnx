@@ -1,0 +1,21 @@
+﻿<Solution>
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="spine-unity-editor.csproj" />
+  <Project Path="Google.Play.Games.Editor.csproj" />
+  <Project Path="Google.Play.Common.csproj" />
+  <Project Path="Google.Play.Games.csproj" />
+  <Project Path="spine-csharp.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="spine-unity-examples.csproj" />
+  <Project Path="GoogleMobileAds.Editor.csproj" />
+  <Project Path="Assembly-CSharp-firstpass.csproj" />
+  <Project Path="spine-unity.csproj" />
+  <Project Path="LayerLab.ArtMakerUnity.csproj" />
+  <Project Path="AppleAuth.csproj" />
+  <Project Path="Google.Play.Review.csproj" />
+  <Project Path="spine-unity-examples-editor.csproj" />
+  <Project Path="AppleAuth.Editor.csproj" />
+  <Project Path="Google.Play.Core.csproj" />
+  <Project Path="LayerLab.ArtMakerUnity.Editor.csproj" />
+  <Project Path="Firebase.App.Internal.csproj" />
+</Solution>

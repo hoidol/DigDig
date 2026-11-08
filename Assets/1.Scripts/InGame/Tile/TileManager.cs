@@ -23,7 +23,8 @@ public class TileManager : MonoSingleton<TileManager>
 
     // 위치로 Tile.index 지정: 왼쪽→오른쪽 x 0부터, 맨 윗줄 y 0부터 아래로 증가
     // TileGroup 사이 간격이 달라도 열/행 순서로만 매기므로 그룹 경계를 넘어 이어짐 (2,0) 옆은 (3,0)
-    void AssignTileIndices()
+    // Awake 시점엔 GridLayoutGroup 레이아웃 계산 전일 수 있어(그룹끼리 index 중복) GameManager가 레이아웃 강제 계산 후 다시 호출
+    public void AssignTileIndices()
     {
         List<float> xs = new List<float>();
         List<float> ys = new List<float>();

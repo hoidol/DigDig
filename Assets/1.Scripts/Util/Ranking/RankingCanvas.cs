@@ -96,7 +96,7 @@ public class RankingCanvas : CanvasUI<RankingCanvas>
         if (refreshTimeText == null)
             return;
         int sec = Mathf.CeilToInt(RankingManager.GetRemainRefreshSec(currentDifficulty));
-        refreshTimeText.text = sec > 0 ? $"갱신까지 {sec / 60}:{sec % 60:00}" : "";
+        refreshTimeText.text = sec > 0 ? string.Format(TranslateManager.GetText("Ranking_RefreshIn"), sec / 60, sec % 60) : "";
     }
 
     static void SetActive(GameObject go, bool active)

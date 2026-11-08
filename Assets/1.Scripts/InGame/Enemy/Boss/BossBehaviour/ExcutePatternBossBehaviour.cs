@@ -10,7 +10,7 @@ public class ExcutePatternBossBehaviour : BossBehaviour
     public string patternName;
     public async override UniTask StartBehaviour()
     {
-        var pattern = boss.curBossPhase.GetEnemyAttackPattern(patternName);
+        var pattern = boss.GetAttackPattern(patternName);
         if (pattern != null)
             await pattern.Execute(boss,null);
     }

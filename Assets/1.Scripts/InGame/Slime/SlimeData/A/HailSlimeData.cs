@@ -16,6 +16,6 @@ public class HailSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"타일그룹 주위 적 경로를 도는 눈을 소환합니다. 닿은 적에게 피해를 주고 {iceChances.GetByMergeLevel(mergeLv)}% 확률로 얼립니다.";
+        return string.Format(TranslateManager.GetText("Slime.Hail.Desc"), iceChances.GetByMergeLevel(mergeLv));
     }
 }

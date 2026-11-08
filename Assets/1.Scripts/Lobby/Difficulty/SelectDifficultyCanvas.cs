@@ -21,7 +21,7 @@ public class SelectDifficultyCanvas : CanvasUI<SelectDifficultyCanvas>
         UserDataManager.difficultyType= difficultyType;
         GameEventBus.Publish(new ChangedDifficultyEvent(difficultyType));
         CloseCanvas();
-        ToastCanvas.Toast($"난이도 {difficultyType}가 설정되었습니다.");
+        ToastCanvas.Toast(string.Format(TranslateManager.GetText("Difficulty_Changed"), DifficultyDisplayButton.GetDifficultyText(difficultyType)));
     }
 }
 public class ChangedDifficultyEvent

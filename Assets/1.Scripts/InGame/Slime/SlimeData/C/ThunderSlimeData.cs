@@ -10,6 +10,6 @@ public class ThunderSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"번개를 떨어뜨려 주변 적에게 피해를 줍니다. (범위 {strikeRadiuses.GetByMergeLevel(mergeLv)}, 최대 {maxHitCounts[mergeLv]}기)";
+        return string.Format(TranslateManager.GetText("Slime.Thunder.Desc"), strikeRadiuses.GetByMergeLevel(mergeLv), maxHitCounts[mergeLv]);
     }
 }

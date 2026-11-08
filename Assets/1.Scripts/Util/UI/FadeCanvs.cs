@@ -13,8 +13,17 @@ public class FadeCanvs : CanvasUI<FadeCanvs>
     {
         text.text = null;
     }
+    // 진행 중인 페이드는 중단 (이전 페이드가 끝나면서 SetActive(false)로 새 페이드 코루틴까지 멈추는 것 방지.
+    // 예: 로비 진입 페이드 중 바로 인게임 → GameManager의 FadeIn 콜백(StartGame)이 안 불림)
+    void StopFade()
+    {
+        StopAllCoroutines();
+        canvasGroup.DOKill();
+    }
+
     public void FadeIn(string msg = null, Action endFadeIn = null)
     {
+        StopFade();
         canvasGroup.alpha = 1;
         gameObject.SetActive(true);
         text.text = msg;
@@ -23,6 +32,7 @@ public class FadeCanvs : CanvasUI<FadeCanvs>
 
     public void FadeOutIn(string msg = null, Action endFadeOut = null, Action endFadeIn = null)
     {
+        StopFade();
         canvasGroup.alpha = 0;
         gameObject.SetActive(true);
         text.text = msg;

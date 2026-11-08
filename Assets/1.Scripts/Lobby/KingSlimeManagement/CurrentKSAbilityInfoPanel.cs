@@ -1,17 +1,19 @@
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CurrentKSAbilityInfoPanel : EquipmentAbilityInfoPanel
 {
+    public Image thumImage;
     float value = 0f;
     public void UpdatePanel(string characterName)
     {
         Init();
-        titleText.text = statType.ToString();
+        titleText.text = StatData.GetTitle(statType);
 
         KingSlimeData playerData = KingSlimeManager.Instance.GetKingSlimeData(System.Enum.Parse<KingSlimeName>(characterName));
-
+        thumImage.sprite = StatData.GetThum(statType);
         float preValue = value;
         value = KingSlimeManager.Instance.GetTotalStatValue(playerData, statType);
 

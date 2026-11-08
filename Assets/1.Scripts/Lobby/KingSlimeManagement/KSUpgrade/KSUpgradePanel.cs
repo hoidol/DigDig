@@ -27,7 +27,7 @@ public class KSUpgradePanel : MonoBehaviour
         bool isMaxLv = info.IsMaxLv(lv);
 
         if (statImage != null)
-            statImage.sprite = Resources.Load<Sprite>($"Icon/Stat/{upgradeType}");
+            statImage.sprite = StatData.GetThum(upgradeType);
         titleText.text = upgradeType.ToString();
         lvText.text = info.maxLv > 0 ? $"Lv.{lv}/{info.maxLv}" : $"Lv.{lv}";
 

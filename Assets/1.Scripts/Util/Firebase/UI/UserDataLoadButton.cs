@@ -12,7 +12,7 @@ public class UserDataLoadButton : ButtonUI
 
     async UniTaskVoid LoadAsync()
     {
-        BlockCanvas.Instance.OpenCanvas("불러오는 중...");
+        BlockCanvas.Instance.OpenCanvas(TranslateManager.GetText("Loading"));
         button.interactable = false;
         bool success = await FirebaseManager.Instance.firebaseDB.LoadUserDataAsync();
         if (this == null)
@@ -21,7 +21,7 @@ public class UserDataLoadButton : ButtonUI
         BlockCanvas.Instance.CloseCanvas();
         if (!success)
         {
-            ToastCanvas.Toast("불러오기 실패");
+            ToastCanvas.Toast(TranslateManager.GetText("Load_Failed"));
             return;
         }
 

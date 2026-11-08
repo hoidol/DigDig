@@ -40,10 +40,10 @@ public class SetFindTargetButton : MonoBehaviour
     {
         switch (type)
         {
-            case FindTargetType.Closest: return "가까운 적";
-            case FindTargetType.Farthest: return "먼 적";
-            case FindTargetType.Random: return "랜덤";
-            case FindTargetType.LowHp: return "낮은 체력";
+            case FindTargetType.Closest: return TranslateManager.GetText("FindTarget.Closest");
+            case FindTargetType.Farthest: return TranslateManager.GetText("FindTarget.Farthest");
+            case FindTargetType.Random: return TranslateManager.GetText("FindTarget.Random");
+            case FindTargetType.LowHp: return TranslateManager.GetText("FindTarget.LowHp");
             default: return type.ToString();
         }
     }

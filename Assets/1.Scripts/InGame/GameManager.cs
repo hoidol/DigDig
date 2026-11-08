@@ -52,6 +52,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         // 타일 위치는 GridLayoutGroup이 정함. 로드가 바로 끝나면 첫 레이아웃 계산 전이라 먼저 강제 계산
         Canvas.ForceUpdateCanvases();
+        TileManager.Instance.AssignTileIndices();
 
         // 캐릭터를 임의의 빈 타일 위에 배치
         Tile characterTile = TileManager.Instance.GetRandomEmptyTile();
@@ -114,7 +115,7 @@ public class GameManager : MonoSingleton<GameManager>
         mainWaveTimer = GameSetting.WAVE_TIME;
 
         WaveType waveType = GetWaveType(waveIdx);
-        DefenceType waveDefenceType = stageData.GetWaveDefenceType(waveIdx);
+        DefenceType waveDefenceType = GetWaveDefenceType(waveIdx);
 
         // 웨이브 진행/종료는 각 Wave가 담당 (종료 시 Wave.MoveNextWave → EndWave)
         Debug.Log($"GameManager StartWave {waveIdx}");
@@ -134,6 +135,18 @@ public class GameManager : MonoSingleton<GameManager>
         if (waveNum % GameSetting.ELITE_WAVE_INTERVAL == 0)
             return WaveType.Elite;
         return WaveType.Battle;
+    }
+
+    // 일반 적 방어 타입. wave 번호가 DEFENCE_WAVE_INTERVAL 배수면 Ethereal, Armored 순서로 번갈아, 나머지는 Normal
+    // (WaveData의 DefenceWaveTypes는 사용 안 함)
+    static readonly DefenceType[] WAVE_DEFENCE_ORDER = { DefenceType.Ethereal, DefenceType.Armored };
+    public static DefenceType GetWaveDefenceType(int waveIdx)
+    {
+        int waveNum = waveIdx + 1;
+        if (waveNum % GameSetting.DEFENCE_WAVE_INTERVAL != 0)
+            return DefenceType.Normal;
+        int order = waveNum / GameSetting.DEFENCE_WAVE_INTERVAL - 1;
+        return WAVE_DEFENCE_ORDER[order % WAVE_DEFENCE_ORDER.Length];
     }
 
     // 현재 진행 중인 wave (가장 마지막에 시작한 wave)
@@ -189,8 +202,7 @@ public class GameManager : MonoSingleton<GameManager>
             return;
 
         isPlaying = false;
-        UserDataManager.Instance.userStageManager.TryStage(stageData.key);
-        GameEventBus.Publish(new TryStageEvent(stageData.key));
+        // 도전 횟수는 결과 화면이 나올 때 (부활하면 한 판으로 이어지므로 여기서 세지 않음)
 
         if (!clear)
         {
@@ -218,7 +230,7 @@ public class GameManager : MonoSingleton<GameManager>
 
                 }
             }
-            ResultCanvas.Instance.OpenCanvas(true);
+            ResultCanvas.Instance.OpenCanvas();
         }
     }
 
@@ -271,10 +283,10 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public Wave GetWave(int wIdx)
     {
-        for(int i = 0; i < accWaves.Count; i++)
+        for (int i = 0; i < accWaves.Count; i++)
         {
-            if(accWaves[i].waveIdx == wIdx)
-            return accWaves[i];
+            if (accWaves[i].waveIdx == wIdx)
+                return accWaves[i];
         }
         return null;
     }

@@ -289,17 +289,25 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
         return true;
     }
 
+    // 일반 합성 조건: 같은 key + 같은 mergeLv, 최대 머지 레벨 미만
+    public static bool CanMerge(string key1, int lv1, int growth1, string key2, int lv2, int growth2)
+    {
+        if (growth1 > 1 || growth2 > 1)
+            return false;
+        if (growth1 != growth2)
+            return false;
+        if (lv1 != lv2)
+            return false;
+        if (key1 != key2)
+            return false;
+        if (lv1 >= SlimeData.MAX_MERGE_LEVEL || lv2 >= SlimeData.MAX_MERGE_LEVEL)
+            return false;
+        return true;
+    }
+
     public virtual async UniTask<(bool, string, int)> Merge(Slime target)
     {
-        if (SlimeData.growth > 1 || target.SlimeData.growth > 1)
-            return (false, null, 0);
-        if (SlimeData.growth != target.SlimeData.growth)
-            return (false, null, 0);
-        if (mergeLevel != target.mergeLevel)
-            return (false, null, 0);
-        if (target.key != key)
-            return (false, null, 0);
-        if (mergeLevel >= SlimeData.MAX_MERGE_LEVEL || target.mergeLevel >= SlimeData.MAX_MERGE_LEVEL)
+        if (!CanMerge(key, mergeLevel, SlimeData.growth, target.key, target.mergeLevel, target.SlimeData.growth))
             return (false, null, 0);
 
         string pickedSlimeKey = null;

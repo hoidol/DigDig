@@ -15,7 +15,7 @@ public class MortarSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int level =0)
     {
-        return $"깃발 위치에 폭탄을 떨어뜨립니다(최대 {maxHitCount}기). 맞은 적은 {slowChance * 100f:0}% 확률로 느려집니다.";
+        return string.Format(TranslateManager.GetText("Slime.Mortar.Desc"), maxHitCount, slowChance * 100f);
     }
 
 }

@@ -60,12 +60,12 @@ public class JokerSlime : SlimeGrowth1
 
         if (mergeLevel <= 0)
         {
-            ToastCanvas.Toast("변신 실패! 조커가 사라졌습니다.");
+            ToastCanvas.Toast(TranslateManager.GetText("Joker_Fail_Vanish"));
             SlimeSpawner.Instance.RemoveFieldSlime(this);
             return null;
         }
 
-        ToastCanvas.Toast("변신 실패! 별이 1 떨어졌습니다.");
+        ToastCanvas.Toast(TranslateManager.GetText("Joker_Fail_LevelDown"));
         return SlimeSpawner.Instance.ReplaceSlime(this, targetKey, mergeLevel - 1);
     }
 }

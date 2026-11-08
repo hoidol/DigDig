@@ -11,9 +11,20 @@ public class DrawProductPanel : ProductPanel
     public int specialDrawInterval;
     public TMP_Text specialDrawInfoText;
 
-    protected int PurchaseCount => UserDataManager.Instance.userPurchaseManager.GetPurchaseCount(key);
+    public string[] LastDrawKeys { get; protected set; } // 마지막 뽑기 결과 (높은 등급 순)
 
-    // Purchased에서 구매 기록이 먼저 쌓이므로, 뽑을 때는 이번 구매까지 센 값으로 판정
+    // 이 패널 하위 구매 버튼들(key)의 구매 횟수 합. 특별 뽑기는 Unique 패널만 쓰므로(specialDrawInterval > 0) 그 패널 구매만 카운트
+    protected int PurchaseCount
+    {
+        get
+        {
+            if (purchaseButtons == null)
+                purchaseButtons = GetComponentsInChildren<ProductPurchaseButton>(true);
+            return purchaseButtons.Sum(b => UserDataManager.Instance.userPurchaseManager.GetPurchaseCount(b.key));
+        }
+    }
+
+    // 버튼이 구매 기록을 먼저 남기고 Purchased(count)를 부르므로, 뽑을 때는 이번 구매까지 센 값으로 판정
     protected bool IsSpecialDraw => specialDrawInterval > 0 && PurchaseCount % specialDrawInterval == 0;
 
     // 특별 뽑기까지 진행도 (0 ~ specialDrawInterval-1)

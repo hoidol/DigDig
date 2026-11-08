@@ -7,11 +7,9 @@ using System.Linq;
 public abstract class Boss : Enemy, IEnemySpecialAttackPattern
 {
     public BossState bossState;
-    protected int currentPhase;
-    public int CurrentPhase => currentPhase;
 
-    [SerializeField] BossPhase[] phases;
-    public BossPhase curBossPhase;
+    // 보스가 쓰는 스킬 (자식의 EnemyAttackPattern). 체력에 따른 페이즈 없음: 어떤 스킬을 쓸지는 StartBehaviour가 정함
+    EnemyAttackPattern[] attackPatterns;
     public float waitingTime = 5f;
 
     [SerializeField] BossBehaviour[] bossBehaviours;
@@ -21,17 +19,13 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     {
         base.Awake();
         bossBehaviours = GetComponentsInChildren<BossBehaviour>();
+        attackPatterns = GetComponentsInChildren<EnemyAttackPattern>(true);
     }
 
 
     public override void Spawn(Vector2 pos, int wave)
     {
-        for (int i = 0; i < phases.Length; i++)
-        {
-            phases[i].Init(this);
-        }
         EnterBossState(BossState.Intro);
-        currentPhase = 0;
         base.Spawn(pos, wave);
         GameEventBus.Publish(new BossSpawnEvent(this));
     }
@@ -39,7 +33,6 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     public override void Apear()
     {
         base.Apear();
-        OnEnterPhase(0);
         StartIntro().Forget();
 
     }
@@ -67,48 +60,20 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     }
 
 
-    protected override void OnHpChanged()
-    {
-        base.OnHpChanged();
-        CheckPhaseTransition();
-    }
-
     public override void Destroy()
     {
-        if (curBossPhase != null)
-            curBossPhase.EndPhase();
-
         base.Destroy();
         GameEventBus.Publish(new BossDeadEvent(this));
     }
 
-    void CheckPhaseTransition()
+    public EnemyAttackPattern GetAttackPattern(string key)
     {
-        if (currentPhase == phases.Length - 1)
-            return;
-        float hpRate = curHp / maxHp;
-        int newPhase = 0;
-        for (int i = 0; i < phases.Length; i++)
+        for (int i = 0; i < attackPatterns.Length; i++)
         {
-            if (hpRate <= phases[i].phaseThreshold)
-                newPhase = i + 1;
+            if (attackPatterns[i].key == key)
+                return attackPatterns[i];
         }
-
-        if (newPhase != currentPhase)
-        {
-            currentPhase = newPhase;
-            GameEventBus.Publish(new BossPhaseChangedEvent(this, currentPhase));
-            OnEnterPhase(currentPhase);
-        }
-    }
-
-    protected virtual void OnEnterPhase(int phase)
-    {
-        if (curBossPhase != null)
-            curBossPhase.EndPhase();
-
-        curBossPhase = phases[phase];
-        curBossPhase.StartPhase();
+        return null;
     }
 
     public virtual float PlayAnim(string animName)
@@ -119,9 +84,6 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
 
     public override void CancelAttack()
     {
-        if (phases != null && currentPhase < phases.Length)
-            phases[currentPhase].EndPhase();
-
     }
 
     //부수면서 이동하기

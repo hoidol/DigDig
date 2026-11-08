@@ -12,6 +12,6 @@ public class StigmaSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"적중 시 {stigmaChances.GetByMergeLevel(mergeLv) * 100:0}% 확률로 낙인을 새깁니다. 낙인 중첩당 받는 피해 {damagePerStack * 100:0}% 증가 (최대 {maxStack}중첩)";
+        return string.Format(TranslateManager.GetText("Slime.Stigma.Desc"), stigmaChances.GetByMergeLevel(mergeLv) * 100, damagePerStack * 100, maxStack);
     }
 }

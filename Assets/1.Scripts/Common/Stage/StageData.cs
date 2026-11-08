@@ -26,14 +26,23 @@ public class StageData : ScriptableObject
     // public EventData[] eventDatas;
     public Boss boss;
 
-    // 난이도마다 스테이지 하나. Normal은 항상 열림, 그 외는 한 단계 낮은 난이도를 클리어해야 열림
+    // 다음 난이도 해금 조건: 한 단계 낮은 난이도에서 이 wave(표시 번호)까지 도달
+    public const int UNLOCK_WAVE = 100;
+
+    // 난이도마다 스테이지 하나. Normal은 항상 열림, 그 외는 한 단계 낮은 난이도에서 wave UNLOCK_WAVE 이상 도달해야 열림
     public bool ChekcUnlock()
     {
         if (difficulty == DifficultyType.Normal)
             return true;
 
         UserStage lowDifficultyUserStage = UserDataManager.Instance.userStageManager.GetUserStage(difficulty - 1);
-        return lowDifficultyUserStage != null && lowDifficultyUserStage.maxWave >= 49;
+        return lowDifficultyUserStage != null && IsUnlockWave(lowDifficultyUserStage.maxWave);
+    }
+
+    // maxWave = 저장된 waveIdx (0부터). 표시 wave = maxWave + 1
+    public static bool IsUnlockWave(int lowDifficultyMaxWave)
+    {
+        return lowDifficultyMaxWave + 1 >= UNLOCK_WAVE;
     }
     public void Init()
     {
@@ -273,5 +282,5 @@ public enum DefenceWaveType
     Armored, //갑옷형 소환
     Ethereal, //정령형 소환 
     // 4: 중갑형(HeavyArmor) 삭제. 기존 직렬화 값 유지를 위해 번호 비워둠
-    Organic = 5, //생체형 소환
+    // 5: 생체형(Organic) 삭제 (2026-11-07). 기존 직렬화 값 유지를 위해 번호 비워둠
 }

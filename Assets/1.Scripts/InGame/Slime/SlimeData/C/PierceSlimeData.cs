@@ -8,7 +8,7 @@ public class PierceSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int level =0)
     {
-        return $"{pierceCount[level]}만큼 관통하는 탄을 발사합니다";
+        return string.Format(TranslateManager.GetText("Slime.Pierce.Desc"), pierceCount[level]);
     }
 
 }

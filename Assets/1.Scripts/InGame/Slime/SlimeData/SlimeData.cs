@@ -11,7 +11,7 @@ public class SlimeData : ScriptableObject
     public static int[] ABILITY_LEVELS = { 2, 5, 8, 11, 14 };
 
     public string key;
-    public string Title => TranslateManager.GetText(key);
+    public string Title => TranslateManager.GetText($"Slime.{key}"); // 이름은 Translate.csv (Slime.{Key})
     public string desc;
     // public string[] enhanceAbilityDescs;
     public int growth;
@@ -314,15 +314,8 @@ public class SlimeStat
 {
     public StatType statType;
     public string[] values;
-    public string Title => statType.ToString();
-    public Sprite Thum
-    {
-        get
-        {
-            var sprite = Resources.Load<Sprite>($"Icon/Stat/{statType}");
-            return sprite;
-        }
-    }
+    public string Title => StatData.GetTitle(statType);
+    public Sprite Thum => StatData.GetThum(statType);
 
     // values 형식
     // - 2개: "기본/증가량" → 기본 + 증가량 * mergeLv

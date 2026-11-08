@@ -12,9 +12,4 @@ public class RemoveAdProductPanel : ProductPanel
         base.UpdatePanel();
         adRemovedObject.gameObject.SetActive(UserDataManager.Instance.isAdRemoved);
     }
-    public override void Purchased()
-    {
-        base.Purchased();
-        UpdatePanel();
-    }
 }

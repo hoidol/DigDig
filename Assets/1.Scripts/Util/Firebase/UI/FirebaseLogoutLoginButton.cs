@@ -10,15 +10,15 @@ public class FirebaseLogoutLoginButton : ButtonUI
             return;
 
         string body = auth.CurrentLoginType == LoginType.Anonymous
-            ? "게스트 계정은 로그아웃하면 다시 불러올 수 없습니다.\n로그아웃할까요?"
-            : "로그아웃할까요?";
+            ? TranslateManager.GetText("Logout_Guest_Confirm")
+            : TranslateManager.GetText("Logout_Confirm");
 
-        YesOrNoCanvas.Instance.OpenCanvas("로그아웃", body, yes =>
+        YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("Logout"), body, yes =>
         {
             if (!yes)
                 return;
             auth.SignOut();
-            ToastCanvas.Toast("로그아웃 완료");
+            ToastCanvas.Toast(TranslateManager.GetText("Logout_Done"));
         });
     }
 }

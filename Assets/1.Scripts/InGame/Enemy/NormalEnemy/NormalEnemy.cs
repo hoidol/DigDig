@@ -14,12 +14,9 @@ public class NormalEnemy : Enemy
     [SerializeField] protected bool moving;
     // protected float moveTimer;
 
-    public Animator animator;
-
     public override void Awake()
     {
         base.Awake();
-        animator = GetComponentInChildren<Animator>();
     }
 
     public override void Spawn(Vector2 pos, int wave)
@@ -55,6 +52,8 @@ public class NormalEnemy : Enemy
     public override void TakeDamage(DamageData damage)
     {
         base.TakeDamage(damage);
+        if (IsDying)
+            return;
         //일반형 - 직관적으로 데미지 입음
         root.DOKill();
         root.localRotation = Quaternion.identity;

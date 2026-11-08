@@ -11,6 +11,6 @@ public class KeenSlimeData : CrossBuffSlimeData
     
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"십자범위 4칸 슬라임의 크리티컬 확률 {GetBuffValue(mergeLv)}% 증가";
+        return string.Format(TranslateManager.GetText("Slime.Keen.Desc"), GetBuffValue(mergeLv));
     }
 }

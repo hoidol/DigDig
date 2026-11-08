@@ -17,6 +17,6 @@ public class DopamineSlimeData : EnhanceAbilitySlimeData
     public override string GetDescription(int mergeLv = 0)
     {
         int percent = Mathf.RoundToInt(extraShotDamageMuls.GetByMergeLevel(mergeLv) * 100f);
-        return $"주변(범위 {detectRanges.GetByMergeLevel(mergeLv)})에서 적이 죽으면 공격력 {percent}%의 탄을 {extraShotCount}발 더 발사합니다.";
+        return string.Format(TranslateManager.GetText("Slime.Dopamine.Desc"), detectRanges.GetByMergeLevel(mergeLv), percent, extraShotCount);
     }
 }

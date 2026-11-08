@@ -1,27 +1,13 @@
-using System;
 using UnityEngine;
 namespace Lobby
 {
     public class DrawEquipmentResultCanvas : DrawResultCanvas<DrawEquipmentResultCanvas> 
 {
-    public EquipmentThumPanel[] equipmentThumPanels;
-    public override void OpenCanvas(string[] pickedKeys, Action closeCallback = null)
+    protected override GradeType SetCardData(DrawResultCard card, string key)
     {
-        base.OpenCanvas(closeCallback);
-        for(int i = 0; i < equipmentThumPanels.Length; i++)
-        {
-            if(i < pickedKeys.Length)
-            {
-                equipmentThumPanels[i].gameObject.SetActive(true);
-                equipmentThumPanels[i].SetEquipmentData(EquipmentManager.Instance.GetEquipmentData(pickedKeys[i]));
-            }
-            else
-            {
-                equipmentThumPanels[i].gameObject.SetActive(false);
-            }
-            
-        }
-        
+        EquipmentData equipmentData = EquipmentManager.Instance.GetEquipmentData(key);
+        card.GetComponentInChildren<EquipmentThumPanel>(true).SetEquipmentData(equipmentData);
+        return equipmentData.grade;
     }
 }
 }

@@ -18,6 +18,6 @@ public class BerserkerSlimeData : EnhanceAbilitySlimeData
     public override string GetDescription(int mergeLv = 0)
     {
         int percent = Mathf.RoundToInt(attackSpeedPerStacks.GetByMergeLevel(mergeLv) * 100f);
-        return $"주변(범위 {detectRanges.GetByMergeLevel(mergeLv)})에서 적이 죽을 때마다 공격속도 {percent}% 증가 (최대 {maxStack}중첩, {stackDuration}초 동안 처치가 없으면 초기화)";
+        return string.Format(TranslateManager.GetText("Slime.Berserker.Desc"), detectRanges.GetByMergeLevel(mergeLv), percent, maxStack, stackDuration);
     }
 }

@@ -38,16 +38,24 @@ public class SacrificeSlime : SlimeGrowth1, IResultBuffSlime
         return allyBulletSpec.Instantiate(this);
     }
 
+    // 희생 합성 조건: 종 상관없이 같은 mergeLv, 최대 머지 레벨 미만
+    public static bool CanSacrificeMerge(int lv, int growth, int targetLv, int targetGrowth)
+    {
+        if (targetGrowth != growth)
+            return false;
+        if (lv != targetLv)
+            return false;
+        if (lv >= SlimeData.MAX_MERGE_LEVEL)
+            return false;
+        return true;
+    }
+
     public override async UniTask<(bool, string, int)> Merge(Slime target)
     {
         if (target is SacrificeSlime)
             return await base.Merge(target);
 
-        if (target.SlimeData.growth != SlimeData.growth)
-            return (false, null, 0);
-        if (mergeLevel != target.mergeLevel)
-            return (false, null, 0);
-        if (mergeLevel >= SlimeData.MAX_MERGE_LEVEL)
+        if (!CanSacrificeMerge(mergeLevel, SlimeData.growth, target.mergeLevel, target.SlimeData.growth))
             return (false, null, 0);
 
         int lv = mergeLevel + 1;

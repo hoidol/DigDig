@@ -34,6 +34,7 @@ public class UserMyInfoManager : UserBaseManager
     {
         userMyInfoData.exp += exp;
         RequestSave();
+        GameEventBus.Publish(new ChangedUserExpEvent());
     }
 
     public int GetMaxExp(int lv = -1)
@@ -63,6 +64,8 @@ public class UserMyInfoManager : UserBaseManager
         {   
             userMyInfoData.exp = remainExp;
             userMyInfoData.lv++;
+            RequestSave();
+            GameEventBus.Publish(new ChangedUserExpEvent());
             return true;
         }
         return false;
@@ -70,6 +73,9 @@ public class UserMyInfoManager : UserBaseManager
 }
 
 
+
+// 유저 경험치/레벨 변경 시 발행 (MyInfoPanel 갱신)
+public class ChangedUserExpEvent { }
 
 [System.Serializable]
 public class UserMyInfoData

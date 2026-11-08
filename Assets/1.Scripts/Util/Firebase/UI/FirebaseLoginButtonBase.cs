@@ -18,13 +18,13 @@ public abstract class FirebaseLoginButtonBase : ButtonUI
         FirebaseAuth auth = FirebaseManager.Instance != null ? FirebaseManager.Instance.firebaseAuth : null;
         if (auth == null || !auth.IsReady)
         {
-            ToastCanvas.Toast("서버 연결 중입니다. 잠시 후 다시 시도해 주세요.");
+            ToastCanvas.Toast(TranslateManager.GetText("Server_Connecting_Retry"));
             return;
         }
         if (auth.IsSigningIn)
             return;
 
-        BlockCanvas.Instance.OpenCanvas($"{LoginName} 로그인 중...");
+        BlockCanvas.Instance.OpenCanvas(string.Format(TranslateManager.GetText("Login_InProgress"), LoginName));
         button.interactable = false;
         try
         {
@@ -47,7 +47,7 @@ public abstract class FirebaseLoginButtonBase : ButtonUI
     {
         if (!success)
         {
-            ToastCanvas.Toast($"{LoginName} 로그인 실패");
+            ToastCanvas.Toast(string.Format(TranslateManager.GetText("Login_Failed"), LoginName));
             return;
         }
 
@@ -55,6 +55,6 @@ public abstract class FirebaseLoginButtonBase : ButtonUI
         FirebaseLoginCanvas canvas = FirebaseLoginCanvas.Instance;
         if (canvas != null && canvas.gameObject.activeSelf)
             canvas.CloseCanvas();
-        ToastCanvas.Toast("로그인 완료");
+        ToastCanvas.Toast(TranslateManager.GetText("Login_Done"));
     }
 }

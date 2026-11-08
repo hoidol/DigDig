@@ -9,6 +9,6 @@ public class RageSlimeData : CrossBuffSlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"십자범위 4칸 슬라임의 공격력 {GetBuffPercent(mergeLv)}% 증가";
+        return string.Format(TranslateManager.GetText("Slime.Rage.Desc"), GetBuffPercent(mergeLv));
     }
 }

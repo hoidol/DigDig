@@ -30,7 +30,7 @@ public class AdRefreshItemButton : ButtonUI
     {
         if (remainCount <= 0)
         {
-            ToastCanvas.Toast("이번 판 갱신 횟수를 모두 사용했습니다");
+            ToastCanvas.Toast(TranslateManager.GetText("TileItem_RefreshLimit"));
             return;
         }
 
@@ -42,7 +42,7 @@ public class AdRefreshItemButton : ButtonUI
         }
 
         button.interactable = false; // 광고 보는 동안 중복 클릭 방지
-        AdManager.Instance.Play("refresh_item", AdType.RA, async (success) =>
+        AdManager.Show("refresh_item", AdType.RA, async (success) =>
         {
             await UniTask.SwitchToMainThread(); // 광고 SDK 콜백은 메인 스레드가 아닐 수 있음
             if (success)

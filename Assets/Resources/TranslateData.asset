@@ -1,0 +1,567 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0618ef4945b2e48b69545143034fffe2, type: 3}
+  m_Name: TranslateData
+  m_EditorClassIdentifier: Assembly-CSharp::TranslateDataTable
+  rows:
+  - key: AttackPower_title
+    kr: "\uACF5\uACA9\uB825"
+    en: Attack
+  - key: MaxHp_title
+    kr: "\uCD5C\uB300 \uCCB4\uB825"
+    en: Max HP
+  - key: RecoveryHp_title
+    kr: "\uCD08\uB2F9 \uD68C\uBCF5\uB7C9"
+    en: 
+  - key: AttackSpeed_title
+    kr: "\uACF5\uACA9 \uC18D\uB3C4"
+    en: Attack Speed
+  - key: MoveSpeed_title
+    kr: "\uC774\uB3D9 \uC18D\uB3C4"
+    en: 
+  - key: CritChance_title
+    kr: "\uCE58\uBA85\uB960"
+    en: Crit Chance
+  - key: CritPower_title
+    kr: "\uCE58\uBA85\uB825"
+    en: Crit Damage
+  - key: Dodge_title
+    kr: "\uD68C\uD53C\uB960"
+    en: 
+  - key: Day
+    kr: "\uB0AE"
+    en: Day
+  - key: Night
+    kr: "\uBC24"
+    en: Night
+  - key: Not enough coin
+    kr: "\uCF54\uC778\uC774 \uBD80\uC871\uD569\uB2C8\uB2E4."
+    en: Not enough coin
+  - key: MaxMiniMe
+    kr: "\uB354 \uC774\uC0C1 \uC18C\uD658\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\\n{0}"
+    en: 
+  - key: review_title
+    kr: "\uD50C\uB808\uC774\uD574\uC8FC\uC154\uC11C \uAC10\uC0AC\uD569\uB2C8\uB2E4."
+    en: Thank you for playing.
+  - key: review_body
+    kr: "\uB354 \uC7AC\uBC0C\uB294 \uAC8C\uC784\uC774 \uB418\uAE30 \uC704\uD574\uC11C
+      \uC18C\uC911\uD55C \uB9AC\uBDF0\uB97C \uB0A8\uACA8\uC8FC\uC138\uC694."
+    en: Please leave a review to help us make the game even better.
+  - key: NormalDrawEquipment
+    kr: "\uC77C\uBC18 \uC7A5\uBE44 \uBF51\uAE30"
+    en: 
+  - key: UniqueDrawEquipment
+    kr: "\uACE0\uAE09 \uC7A5\uBE44 \uBF51\uAE30"
+    en: 
+  - key: Purchased
+    kr: "\uAD6C\uB9E4\uD568"
+    en: Purchased
+  - key: TryMerge
+    kr: "\uD569\uC131\uD558\uAE30(0)"
+    en: 
+  - key: UtillRefresh
+    kr: "\uAC31\uC2E0\uAE4C\uC9C0"
+    en: 
+  - key: Refresh
+    kr: "\uAC31\uC2E0\uD558\uAE30"
+    en: 
+  - key: LuckItem_Desc
+    kr: "\uD68C\uD53C\uB960 +{0}%"
+    en: 
+  - key: ForceItem_Desc
+    kr: "\uACF5\uACA9\uB825 +{0} \uACF5\uACA9 \uC18D\uB3C4 +{1}"
+    en: 
+  - key: BounceItem_Desc
+    kr: "\uD0C4 \uD295\uAE40 +{0}"
+    en: 
+  - key: FlameItem_Desc
+    kr: "{0}\uBC88 \uACF5\uACA9\uB9C8\uB2E4 \uD654\uC5FC\uD0C4 2\uBC1C \uBC1C\uC0AC"
+    en: 
+  - key: MiniMeItem_Desc
+    kr: "\uBBF8\uB2C8\uBBF8\uB97C \uC18C\uD658, \uBBF8\uB2C8 \uACF5\uACA9\uB825 {0}"
+    en: 
+  - key: NatureItem_Desc
+    kr: "\uCCB4\uB825 +{0} \uCD08\uB2F9 \uD68C\uBCF5\uB825 +{1}"
+    en: 
+  - key: OrbitItem_Desc
+    kr: "\uADA4\uB3C4\uD0C4 1\uAC1C \uCD94\uAC00"
+    en: 
+  - key: PierceItem_Desc
+    kr: "{0}\uBC88 \uACF5\uACA9\uB9C8\uB2E4 \uAD00\uD1B5\uD0C4 \uBC1C\uC0AC\\n\uAD00\uD1B5\uB825
+      +{1}"
+    en: 
+  - key: RushItem_Desc
+    kr: "\uCC98\uCE58 \uC2DC \uCD94\uAC00\uD0C4 \uBC1C\uC0AC, \uCFE8\uD0C0\uC784
+      {0}\uCD08"
+    en: 
+  - key: WackyItem_Desc
+    kr: "{0}% \uD655\uB960\uB85C \uB79C\uB364 \uBC29\uD5A5\uC73C\uB85C \uCD94\uAC00\uD0C4
+      \uBC1C\uC0AC"
+    en: 
+  - key: BoomItem_Desc
+    kr: "{0}\uBC1C\uC0AC\uB9C8\uB2E4 \uD3ED\uD0C4 \uBC1C\uC0AC (\uCD5C\uB300 2\uBC88
+      \uD295\uAE40)"
+    en: 
+  - key: New Slime
+    kr: "\uC0C8\uB85C\uC6B4 \uC2AC\uB77C\uC784"
+    en: New Slime
+  - key: Not enough exp
+    kr: "\uACBD\uD5D8\uCE58\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4."
+    en: Not enough EXP.
+  - key: Not enough energe
+    kr: "\uC5D0\uB108\uC9C0\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4. \uC5D0\uB108\uC9C0\uB97C
+      1\uBD84\uB9C8\uB2E4 1\uAC1C\uC529 \uCDA9\uC804\uB429\uB2C8\uB2E4."
+    en: 
+  - key: DefenceType.Normal
+    kr: "\uC77C\uBC18\uD615"
+    en: Normal
+  - key: DefenceType.Armored
+    kr: "\uAC11\uC637\uD615"
+    en: Armored
+  - key: DefenceType.Ethereal
+    kr: "\uC815\uB839\uD615"
+    en: Ethereal
+  - key: DefenceType.HeavyArmor
+    kr: "\uC911\uAC11\uD615"
+    en: HeavyArmor
+  - key: DefenceType.Organic
+    kr: "\uC0DD\uCCB4\uD615"
+    en: Organic
+  - key: Difficulty.Normal
+    kr: "\uBCF4\uD1B5"
+    en: Normal
+  - key: Difficulty.Hard
+    kr: "\uC5B4\uB824\uC6C0"
+    en: Hard
+  - key: Difficulty.Hell
+    kr: "\uC9C0\uC625"
+    en: Hell
+  - key: Difficulty_Changed
+    kr: "\uB09C\uC774\uB3C4 {0}(\uC73C)\uB85C \uC124\uC815\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
+    en: Difficulty set to {0}.
+  - key: Difficulty_Locked
+    kr: "\uC774\uC804 \uB09C\uC774\uB3C4 Wave {0} \uB3C4\uB2EC \uC2DC \uD574\uAE08"
+    en: Unlocks after reaching Wave {0} on the previous difficulty
+  - key: Slime.Random
+    kr: "\uB79C\uB364"
+    en: Random
+  - key: Slime.Bounce
+    kr: "\uD0C4\uC131"
+    en: Bounce
+  - key: Slime.Flame
+    kr: "\uD654\uC5FC"
+    en: Flame
+  - key: Slime.Orbit
+    kr: "\uADA4\uB3C4"
+    en: Orbit
+  - key: Slime.Ice
+    kr: "\uC5BC\uC74C"
+    en: Ice
+  - key: Slime.Lightning
+    kr: "\uB77C\uC774\uD2B8\uB2DD"
+    en: Lightning
+  - key: Slime.Pierce
+    kr: "\uAD00\uD1B5"
+    en: Pierce
+  - key: Slime.Iron
+    kr: "\uAC15\uCCA0"
+    en: Iron
+  - key: Slime.Thunder
+    kr: "\uCC9C\uB465"
+    en: Thunder
+  - key: Slime.Shield
+    kr: "\uCCA0\uBCBD"
+    en: Shield
+  - key: Slime.Dopamine
+    kr: "\uAD11\uB780"
+    en: Frenzy
+  - key: Slime.Mine
+    kr: "\uC9C0\uB8B0"
+    en: Mine
+  - key: Slime.Breeze
+    kr: "\uC0B0\uB4E4\uBC14\uB78C"
+    en: Breeze
+  - key: Slime.Rage
+    kr: "\uACA9\uB178"
+    en: Rage
+  - key: Slime.Stigma
+    kr: "\uB099\uC778"
+    en: Stigma
+  - key: Slime.Mud
+    kr: "\uC9C4\uD759"
+    en: Mud
+  - key: Slime.Beam
+    kr: "\uAD11\uC120 \uB9C1\uD06C"
+    en: Beam Link
+  - key: Slime.Berserker
+    kr: "\uBC84\uC11C\uCEE4"
+    en: Berserker
+  - key: Slime.Mortar
+    kr: "\uBC15\uACA9\uD3EC"
+    en: Mortar
+  - key: Slime.Hail
+    kr: "\uBE59\uC11D"
+    en: Hail
+  - key: Slime.Inferno
+    kr: "\uC9C0\uC625"
+    en: Inferno
+  - key: Slime.Keen
+    kr: "\uC124\uC758"
+    en: Keen
+  - key: Slime.Sacrifice
+    kr: "\uD76C\uC0DD"
+    en: Sacrifice
+  - key: Slime.GrowUp
+    kr: "\uC131\uC7A5"
+    en: Grow Up
+  - key: Slime.Scavenger
+    kr: "\uC218\uD655"
+    en: Scavenger
+  - key: Slime.Joker
+    kr: "\uC870\uCEE4"
+    en: Joker
+  - key: Slime.Hunter
+    kr: "\uC0AC\uB0E5\uAFBC"
+    en: Hunter
+  - key: Slime.Random.Desc
+    kr: "{0}~{1} \uD53C\uD574\uB97C \uAC00\uC9C4 \uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+    en: Fires shots that deal {0}~{1} damage.
+  - key: Slime.Ice.Desc
+    kr: "\uBE59\uACB0\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4. {0}\uCD08 \uB3D9\uC548
+      \uBE59\uACB0 \uC0C1\uD0DC\uB97C \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+    en: Fires frost shots that freeze for {0}s.
+  - key: Slime.Flame.Desc
+    kr: "\uD654\uC5FC\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4. \uD654\uC5FC \uC2DC
+      {0}\uCD08 \uB3D9\uC548 \uCD08\uB2F9 {1} \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
+    en: Fires fire shots. Burns for {0}s, dealing {1} damage per second.
+  - key: Slime.Pierce.Desc
+    kr: "{0}\uB9CC\uD07C \uAD00\uD1B5\uD558\uB294 \uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4"
+    en: Fires shots that pierce {0} times
+  - key: Slime.Lightning.Desc
+    kr: "{0}\uAE30 \uC801\uC5D0\uAC8C \uCCB4\uC778 \uB370\uBBF8\uC9C0\uB97C \uC785\uD799\uB2C8\uB2E4."
+    en: Deals chain damage to {0} enemies.
+  - key: Slime.Iron.Desc
+    kr: "\uC5D8\uB9AC\uD2B8, \uBCF4\uC2A4\uC5D0\uAC8C {0}\uBC30 \uB370\uBBF8\uC9C0\uB97C
+      \uC90D\uB2C8\uB2E4."
+    en: Deals {0}x damage to Elites and Bosses.
+  - key: Slime.Thunder.Desc
+    kr: "\uBC88\uAC1C\uB97C \uB5A8\uC5B4\uB728\uB824 \uC8FC\uBCC0 \uC801\uC5D0\uAC8C
+      \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4. (\uBC94\uC704 {0}, \uCD5C\uB300 {1}\uAE30)"
+    en: Strikes lightning that damages nearby enemies. (Range {0}, up to {1} enemies)
+  - key: Slime.Mine.Desc
+    kr: "\uC801 \uC774\uB3D9 \uACBD\uB85C\uC5D0 \uC9C0\uB8B0\uB97C \uC124\uCE58\uD569\uB2C8\uB2E4.
+      \uBC1F\uC73C\uBA74 \uD3ED\uBC1C\uD574 \uC8FC\uBCC0 \uC801\uC5D0\uAC8C \uD53C\uD574\uB97C
+      \uC90D\uB2C8\uB2E4. (\uCD5C\uB300 {0}\uAC1C, \uBC94\uC704 {1}, \uCD5C\uB300
+      {2}\uAE30)"
+    en: Plants mines on the enemy path that explode when stepped on, damaging nearby
+      enemies. (Up to {0} mines, range {1}, up to {2} enemies)
+  - key: Slime.Stigma.Desc
+    kr: "\uC801\uC911 \uC2DC {0:0}% \uD655\uB960\uB85C \uB099\uC778\uC744 \uC0C8\uAE41\uB2C8\uB2E4.
+      \uB099\uC778 \uC911\uCCA9\uB2F9 \uBC1B\uB294 \uD53C\uD574 {1:0}% \uC99D\uAC00
+      (\uCD5C\uB300 {2}\uC911\uCCA9)"
+    en: '{0:0}% chance on hit to brand the enemy. Each brand stack increases damage
+      taken by {1:0}% (max {2} stacks)'
+  - key: Slime.Rage.Desc
+    kr: "\uC2ED\uC790\uBC94\uC704 4\uCE78 \uC2AC\uB77C\uC784\uC758 \uACF5\uACA9\uB825
+      {0}% \uC99D\uAC00"
+    en: Increases attack power of slimes in the 4 cross tiles by {0}%
+  - key: Slime.Breeze.Desc
+    kr: "\uC2ED\uC790\uBC94\uC704 4\uCE78 \uC2AC\uB77C\uC784\uC758 \uACF5\uACA9\uC18D\uB3C4
+      {0}% \uC99D\uAC00"
+    en: Increases attack speed of slimes in the 4 cross tiles by {0}%
+  - key: Slime.Dopamine.Desc
+    kr: "\uC8FC\uBCC0(\uBC94\uC704 {0})\uC5D0\uC11C \uC801\uC774 \uC8FD\uC73C\uBA74
+      \uACF5\uACA9\uB825 {1}%\uC758 \uD0C4\uC744 {2}\uBC1C \uB354 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+    en: When an enemy dies nearby (range {0}), fires {2} extra shots dealing {1}%
+      attack power.
+  - key: Slime.Keen.Desc
+    kr: "\uC2ED\uC790\uBC94\uC704 4\uCE78 \uC2AC\uB77C\uC784\uC758 \uD06C\uB9AC\uD2F0\uCEEC
+      \uD655\uB960 {0}% \uC99D\uAC00"
+    en: Increases crit chance of slimes in the 4 cross tiles by {0}%
+  - key: Slime.Mud.Desc
+    kr: "\uC9C4\uD759 \uAD6C\uC2AC(\uCD5C\uB300 {0}\uAC1C)\uC774 \uC8FC\uBCC0\uC744
+      \uB3CC\uB2E4 \uC801\uC5D0 \uB2FF\uC73C\uBA74 \uD130\uC838 \uC8FC\uBCC0\uC5D0
+      \uC9C4\uD759\uC744 \uBB3B\uD799\uB2C8\uB2E4. \uC9C4\uD759 \uC911\uCCA9\uB2F9
+      \uC774\uB3D9\uC18D\uB3C4 {1:0}% \uAC10\uC18C (\uCD5C\uB300 {2:0}%, \uC5D8\uB9AC\uD2B8\xB7\uBCF4\uC2A4
+      {3:0}%)"
+    en: Mud orbs (up to {0}) circle around and burst on enemies, splashing mud. Each
+      mud stack slows by {1:0}% (max {2:0}%, Elite/Boss {3:0}%)
+  - key: Slime.Beam.Desc
+    kr: "\uB2E4\uB978 \uAD11\uC120 \uC2AC\uB77C\uC784\uACFC \uB808\uC774\uC800\uB85C
+      \uC5F0\uACB0\uB429\uB2C8\uB2E4. \uB808\uC774\uC800\uC5D0 \uB2FF\uC740 \uC801\uC5D0\uAC8C
+      {0}\uCD08\uB9C8\uB2E4 \uD53C\uD574 (\uD63C\uC790\uBA74 \uAE30\uBCF8 \uACF5\uACA9)"
+    en: Links to other Beam slimes with lasers. Damages enemies touching a laser
+      every {0}s (basic attack when alone)
+  - key: Slime.Berserker.Desc
+    kr: "\uC8FC\uBCC0(\uBC94\uC704 {0})\uC5D0\uC11C \uC801\uC774 \uC8FD\uC744 \uB54C\uB9C8\uB2E4
+      \uACF5\uACA9\uC18D\uB3C4 {1}% \uC99D\uAC00 (\uCD5C\uB300 {2}\uC911\uCCA9, {3}\uCD08
+      \uB3D9\uC548 \uCC98\uCE58\uAC00 \uC5C6\uC73C\uBA74 \uCD08\uAE30\uD654)"
+    en: Each enemy death nearby (range {0}) increases attack speed by {1}% (max {2}
+      stacks, resets after {3}s without a kill)
+  - key: Slime.Mortar.Desc
+    kr: "\uAE43\uBC1C \uC704\uCE58\uC5D0 \uD3ED\uD0C4\uC744 \uB5A8\uC5B4\uB728\uB9BD\uB2C8\uB2E4(\uCD5C\uB300
+      {0}\uAE30). \uB9DE\uC740 \uC801\uC740 {1:0}% \uD655\uB960\uB85C \uB290\uB824\uC9D1\uB2C8\uB2E4."
+    en: Drops bombs on the flag (up to {0} enemies). Hit enemies have a {1:0}% chance
+      to be slowed.
+  - key: Slime.Hail.Desc
+    kr: "\uD0C0\uC77C\uADF8\uB8F9 \uC8FC\uC704 \uC801 \uACBD\uB85C\uB97C \uB3C4\uB294
+      \uB208\uC744 \uC18C\uD658\uD569\uB2C8\uB2E4. \uB2FF\uC740 \uC801\uC5D0\uAC8C
+      \uD53C\uD574\uB97C \uC8FC\uACE0 {0}% \uD655\uB960\uB85C \uC5BC\uB9BD\uB2C8\uB2E4."
+    en: Summons hail that circles the enemy path around its tile group. Damages enemies
+      it touches with a {0}% chance to freeze.
+  - key: Slime.Inferno.Desc
+    kr: "\uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801 \uACBD\uB85C \uAD6C\uAC04\uC5D0 \uC9C0\uC625\uBD88\uC744
+      \uD53C\uC6CC \uC548\uC5D0 \uC788\uB294 \uC801\uC5D0\uAC8C \uD53C\uD574\uB97C
+      \uC90D\uB2C8\uB2E4. (\uD0C0\uC77C\uADF8\uB8F9 \uAC00\uC6B4\uB370 \uCE78\uC5D0\uC11C\uB294
+      \uBC1C\uB3D9 \uC548 \uD568)"
+    en: Ignites hellfire on the nearest enemy path segment, damaging enemies inside.
+      (Inactive on the center tile of a tile group)
+  - key: Slime.Sacrifice.Desc
+    kr: "\uAC19\uC740 \uBCC4\uC758 \uC544\uBB34 \uC2AC\uB77C\uC784\uACFC \uD569\uCE58\uBA74
+      \uADF8 \uC2AC\uB77C\uC784\uC73C\uB85C \uAC15\uD654\uB429\uB2C8\uB2E4."
+    en: Merge with any slime of the same star to upgrade into that slime.
+  - key: Slime.GrowUp.Desc
+    kr: "{0:0}\uCD08 \uD6C4 \uB79C\uB364\uD55C \uC2AC\uB77C\uC784\uC73C\uB85C \uC131\uC7A5\uD569\uB2C8\uB2E4(\uBCC4
+      +{1})."
+    en: Grows into a random slime after {0:0}s (+{1} star).
+  - key: Slime.Scavenger.Desc
+    kr: "\uC0AC\uAC70\uB9AC \uC548\uC5D0\uC11C \uC801\uC774 \uC8FD\uC73C\uBA74 {0}\uACE8\uB4DC\uB97C
+      \uC5BB\uC2B5\uB2C8\uB2E4."
+    en: Gain {0} gold whenever an enemy dies within range.
+  - key: Slime.Joker.Desc
+    kr: "\uC6D0\uD558\uB294 \uC2AC\uB77C\uC784\uC73C\uB85C \uBCC0\uC2E0\uD569\uB2C8\uB2E4.
+      {0:0}% \uD655\uB960\uB85C \uC2E4\uD328\uD574 \uBCC4\uC774 1 \uB5A8\uC5B4\uC9D1\uB2C8\uB2E4(\uBCC4
+      1\uC774\uBA74 \uC0AC\uB77C\uC9D0)."
+    en: Transforms into any slime you choose. {0:0}% chance to fail and lose 1 star
+      (vanishes at 1 star).
+  - key: Slime.Hunter.Desc
+    kr: "{0}\uD68C \uACF5\uACA9\uB9C8\uB2E4 \uC800\uACA9 \uAD00\uD1B5\uD0C4\uC744
+      \uBC1C\uC0AC\uD574 {1}\uCD08 \uC2A4\uD134 + \uCE58\uBA85 \uD53C\uD574\uB97C
+      \uC90D\uB2C8\uB2E4."
+    en: Every {0} attacks, fires a piercing sniper shot that stuns for {1}s and always
+      crits.
+  - key: Joker_Fail_Vanish
+    kr: "\uBCC0\uC2E0 \uC2E4\uD328! \uC870\uCEE4\uAC00 \uC0AC\uB77C\uC84C\uC2B5\uB2C8\uB2E4."
+    en: Transform failed! The Joker vanished.
+  - key: Joker_Fail_LevelDown
+    kr: "\uBCC0\uC2E0 \uC2E4\uD328! \uBCC4\uC774 1 \uB5A8\uC5B4\uC84C\uC2B5\uB2C8\uB2E4."
+    en: Transform failed! Lost 1 star.
+  - key: AttackRange_title
+    kr: "\uC0AC\uAC70\uB9AC"
+    en: Range
+  - key: MaxSlimeCount_title
+    kr: "\uCD5C\uB300 \uC2AC\uB77C\uC784 \uC218"
+    en: Max Slimes
+  - key: StartGold_title
+    kr: "\uC2DC\uC791 \uCF54\uC778"
+    en: Starting Coins
+  - key: WaveClearGold_title
+    kr: "\uC6E8\uC774\uBE0C \uC885\uB8CC \uCF54\uC778"
+    en: Wave Clear Coins
+  - key: BurnDPS_title
+    kr: "\uD654\uC0C1 \uD53C\uD574"
+    en: Burn Damage
+  - key: Stat_AttackSpeedValue
+    kr: "10\uCD08\uB2F9 {0:0.#}\uBC1C"
+    en: '{0:0.#} shots / 10s'
+  - key: AttackType.AllRounder
+    kr: "\uB9CC\uB2A5\uD615"
+    en: All-Rounder
+  - key: AttackType.Physic
+    kr: "\uBB3C\uB9AC\uD615"
+    en: Physical
+  - key: AttackType.Magic
+    kr: "\uB9C8\uBC95\uD615"
+    en: Magic
+  - key: DefenceType_Label
+    kr: "\uC720\uD615:{0}"
+    en: 'Type: {0}'
+  - key: Defence_None
+    kr: "\uC57D\uC810/\uB0B4\uC131 \uC5C6\uC74C"
+    en: No weakness/resistance
+  - key: Defence_Weak
+    kr: "\uC57D\uC810:<color=#00FF00>{0}</color>"
+    en: 'Weak: <color=#00FF00>{0}</color>'
+  - key: Defence_Resist
+    kr: "\uB0B4\uC131:<color=#FF0000>{0}</color>"
+    en: 'Resist: <color=#FF0000>{0}</color>'
+  - key: WaveEnemyInfo
+    kr: "Wave {0} \uC801 \uC815\uBCF4"
+    en: Wave {0} Enemies
+  - key: Grade.C
+    kr: "\uB178\uB9D0"
+    en: Normal
+  - key: Grade.B
+    kr: "\uB808\uC5B4"
+    en: Rare
+  - key: Grade.A
+    kr: "\uC720\uB2C8\uD06C"
+    en: Unique
+  - key: Grade.S
+    kr: "\uB808\uC804\uB4DC"
+    en: Legend
+  - key: Grade.SS
+    kr: "\uC2E0\uD654"
+    en: Mythic
+  - key: Grade.SSS
+    kr: "\uCD08\uC6D4"
+    en: Transcendent
+  - key: FindTarget.Closest
+    kr: "\uAC00\uAE4C\uC6B4 \uC801"
+    en: Closest
+  - key: FindTarget.Farthest
+    kr: "\uBA3C \uC801"
+    en: Farthest
+  - key: FindTarget.Random
+    kr: "\uB79C\uB364"
+    en: Random
+  - key: FindTarget.LowHp
+    kr: "\uB0AE\uC740 \uCCB4\uB825"
+    en: Lowest HP
+  - key: TileItem_DrawChance
+    kr: "{0}% \uD655\uB960\uB85C \uD0C0\uC77C \uAC15\uD654 \uC544\uC774\uD15C\uC744
+      \uC5BB\uC2B5\uB2C8\uB2E4."
+    en: '{0}% chance to get a tile item.'
+  - key: TileItem_NoTile
+    kr: "\uC801\uC6A9 \uAC00\uB2A5\uD55C \uD0C0\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
+    en: No tile available.
+  - key: TileItem_AlreadyInstalled
+    kr: "\uC774\uBBF8 \uC544\uC774\uD15C\uC774 \uC124\uCE58\uB41C \uD0C0\uC77C\uC785\uB2C8\uB2E4."
+    en: This tile already has an item.
+  - key: TileItem_RefreshLimit
+    kr: "\uC774\uBC88 \uD310 \uAC31\uC2E0 \uD69F\uC218\uB97C \uBAA8\uB450 \uC0AC\uC6A9\uD588\uC2B5\uB2C8\uB2E4"
+    en: No refreshes left this game
+  - key: Draw_Success
+    kr: "\uBF51\uAE30 \uC131\uACF5!"
+    en: Draw succeeded!
+  - key: Draw_Fail
+    kr: "\uBF51\uAE30 \uC2E4\uD328"
+    en: Draw failed
+  - key: Resurrection_Daily
+    kr: "\uC77C\uC77C \uBD80\uD65C {0}"
+    en: Daily revives {0}
+  - key: Currency.Gold
+    kr: "\uACE8\uB4DC"
+    en: Gold
+  - key: Currency.Dia
+    kr: "\uB2E4\uC774\uC544"
+    en: Diamond
+  - key: Currency_Get
+    kr: "{0} {1:N0} \uD68D\uB4DD!"
+    en: Got {0} {1:N0}!
+  - key: Draw_Slime_Get
+    kr: "\uC2AC\uB77C\uC784 {0}\uB9C8\uB9AC \uD68D\uB4DD!"
+    en: Got {0} slimes!
+  - key: Draw_Equipment_Get
+    kr: "\uC7A5\uBE44 {0}\uAC1C \uD68D\uB4DD!"
+    en: Got {0} equipment!
+  - key: Draw_SpecialSlime
+    kr: "{0} \uC774\uC0C1 \uC2AC\uB77C\uC784 \uB4F1\uC7A5\uAE4C\uC9C0 [{1}/{2}]"
+    en: '{0}+ slime guaranteed in [{1}/{2}]'
+  - key: Draw_SpecialEquipment
+    kr: "{0} \uC774\uC0C1 \uC7A5\uBE44 \uB4F1\uC7A5\uAE4C\uC9C0 [{1}/{2}]"
+    en: '{0}+ equipment guaranteed in [{1}/{2}]'
+  - key: Ad
+    kr: "\uAD11\uACE0"
+    en: AD
+  - key: Ad_Watching
+    kr: "\uAD11\uACE0 \uC2DC\uCCAD\uC911..."
+    en: Watching ad...
+  - key: Purchasing
+    kr: "\uAD6C\uB9E4\uC911..."
+    en: Purchasing...
+  - key: Purchase_DailyLimit
+    kr: "\uC624\uB298 \uAD6C\uB9E4 \uD69F\uC218\uB97C \uBAA8\uB450 \uC0AC\uC6A9\uD588\uC2B5\uB2C8\uB2E4"
+    en: You've reached today's purchase limit
+  - key: Purchase_Unavailable
+    kr: "\uACB0\uC81C\uB97C \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4."
+    en: Purchases are unavailable.
+  - key: Ranking_RefreshIn
+    kr: "\uAC31\uC2E0\uAE4C\uC9C0 {0}:{1:00}"
+    en: Refresh in {0}:{1:00}
+  - key: Server_Connecting
+    kr: "\uC11C\uBC84 \uC5F0\uACB0 \uC911..."
+    en: Connecting to the server...
+  - key: Server_Connecting_Retry
+    kr: "\uC11C\uBC84 \uC5F0\uACB0 \uC911\uC785\uB2C8\uB2E4. \uC7A0\uC2DC \uD6C4
+      \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694."
+    en: Connecting to the server. Please try again later.
+  - key: Guest
+    kr: "\uAC8C\uC2A4\uD2B8"
+    en: Guest
+  - key: Login_InProgress
+    kr: "{0} \uB85C\uADF8\uC778 \uC911..."
+    en: Signing in with {0}...
+  - key: Login_Failed
+    kr: "{0} \uB85C\uADF8\uC778 \uC2E4\uD328"
+    en: '{0} sign-in failed'
+  - key: Login_Done
+    kr: "\uB85C\uADF8\uC778 \uC644\uB8CC"
+    en: Signed in
+  - key: Login_State_Guest
+    kr: "\uAC8C\uC2A4\uD2B8 ({0})"
+    en: Guest ({0})
+  - key: Login_State_Google
+    kr: "Google \uACC4\uC815 \uC5F0\uACB0\uB428"
+    en: Google account linked
+  - key: Login_State_Apple
+    kr: "Apple \uACC4\uC815 \uC5F0\uACB0\uB428"
+    en: Apple account linked
+  - key: Login_State_SignedIn
+    kr: "\uB85C\uADF8\uC778\uB428"
+    en: Signed in
+  - key: Login_State_Required
+    kr: "\uB85C\uADF8\uC778 \uD544\uC694"
+    en: Sign-in required
+  - key: Logout
+    kr: "\uB85C\uADF8\uC544\uC6C3"
+    en: Log Out
+  - key: Logout_Confirm
+    kr: "\uB85C\uADF8\uC544\uC6C3\uD560\uAE4C\uC694?"
+    en: Log out?
+  - key: Logout_Guest_Confirm
+    kr: "\uAC8C\uC2A4\uD2B8 \uACC4\uC815\uC740 \uB85C\uADF8\uC544\uC6C3\uD558\uBA74
+      \uB2E4\uC2DC \uBD88\uB7EC\uC62C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\\n\uB85C\uADF8\uC544\uC6C3\uD560\uAE4C\uC694?"
+    en: Guest accounts cannot be recovered after logging out.\nLog out?
+  - key: Logout_Done
+    kr: "\uB85C\uADF8\uC544\uC6C3 \uC644\uB8CC"
+    en: Logged out
+  - key: Loading
+    kr: "\uBD88\uB7EC\uC624\uB294 \uC911..."
+    en: Loading...
+  - key: Load_Failed
+    kr: "\uBD88\uB7EC\uC624\uAE30 \uC2E4\uD328"
+    en: Failed to load
+  - key: Saving
+    kr: "\uC800\uC7A5 \uC911..."
+    en: Saving...
+  - key: Save_Done
+    kr: "\uC800\uC7A5 \uC644\uB8CC"
+    en: Saved
+  - key: Save_Failed
+    kr: "\uC800\uC7A5 \uC2E4\uD328"
+    en: Save failed
+  - key: day_0
+    kr: "{0}\uC77C"
+    en: '{0}d'
+  - key: hour_0
+    kr: "{0}\uC2DC\uAC04"
+    en: '{0}h'
+  - key: min_0
+    kr: "{0}\uBD84"
+    en: '{0}m'
+  - key: sec_0
+    kr: "{0}\uCD08"
+    en: '{0}s'
+  - key: changedLanguage
+    kr: "\uC5B8\uC5B4\uAC00 \uBCC0\uACBD\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
+    en: Language changed.

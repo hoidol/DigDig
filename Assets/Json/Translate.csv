@@ -1,18 +1,18 @@
 Key	Kr	En
-AttackPower_title	공격력	
-MaxHp_title	최대 체력	
+AttackPower_title	공격력	Attack
+MaxHp_title	최대 체력	Max HP
 RecoveryHp_title	초당 회복량	
-AttackSpeed_title	공격 속도	
+AttackSpeed_title	공격 속도	Attack Speed
 MoveSpeed_title	이동 속도	
-CritChance_title	치명률	
-CritPower_title	치명력	
+CritChance_title	치명률	Crit Chance
+CritPower_title	치명력	Crit Damage
 Dodge_title	회피률	
 Day	낮	Day
 Night	밤	Night
 Not enough coin	코인이 부족합니다.	Not enough coin
 MaxMiniMe	더 이상 소환할 수 없습니다.\n{0}	
-review_title	플레이해주셔서 감사합니다.	
-review_body	더 재밌는 게임이 되기 위해서 소중한 리뷰를 남겨주세요.	
+review_title	플레이해주셔서 감사합니다.	Thank you for playing.
+review_body	더 재밌는 게임이 되기 위해서 소중한 리뷰를 남겨주세요.	Please leave a review to help us make the game even better.
 NormalDrawEquipment	일반 장비 뽑기	
 UniqueDrawEquipment	고급 장비 뽑기	
 Purchased	구매함	Purchased
@@ -30,11 +30,138 @@ PierceItem_Desc	{0}번 공격마다 관통탄 발사\n관통력 +{1}
 RushItem_Desc	처치 시 추가탄 발사, 쿨타임 {0}초	
 WackyItem_Desc	{0}% 확률로 랜덤 방향으로 추가탄 발사	
 BoomItem_Desc	{0}발사마다 폭탄 발사 (최대 2번 튕김)	
-New Slime	새로운 슬라임	
-Not enough exp	경험치가 부족합니다.	
+New Slime	새로운 슬라임	New Slime
+Not enough exp	경험치가 부족합니다.	Not enough EXP.
 Not enough energe	에너지가 부족합니다. 에너지를 1분마다 1개씩 충전됩니다.	
 DefenceType.Normal	일반형	Normal
 DefenceType.Armored	갑옷형	Armored
 DefenceType.Ethereal	정령형	Ethereal
 DefenceType.HeavyArmor	중갑형	HeavyArmor
 DefenceType.Organic	생체형	Organic
+Difficulty.Normal	보통	Normal
+Difficulty.Hard	어려움	Hard
+Difficulty.Hell	지옥	Hell
+Difficulty_Changed	난이도 {0}(으)로 설정되었습니다.	Difficulty set to {0}.
+Difficulty_Locked	이전 난이도 Wave {0} 도달 시 해금	Unlocks after reaching Wave {0} on the previous difficulty
+Slime.Random	랜덤	Random
+Slime.Bounce	탄성	Bounce
+Slime.Flame	화염	Flame
+Slime.Orbit	궤도	Orbit
+Slime.Ice	얼음	Ice
+Slime.Lightning	라이트닝	Lightning
+Slime.Pierce	관통	Pierce
+Slime.Iron	강철	Iron
+Slime.Thunder	천둥	Thunder
+Slime.Shield	철벽	Shield
+Slime.Dopamine	광란	Frenzy
+Slime.Mine	지뢰	Mine
+Slime.Breeze	산들바람	Breeze
+Slime.Rage	격노	Rage
+Slime.Stigma	낙인	Stigma
+Slime.Mud	진흙	Mud
+Slime.Beam	광선 링크	Beam Link
+Slime.Berserker	버서커	Berserker
+Slime.Mortar	박격포	Mortar
+Slime.Hail	빙석	Hail
+Slime.Inferno	지옥	Inferno
+Slime.Keen	설의	Keen
+Slime.Sacrifice	희생	Sacrifice
+Slime.GrowUp	성장	Grow Up
+Slime.Scavenger	수확	Scavenger
+Slime.Joker	조커	Joker
+Slime.Hunter	사냥꾼	Hunter
+Slime.Random.Desc	{0}~{1} 피해를 가진 탄을 발사합니다.	Fires shots that deal {0}~{1} damage.
+Slime.Ice.Desc	빙결탄을 발사합니다. {0}초 동안 빙결 상태를 부여합니다.	Fires frost shots that freeze for {0}s.
+Slime.Flame.Desc	화염탄을 발사합니다. 화염 시 {0}초 동안 초당 {1} 피해를 줍니다.	Fires fire shots. Burns for {0}s, dealing {1} damage per second.
+Slime.Pierce.Desc	{0}만큼 관통하는 탄을 발사합니다	Fires shots that pierce {0} times
+Slime.Lightning.Desc	{0}기 적에게 체인 데미지를 입힙니다.	Deals chain damage to {0} enemies.
+Slime.Iron.Desc	엘리트, 보스에게 {0}배 데미지를 줍니다.	Deals {0}x damage to Elites and Bosses.
+Slime.Thunder.Desc	번개를 떨어뜨려 주변 적에게 피해를 줍니다. (범위 {0}, 최대 {1}기)	Strikes lightning that damages nearby enemies. (Range {0}, up to {1} enemies)
+Slime.Mine.Desc	적 이동 경로에 지뢰를 설치합니다. 밟으면 폭발해 주변 적에게 피해를 줍니다. (최대 {0}개, 범위 {1}, 최대 {2}기)	Plants mines on the enemy path that explode when stepped on, damaging nearby enemies. (Up to {0} mines, range {1}, up to {2} enemies)
+Slime.Stigma.Desc	적중 시 {0:0}% 확률로 낙인을 새깁니다. 낙인 중첩당 받는 피해 {1:0}% 증가 (최대 {2}중첩)	{0:0}% chance on hit to brand the enemy. Each brand stack increases damage taken by {1:0}% (max {2} stacks)
+Slime.Rage.Desc	십자범위 4칸 슬라임의 공격력 {0}% 증가	Increases attack power of slimes in the 4 cross tiles by {0}%
+Slime.Breeze.Desc	십자범위 4칸 슬라임의 공격속도 {0}% 증가	Increases attack speed of slimes in the 4 cross tiles by {0}%
+Slime.Dopamine.Desc	주변(범위 {0})에서 적이 죽으면 공격력 {1}%의 탄을 {2}발 더 발사합니다.	When an enemy dies nearby (range {0}), fires {2} extra shots dealing {1}% attack power.
+Slime.Keen.Desc	십자범위 4칸 슬라임의 크리티컬 확률 {0}% 증가	Increases crit chance of slimes in the 4 cross tiles by {0}%
+Slime.Mud.Desc	진흙 구슬(최대 {0}개)이 주변을 돌다 적에 닿으면 터져 주변에 진흙을 묻힙니다. 진흙 중첩당 이동속도 {1:0}% 감소 (최대 {2:0}%, 엘리트·보스 {3:0}%)	Mud orbs (up to {0}) circle around and burst on enemies, splashing mud. Each mud stack slows by {1:0}% (max {2:0}%, Elite/Boss {3:0}%)
+Slime.Beam.Desc	다른 광선 슬라임과 레이저로 연결됩니다. 레이저에 닿은 적에게 {0}초마다 피해 (혼자면 기본 공격)	Links to other Beam slimes with lasers. Damages enemies touching a laser every {0}s (basic attack when alone)
+Slime.Berserker.Desc	주변(범위 {0})에서 적이 죽을 때마다 공격속도 {1}% 증가 (최대 {2}중첩, {3}초 동안 처치가 없으면 초기화)	Each enemy death nearby (range {0}) increases attack speed by {1}% (max {2} stacks, resets after {3}s without a kill)
+Slime.Mortar.Desc	깃발 위치에 폭탄을 떨어뜨립니다(최대 {0}기). 맞은 적은 {1:0}% 확률로 느려집니다.	Drops bombs on the flag (up to {0} enemies). Hit enemies have a {1:0}% chance to be slowed.
+Slime.Hail.Desc	타일그룹 주위 적 경로를 도는 눈을 소환합니다. 닿은 적에게 피해를 주고 {0}% 확률로 얼립니다.	Summons hail that circles the enemy path around its tile group. Damages enemies it touches with a {0}% chance to freeze.
+Slime.Inferno.Desc	가장 가까운 적 경로 구간에 지옥불을 피워 안에 있는 적에게 피해를 줍니다. (타일그룹 가운데 칸에서는 발동 안 함)	Ignites hellfire on the nearest enemy path segment, damaging enemies inside. (Inactive on the center tile of a tile group)
+Slime.Sacrifice.Desc	같은 별의 아무 슬라임과 합치면 그 슬라임으로 강화됩니다.	Merge with any slime of the same star to upgrade into that slime.
+Slime.GrowUp.Desc	{0:0}초 후 랜덤한 슬라임으로 성장합니다(별 +{1}).	Grows into a random slime after {0:0}s (+{1} star).
+Slime.Scavenger.Desc	사거리 안에서 적이 죽으면 {0}골드를 얻습니다.	Gain {0} gold whenever an enemy dies within range.
+Slime.Joker.Desc	원하는 슬라임으로 변신합니다. {0:0}% 확률로 실패해 별이 1 떨어집니다(별 1이면 사라짐).	Transforms into any slime you choose. {0:0}% chance to fail and lose 1 star (vanishes at 1 star).
+Slime.Hunter.Desc	{0}회 공격마다 저격 관통탄을 발사해 {1}초 스턴 + 치명 피해를 줍니다.	Every {0} attacks, fires a piercing sniper shot that stuns for {1}s and always crits.
+Joker_Fail_Vanish	변신 실패! 조커가 사라졌습니다.	Transform failed! The Joker vanished.
+Joker_Fail_LevelDown	변신 실패! 별이 1 떨어졌습니다.	Transform failed! Lost 1 star.
+AttackRange_title	사거리	Range
+MaxSlimeCount_title	최대 슬라임 수	Max Slimes
+StartGold_title	시작 코인	Starting Coins
+WaveClearGold_title	웨이브 종료 코인	Wave Clear Coins
+BurnDPS_title	화상 피해	Burn Damage
+Stat_AttackSpeedValue	10초당 {0:0.#}발	{0:0.#} shots / 10s
+AttackType.AllRounder	만능형	All-Rounder
+AttackType.Physic	물리형	Physical
+AttackType.Magic	마법형	Magic
+DefenceType_Label	유형:{0}	Type: {0}
+Defence_None	약점/내성 없음	No weakness/resistance
+Defence_Weak	약점:<color=#00FF00>{0}</color>	Weak: <color=#00FF00>{0}</color>
+Defence_Resist	내성:<color=#FF0000>{0}</color>	Resist: <color=#FF0000>{0}</color>
+WaveEnemyInfo	Wave {0} 적 정보	Wave {0} Enemies
+Grade.C	노말	Normal
+Grade.B	레어	Rare
+Grade.A	유니크	Unique
+Grade.S	레전드	Legend
+Grade.SS	신화	Mythic
+Grade.SSS	초월	Transcendent
+FindTarget.Closest	가까운 적	Closest
+FindTarget.Farthest	먼 적	Farthest
+FindTarget.Random	랜덤	Random
+FindTarget.LowHp	낮은 체력	Lowest HP
+TileItem_DrawChance	{0}% 확률로 타일 강화 아이템을 얻습니다.	{0}% chance to get a tile item.
+TileItem_NoTile	적용 가능한 타일이 없습니다.	No tile available.
+TileItem_AlreadyInstalled	이미 아이템이 설치된 타일입니다.	This tile already has an item.
+TileItem_RefreshLimit	이번 판 갱신 횟수를 모두 사용했습니다	No refreshes left this game
+Draw_Success	뽑기 성공!	Draw succeeded!
+Draw_Fail	뽑기 실패	Draw failed
+Resurrection_Daily	일일 부활 {0}	Daily revives {0}
+Currency.Gold	골드	Gold
+Currency.Dia	다이아	Diamond
+Currency_Get	{0} {1:N0} 획득!	Got {0} {1:N0}!
+Draw_Slime_Get	슬라임 {0}마리 획득!	Got {0} slimes!
+Draw_Equipment_Get	장비 {0}개 획득!	Got {0} equipment!
+Draw_SpecialSlime	{0} 이상 슬라임 등장까지 [{1}/{2}]	{0}+ slime guaranteed in [{1}/{2}]
+Draw_SpecialEquipment	{0} 이상 장비 등장까지 [{1}/{2}]	{0}+ equipment guaranteed in [{1}/{2}]
+Ad	광고	AD
+Ad_Watching	광고 시청중...	Watching ad...
+Purchasing	구매중...	Purchasing...
+Purchase_DailyLimit	오늘 구매 횟수를 모두 사용했습니다	You've reached today's purchase limit
+Purchase_Unavailable	결제를 사용할 수 없습니다.	Purchases are unavailable.
+Ranking_RefreshIn	갱신까지 {0}:{1:00}	Refresh in {0}:{1:00}
+Server_Connecting	서버 연결 중...	Connecting to the server...
+Server_Connecting_Retry	서버 연결 중입니다. 잠시 후 다시 시도해 주세요.	Connecting to the server. Please try again later.
+Guest	게스트	Guest
+Login_InProgress	{0} 로그인 중...	Signing in with {0}...
+Login_Failed	{0} 로그인 실패	{0} sign-in failed
+Login_Done	로그인 완료	Signed in
+Login_State_Guest	게스트 ({0})	Guest ({0})
+Login_State_Google	Google 계정 연결됨	Google account linked
+Login_State_Apple	Apple 계정 연결됨	Apple account linked
+Login_State_SignedIn	로그인됨	Signed in
+Login_State_Required	로그인 필요	Sign-in required
+Logout	로그아웃	Log Out
+Logout_Confirm	로그아웃할까요?	Log out?
+Logout_Guest_Confirm	게스트 계정은 로그아웃하면 다시 불러올 수 없습니다.\n로그아웃할까요?	Guest accounts cannot be recovered after logging out.\nLog out?
+Logout_Done	로그아웃 완료	Logged out
+Loading	불러오는 중...	Loading...
+Load_Failed	불러오기 실패	Failed to load
+Saving	저장 중...	Saving...
+Save_Done	저장 완료	Saved
+Save_Failed	저장 실패	Save failed
+day_0	{0}일	{0}d
+hour_0	{0}시간	{0}h
+min_0	{0}분	{0}m
+sec_0	{0}초	{0}s
+changedLanguage	언어가 변경되었습니다.	Language changed.

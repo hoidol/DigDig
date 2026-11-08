@@ -10,6 +10,6 @@ public class GrowUpSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"{growTime:0}초 후 랜덤한 슬라임으로 성장합니다(별 +{growLevelUp}).";
+        return string.Format(TranslateManager.GetText("Slime.GrowUp.Desc"), growTime, growLevelUp);
     }
 }

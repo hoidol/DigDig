@@ -13,7 +13,7 @@ public class UniqueDrawSlimeProductPanel : DrawSlimeProductPanel
     {
         base.UpdatePanel();
         if (specialDrawInfoText != null)
-            specialDrawInfoText.text = $"{Grade.GetGradeText(GradeType.A)} 이상 슬라임 등장까지 [{SpecialDrawProgress}/{specialDrawInterval}]";
+            specialDrawInfoText.text = string.Format(TranslateManager.GetText("Draw_SpecialSlime"), Grade.GetGradeText(GradeType.A), SpecialDrawProgress, specialDrawInterval);
     }
 
     // 특별 뽑기 회차: 1개는 specialDrawSlime에서 확정, 나머지는 평소대로

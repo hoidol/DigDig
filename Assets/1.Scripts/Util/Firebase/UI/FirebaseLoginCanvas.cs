@@ -53,14 +53,14 @@ public class FirebaseLoginCanvas : CanvasUI<FirebaseLoginCanvas>
     static string GetStatusText(FirebaseAuth auth, bool ready, LoginType type)
     {
         if (!ready)
-            return "서버 연결 중...";
+            return TranslateManager.GetText("Server_Connecting");
 
         switch (type)
         {
-            case LoginType.Anonymous: return $"게스트 ({ShortId(auth.UserId)})";
-            case LoginType.Google: return "Google 계정 연결됨";
-            case LoginType.Apple: return "Apple 계정 연결됨";
-            default: return auth.IsSignedIn ? "로그인됨" : "로그인 필요";
+            case LoginType.Anonymous: return string.Format(TranslateManager.GetText("Login_State_Guest"), ShortId(auth.UserId));
+            case LoginType.Google: return TranslateManager.GetText("Login_State_Google");
+            case LoginType.Apple: return TranslateManager.GetText("Login_State_Apple");
+            default: return auth.IsSignedIn ? TranslateManager.GetText("Login_State_SignedIn") : TranslateManager.GetText("Login_State_Required");
         }
     }
 

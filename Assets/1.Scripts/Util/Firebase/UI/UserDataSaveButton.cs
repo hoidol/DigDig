@@ -11,7 +11,7 @@ public class UserDataSaveButton : ButtonUI
 
     async UniTaskVoid SaveAsync()
     {
-        BlockCanvas.Instance.OpenCanvas("저장 중...");
+        BlockCanvas.Instance.OpenCanvas(TranslateManager.GetText("Saving"));
         button.interactable = false;
         bool success = await FirebaseManager.Instance.firebaseDB.SaveUserDataAsync();
         if (this == null)
@@ -19,6 +19,6 @@ public class UserDataSaveButton : ButtonUI
         button.interactable = true;
         BlockCanvas.Instance.CloseCanvas();
 
-        ToastCanvas.Toast(success ? "저장 완료" : "저장 실패");
+        ToastCanvas.Toast(success ? TranslateManager.GetText("Save_Done") : TranslateManager.GetText("Save_Failed"));
     }
 }

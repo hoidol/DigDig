@@ -9,6 +9,6 @@ public class ScavengerSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"사거리 안에서 적이 죽으면 {coinPerKill}골드를 얻습니다.";
+        return string.Format(TranslateManager.GetText("Slime.Scavenger.Desc"), coinPerKill);
     }
 }

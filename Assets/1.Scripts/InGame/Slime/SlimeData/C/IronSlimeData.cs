@@ -9,6 +9,6 @@ public class IronSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"엘리트, 보스에게 {eliteBossDamageMuls[mergeLv]}배 데미지를 줍니다.";
+        return string.Format(TranslateManager.GetText("Slime.Iron.Desc"), eliteBossDamageMuls[mergeLv]);
     }
 }

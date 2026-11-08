@@ -39,7 +39,7 @@ public class WaveEnemyInfoPanel : MonoBehaviour
 
     public void SetWaveInfo(int w)
     {
-        waveText.text = $"Wave {w+1} 적 정보";
+        waveText.text = string.Format(TranslateManager.GetText("WaveEnemyInfo"), w+1);
         defenceTypePanel.SetDefenceType(GameManager.Instance.GetWave(w).waveDefenceType);
     }
 }

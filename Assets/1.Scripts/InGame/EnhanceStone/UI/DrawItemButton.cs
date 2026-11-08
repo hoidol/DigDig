@@ -25,9 +25,11 @@ public class DrawItemButton : ButtonUI
     }
 
     // 성공 확률(%): 처음 100%, 성공할 때마다 5%씩 감소 (최소 MIN_DRAW_ITEM_CHANCE)
-    public static int GetDrawChance()
+    public static int GetDrawChance() => GetDrawChance(GameManager.Instance.drawItemCount);
+
+    public static int GetDrawChance(int drawCount)
     {
-        int chance = GameSetting.INIT_DRAW_ITEM_CHANCE - GameManager.Instance.drawItemCount * GameSetting.DECREASE_DRAW_ITEM_CHANCE;
+        int chance = GameSetting.INIT_DRAW_ITEM_CHANCE - drawCount * GameSetting.DECREASE_DRAW_ITEM_CHANCE;
         return Mathf.Max(chance, GameSetting.MIN_DRAW_ITEM_CHANCE);
     }
 
@@ -42,7 +44,7 @@ public class DrawItemButton : ButtonUI
         Tile tile = TileManager.Instance.GetRandomTileForItem();
         if (tile == null)
         {
-            ToastCanvas.Toast("적용 가능한 타일이 없습니다.");
+            ToastCanvas.Toast(TranslateManager.GetText("TileItem_NoTile"));
             return;
         }
         if (ItemManager.Instance.GetDrawTileItems(1).Count == 0)

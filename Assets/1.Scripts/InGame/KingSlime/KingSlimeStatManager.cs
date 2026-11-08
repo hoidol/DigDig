@@ -167,15 +167,8 @@ public class KingSlimeStat
     public float initValue; //CharacterData + EquipmentAbility
     public float value; //0~1
 
-    public string Title => statType.ToString();
-    public Sprite Thum
-    {
-        get
-        {
-            var sprite = Resources.Load<Sprite>($"Icon/Stat/{statType}");
-            return sprite;
-        }
-    }
+    public string Title => StatData.GetTitle(statType);
+    public Sprite Thum => StatData.GetThum(statType);
 
     // public string GetValueToString()
     // {

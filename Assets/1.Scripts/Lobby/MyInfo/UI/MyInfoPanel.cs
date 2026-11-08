@@ -17,10 +17,16 @@ public class MyInfoPanel : MonoBehaviour
     void OnEnable()
     {
         GameEventBus.Subscribe<ChangedEnergeEvent>(OnChangedEnergeEvent);
+        GameEventBus.Subscribe<ChangedUserExpEvent>(OnChangedUserExpEvent);
     }
     void OnDisable()
     {
         GameEventBus.Unsubscribe<ChangedEnergeEvent>(OnChangedEnergeEvent);
+        GameEventBus.Unsubscribe<ChangedUserExpEvent>(OnChangedUserExpEvent);
+    }
+    void OnChangedUserExpEvent(ChangedUserExpEvent e)
+    {
+        UpdatePanel();
     }
     void OnChangedEnergeEvent(ChangedEnergeEvent e)
     {

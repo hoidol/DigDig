@@ -18,6 +18,9 @@ public class UserSlimeManager : UserBaseManager
         userSlimeData = SaveManager.LoadData<UserSlimeData>(UserDataFileName);
         if (userSlimeData == null)
         {
+#if UNITY_EDITOR
+            GameSetting.INIT_SLIME_KEYS = new string[] { "Flame", "Ice", "Random", "Orbit", "Lightning" };
+#endif
             userSlimeData = new UserSlimeData();
             for (int i = 0; i < GameSetting.INIT_SLIME_KEYS.Length; i++)
             {
@@ -31,7 +34,6 @@ public class UserSlimeManager : UserBaseManager
         {
             if (userSlimeData.equiptedSlimes[i] == null || string.IsNullOrEmpty(userSlimeData.equiptedSlimes[i].key) || !userSlimeData.equiptedSlimes[i].own)
             {
-                // Debug.Log($"조건 걸림 i {i} {GameSetting.INIT_BULLE_KEYS[i]}");
                 userSlimeData.equiptedSlimes[i] = GetUserSlime(GameSetting.INIT_SLIME_KEYS[i]);
                 userSlimeData.equiptedSlimes[i].own = true;
                 userSlimeData.equiptedSlimes[i].equipedIdx = i;
@@ -147,6 +149,6 @@ public class LevelUpSlimeEvent
     public string key;
     public LevelUpSlimeEvent(string key)
     {
-        this.key = key;        
+        this.key = key;
     }
 }

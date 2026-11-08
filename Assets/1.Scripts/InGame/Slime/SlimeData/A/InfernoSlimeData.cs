@@ -14,6 +14,6 @@ public class InfernoSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return "가장 가까운 적 경로 구간에 지옥불을 피워 안에 있는 적에게 피해를 줍니다. (타일그룹 가운데 칸에서는 발동 안 함)";
+        return TranslateManager.GetText("Slime.Inferno.Desc");
     }
 }

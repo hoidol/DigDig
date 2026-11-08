@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e228e95de6b24e51bb26ea1aa92bb69, type: 3}
+  m_Name: ProductData
+  m_EditorClassIdentifier: Assembly-CSharp::ProductDataTable
+  productDatas:
+  - key: RemoveAd
+    productId: remove_ad
+    currencyType: 5
+    price: 4.99
+  - key: GameSpeedUp
+    productId: game_speed_up
+    currencyType: 5
+    price: 2.99
+  - key: DrawSlime_Normal_Ad
+    productId: 
+    currencyType: 4
+    price: 1
+  - key: DrawSlime_Normal_DrawTicket
+    productId: 
+    currencyType: 3
+    price: 30
+  - key: DrawSlime_Unique_Dia
+    productId: 
+    currencyType: 1
+    price: 50
+  - key: DrawEquipment_Normal_Ad
+    productId: 
+    currencyType: 4
+    price: 1
+  - key: DrawEquipment_Normal_Dia
+    productId: 
+    currencyType: 1
+    price: 25
+  - key: DrawEquipment_Unique
+    productId: 
+    currencyType: 1
+    price: 50
+  - key: Dia_20
+    productId: dia_20
+    currencyType: 5
+    price: 1.99
+  - key: Dia_110
+    productId: dia_110
+    currencyType: 5
+    price: 5.9
+  - key: Dia_550
+    productId: dia_550
+    currencyType: 5
+    price: 17.9
+  - key: Gold_1000
+    productId: 
+    currencyType: 1
+    price: 12
+  - key: Gold_5500
+    productId: 
+    currencyType: 1
+    price: 54
+  - key: Gold_30000
+    productId: 
+    currencyType: 1
+    price: 270

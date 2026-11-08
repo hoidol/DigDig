@@ -9,7 +9,7 @@ public class IceSlimeData : EnhanceAbilitySlimeData
 
     public override string GetDescription(int mergeLv = 0)
     {
-        return $"빙결탄을 발사합니다. {durations[mergeLv]}초 동안 빙결 상태를 부여합니다.";
+        return string.Format(TranslateManager.GetText("Slime.Ice.Desc"), durations[mergeLv]);
     }
 
 }

@@ -107,7 +107,7 @@ MonoBehaviour:
       values:
       - 12
       - 10
-  attackPowerRandomRatio: 0.67
+  attackPowerRandomRatio: 0
   reinforceAttackPowerPercent: 10
   prefab: {fileID: 1358385290756183109, guid: 0b213b5c98b6a4260a2fa4adeea3a912, type: 3}
   unlockConditions: []

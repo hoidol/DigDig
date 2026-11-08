@@ -10,7 +10,7 @@ public class RankingButton : ButtonUI
         FirebaseAuth auth = FirebaseManager.Instance != null ? FirebaseManager.Instance.firebaseAuth : null;
         if (auth == null || !auth.IsReady)
         {
-            ToastCanvas.Toast("서버 연결 중입니다. 잠시 후 다시 시도해 주세요.");
+            ToastCanvas.Toast(TranslateManager.GetText("Server_Connecting_Retry"));
             return;
         }
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Boomlagoon.JSON;
@@ -56,72 +56,45 @@ public class TranslateManager
         }
         PlayerPrefs.SetInt("LanguageType", (int)curLanguageType);
 
-        string json = Resources.Load<TextAsset>("JSON/TranslateData").text;
-        JSONArray arr = JSONObject.Parse(json).GetArray("JSON");
-        for (int i = 0; i < arr.Length; i++)
+        // Json/Translate.csv → Resources/TranslateData.asset (DataTableImporter)
+        translateDic.Clear();
+        TranslateDataTable table = Resources.Load<TranslateDataTable>(TranslateDataTable.RESOURCE_PATH);
+        if (table == null)
         {
-            TranslateData translateData = new TranslateData();
-
-            translateData.key = arr[i].Obj.GetString("Key");
-
-            translateData.en = arr[i].Obj.GetString("En");
-            translateData.en = translateData.en.Replace("\\n", "\n");
-
-
-            translateData.kr = arr[i].Obj.GetString("Kr");
-            translateData.kr = translateData.kr.Replace("\\n", "\n");
-
-            //3. 시트 to Data
-            translateData.vi = arr[i].Obj.GetString("Vi");
-            translateData.vi = translateData.vi.Replace("\\n", "\n");
-
-            translateData.es = arr[i].Obj.GetString("Es");
-            translateData.es = translateData.es.Replace("\\n", "\n");
-
-            translateData.pt = arr[i].Obj.GetString("Pt");
-            translateData.pt = translateData.pt.Replace("\\n", "\n");
-
-            translateData.de = arr[i].Obj.GetString("De");
-            translateData.de = translateData.de.Replace("\\n", "\n");
-
-
-            translateDic.Add(translateData.key, translateData);
-
+            Debug.LogWarning("[TranslateManager] Resources/TranslateData 없음 (Tools/Data/Import All 실행 필요)");
+            return;
+        }
+        foreach (TranslateDataTable.Row row in table.rows)
+        {
+            if (string.IsNullOrEmpty(row.key) || translateDic.ContainsKey(row.key))
+                continue;
+            translateDic.Add(row.key, new TranslateData
+            {
+                key = row.key,
+                kr = (row.kr ?? "").Replace("\\n", "\n"),
+                en = (row.en ?? "").Replace("\\n", "\n"),
+            });
         }
     }
     static LanguageType curLanguageType;
+    // 번역 없음 → "*key" (빠진 번역이 화면에서 보이게). 현재 언어 칸이 비어 있으면 Kr → 그래도 없으면 En
+    // 시트에는 Kr / En만 있음 → 그 외 언어는 En
     public static string GetText(string key)
     {
-        // Init();
-        if (!translateDic.ContainsKey(key))
-        {
-            //            Debug.LogWarning($"{key} 해당하는 번역 데이터 없음");
+        Init();
+        if (string.IsNullOrEmpty(key) || !translateDic.TryGetValue(key, out TranslateData data))
             return $"*{key}";
-        }
 
-        //4. 현재 언어 설정에 맞는 데이터 가져오기
-        if (curLanguageType == LanguageType.kr)
-        {
-            return translateDic[key].kr;
-        }
-        else if (curLanguageType == LanguageType.vi)
-        {
-            return translateDic[key].vi;
-        }
-        else if (curLanguageType == LanguageType.de)
-        {
-            return translateDic[key].en;
-        }
-        else if (curLanguageType == LanguageType.es)
-        {
-            return translateDic[key].es;
-        }
-        else if (curLanguageType == LanguageType.pt)
-        {
-            return translateDic[key].pt;
-        }
+        string text = curLanguageType == LanguageType.kr ? data.kr : data.en;
+        if (string.IsNullOrEmpty(text))
+            text = !string.IsNullOrEmpty(data.kr) ? data.kr : data.en;
+        return string.IsNullOrEmpty(text) ? $"*{key}" : text;
+    }
 
-        return translateDic[key].en;
+    public static bool HasKey(string key)
+    {
+        Init();
+        return !string.IsNullOrEmpty(key) && translateDic.ContainsKey(key);
     }
 
     public static void ChangeLanguage(LanguageType languageType)

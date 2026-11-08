@@ -103,7 +103,7 @@
         {
             "key": "Pierce",
             "equipedIdx": -1,
-            "own": false,
+            "own": true,
             "enhanceLevel": 0,
             "exp": 0
         },
@@ -131,7 +131,7 @@
         {
             "key": "Hail",
             "equipedIdx": -1,
-            "own": false,
+            "own": true,
             "enhanceLevel": 0,
             "exp": 0
         },
@@ -180,7 +180,7 @@
         {
             "key": "Breeze",
             "equipedIdx": -1,
-            "own": false,
+            "own": true,
             "enhanceLevel": 0,
             "exp": 0
         },
@@ -194,7 +194,7 @@
         {
             "key": "Mine",
             "equipedIdx": -1,
-            "own": false,
+            "own": true,
             "enhanceLevel": 0,
             "exp": 0
         },
@@ -209,6 +209,34 @@
             "key": "Stigma",
             "equipedIdx": -1,
             "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Mortar",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Hunter",
+            "equipedIdx": -1,
+            "own": false,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Dopamine",
+            "equipedIdx": -1,
+            "own": true,
+            "enhanceLevel": 0,
+            "exp": 0
+        },
+        {
+            "key": "Shield",
+            "equipedIdx": -1,
+            "own": true,
             "enhanceLevel": 0,
             "exp": 0
         }
