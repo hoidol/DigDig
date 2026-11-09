@@ -18223,10 +18223,10 @@ RectTransform:
   - {fileID: 138076517}
   m_Father: {fileID: 1655876354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: -842}
-  m_SizeDelta: {x: 1150, y: 450}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 262}
+  m_SizeDelta: {x: -92, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &443617333
 MonoBehaviour:
@@ -31668,10 +31668,10 @@ RectTransform:
   - {fileID: 1615780242}
   m_Father: {fileID: 1180586456}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 58.1}
-  m_SizeDelta: {x: 125, y: 44.12}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -35.000122}
+  m_SizeDelta: {x: 110, y: 44.119995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &793663347
 MonoBehaviour:
@@ -32061,10 +32061,10 @@ RectTransform:
   - {fileID: 502979831}
   m_Father: {fileID: 1655876354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0000091554, y: -842}
-  m_SizeDelta: {x: 1150, y: 450}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0, y: 262}
+  m_SizeDelta: {x: -92, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &800966079
 MonoBehaviour:
@@ -35156,8 +35156,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 2.7799988}
-  m_SizeDelta: {x: 0, y: -5.56}
+  m_AnchoredPosition: {x: 0, y: -19.3298}
+  m_SizeDelta: {x: 0, y: -49.7796}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &879645299
 MonoBehaviour:
@@ -35179,7 +35179,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uD314\uAE30"
+  m_text: "\uAC15\uD654"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb074ab2e8b3b4c0c8bb83691e429c70, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 5f286ac53973942208b33027d055e62d, type: 2}
@@ -46138,8 +46138,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 251.6, y: -22.1}
-  m_SizeDelta: {x: 126.56, y: 78.095}
+  m_AnchoredPosition: {x: 263, y: 0}
+  m_SizeDelta: {x: 126.56, y: 137.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1180586457
 MonoBehaviour:
@@ -51867,8 +51867,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 2.7799988}
-  m_SizeDelta: {x: 0, y: -5.56}
+  m_AnchoredPosition: {x: 0, y: -19.3298}
+  m_SizeDelta: {x: 0, y: -49.7796}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1355450384
 MonoBehaviour:
@@ -54505,10 +54505,10 @@ RectTransform:
   - {fileID: 262866570}
   m_Father: {fileID: 1655876354}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000061035, y: -842}
-  m_SizeDelta: {x: 1242, y: 524}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0.000061035156, y: 262}
+  m_SizeDelta: {x: 0, y: 524}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1451268374
 CanvasRenderer:
@@ -55666,8 +55666,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 105.04001, y: -22.1}
-  m_SizeDelta: {x: 126.56, y: 78.095}
+  m_AnchoredPosition: {x: 396, y: 0}
+  m_SizeDelta: {x: 126.56, y: 137.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1478224344
 MonoBehaviour:
@@ -55682,7 +55682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeTileItemButton
   button: {fileID: 1478224345}
-  priceText: {fileID: 879645299}
+  priceText: {fileID: 305666328}
 --- !u!114 &1478224345
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55740,7 +55740,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.99607843, g: 0.4, b: 0.22745098, a: 1}
+  m_Color: {r: 0.2627451, g: 0.7176471, b: 0.99607843, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -69352,10 +69352,10 @@ RectTransform:
   - {fileID: 582599711}
   m_Father: {fileID: 1478224343}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 58.1}
-  m_SizeDelta: {x: 125, y: 44.12}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -35}
+  m_SizeDelta: {x: 110, y: 44.119995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1839727364
 MonoBehaviour:

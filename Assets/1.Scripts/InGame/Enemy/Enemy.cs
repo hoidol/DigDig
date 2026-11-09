@@ -49,6 +49,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public static readonly int DEAD_ANIM_HASH = Animator.StringToHash("Dead");
     // Dead 애니메이션이 끝나지 않는 경우(상태 없음·속도 0 등) 대비 최대 대기 시간
     public const float DEAD_ANIM_MAX_TIME = 3f;
+    // Dead 애니메이션이 완전히 끝나기 이만큼(초) 전에 비활성화 (마지막 프레임에 멈춰 보이거나 루프 클립이 처음으로 튀는 것 방지). 최소 1프레임 전
+    public const float DEAD_ANIM_END_EARLY_TIME = 0.1f;
     // 처치되어 Dead 애니메이션 재생 중 (충돌·이동 없음, 끝나면 비활성화 후 풀로)
     public bool IsDying { get; private set; }
     float dyingTimer;
@@ -333,7 +335,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         PlayAnim(DEAD_ANIM_HASH);
     }
 
-    // Dead 상태의 재생이 한 번 끝나면(normalizedTime >= 1) 비활성화. Dead 클립이 루프여도 한 번만 보여줌
+    // Dead 상태의 재생이 한 번 끝나기 직전(DEAD_ANIM_END_EARLY_TIME 전)에 비활성화. Dead 클립이 루프여도 한 번만 보여줌
     void UpdateDying()
     {
         rg2d.linearVelocity = Vector2.zero;
@@ -349,7 +351,14 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (animator.IsInTransition(0))
             return false;
         AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(0);
-        return info.shortNameHash == DEAD_ANIM_HASH && info.normalizedTime >= 1f;
+        if (info.shortNameHash != DEAD_ANIM_HASH)
+            return false;
+        // 남은 재생 시간(초) = 남은 비율 × 클립 길이 / 재생 속도
+        float speed = Mathf.Abs(info.speed * info.speedMultiplier * animator.speed);
+        if (speed <= 0f)
+            return false; // 멈춰 있으면 DEAD_ANIM_MAX_TIME으로 종료
+        float remaining = (1f - info.normalizedTime) * info.length / speed;
+        return remaining <= Mathf.Max(DEAD_ANIM_END_EARLY_TIME, Time.deltaTime);
     }
 
     // 비활성화 후 스포너 풀로 반환 (스포너가 만든 적이 아니면 비활성화만)

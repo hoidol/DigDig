@@ -108,7 +108,7 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
         float shown = Time.time - deadStart;
         Assert.IsFalse(enemy.gameObject.activeSelf, $"Dead 애니메이션 후 비활성화되지 않음 (클립 {deadLength:0.00}초)");
         Assert.IsFalse(enemy.IsDying);
-        Assert.GreaterOrEqual(shown, Mathf.Min(deadLength, Enemy.DEAD_ANIM_MAX_TIME) - 0.1f, $"Dead 애니메이션이 끝나기 전에 비활성화됨 (클립 {deadLength:0.00}초, 표시 {shown:0.00}초)");
+        Assert.GreaterOrEqual(shown, Mathf.Min(deadLength, Enemy.DEAD_ANIM_MAX_TIME) - Enemy.DEAD_ANIM_END_EARLY_TIME - 0.1f, $"Dead 애니메이션이 끝나기 전에 비활성화됨 (클립 {deadLength:0.00}초, 표시 {shown:0.00}초)");
         Assert.AreEqual(0, EnemyFieldController.Instance.DyingEnemyCount, "Dead 끝난 적이 풀에 반환되지 않음");
 
         // 풀에서 재사용되면 다시 Walk부터, 충돌 켜짐

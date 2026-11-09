@@ -32,7 +32,7 @@ public class GameSetting
    public const int INIT_DRAW_ITEM_CHANCE = 100; // 아이템 뽑기 성공 확률(%). 성공할 때마다 감소
    public const int DECREASE_DRAW_ITEM_CHANCE = 5;
    public const int MIN_DRAW_ITEM_CHANCE = 10;
-   public const int SELL_TILE_ITEM_PRICE = 10; // 타일 아이템 판매 시 받는 코인
+   public const int SELL_TILE_ITEM_PRICE = 2; // 타일 아이템 판매 시 받는 코인
    public const int INIT_SPAWN_PRICE = 10;
    public const int INCREASE_SPAWN_PRICE = 1;
    public const int REINFORCE_PRICE_PER_LEVEL = 30; // 슬라임 종 강화 가격 = 30 × (현재 reinforceLevel + 1) → 30, 60, 90... (최대 레벨 없음)
