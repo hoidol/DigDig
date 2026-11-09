@@ -24,19 +24,25 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
             UpdateSlime();
     }
 
-    // 진화 (EvolutionTileItem: 최대 머지 레벨 슬라임이 올라가면 진화). 진화 내용은 추후 기획 → 지금은 표시만
+    // 진화 (EvolutionTileItem: 최대 머지 레벨 슬라임이 올라가면 진화) = 슬라임 고유 [각성] 능력 발현
+    // 각성 효과는 슬라임마다 isEvolved일 때만 동작. 진화 순간에 바꿔야 하는 값(개수 등)은 OnEvolve에서 적용
+    // 합성·교체로 새로 생긴 슬라임은 진화 안 된 상태 (Spawn에서 초기화)
     public bool isEvolved;
     public virtual bool CanEvolve => mergeLevel >= SlimeData.MAX_MERGE_LEVEL && !isEvolved;
-    public virtual void Evolve()
+    public void Evolve()
     {
         if (!CanEvolve)
             return;
         isEvolved = true;
         Debug.Log($"[Evolve] {key} 진화 (머지 레벨 {mergeLevel})");
-        // TODO: 진화 효과 (기획 확정 후 슬라임별 재정의 or 공용 처리)
+        OnEvolve();
+        UpdateSlime();
     }
 
-    public SlimeEnhanceAbility[] slimeEnhanceAbilities;
+    protected virtual void OnEvolve()
+    {
+    }
+
     // public SlimeMovement movement;
 
     public Dictionary<StatType, float> statDic = new Dictionary<StatType, float>();
@@ -77,8 +83,6 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     public ShotModifier ShotModifier => shotModifier;
     public virtual void Awake()
     {
-        slimeEnhanceAbilities = GetComponentsInChildren<SlimeEnhanceAbility>();
-        
         if (rootTr == null)
             rootTr = transform.Find("Root");
 
@@ -149,17 +153,6 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
         rangeTr.localScale = Vector3.one * statDic[StatType.AttackRange];
     }
 
-    public SlimeEnhanceAbility GetSlimeEnhanceAbility(int lv)
-    {
-        for (int i = 0; i < slimeEnhanceAbilities.Length; i++)
-        {
-            if (slimeEnhanceAbilities[i].level == lv)
-            {
-                return slimeEnhanceAbilities[i];
-            }
-        }
-        return null;
-    }
     public virtual void OnEnable()
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
@@ -206,6 +199,8 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     // 시각적 변화(탄 수, 체인 수 등)는 강화가 아니라 머지 레벨로 준다
     public virtual void UpdateReinforce()
     {
+        if (KingSlime.Instance == null) // 씬 종료 중 (킹이 먼저 파괴됨)
+            return;
         int reinforceLevel = KingSlime.Instance.statMgr.GetReinforceLevel(slimeData.key);
         statDic[StatType.AttackPower] *= 1f + slimeData.reinforceAttackPowerPercent / 100f * reinforceLevel;
     }

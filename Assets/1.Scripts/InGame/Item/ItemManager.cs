@@ -85,14 +85,29 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
         if (TileManager.Instance.GetRandomTileForItem() == null)
             return new List<ItemData>();
 
-        return allItemDatas.Where(data =>
+        var candidates = allItemDatas.Where(data =>
         {
             if (!(data.itemPrefab is TileItem tileItem) || !tileItem.CanDraw() || !data.CheckUnlock())
                 return false;
-            if (KingSlime.Instance.statMgr.itemStatDic.TryGetValue(data.key, out CharacterItemStat stat) && stat.count >= data.maxCount)
+            if (!tileItem.IgnoreMaxCount && KingSlime.Instance.statMgr.itemStatDic.TryGetValue(data.key, out CharacterItemStat stat) && stat.count >= data.maxCount)
                 return false;
             return true;
-        }).OrderBy(data => avoid != null && avoid.Contains(data)).ThenBy(data => Random.value).Take(count).ToList();
+        }).ToList();
+
+        // 확률 등장 아이템(진화 타일): 판정 성공 → 맨 앞(확정 노출), 실패 → 후보에서 제외
+        var guaranteed = new List<ItemData>();
+        foreach (ItemData data in candidates.ToList())
+        {
+            float? chance = ((TileItem)data.itemPrefab).DrawChance;
+            if (chance == null)
+                continue;
+            candidates.Remove(data);
+            if (Random.Range(0f, 100f) < chance.Value)
+                guaranteed.Add(data);
+        }
+
+        return guaranteed.Concat(candidates.OrderBy(data => avoid != null && avoid.Contains(data)).ThenBy(data => Random.value))
+            .Take(count).ToList();
     }
 
     public ItemData GetItemData(string key)

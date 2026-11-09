@@ -9,7 +9,6 @@ namespace Lobby
         public GameObject equiptButton;
         public GameObject levelUpButton;
         public SlimeMergeInfoPanel slimeMergeInfoPanel;
-        public SlimeEnhanceAbilityPanel[] enhanceAbilityPanels;
 
         SlimeData slimeData;
         UserSlime userSlime;
@@ -34,11 +33,6 @@ namespace Lobby
             equiptButton.SetActive(userSlime.own && !userSlime.Equiping);
 
             slimeMergeInfoPanel.UpdatePanel();
-
-            for (int i = 0; i < enhanceAbilityPanels.Length; i++)
-            {
-                enhanceAbilityPanels[i].SetSlimeData(slimeData, userSlime);
-            }
         }
 
         public void OnClickedLeft()

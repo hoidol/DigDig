@@ -1,13 +1,14 @@
 using UnityEngine;
 
+// [각성] (진화) 감전: 맞은 적 EVOLVE_SLOW_DURATION초 감속
 public class LightningSlime : SlimeGrowth1
 {
+    public const float EVOLVE_SLOW_DURATION = 1f;
     public LightningSlimeData lightningSlimeData;
     [SerializeField] LightningBulletSpec lightningBulletSpec;
     public float searchRadius = 2f;
     public float initSearchRadius = 6f;
     public int lightningCount;
-    public LightningEnhance8Ability slowEffect;
 
     public override void Spawn(Vector2 pos, int lv)
     {
@@ -34,10 +35,8 @@ public class LightningSlime : SlimeGrowth1
         lightningBulletSpec.lightningCount = lightningCount;
         lightningBulletSpec.damage = AttackPower;
         lightningBulletSpec.StartBulletSpec();
-        if (slowEffect.isActivate)
-        {
-            lightningBulletSpec.AddBulletBehaviour(new SlowOnHitBehavior(1, slowEffect.slowDuration));
-        }
+        if (isEvolved)
+            lightningBulletSpec.AddBulletBehaviour(new SlowOnHitBehavior(1, EVOLVE_SLOW_DURATION));
 
         return lightningBulletSpec.Instantiate(this);
     }

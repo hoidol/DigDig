@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "Orbit", menuName = "SlimeData/C/Orbit")]
-public class OrbitSlimeData : EnhanceAbilitySlimeData
+public class OrbitSlimeData : EnhanceSlimeData
 {
     public int[] orbitCount = { 1, 2, 3, 4, 5 };
 

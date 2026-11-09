@@ -5,19 +5,19 @@ using UnityEngine;
 // - 시간은 게임 진행 중에만 흐름. 드래그 중에 시간이 다 되면 놓은 뒤 성장
 // - 옮겨도 시간은 유지, 합성하면 사라짐 (일반 합성 규칙)
 // - 성장 전까지는 일반 탄 공격
-// - 강화: 5 = 20초, 8 = [각성] 성장 시 50% 확률로 머지 레벨 +1 추가, 11 = 15초
 // 프리팹: growBar(선택)에 진행도 표시용 Transform 연결 (localScale.x = 진행도 0~1)
 public class GrowUpSlime : SlimeGrowth1
 {
+    // 최대 머지 레벨에서는 쓸 수 있는 각성이 없어 진화하지 않음 (머지 레벨을 올리는 슬라임)
+    public override bool CanEvolve => false;
+
     public Transform growBar;
 
     GrowUpSlimeData growUpSlimeData;
     AllyBulletSpec allyBulletSpec;
 
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
     public float growTime;
     public int growLevelUp;
-    public float extraLevelChance; // 0~1, 성장 시 머지 레벨 +1 추가 확률 ([각성])
 
     float growTimer;
     bool isDragging;
@@ -34,7 +34,6 @@ public class GrowUpSlime : SlimeGrowth1
         allyBulletSpec = new AllyBulletSpec();
         growTime = growUpSlimeData.growTime;
         growLevelUp = growUpSlimeData.growLevelUp;
-        extraLevelChance = 0f;
         growTimer = 0f;
         isDragging = false;
         isGrown = false;
@@ -77,10 +76,7 @@ public class GrowUpSlime : SlimeGrowth1
             return;
 
         isGrown = true;
-        int lv = mergeLevel + growLevelUp;
-        if (SlimeChancePity.RollInGame(key, extraLevelChance))
-            lv++;
-        lv = Mathf.Min(lv, SlimeData.MAX_MERGE_LEVEL);
+        int lv = Mathf.Min(mergeLevel + growLevelUp, SlimeData.MAX_MERGE_LEVEL);
         SlimeFieldController.Instance.ReplaceSlime(this, growKey, lv);
     }
 

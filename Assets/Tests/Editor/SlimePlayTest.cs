@@ -5,7 +5,8 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-// 로드된 모든 슬라임 key × 머지 레벨 0/최대를 하나씩 소환해 싸우게 하고 에러가 없는지 본다
+// 로드된 모든 슬라임 key × (머지 레벨 0 / 최대 / 최대+진화)를 하나씩 소환해 싸우게 하고 에러가 없는지 본다
+// 진화 = EvolutionTileItem과 같은 Slime.Evolve (각성 능력 발현). 진화하지 않는 슬라임(CanEvolve false)은 진화 없이 싸움
 public class SlimePlayTest : InGamePlayTestBase
 {
     const float TIME_SCALE = 4f;
@@ -21,9 +22,11 @@ public class SlimePlayTest : InGamePlayTestBase
         var failed = new List<string>();
         foreach (string key in SlimeManager.Instance.slimeDataDic.Keys.ToList())
         {
-            foreach (int lv in new[] { 0, SlimeData.MAX_MERGE_LEVEL })
+            for (int step = 0; step < 3; step++)
             {
-                current = $"{key}/{lv}";
+                int lv = step == 0 ? 0 : SlimeData.MAX_MERGE_LEVEL;
+                bool evolve = step == 2;
+                current = evolve ? $"{key}/{lv}/진화" : $"{key}/{lv}";
                 int before = errors.Count;
                 Slime slime = null;
                 try
@@ -31,6 +34,12 @@ public class SlimePlayTest : InGamePlayTestBase
                     Tile tile = GetFreeTile();
                     Assert.IsNotNull(tile, "빈 타일 없음");
                     slime = SpawnSlime(key, tile, lv);
+                    if (evolve && slime.CanEvolve)
+                    {
+                        slime.Evolve();
+                        if (!slime.isEvolved)
+                            errors.Add($"[{current}] Evolve 후 isEvolved가 false");
+                    }
                 }
                 catch (System.Exception e)
                 {

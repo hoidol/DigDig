@@ -24,12 +24,10 @@ public abstract class CrossBuffSlime : SlimeGrowth1, IBuffRangeUnit
 
     protected CrossBuffSlimeData crossBuffSlimeData;
     AllyBulletSpec allyBulletSpec;
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
     public float buffValue;
-    public List<Buff> extraBuffs = new List<Buff>();       // 버프 대상에게 같이 거는 추가 버프 (강화 11 등)
-    // [각성] 포위 진형: 십자 4칸이 모두 슬라임이면 버프 효과(증가분) × (1 + surroundBonus). 0이면 없음
-    // 같은 TileGroup 안 십자 4칸이 다 있어야 하므로 사실상 3*3 그룹의 가운데 칸 + 막힌 칸 없음이 조건
-    public float surroundBonus;
+    // [각성] (진화) 포위 진형: 같은 TileGroup 안 범위 4칸(십자/대각)이 모두 슬라임이면 버프 효과(증가분) × (1 + EVOLVE_SURROUND_BONUS)
+    // 그룹 경계·막힌 칸이면 불가 → 사실상 3*3 그룹 가운데 칸을 노리는 자리 퍼즐
+    public const float EVOLVE_SURROUND_BONUS = 0.5f;
 
     // 버프 범위 모양 (설정 버튼): 십자 4칸 / 대각 4칸. 소환(InitSlime) 시 십자로 초기화
     BuffRangeShape buffRangeShape = BuffRangeShape.Cross;
@@ -45,7 +43,7 @@ public abstract class CrossBuffSlime : SlimeGrowth1, IBuffRangeUnit
     Vector2Int[] ShapeOffsets => buffRangeShape == BuffRangeShape.Diagonal ? DIAGONAL_OFFSETS : CROSS_OFFSETS;
 
     // 버프 범위 확장 타일(ExpandBuffRangeTileItem) 위에 있으면 십자/대각 4칸 → 8방향. 타일이 OnEnter/OnExit로 올리고 내림
-    // InitSlime에서 초기화하지 않음 (타일 상태라 강화 재적용과 무관)
+    // InitSlime에서 초기화하지 않음 (타일 상태)
     int rangeExpandCount;
     public bool IsRangeExpanded => rangeExpandCount > 0;
     public void AddRangeExpand() { rangeExpandCount++; RefreshBuffs(); }
@@ -56,16 +54,16 @@ public abstract class CrossBuffSlime : SlimeGrowth1, IBuffRangeUnit
 
     // 버프를 준 슬라임 → 걸어준 Buff들 (RemoveBuff는 참조로 지우므로 인스턴스를 들고 있음)
     readonly Dictionary<Slime, List<Buff>> appliedBuffs = new Dictionary<Slime, List<Buff>>();
-    float appliedValue; // 지금 걸려 있는 버프 값 (포위 여부로 바뀌면 전부 다시 걸기)
+    float appliedValue; // 지금 걸려 있는 버프 값 (포위 여부 등으로 바뀌면 전부 다시 걸기)
 
     // 포위 진형 보너스까지 반영한 실제 버프 값. Multiply는 증가분에만 배율 (1.2 → 1.3), Add는 값 전체 (20 → 30)
     public float EffectiveBuffValue
     {
         get
         {
-            if (surroundBonus <= 0 || !IsSurrounded())
+            if (!isEvolved || !IsSurrounded())
                 return buffValue;
-            float mul = 1f + surroundBonus;
+            float mul = 1f + EVOLVE_SURROUND_BONUS;
             return BuffOpType == StatOpType.Multiply ? 1f + (buffValue - 1f) * mul : buffValue * mul;
         }
     }
@@ -90,6 +88,8 @@ public abstract class CrossBuffSlime : SlimeGrowth1, IBuffRangeUnit
         return count == offsets.Length;
     }
 
+    protected override void OnEvolve() => RefreshBuffs();
+
     public override void Spawn(Vector2 pos, int lv)
     {
         crossBuffSlimeData = SlimeManager.Instance.GetSlimeData(key) as CrossBuffSlimeData;
@@ -100,10 +100,8 @@ public abstract class CrossBuffSlime : SlimeGrowth1, IBuffRangeUnit
     {
         allyBulletSpec = new AllyBulletSpec();
         buffValue = crossBuffSlimeData.GetBuffValue(mergeLevel);
-        extraBuffs.Clear();
-        surroundBonus = 0;
         buffRangeShape = BuffRangeShape.Cross;
-        base.InitSlime(); // 강화 능력이 buffValue를 바꿀 수 있으므로 기본값 설정 후 호출
+        base.InitSlime();
 
         // 풀링 재사용 등으로 값이 바뀌었으면 새 값으로 다시 걸기
         ClearBuffs();
@@ -193,10 +191,7 @@ public abstract class CrossBuffSlime : SlimeGrowth1, IBuffRangeUnit
         {
             if (appliedBuffs.ContainsKey(slime))
                 continue;
-            // 슬라임마다 따로 인스턴스 (extraBuffs는 템플릿)
             List<Buff> buffs = new List<Buff> { new Buff(BuffStatType, appliedValue, BuffOpType) };
-            foreach (Buff extra in extraBuffs)
-                buffs.Add(new Buff(extra.statType, extra.value, extra.opType));
             appliedBuffs.Add(slime, buffs);
             foreach (Buff buff in buffs)
                 slime.AddBuff(buff);

@@ -4,7 +4,7 @@ using System.Linq;
 
 // 슬라임 유형 태그 (SlimeData.csv Tags 열, "Shooter|Status"처럼 | 로 구분).
 // 장비가 "장착 슬라임 구성"에 반응하는 기준 (CLAUDE.md "장비").
-// 형태는 슬라임마다 정확히 하나, 특성은 0개 이상. 태그는 기본 효과 기준 (각성·부가 효과는 안 셈)
+// 형태는 슬라임마다 정확히 하나, 특성은 0개 이상. 태그는 기본 효과 기준 (부가 효과는 안 셈)
 [Flags]
 public enum SlimeTag
 {

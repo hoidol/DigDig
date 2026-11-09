@@ -142,8 +142,7 @@ public static class BeamLinkNetwork
         float reduction = Mathf.Min(link.a.damageReductionPerLine, link.b.damageReductionPerLine);
         float mul = Mathf.Max(Mathf.Max(link.a.MinLineDamageMul, link.b.MinLineDamageMul), 1f - reduction * (links.Count - 1));
         float damage = (link.a.AttackPower + link.b.AttackPower) * 0.5f * mul;
-        bool slow = link.a.slowOnLine || link.b.slowOnLine;
-        float slowDuration = Mathf.Max(link.a.slowDuration, link.b.slowDuration);
+        bool slow = link.a.isEvolved || link.b.isEvolved; // 둘 중 하나라도 진화(각성)면 감속
 
         RaycastHit2D[] hits = Physics2D.CircleCastAll(from, GetWidth(link) * 0.5f, dir / dist, dist, link.a.targetLayerMask);
         foreach (RaycastHit2D hit in hits)
@@ -160,7 +159,7 @@ public static class BeamLinkNetwork
             hittable.TakeDamage(damageData);
 
             if (slow && hittable is Enemy enemy && enemy.gameObject.activeInHierarchy)
-                enemy.GetComponent<StatusEffectHandler>()?.Apply(new SlowEffect(slowDuration));
+                enemy.GetComponent<StatusEffectHandler>()?.Apply(new SlowEffect(BeamSlime.EVOLVE_SLOW_DURATION));
         }
     }
 }

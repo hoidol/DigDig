@@ -4,8 +4,10 @@ using UnityEngine;
 // [B] 지뢰: 자기 타일이 속한 TileGroup의 enemyRoots 경로 위에 지뢰(Mine)를 던져 설치 (탄을 쏘지 않음)
 // 적이 사거리에 없어도 미리 깔아 둔다. 동시에 깔린 지뢰 수는 머지 레벨로 증가(MineSlimeData.maxMineCounts)
 // 최대치면 던지지 않고 공격 타이머를 유지 → 지뢰가 터지면 바로 다음 지뢰를 던짐
+// [각성] (진화) 한 번에 지뢰 EVOLVE_MINES_PER_THROW개씩 설치
 public class MineSlime : SlimeGrowth1
 {
+    public const int EVOLVE_MINES_PER_THROW = 2;
     public Mine minePrefab;
 
     MineSlimeData mineSlimeData;
@@ -13,10 +15,8 @@ public class MineSlime : SlimeGrowth1
     public float explodeRadius;
     public int maxHitCount;
     public float mineLifetime;
-    public int minesPerThrow; // 한 번에 던지는 지뢰 수 ([각성] 1 > 2)
-
     // 한 번 공격에 던지는 지뢰 수 (Fire에서 사용)
-    public override int ShootCount => minesPerThrow;
+    public override int ShootCount => isEvolved ? EVOLVE_MINES_PER_THROW : 1;
 
     readonly HashSet<Mine> activeMines = new HashSet<Mine>();
 
@@ -32,10 +32,9 @@ public class MineSlime : SlimeGrowth1
         explodeRadius = mineSlimeData.explodeRadiuses.GetByMergeLevel(mergeLevel);
         maxHitCount = mineSlimeData.maxHitCount;
         mineLifetime = mineSlimeData.mineLifetime;
-        minesPerThrow = 1;
         isDragging = false;
         activeMines.Clear(); // 합성 등으로 사라져도 이미 깔린 지뢰는 그대로 남아서 터짐
-        base.InitSlime(); // 강화 능력이 값을 바꿀 수 있으므로 기본값 설정 후 호출
+        base.InitSlime();
     }
 
     TileGroup GetTileGroup()

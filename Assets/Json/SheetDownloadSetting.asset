@@ -78,22 +78,22 @@ MonoBehaviour:
     csvPath: Json/SlimeEnhance/SlimeEnhance_C.csv
     sheetId: 
     gid: 1944598144
-    range: A:D
+    range: A:C
   - enabled: 1
     csvPath: Json/SlimeEnhance/SlimeEnhance_B.csv
     sheetId: 
     gid: 1615882530
-    range: A:D
+    range: A:C
   - enabled: 1
     csvPath: Json/SlimeEnhance/SlimeEnhance_A.csv
     sheetId: 
     gid: 1014026992
-    range: A:D
+    range: A:C
   - enabled: 1
     csvPath: Json/SlimeEnhance/SlimeEnhance_S.csv
     sheetId: 
     gid: 547841506
-    range: A:D
+    range: A:C
   - enabled: 1
     csvPath: Json/ReinforceData.csv
     sheetId: 

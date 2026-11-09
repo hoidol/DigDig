@@ -1,16 +1,17 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FlameSlime : SlimeGrowth1,IExecuteSkillSlime
+// [각성] (진화) EVOLVE_SKILL_COOLTIME초마다 공격 사거리 안 적 최대 EVOLVE_SKILL_MAX_HIT기에 공격력 피해 + 화상
+public class FlameSlime : SlimeGrowth1
 {
+    public const float EVOLVE_SKILL_COOLTIME = 5f;
+    public const int EVOLVE_SKILL_MAX_HIT = 7;
+
     FlameBulletSpec flameBulletSpec;
     public FlameSlimeData flameSlimeData;
     public float burnDuration;
     public float burnDPS;
-
-    public FlameEnhance8Ability skill1; //각성
-    public FlameEnhance11Ability targetSearcher; //타겟 탐색
     float skillTimer;
+    readonly AllyUnitDamageData skillDamageData = new AllyUnitDamageData();
 
     public override void Spawn(Vector2 pos, int lv)
     {
@@ -21,9 +22,10 @@ public class FlameSlime : SlimeGrowth1,IExecuteSkillSlime
     }
 
     public override void InitSlime()
-    {       
+    {
         burnDuration = flameSlimeData.burnDuration;
         burnDPS = flameSlimeData.burnDPSES[mergeLevel];
+        skillTimer = 0;
 
         base.InitSlime();
     }
@@ -39,45 +41,28 @@ public class FlameSlime : SlimeGrowth1,IExecuteSkillSlime
     public override void Update()
     {
         base.Update();
-
-        if (skill1.isActivate)
-        {
-            if (skillTimer >= skill1.cooltime)
-            {
-                ExecuteSkill();
-                skillTimer = 0;
-            }
-            skillTimer += Time.deltaTime ;    
-        }
-        
+        if (!isEvolved)
+            return;
+        skillTimer += Time.deltaTime;
+        if (skillTimer < EVOLVE_SKILL_COOLTIME)
+            return;
+        skillTimer = 0;
+        ExecuteEvolveSkill();
     }
 
-    public void ExecuteSkill()
+    void ExecuteEvolveSkill()
     {
-        skill1.Execute();
-    }
-
-
-    // public override int ShootCount => flameSlimeData.shootCounts.GetByMergeLevel(mergeLevel);
-
-    public override List<Transform> FindTargets(int count)
-    {
-        // 타겟 탐색 능력: 이미 불붙은 적은 후순위
-        string exceptEffect = targetSearcher.isActivate ? "Flame" : null;
-        return InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, count, exceptEffect);
-    }
-
-    public override Transform FindTarget()
-    {
-        if (!targetSearcher.isActivate)
+        foreach (Transform target in InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, EVOLVE_SKILL_MAX_HIT))
         {
-            return base.FindTarget();
+            if (target == null || !target.TryGetComponent(out IHittable hittable))
+                continue;
+            if (target.TryGetComponent(out StatusEffectHandler handler))
+                handler.Apply(new FlameEffect(burnDuration, burnDPS));
+            skillDamageData.Init(this);
+            skillDamageData.damage = AttackPower;
+            skillDamageData.attackType = AttackType;
+            AccumulateDamage(skillDamageData.damage);
+            hittable.TakeDamage(skillDamageData);
         }
-        else
-        {
-            return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, findTargetType, "Flame");
-        }
-
     }
-
 }

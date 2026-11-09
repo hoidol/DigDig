@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "Ice", menuName = "SlimeData/C/Ice")]
-public class IceSlimeData : EnhanceAbilitySlimeData
+public class IceSlimeData : EnhanceSlimeData
 {
 
     public float[] durations = { 1.5f, 2f, 2.5f, 2.75f, 3f };

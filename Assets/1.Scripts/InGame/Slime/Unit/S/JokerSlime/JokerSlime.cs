@@ -5,13 +5,14 @@ using UnityEngine;
 // - 변신 결과는 같은 타일, 머지 레벨 유지. 단 levelDownChance(기본 30%) 확률로 실패 → 머지 레벨 -1, 가장 낮은 단계면 사라짐
 // - 아껴 뒀다가 필요한 종이 생기면 변신하는 카드
 // - 변신 전까지는 일반 탄 공격
-// - 강화: 5/8/11 = 실패 확률 25% / 20% / 15% (JokerLevelDownEnhanceAbility). 각성 개념 없음
 public class JokerSlime : SlimeGrowth1
 {
+    // 최대 머지 레벨에서는 쓸 수 있는 각성이 없어 진화하지 않음 (머지 레벨을 올리는 슬라임)
+    public override bool CanEvolve => false;
+
     JokerSlimeData jokerSlimeData;
     AllyBulletSpec allyBulletSpec;
 
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
     public float levelDownChance; // 0~1, 변신 실패 확률
 
     public override void Spawn(Vector2 pos, int lv)

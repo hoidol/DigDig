@@ -2,18 +2,17 @@ using UnityEngine;
 
 // [A] 광선 링크: 필드(타일 위)에 광선 슬라임이 2마리 이상이면 모두 서로 레이저로 연결 (BeamLinkNetwork)
 // 레이저에 닿은 적에게 0.25초마다 피해. 연결된 슬라임은 기본 공격을 하지 않고, 혼자면 기본 탄 공격
+// [각성] (진화) 레이저에 닿은 적 피해 틱마다 EVOLVE_SLOW_DURATION초 감속
 public class BeamSlime : SlimeGrowth1
 {
+    public const float EVOLVE_SLOW_DURATION = 0.5f;
     BeamSlimeData beamSlimeData;
     AllyBulletSpec allyBulletSpec;
 
     public Material lineMaterial; // 레이저 머티리얼 (비어 있으면 Sprites/Default)
     public Color lineColor = new Color(1f, 0.3f, 0.3f, 0.9f);
 
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
     public float damageReductionPerLine;
-    public bool slowOnLine;         // [각성] 레이저에 닿은 적 감속
-    public float slowDuration = 0.5f;
 
     public float LineWidth => beamSlimeData.lineWidths.GetByMergeLevel(mergeLevel);
     public float MinLineDamageMul => beamSlimeData.minLineDamageMul;
@@ -32,9 +31,8 @@ public class BeamSlime : SlimeGrowth1
     {
         allyBulletSpec = new AllyBulletSpec();
         damageReductionPerLine = beamSlimeData.damageReductionPerLine;
-        slowOnLine = false;
         isDragging = false;
-        base.InitSlime(); // 강화 능력이 값을 바꿀 수 있으므로 기본값 설정 후 호출
+        base.InitSlime();
     }
 
     public override void OnEnable()

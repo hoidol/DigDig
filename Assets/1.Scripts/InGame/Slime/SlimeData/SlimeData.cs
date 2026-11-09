@@ -13,7 +13,6 @@ public class SlimeData : ScriptableObject
     public string key;
     public string Title => TranslateManager.GetText($"Slime.{key}"); // 이름은 Translate.csv (Slime.{Key})
     public string desc;
-    // public string[] enhanceAbilityDescs;
     public int growth;
     public AttackType attackType;
     [Tooltip("슬라임 유형 (SlimeData.csv Tags). 형태 하나 + 특성. 장비가 장착 슬라임 구성에 반응하는 기준")]

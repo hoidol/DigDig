@@ -8,7 +8,7 @@ public class ShieldOrbitOrb : OrbitOrb
 {
     public int maxBlockCount = 3; // ShieldSlime이 AddOrbit 후 설정 (blockCountPerShield)
 
-    // [각성] 가시방패: 막혀 있는 적에게 THORN_INTERVAL마다 최대 체력 × thornMaxHpRatio 피해 (0이면 없음)
+    // [각성] 가시방패 (ShieldSlime 진화): 막혀 있는 적에게 THORN_INTERVAL마다 최대 체력 × thornMaxHpRatio 피해 (0이면 없음)
     // 퍼센트 피해라 방어 타입 배율은 무시, 치명타 없음. 낙인 배율 등 적 쪽 배율은 그대로 적용
     public float thornMaxHpRatio;
     const float THORN_INTERVAL = 1f;

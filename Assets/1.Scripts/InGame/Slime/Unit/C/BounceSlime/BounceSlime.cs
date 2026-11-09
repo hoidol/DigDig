@@ -1,16 +1,14 @@
-using System.Collections.Generic;
 using UnityEngine;
 
+// [각성] (진화) 탄 피해 +EVOLVE_DAMAGE_BONUS
 public class BounceSlime : SlimeGrowth1
 {
+    public const float EVOLVE_DAMAGE_BONUS = 0.2f;
     BounceBulletSpec bounceBulletSpec;
     public int bounceCount;
     public BounceSlimeData bounceSlimeData;
-    public BounceEnhance8Ability damageBoostAbility;
-    public List<IBulletForce> bulletForces = new List<IBulletForce>();
     public override void Spawn(Vector2 pos, int lv)
     {
-        bulletForces.Clear();
         bounceSlimeData = SlimeManager.Instance.GetSlimeData(key) as BounceSlimeData;
         base.Spawn(pos, lv);
     }
@@ -31,12 +29,8 @@ public class BounceSlime : SlimeGrowth1
         bounceBulletSpec.damage = AttackPower;
         bounceBulletSpec.multi = 0.8f;
         bounceBulletSpec.StartBulletSpec();
-
-        if (damageBoostAbility.isActivate)
-        {
-            bounceBulletSpec.AddBulletForce(new DamageBoostForce(damageBoostAbility.boostForceValue));
-        }
-
+        if (isEvolved)
+            bounceBulletSpec.AddBulletForce(new DamageBoostForce(EVOLVE_DAMAGE_BONUS));
 
         return bounceBulletSpec.Instantiate(this);
     }

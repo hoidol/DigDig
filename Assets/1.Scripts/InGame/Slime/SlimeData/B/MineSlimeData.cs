@@ -3,7 +3,7 @@ using UnityEngine;
 
 // [B] 지뢰: 자기 TileGroup의 적 경로(enemyRoots)에 지뢰 설치
 [CreateAssetMenu(fileName = "Mine", menuName = "SlimeData/B/Mine")]
-public class MineSlimeData : EnhanceAbilitySlimeData
+public class MineSlimeData : EnhanceSlimeData
 {
     // 머지 레벨별 동시에 깔아 둘 수 있는 지뢰 수 (머지할수록 증가)
     public int[] maxMineCounts = { 3, 4, 5, 6, 7 };

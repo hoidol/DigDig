@@ -23,6 +23,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 슬라임 소환 / 합성
 - 소환 버튼: **10코인**, 장착한 **5종 중 1종이 랜덤**으로 mergeLv 0으로 **16칸** 중 빈 칸에 등장.
 - 합성 조건: **같은 key + 같은 mergeLv** 끼리만 (ice 0 + ice 0 O / ice + flame X / ice 0 + ice 1 X).
+- (2026-11-09) **머지가 안 되는 슬라임 위에 놓으면 두 슬라임 자리 교체**(`SlimeFieldController.SwapSlimes`). 타일 아이템 효과도 칸을 따라 바뀜. 이전엔 원위치. 테스트 `MergeSwapPlayTest`.
 - mergeLv는 0부터 시작. 최대치는 `SlimeData.MAX_MERGE_LEVEL` = 4 (0~4, 5단계).
 - 합성 결과 key: 현재 코드는 장착 5종 중 **랜덤** (`Slime.Merge`). 기획 의도 확인 필요.
 - 슬라임 판매/버리기 기능 없음.
@@ -39,29 +40,34 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - Orbit: 발사가 없으므로 **공속 = 회전 속도**(2026-10-23). `orbitRotationSpeed × AttackSpeed / GameSetting.ATTACK_SPEED_PER_SECOND`(=50, 초당 1회 공격 기준. 슬라임·캐릭터 공격 타이머도 같은 값 사용) → 공속 강화/버프(타일 아이템, 킹 오라)가 회전 속도로 반영됨.
 - 랜덤 데미지(Random 등, 2026-11-05 Wacky에서 key 변경. 저장 데이터 마이그레이션은 안 함: 필요하면 데이터 초기화): 데이터에는 **중간값만** 입력, SlimeData의 `attackPowerRandomRatio`로 `중간값 × (1 ± 비율)` 범위 결정. `3~15` 같은 범위 직접 입력은 쓰지 않는다.
 - (2026-11-05) 슬라임 스크립트는 **등급별 폴더**(`Slime/Unit/{C,B,A,S}/{Key}Slime/`, 데이터 스크립트는 `Slime/SlimeData/{C,B,A,S}/`, 프리팹은 `3.Prefabs/Slime/{C,B,A,S}/` — `SlimeData.LoadData`가 grade로 찾음). 신규 key: B = Shield(철벽)·Dopamine(광란)·Mine·Breeze·Rage·Stigma(낙인), A = Mud·Keen(설의, 2026-11-06 B→A)·Beam(광선 링크)·Berserker·Hail(빙석)·Inferno(지옥)·Mortar(박격포, 2026-11-06 Boom에서 key 변경), S = Sacrifice·GrowUp·Scavenger(시체수집)·Joker·Hunter(사냥꾼, 2026-11-06). 대부분 아직 뼈대(일반 탄)만 있음.
-- (2026-11-05) 강화 능력(`SlimeEnhanceAbility`): **스탯 증가는 공용 `StatBuffEnhanceAbility`**(프리팹 인스펙터에서 level + buffs 설정). 슬라임 고유 능력만 클래스로 만든다. 능력 설명은 SlimeEnhance CSV의 EnhanceAbility 열.
+- (2026-11-09) **강화 능력(EnhanceAbility) 폐지.** 강화 레벨(0~14, 로비 영구 성장)은 유지하되 **스탯(공격력·공속, 슬라임 특성 수치)만 올린다.** 가시방패·포위 진형·화상 같은 레벨 해금 특수 능력(각성 포함)은 없다. 강화 데이터 = `EnhanceSlimeData`(이전 EnhanceAbilitySlimeData) + SlimeEnhance CSV(Key/Level/AttackPower). 공속·특성 수치의 레벨별 증가는 아직 미구현(시트 형식 정해서 추가 예정).
+- (2026-11-09) **[각성] = 진화로 발현.** 최대 머지 레벨 슬라임이 진화 타일(`EvolutionTile`)에 올라가면 `Slime.Evolve` → `isEvolved` + `OnEvolve`로 그 슬라임의 각성 능력이 켜진다(이전 강화 8 능력). 수치는 각 슬라임 클래스 `EVOLVE_*` const(임시). 합성·교체로 새 슬라임이 되면 사라짐.
+  - C: 탄성·관통 = 탄 피해 +20%, 냉기 = 탄 1회 튕김, 번개 = 맞은 적 1초 감속, 천둥 = 10% 확률 1초 감속, 강철 = 엘리트·보스 배율 +0.2, 회전 = 3% 확률 0.1초 스턴, 랜덤 = 6번째 공격마다 4방향 원형 발사, 화염 = 5초마다 사거리 안 적 최대 7기에 공격력 피해 + 화상.
+  - B: 철벽 = 가시방패(막힌 적 1초마다 최대 체력 1%), 광란 = 추가 탄 2발, 지뢰 = 2개씩 설치, 낙인 = 최대 5중첩, 십자 버프(산들바람·격노·설의) = **포위 진형**(같은 그룹 안 범위 4칸이 모두 슬라임이면 버프 증가분 +50%).
+  - A: 광선 = 레이저 감속 0.5초, 버서커 = 최대 중첩 시 공격력 ×1.2, 빙석 = 눈 2개, 지옥 = 화상(2초, 초당 공격력 30%), 박격포 = 슬로우 확률 50%, 진흙 = 구슬 최대 +1.
+  - S: 사냥꾼 = 2회마다 저격, 시체수집 = 엘리트·보스 +30코인. **희생·성장·조커는 진화하지 않음**(`CanEvolve` false: 머지 레벨을 올리는 각성이라 최대 레벨에선 의미 없음).
 - (2026-11-05) C등급 신규: **Iron(강철, 물리)** = 엘리트/보스에게 데미지 ×2(`IronSlimeData.eliteBossDamageMul`). 배율은 탄 스펙의 `BigEnemyDamageForce`(IBulletForce, 2026-11-06)로 실어 연발 탄에도 유지, **거인 사냥 타일과 곱연산**(×4: force가 피해량을 키우고 거인 사냥은 `DamageData.eliteBossDamageMul`로 EnemyDefence에서 곱함). 다른 IBulletForce와는 합연산. 엘리트 wave용 배치 카드.
   **Thunder(천둥, 마법)** = 탄이 날아가지 않고 발사 방향 첫 적 위치에 낙뢰 → 주변 범위 피해(최대 5기). 머지 레벨이 오를수록 범위 증가(`strikeRadiuses`). 발사 0.1초 뒤 피해(타일 효과가 OnFired로 붙은 다음).
 - (2026-11-06) **Mine(지뢰, B)** = 슬라임이 있는 타일의 `TileGroup.enemyRoots`(순서대로 이은 선 = 그 그룹 근처 적 경로) 위 랜덤 지점에 지뢰를 던져 설치. 적이 사거리에 없어도 미리 깔고, 밟히면 범위 폭발. **동시에 깔린 지뢰 수 상한이 머지 레벨로 증가**(`maxMineCounts`), 상한이면 대기했다가 터지면 바로 다음 지뢰. 어느 그룹에 두느냐 = 어느 경로 구간을 막느냐가 배치 포인트. 슬라임이 합성돼 사라져도 깔린 지뢰는 남는다. 지뢰는 **탄이 아니라 독립 오브젝트 `Mine`**(MineSlime이 던짐, 자체 풀링): 폭발 범위·최대 피해 적 수·유지 시간은 MineSlimeData, 트리거 범위는 고정(`Mine.TRIGGER_RANGE`). 탄이 아니라서 발사 훅(`TileItem.OnFired`)의 타일 효과는 안 붙고, 피해량·치명타 확률은 던질 때 슬라임 스탯으로 고정.
-- (2026-11-06) **Stigma(낙인, B)** = 일반 탄 + 적중 시 확률(`stigmaChances`, 머지 레벨로 증가)로 낙인 1중첩(`StigmaEffect`). 중첩당 그 적이 받는 **모든 아군 피해** +5%(최대 3중첩, `Enemy.TakeDamage`에서 `StatusEffectHandler.StigmaDamageMul` 곱). 낙인은 적이 죽을 때까지 유지. 딜러 보조형 → 다른 슬라임과 같은 적을 때리게 배치하는 게 포인트. 강화: 5 = 중첩당 7%, 8 = 최대 5중첩, 11 = 낙인 적은 적 우선 타겟. 여러 낙인 슬라임이 섞이면 최대 중첩/중첩당 피해는 큰 값.
-- (2026-11-06) **Berserker(버서커, A)** = 기본 탄 + 주변(`detectRanges`, mergeLv별)에서 적/돌이 죽을 때마다 **공속 중첩**(중첩당 `attackSpeedPerStacks`%, 최대 10). 광란(Dopamine)과 같은 처치 감지 구조. **마지막 처치 후 `stackDuration`(5초) 동안 처치가 없으면 중첩 초기화** → 적이 계속 죽는 자리(다른 딜러 옆, 경로 가까이)에 두는 배치 포인트. 강화: 5 = 최대 15중첩, 8 = 최대 중첩일 때 공격력 +20%, 11 = 감지 범위 +15%.
-- (2026-11-06) **Inferno(지옥, A)** = 탄 없음. 자기 TileGroup `enemyRoots` 중 **슬라임과 가장 가까운 2개 사이**에 지옥불(`Hellfire`, 길이 = 두 점 거리, 폭 = `hellfireWidth`) → **공격 주기마다 그 안에 있는 적 전부** 피해, 벗어나면 바로 피해 없음. **TileGroup 3*3 가운데 칸이면 지옥불 없음**(index % 3 == 1). 같은 그룹 안에서도 칸 위치가 덮는 경로 구간을 정함 → 배치 포인트. 드래그 중엔 숨김. 강화: 5 = 피해 +15%, 8 = [각성] 지옥불 피해 시 화상(FlameEffect, AttackPower × `burnDpsRatio`), 11 = 화상 +1초.
-- (2026-11-06) **Mud(진흙, A)** = 탄 없음. **공속 = 진흙 구슬 생성 주기**(공격마다 1개, 최대 `maxOrbCounts` 머지 레벨로 증가, OrbitMachine으로 회전, 회전 속도는 고정). 구슬이 적에 닿으면 **스플래시**(`splashRadiuses`) 피해 + 진흙 1중첩 후 **구슬은 사라짐** → 최대치면 대기했다 터지면 바로 재생성. **진흙 중첩당 이동속도 15% 감소, 최대 80%(엘리트·보스 60%)**, 멈추지는 않음(`MudEffect`, 마지막 적중 후 `mudDuration` 지나면 전부 해제). 슬로우·빙결 중첩과는 별개로 곱함(`StatusEffectHandler.SlowRate`). 4중첩 굳음(스턴)은 다수 배치 시 보스까지 영구 속박돼 폐기(2026-11-06). 강화: 5 = 진흙 지속 +1초, 8 = [각성] 구슬 최대 +1, 11 = 회전 반경 +15%.
+- (2026-11-06) **Stigma(낙인, B)** = 일반 탄 + 적중 시 확률(`stigmaChances`, 머지 레벨로 증가)로 낙인 1중첩(`StigmaEffect`). 중첩당 그 적이 받는 **모든 아군 피해** +5%(최대 3중첩, `Enemy.TakeDamage`에서 `StatusEffectHandler.StigmaDamageMul` 곱). 낙인은 적이 죽을 때까지 유지. 딜러 보조형 → 다른 슬라임과 같은 적을 때리게 배치하는 게 포인트. 여러 낙인 슬라임이 섞이면 최대 중첩/중첩당 피해는 큰 값.
+- (2026-11-06) **Berserker(버서커, A)** = 기본 탄 + 주변(`detectRanges`, mergeLv별)에서 적/돌이 죽을 때마다 **공속 중첩**(중첩당 `attackSpeedPerStacks`%, 최대 10). 광란(Dopamine)과 같은 처치 감지 구조. **마지막 처치 후 `stackDuration`(5초) 동안 처치가 없으면 중첩 초기화** → 적이 계속 죽는 자리(다른 딜러 옆, 경로 가까이)에 두는 배치 포인트.
+- (2026-11-06) **Inferno(지옥, A)** = 탄 없음. 자기 TileGroup `enemyRoots` 중 **슬라임과 가장 가까운 2개 사이**에 지옥불(`Hellfire`, 길이 = 두 점 거리, 폭 = `hellfireWidth`) → **공격 주기마다 그 안에 있는 적 전부** 피해, 벗어나면 바로 피해 없음. **TileGroup 3*3 가운데 칸이면 지옥불 없음**(index % 3 == 1). 같은 그룹 안에서도 칸 위치가 덮는 경로 구간을 정함 → 배치 포인트. 드래그 중엔 숨김.
+- (2026-11-06) **Mud(진흙, A)** = 탄 없음. **공속 = 진흙 구슬 생성 주기**(공격마다 1개, 최대 `maxOrbCounts` 머지 레벨로 증가, OrbitMachine으로 회전, 회전 속도는 고정). 구슬이 적에 닿으면 **스플래시**(`splashRadiuses`) 피해 + 진흙 1중첩 후 **구슬은 사라짐** → 최대치면 대기했다 터지면 바로 재생성. **진흙 중첩당 이동속도 15% 감소, 최대 80%(엘리트·보스 60%)**, 멈추지는 않음(`MudEffect`, 마지막 적중 후 `mudDuration` 지나면 전부 해제). 슬로우·빙결 중첩과는 별개로 곱함(`StatusEffectHandler.SlowRate`). 4중첩 굳음(스턴)은 다수 배치 시 보스까지 영구 속박돼 폐기(2026-11-06).
 - (2026-11-06) B등급 **Dopamine(광란)** = 기본 탄 + 슬라임 주변 `detectRanges`(mergeLv별) 안에서 적/돌이 죽으면 **추가 탄**(공격력 × `extraShotDamageMuls`, mergeLv별) `extraShotCount`발. 추가 발사 후 `extraShotCoolTime` 쿨타임, 일반 공격 타이머는 리셋하지 않음. → 적 경로 근처(처치가 잦은 칸)에 둘지 고민.
-- (2026-11-06) B등급 **Shield(철벽)** = 방패(`ShieldOrbitOrb`, `SeparateOrbitMachine`으로 방패마다 따로 회전)가 닿은 적의 **이동을 멈춤**(`Enemy.AddBlocker`). 방패당 최대 `blockCountPerShield`기(기본 3), 초과분은 통과. **엘리트/보스는 막기 무시**(`Enemy.CanBeBlocked`, 슬롯도 안 차지). 각성(강화 8) = **가시방패**: 막혀 있는 적에게 1초마다 **최대 체력 1%** 피해(방어 배율 무시, 치명타 없음). 막는 동안 그 방패는 정지, 막던 적이 모두 죽거나 빠지면 다시 회전. → 경로 근처에 두면 적을 붙잡아 다른 슬라임이 처리.
+- (2026-11-06) B등급 **Shield(철벽)** = 방패(`ShieldOrbitOrb`, `SeparateOrbitMachine`으로 방패마다 따로 회전)가 닿은 적의 **이동을 멈춤**(`Enemy.AddBlocker`). 방패당 최대 `blockCountPerShield`기(기본 3), 초과분은 통과. **엘리트/보스는 막기 무시**(`Enemy.CanBeBlocked`, 슬롯도 안 차지). 막는 동안 그 방패는 정지, 막던 적이 모두 죽거나 빠지면 다시 회전. → 경로 근처에 두면 적을 붙잡아 다른 슬라임이 처리.
 - (2026-11-06) A등급 **Beam(광선 링크)** = 필드(타일 위)의 광선 슬라임끼리 **모두 레이저 연결**(`BeamLinkNetwork`, n마리 → n(n-1)/2개). 레이저 두께 = 머지 레벨별 `lineWidths`(두 슬라임 평균). 레이저에 닿은 적에게 **0.25초마다(고정)** 피해(두 슬라임 공격력 평균 × 배율, 배율은 전체 레이저 수가 늘수록 감소). **연결된 슬라임은 기본 공격 안 함**, 혼자면 기본 탄. → 광선 슬라임 둘을 적 경로를 가로지르게 배치하는 고민. 타일 아이템 발사 효과는 레이저에 적용 안 됨.
-- (2026-11-06) A등급 **Hail(빙석)** = 탄 없이 **내 TileGroup의 `enemyRoots`를 순서대로 빙빙 도는 눈**(`HailStone`, 마지막 지점 → 첫 지점으로 이어 고리로 순환, 여러 개면 같은 간격). Orbit과 다른 방식(회전체 아님). 닿으면 피해 + 머지 레벨별 확률(30~50%)로 얼음, 같은 적은 0.5초 쿨. 눈 1개, 각성(강화 8) 2개. 이동 속도 = 공속 비례. → 적 경로가 지나는 그룹에 둘지 고민.
-- (2026-11-06) A등급 **Mortar(박격포, 이전 key Boom. 저장 데이터 마이그레이션 안 함)** = 드래그로 옮기는 **깃발(`MortarFlag`) 자리에 폭탄을 포물선으로 떨어뜨림**(비행 중 충돌 없음, 착탄 지점 범위 피해, 최대 `maxHitCount`기). 높은 공격력 + 느린 공속. 깃발 폭발 범위 안에 적이 있을 때만 발사. 맞은 적 **25% 확률 슬로우(머지 레벨과 무관, 고정)**, 각성(강화 8) = 50%(이전 넉백 대체). 깃발은 슬라임 사거리 안으로만 옮길 수 있고, 처음엔 내 TileGroup 적 경로에서 가장 가까운 지점. 깃발 드래그는 `SlimeFieldController`에서 처리(공용 `DragHandle`): 선택된 슬라임의 깃발은 유닛보다 우선, 아닌 깃발은 유닛이 없는 자리에서만 잡힘. → 깃발을 어디 꽂을지(경로 꺾이는 곳, 철벽이 막는 곳)가 배치 포인트. 낙뢰처럼 타일 발사 효과(치명타·둔화·연발 등)가 적용됨.
-- (2026-11-06) S등급 **Hunter(사냥꾼)** = 평소 일반 탄, **3회 공격마다 저격탄**(관통 감쇠 없음 + 스턴 0.2초 + 확정 치명타 `BulletSpec.mustCrit`). 한 공격의 탄이 여러 발이면 전부 저격탄. 강화(임시): 5 = 스턴 0.3초, 8 = 2회마다 저격, 11 = 저격탄 공격력 +30%. 저격탄은 Pierce 탄 프리팹을 같이 씀.
+- (2026-11-06) A등급 **Hail(빙석)** = 탄 없이 **내 TileGroup의 `enemyRoots`를 순서대로 빙빙 도는 눈**(`HailStone`, 마지막 지점 → 첫 지점으로 이어 고리로 순환, 여러 개면 같은 간격). Orbit과 다른 방식(회전체 아님). 닿으면 피해 + 머지 레벨별 확률(30~50%)로 얼음, 같은 적은 0.5초 쿨. 눈 1개. 이동 속도 = 공속 비례. → 적 경로가 지나는 그룹에 둘지 고민.
+- (2026-11-06) A등급 **Mortar(박격포, 이전 key Boom. 저장 데이터 마이그레이션 안 함)** = 드래그로 옮기는 **깃발(`MortarFlag`) 자리에 폭탄을 포물선으로 떨어뜨림**(비행 중 충돌 없음, 착탄 지점 범위 피해, 최대 `maxHitCount`기). 높은 공격력 + 느린 공속. 깃발 폭발 범위 안에 적이 있을 때만 발사. 맞은 적 **25% 확률 슬로우(머지 레벨과 무관, 고정)**. 깃발은 슬라임 사거리 안으로만 옮길 수 있고, 처음엔 내 TileGroup 적 경로에서 가장 가까운 지점. 깃발 드래그는 `SlimeFieldController`에서 처리(공용 `DragHandle`): 선택된 슬라임의 깃발은 유닛보다 우선, 아닌 깃발은 유닛이 없는 자리에서만 잡힘. → 깃발을 어디 꽂을지(경로 꺾이는 곳, 철벽이 막는 곳)가 배치 포인트. 낙뢰처럼 타일 발사 효과(치명타·둔화·연발 등)가 적용됨.
+- (2026-11-06) S등급 **Hunter(사냥꾼)** = 평소 일반 탄, **3회 공격마다 저격탄**(관통 감쇠 없음 + 스턴 0.2초 + 확정 치명타 `BulletSpec.mustCrit`). 한 공격의 탄이 여러 발이면 전부 저격탄. 저격탄은 Pierce 탄 프리팹을 같이 씀.
 - (2026-11-06) S등급 4종 (모두 평소엔 일반 탄 공격):
-  - **Sacrifice(희생)** = 같은 머지 레벨의 **아무 종과 합성 가능 → 결과 = 상대 종, 머지 레벨 +1**(일반 합성은 결과 종 랜덤). 끌어온 쪽/놓인 쪽 상관없음(`SlimeFieldController.Merge`), 희생끼리는 일반 규칙. → 키우고 싶은 종을 골라 올리는 카드. 강화 5/11 = 합성 결과 슬라임 버프(공 10% / 공속 10%, 결과 개체에 걸려서 다시 합성하면 사라짐), 8 = 30% 확률 머지 레벨 +1 추가.
-  - **GrowUp(성장)** = 타일 위에서 게임 진행 중 **25초 지나면 장착 슬라임 중 랜덤 종(성장 제외)으로 성장, 머지 레벨 +1**. 드래그 중이면 놓은 뒤 성장, 옮겨도 시간 유지. 강화 5 = 22초, 8 = 50% 확률로 레벨 +1 추가, 11 = 18초.
-  - **Scavenger(시체수집)** = 공격 사거리 안에서 적이 **처치되면(누가 잡든) 1코인**. 경로 끝 도착은 제외(체력 0일 때만). 강화 5 = 획득 범위 ×1.15, 8 = 엘리트/보스 +5, 11 = 20% 확률 2배. → 처치가 몰리는 자리에 두는 배치 포인트.
-  - **Joker(조커)** = 필드의 조커 선택 → 변신 버튼(`JokerTransformButton`) → **장착 슬라임 중 원하는 종으로 변신**(`JokerSelectCanvas`, 일시정지). 머지 레벨 유지, 단 **30% 확률로 실패 → 머지 레벨 -1, 가장 낮은 단계(별 1)면 조커가 사라짐**. 아껴 뒀다가 필요한 종이 생기면 쓰는 카드(걸어볼지 고민). 강화 5/8/11 = 실패 확률 25/20/15% (**각성 개념 없음**, 이전 "변신 시 레벨 +1"은 너무 강해서 폐기).
-  - (2026-11-09) **확률 연속 실패 보정**(`SlimeChancePity`, `GameManager.slimeChancePity`): 조커 변신 성공, 희생·성장 추가 레벨 판정은 슬라임 key별로 연속 실패를 세고, **4연속 실패하면 다음 시도부터 성공 확률 +50%p**(성공할 때까지 유지), **성공하면 초기화**(4회 전 성공도). 한 판 동안 유지. 의도: 확률에 거는 재미는 두되 연속 실패로 짜증나지 않게. 전투 중 적중 확률(낙인·빙석 등)은 대상 아님.
-  - 성장·변신은 공용 `SlimeFieldController.ReplaceSlime`(같은 타일에 교체, 선택 유지). 결과 슬라임 버프는 공용 `ResultBuffEnhanceAbility`(희생 5/11).
+  - **Sacrifice(희생)** = 같은 머지 레벨의 **아무 종과 합성 가능 → 결과 = 상대 종, 머지 레벨 +1**(일반 합성은 결과 종 랜덤). 끌어온 쪽/놓인 쪽 상관없음(`SlimeFieldController.Merge`), 희생끼리는 일반 규칙. → 키우고 싶은 종을 골라 올리는 카드.
+  - **GrowUp(성장)** = 타일 위에서 게임 진행 중 **25초 지나면 장착 슬라임 중 랜덤 종(성장 제외)으로 성장, 머지 레벨 +1**. 드래그 중이면 놓은 뒤 성장, 옮겨도 시간 유지.
+  - **Scavenger(시체수집)** = 공격 사거리 안에서 적이 **처치되면(누가 잡든) 1코인**. 경로 끝 도착은 제외(체력 0일 때만). → 처치가 몰리는 자리에 두는 배치 포인트.
+  - **Joker(조커)** = 필드의 조커 선택 → 변신 버튼(`JokerTransformButton`) → **장착 슬라임 중 원하는 종으로 변신**(`JokerSelectCanvas`, 일시정지). 머지 레벨 유지, 단 **30% 확률로 실패 → 머지 레벨 -1, 가장 낮은 단계(별 1)면 조커가 사라짐**. 아껴 뒀다가 필요한 종이 생기면 쓰는 카드(걸어볼지 고민).
+  - (2026-11-09) **확률 연속 실패 보정**(`SlimeChancePity`, `GameManager.slimeChancePity`): 조커 변신 성공 판정은 슬라임 key별로 연속 실패를 세고, **4연속 실패하면 다음 시도부터 성공 확률 +50%p**(성공할 때까지 유지), **성공하면 초기화**(4회 전 성공도). 한 판 동안 유지. 의도: 확률에 거는 재미는 두되 연속 실패로 짜증나지 않게. 전투 중 적중 확률(낙인·빙석 등)은 대상 아님.
+  - 성장·변신은 공용 `SlimeFieldController.ReplaceSlime`(같은 타일에 교체, 선택 유지).
 - (2026-11-06) **십자 버프 슬라임**(공용 부모 `CrossBuffSlime` / `CrossBuffSlimeData.buffValues`, mergeLv별): 기본 탄 + 내 타일 기준 **십자 4칸 슬라임에게 버프**. 범위는 **같은 TileGroup 안에서만**(Grant 기획과 같은 규칙). 타일 오브젝트가 바뀔 때마다 대상 재계산, 여러 개가 겹치면 각각 적용(Multiply는 곱). → 배치 고민 포인트.
-  - 각성(강화 8) = **포위 진형**: 같은 TileGroup 안 십자 4칸이 모두 슬라임이면 버프 효과(증가분) +50% (1.2→1.3, Add 20→30). 그룹 경계·막힌 칸이면 불가 → 사실상 3*3 그룹 가운데 칸을 노리는 자리 퍼즐. 범위 8방향은 각성이 아니라 `ExpandBuffRangeTile` 타일.
+  - 범위 8방향은 `ExpandBuffRangeTile` 타일. 포위 진형은 진화(각성)로 발현, 고른 모양(십자/대각)의 4칸 기준.
   - B등급 Breeze(산들바람) = 공속 ×, Rage(격노) = 공격력 ×. A등급 Keen(설의) = 치명타 확률 +%(Add) (2026-11-06 B에서 승급).
   - 슬라임 `CritChance` 스탯(기본 0, 버프로만 오름)은 `AllyUnitDamageData.Init`에서 탄 데미지 데이터로 들어간다(연발·Orbit 포함). 타일 치명타는 그 위에 더함.
 
@@ -74,7 +80,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ### 유닛 설정 버튼 (2026-11-09)
 - 선택한 유닛 패널(`AllySettingPanel`)의 설정 버튼은 **유닛이 쓸 수 있는 설정만 노출**(공용 `AllyOptionButton.IsAvailable`). 누를 때마다 다음 값으로 순환.
   - 타겟 방식(`SetFindTargetButton`): 타겟을 노리지 않는 슬라임(`Slime.UseFindTarget = false`: Orbit·Mud·Shield·Hail)엔 숨김.
-  - 버프 범위(`SetBuffRangeButton`, `IBuffRangeUnit`): 십자 버프 슬라임 = **십자 4칸 ↔ 대각 4칸**. 포위 진형(각성)도 고른 모양의 4칸 기준. 버프 범위 확장 타일 위면 모양과 상관없이 8방향.
+  - 버프 범위(`SetBuffRangeButton`, `IBuffRangeUnit`): 십자 버프 슬라임 = **십자 4칸 ↔ 대각 4칸**. 버프 범위 확장 타일 위면 모양과 상관없이 8방향.
   - 회전 방향(`SetRotationDirectionButton`, `IRotationDirectionUnit`): 회전체(Orbit·Mud·Shield, `OrbitMachine.rotationDirection`, 기본 반시계) / 경로 순환(Hail, 기본은 데이터) = **시계 ↔ 반시계**.
   - 의도: 같은 슬라임이라도 **버프가 닿는 칸·회전체가 경로를 쓸고 지나가는 방향**을 플레이어가 골라 배치 고민을 늘린다.
   - 설정은 소환(InitSlime) 때 기본값으로 초기화 → 합성·성장으로 새 슬라임이 되면 다시 골라야 함.
@@ -114,7 +120,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
     - 조건형(왕관·인장)은 게임 시작 시 장착 슬라임으로 한 번 판정. 이름 = Translate `Authority.{Key}`, 설명 = AuthorityData.csv Desc, 발동 토스트 = Translate `Authority_*`.
     - 테스트 `AuthorityAbilityTest`(능력 클래스 존재·규칙 계산), `AuthorityPlayInGameTest`(18개 모두 켜고 실제 전투: 곡괭이·쌍둥이·잔불·모래시계 확인 + 에러 없음).
 - 데이터: `AuthorityData`(Addressables 폴더 항목 `AddressableResources/AuthorityData`, 라벨 `AuthorityData`) → `AuthorityManager`(Resources/Init, `GetTierAuthorities`).
-- **슬라임 유형 태그(`SlimeTag`, Flags)**: 권능이 반응하는 기준. SlimeData.csv **`Tags` 열(L열, `Shooter|Status`처럼 |로 구분)** → `SlimeData.tags`. 시트 다운로드 범위 `slimeRange` = A:L. 태그는 **기본 효과 기준**(각성·부가 효과는 안 셈).
+- **슬라임 유형 태그(`SlimeTag`, Flags)**: 권능이 반응하는 기준. SlimeData.csv **`Tags` 열(L열, `Shooter|Status`처럼 |로 구분)** → `SlimeData.tags`. 시트 다운로드 범위 `slimeRange` = A:L. 태그는 **기본 효과 기준**(부가 효과는 안 셈).
   - 형태(정확히 하나): Shooter 발사(Random, Bounce, Flame, Ice, Lightning, Pierce, Iron, Dopamine, Stigma, Berserker, Hunter) / Zone 장판(Mine, Beam, Mortar, Hail, Inferno, **Thunder**) / Orbit 회전(Orbit, Shield, Mud) / Support 버프(Breeze, Rage, Keen) / Special 특수(Sacrifice, GrowUp, Joker, Scavenger).
   - 특성: Status 상태이상(Flame, Ice, Stigma, Mud, Hail) / Chance 확률(Ice, Stigma, Hail, Joker) / KillTrigger 처치 감지(Dopamine, Berserker, Scavenger) / Heavy 강타(Iron, Hunter, Mortar) / Transform 변환(Sacrifice, GrowUp, Joker).
   - 규칙(`SlimeTagTest`): 형태는 슬라임마다 하나, 형태·특성마다 해당 슬라임 **3종 이상**. 새 슬라임 추가 시 Tags도 채울 것.
@@ -144,7 +150,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 
 ## 슬로우 / 빙결 (2026-10-31)
 - 둘은 **이펙트만 다르고 감속은 같다**(`IceEffect : SlowEffect`). 적중마다 이동속도 ×0.5, **둘을 합쳐 최대 3중첩**(최저 12.5%). 효과가 끝나면 그 효과가 쌓은 중첩만 풀린다.
-- (2026-11-06) **넉백(적 밀어내기, `Enemy.Push`/`PushBehavior`)은 삭제.** 적 이동 방해는 슬로우·빙결·스턴·철벽 막기로만. Orbit 각성은 넉백 대신 **회전에 닿은 적 3% 확률 0.1초 스턴**. **스턴은 모든 출처 공통으로 엘리트/보스도 걸리고 시간만 절반**(`StatusEffectHandler.Apply`).
+- (2026-11-06) **넉백(적 밀어내기, `Enemy.Push`/`PushBehavior`)은 삭제.** 적 이동 방해는 슬로우·빙결·스턴·철벽 막기로만. **스턴은 모든 출처 공통으로 엘리트/보스도 걸리고 시간만 절반**(`StatusEffectHandler.Apply`).
 
 ## 타일 아이템 (2026-10-22)
 - 아이템 획득(2026-11-01): `DrawItemButton`으로 코인을 내면 `SelectItemCanvas`가 열린다. **Draw**(확률 연출, `drawDuration` 0이면 생략) → **SelectItem**(TileItem 중 겹치지 않는 랜덤 3개, 반드시 하나 선택) → **SelectTile**(눌러서 설치, 이미 아이템이 있는 타일은 불가). **열려 있어도 게임은 멈추지 않는다**(2026-11-07 확인, 이전엔 일시정지). 설치 칸을 직접 고르는 것이 배치 고민 포인트. PioneerTile은 설치가 없어 타일 선택 생략. (이전: 랜덤 1개를 랜덤 타일에 바로 설치)
@@ -169,8 +175,8 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   AttackPowerTile(공 +50%), AttackSpeedTile(공속 +30%), BurstShotTile, MultiTargetTile, RangeUpTile(사거리 +2),
   SlowTile(10% 슬로우), StunTile(2% 0.3초 스턴), CriticalTile(10% 2배), TrueDamageTile(방어 배율 무시 → 항상 100%),
   IgnoreCountingTile(2026-11-04, 올라간 슬라임은 최대 슬라임 수에 안 셈 → `SlimeFieldController.ignoreSlimeCount`/`CountedSlimeCount`. 최대치 12마리 막힘을 푸는 수단),
-  ExpandBuffRangeTile(2026-11-06, 올라간 십자 버프 슬라임의 범위 십자 4칸 → 8방향. 장착 슬라임에 버프 슬라임이 없으면 안 나옴. 이전엔 강화 각성이던 것을 타일로 옮김 → 배치 고민 포인트),
-  EvolutionTile(2026-11-06, 최대 머지 레벨(4) 슬라임이 올라가면 진화 `Slime.Evolve`, 슬라임당 1회(`isEvolved`, 합성·교체로 새로 생기면 초기화), 타일은 남아 재사용. **필드에 진화 안 한 레벨 4 슬라임이 있을 때만 뽑기 후보**. 진화 내용은 추후 기획 → 지금은 훅만),
+  ExpandBuffRangeTile(2026-11-06, 올라간 십자 버프 슬라임의 범위 십자 4칸 → 8방향. 장착 슬라임에 버프 슬라임이 없으면 안 나옴. 배치 고민 포인트),
+  EvolutionTile(2026-11-06, 최대 머지 레벨(4) 슬라임이 올라가면 진화 `Slime.Evolve`, 슬라임당 1회(`isEvolved`, 합성·교체로 새로 생기면 초기화), 타일은 남아 재사용. **뽑기(2026-11-09): 필드의 진화 안 한 레벨 4 슬라임 수 > 설치된 진화 타일 수일 때만, 뽑기 시도마다 40%(`EvolutionTileItem.DRAW_CHANCE`)로 선택지 3개 중 하나로 확정 등장**(실패하면 그 뽑기엔 안 나옴). 같으면 안 나옴(예: 5마리/4개 → 40%, 5마리/5개 → 0%, 타일이 더 많은 경우는 없어야 함). 보유 상한(MaxCount) 대신 이 규칙만 씀(`TileItem.IgnoreMaxCount`/`DrawChance`, `ItemManager.GetDrawTileItems`). 강화 불가. 테스트 `EvolutionTileDrawPlayTest`. 진화 = 슬라임 고유 [각성] 발현, 위 슬라임 섹션 참고),
   GoldTile(처치 시 코인 +1), PioneerTile(획득 즉시 막힌 칸 1개 해제, 설치 안 함, 막힌 칸 없으면 안 나옴), BerserkTile(공 ×2, 사거리 ×0.5), GiantSlayerTile(엘리트·보스에게 데미지 ×2, 방어 배율과 곱연산).
 - 공격 타입 변경 타일 (2026-10-27): PhysicTile / MagicTile = 올라간 유닛의 공격 타입을 해당 속성으로 바꿈(`AttackTypeTileItem`).
   - 의도: 방어 타입 상성을 **배치로 맞추는 수단**. 슬라임 속성은 랜덤 소환이라 못 고르지만, 타일 위로 옮겨서 이번 wave 상성에 맞출 수 있다.
@@ -286,7 +292,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - **테스트는 메인 에디터가 아니라 테스트 전용 복사본(`~/KingSlime-Test`, git worktree)에서 돌린다** (2026-11-08). `Tools/run-tests.sh [필터]` = 메인의 커밋 + 작업 중 변경을 복사본에 동기화(`Tools/sync-test-project.sh`) → 복사본 에디터가 열려 있으면 그 에디터에서, 아니면 배치모드로 실행. 백그라운드로 돌리고 끝나면 결과를 알려준다. 메인 씬·저장 파일을 건드리지 않으므로 작업 중에도 가능.
 - EditMode 테스트는 `Assets/Tests/Editor/`(asmdef 없음 → `Assembly-CSharp-Editor`라서 게임 코드를 바로 참조). 게임 스크립트에 asmdef가 없으므로 테스트에도 asmdef를 만들지 않는다.
 - 기획 규칙은 **씬·싱글톤 없이 계산할 수 있는 static 함수**로 빼서 테스트한다(예: `Slime.CanMerge`, `SacrificeSlime.CanSacrificeMerge`, `DrawItemButton.GetDrawChance(int)`). 기획이 바뀌면 `GameRuleTest.cs`의 기대값도 같이 고친다.
-- 플레이 테스트(`SlimePlayTest`): EditMode 테스트에서 InGame 씬을 열고 `EnterPlayMode`로 들어가 실제 게임을 돌린다(PlayMode asmdef 없이). 로비 없이 InGame 씬만으로 시작 가능. 로드된 **모든 SlimeData key × 머지 레벨 0/4**를 하나씩 소환해 배속(×4)으로 싸우게 하고 에러·예외가 없는지 본다. 새 슬라임은 SlimeData 에셋만 있으면 자동으로 대상이 된다.
+- 플레이 테스트(`SlimePlayTest`): EditMode 테스트에서 InGame 씬을 열고 `EnterPlayMode`로 들어가 실제 게임을 돌린다(PlayMode asmdef 없이). 로비 없이 InGame 씬만으로 시작 가능. 로드된 **모든 SlimeData key × 머지 레벨 0/4/4+진화**를 하나씩 소환해 배속(×4)으로 싸우게 하고 에러·예외가 없는지 본다. 새 슬라임은 SlimeData 에셋만 있으면 자동으로 대상이 된다.
   - 에디터용 Firebase 네이티브 라이브러리가 없어 플레이마다 `DllNotFoundException: FirebaseCppApp`이 난다 → 테스트에서는 무시 목록(`IGNORE_ERRORS`)으로 거른다.
   - 사망 시 `EndGame`에서 유저 데이터가 저장되므로 테스트 중엔 킹 체력을 계속 채워 죽지 않게 한다.
   - 콘솔 Error Pause가 켜져 있으면 에러에서 멈추므로 테스트가 일시정지를 풀면서 진행한다.
@@ -294,11 +300,12 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   - 공용 준비는 `InGamePlayTestBase`(씬 열기, 에러 수집, 저장 파일 `Assets/User*.json` 백업·복원 — 플레이 중 업적 처치 수 등이 저장되기 때문).
   - `TileItemPlayTest`: 타일 index 6*6 중복 없음, 모든 타일 아이템 설치→전투→판매, 스탯 타일 효과, 버프 범위 확장(대각선 버프). `DrawItemButtonPlayTest`: 뽑기 버튼 성공/실패/코인 부족 흐름(실패는 `Random.InitState` 시드로 고정).
   - `WaveResultPlayTest`: wave를 강제로 넘겨(`waveTimer`/`mainWaveTimer` = 0) 엘리트·보스 주기, 보스 wave는 시간으로 안 넘어감, 보스 처치 → 다음 wave + 종료 코인. 사망 → 실패 화면 → 결과 화면 보상(골드 = waveIdx, 경험치 = waveIdx/2, 뽑기권 = 합성 횟수)·최고 wave 기록·홈 → 로비. 부활 흐름.
+  - `EvolutionPlayTest`(2026-11-09): 진화 타일 흐름(최대 레벨만 진화·옮겨도 유지·타일 재사용·슬라임 위 설치 시 진화·희생/성장/조커 제외·새 소환은 미진화) + 각성 효과(상태 값, 발사 탄 스펙, 가시방패·화염 스킬 실제 피해, 포위 진형 버프, 시체수집 엘리트 보너스).
   - `GameCyclePlayTest`(2026-11-09): 로비 KS 업그레이드(버튼) → 전투 버튼(에너지 차감) → 인게임 스탯 반영 → 사망·부활(보상 없음) → 사망·포기 → 결과 보상 → 로비 레벨업 창(레벨마다 하나씩, 2레벨 연속) → 재업그레이드 → 2판 wave 0 사망(보상 0, 최고 기록 유지). 단계마다 UserDataManager 메모리 값과 **저장 파일(SaveManager.LoadData)** 을 같이 확인.
   - **도메인 리로드 후 테스트 이터레이터는 직렬화로 복원되는데 람다가 캡처한 지역 변수(클로저)는 null이 된다** → 플레이 모드 진입 뒤 본문은 별도 이터레이터(`XxxBody()`)로 분리.
 - 새 데이터 추가 시 주의 (테스트로 잡힌 실수):
   - ItemData 에셋을 **복사해서 만들면 key·itemPrefab이 원본 그대로** 남는다(`ItemData.LoadData`는 기존 key로 CSV 행을 찾고 프리팹은 안 채움) → key와 itemPrefab을 직접 바꾸고 프리팹도 만들 것.
-  - 슬라임 데이터 에셋은 **`{Key}SlimeData`(EnhanceAbilitySlimeData 계열)** 로 만들어야 LoadData가 SlimeEnhance CSV를 읽는다. 기본 `SlimeData`로 만들면 강화 데이터가 비어 소환 시 NullReference.
+  - 슬라임 데이터 에셋은 **`{Key}SlimeData`(EnhanceSlimeData 계열)** 로 만들어야 LoadData가 SlimeEnhance CSV를 읽는다. 기본 `SlimeData`로 만들면 강화 데이터가 비어 소환 시 NullReference.
 
 ## 데이터 파이프라인
 - (2026-11-08) **번역**: `Json/Translate.csv`(시트 Key / Kr / En) → DataTableImporter(`Tools/Data/Import TranslateData`, Play 시 자동) → `Resources/TranslateData.asset` → `TranslateManager.GetText`가 처음 호출될 때 로드. 한국어 기기 = Kr, 그 외 = En, 칸이 비면 Kr로 대체, key가 없으면 `*key`. 코드에서 보여주는 문구는 한글 리터럴 대신 key로(조합 key: `Difficulty.{난이도}`, `Slime.{Key}`/`Slime.{Key}.Desc`, `{StatType}_title`, `Grade.{등급}`). `TranslateDataTest`가 코드 key가 시트에 다 있는지 검사. 씬에 박힌 고정 텍스트는 아직 `TranslateText` 미적용. 슬라임 설명 중 CSV Desc를 그대로 쓰는 종(Bounce, Orbit 등)과 아이템 이름·설명(ItemData.csv)은 아직 번역 안 됨.
@@ -307,5 +314,5 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   - WaveData/{난이도}.csv: StartWave, DefenceTypes, DefenceWaveTypes (WaveType은 번호로 결정, 위 웨이브 섹션)
   - (EnemyPatternData/{난이도}.csv는 2026-10-16부터 코드에서 사용 안 함. 일반 스폰은 1초마다 1마리 고정)
   - SlimeData.csv: Key, Desc, Grade, AttackType(enum 이름 그대로: Physic/Magic/AllRounder), Growth, **AttackSpeed, AttackRange, CritChance**(2026-11-06 SlimeEnhance에서 이동. **강화 레벨·머지 레벨과 무관한 고정 기본 스탯** → `SlimeData.baseSlimeStats`, CritChance는 %), ReinforceAttackPower, ReinforceAttackSpeed(코드 미반영). 슬라임 치명타 배율은 `GameSetting.INIT_CRIT_POWER`(1.5, 타일 치명타는 2배).
-  - SlimeEnhance/SlimeEnhance_{등급}.csv (2026-11-05, 시트도 등급별 탭, SheetDownloadSetting.entries에 각각 등록): `Key`는 블록 첫 행에만 쓰고 아래 행은 비우면 위 Key를 이어받음. 읽을 때는 등급과 상관없이 `SlimeEnhance_*.csv` 전체에서 key 블록을 찾음(같은 key가 두 파일에 있으면 경고). **Key / Level / AttackPower / EnhanceAbility 만** 읽음(공속·사거리는 SlimeData.csv)(`/`로 mergeLv 값).
+  - SlimeEnhance/SlimeEnhance_{등급}.csv (2026-11-05, 시트도 등급별 탭, SheetDownloadSetting.entries에 각각 등록): `Key`는 블록 첫 행에만 쓰고 아래 행은 비우면 위 Key를 이어받음. 읽을 때는 등급과 상관없이 `SlimeEnhance_*.csv` 전체에서 key 블록을 찾음(같은 key가 두 파일에 있으면 경고). **Key / Level / AttackPower 만** 읽음(시트 범위 A:C, EnhanceAbility 열은 2026-11-09 삭제)(공속·사거리는 SlimeData.csv)(`/`로 mergeLv 값).
   - (2026-11-04) SlimeStatType은 StatType으로 통합. 슬라임 고유 스탯(`uniqueSlimeStats`)은 CSV가 아니라 **각 슬라임 SlimeData의 `LoadData` 재정의**에서 `SetUniqueStat`으로 입력.

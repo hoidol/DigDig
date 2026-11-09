@@ -7,7 +7,7 @@ using UnityEngine;
 // 아이템 하나 반드시 선택해야됌. 열려 있어도 게임은 멈추지 않음
 public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 {
-    const int SELECT_ITEM_COUNT = 3;
+    public const int SELECT_ITEM_COUNT = 3;
 
     public DrawTileItemContainer drawTileItemContainer;
     public GameObject selectItemContainer;

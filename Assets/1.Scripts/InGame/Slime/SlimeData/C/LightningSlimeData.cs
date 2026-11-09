@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "Lightning", menuName = "SlimeData/C/Lightning")]
-public class LightningSlimeData : EnhanceAbilitySlimeData
+public class LightningSlimeData : EnhanceSlimeData
 {
 
     public float searchRadius = 2f;

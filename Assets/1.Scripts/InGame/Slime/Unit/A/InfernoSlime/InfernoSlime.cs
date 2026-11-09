@@ -2,9 +2,9 @@ using System.Linq;
 using UnityEngine;
 
 // [A] 지옥: 탄을 쏘지 않고, 자기 TileGroup의 enemyRoots 중 슬라임과 가장 가까운 2개 사이에 지옥불(Hellfire) 생성
-// 공격 주기(공속)마다 지옥불 안에 있는 적 전부에게 AttackPower × damageMul 피해. 영역을 벗어나면 바로 피해 없음
+// 공격 주기(공속)마다 지옥불 안에 있는 적 전부에게 AttackPower 피해. 영역을 벗어나면 바로 피해 없음
 // TileGroup 3*3의 가운데 칸이면 지옥불 없음 (위치가 지옥불을 결정 → 배치 포인트)
-// [각성] 지옥불 피해를 입은 적에게 화상(FlameEffect) 부여
+// [각성] (진화) 지옥불 피해를 입은 적에게 화상(FlameEffect, 초당 AttackPower × burnDpsRatio, burnDuration초)
 public class InfernoSlime : SlimeGrowth1
 {
     public Hellfire hellfirePrefab;
@@ -12,12 +12,6 @@ public class InfernoSlime : SlimeGrowth1
 
     InfernoSlimeData infernoSlimeData;
     readonly AllyUnitDamageData damageData = new AllyUnitDamageData();
-
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
-    public float damageMul;
-    public bool applyBurn;      // [각성]
-    public float burnDuration;
-    public float burnDpsRatio;
 
     bool isDragging;
 
@@ -29,12 +23,8 @@ public class InfernoSlime : SlimeGrowth1
 
     public override void InitSlime()
     {
-        damageMul = 1f;
-        applyBurn = false;
-        burnDuration = infernoSlimeData.burnDuration;
-        burnDpsRatio = infernoSlimeData.burnDpsRatio;
         isDragging = false;
-        base.InitSlime(); // 강화 능력이 값을 바꿀 수 있으므로 기본값 설정 후 호출
+        base.InitSlime();
     }
 
     public override void OnDisable()
@@ -125,21 +115,21 @@ public class InfernoSlime : SlimeGrowth1
         if (isDragging || !RefreshHellfire())
             return;
 
-        float damage = AttackPower * damageMul;
+        float damage = AttackPower;
         damageData.Init(this);
         damageData.attackType = AttackType;
 
         var hellfireTargets = hellfire.GetEnemies(targetLayerMask).ToList();
         if (hellfireTargets.Count > 0)
-            EmberBrazierAuthority.OnZoneDamage(hellfireTargets[UnityEngine.Random.Range(0, hellfireTargets.Count)].Transform.position, EMBER_RADIUS, AttackPower * damageMul, targetLayerMask);
+            EmberBrazierAuthority.OnZoneDamage(hellfireTargets[UnityEngine.Random.Range(0, hellfireTargets.Count)].Transform.position, EMBER_RADIUS, damage, targetLayerMask);
         foreach (IHittable hit in hellfireTargets)
         {
             damageData.damage = damage;
             AccumulateDamage(damage);
             hit.TakeDamage(damageData);
 
-            if (applyBurn && hit is Enemy enemy && enemy.CurHp > 0)
-                enemy.ApplyStatusEffect(new FlameEffect(burnDuration, AttackPower * burnDpsRatio));
+            if (isEvolved && hit is Enemy enemy && enemy.CurHp > 0)
+                enemy.ApplyStatusEffect(new FlameEffect(infernoSlimeData.burnDuration, AttackPower * infernoSlimeData.burnDpsRatio));
         }
         attackTimer = 0; // 안에 적이 없어도 주기는 그대로 돈다
     }

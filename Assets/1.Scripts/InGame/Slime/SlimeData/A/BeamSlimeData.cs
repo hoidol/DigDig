@@ -4,7 +4,7 @@ using UnityEngine;
 // [A] 광선 링크: 필드에 광선 슬라임이 2마리 이상이면 모두 서로 레이저로 연결, 레이저에 닿은 적에게 0.25초마다 피해 (간격 고정: BeamLinkNetwork.TICK_INTERVAL)
 // 혼자 있는 광선 슬라임은 기본 탄 공격
 [CreateAssetMenu(fileName = "Beam", menuName = "SlimeData/A/Beam")]
-public class BeamSlimeData : EnhanceAbilitySlimeData
+public class BeamSlimeData : EnhanceSlimeData
 {
     // mergeLv별 레이저 두께 (적중 판정 폭). 레이저 하나의 두께는 연결된 두 슬라임 값의 평균
     public float[] lineWidths = { 0.15f, 0.2f, 0.25f, 0.3f, 0.35f };

@@ -1,0 +1,194 @@
+<linker>
+  <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="AllyBulletObject" preserve="all" />
+    <type fullname="ApprochingBossBehaviour" preserve="all" />
+    <type fullname="ArmoredEnemyDefence" preserve="all" />
+    <type fullname="AttackPowerTileItem" preserve="all" />
+    <type fullname="AttackSpeedTileItem" preserve="all" />
+    <type fullname="AuthorityData" preserve="all" />
+    <type fullname="BeamSlime" preserve="all" />
+    <type fullname="BeamSlimeData" preserve="all" />
+    <type fullname="BerserkerSlime" preserve="all" />
+    <type fullname="BerserkerSlimeData" preserve="all" />
+    <type fullname="BerserkTileItem" preserve="all" />
+    <type fullname="BossWave" preserve="all" />
+    <type fullname="BounceBulletObject" preserve="all" />
+    <type fullname="BounceSlime" preserve="all" />
+    <type fullname="BounceSlimeData" preserve="all" />
+    <type fullname="BreezeSlime" preserve="all" />
+    <type fullname="BreezeSlimeData" preserve="all" />
+    <type fullname="BulletData" preserve="all" />
+    <type fullname="BurstShotTileItem" preserve="all" />
+    <type fullname="CriticalTileItem" preserve="all" />
+    <type fullname="DopamineSlime" preserve="all" />
+    <type fullname="DopamineSlimeData" preserve="all" />
+    <type fullname="EliteEnemy" preserve="all" />
+    <type fullname="EliteWave" preserve="all" />
+    <type fullname="EnemyData" preserve="all" />
+    <type fullname="EnemySpawnerContainer" preserve="all" />
+    <type fullname="EnhanceExpInfo" preserve="all" />
+    <type fullname="EtherealEnemyDefence" preserve="all" />
+    <type fullname="EvolutionTileItem" preserve="all" />
+    <type fullname="ExcutePatternBossBehaviour" preserve="all" />
+    <type fullname="ExpandBuffRangeTileItem" preserve="all" />
+    <type fullname="FixRotation" preserve="all" />
+    <type fullname="FlameBulletObject" preserve="all" />
+    <type fullname="FlameSlime" preserve="all" />
+    <type fullname="FlameSlimeData" preserve="all" />
+    <type fullname="GiantSlayerTileItem" preserve="all" />
+    <type fullname="GoldTileItem" preserve="all" />
+    <type fullname="GrowUpSlime" preserve="all" />
+    <type fullname="GrowUpSlimeData" preserve="all" />
+    <type fullname="HailSlime" preserve="all" />
+    <type fullname="HailSlimeData" preserve="all" />
+    <type fullname="HailStone" preserve="all" />
+    <type fullname="HardWave" preserve="all" />
+    <type fullname="Hellfire" preserve="all" />
+    <type fullname="HunterSlime" preserve="all" />
+    <type fullname="HunterSlimeData" preserve="all" />
+    <type fullname="IceBulletObject" preserve="all" />
+    <type fullname="IceSlime" preserve="all" />
+    <type fullname="IceSlimeData" preserve="all" />
+    <type fullname="IceStatusEffectView" preserve="all" />
+    <type fullname="IgnoreCountingTileItem" preserve="all" />
+    <type fullname="InfernoSlime" preserve="all" />
+    <type fullname="InfernoSlimeData" preserve="all" />
+    <type fullname="IronSlime" preserve="all" />
+    <type fullname="IronSlimeData" preserve="all" />
+    <type fullname="ItemData" preserve="all" />
+    <type fullname="JokerSlime" preserve="all" />
+    <type fullname="JokerSlimeData" preserve="all" />
+    <type fullname="KeenSlime" preserve="all" />
+    <type fullname="KeenSlimeData" preserve="all" />
+    <type fullname="KingSlimeBulletObject" preserve="all" />
+    <type fullname="LightningBulletObject" preserve="all" />
+    <type fullname="LightningSlime" preserve="all" />
+    <type fullname="LightningSlimeData" preserve="all" />
+    <type fullname="Mine" preserve="all" />
+    <type fullname="MineSlime" preserve="all" />
+    <type fullname="MineSlimeData" preserve="all" />
+    <type fullname="MortarBulletObject" preserve="all" />
+    <type fullname="MortarFlag" preserve="all" />
+    <type fullname="MortarSlime" preserve="all" />
+    <type fullname="MortarSlimeData" preserve="all" />
+    <type fullname="MudOrb" preserve="all" />
+    <type fullname="MudSlime" preserve="all" />
+    <type fullname="MudSlimeData" preserve="all" />
+    <type fullname="MultiTargetTileItem" preserve="all" />
+    <type fullname="NormalEnemy" preserve="all" />
+    <type fullname="NormalEnemyDefence" preserve="all" />
+    <type fullname="NormalWave" preserve="all" />
+    <type fullname="OrbitMachine" preserve="all" />
+    <type fullname="OrbitOrb" preserve="all" />
+    <type fullname="OrbitSlime" preserve="all" />
+    <type fullname="OrbitSlimeData" preserve="all" />
+    <type fullname="PhaseEnemySpawnPattern" preserve="all" />
+    <type fullname="PierceBulletObject" preserve="all" />
+    <type fullname="PierceSlime" preserve="all" />
+    <type fullname="PierceSlimeData" preserve="all" />
+    <type fullname="PioneerTileItem" preserve="all" />
+    <type fullname="RageSlime" preserve="all" />
+    <type fullname="RageSlimeData" preserve="all" />
+    <type fullname="RandomDropPattern" preserve="all" />
+    <type fullname="RandomSlime" preserve="all" />
+    <type fullname="RandomSlimeData" preserve="all" />
+    <type fullname="RangeUpTileItem" preserve="all" />
+    <type fullname="SacrificeSlime" preserve="all" />
+    <type fullname="SacrificeSlimeData" preserve="all" />
+    <type fullname="ScavengerSlime" preserve="all" />
+    <type fullname="ScavengerSlimeData" preserve="all" />
+    <type fullname="SeparateOrbitMachine" preserve="all" />
+    <type fullname="ShieldOrbitOrb" preserve="all" />
+    <type fullname="ShieldSlime" preserve="all" />
+    <type fullname="ShieldSlimeData" preserve="all" />
+    <type fullname="SlimeMergeData" preserve="all" />
+    <type fullname="SlowTileItem" preserve="all" />
+    <type fullname="SpriteForStatusEffect" preserve="all" />
+    <type fullname="StageData" preserve="all" />
+    <type fullname="StatusEffectHandler" preserve="all" />
+    <type fullname="StatusEffectView" preserve="all" />
+    <type fullname="StigmaSlime" preserve="all" />
+    <type fullname="StigmaSlimeData" preserve="all" />
+    <type fullname="StopBossBehaviour" preserve="all" />
+    <type fullname="StunTileItem" preserve="all" />
+    <type fullname="SweepPattern" preserve="all" />
+    <type fullname="ThunderBulletObject" preserve="all" />
+    <type fullname="ThunderSlime" preserve="all" />
+    <type fullname="ThunderSlimeData" preserve="all" />
+    <type fullname="TigerWraithBoss" preserve="all" />
+    <type fullname="TrueDamageTileItem" preserve="all" />
+    <type fullname="WaveTimer" preserve="all" />
+    <type fullname="AllyUnitDamageData" preserve="nothing" serialized="true" />
+    <type fullname="EnemyDamageData" preserve="nothing" serialized="true" />
+    <type fullname="StageRewardData" preserve="nothing" serialized="true" />
+    <type fullname="WaveData" preserve="nothing" serialized="true" />
+    <type fullname="LightningBulletSpec" preserve="nothing" serialized="true" />
+    <type fullname="ShotModifier" preserve="nothing" serialized="true" />
+    <type fullname="SlimeEnhanceInfo" preserve="nothing" serialized="true" />
+    <type fullname="SlimeStat" preserve="nothing" serialized="true" />
+    <type fullname="UserSlime" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="TMPro.TextMeshPro" preserve="all" />
+    <type fullname="TMPro.TMP_FontAsset" preserve="all" />
+    <type fullname="TMPro.FaceInfo_Legacy" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.FontAssetCreationSettings" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.KerningTable" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.TMP_Character" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.TMP_FontFeatureTable" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.TMP_FontWeightPair" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.VertexGradient" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AnimationClip" preserve="all" />
+    <type fullname="UnityEngine.Animator" preserve="all" />
+    <type fullname="UnityEngine.RuntimeAnimatorController" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.GameObject" preserve="all" />
+    <type fullname="UnityEngine.LineRenderer" preserve="all" />
+    <type fullname="UnityEngine.Material" preserve="all" />
+    <type fullname="UnityEngine.MeshRenderer" preserve="all" />
+    <type fullname="UnityEngine.MonoBehaviour" preserve="all" />
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.RectTransform" preserve="all" />
+    <type fullname="UnityEngine.Rendering.SortingGroup" preserve="all" />
+    <type fullname="UnityEngine.Shader" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.SpriteRenderer" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.Transform" preserve="all" />
+    <type fullname="UnityEngine.Events.PersistentCallGroup" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.ParticleSystem" preserve="all" />
+    <type fullname="UnityEngine.ParticleSystemRenderer" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.Physics2DModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.BoxCollider2D" preserve="all" />
+    <type fullname="UnityEngine.CircleCollider2D" preserve="all" />
+    <type fullname="UnityEngine.Rigidbody2D" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.UI.Image" preserve="all" />
+    <type fullname="UnityEngine.UI.MaskableGraphic/CullStateChangedEvent" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.CanvasRenderer" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.TextCoreFontEngineModule">
+    <type fullname="UnityEngine.TextCore.FaceInfo" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.TextCore.Glyph" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.TextCore.GlyphMetrics" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.TextCore.GlyphRect" preserve="nothing" serialized="true" />
+  </assembly>
+</linker>

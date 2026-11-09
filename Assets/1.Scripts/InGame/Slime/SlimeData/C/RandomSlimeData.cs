@@ -3,7 +3,7 @@ using UnityEngine;
 
 // 데미지 범위가 넓은 슬라임: AttackPower에 중간값만 넣고 attackPowerRandomRatio(예: 0.67)로 최소~최대 결정
 [CreateAssetMenu(fileName ="Random",menuName = "SlimeData/C/Random")]
-public class RandomSlimeData : EnhanceAbilitySlimeData
+public class RandomSlimeData : EnhanceSlimeData
 {
     // public int[] shootCounts = {1,2,2,3,3,4};
 

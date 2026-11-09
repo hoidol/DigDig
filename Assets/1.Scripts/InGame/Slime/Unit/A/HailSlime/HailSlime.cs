@@ -3,10 +3,11 @@ using UnityEngine;
 
 // [A] 빙석: 탄을 쏘지 않고, 내 타일이 속한 TileGroup의 적 경로(enemyRoots)를 순서대로 빙빙 도는 눈(HailStone)을 소환
 // - 경로는 enemyRoots[0] → [1] → … → 마지막 → 다시 [0] (닫힌 고리로 계속 순환)
-// - 눈 hailCount개(각성 2개)는 경로 위에 같은 간격으로 배치되어 함께 이동
-// - 이동 속도 = moveSpeed × 공속 / ATTACK_SPEED_PER_SECOND (공속 강화·버프가 속도에 반영, Orbit과 같은 규칙)
+// - 눈 hailCount개는 경로 위에 같은 간격으로 배치되어 함께 이동
+// - 이동 속도 = moveSpeed × 공속 / ATTACK_SPEED_PER_SECOND (공속 버프가 속도에 반영, Orbit과 같은 규칙)
 // - 닿은 적: 피해(공격력) + iceChance%(머지 레벨별) 확률로 얼음
 // - 슬라임을 다른 그룹으로 옮기면 그 그룹 경로로 바뀜. 드래그 중에는 눈 숨김
+// - [각성] (진화) 눈 EVOLVE_HAIL_COUNT개
 // 프리팹: hailPrefab에 HailStone 프리팹 연결
 public class HailSlime : SlimeGrowth1, IRotationDirectionUnit
 {
@@ -15,15 +16,15 @@ public class HailSlime : SlimeGrowth1, IRotationDirectionUnit
     public void SetRotationDirection(RotationDirection direction) => rotationDirection = direction;
     public override bool UseFindTarget => false;
 
+    public const int EVOLVE_HAIL_COUNT = 2;
+
     public HailStone hailPrefab;
 
     HailSlimeData hailSlimeData;
 
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
     public int hailCount;
-    public float moveSpeedMul;
     public float iceChance;
-    public RotationDirection rotationDirection; // 기본값은 데이터, 강화 등으로 바꿀 수 있음
+    public RotationDirection rotationDirection; // 기본값은 데이터, 설정 버튼으로 변경
 
     readonly List<HailStone> hails = new List<HailStone>();
     float travel;          // 경로 위 진행 거리 (첫 번째 눈 기준)
@@ -38,14 +39,23 @@ public class HailSlime : SlimeGrowth1, IRotationDirectionUnit
     public override void InitSlime()
     {
         hailCount = hailSlimeData.hailCount;
-        moveSpeedMul = 1f;
         iceChance = hailSlimeData.iceChances.GetByMergeLevel(mergeLevel);
         rotationDirection = hailSlimeData.rotationDirection;
         isDragging = false;
         travel = 0f;
-        base.InitSlime(); // 강화 능력이 값을 바꿀 수 있으므로 기본값 설정 후 호출
+        base.InitSlime();
+        PrepareHails();
+    }
 
-        // 개수만큼 눈 준비 (남는 건 끔)
+    protected override void OnEvolve()
+    {
+        hailCount = Mathf.Max(hailCount, EVOLVE_HAIL_COUNT);
+        PrepareHails();
+    }
+
+    // 개수만큼 눈 준비 (남는 건 끔)
+    void PrepareHails()
+    {
         while (hails.Count < hailCount)
             hails.Add(Instantiate(hailPrefab, transform));
         for (int i = 0; i < hails.Count; i++)
@@ -57,7 +67,7 @@ public class HailSlime : SlimeGrowth1, IRotationDirectionUnit
         }
     }
 
-    public float MoveSpeed => hailSlimeData.moveSpeed * moveSpeedMul * AttackSpeed / GameSetting.ATTACK_SPEED_PER_SECOND;
+    public float MoveSpeed => hailSlimeData.moveSpeed * AttackSpeed / GameSetting.ATTACK_SPEED_PER_SECOND;
 
     public override void Update()
     {

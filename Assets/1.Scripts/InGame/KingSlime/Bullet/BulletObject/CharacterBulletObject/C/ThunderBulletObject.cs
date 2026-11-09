@@ -69,7 +69,7 @@ public class ThunderBulletObject : AllyBulletObject
             allyUnitDamageData.damage = finalDamage;
             hit.TakeDamage(allyUnitDamageData);
 
-            // 적중 후 효과 (각성 감속, 타일의 둔화/스턴/처치 코인 등). 범위 피해라 Release 여부는 무시
+            // 적중 후 효과 (타일의 둔화/스턴/처치 코인 등). 범위 피해라 Release 여부는 무시
             foreach (var b in behaviors)
                 b.OnHit(this, hit, default, direction);
         }

@@ -96,6 +96,12 @@ public abstract class TileItem : Item, ITileItem
     // 뽑기 후보로 나올 수 있는지 (ItemManager.GetDrawTileItems)
     public virtual bool CanDraw() => true;
 
+    // 보유 상한(ItemData.maxCount)을 무시하고 CanDraw로만 판단 (진화 타일)
+    public virtual bool IgnoreMaxCount => false;
+
+    // null = 일반 후보 (랜덤으로 3개 안에 들 수도 있음). 값이 있으면 뽑기마다 그 확률(%)로 선택지에 확정 등장, 실패하면 후보에서 빠짐
+    public virtual float? DrawChance => null;
+
     // 획득할 때 설치할 타일을 골라야 하는지 (SelectItemCanvas)
     public virtual bool NeedTile => true;
 

@@ -1,12 +1,12 @@
 using UnityEngine;
 
+// [각성] (진화) 탄 피해 +EVOLVE_DAMAGE_BONUS
 public class PierceSlime : SlimeGrowth1
 {
+    public const float EVOLVE_DAMAGE_BONUS = 0.2f;
     public PierceSlimeData pierceSlimeData;
     PierceBulletSpec pierceBulletSpec;
     public int pierceCount;
-    public PierceEnhance8Ability damageBoostAbility;
-    public PierceEnhance11Ability scaleUpAbility;
 
     public override void Spawn(Vector2 pos, int lv)
     {
@@ -29,21 +29,11 @@ public class PierceSlime : SlimeGrowth1
         pierceBulletSpec.damage = AttackPower;
         pierceBulletSpec.multi = 0.8f;
         pierceBulletSpec.StartBulletSpec();
-
+        if (isEvolved)
+            pierceBulletSpec.AddBulletForce(new DamageBoostForce(EVOLVE_DAMAGE_BONUS));
 
         AllyBulletObject bulletObj = pierceBulletSpec.Instantiate(this);
-
         bulletObj.transform.localScale = Vector3.one;
-        if (scaleUpAbility.isActivate)
-        {
-            bulletObj.transform.localScale *= scaleUpAbility.scale;
-        }
-
-
-        if (damageBoostAbility.isActivate)
-        {
-            pierceBulletSpec.AddBulletForce(new DamageBoostForce(damageBoostAbility.boostForceValue));
-        }
         return bulletObj;
     }
 

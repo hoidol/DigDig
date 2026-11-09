@@ -221,7 +221,7 @@ public class SlimeFieldController : MonoSingleton<SlimeFieldController>
         return true;
     }
 
-    // 슬라임끼리 놓으면 머지 시도, 빈 타일이면 이동, 그 외엔 원위치
+    // 슬라임끼리 놓으면 머지 시도(머지가 안 되면 두 슬라임 자리 교체), 빈 타일이면 이동, 그 외엔 원위치
     void EndDrag()
     {
         ITileObject source = dragObject;
@@ -284,14 +284,36 @@ public class SlimeFieldController : MonoSingleton<SlimeFieldController>
         return closest;
     }
 
+    // 두 슬라임의 타일을 맞바꾼다. 타일 아이템 효과는 SetTileObject가 OnExit/OnEnter로 옮김
+    // 둘 다 옮겨 놓은 것과 같이 EndDrag(새 타일) 처리 → 지옥불 위치 등 타일 기준 상태 갱신
+    public static bool SwapSlimes(Slime a, Slime b)
+    {
+        if (a == null || b == null || a == b)
+            return false;
+        Tile tileA = TileManager.Instance.GetTile(a);
+        Tile tileB = TileManager.Instance.GetTile(b);
+        if (tileA == null || tileB == null)
+            return false;
+
+        tileA.Clear();
+        tileB.Clear();
+        tileA.SetTileObject(b);
+        tileB.SetTileObject(a);
+        a.EndDrag(tileB);
+        b.EndDrag(tileA);
+        return true;
+    }
+
     async UniTaskVoid Merge(Slime source, Slime target, Vector3 sourceOriginPos)
     {
 
         var (result, mergeResultKey, lv) = await Merge(source, target);
         if (!result)
         {
-            source.transform.position = sourceOriginPos;
-            SelectTile(TileManager.Instance.GetTile(source));
+            // 머지가 안 되는 슬라임끼리면 자리 교체 (둘 중 하나라도 타일 밖이면 원위치)
+            if (!SwapSlimes(source, target))
+                source.transform.position = sourceOriginPos;
+            SelectTile(TileManager.Instance.GetTile(source)); // 선택은 옮긴 슬라임을 따라감
             return;
         }
 
@@ -305,11 +327,6 @@ public class SlimeFieldController : MonoSingleton<SlimeFieldController>
         Slime merged = KingSlime.Instance.AddSlime(mergeResultKey, lv);
         if (tile != null)
             tile.SetTileObject(merged);
-
-        // 희생 슬라임 강화: 합성 결과 슬라임 버프 (희생끼리 합성은 제외)
-        SacrificeSlime sacrifice = source as SacrificeSlime ?? target as SacrificeSlime;
-        if (sacrifice != null && !(source is SacrificeSlime && target is SacrificeSlime))
-            sacrifice.ApplyResultBuffs(merged);
         mergeCount++;
         // Character.Instance.AddMergeCoin(1);
         GameEventBus.Publish(new MergedSlimeEvent());

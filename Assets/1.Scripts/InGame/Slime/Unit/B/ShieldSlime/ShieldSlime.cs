@@ -1,7 +1,8 @@
 using UnityEngine;
 
-// [B] 철벽: 방패(ShieldOrbitOrb)가 슬라임 주위를 돈다. 방패 수 = mergeLevel + 1 (+강화)
+// [B] 철벽: 방패(ShieldOrbitOrb)가 슬라임 주위를 돈다. 방패 수 = mergeLevel + 1
 // 방패는 닿은 적의 이동을 멈춤 (방패당 최대 blockCountPerShield기). 막는 동안 그 방패만 정지 (SeparateOrbitMachine)
+// [각성] (진화) 가시방패: 막힌 적에게 1초마다 최대 체력 × EVOLVE_THORN_MAX_HP_RATIO 피해
 // 프리팹: orbitMachine의 orbitOrbPrefab에 ShieldOrbitOrb 프리팹 연결
 public class ShieldSlime : SlimeGrowth1, IRotationDirectionUnit
 {
@@ -11,23 +12,21 @@ public class ShieldSlime : SlimeGrowth1, IRotationDirectionUnit
     public override bool UseFindTarget => false;
 
     public SeparateOrbitMachine orbitMachine;
-    public float orbitRotationSpeed = 120; // 프리팹 기본값 (강화는 rotationSpeed에 반영)
+    public float orbitRotationSpeed = 120; // 프리팹 기본값
 
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
     public float rotationSpeed;
     public int shieldCount;
     public int blockCountPerShield; // 방패당 동시에 막는 적 수
-    public float thornMaxHpRatio;   // [각성] 가시방패: 막힌 적에게 초당 최대 체력 × 비율 피해 (0이면 없음)
 
     public const int BASE_BLOCK_COUNT_PER_SHIELD = 2;
+    public const float EVOLVE_THORN_MAX_HP_RATIO = 0.01f;
 
     public override void InitSlime()
     {
         rotationSpeed = orbitRotationSpeed;
         shieldCount = mergeLevel + 1;
         blockCountPerShield = BASE_BLOCK_COUNT_PER_SHIELD;
-        thornMaxHpRatio = 0;
-        base.InitSlime(); // 강화 능력이 값을 바꿀 수 있으므로 기본값 설정 후 호출
+        base.InitSlime();
     }
 
     public override void Spawn(Vector2 pos, int lv)
@@ -46,9 +45,16 @@ public class ShieldSlime : SlimeGrowth1, IRotationDirectionUnit
             if (orb is ShieldOrbitOrb shield)
             {
                 shield.maxBlockCount = blockCountPerShield;
-                shield.thornMaxHpRatio = thornMaxHpRatio;
+                shield.thornMaxHpRatio = 0;
             }
         }
+    }
+
+    protected override void OnEvolve()
+    {
+        foreach (OrbitOrb orb in orbitMachine.orbitOrbs)
+            if (orb is ShieldOrbitOrb shield)
+                shield.thornMaxHpRatio = EVOLVE_THORN_MAX_HP_RATIO;
     }
 
     public override AllyBulletObject GetBullet()

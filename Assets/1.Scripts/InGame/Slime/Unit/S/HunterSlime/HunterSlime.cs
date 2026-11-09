@@ -5,16 +5,16 @@ using UnityEngine;
 // - 한 번의 공격에 탄이 여러 발(다중 타겟 타일 등)이면 그 공격의 탄 전부가 저격탄
 // - 연발 타일은 같은 spec을 다시 쓰므로 저격탄의 연발도 저격탄
 // 프리팹 탄: 저격탄은 관통 탄(Pierce) 프리팹을 같이 씀 (전용 연출이 필요하면 별도 key로 분리)
+// [각성] (진화) EVOLVE_SNIPE_INTERVAL회 공격마다 저격탄
 public class HunterSlime : SlimeGrowth1
 {
+    public const int EVOLVE_SNIPE_INTERVAL = 2;
     HunterSlimeData hunterSlimeData;
     AllyBulletSpec normalSpec;
     PierceBulletSpec snipeSpec;
 
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
     public int snipeInterval;
     public float snipeStunDuration;
-    public float snipeDamageMul;
 
     int attackCount;
     bool isSnipeTurn;
@@ -31,9 +31,13 @@ public class HunterSlime : SlimeGrowth1
         snipeSpec = new PierceBulletSpec();
         snipeInterval = hunterSlimeData.snipeInterval;
         snipeStunDuration = hunterSlimeData.snipeStunDuration;
-        snipeDamageMul = 1f;
         attackCount = 0;
         base.InitSlime();
+    }
+
+    protected override void OnEvolve()
+    {
+        snipeInterval = Mathf.Min(snipeInterval, EVOLVE_SNIPE_INTERVAL);
     }
 
     public override void Fire(Vector2 dir)
@@ -58,7 +62,7 @@ public class HunterSlime : SlimeGrowth1
             return normalSpec.Instantiate(this);
         }
 
-        snipeSpec.damage = AttackPower * snipeDamageMul;
+        snipeSpec.damage = AttackPower;
         snipeSpec.pierceCount = hunterSlimeData.snipePierceCount;
         snipeSpec.multi = 1f; // 관통해도 피해 감소 없음
         snipeSpec.mustCrit = true;

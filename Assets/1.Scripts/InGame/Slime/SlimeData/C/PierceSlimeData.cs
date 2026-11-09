@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName ="Pierce",menuName = "SlimeData/C/Pierce")]
-public class PierceSlimeData : EnhanceAbilitySlimeData
+public class PierceSlimeData : EnhanceSlimeData
 {
     public int[] pierceCount = {2,3,4,5,6};
 

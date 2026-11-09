@@ -4,7 +4,7 @@ using UnityEngine;
 // [A] 진흙: 공속마다 진흙 구슬 생성(회전), 닿으면 스플래시 피해 + 진흙 중첩 후 사라짐
 // 진흙 중첩당 이동속도 15% 감소 (최대 80%, 엘리트·보스 60%). 멈추지는 않음 (MudEffect)
 [CreateAssetMenu(fileName = "Mud", menuName = "SlimeData/A/Mud")]
-public class MudSlimeData : EnhanceAbilitySlimeData
+public class MudSlimeData : EnhanceSlimeData
 {
     // 머지 레벨별 최대 구슬 수
     public int[] maxOrbCounts = { 1, 2, 3, 4, 5 };

@@ -1,21 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 드래그 가능한 깃발로 높은 공격력의 폭탄을 발사함, 공속 느림 + 25% 확률로 슬로우 (고정, [각성] 50%)
+// 드래그 가능한 깃발로 높은 공격력의 폭탄을 발사함, 공속 느림 + 25% 확률로 슬로우 (고정)
 // [A] 폭격
 // - 깃발(MortarFlag)은 슬라임 사거리 안에서만 옮길 수 있음. 처음엔 내 TileGroup 적 경로(enemyRoots)에서 가장 가까운 지점
 // - 깃발 기준 폭발 범위(boomRange) 안에 적이 있을 때만 발사 → 폭탄은 적이 아니라 깃발 자리에 떨어짐
 // - 깃발을 어디 꽂느냐(경로 꺾이는 곳, 철벽이 막는 곳 등)가 배치 포인트
 // 프리팹: flagPrefab에 MortarFlag 프리팹 연결
+// [각성] (진화) 슬로우 확률 EVOLVE_SLOW_CHANCE
 public class MortarSlime : SlimeGrowth1
 {
+    public const float EVOLVE_SLOW_CHANCE = 0.5f; // 0~1
     public MortarFlag flagPrefab;
 
     MortarBulletSpec mortarBulletSpec;
     MortarSlimeData mortarSlimeData;
     public float boomRange;
     public int maxHitCount;
-    public float slowChance; // 0~1. 기본은 데이터(50%, 고정), [각성]이면 100%
+    public float slowChance; // 0~1. 데이터(고정)
 
     MortarFlag flag;
     SlowOnHitBehavior slowBehavior;
@@ -32,6 +34,12 @@ public class MortarSlime : SlimeGrowth1
         base.Spawn(pos, lv);
     }
 
+    protected override void OnEvolve()
+    {
+        slowChance = Mathf.Max(slowChance, EVOLVE_SLOW_CHANCE);
+        slowBehavior = new SlowOnHitBehavior(slowChance, mortarSlimeData.slowDuration);
+    }
+
     public override void InitSlime()
     {
         mortarBulletSpec = new MortarBulletSpec();
@@ -39,7 +47,7 @@ public class MortarSlime : SlimeGrowth1
         maxHitCount = mortarSlimeData.maxHitCount;
         slowChance = mortarSlimeData.slowChance;
 
-        base.InitSlime(); // 강화 능력이 범위/타격 수/슬로우 확률을 바꿀 수 있으므로 기본값 설정 후 호출
+        base.InitSlime();
 
         slowBehavior = new SlowOnHitBehavior(slowChance, mortarSlimeData.slowDuration);
 

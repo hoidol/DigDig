@@ -14,8 +14,8 @@ public class MudSlime : SlimeGrowth1, IRotationDirectionUnit
     public OrbitMachine orbitMachine;
     MudSlimeData mudSlimeData;
 
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
     public int maxOrbCount;
+    public const int EVOLVE_ADD_ORB_COUNT = 1; // [각성] (진화) 구슬 최대 수 +1
     public float radius;
     public float splashRadius;
     public int maxHitCount;
@@ -29,6 +29,11 @@ public class MudSlime : SlimeGrowth1, IRotationDirectionUnit
         base.Spawn(pos, lv);
     }
 
+    protected override void OnEvolve()
+    {
+        maxOrbCount += EVOLVE_ADD_ORB_COUNT;
+    }
+
     public override void InitSlime()
     {
         maxOrbCount = mudSlimeData.maxOrbCounts.GetByMergeLevel(mergeLevel);
@@ -37,7 +42,7 @@ public class MudSlime : SlimeGrowth1, IRotationDirectionUnit
         maxHitCount = mudSlimeData.maxHitCount;
         mudDuration = mudSlimeData.mudDuration;
         isDragging = false;
-        base.InitSlime(); // 강화 능력이 값을 바꿀 수 있으므로 기본값 설정 후 호출
+        base.InitSlime();
 
         // 풀링 재사용 시 이전 구슬 정리 후 처음부터 다시 생성
         foreach (OrbitOrb orb in new List<OrbitOrb>(orbitMachine.orbitOrbs))

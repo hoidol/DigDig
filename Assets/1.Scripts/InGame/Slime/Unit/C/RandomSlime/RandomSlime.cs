@@ -1,86 +1,50 @@
 using UnityEngine;
 
-//데미지 범위가 넓게 
-// 10 - 3 ~ 15
-// 20 - 5 ~ 30
-// 30 - 10 ~ 50
+// 공격력 랜덤 폭: 데이터에는 중간값만 (SlimeData.attackPowerRandomRatio)
+// [각성] (진화) EVOLVE_SKILL_INTERVAL번째 공격마다 EVOLVE_SKILL_BULLET_COUNT방향으로 원형 발사
 public class RandomSlime : SlimeGrowth1
 {
+    public const int EVOLVE_SKILL_INTERVAL = 6;
+    public const int EVOLVE_SKILL_BULLET_COUNT = 4;
+
     public RandomSlimeData randomSlimeData;
-    // float fireTimer;
     AllyBulletSpec allyBulletSpec;
-    // public float wackyFireSpeed;
-    
-    public int skillBulletCount;
-    // public float skillCoolTime;
+    int attackCount;
+
     public override void Spawn(Vector2 pos, int lv)
     {
         randomSlimeData = SlimeManager.Instance.GetSlimeData(key) as RandomSlimeData;
-        base.Spawn(pos, lv);      
+        base.Spawn(pos, lv);
     }
 
     public override void InitSlime()
     {
-        // skillCoolTime = float.Parse(randomSlimeData.GetUniqueStat(SlimeStatType.SkillCooltime).values[mergeLevel]) ;
         allyBulletSpec = new AllyBulletSpec();
-        // fireTimer = 0;
-        // wackyFireSpeed = 1;
-
+        attackCount = 0;
         base.InitSlime();
     }
 
-    // public override void Update()
-    // {
-    //     base.Update();
-    //     // if (fireTimer >= skillCoolTime)
-    //     // {
-    //     //     Fire();
-    //     //     fireTimer = 0;
-    //     // }
-    //     // fireTimer += Time.deltaTime * wackyFireSpeed;
-    // }
-
-    // void Fire()
-    // {
-    //     for (int i = 0; i < mergeLevel + 1; i++)
-    //     {
-    //         Vector2 randomDir = Random.insideUnitCircle.normalized;
-    //         Fire(randomDir);
-    //     }   
-    // }
-
-    // public override int ShootCount => randomSlimeData.shootCounts.GetByMergeLevel(mergeLevel);
-
     public override void Fire(Vector2 dir)
-    { 
+    {
         if (dir == Vector2.zero)
             return;
-
-        if(skillCounter >= 6)
+        if (!isEvolved || (attackCount + 1) % EVOLVE_SKILL_INTERVAL != 0)
         {
-            ExecuteSkill();
-        }
-        else
             base.Fire(dir);
-    }
-    
-    int skillCounter;
-    public void CountUp()
-    {
-        skillCounter++;
-    }
-    public void ExecuteSkill()
-    {
+            if (attackTimer == 0) // 발사에 성공했을 때만 횟수 증가
+                attackCount++;
+            return;
+        }
+
         float baseAngle = Random.Range(0f, 360f);
-        float angleStep = 360f / skillBulletCount;
-        for (int i = 0; i < skillBulletCount; i++)
+        float angleStep = 360f / EVOLVE_SKILL_BULLET_COUNT;
+        for (int i = 0; i < EVOLVE_SKILL_BULLET_COUNT; i++)
         {
             float rad = (baseAngle + i * angleStep) * Mathf.Deg2Rad;
-            Vector2 dir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-            FireBullet(dir); // 스킬은 원형 방향 그대로 (멀티 타겟 X)
+            FireBullet(new Vector2(Mathf.Cos(rad), Mathf.Sin(rad))); // 원형 방향 그대로 (멀티 타겟 X)
         }
         attackTimer = 0;
-        skillCounter = 0;
+        attackCount++;
     }
 
     public override AllyBulletObject GetBullet()
@@ -90,10 +54,4 @@ public class RandomSlime : SlimeGrowth1
         allyBulletSpec.StartBulletSpec();
         return allyBulletSpec.Instantiate(this);
     }
-
-    // public override string GetDescription(int level =0)
-    // {
-    //     return string.Format("{0}초마다 랜덤한 방향으로 총알을 발사합니다.",randomSlimeData.fireTimes[level]);
-    // }
-
 }

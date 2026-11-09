@@ -3,7 +3,7 @@ using UnityEngine;
 // 십자 4칸 버프 슬라임(CrossBuffSlime) 공용 데이터
 // buffValues: mergeLv별 버프 값. Multiply면 배율(1.2 = +20%), Add면 더하는 값(치명타 확률은 % 단위)
 // 기본값은 자식에서 DefaultBuffOpType / DefaultBuffValues를 재정의. 에셋에 직렬화된 값이 있으면 그 값이 우선
-public abstract class CrossBuffSlimeData : EnhanceAbilitySlimeData
+public abstract class CrossBuffSlimeData : EnhanceSlimeData
 {
     public StatOpType buffOpType;
     public float[] buffValues;

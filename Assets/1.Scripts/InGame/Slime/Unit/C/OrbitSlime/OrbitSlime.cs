@@ -2,8 +2,12 @@ using UnityEngine;
 
 //플레이어가 공격하면 같이 방향으로 쏨
 //충돌 안하게 하자
+// [각성] (진화) 회전에 닿은 적 EVOLVE_STUN_CHANCE 확률로 EVOLVE_STUN_DURATION초 스턴
 public class OrbitSlime : SlimeGrowth1, IRotationDirectionUnit
 {
+    public const float EVOLVE_STUN_CHANCE = 0.03f; // 0~1
+    public const float EVOLVE_STUN_DURATION = 0.1f;
+
     // 회전 방향 설정 (설정 버튼). 타겟을 노리지 않으므로 타겟 방식 버튼은 숨김
     public RotationDirection RotationDirection => orbitMachine.rotationDirection;
     public void SetRotationDirection(RotationDirection direction) => orbitMachine.rotationDirection = direction;
@@ -15,7 +19,6 @@ public class OrbitSlime : SlimeGrowth1, IRotationDirectionUnit
     public float rotationSpeed;
     public float radius;
 
-    public OrbitEnhance8Ability stunAbility; // [각성] 확률 스턴
     public override void Spawn(Vector2 pos, int lv)
     {
         orbitSlimeData = SlimeManager.Instance.GetSlimeData(key) as OrbitSlimeData;
@@ -38,11 +41,13 @@ public class OrbitSlime : SlimeGrowth1, IRotationDirectionUnit
         Debug.Log($"OrbitSlime InitSlime() {key} MergeLevel {mergeLevel} AttackPower {AttackPower}");
         orbitMachine.radius = radius;
         for (int i = 0; i < orbitCount; i++)
-        {
-            OrbitOrb orbitOrb = orbitMachine.AddOrbit();
-            if (stunAbility != null && stunAbility.isActivate)
-                orbitOrb.AddBulletBehaviour(new StunOnHitBehavior(stunAbility.stunDuration, stunAbility.stunChance));
-        }
+            orbitMachine.AddOrbit();
+    }
+
+    protected override void OnEvolve()
+    {
+        foreach (OrbitOrb orb in orbitMachine.orbitOrbs)
+            orb.AddBulletBehaviour(new StunOnHitBehavior(EVOLVE_STUN_DURATION, EVOLVE_STUN_CHANCE));
     }
 
     public override void StartDrag()

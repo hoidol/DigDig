@@ -5,13 +5,14 @@ using UnityEngine;
 // [B] 광란: 기본 탄 발사 + 주변(detectRange)에서 적/돌이 죽으면 추가 탄 extraShotCount발 발사
 // 추가 탄 공격력 = AttackPower × extraShotDamageMul. 추가 발사는 일반 공격 타이머를 건드리지 않음 (Fire 대신 FireBullet)
 // 추가 발사 후 coolTime 동안은 다시 발동 안 함
+// [각성] (진화) 추가 탄 EVOLVE_EXTRA_SHOT_COUNT발
 public class DopamineSlime : SlimeGrowth1
 {
+    public const int EVOLVE_EXTRA_SHOT_COUNT = 2;
     DopamineSlimeData dopamineSlimeData;
     AllyBulletSpec allyBulletSpec;
 
     public Transform dopamineRange; // 처치 감지 범위 표시 (선택(StartTarget) 중에만 보임, 크기 = detectRange. 공격 사거리 rangeTr와 같은 규칙)
-    // 강화 능력이 바꿀 수 있음 (InitSlime에서 base 호출 전에 기본값 설정)
     public float detectRange;
     public float extraShotDamageMul;
     public int extraShotCount;
@@ -35,13 +36,18 @@ public class DopamineSlime : SlimeGrowth1
         extraShotCount = dopamineSlimeData.extraShotCount;
         coolTime = dopamineSlimeData.extraShotCoolTime;
         coolTimer = 0;
-        base.InitSlime(); // 강화 능력이 범위/배율/발사 수/쿨타임을 바꿀 수 있으므로 기본값 설정 후 호출
+        base.InitSlime();
 
         if (dopamineRange != null)
         {
-            dopamineRange.localScale = Vector3.one * detectRange; // 강화 반영된 값
+            dopamineRange.localScale = Vector3.one * detectRange;
             dopamineRange.gameObject.SetActive(false);
         }
+    }
+
+    protected override void OnEvolve()
+    {
+        extraShotCount = Mathf.Max(extraShotCount, EVOLVE_EXTRA_SHOT_COUNT);
     }
 
     public override void StartTarget()

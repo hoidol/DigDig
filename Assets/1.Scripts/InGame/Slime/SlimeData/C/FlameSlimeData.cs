@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "Flame", menuName = "SlimeData/C/Flame")]
-public class FlameSlimeData : EnhanceAbilitySlimeData
+public class FlameSlimeData : EnhanceSlimeData
 {
     public float burnDuration = 4;
     public float[] burnDPSES = {1, 2, 3, 4, 5f};

@@ -67,7 +67,7 @@ public class MortarBulletObject : AllyBulletObject
             allyUnitDamageData.damage = finalDamage;
             hit.TakeDamage(allyUnitDamageData);
 
-            // 적중 후 효과 (슬로우 50%, 각성 넉백, 타일 효과). 넉백 방향 = 폭발 중심 → 적
+            // 적중 후 효과 (슬로우, 타일 효과)
             Vector2 pushDir = ((Vector2)hit.Transform.position - targetPos).normalized;
             foreach (var b in behaviors)
                 b.OnHit(this, hit, default, pushDir);
