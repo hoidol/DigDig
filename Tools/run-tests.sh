@@ -6,7 +6,7 @@
 #   Tools/run-tests.sh "KSUpgradePlayTest"   테스트 이름 필터 (에디터: 부분 일치 / 배치모드: ; 구분, 정규식 가능)
 #   NO_SYNC=1 Tools/run-tests.sh             동기화 생략
 set -e
-MAIN=${MAIN:-$HOME/KingSlime}
+MAIN=${MAIN:-${0:A:h:h}} # 이 스크립트가 있는 프로젝트
 TEST=${TEST:-$HOME/KingSlime-Test}
 UNITY=${UNITY:-/Applications/Unity/Hub/Editor/$(sed -n 's/^m_EditorVersion: //p' "$MAIN/ProjectSettings/ProjectVersion.txt")/Unity.app/Contents/MacOS/Unity}
 OUT=$TEST/TestResults

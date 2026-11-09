@@ -9,21 +9,6 @@ using UnityEngine.TestTools;
 // 웨이브 진행(엘리트·보스 주기) / 사망 → 결과 화면 → 보상 (CLAUDE.md "웨이브", ResultCanvas)
 public class WaveResultPlayTest : InGamePlayTestBase
 {
-    const float WAVE_SKIP_TIMEOUT = 5f; // 실시간(초)
-
-    static readonly DamageData KILL = new DamageData { damage = 1e12f, attackType = AttackType.AllRounder };
-
-    // 현재 wave를 시간 끝까지 돌린 것처럼: 자기 타이머 종료(→ EndWave, 코인) + 메인 타이머 종료(→ 다음 wave)
-    static IEnumerator SkipWave()
-    {
-        int idx = GameManager.Instance.waveIdx;
-        GameManager.Instance.CurrentWave.waveTimer = 0f;
-        GameManager.Instance.mainWaveTimer = 0.01f;
-        double end = UnityEditor.EditorApplication.timeSinceStartup + WAVE_SKIP_TIMEOUT;
-        while (GameManager.Instance.waveIdx == idx && UnityEditor.EditorApplication.timeSinceStartup < end)
-            yield return WaitRealtime(0f);
-    }
-
     static Boss FindBoss() => Object.FindObjectsByType<Boss>(FindObjectsSortMode.None).FirstOrDefault(b => b.gameObject.activeInHierarchy);
 
     [UnityTest]

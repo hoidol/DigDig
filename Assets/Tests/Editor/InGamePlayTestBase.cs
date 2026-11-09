@@ -204,6 +204,20 @@ public abstract class InGamePlayTestBase
         }
     }
 
+    protected static readonly DamageData KILL = new DamageData { damage = 1e12f, attackType = AttackType.AllRounder };
+    const float WAVE_SKIP_TIMEOUT = 5f; // 실시간(초)
+
+    // 현재 wave를 시간 끝까지 돌린 것처럼: 자기 타이머 종료(→ EndWave, 코인) + 메인 타이머 종료(→ 다음 wave)
+    protected static IEnumerator SkipWave()
+    {
+        int idx = GameManager.Instance.waveIdx;
+        GameManager.Instance.CurrentWave.waveTimer = 0f;
+        GameManager.Instance.mainWaveTimer = 0.01f;
+        double end = EditorApplication.timeSinceStartup + WAVE_SKIP_TIMEOUT;
+        while (GameManager.Instance.waveIdx == idx && EditorApplication.timeSinceStartup < end)
+            yield return WaitRealtime(0f);
+    }
+
     protected void AssertNoErrors(string title = "에러")
     {
         Assert.IsEmpty(errors, $"{title}\n{string.Join("\n", errors.Distinct())}");
