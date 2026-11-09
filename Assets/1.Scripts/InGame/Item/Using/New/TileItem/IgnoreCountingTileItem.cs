@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 카운팅 제외: 위에 올라간 슬라임은 최대 슬라임 수에 세지 않는다 (SlimeSpawner.ignoreSlimeCount)
+// 카운팅 제외: 위에 올라간 슬라임은 최대 슬라임 수에 세지 않는다 (SlimeFieldController.ignoreSlimeCount)
 public class IgnoreCountingTileItem : TileItem //타일 위에 설치되는 아이템
 {
     Slime ignoredSlime;
@@ -11,7 +11,7 @@ public class IgnoreCountingTileItem : TileItem //타일 위에 설치되는 아�
             return;
 
         ignoredSlime = slime;
-        SlimeSpawner.Instance.ignoreSlimeCount++;
+        SlimeFieldController.Instance.ignoreSlimeCount++;
     }
 
     public override void OnExit(ITileObject tileObject)
@@ -20,6 +20,6 @@ public class IgnoreCountingTileItem : TileItem //타일 위에 설치되는 아�
             return;
 
         ignoredSlime = null;
-        SlimeSpawner.Instance.ignoreSlimeCount--;
+        SlimeFieldController.Instance.ignoreSlimeCount--;
     }
 }

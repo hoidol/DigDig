@@ -92,7 +92,7 @@ public class WaveResultPlayTest : InGamePlayTestBase
             yield return SkipWave();
         int waveIdx = GameManager.Instance.waveIdx;
         Assert.AreEqual(6, waveIdx);
-        SlimeSpawner.Instance.mergeCount = 3;
+        SlimeFieldController.Instance.mergeCount = 3;
 
         var user = UserDataManager.Instance;
         string stageKey = GameManager.Instance.stageData.key;
@@ -130,6 +130,30 @@ public class WaveResultPlayTest : InGamePlayTestBase
 
         int shownRewards = result.rewardPanels.Count(p => p.gameObject.activeSelf);
         Assert.AreEqual(3, shownRewards, "보상 패널 수 (골드·경험치·뽑기권)");
+
+        // 광고 보고 2배: 같은 양을 한 번 더 지급 (한 번만)
+        if (result.adDoubleRewardButton != null)
+            Assert.IsTrue(result.adDoubleRewardButton.activeSelf, "2배 보상 버튼이 안 보임");
+        result.OnClickedDoubleReward();
+        yield return WaitFrames(3);
+        Assert.IsTrue(result.IsDoubled, "2배 보상이 적용 안 됨");
+        Assert.AreEqual(gold + waveIdx * 2, user.userData.gold, "골드 2배");
+        Assert.AreEqual(exp + waveIdx / 2 * 2, user.userMyInfoManager.userMyInfoData.exp, "경험치 2배");
+        Assert.AreEqual(drawTicket + 3 * 2, user.userData.drawTicket, "뽑기권 2배");
+        if (result.adDoubleRewardButton != null)
+            Assert.IsFalse(result.adDoubleRewardButton.activeSelf, "2배 받은 뒤 버튼 숨김");
+        // 글씨 확대 이펙트가 끝나면 2배 값 표시 + 원래 크기
+        double popEnd = UnityEditor.EditorApplication.timeSinceStartup + RewardPanel.POP_UP_TIME + RewardPanel.POP_DOWN_TIME + 0.5f;
+        while (UnityEditor.EditorApplication.timeSinceStartup < popEnd)
+            yield return WaitFrames(1);
+        var shownValues = result.rewardPanels.Where(p => p.gameObject.activeSelf).Select(p => p.rewardValueText.text).ToList();
+        CollectionAssert.Contains(shownValues, (waveIdx * 2).ToString(), "골드 패널 2배 값 표시");
+        CollectionAssert.Contains(shownValues, (3 * 2).ToString(), "뽑기권 패널 2배 값 표시");
+        foreach (var p in result.rewardPanels.Where(p => p.gameObject.activeSelf))
+            Assert.AreEqual(1f, p.rewardValueText.transform.localScale.x, 0.01f, "이펙트 후 원래 크기");
+        result.OnClickedDoubleReward();
+        yield return WaitFrames(3);
+        Assert.AreEqual(gold + waveIdx * 2, user.userData.gold, "2배는 한 번만");
 
         // 홈 → 로비 씬
         result.OnClickedHome();

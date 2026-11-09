@@ -100,7 +100,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         while (GameManager.Instance.waveIdx < FIRST_RUN_WAVE)
             yield return SkipWave();
         Assert.AreEqual(FIRST_RUN_WAVE, GameManager.Instance.waveIdx);
-        SlimeSpawner.Instance.mergeCount = FIRST_RUN_MERGE;
+        SlimeFieldController.Instance.mergeCount = FIRST_RUN_MERGE;
 
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
@@ -128,21 +128,32 @@ public class GameCyclePlayTest : InGamePlayTestBase
         current = "로비 레벨업";
         ResultCanvas.Instance.OnClickedHome();
         yield return WaitScene("Lobby");
+        // 로비 진입 직후: 받기 전 경험치(0/최대)에서 바가 차오름
+        yield return WaitUntil(() => Object.FindObjectsByType<MyInfoPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None).Any(p => p.IsAnimating), "경험치 바 연출이 안 시작됨");
         yield return WaitUntil(() => Lobby.UserLevelUpCanvas.Instance != null && Lobby.UserLevelUpCanvas.Instance.gameObject.activeInHierarchy, "레벨업 창이 안 열림");
 
         for (int lv = 1; lv <= 2; lv++)
         {
+            // 이전 창을 닫으면 남은 경험치만큼 바가 차오른 뒤 다음 레벨업 창
+            yield return WaitUntil(() => Lobby.UserLevelUpCanvas.Instance.gameObject.activeInHierarchy, $"Lv.{lv} 레벨업 창이 안 열림");
             var levelUp = Lobby.UserLevelUpCanvas.Instance;
             Assert.IsTrue(levelUp.gameObject.activeInHierarchy, $"Lv.{lv} 레벨업 창");
             Assert.AreEqual(lv, MyInfo.userMyInfoData.lv, $"Lv.{lv} 레벨");
             Assert.AreEqual(lv.ToString(), levelUp.lvText.text, $"Lv.{lv} 레벨업 창 표시");
-            AssertMyInfoPanels();
+            // 레벨업 창이 뜰 때 바는 새 레벨의 빈 칸 (닫으면 남은 경험치만큼 다시 차오름)
+            foreach (var panel in Object.FindObjectsByType<MyInfoPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                Assert.AreEqual($"LV.{lv}", panel.lvText.text, $"Lv.{lv} MyInfoPanel 레벨 표시");
+                Assert.AreEqual(0f, panel.barImage.fillAmount, 0.001f, $"Lv.{lv} 레벨업 창 동안 바는 빈 칸");
+            }
             levelUp.CloseCanvas();
             yield return WaitFrames(3);
         }
         Assert.IsFalse(Lobby.UserLevelUpCanvas.Instance.gameObject.activeInHierarchy, "레벨이 2만 올라야 함");
         Assert.AreEqual(2, MyInfo.userMyInfoData.lv);
         Assert.AreEqual(0, MyInfo.userMyInfoData.exp, "레벨업 후 남은 경험치");
+        yield return WaitUntil(() => Object.FindObjectsByType<MyInfoPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None).All(p => !p.IsAnimating), "경험치 바 연출이 안 끝남");
+        Assert.AreEqual(0, UserMyInfoManager.unshownGainExp, "보여줄 경험치가 남음");
         AssertMyInfoPanels();
         yield return WaitSaveFlushed();
         Assert.AreEqual(2, SavedMyInfo.lv, "저장: 레벨");
@@ -157,7 +168,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
 
         gold = User.userData.gold;
         drawTicket = User.userData.drawTicket;
-        SlimeSpawner.Instance.mergeCount = 0;
+        SlimeFieldController.Instance.mergeCount = 0;
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         FailCanvas.Instance.OnClickedCancel();

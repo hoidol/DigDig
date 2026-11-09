@@ -6,6 +6,11 @@ public class CriticalTileItem : TileItem //타일 위에 설치되는 아이템
     public float chance = 30f;
     public float critPower = 2f;
 
+    protected override void ApplyLevelValue(float v)
+    {
+        chance = v; // 레벨 수치 = 치명타 확률
+    }
+
     public override void ModifyDamageData(AllyUnitDamageData data)
     {
         data.critChance += chance;

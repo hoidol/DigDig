@@ -1,0 +1,19 @@
+Key	Tier	MatchTags	Desc
+PioneerPick	1		게임 시작 시 사용할 수 없는 칸이 2칸 줄어듭니다.
+MerchantLedger	1		첫 wave 동안 슬라임 소환 가격이 절반이 됩니다.
+GamblerCoin	1		소환할 때 25% 확률로 머지 레벨 1로 등장하지만, 25% 확률로 코인을 2배 소모합니다.
+SplitShard	2	Shooter	탄이 적을 처치하면 두 갈래로 쪼개집니다. (피해 50%)
+EmberBrazier	2	Zone	지뢰·박격포·낙뢰·지옥불이 피해를 준 자리에 3초간 불길이 남습니다. (초당 공격력의 20%)
+WhirlOrb	2	Orbit	회전체가 한 바퀴 돌 때마다 바깥으로 탄을 1발 쏩니다.
+PlagueChalice	3	Status	상태이상이 2종 이상 걸린 적이 죽으면 주변 적에게 상태이상이 옮겨갑니다.
+RelayCrystal	3	KillTrigger	킹 주변 3*3에서 일어난 처치도 모든 처치 감지 슬라임이 감지합니다.
+CommandFlag	3	Support	십자 버프가 타일 그룹 경계를 넘어 적용됩니다.
+SurveyCompass	4	Zone	지뢰·지옥불 슬라임이 옆 타일 그룹의 경로도 사용합니다.
+TwinRing	4		같은 종 2마리가 상하좌우로 붙어 있으면 둘 다 머지 레벨 +1의 공격력을 냅니다.
+ArtisanHammer	4		타일 아이템 뽑기 최저 확률이 10%에서 30%로 오르고, 실패하면 코인 절반을 돌려받습니다.
+HunterCharm	5	Heavy	엘리트·보스가 나오면 강타 슬라임이 먼저 노립니다. 엘리트를 처치하면 타일 아이템을 무료로 뽑습니다. (성공 100%)
+MixedCrest	5		장착 슬라임에 물리·마법이 섞여 있으면, 방어 타입 wave 시작 시 약점 속성 슬라임 1마리를 무료로 소환합니다.
+Hourglass	5		킹 체력이 처음으로 30% 아래가 되면 5초간 모든 적이 멈춥니다. (한 판에 1번)
+PureCrown	6		장착 슬라임 5종의 공격 속성이 모두 같으면 약점 피해가 1.5배가 됩니다.
+KingSeal	6		장착 슬라임 5종의 형태가 모두 다르면 모든 슬라임의 공격 속도가 20% 오릅니다.
+BloodlineFlask	6	Transform	합성할 때 50% 확률로 결과가 랜덤 종 대신 같은 종으로 유지됩니다.

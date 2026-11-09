@@ -8,6 +8,61 @@ public abstract class TileItem : Item, ITileItem
 {
     public Tile tile; // 장착 전에 지정되어 있으면 그 타일에 설치, 없으면 랜덤 타일
 
+    // ---- 강화 (타일 객체마다, 주사위 코인). 레벨 1 시작, 최대 = ItemData.MaxLevel
+    public int upgradeLevel = 1;
+    public static readonly float[] UPGRADE_CHANCES = { 70f, 50f }; // Lv1→2, Lv2→3 (이후는 마지막 값)
+    public static int GetUpgradeCost(int baseDiceCoin, int curLevel) => baseDiceCoin * (curLevel + 1);
+    public static float GetUpgradeChance(int curLevel) => UPGRADE_CHANCES[Mathf.Clamp(curLevel - 1, 0, UPGRADE_CHANCES.Length - 1)];
+
+    public bool CanUpgrade => itemData != null && itemData.CanUpgradeItem;
+    public bool IsMaxLevel => itemData == null || upgradeLevel >= itemData.MaxLevel;
+    public int UpgradeCost => GetUpgradeCost(itemData.diceCoin, upgradeLevel);
+    public float UpgradeChance => GetUpgradeChance(upgradeLevel);
+
+    // 레벨 수치(ItemData.csv Values)를 이 아이템의 대표 수치에 넣는다. 수치가 없으면 프리팹 값 그대로
+    protected virtual void ApplyLevelValue(float value) { }
+
+    // 설명의 {0}에 들어갈 표시 값 (기본 = 수치 그대로). 배율형은 % 증가량으로 바꿔서 보여준다
+    protected virtual string FormatLevelValue(float value) => FormatNumber(value);
+    protected static string FormatNumber(float v) => v.ToString("0.##");
+    protected static string FormatMulPercent(float mul) => FormatNumber((mul - 1f) * 100f); // 1.5 → "50"
+
+    // ItemData.csv Desc의 {0} = 현재 레벨 수치 (프리팹이면 Lv1). 수치가 없으면 Desc 그대로
+    public override string GetDescription() => GetDescription(itemData);
+
+    public string GetDescription(ItemData data)
+    {
+        if (data == null)
+            return "";
+        if (!data.HasLevelValues || !data.desc.Contains("{0}"))
+            return data.desc;
+        return string.Format(data.desc, FormatLevelValue(data.GetLevelValue(upgradeLevel)));
+    }
+
+    void ApplyLevel()
+    {
+        ItemData data = itemData;
+        if (data != null && data.HasLevelValues)
+            ApplyLevelValue(data.GetLevelValue(upgradeLevel));
+    }
+
+    // 성공 판정만 (주사위 코인은 호출 측에서 먼저 냄). 올라간 유닛이 있으면 효과를 뺐다가 새 수치로 다시 건다
+    public bool TryUpgrade(float roll)
+    {
+        if (!CanUpgrade || IsMaxLevel)
+            return false;
+        if (roll >= UpgradeChance)
+            return false;
+        ITileObject obj = tile != null ? tile.tileObject : null;
+        if (obj != null)
+            OnExit(obj);
+        upgradeLevel++;
+        ApplyLevel();
+        if (obj != null)
+            OnEnter(obj);
+        return true;
+    }
+
     public override void OnEquip()
     {
         if (tile == null)
@@ -17,6 +72,7 @@ public abstract class TileItem : Item, ITileItem
             Debug.LogWarning($"TileItem {key} 설치할 타일 없음");
             return;
         }
+        ApplyLevel(); // 설치(OnEnter) 전에 레벨 수치 반영
         tile.AddTileItem(this);
         transform.SetParent(tile.transform, false); // 하이어라키에서 설치된 타일 아래에 둠 (타일 위치 기준)
         transform.localScale = Vector3.one;

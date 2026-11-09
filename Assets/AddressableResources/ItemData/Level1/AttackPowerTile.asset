@@ -14,9 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: AttackPowerTile
   itemName: "\uACF5\uACA9\uB825 \uD0C0\uC77C"
-  desc: "\uACF5\uACA9\uB825 30% > 50% > 70% \uC99D\uAC00"
+  desc: "\uACF5\uACA9\uB825 {0}% \uC99D\uAC00"
   level: 1
   maxCount: 3
+  diceCoin: 3
+  levelValues:
+  - 1.5
+  - 1.75
+  - 2
   itemPrefab: {fileID: 7770114647235554288, guid: f253208175c7640f286f09ae20053beb,
     type: 3}
   unlockConditions: []

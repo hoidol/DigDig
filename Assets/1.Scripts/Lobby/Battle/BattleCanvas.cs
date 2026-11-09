@@ -48,7 +48,7 @@ public class BattleCanvas : BaseLobbyCanvas
     public override void UpdateCanvas()
     {
         // stageRewardContainer.UpdateContainer();
-        titleText.text = stageData.Title;
+        titleText.text = DifficultyDisplayButton.GetDifficultyText(stageData.difficulty); // key(Normal 등) 대신 번역된 난이도 이름
 
         // 난이도마다 스테이지 하나라 이전/다음 스테이지 이동 없음
         // nextStageButton.SetActive(false);

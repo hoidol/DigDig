@@ -19,11 +19,13 @@ public class AllyBulletObject : BulletObject
     public Vector2 shootPos;
     public Vector2 shootDir;
     public float shootDamage;
+    public bool isSplitShard; // 분열의 파편으로 쪼개진 탄 (다시 쪼개지지 않음)
 
     public virtual void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
         this.allyUnit = allyUnit;
         spec = bullet;
+        isSplitShard = false; // 풀링 재사용
         AllyBulletSpec allyBulletSpec = bullet as AllyBulletSpec;
         transform.localScale = Vector3.one;
 
@@ -85,6 +87,10 @@ public class AllyBulletObject : BulletObject
         allyUnit.AccumulateDamage(finalDamage);
         allyUnitDamageData.damage = finalDamage;
         hit.TakeDamage(allyUnitDamageData);
+
+        // 권능 분열의 파편: 이 탄이 적을 처치했으면 두 갈래로
+        if (AuthoritySystem.Has<SplitShardAuthority>() && hit is Enemy killed && killed.CurHp <= 0)
+            SplitShardAuthority.Split(this, hit.Transform.position, direction);
 
         bool shouldRelease = true;
         foreach (var b in behaviors)

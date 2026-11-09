@@ -3,10 +3,10 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEditor;
 
-// 슬라임 유형 태그 (SlimeData.csv Tags → SlimeData.tags, CLAUDE.md "유물")
+// 슬라임 유형 태그 (SlimeData.csv Tags → SlimeData.tags, CLAUDE.md "권능")
 public class SlimeTagTest
 {
-    const int MIN_SLIMES_PER_TAG = 3; // 유물이 반응할 만한 최소 종 수
+    const int MIN_SLIMES_PER_TAG = 3; // 권능이 반응할 만한 최소 종 수
 
     static Dictionary<string, string> CsvTags()
     {
@@ -37,14 +37,14 @@ public class SlimeTagTest
         Assert.AreEqual(0, SlimeTags.CountMatching(equipped, SlimeTag.None));
     }
 
-    // 유물 matchTags: 태그 중 하나라도 가진 슬라임 수 (유물 정보 창 "해당 슬라임 N/5")
+    // 권능 matchTags: 태그 중 하나라도 가진 슬라임 수 (권능 정보 창 "해당 슬라임 N/5")
     [Test]
-    public void Relic_CountMatchingSlimes_AnyTag()
+    public void Authority_CountMatchingSlimes_AnyTag()
     {
         var equipped = new[] { SlimeTag.Zone | SlimeTag.Heavy, SlimeTag.Shooter | SlimeTag.Heavy, SlimeTag.Zone, SlimeTag.Support, SlimeTag.Orbit | SlimeTag.Status };
-        Assert.AreEqual(4, RelicData.CountMatchingSlimes(SlimeTag.Zone | SlimeTag.Heavy | SlimeTag.Status, equipped));
-        Assert.AreEqual(2, RelicData.CountMatchingSlimes(SlimeTag.Heavy, equipped));
-        Assert.AreEqual(0, RelicData.CountMatchingSlimes(SlimeTag.None, equipped), "matchTags 없으면 0");
+        Assert.AreEqual(4, AuthorityData.CountMatchingSlimes(SlimeTag.Zone | SlimeTag.Heavy | SlimeTag.Status, equipped));
+        Assert.AreEqual(2, AuthorityData.CountMatchingSlimes(SlimeTag.Heavy, equipped));
+        Assert.AreEqual(0, AuthorityData.CountMatchingSlimes(SlimeTag.None, equipped), "matchTags 없으면 0");
     }
 
     // 모든 슬라임: 아는 태그만, 형태는 정확히 하나
@@ -63,7 +63,7 @@ public class SlimeTagTest
         Assert.IsEmpty(problems, string.Join("\n", problems));
     }
 
-    // 형태·특성마다 해당 슬라임이 최소 3종 (유물이 쓸모 있으려면)
+    // 형태·특성마다 해당 슬라임이 최소 3종 (권능이 쓸모 있으려면)
     [Test]
     public void Csv_EveryTagHasEnoughSlimes()
     {

@@ -45,6 +45,7 @@ public class ThunderBulletObject : AllyBulletObject
         Vector2 strikePos = target != null && target.gameObject.activeInHierarchy ? (Vector2)target.position : fallbackPos;
         transform.position = strikePos;
         EffectManager.Instance.Play(EffectType.SmallExplosion, strikePos);
+        EmberBrazierAuthority.OnZoneDamage(strikePos, thunderBulletSpec.strikeRadius, damage * damageMultiplier, thunderBulletSpec.hitLayerMask);
 
         IHittable[] targets = Physics2D.OverlapCircleAll(strikePos, thunderBulletSpec.strikeRadius, thunderBulletSpec.hitLayerMask)
             .Select(c => c.GetComponent<IHittable>())

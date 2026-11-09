@@ -48,7 +48,7 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
 
     static Enemy WaitActiveEnemy(System.Func<Enemy, bool> filter = null)
     {
-        return EnemySpawner.Instance.activeEnemies.FirstOrDefault(e => e != null && e.CurHp > 0 && (filter == null || filter(e)));
+        return EnemyFieldController.Instance.activeEnemies.FirstOrDefault(e => e != null && e.CurHp > 0 && (filter == null || filter(e)));
     }
 
     static IEnumerator WaitForEnemy()
@@ -78,7 +78,7 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
         // 이동 중엔 Walk
         Assert.AreEqual(Enemy.WALK_ANIM_HASH, enemy.animator.GetCurrentAnimatorStateInfo(0).shortNameHash, $"{enemy.name}: 이동 중 Walk가 아님");
 
-        int countBefore = EnemySpawner.Instance.ActiveEnemyCount;
+        int countBefore = EnemyFieldController.Instance.ActiveEnemyCount;
         enemy.TakeDamage(KILL);
 
         // 죽은 직후: 활성 상태로 Dead 재생, 충돌 꺼짐, 타겟 불가, 활성 적 수에서는 빠짐
@@ -86,8 +86,8 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
         Assert.IsTrue(enemy.gameObject.activeSelf, "Dead 애니메이션 전에 바로 비활성화됨");
         Assert.IsFalse(enemy.GetComponent<Collider2D>().enabled, "죽은 적의 충돌이 켜져 있음");
         Assert.IsFalse(enemy.CanHit(), "죽은 적이 타겟 가능");
-        Assert.IsFalse(EnemySpawner.Instance.activeEnemies.Contains(enemy), "죽은 적이 activeEnemies에 남음");
-        Assert.Less(EnemySpawner.Instance.ActiveEnemyCount, countBefore + 1, "죽은 적이 활성 적 수에 남음");
+        Assert.IsFalse(EnemyFieldController.Instance.activeEnemies.Contains(enemy), "죽은 적이 activeEnemies에 남음");
+        Assert.Less(EnemyFieldController.Instance.ActiveEnemyCount, countBefore + 1, "죽은 적이 활성 적 수에 남음");
 
         yield return WaitFrames(2);
         Assert.AreEqual(Enemy.DEAD_ANIM_HASH, enemy.animator.GetCurrentAnimatorStateInfo(0).shortNameHash, "Dead 애니메이션이 재생되지 않음");
@@ -109,7 +109,7 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
         Assert.IsFalse(enemy.gameObject.activeSelf, $"Dead 애니메이션 후 비활성화되지 않음 (클립 {deadLength:0.00}초)");
         Assert.IsFalse(enemy.IsDying);
         Assert.GreaterOrEqual(shown, Mathf.Min(deadLength, Enemy.DEAD_ANIM_MAX_TIME) - 0.1f, $"Dead 애니메이션이 끝나기 전에 비활성화됨 (클립 {deadLength:0.00}초, 표시 {shown:0.00}초)");
-        Assert.AreEqual(0, EnemySpawner.Instance.DyingEnemyCount, "Dead 끝난 적이 풀에 반환되지 않음");
+        Assert.AreEqual(0, EnemyFieldController.Instance.DyingEnemyCount, "Dead 끝난 적이 풀에 반환되지 않음");
 
         // 풀에서 재사용되면 다시 Walk부터, 충돌 켜짐
         current = "풀 재사용";
@@ -122,6 +122,58 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
         Assert.IsTrue(enemy.CanHit(), "재사용된 적 타겟 불가");
         Assert.IsTrue(enemy.GetComponent<Collider2D>().enabled, "재사용된 적 충돌 꺼짐");
         Assert.AreEqual(Enemy.WALK_ANIM_HASH, enemy.animator.GetCurrentAnimatorStateInfo(0).shortNameHash, "재사용된 적이 Walk가 아님");
+
+        AssertNoErrors();
+    }
+
+    // 풀에서 꺼낸 적: 소환하는 순간 transform·rigidbody 모두 소환 위치 → 이전 위치(죽은 자리)에서 켜졌다가 한두 프레임 뒤 옮겨지지 않음
+    [UnityTest]
+    public IEnumerator PooledEnemy_SpawnsAtSpawnPosition_NoJump()
+    {
+        if (!Application.isPlaying) { BeforeEnterPlayMode(); yield return new EnterPlayMode(); }
+        yield return WaitGameStart();
+        yield return PooledSpawnBody();
+    }
+
+    IEnumerator PooledSpawnBody()
+    {
+        current = "풀 재사용 위치";
+        yield return WaitForEnemy();
+        Enemy enemy = WaitActiveEnemy(e => e.enemyType == EnemyType.Normal);
+        Assert.IsNotNull(enemy, "적이 소환되지 않음");
+
+        // 소환 위치에서 멀리 떨어진 곳에서 죽고 바로 풀로
+        Vector2 spawnPos = EnemyFieldController.Instance.GetSpawnPosition();
+        Transform[] paths = EnemyFieldController.Instance.paths;
+        Vector2 farPos = paths.Select(p => (Vector2)p.position).OrderByDescending(p => Vector2.Distance(p, spawnPos)).First();
+        enemy.transform.position = farPos;
+        enemy.Rigidbody2D.position = farPos; // transform만 바꾸면 rigidbody는 그대로 (Kinematic)
+        yield return WaitFrames(2);
+        Assert.Greater(Vector2.Distance(enemy.Rigidbody2D.position, spawnPos), 1f, "테스트 준비: 먼 위치로 옮겨지지 않음");
+        enemy.TakeDamage(KILL);
+        enemy.Deactivate();
+
+        // 같은 프레임에 같은 종류를 꺼내면 방금 넣은 적(스택 맨 위)
+        Enemy prefab = GameManager.Instance.stageData.GetEnemyPrefab(enemy.enemyType, enemy.defenceType);
+        Enemy reused = EnemyFieldController.Instance.Instantiate(prefab);
+        Assert.AreSame(enemy, reused, "풀에서 같은 적을 꺼내지 않음");
+        Assert.IsFalse(reused.gameObject.activeSelf, "Spawn 전에 활성화됨 (이전 위치에서 켜짐)");
+        reused.Spawn(spawnPos, 0);
+
+        Assert.IsTrue(reused.gameObject.activeSelf);
+        Assert.Less(Vector2.Distance(reused.transform.position, spawnPos), 0.01f, "소환 직후 transform 위치");
+        Assert.Less(Vector2.Distance(reused.Rigidbody2D.position, spawnPos), 0.01f, "소환 직후 rigidbody 위치가 이전 자리");
+
+        // 다음 몇 프레임 동안 이동량은 이동 속도만큼만 (튀지 않음)
+        Vector2 prev = reused.transform.position;
+        for (int i = 0; i < 5; i++)
+        {
+            yield return WaitFrames(1);
+            Vector2 now = reused.transform.position;
+            float maxStep = reused.enemyData.moveSpeed * Mathf.Max(Time.deltaTime, Time.fixedDeltaTime) * 2f + 0.05f;
+            Assert.LessOrEqual(Vector2.Distance(prev, now), maxStep, $"{i + 1}프레임째 위치가 튐 ({prev} → {now})");
+            prev = now;
+        }
 
         AssertNoErrors();
     }
@@ -142,7 +194,7 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
         Assert.IsNotNull(enemy, "적이 소환되지 않음");
 
         // 마지막 지점에 바로 도착시킴
-        Transform[] paths = EnemySpawner.Instance.paths;
+        Transform[] paths = EnemyFieldController.Instance.paths;
         enemy.pathIdx = paths.Length - 1;
         enemy.transform.position = paths[paths.Length - 1].position;
         double end = EditorApplication.timeSinceStartup + 2f;
@@ -151,7 +203,7 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
 
         Assert.IsFalse(enemy.gameObject.activeSelf, "경로 끝 도착 후 비활성화되지 않음 (Dead 재생 없이 바로)");
         Assert.IsFalse(enemy.IsDying, "경로 끝 도착인데 Dead 재생");
-        Assert.IsFalse(EnemySpawner.Instance.activeEnemies.Contains(enemy));
+        Assert.IsFalse(EnemyFieldController.Instance.activeEnemies.Contains(enemy));
 
         // 부활(ClearAllEnemies) 시 Dead 재생 중인 적도 회수
         current = "부활 회수";
@@ -160,10 +212,10 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
         Assert.IsNotNull(dying, "적이 소환되지 않음");
         dying.TakeDamage(KILL);
         Assert.IsTrue(dying.IsDying);
-        EnemySpawner.Instance.ClearAllEnemies();
+        EnemyFieldController.Instance.ClearAllEnemies();
         Assert.IsFalse(dying.gameObject.activeSelf, "부활 시 Dead 재생 중인 적이 남음");
-        Assert.AreEqual(0, EnemySpawner.Instance.DyingEnemyCount);
-        Assert.AreEqual(0, EnemySpawner.Instance.ActiveEnemyCount);
+        Assert.AreEqual(0, EnemyFieldController.Instance.DyingEnemyCount);
+        Assert.AreEqual(0, EnemyFieldController.Instance.ActiveEnemyCount);
 
         AssertNoErrors();
     }

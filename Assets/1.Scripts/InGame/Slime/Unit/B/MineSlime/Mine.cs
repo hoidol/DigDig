@@ -97,6 +97,7 @@ public class Mine : MonoBehaviour
             hit.TakeDamage(damageData);
         }
 
+        EmberBrazierAuthority.OnZoneDamage(landPos, explodeRadius, damage, hitLayerMask);
         Release();
     }
 

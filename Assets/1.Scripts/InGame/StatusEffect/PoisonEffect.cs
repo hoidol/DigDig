@@ -4,6 +4,7 @@ using UnityEngine;
 public class PoisonEffect : StatusEffect
 {
     float damagePerTick;
+    public float DamagePerTick => damagePerTick;
     float tickTimer;
     IHittable hittable;
     DamageData damageData = new DamageData();

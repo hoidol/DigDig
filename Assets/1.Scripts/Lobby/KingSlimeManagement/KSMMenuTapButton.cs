@@ -13,5 +13,5 @@ public class KSMMenuTapButton : TapButton
 public enum KSMenuType
 {
     Upgrade,
-    Relic, // 이전 Equipment (프리팹에 int로 저장)
+    Authority, // 이전 Equipment (프리팹에 int로 저장)
 }

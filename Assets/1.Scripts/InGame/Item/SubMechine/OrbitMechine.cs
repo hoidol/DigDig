@@ -9,6 +9,11 @@ public class OrbitMachine : SubMachine
     public float damage;
     public AttackType attackType;
     public IAllyUnit owner; // 적중 시 타일 효과 기준 유닛 (OrbitSlime)
+    public RotationDirection rotationDirection = DEFAULT_ROTATION_DIRECTION; // 화면 기준 회전 방향 (슬라임 설정 버튼으로 변경)
+
+    public const RotationDirection DEFAULT_ROTATION_DIRECTION = RotationDirection.CounterClockwise; // 기존 동작(z 양수 회전)
+    // z축 회전 부호: 양수 = 반시계
+    protected float DirectionSign => rotationDirection == RotationDirection.Clockwise ? -1f : 1f;
 
     public readonly List<OrbitOrb> orbitOrbs = new();
     readonly Queue<OrbitOrb> pool = new();
@@ -77,6 +82,20 @@ public class OrbitMachine : SubMachine
     // 부모 오브젝트 자체를 회전 → 자식들이 자동으로 공전
     protected virtual void Update()
     {
-        transform.Rotate(0f, 0f, rotationSpeed * Time.deltaTime);
+        float delta = DirectionSign * rotationSpeed * Time.deltaTime;
+        transform.Rotate(0f, 0f, delta);
+        AccumulateRotation(delta);
+    }
+
+    // 누적 회전각이 360°를 넘을 때마다 한 바퀴 (권능 회오리 구슬)
+    float accumulatedAngle;
+    protected void AccumulateRotation(float delta)
+    {
+        accumulatedAngle += Mathf.Abs(delta);
+        while (accumulatedAngle >= 360f)
+        {
+            accumulatedAngle -= 360f;
+            WhirlOrbAuthority.OnRevolution(this);
+        }
     }
 }

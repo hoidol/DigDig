@@ -2,15 +2,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 십자 4칸 버프 슬라임 공용 (Breeze 공속 / Rage 공격력 / Keen 치명타 확률)
-// 기본 탄 발사 + 내 타일 기준 상하좌우 4칸 슬라임에게 Buff(BuffStatType, 값, BuffOpType)
+// 기본 탄 발사 + 내 타일 기준 상하좌우 4칸(설정 버튼으로 대각 4칸 선택 가능) 슬라임에게 Buff(BuffStatType, 값, BuffOpType)
 // 범위는 내 타일의 TileGroup 안에서만 (바로 옆 칸이라도 그룹이 다르면 영향 없음)
 // 타일 위 오브젝트가 바뀔 때마다(소환/이동/머지) 대상을 다시 계산 → 들어온 슬라임은 버프, 나간 슬라임은 해제
 // 여러 버프 슬라임이 같은 슬라임을 감싸면 버프는 각각 적용 (Multiply는 곱, Add는 합)
-public abstract class CrossBuffSlime : SlimeGrowth1
+public abstract class CrossBuffSlime : SlimeGrowth1, IBuffRangeUnit
 {
     static readonly Vector2Int[] CROSS_OFFSETS =
     {
         new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(-1, 0), new Vector2Int(1, 0),
+    };
+    static readonly Vector2Int[] DIAGONAL_OFFSETS =
+    {
+        new Vector2Int(1, 1), new Vector2Int(1, -1), new Vector2Int(-1, 1), new Vector2Int(-1, -1),
     };
     static readonly Vector2Int[] EIGHT_OFFSETS =
     {
@@ -27,7 +31,20 @@ public abstract class CrossBuffSlime : SlimeGrowth1
     // 같은 TileGroup 안 십자 4칸이 다 있어야 하므로 사실상 3*3 그룹의 가운데 칸 + 막힌 칸 없음이 조건
     public float surroundBonus;
 
-    // 버프 범위 확장 타일(ExpandBuffRangeTileItem) 위에 있으면 십자 4칸 → 8방향. 타일이 OnEnter/OnExit로 올리고 내림
+    // 버프 범위 모양 (설정 버튼): 십자 4칸 / 대각 4칸. 소환(InitSlime) 시 십자로 초기화
+    BuffRangeShape buffRangeShape = BuffRangeShape.Cross;
+    public BuffRangeShape BuffRangeShape => buffRangeShape;
+    public void SetBuffRangeShape(BuffRangeShape shape)
+    {
+        if (buffRangeShape == shape)
+            return;
+        buffRangeShape = shape;
+        RefreshBuffs();
+    }
+    // 지금 모양의 기본 4칸 (포위 진형 판정 기준)
+    Vector2Int[] ShapeOffsets => buffRangeShape == BuffRangeShape.Diagonal ? DIAGONAL_OFFSETS : CROSS_OFFSETS;
+
+    // 버프 범위 확장 타일(ExpandBuffRangeTileItem) 위에 있으면 십자/대각 4칸 → 8방향. 타일이 OnEnter/OnExit로 올리고 내림
     // InitSlime에서 초기화하지 않음 (타일 상태라 강화 재적용과 무관)
     int rangeExpandCount;
     public bool IsRangeExpanded => rangeExpandCount > 0;
@@ -53,7 +70,7 @@ public abstract class CrossBuffSlime : SlimeGrowth1
         }
     }
 
-    // 같은 TileGroup 안 십자 4칸이 모두 있고(그룹 경계/막힌 칸이면 실패) 모두 슬라임이 올라가 있는지
+    // 같은 TileGroup 안 범위 4칸(십자 또는 대각)이 모두 있고(그룹 경계/막힌 칸이면 실패) 모두 슬라임이 올라가 있는지
     public bool IsSurrounded()
     {
         if (TileManager.Instance == null)
@@ -63,13 +80,14 @@ public abstract class CrossBuffSlime : SlimeGrowth1
             return false;
 
         int count = 0;
-        foreach (Tile tile in TileManager.Instance.GetTilesAround(center, CROSS_OFFSETS))
+        Vector2Int[] offsets = ShapeOffsets;
+        foreach (Tile tile in TileManager.Instance.GetTilesAround(center, offsets))
         {
-            if (tile.tileGroup != center.tileGroup || tile.tileObject is not Slime)
+            if ((tile.tileGroup != center.tileGroup && !CommandFlagAuthority.IgnoreGroupBorder) || tile.tileObject is not Slime)
                 return false;
             count++;
         }
-        return count == CROSS_OFFSETS.Length;
+        return count == offsets.Length;
     }
 
     public override void Spawn(Vector2 pos, int lv)
@@ -84,6 +102,7 @@ public abstract class CrossBuffSlime : SlimeGrowth1
         buffValue = crossBuffSlimeData.GetBuffValue(mergeLevel);
         extraBuffs.Clear();
         surroundBonus = 0;
+        buffRangeShape = BuffRangeShape.Cross;
         base.InitSlime(); // 강화 능력이 buffValue를 바꿀 수 있으므로 기본값 설정 후 호출
 
         // 풀링 재사용 등으로 값이 바뀌었으면 새 값으로 다시 걸기
@@ -119,7 +138,7 @@ public abstract class CrossBuffSlime : SlimeGrowth1
     // 버프 대상 조건. 하위 클래스에서 제외 규칙을 추가할 수 있음
     protected virtual bool CanBuff(Slime slime) => slime != this;
 
-    // 내 타일 기준 십자 4칸(버프 범위 확장 타일 위면 8방향), 같은 TileGroup 안의 슬라임 (내 타일이 없으면 빈 목록)
+    // 내 타일 기준 십자/대각 4칸(버프 범위 확장 타일 위면 8방향), 같은 TileGroup 안의 슬라임 (내 타일이 없으면 빈 목록)
     List<Slime> GetTargets()
     {
         List<Slime> targets = new List<Slime>();
@@ -130,9 +149,9 @@ public abstract class CrossBuffSlime : SlimeGrowth1
         if (center == null)
             return targets;
 
-        foreach (Tile tile in TileManager.Instance.GetTilesAround(center, IsRangeExpanded ? EIGHT_OFFSETS : CROSS_OFFSETS))
+        foreach (Tile tile in TileManager.Instance.GetTilesAround(center, IsRangeExpanded ? EIGHT_OFFSETS : ShapeOffsets))
         {
-            if (tile.tileGroup != center.tileGroup)
+            if (tile.tileGroup != center.tileGroup && !CommandFlagAuthority.IgnoreGroupBorder) // 지휘의 깃발: 경계 무시
                 continue;
             if (tile.tileObject is Slime slime && CanBuff(slime))
                 targets.Add(slime);

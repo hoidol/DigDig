@@ -24,36 +24,16 @@ MonoBehaviour:
     sheetId: 
     gid: 148161990
     range: A:E
-  - enabled: 0
-    csvPath: Json/EnemyPatternData/Hard.csv
-    sheetId: 
-    gid: 576911921
-    range: H:K
-  - enabled: 0
-    csvPath: Json/EnemyPatternData/Hell.csv
-    sheetId: 
-    gid: 576911921
-    range: O:R
-  - enabled: 0
-    csvPath: Json/EnemyPatternData/Normal.csv
-    sheetId: 
-    gid: 576911921
-    range: B:E
   - enabled: 1
-    csvPath: Json/RelicData.csv
+    csvPath: Json/AuthorityData.csv
     sheetId: 
     gid: 383982687
-    range: 
-  - enabled: 0
-    csvPath: Json/EventData.csv
-    sheetId: 
-    gid: 
     range: 
   - enabled: 1
     csvPath: Json/ItemData.csv
     sheetId: 
     gid: 1944029805
-    range: A:F
+    range: A:G
   - enabled: 1
     csvPath: Json/StageData.csv
     sheetId: 
@@ -114,5 +94,10 @@ MonoBehaviour:
     sheetId: 
     gid: 547841506
     range: A:D
+  - enabled: 1
+    csvPath: Json/ReinforceData.csv
+    sheetId: 
+    gid: 556486007
+    range: A:F
   slimeGid: 1109237000
   slimeRange: A:L

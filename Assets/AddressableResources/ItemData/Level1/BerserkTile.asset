@@ -14,9 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: BerserkTile
   itemName: "\uAD11\uD3ED \uD0C0\uC77C"
-  desc: "\uACF5\uACA9\uB825 +100% \uC0AC\uAC70\uB9AC -50%"
+  desc: "\uACF5\uACA9\uB825 +{0}% \uC0AC\uAC70\uB9AC -50%"
   level: 1
   maxCount: 3
+  diceCoin: 4
+  levelValues:
+  - 2
+  - 2.3
+  - 2.6
   itemPrefab: {fileID: 4709012365257826735, guid: f5130087321774c93b939ee1be0605b5,
     type: 3}
   unlockConditions: []

@@ -18,6 +18,6 @@ public class SellTileItemButton : ButtonUI
 
         KingSlime.Instance.RemoveItem(item);
         KingSlime.Instance.AddCoin(GameSetting.SELL_TILE_ITEM_PRICE);
-        SlimeSpawner.Instance.DeselectTile();
+        SlimeFieldController.Instance.DeselectTile();
     }
 }

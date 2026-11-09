@@ -25,7 +25,11 @@ public class DrawItemButton : ButtonUI
     }
 
     // 성공 확률(%): 처음 100%, 성공할 때마다 5%씩 감소 (최소 MIN_DRAW_ITEM_CHANCE)
-    public static int GetDrawChance() => GetDrawChance(GameManager.Instance.drawItemCount);
+    public static int GetDrawChance()
+    {
+        int chance = GetDrawChance(GameManager.Instance.drawItemCount);
+        return AuthoritySystem.Has<ArtisanHammerAuthority>() ? ArtisanHammerAuthority.ApplyMinChance(chance) : chance;
+    }
 
     public static int GetDrawChance(int drawCount)
     {
@@ -53,7 +57,11 @@ public class DrawItemButton : ButtonUI
             return;
         }
 
-        KingSlime.Instance.AddCoin(-GetDrawPrice());
-        SelectItemCanvas.Instance.OpenDraw(GetDrawChance(), UpdateButton);
+        int price = GetDrawPrice();
+        KingSlime.Instance.AddCoin(-price);
+        System.Action onFail = null;
+        if (AuthoritySystem.Has<ArtisanHammerAuthority>())
+            onFail = () => KingSlime.Instance.AddCoin(ArtisanHammerAuthority.GetRefund(price));
+        SelectItemCanvas.Instance.OpenDraw(GetDrawChance(), UpdateButton, onFail);
     }
 }

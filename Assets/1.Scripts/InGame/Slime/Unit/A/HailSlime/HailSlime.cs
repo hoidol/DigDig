@@ -8,8 +8,13 @@ using UnityEngine;
 // - 닿은 적: 피해(공격력) + iceChance%(머지 레벨별) 확률로 얼음
 // - 슬라임을 다른 그룹으로 옮기면 그 그룹 경로로 바뀜. 드래그 중에는 눈 숨김
 // 프리팹: hailPrefab에 HailStone 프리팹 연결
-public class HailSlime : SlimeGrowth1
+public class HailSlime : SlimeGrowth1, IRotationDirectionUnit
 {
+    // 경로를 도는 방향 설정 (설정 버튼). 타겟을 노리지 않으므로 타겟 방식 버튼은 숨김
+    public RotationDirection RotationDirection => rotationDirection;
+    public void SetRotationDirection(RotationDirection direction) => rotationDirection = direction;
+    public override bool UseFindTarget => false;
+
     public HailStone hailPrefab;
 
     HailSlimeData hailSlimeData;

@@ -6,6 +6,11 @@ public class SlowTileItem : TileItem //타일 위에 설치되는 아이템
     public float chance = 30f;
     public float duration = 2f;
 
+    protected override void ApplyLevelValue(float v)
+    {
+        chance = v; // 레벨 수치 = 슬로우 확률
+    }
+
     SlowOnHitBehavior slowBehavior;
 
     // 읽을 때마다 확률 판정 → 탄은 발사 시(OnFired) 1번, 탄이 없는 Orbit은 적중마다 1번

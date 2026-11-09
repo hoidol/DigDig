@@ -76,25 +76,25 @@ public class DrawItemButtonPlayTest : InGamePlayTestBase
         ItemData picked = shown[idx];
         panels[idx].OnClickedButton();
         Assert.AreEqual(SelectItemStep.SelectTile, canvas.step, "타일 선택 단계로 안 넘어감");
-        Assert.IsNotNull(SlimeSpawner.Instance.tilePickCallback, "타일 선택 모드가 아님");
+        Assert.IsNotNull(SlimeFieldController.Instance.tilePickCallback, "타일 선택 모드가 아님");
 
         // 이미 아이템이 있는 타일은 거부
         Tile occupied = GetFreeTile();
         KingSlime.Instance.AddItem("AttackPowerTile", occupied).Forget();
         yield return WaitFrames(2);
         object before = occupied.tileItem;
-        SlimeSpawner.Instance.tilePickCallback(occupied);
+        SlimeFieldController.Instance.tilePickCallback(occupied);
         Assert.AreSame(before, occupied.tileItem, "이미 아이템이 있는 타일에 설치됨");
         Assert.AreEqual(SelectItemStep.SelectTile, canvas.step, "거부 후에도 타일 선택 단계여야 함");
 
         // 빈 타일 선택 → 설치되고 캔버스 닫힘
         Tile target = GetFreeTile();
-        SlimeSpawner.Instance.tilePickCallback(target);
+        SlimeFieldController.Instance.tilePickCallback(target);
         yield return WaitFrames(2);
         Assert.IsInstanceOf<TileItem>(target.tileItem, "고른 타일에 설치되지 않음");
         Assert.AreEqual(picked.key, ((TileItem)target.tileItem).key, "고른 아이템과 다른 아이템이 설치됨");
         Assert.IsFalse(canvas.gameObject.activeSelf, "설치 후 캔버스가 닫히지 않음");
-        Assert.IsNull(SlimeSpawner.Instance.tilePickCallback, "설치 후에도 타일 선택 모드");
+        Assert.IsNull(SlimeFieldController.Instance.tilePickCallback, "설치 후에도 타일 선택 모드");
 
         // 다음 가격 +증가분
         SetCoin(TEST_COIN);

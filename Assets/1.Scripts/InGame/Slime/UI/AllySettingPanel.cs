@@ -6,6 +6,8 @@ public class AllySettingPanel : MonoBehaviour
 {
     public GameObject obj;
     public SetFindTargetButton setFindTargetButton;
+    public SetBuffRangeButton setBuffRangeButton;                 // 십자 버프 슬라임: 십자 / 대각
+    public SetRotationDirectionButton setRotationDirectionButton; // 회전체·경로 순환 슬라임: 시계 / 반시계
     // public TMP_Text nameText;
     // public Image thumImage;
     public KingSlimeShortcutInfoPanel characterShortcutInfoPanel;
@@ -46,7 +48,12 @@ public class AllySettingPanel : MonoBehaviour
             slimeShortcutInfoPanel.SetSlime(slime);
         }
         obj.SetActive(true);
+        // 유닛이 쓸 수 있는 설정 버튼만 노출 (각 버튼이 IsAvailable로 판단)
         setFindTargetButton.SetSlime(targetSlime);
+        if (setBuffRangeButton != null)
+            setBuffRangeButton.SetSlime(targetSlime);
+        if (setRotationDirectionButton != null)
+            setRotationDirectionButton.SetSlime(targetSlime);
     }
 
     // 공격 타입 변경 타일 위에 있으면 바뀐 타입을 표시

@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 // [A] 지옥: 탄을 쏘지 않고, 자기 TileGroup의 enemyRoots 중 슬라임과 가장 가까운 2개 사이에 지옥불(Hellfire) 생성
@@ -65,10 +66,18 @@ public class InfernoSlime : SlimeGrowth1
     }
 
     // 지금 타일 기준으로 지옥불 위치 갱신. 만들 수 없으면(타일 없음/가운데 칸/경로 점 부족) 숨김
+    const float EMBER_RADIUS = 0.8f; // 잔불의 화로 불길 반경 (지옥불은 원형 범위가 없어서 고정)
+
     bool RefreshHellfire()
     {
         Tile tile = TileManager.Instance.GetTile(this);
         TileGroup group = tile != null ? tile.GetComponentInParent<TileGroup>() : null;
+        // 측량사의 나침반: 옆 그룹 경로까지 후보 → 가장 가까운 경로를 쓰는 그룹
+        if (group != null && !IsCenterTile(tile))
+            group = SurveyCompassAuthority.GetPathGroups(group)
+                .Where(g => g.enemyRoots != null && g.enemyRoots.Length >= 2)
+                .OrderBy(g => g.enemyRoots.Where(r => r != null).Min(r => ((Vector2)r.position - (Vector2)tile.transform.position).sqrMagnitude))
+                .FirstOrDefault() ?? group;
         if (group == null || IsCenterTile(tile) || group.enemyRoots == null || group.enemyRoots.Length < 2)
         {
             if (hellfire != null)
@@ -120,7 +129,10 @@ public class InfernoSlime : SlimeGrowth1
         damageData.Init(this);
         damageData.attackType = AttackType;
 
-        foreach (IHittable hit in hellfire.GetEnemies(targetLayerMask))
+        var hellfireTargets = hellfire.GetEnemies(targetLayerMask).ToList();
+        if (hellfireTargets.Count > 0)
+            EmberBrazierAuthority.OnZoneDamage(hellfireTargets[UnityEngine.Random.Range(0, hellfireTargets.Count)].Transform.position, EMBER_RADIUS, AttackPower * damageMul, targetLayerMask);
+        foreach (IHittable hit in hellfireTargets)
         {
             damageData.damage = damage;
             AccumulateDamage(damage);

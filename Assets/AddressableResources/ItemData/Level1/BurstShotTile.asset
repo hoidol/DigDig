@@ -14,9 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: BurstShotTile
   itemName: "\uC5F0\uBC1C \uD0C0\uC77C"
-  desc: "\uC5F0\uC18D\uC73C\uB85C \uBC1C\uC0AC"
+  desc: "\uAC19\uC740 \uBC29\uD5A5\uC73C\uB85C {0}\uBC1C \uC5F0\uC18D \uCD94\uAC00
+    \uBC1C\uC0AC"
   level: 1
   maxCount: 3
+  diceCoin: 7
+  levelValues:
+  - 1
+  - 2
+  - 3
   itemPrefab: {fileID: 5546636492808723056, guid: 4e76832c14bc1440aa41e6c41a4b1119,
     type: 3}
   unlockConditions: []

@@ -42,7 +42,7 @@ public class SlimePlayTest : InGamePlayTestBase
                 try
                 {
                     if (slime != null)
-                        SlimeSpawner.Instance.RemoveFieldSlime(slime);
+                        SlimeFieldController.Instance.RemoveFieldSlime(slime);
                 }
                 catch (System.Exception e)
                 {

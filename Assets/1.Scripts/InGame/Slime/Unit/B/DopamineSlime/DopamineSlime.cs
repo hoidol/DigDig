@@ -95,7 +95,7 @@ public class DopamineSlime : SlimeGrowth1
     {
         if (dopamineSlimeData == null || coolTimer > 0) // Spawn 전 / 쿨타임 중
             return;
-        if (Vector2.Distance(transform.position, deadPos) > detectRange)
+        if (!RelayCrystalAuthority.InDetectRange(transform.position, detectRange, deadPos))
             return;
 
         coolTimer = coolTime; // 같은 프레임에 여러 마리가 죽어도 한 번만 발동

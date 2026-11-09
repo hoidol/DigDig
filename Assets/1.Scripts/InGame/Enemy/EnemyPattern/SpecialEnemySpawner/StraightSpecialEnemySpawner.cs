@@ -72,7 +72,7 @@ public class StraightSpecialEnemySpawner : SpecialEnemySpawner
         //             if (MapManager.GetTileArray(idx, EnemyManager.GetEnemyData(state.enemyType).size, out spawnTileArray))
         //             {
         //                 Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(state.enemyType);
-        //                 Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
+        //                 Enemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab);
         //                 // enemy?.Spawn(spawnTileArray);
         //                 state.count--;
         //             }

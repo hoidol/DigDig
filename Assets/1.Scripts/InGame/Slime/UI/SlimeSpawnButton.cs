@@ -15,13 +15,16 @@ public class SlimeSpawnButton : ButtonUI
     }
     int GetSpawnPrice()
     {
-        return (GameSetting.INIT_SPAWN_PRICE + GameManager.Instance.slimeSpawnCount * GameSetting.INCREASE_SPAWN_PRICE);
+        int price = GameSetting.INIT_SPAWN_PRICE + GameManager.Instance.slimeSpawnCount * GameSetting.INCREASE_SPAWN_PRICE;
+        if (AuthoritySystem.Has<MerchantLedgerAuthority>())
+            price = MerchantLedgerAuthority.ApplyDiscount(price, GameManager.Instance.waveIdx);
+        return price;
     }
     public override void OnClickedBtn()
     {
-        // if (GameSetting.MAX_SLIME_SLOT_COUNT <= SlimeSpawner.Instance.activeslimes.Count)
+        // if (GameSetting.MAX_SLIME_SLOT_COUNT <= SlimeFieldController.Instance.activeslimes.Count)
         // {
-        //     ToastCanvas.Toast(string.Format(TranslateManager.GetText("MaxSlime"), $"{GameSetting.MAX_SLIME_SLOT_COUNT}/{EnemySpawner.Instance.activeEnemies.Count}"));
+        //     ToastCanvas.Toast(string.Format(TranslateManager.GetText("MaxSlime"), $"{GameSetting.MAX_SLIME_SLOT_COUNT}/{EnemyFieldController.Instance.activeEnemies.Count}"));
         //     return;
 
         // }
@@ -38,17 +41,26 @@ public class SlimeSpawnButton : ButtonUI
             return;
         }
 
-        if(SlimeSpawner.Instance.slimeMaxCount <= SlimeSpawner.Instance.CountedSlimeCount)
+        if(SlimeFieldController.Instance.slimeMaxCount <= SlimeFieldController.Instance.CountedSlimeCount)
         {
             ToastCanvas.Toast("Max Slime");
             return;
         }
         
 
-        KingSlime.Instance.AddCoin(-GetSpawnPrice());
+        int cost = GetSpawnPrice();
+        int lv = 0;
+        if (AuthoritySystem.Has<GamblerCoinAuthority>())
+        {
+            (lv, cost) = GamblerCoinAuthority.Roll(Random.value, cost, KingSlime.Instance.coin);
+            if (lv > 0)
+                ToastCanvas.Toast(TranslateManager.GetText("Authority_GamblerCoinWin"));
+            else if (cost > GetSpawnPrice())
+                ToastCanvas.Toast(TranslateManager.GetText("Authority_GamblerCoinLose"));
+        }
+        KingSlime.Instance.AddCoin(-cost);
         string randomSlimeKey = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, 5)].key;
-        //Slime slime = Character.Instance.AddSlime("Base");
-        Slime slime = KingSlime.Instance.AddSlime(randomSlimeKey);        
+        Slime slime = KingSlime.Instance.AddSlime(randomSlimeKey, lv);
         tile.SetTileObject(slime);
 
         KingSlimeManageCanvas.Instance.UpdateCanvas();

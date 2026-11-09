@@ -9,7 +9,7 @@ public class BossWave : Wave
         base.StartWave(wIdx, dType);
         GameEventBus.Subscribe<BossDeadEvent>(OnBossDeadEvent);
         boss = Instantiate(GameManager.Instance.stageData.boss);
-        boss.Spawn(EnemySpawner.Instance.GetSpawnPosition(), wIdx);
+        boss.Spawn(EnemyFieldController.Instance.GetSpawnPosition(), wIdx);
         BossCanvas.Instance.SetBoss(boss); // BossSpawnEvent는 Boss.Spawn에서 발행
     }
 

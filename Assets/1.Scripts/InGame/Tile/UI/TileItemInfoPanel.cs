@@ -10,6 +10,7 @@ public class TileItemInfoPanel : MonoBehaviour
     public TMP_Text descText;
     public Image thumImage;
     public SellTileItemButton sellTileItemButton;
+    public UpgradeTileItemButton upgradeTileItemButton;
 
     void Start()
     {
@@ -25,9 +26,12 @@ public class TileItemInfoPanel : MonoBehaviour
         }
         if (sellTileItemButton != null)
             sellTileItemButton.SetTile(tile);
+        if (upgradeTileItemButton != null)
+            upgradeTileItemButton.SetTile(tile);
 
         ItemData data = item.itemData;
-        nameText.text = data.Title;
+        // 강화 가능한 아이템은 레벨 표시
+        nameText.text = item.CanUpgrade ? string.Format(TranslateManager.GetText("TileItem_Level"), data.Title, item.upgradeLevel) : data.Title;
         descText.text = item.GetDescription();
         thumImage.sprite = data.thum;
         thumImage.gameObject.SetActive(data.thum != null);

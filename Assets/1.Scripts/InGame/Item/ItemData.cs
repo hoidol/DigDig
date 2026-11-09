@@ -12,7 +12,15 @@ public class ItemData : ScriptableObject
     // public int consumeHp;
     public int level;
     // public int addPrice; //추가 금액
-    public int maxCount = 2; //최대 보유 개수
+    public int maxCount = 2; //최대 보유 개수, 타일 아이템은 최대 강화 레벨도 겸함
+
+    // 타일 아이템 강화 (CLAUDE.md "타일 아이템 강화"): 비용 = diceCoin × (현재 레벨 + 1), 0이면 강화 불가
+    public int diceCoin;
+    public float[] levelValues; // ItemData.csv Values ("1.3/1.5/1.7"), index = 레벨 - 1
+    public int MaxLevel => maxCount;
+    public bool CanUpgradeItem => diceCoin > 0 && levelValues != null && levelValues.Length > 1;
+    public bool HasLevelValues => levelValues != null && levelValues.Length > 0;
+    public float GetLevelValue(int lv) => levelValues[Mathf.Clamp(lv - 1, 0, levelValues.Length - 1)];
 
     // public string valueInfo;
     public Item itemPrefab;
@@ -49,6 +57,14 @@ public class ItemData : ScriptableObject
     }
 
 
+    // "1.3/1.5/1.7" → [1.3, 1.5, 1.7] (빈 칸 = 레벨 수치 없음)
+    public static float[] ParseLevelValues(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return new float[0];
+        return System.Array.ConvertAll(raw.Split('/'), s => float.Parse(s.Trim(), System.Globalization.CultureInfo.InvariantCulture));
+    }
+
 #if UNITY_EDITOR
     public void LoadData()
     {
@@ -72,6 +88,8 @@ public class ItemData : ScriptableObject
         //     addPrice = ap;
         if (row.TryGetInt("MaxCount", out int mc))
             maxCount = mc;
+        diceCoin = row.TryGetInt("DiceCoin", out int dc) ? dc : 0;
+        levelValues = table.HasColumn("Values") ? ParseLevelValues(row.Get("Values")) : new float[0];
 
         string thumPath = $"Assets/2.Sprites/Item/Level{level}/{key}.png";
         thum = UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(thumPath);

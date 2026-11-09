@@ -25,6 +25,6 @@ public class SlimeCountInfoPanel : MonoBehaviour
 
     void UpdatePanel()
     {
-        infoText.text = $"{SlimeSpawner.Instance.CountedSlimeCount}/{SlimeSpawner.Instance.slimeMaxCount}";
+        infoText.text = $"{SlimeFieldController.Instance.CountedSlimeCount}/{SlimeFieldController.Instance.slimeMaxCount}";
     }
 }

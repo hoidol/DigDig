@@ -2,8 +2,13 @@ using UnityEngine;
 
 //플레이어가 공격하면 같이 방향으로 쏨
 //충돌 안하게 하자
-public class OrbitSlime : SlimeGrowth1
+public class OrbitSlime : SlimeGrowth1, IRotationDirectionUnit
 {
+    // 회전 방향 설정 (설정 버튼). 타겟을 노리지 않으므로 타겟 방식 버튼은 숨김
+    public RotationDirection RotationDirection => orbitMachine.rotationDirection;
+    public void SetRotationDirection(RotationDirection direction) => orbitMachine.rotationDirection = direction;
+    public override bool UseFindTarget => false;
+
     public OrbitMachine orbitMachine;
     public OrbitSlimeData orbitSlimeData;
     public int orbitCount;
@@ -28,6 +33,7 @@ public class OrbitSlime : SlimeGrowth1
         orbitMachine.damage = AttackPower;
         orbitMachine.attackType = AttackType;
         orbitMachine.owner = this;
+        orbitMachine.rotationDirection = OrbitMachine.DEFAULT_ROTATION_DIRECTION;
 
         Debug.Log($"OrbitSlime InitSlime() {key} MergeLevel {mergeLevel} AttackPower {AttackPower}");
         orbitMachine.radius = radius;

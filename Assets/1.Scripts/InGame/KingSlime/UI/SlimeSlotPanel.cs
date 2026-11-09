@@ -32,11 +32,11 @@ public class SlimeSlotPanel : MonoBehaviour
             Slime slime = KingSlime.Instance.slimeInventory.curSlimes[idx];
             SetSlime(slime);
         }
-        // else if (idx + 1 == SlimeSpawner.Instance.slimeSlotCount)
+        // else if (idx + 1 == SlimeFieldController.Instance.slimeSlotCount)
         // {
         //     selling = true;
         //     gameObject.SetActive(true);
-        //     priceText.text = SlimeSpawner.Instance.GetSlotPrice().ToString();
+        //     priceText.text = SlimeFieldController.Instance.GetSlotPrice().ToString();
         //     sellPanel.SetActive(true);
         // }
 
@@ -47,13 +47,13 @@ public class SlimeSlotPanel : MonoBehaviour
         if (!selling)
             return;
 
-        // if (Character.Instance.coin < SlimeSpawner.Instance.GetSlotPrice())
+        // if (Character.Instance.coin < SlimeFieldController.Instance.GetSlotPrice())
         // {
         //     ToastCanvas.Toast(TranslateManager.GetText("Not enough coin"));
         //     return;
         // }
-        // Character.Instance.AddCoin(-SlimeSpawner.Instance.GetSlotPrice());
-        // SlimeSpawner.Instance.PurchaseSlot(idx);
+        // Character.Instance.AddCoin(-SlimeFieldController.Instance.GetSlotPrice());
+        // SlimeFieldController.Instance.PurchaseSlot(idx);
         // CharacterManageCanvas.Instance.UpdateCanvas();
     }
 
@@ -111,7 +111,7 @@ public class SlimeSlotPanel : MonoBehaviour
 
     async UniTask Merged(SlimeSlotPanel sourceSlot)
     {
-        var (result, mergeResultKey, lv) = await SlimeSpawner.Instance.Merge(sourceSlot.slime, this.slime);
+        var (result, mergeResultKey, lv) = await SlimeFieldController.Instance.Merge(sourceSlot.slime, this.slime);
 
         
         if (result)

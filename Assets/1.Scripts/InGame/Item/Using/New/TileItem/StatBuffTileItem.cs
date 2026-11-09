@@ -8,6 +8,13 @@ public abstract class StatBuffTileItem : TileItem
 
     protected abstract StatType StatType { get; }
 
+    protected override string FormatLevelValue(float v) => opType == StatOpType.Multiply ? FormatMulPercent(v) : FormatNumber(v);
+
+    protected override void ApplyLevelValue(float v)
+    {
+        value = v;
+    }
+
     IBuffable buffTarget;
     Buff appliedBuff; // RemoveBuff는 참조로 지우므로 적용한 인스턴스를 들고 있음
 

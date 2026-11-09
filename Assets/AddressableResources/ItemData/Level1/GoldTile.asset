@@ -14,9 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: GoldTile
   itemName: "\uCF54\uC778 \uD0C0\uC77C"
-  desc: "\uC801 \uCC98\uCE58 \uC2DC \uCF54\uC778 +1"
+  desc: "\uC801 \uCC98\uCE58 \uC2DC \uCF54\uC778 +{0}"
   level: 1
   maxCount: 3
+  diceCoin: 4
+  levelValues:
+  - 1
+  - 2
+  - 3
   itemPrefab: {fileID: 8228040398564896806, guid: ae19eea4f0c1443d5b177cf797006275,
     type: 3}
   unlockConditions: []

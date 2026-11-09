@@ -3,6 +3,7 @@ using UnityEngine;
 public class FlameEffect : StatusEffect
 {
     float damagePerSecond;
+    public float DamagePerSecond => damagePerSecond;
     float damageTimer;
     IHittable hittable;
     public override string EffectKey => "Flame";

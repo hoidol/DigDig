@@ -131,7 +131,7 @@ public abstract class InGamePlayTestBase
         double timeout = EditorApplication.timeSinceStartup + START_TIMEOUT;
         while (UserDataManager.Instance == null || BlockCanvas.Instance == null || ProductManager.Instance == null
             || SlimeManager.Instance == null || !SlimeManager.Instance.LoadTask.Status.IsCompleted()
-            || RelicManager.Instance == null || !RelicManager.Instance.LoadTask.Status.IsCompleted())
+            || AuthorityManager.Instance == null || !AuthorityManager.Instance.LoadTask.Status.IsCompleted())
         {
             Assert.Less(EditorApplication.timeSinceStartup, timeout, "로비가 시작되지 않음");
             Unpause();

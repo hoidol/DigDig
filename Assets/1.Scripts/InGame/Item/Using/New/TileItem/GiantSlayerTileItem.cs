@@ -5,6 +5,11 @@ public class GiantSlayerTileItem : TileItem //타일 위에 설치되는 아이�
 {
     public float damageMul = 2f;
 
+    protected override void ApplyLevelValue(float v)
+    {
+        damageMul = v;
+    }
+
     public override void ModifyDamageData(AllyUnitDamageData data)
     {
         data.eliteBossDamageMul *= damageMul; // 강철 슬라임(BigEnemyDamageForce, 탄 피해량 자체를 키움)과 곱연산

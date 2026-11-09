@@ -6,6 +6,13 @@ public class BerserkTileItem : TileItem //타일 위에 설치되는 아이템
     public float attackPowerMul = 2f;
     public float rangeMul = 0.5f;
 
+    protected override string FormatLevelValue(float v) => FormatMulPercent(v);
+
+    protected override void ApplyLevelValue(float v)
+    {
+        attackPowerMul = v; // 레벨 수치 = 공격력 배율
+    }
+
     IBuffable buffTarget;
     Buff attackPowerBuff;
     Buff rangeBuff;

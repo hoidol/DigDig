@@ -78,10 +78,10 @@ public class GrowUpSlime : SlimeGrowth1
 
         isGrown = true;
         int lv = mergeLevel + growLevelUp;
-        if (extraLevelChance > 0f && Random.value < extraLevelChance)
+        if (SlimeChancePity.RollInGame(key, extraLevelChance))
             lv++;
         lv = Mathf.Min(lv, SlimeData.MAX_MERGE_LEVEL);
-        SlimeSpawner.Instance.ReplaceSlime(this, growKey, lv);
+        SlimeFieldController.Instance.ReplaceSlime(this, growKey, lv);
     }
 
     // 장착 슬라임 중 랜덤 (성장 자신 제외, 장착이 성장뿐이면 성장)

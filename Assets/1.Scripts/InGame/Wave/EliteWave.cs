@@ -8,7 +8,7 @@ public class EliteWave : BattleWave
         base.StartWave(wIdx, dType);
         // 엘리트·보스는 wave 방어 타입과 상관없이 항상 Normal 방어 타입
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Elite);
-        Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-        enemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition(), wIdx);
+        Enemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab);
+        enemy?.Spawn(EnemyFieldController.Instance.GetSpawnPosition(), wIdx);
     }
 }

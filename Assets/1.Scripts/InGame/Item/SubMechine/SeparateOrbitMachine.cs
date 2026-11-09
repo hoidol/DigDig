@@ -97,8 +97,9 @@ public class SeparateOrbitMachine : OrbitMachine
     // 머신은 그대로, pivot마다 각자 회전
     protected override void Update()
     {
-        float delta = rotationSpeed * Time.deltaTime;
+        float delta = DirectionSign * rotationSpeed * Time.deltaTime;
         for (int i = 0; i < pivots.Count; i++)
             pivots[i].Rotate(0f, 0f, delta * speedMuls[i]);
+        AccumulateRotation(delta); // 기준 회전 속도로 한 바퀴
     }
 }

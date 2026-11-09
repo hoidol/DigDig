@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-// 선택된 타일 위치를 보여주는 표시 오브젝트. 입력은 받지 않고 선택 이벤트만 따라감 (선택 판정은 SlimeSpawner)
+// 선택된 타일 위치를 보여주는 표시 오브젝트. 입력은 받지 않고 선택 이벤트만 따라감 (선택 판정은 SlimeFieldController)
 public class TilePointer : MonoSingleton<TilePointer>
 {
     public GameObject obj; // 실제 표시 오브젝트 (자기 자신을 끄면 구독이 안 되므로 자식을 켜고 끔)

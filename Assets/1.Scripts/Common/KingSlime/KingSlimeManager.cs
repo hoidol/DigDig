@@ -22,7 +22,7 @@ public class KingSlimeManager : MonoSingleton<KingSlimeManager>
         return null;
     }
 
-    // 기본값 + 로비 업그레이드 (유물은 스탯 없음)
+    // 기본값 + 로비 업그레이드 (권능은 스탯 없음)
     public float GetTotalStatValue(KingSlimeData kingslimeData, StatType statType)
     {
         float baseValue = kingslimeData.GetKingSlimeStat(statType)?.value ?? 0f;

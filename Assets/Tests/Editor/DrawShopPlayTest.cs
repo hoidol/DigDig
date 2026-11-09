@@ -32,7 +32,7 @@ public class DrawShopPlayTest : InGamePlayTestBase
 
     static int GetCurrency(CurrencyType type) => Data.GetCurrency(type);
 
-    // (key, 지급 개수). 유물 뽑기는 삭제(2026-11-09, 유물은 레벨 해금 선택)
+    // (key, 지급 개수). 권능 뽑기는 삭제(2026-11-09, 권능은 레벨 해금 선택)
     static readonly (string key, int count)[] DRAWS =
     {
         ("DrawSlime_Normal_Ad", 10),
@@ -137,7 +137,7 @@ public class DrawShopPlayTest : InGamePlayTestBase
         AssertNoErrors();
     }
 
-    // 슬라임 관리 화면: 모든 슬라임이 한 번씩, 보유 먼저, 미보유 표시, 장착 슬롯 5개
+    // 슬라임 관리 화면: 모든 슬라임이 한 번씩, 보유/미보유 컨테이너, 각 컨테이너 등급 높은 순, 미보유 표시, 장착 슬롯 5개
     [UnityTest]
     public IEnumerator SlimeManageCanvas_ShowsAllSlimes()
     {
@@ -167,14 +167,23 @@ public class DrawShopPlayTest : InGamePlayTestBase
         Assert.AreEqual(shownKeys.Count, shownKeys.Distinct().Count(), "같은 슬라임이 여러 칸");
         CollectionAssert.AreEquivalent(allKeys, shownKeys, "빠진 슬라임");
 
-        // 보유 → 미보유 순서, 미보유 표시
-        bool seenUnowned = false;
+        // 보유/미보유 컨테이너 분리, 미보유 표시
         foreach (var panel in shown)
         {
             bool own = slimeManager.GetUserSlime(panel.slimeData.key).own;
-            if (!own) seenUnowned = true;
-            Assert.IsFalse(own && seenUnowned, $"보유 슬라임 {panel.slimeData.key}가 미보유 뒤에 있음");
+            Assert.AreEqual(own ? canvas.ownContainer : canvas.unownContainer, panel.transform.parent, $"{panel.slimeData.key} 컨테이너");
             Assert.AreEqual(!own, panel.unownPanel.activeSelf, $"{panel.slimeData.key} 미보유 표시");
+        }
+
+        // 각 컨테이너 안에서 화면 순서 = 등급 높은 순 (레전드 → 유니크 → 레어 → 노말). 새로 얻은 슬라임도 등급 자리에
+        foreach (Transform container in new[] { canvas.ownContainer, canvas.unownContainer })
+        {
+            var grades = container.GetComponentsInChildren<Lobby.Growth1SlimeEntryPanel>(false)
+                .Where(p => p.transform.parent == container && p.slimeData != null)
+                .OrderBy(p => p.transform.GetSiblingIndex())
+                .Select(p => p.slimeData.grade).ToList();
+            for (int i = 1; i < grades.Count; i++)
+                Assert.GreaterOrEqual((int)grades[i - 1], (int)grades[i], $"{container.name} {i}번째 칸 등급 순서: {string.Join(",", grades)}");
         }
         if (newlyOwned != null)
             Assert.IsFalse(shown.First(p => p.slimeData.key == newlyOwned.key).unownPanel.activeSelf, "새로 얻은 슬라임이 미보유로 보임");

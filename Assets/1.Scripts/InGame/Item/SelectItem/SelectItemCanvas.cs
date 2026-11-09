@@ -27,10 +27,11 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     }
 
     // 뽑기 버튼용: 확률(%) 판정 후 성공하면 아이템 선택. 가격은 버튼에서 미리 냄
-    public void OpenDraw(int chance, Action closeCallback = null)
+    // onFail: 실패했을 때 (장인의 망치 환불 등)
+    public void OpenDraw(int chance, Action closeCallback = null, Action onFail = null)
     {
         Open(closeCallback);
-        Draw(chance).Forget();
+        Draw(chance, onFail).Forget();
     }
 
     void Open(Action closeCallback)
@@ -41,7 +42,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 
     public override void CloseCanvas()
     {
-        SlimeSpawner.Instance.tilePickCallback = null;
+        SlimeFieldController.Instance.tilePickCallback = null;
         base.CloseCanvas();
     }
 
@@ -54,7 +55,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     }
 
     // 실패하면 코인만 소모되고 가격/확률은 그대로
-    async UniTaskVoid Draw(int chance)
+    async UniTaskVoid Draw(int chance, Action onFail = null)
     {
         SetStep(SelectItemStep.Draw);
         bool isSuccess = UnityEngine.Random.Range(0, 100) < chance;
@@ -69,6 +70,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
         if (!isSuccess)
         {
             ToastCanvas.Toast(TranslateManager.GetText("Draw_Fail"));
+            onFail?.Invoke();
             CloseCanvas();
             return;
         }
@@ -116,7 +118,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
         if (data.itemPrefab is TileItem tileItem && tileItem.NeedTile)
         {
             SetStep(SelectItemStep.SelectTile);
-            SlimeSpawner.Instance.tilePickCallback = OnTilePicked;
+            SlimeFieldController.Instance.tilePickCallback = OnTilePicked;
             return;
         }
 

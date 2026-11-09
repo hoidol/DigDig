@@ -152,7 +152,7 @@ public class KSUpgradePlayTest : InGamePlayTestBase
 
         Assert.AreEqual(expected[StatType.MaxHp], KingSlime.Instance.health.MaxHp, EPSILON, "킹 최대 체력");
         Assert.AreEqual(expected[StatType.MaxHp], KingSlime.Instance.CurHp, EPSILON, "시작 체력 = 최대 체력");
-        Assert.AreEqual(GameSetting.SLIME_MIN_EXIST_COUNT + (int)expected[StatType.MaxSlimeCount], SlimeSpawner.Instance.slimeMaxCount, "최대 슬라임 수 (기본 + MaxSlimeCount, 한 번만 더함)");
+        Assert.AreEqual(GameSetting.SLIME_MIN_EXIST_COUNT + (int)expected[StatType.MaxSlimeCount], SlimeFieldController.Instance.slimeMaxCount, "최대 슬라임 수 (기본 + MaxSlimeCount, 한 번만 더함)");
         Assert.AreEqual((int)expected[StatType.StartGold], startCoin, "시작 코인 = StartGold");
 
         // wave 종료 → WaveClearGold

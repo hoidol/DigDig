@@ -81,7 +81,7 @@ public class TileItemPlayTest : InGamePlayTestBase
             try
             {
                 if (slime != null)
-                    SlimeSpawner.Instance.RemoveFieldSlime(slime);
+                    SlimeFieldController.Instance.RemoveFieldSlime(slime);
                 KingSlime.Instance.RemoveItem(installed);
             }
             catch (System.Exception e)
@@ -129,7 +129,7 @@ public class TileItemPlayTest : InGamePlayTestBase
             else
                 Assert.Less(after, before, $"{current}: 스탯이 내려가지 않음");
 
-            SlimeSpawner.Instance.RemoveFieldSlime(onItem);
+            SlimeFieldController.Instance.RemoveFieldSlime(onItem);
             KingSlime.Instance.RemoveItem((TileItem)tile.tileItem);
             yield return WaitFrames(2);
         }
@@ -160,7 +160,7 @@ public class TileItemPlayTest : InGamePlayTestBase
         float noExpand = target.AttackSpeed;
         Assert.IsFalse(((CrossBuffSlime)buffer).IsRangeExpanded);
 
-        SlimeSpawner.Instance.RemoveFieldSlime(buffer);
+        SlimeFieldController.Instance.RemoveFieldSlime(buffer);
         KingSlime.Instance.AddItem("MaxExpandBuffRangeTile", center).Forget();
         yield return WaitFrames(2);
         Assert.IsInstanceOf<ExpandBuffRangeTileItem>(center.tileItem, "버프 범위 확장 아이템이 설치되지 않음");
@@ -171,7 +171,7 @@ public class TileItemPlayTest : InGamePlayTestBase
         Assert.Greater(target.AttackSpeed, noExpand, "대각선 슬라임이 버프를 받지 못함");
 
         // 타일에서 내리면 다시 4방향
-        SlimeSpawner.Instance.RemoveFieldSlime(buffer);
+        SlimeFieldController.Instance.RemoveFieldSlime(buffer);
         yield return WaitFrames(3);
         Assert.AreEqual(noExpand, target.AttackSpeed, 0.0001f, "버프 슬라임이 사라졌는데 버프가 남음");
         AssertNoErrors();

@@ -2,12 +2,12 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-// 킹슬라임 관리: 상단 능력치 + 메뉴(강화 / 유물). 오라는 폐기(2026-11-09)
+// 킹슬라임 관리: 상단 능력치 + 메뉴(강화 / 권능). 오라는 폐기(2026-11-09)
 public class KSManagementCanvas : BaseLobbyCanvas
 {
     public KSStatStateContainer kSStatStateContainer;
     public KSUpgradeContainer upgradeContainer;
-    [FormerlySerializedAs("kSEquipmentContainer")] public RelicContainer relicContainer;
+    [FormerlySerializedAs("kSEquipmentContainer")] public AuthorityContainer authorityContainer;
 
     public override void OpenCanvas(Action closeCallback = null)
     {
@@ -15,7 +15,7 @@ public class KSManagementCanvas : BaseLobbyCanvas
 
         kSStatStateContainer.OpenContainer();
         upgradeContainer.OpenContainer();
-        relicContainer.OpenContainer();
+        authorityContainer.OpenContainer();
 
         SelectMenu(KSMenuType.Upgrade);
 
@@ -25,13 +25,13 @@ public class KSManagementCanvas : BaseLobbyCanvas
     public void SelectMenu(KSMenuType menuType)
     {
         upgradeContainer.gameObject.SetActive(menuType == KSMenuType.Upgrade);
-        relicContainer.gameObject.SetActive(menuType == KSMenuType.Relic);
+        authorityContainer.gameObject.SetActive(menuType == KSMenuType.Authority);
     }
 
     public override void UpdateCanvas()
     {
         kSStatStateContainer.UpdatePanel();
         upgradeContainer.UpdateContainer();
-        relicContainer.UpdateContainer();
+        authorityContainer.UpdateContainer();
     }
 }

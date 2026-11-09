@@ -45,7 +45,7 @@
 
 
 //             // Debug.Log($"FillEnemyPattern Whole emptyCount {emptyCount}");
-//             if (EnemySpawner.Instance.activeEnemies.Count <= limitRoomCount)
+//             if (EnemyFieldController.Instance.activeEnemies.Count <= limitRoomCount)
 //             {
 //                 specialEnemySpawner.Spawn();
 //             }

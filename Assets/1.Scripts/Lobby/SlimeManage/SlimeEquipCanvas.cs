@@ -20,6 +20,7 @@ namespace Lobby
         public void OpenCanvas(UserSlime userSlime, Action closeCallback = null)
         {
             base.OpenCanvas(closeCallback);
+            this.userSlime = userSlime;
             userSlimes = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes;
             for(int i = 0; i < equipPanels.Length; i++)
             {

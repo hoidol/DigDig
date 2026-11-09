@@ -1,0 +1,53 @@
+Key	Stat	Op	Value	Every	Max	Desc
+Random	AttackPower	Percent	10	1
+Bounce	AttackPower	Percent	7	1
+Flame	AttackPower	Percent	5	1
+	BurnDPS	Percent	8	1
+	BurnDuration	Add	1	5	5
+Orbit	AttackPower	Percent	6	1
+	OrbitRotationSpeed	Percent	3	1	60
+Ice	AttackPower	Percent	5	1
+	IceDuration	Add	0.25	3	1.5
+Lightning	AttackPower	Percent	6	1
+	ChainSearchRadius	Add	0.1	3	1
+Pierce	AttackPower	Percent	8	1
+Iron	AttackPower	Percent	5	1
+	EliteBossDamageMul	Add	0.05	2	1
+Thunder	AttackPower	Percent	6	1
+	StrikeRadius	Add	0.05	3	0.5
+Shield	BlockCountPerShield	Add	1	10	3
+	ShieldThornDamage	Add	0.1	5	1
+Dopamine	AttackPower	Percent	7	1
+	ExtraShotCoolTime	Add	-0.05	2	0.5
+Mine	AttackPower	Percent	7	1
+	MineLifetime	Add	1	2	10
+Breeze	AttackPower	Percent	5	1
+	BuffValue	Add	1	3	10
+Rage	AttackPower	Percent	5	1
+	BuffValue	Add	1	3	10
+Stigma	AttackPower	Percent	6	1
+	StigmaChance	Add	1	2	15
+Mud	AttackPower	Percent	6	1
+	MudDuration	Add	0.5	4	2
+Beam	AttackPower	Percent	6	1
+	LineWidth	Add	0.01	3	0.1
+Berserker	AttackPower	Percent	6	1
+	StackDuration	Add	0.5	3	3
+Mortar	AttackPower	Percent	8	1
+	ExplodeRadius	Add	0.05	3	0.5
+Hail	AttackPower	Percent	6	1
+	HailMoveSpeed	Percent	3	1	30
+	IceChance	Add	1	3	10
+Inferno	AttackPower	Percent	6	1
+	HellfireWidth	Add	0.05	3	0.5
+Keen	AttackPower	Percent	5	1
+	BuffValue	Add	0.5	3	5
+Sacrifice	AttackPower	Percent	5	1
+GrowUp	AttackPower	Percent	5	1
+	GrowTime	Add	-0.5	2	7
+Scavenger	AttackPower	Percent	5	1
+	AttackRange	Add	0.1	3	1
+Joker	AttackPower	Percent	5	1
+	JokerFailChance	Add	-1	3	10
+Hunter	AttackPower	Percent	7	1
+	SnipeStunDuration	Add	0.05	3	0.3

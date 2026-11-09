@@ -15,6 +15,11 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Clear();
     }
 
+    void OnDestroy()
+    {
+        AuthoritySystem.End();
+    }
+
     [field: SerializeField]
     public float gameTimer
     {
@@ -28,6 +33,7 @@ public class GameManager : MonoSingleton<GameManager>
     // public DefenceType waveDefenceType; // 이번 wave에 소환될 적의 방어 타입 (wave 시작 시 DefenceWaveTypes로 결정)
     public int slimeSpawnCount;
     public int drawItemCount;
+    public SlimeChancePity slimeChancePity = new SlimeChancePity(); // 슬라임 확률 연속 실패 보정 (한 판 동안 유지)
 
     async void Start()
     {
@@ -36,7 +42,7 @@ public class GameManager : MonoSingleton<GameManager>
             BulletManager.Instance.LoadTask,
             ItemManager.Instance.LoadTask,
             EnemyManager.Instance.LoadTask,
-            RelicManager.Instance.LoadTask,
+            AuthorityManager.Instance.LoadTask,
             SlimeManager.Instance.LoadTask
         );
 
@@ -61,7 +67,10 @@ public class GameManager : MonoSingleton<GameManager>
         else
             Debug.LogWarning("GameManager 캐릭터를 올릴 빈 타일 없음");
 
-        SlimeSpawner.Instance.slimeMaxCount += (int)KingSlime.Instance.statMgr.GetValue(StatType.MaxSlimeCount);
+        SlimeFieldController.Instance.slimeMaxCount += (int)KingSlime.Instance.statMgr.GetValue(StatType.MaxSlimeCount);
+
+        // 권능: 로비에서 해금된 묶음마다 고른 것 전부 (타일·킹 배치 후, 게임 시작 전)
+        AuthoritySystem.Begin(UserDataManager.Instance.userAuthorityManager.GetActiveAuthorityKeys());
 
         GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
@@ -255,7 +264,7 @@ public class GameManager : MonoSingleton<GameManager>
             }
         }
 
-        EnemySpawner.Instance.ClearAllEnemies();
+        EnemyFieldController.Instance.ClearAllEnemies();
 
         KingSlime.Instance.AddHp(KingSlime.Instance.health.MaxHp);
         isPlaying = true;

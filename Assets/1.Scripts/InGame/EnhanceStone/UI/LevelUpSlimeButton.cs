@@ -25,7 +25,7 @@ public class LevelUpSlimeButton : EnhanceStoneButton
         });
         for(int i =0;i<selectedSlimes.Length;i++)
         {
-            SlimeSpawner.Instance.LevelUp(selectedSlimes[i]);
+            SlimeFieldController.Instance.LevelUp(selectedSlimes[i]);
         }
 
     }

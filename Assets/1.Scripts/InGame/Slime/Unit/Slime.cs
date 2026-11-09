@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,6 +11,18 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
 {
     public string key;
     public int mergeLevel;
+    // 권능 쌍둥이 반지: 같은 종이 붙어 있으면 1. 데이터 스탯(공격력 등)만 이만큼 높은 머지 레벨 값으로 (합성·표시는 mergeLevel 그대로)
+    public int twinBonus;
+    int StatMergeLevel => Mathf.Min(mergeLevel + twinBonus, SlimeData.MAX_MERGE_LEVEL);
+
+    public void SetTwinBonus(int bonus)
+    {
+        if (twinBonus == bonus)
+            return;
+        twinBonus = bonus;
+        if (slimeData != null)
+            UpdateSlime();
+    }
 
     // 진화 (EvolutionTileItem: 최대 머지 레벨 슬라임이 올라가면 진화). 진화 내용은 추후 기획 → 지금은 표시만
     public bool isEvolved;
@@ -43,6 +56,8 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     public FindTargetType findTargetType = FindTargetType.Closest;
 
     public FindTargetType FindTargetType => findTargetType;
+    // 타겟 방식 설정이 의미 있는지 (회전체·경로 순환처럼 타겟을 노리지 않는 슬라임은 false → 설정 버튼 숨김)
+    public virtual bool UseFindTarget => true;
 
     public void AccumulateDamage(float d)
     {
@@ -79,6 +94,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
         slimeEnhanceInfo = slimeData.GetCommonSlimeEnhanceInfo(userSlime.enhanceLevel);
         transform.position = pos;
         this.mergeLevel = mLv;
+        twinBonus = 0; // 풀링 재사용
         isDraging = false;
         isEvolved = false; // 풀링 재사용 · 합성/교체로 새로 생긴 슬라임은 진화 안 된 상태
 
@@ -100,7 +116,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
 
     public virtual void InitSlimeStat()
     {
-        statDic[StatType.AttackPower] = slimeData.GetSlimeStat(StatType.AttackPower, userSlime.enhanceLevel).GetValue<float>(mergeLevel);
+        statDic[StatType.AttackPower] = slimeData.GetSlimeStat(StatType.AttackPower, userSlime.enhanceLevel).GetValue<float>(StatMergeLevel);
         statDic[StatType.AttackSpeed] = GetDataStat(StatType.AttackSpeed); // SlimeData.csv (강화·머지 레벨 무관)
         statDic[StatType.AttackRange] = GetDataStat(StatType.AttackRange);
         statDic[StatType.CritChance] = GetDataStat(StatType.CritChance); // % 단위. SlimeData.csv (기본 0)
@@ -110,7 +126,7 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     float GetDataStat(StatType statType)
     {
         SlimeStat stat = slimeData.GetSlimeStat(statType, userSlime.enhanceLevel);
-        return stat != null ? stat.GetValue<float>(mergeLevel) : 0f;
+        return stat != null ? stat.GetValue<float>(StatMergeLevel) : 0f;
     }
 
     public virtual void UpdateSlime()
@@ -123,6 +139,11 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
             statDic.TryGetValue(buff.statType, out float cur); // 없는 스탯 버프도 예외 없이 (기본 0)
             statDic[buff.statType] = buff.Apply(cur);
         }
+
+        // 권능 왕의 인장: 조건 충족 시 모든 슬라임 공속
+        KingSealAuthority kingSeal = AuthoritySystem.Get<KingSealAuthority>();
+        if (kingSeal != null && kingSeal.active)
+            statDic[StatType.AttackSpeed] *= KingSealAuthority.ATTACK_SPEED_MUL;
 
         // 사거리 버프까지 반영된 값으로 표시
         rangeTr.localScale = Vector3.one * statDic[StatType.AttackRange];
@@ -242,6 +263,9 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     // 서로 다른 타겟 count개 (우선순위 순). 기본은 findTargetType 기준
     public virtual List<Transform> FindTargets(int count)
     {
+        // 권능 사냥꾼의 부적: 강타 슬라임은 엘리트·보스 먼저
+        if (AuthoritySystem.Has<HunterCharmAuthority>() && HunterCharmAuthority.IsHeavy(SlimeData))
+            return HunterCharmAuthority.PreferEliteBoss(InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, HunterCharmAuthority.MAX_CANDIDATES), count);
         return InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, count);
     }
 
@@ -316,6 +340,8 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
         {
             UserSlime userSlime = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes[Random.Range(0, UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes.Length)];
             pickedSlimeKey = userSlime.key;
+            if (AuthoritySystem.Has<BloodlineFlaskAuthority>())
+                pickedSlimeKey = BloodlineFlaskAuthority.PickResultKey(key, pickedSlimeKey, Random.value);
             lv = mergeLevel + 1;
         }
         else if (SlimeData.growth == 0)
@@ -332,6 +358,8 @@ public abstract class Slime : MonoBehaviour, IAllyUnit, ITileObject, IBuffable, 
     }
     public virtual Transform FindTarget()
     {
+        if (AuthoritySystem.Has<HunterCharmAuthority>() && HunterCharmAuthority.IsHeavy(SlimeData))
+            return FindTargets(1).FirstOrDefault();
         return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, findTargetType);
     }
 

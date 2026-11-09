@@ -45,6 +45,7 @@ public class MortarBulletObject : AllyBulletObject
     void Explode()
     {
         EffectManager.Instance.Play(EffectType.Explosion, targetPos);
+        EmberBrazierAuthority.OnZoneDamage(targetPos, mortarSpec.boomRange, damage * damageMultiplier, mortarSpec.hitLayerMask);
 
         IHittable[] targets = Physics2D.OverlapCircleAll(targetPos, mortarSpec.boomRange, mortarSpec.hitLayerMask)
             .Select(c => c.GetComponent<IHittable>())

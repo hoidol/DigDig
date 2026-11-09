@@ -6,6 +6,11 @@ public class MultiTargetTileItem  : TileItem //타일 위에 설치되는 아이
 {
     public int addShootCount = 1;
 
+    protected override void ApplyLevelValue(float v)
+    {
+        addShootCount = Mathf.RoundToInt(v);
+    }
+
     public override void OnEnter(ITileObject tileObject)
     {
         if (tileObject is IShotModifiable m)

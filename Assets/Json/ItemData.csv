@@ -1,17 +1,17 @@
-Key	Name	Desc	Level	MaxCount	DiceCoin
-AttackPowerTile	공격력 타일	공격력 30% > 50% > 70% 증가	1	3	3
-AttackSpeedTile	공격속도 타일	공격속도 50% 증가	1	3	3
-BerserkTile	광폭 타일	공격력 +100% 사거리 -50%	1	3	4
-BurstShotTile	연발 타일	연속으로 발사	1	3	7
-CriticalTile	치명타 타일	치명타 확률 +30% 증가 데미지 2배	1	3	3
-GiantSlayerTile	거인 사냥 타일	엘리트 또는 보스에게 데미지 2배	1	3	3
-GoldTile	코인 타일	적 처치 시 코인 +1	1	3	4
-IgnoreCountingTile	카운딩 제외 타일	카운팅이 되지 않습니다.	1	3	0
-MaxExpandBuffRangeTile	최대 버프	4방향에서 8방향으로 확장시킴	1	3	0
-MultiTargetTile	다중 타겟 타일	공격 대상 +1 추가됩니다.	1	3	7
-PioneerTile	개척 타일	막힌 칸 해제	1	3	0
-RangeUpTile	사거리 타일	사정거리 +1.5	1	3	3
-SlowTile	둔화 타일	30% 확률로 적에게 슬로우 효과 적용	1	3	3
-StunTile	스턴 타일	5% 확률로 0.3초간 스턴	1	3	4
-TrueDamageTile	만능 공격 타일	모든 방어 타입에 데미지 100% 적용	1	3	0
-EvolutionTile	진화				
+Key	Name	Desc	Level	MaxCount	DiceCoin	Values
+AttackPowerTile	공격력 타일	공격력 {0}% 증가	1	3	3	1.5/1.75/2
+AttackSpeedTile	공격속도 타일	공격속도 {0}% 증가	1	3	3	1.3/1.45/1.6
+BerserkTile	광폭 타일	공격력 +{0}% 사거리 -50%	1	3	4	2/2.3/2.6
+BurstShotTile	연발 타일	같은 방향으로 {0}발 연속 추가 발사	1	3	7	1/2/3
+CriticalTile	치명타 타일	치명타 확률 +{0}% 증가 데미지 2배	1	3	3	30/40/50
+GiantSlayerTile	거인 사냥 타일	엘리트 또는 보스에게 데미지 {0}배	1	3	3	2/2.5/3
+GoldTile	코인 타일	적 처치 시 코인 +{0}	1	3	4	1/2/3
+IgnoreCountingTile	카운딩 제외 타일	카운팅이 되지 않습니다.	1	3	0	
+MaxExpandBuffRangeTile	최대 버프	4방향에서 8방향으로 확장시킴	1	3	0	
+MultiTargetTile	다중 타겟 타일	공격 대상 +{0} 추가됩니다.	1	3	7	1/2/3
+PioneerTile	개척 타일	막힌 칸 해제	1	3	0	
+RangeUpTile	사거리 타일	사정거리 +{0}	1	3	3	2/2.5/3
+SlowTile	둔화 타일	{0}% 확률로 적에게 슬로우 효과 적용	1	3	3	30/40/50
+StunTile	스턴 타일	{0}% 확률로 0.3초간 스턴	1	3	4	2/3.5/5
+TrueDamageTile	만능 공격 타일	모든 방어 타입에 데미지 100% 적용	1	3	0	
+EvolutionTile	진화					

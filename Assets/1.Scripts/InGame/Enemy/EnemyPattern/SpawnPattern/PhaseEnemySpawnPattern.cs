@@ -35,8 +35,8 @@ public class PhaseEnemySpawnPattern : SpawnPattern
     {
         // Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type, GameManager.Instance.waveDefenceType);
         // Debug.Log($"PhaseEnemySpawnPattern Spawn type {type}, GameManager.Instance.phaseDefenceType {GameManager.Instance.waveDefenceType}");
-        // Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-        // enemy.Spawn(EnemySpawner.Instance.GetSpawnPosition());
+        // Enemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab);
+        // enemy.Spawn(EnemyFieldController.Instance.GetSpawnPosition());
     }
 
     public override void EndPattern()

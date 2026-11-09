@@ -55,7 +55,7 @@ public class ScavengerSlime : SlimeGrowth1
             return;
         if (TileManager.Instance == null || TileManager.Instance.GetTile(this) == null)
             return;
-        if (Vector2.Distance(transform.position, e.position) > CoinRange)
+        if (!RelayCrystalAuthority.InDetectRange(transform.position, CoinRange, e.position))
             return;
 
         int coin = scavengerSlimeData.coinPerKill;

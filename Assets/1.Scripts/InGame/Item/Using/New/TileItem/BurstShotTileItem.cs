@@ -6,6 +6,11 @@ public class BurstShotTileItem : TileItem //타일 위에 설치되는 아이템
 {
     public int burstCount = 1;
 
+    protected override void ApplyLevelValue(float v)
+    {
+        burstCount = Mathf.RoundToInt(v);
+    }
+
     public override void OnFired(AllyBulletObject bullet)
     {
         base.OnFired(bullet);

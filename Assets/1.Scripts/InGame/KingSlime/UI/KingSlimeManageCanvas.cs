@@ -52,10 +52,10 @@ public class KingSlimeManageCanvas : CanvasUI<KingSlimeManageCanvas>
 
     public void UpdateCanvas()
     {
-        // SlimeSpawner.Instance.slimeSlotCount
+        // SlimeFieldController.Instance.slimeSlotCount
         // for (int i = 0; i < slimeSlotPanels.Length; i++)
         // {
-        //     if (i < SlimeSpawner.Instance.slimeSlotCount)
+        //     if (i < SlimeFieldController.Instance.slimeSlotCount)
         //     {
         //         slimeSlotPanels[i].gameObject.SetActive(true);
         //     }

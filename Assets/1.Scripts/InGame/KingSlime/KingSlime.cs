@@ -158,44 +158,44 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         UpdateCharacter();
     }
 
-    public void AddExp(int e)
-    {
-        this.exp += e;
-        if (exp >= GetMaxExp())
-        {
-            LevelUp();
-            Time.timeScale = 0;
-            InGame.LevelUpCanvas.Instance.OpenCanvas(() =>
-            {
-                Time.timeScale = 1;
-                AddExp(0);
-            });
-        }
-        GameEventBus.Publish(new ExpChangedEvent(exp, GetMaxExp()));
-    }
+    // public void AddExp(int e)
+    // {
+    //     this.exp += e;
+    //     if (exp >= GetMaxExp())
+    //     {
+    //         LevelUp();
+    //         Time.timeScale = 0;
+    //         InGame.LevelUpCanvas.Instance.OpenCanvas(() =>
+    //         {
+    //             Time.timeScale = 1;
+    //             AddExp(0);
+    //         });
+    //     }
+    //     GameEventBus.Publish(new ExpChangedEvent(exp, GetMaxExp()));
+    // }
     public void SetFindTargetType(FindTargetType type)
     {
         findTargetType = type;
     }
 
-    void LevelUp()
-    {
-        int remain = exp - GetMaxExp();
-        exp = remain;
-        lv++;
-        levelUped = true;
-    }
+    // void LevelUp()
+    // {
+    //     int remain = exp - GetMaxExp();
+    //     exp = remain;
+    //     lv++;
+    //     levelUped = true;
+    // }
 
-    public int GetMaxExp(int l = -1)
-    {
-        if (l == -1) l = lv;
-        if (maxExp == 0 || levelUped)
-        {
-            maxExp = 3 + l * 2;
-            levelUped = false;
-        }
-        return maxExp;
-    }
+    // public int GetMaxExp(int l = -1)
+    // {
+    //     if (l == -1) l = lv;
+    //     if (maxExp == 0 || levelUped)
+    //     {
+    //         maxExp = 3 + l * 2;
+    //         levelUped = false;
+    //     }
+    //     return maxExp;
+    // }
 
 
 
@@ -220,7 +220,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
 
     public Slime AddSlime(string key, int lv = 0)
     {
-        Slime slime = SlimeSpawner.Instance.Instantiate(key);
+        Slime slime = SlimeFieldController.Instance.Instantiate(key);
         slime.Spawn((Vector2)transform.position + UnityEngine.Random.insideUnitCircle, lv);
 
         statMgr.AddSlime(key);

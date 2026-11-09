@@ -54,18 +54,19 @@ public class JokerSlime : SlimeGrowth1
         if (TileManager.Instance.GetTile(this) == null) // 필드에 없으면 (합성·제거됨) 무시
             return null;
 
-        bool failed = levelDownChance > 0f && Random.value < levelDownChance;
+        // 성공 확률 기준으로 판정 (연속 4회 실패 후엔 성공 +50%p, SlimeChancePity)
+        bool failed = !SlimeChancePity.RollInGame(key, 1f - levelDownChance);
         if (!failed)
-            return SlimeSpawner.Instance.ReplaceSlime(this, targetKey, mergeLevel);
+            return SlimeFieldController.Instance.ReplaceSlime(this, targetKey, mergeLevel);
 
         if (mergeLevel <= 0)
         {
             ToastCanvas.Toast(TranslateManager.GetText("Joker_Fail_Vanish"));
-            SlimeSpawner.Instance.RemoveFieldSlime(this);
+            SlimeFieldController.Instance.RemoveFieldSlime(this);
             return null;
         }
 
         ToastCanvas.Toast(TranslateManager.GetText("Joker_Fail_LevelDown"));
-        return SlimeSpawner.Instance.ReplaceSlime(this, targetKey, mergeLevel - 1);
+        return SlimeFieldController.Instance.ReplaceSlime(this, targetKey, mergeLevel - 1);
     }
 }

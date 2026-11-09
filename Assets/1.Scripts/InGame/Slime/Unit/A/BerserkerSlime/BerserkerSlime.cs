@@ -100,7 +100,7 @@ public class BerserkerSlime : SlimeGrowth1
     {
         if (berserkerSlimeData == null) // Spawn 전
             return;
-        if (Vector2.Distance(transform.position, deadPos) > detectRange)
+        if (!RelayCrystalAuthority.InDetectRange(transform.position, detectRange, deadPos))
             return;
 
         stackTimer = stackDuration; // 최대 중첩이어도 유지 시간은 갱신

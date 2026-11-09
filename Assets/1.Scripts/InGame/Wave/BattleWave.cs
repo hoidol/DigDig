@@ -62,8 +62,8 @@ public abstract class BattleWave : Wave
     {
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type, waveDefenceType);
         // Debug.Log($"PhaseEnemySpawnPattern Spawn type {type}, GameManager.Instance.phaseDefenceType {waveDefenceType}");
-        Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-        enemy.Spawn(EnemySpawner.Instance.GetSpawnPosition(), waveIdx);
+        Enemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab);
+        enemy.Spawn(EnemyFieldController.Instance.GetSpawnPosition(), waveIdx);
     }
 
     public virtual void EndSpawnEnemy()

@@ -73,7 +73,7 @@ public class BundleWaveEnemySpawner : SpawnPattern
             for (int i = 0; i < enemyCountPerBundle; i++)
             {
                 Vector2 pos = bundleCenter + Random.insideUnitCircle * bundleRadius;
-                Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
+                Enemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab);
                 // enemy?.Spawn(pos);
             }
         }

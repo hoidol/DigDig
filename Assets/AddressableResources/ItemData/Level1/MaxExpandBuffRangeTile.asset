@@ -17,6 +17,8 @@ MonoBehaviour:
   desc: "4\uBC29\uD5A5\uC5D0\uC11C 8\uBC29\uD5A5\uC73C\uB85C \uD655\uC7A5\uC2DC\uD0B4"
   level: 1
   maxCount: 3
+  diceCoin: 0
+  levelValues: []
   itemPrefab: {fileID: 3038301936894067927, guid: 1d6b17f6b0610465e9af7a8c423c87ec,
     type: 3}
   unlockConditions: []

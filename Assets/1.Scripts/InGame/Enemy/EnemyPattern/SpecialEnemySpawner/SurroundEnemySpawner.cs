@@ -45,7 +45,7 @@ public class SurroundEnemySpawner : SpecialEnemySpawner
             float angle = (startAngle + step * i) * Mathf.Deg2Rad;
             Vector2 pos = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * r;
 
-            Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
+            Enemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab);
             // enemy?.Spawn(pos + Random.insideUnitCircle*0.3f);
         }
     }

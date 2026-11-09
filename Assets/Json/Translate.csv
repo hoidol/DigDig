@@ -41,6 +41,8 @@ Difficulty.Hard	어려움	Hard
 Difficulty.Hell	지옥	Hell
 Difficulty_Changed	난이도 {0}(으)로 설정되었습니다.	Difficulty set to {0}.
 Difficulty_Locked	이전 난이도 Wave {0} 도달 시 해금	Unlocks after reaching Wave {0} on the previous difficulty
+Difficulty_BestWave	최고 기록 Wave {0}	Best Wave {0}
+Difficulty_NoRecord	기록 없음	No record
 Slime.Random	랜덤	Random
 Slime.Bounce	탄성	Bounce
 Slime.Flame	화염	Flame
@@ -118,10 +120,19 @@ FindTarget.Closest	가까운 적	Closest
 FindTarget.Farthest	먼 적	Farthest
 FindTarget.Random	랜덤	Random
 FindTarget.LowHp	낮은 체력	Lowest HP
+BuffRange.Cross	십자	Cross
+BuffRange.Diagonal	대각	Diagonal
+Rotation.Clockwise	시계 방향	Clockwise
+Rotation.CounterClockwise	반시계 방향	Counterclockwise
 TileItem_DrawChance	{0}% 확률로 타일 강화 아이템을 얻습니다.	{0}% chance to get a tile item.
 TileItem_NoTile	적용 가능한 타일이 없습니다.	No tile available.
 TileItem_AlreadyInstalled	이미 아이템이 설치된 타일입니다.	This tile already has an item.
 TileItem_RefreshLimit	이번 판 갱신 횟수를 모두 사용했습니다	No refreshes left this game
+TileItem_Level	{0} Lv.{1}	{0} Lv.{1}
+TileItem_Upgrade	강화 {0:0}%\n주사위 코인 {1}	Upgrade {0:0}%\nDice Coin {1}
+TileItem_UpgradeSuccess	강화 성공! Lv.{0}	Upgrade succeeded! Lv.{0}
+TileItem_UpgradeFail	강화 실패	Upgrade failed
+Not enough dice coin	주사위 코인이 부족합니다.	Not enough dice coins.
 Draw_Success	뽑기 성공!	Draw succeeded!
 Draw_Fail	뽑기 실패	Draw failed
 Resurrection_Daily	일일 부활 {0}	Daily revives {0}
@@ -161,24 +172,29 @@ hour_0	{0}시간	{0}h
 min_0	{0}분	{0}m
 sec_0	{0}초	{0}s
 changedLanguage	언어가 변경되었습니다.	Language changed.
-Relic_MatchSlime	해당 슬라임 {0}/{1}	Matching slimes {0}/{1}
-Relic.SplitShard	분열의 파편	SplitShard
-Relic.EmberBrazier	잔불의 화로	EmberBrazier
-Relic.WhirlOrb	회오리 구슬	WhirlOrb
-Relic.CommandFlag	지휘의 깃발	CommandFlag
-Relic.SurveyCompass	측량사의 나침반	SurveyCompass
-Relic.PlagueChalice	전염의 성배	PlagueChalice
-Relic.RelayCrystal	중계의 수정	RelayCrystal
-Relic.GamblerDice	도박사의 주사위	GamblerDice
-Relic.HunterCharm	사냥꾼의 부적	HunterCharm
-Relic.PureCrown	순혈의 왕관	PureCrown
-Relic.MixedCrest	혼혈의 문장	MixedCrest
-Relic.TwinRing	쌍둥이 반지	TwinRing
-Relic.AlchemyFlask	연금술 플라스크	AlchemyFlask
-Relic.GoldenScale	황금 저울	GoldenScale
-Relic.FrostCore	서리 핵	FrostCore
-Relic.KingSeal	왕의 인장	KingSeal
-Relic.Hourglass	모래시계	Hourglass
-Relic.DragonHeart	용의 심장	DragonHeart
-Relic_Locked	Lv.{0}에 해금됩니다	Unlocks at Lv.{0}
-Relic_TierUnlocked	새 유물 묶음이 해금되었습니다! 하나를 골라 주세요	A new relic set is unlocked! Choose one
+Authority_MatchSlime	해당 슬라임 {0}/{1}	Matching slimes {0}/{1}
+Authority_Locked	Lv.{0}에 해금됩니다	Unlocks at Lv.{0}
+Authority_TierUnlocked	새 권능 묶음이 해금되었습니다! 하나를 골라 주세요	A new set of authorities is unlocked! Choose one
+Authority.PioneerPick	개척자의 곡괭이	Pioneer's Pick
+Authority.MerchantLedger	상인의 장부	Merchant's Ledger
+Authority.GamblerCoin	도박꾼의 동전	Gambler's Coin
+Authority.SplitShard	분열의 파편	Split Shard
+Authority.EmberBrazier	잔불의 화로	Ember Brazier
+Authority.WhirlOrb	회오리 구슬	Whirl Orb
+Authority.PlagueChalice	전염의 성배	Plague Chalice
+Authority.RelayCrystal	중계의 수정	Relay Crystal
+Authority.CommandFlag	지휘의 깃발	Command Flag
+Authority.SurveyCompass	측량사의 나침반	Surveyor's Compass
+Authority.TwinRing	쌍둥이 반지	Twin Ring
+Authority.ArtisanHammer	장인의 망치	Artisan's Hammer
+Authority.HunterCharm	사냥꾼의 부적	Hunter's Charm
+Authority.MixedCrest	혼혈의 문장	Mixed Crest
+Authority.Hourglass	모래시계	Hourglass
+Authority.PureCrown	순혈의 왕관	Pure Crown
+Authority.KingSeal	왕의 인장	King's Seal
+Authority.BloodlineFlask	혈통의 플라스크	Bloodline Flask
+Authority_GamblerCoinWin	도박꾼의 동전: 한 단계 높은 슬라임!	Gambler's Coin: a higher-level slime!
+Authority_GamblerCoinLose	도박꾼의 동전: 코인을 2배 냈습니다	Gambler's Coin: paid double
+Authority_HunterCharmDraw	사냥꾼의 부적: 타일 아이템 무료 뽑기!	Hunter's Charm: free tile item draw!
+Authority_MixedCrestSpawn	혼혈의 문장: 약점 속성 슬라임 소환!	Mixed Crest: summoned a slime with the weak type!
+Authority_HourglassFreeze	모래시계: 모든 적이 멈춥니다!	Hourglass: all enemies are frozen!

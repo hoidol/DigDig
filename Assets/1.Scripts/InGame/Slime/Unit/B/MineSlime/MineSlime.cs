@@ -79,7 +79,10 @@ public class MineSlime : SlimeGrowth1
         for (int i = 0; i < count; i++)
         {
             Mine mine = Mine.Spawn(minePrefab);
-            mine.Throw(this, transform.position, PickPathPos(group.enemyRoots), AttackPower, explodeRadius, maxHitCount, mineLifetime, targetLayerMask);
+            // 측량사의 나침반: 옆 그룹 경로에도 설치
+            var groups = SurveyCompassAuthority.GetPathGroups(group);
+            TileGroup pathGroup = groups[Random.Range(0, groups.Count)];
+            mine.Throw(this, transform.position, PickPathPos(pathGroup.enemyRoots), AttackPower, explodeRadius, maxHitCount, mineLifetime, targetLayerMask);
             activeMines.Add(mine);
         }
         attackTimer = 0;

@@ -49,7 +49,7 @@ public class MortarSlime : SlimeGrowth1
         flag.gameObject.SetActive(false); // 타일에 올라간 뒤 UpdateFlag에서 위치를 정하고 켬
     }
 
-    // 슬라임·깃발 드래그(SlimeSpawner.Update)가 끝난 뒤 깃발 위치를 맞춤 → 한 프레임도 사거리 밖으로 안 나감
+    // 슬라임·깃발 드래그(SlimeFieldController.Update)가 끝난 뒤 깃발 위치를 맞춤 → 한 프레임도 사거리 밖으로 안 나감
     void LateUpdate()
     {
         UpdateFlag();

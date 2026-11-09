@@ -128,7 +128,7 @@ public enum AchievementType
     LevelUpSlime,
     TryStage,
     DrawSlime,
-    DrawRelic, // 사용 안 함 (유물 뽑기 삭제, 2026-11-09). 값 순서 유지
+    DrawAuthority, // 사용 안 함 (권능 뽑기 삭제, 2026-11-09). 값 순서 유지
     Watch_Ad
 }
 [System.Serializable]

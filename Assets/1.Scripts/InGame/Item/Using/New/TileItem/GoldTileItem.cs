@@ -5,6 +5,11 @@ public class GoldTileItem : TileItem //타일 위에 설치되는 아이템
 {
     public int addCoin = 1;
 
+    protected override void ApplyLevelValue(float v)
+    {
+        addCoin = Mathf.RoundToInt(v);
+    }
+
     IBulletBehavior hitBehavior;
     public override IBulletBehavior HitBehavior => hitBehavior ??= new KillCoinBehavior(this);
 }

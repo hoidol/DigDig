@@ -11,6 +11,7 @@ namespace Lobby
         public Growth1SlimeEntryPanel[] growth1SlimeEntryPanels;
         public Transform ownContainer;
         public Transform unownContainer;
+        public SlimePresetButton[] presetButtons;
         // public Growth2SlimeEntryPanel[] growth2SlimeEntryPanels;
 
         public override void Init()
@@ -22,6 +23,7 @@ namespace Lobby
             // 칸은 SetData에서 켜고 끄므로 꺼져 있는 칸도 포함 (안 그러면 켜진 칸만 잡혀 슬라임이 일부만 보임)
             equipedSlotPanels = GetComponentsInChildren<SlimeEquipedSlotPanel>(true);
             growth1SlimeEntryPanels = GetComponentsInChildren<Growth1SlimeEntryPanel>(true);
+            presetButtons = GetComponentsInChildren<SlimePresetButton>(true);
             // growth2SlimeEntryPanels = GetComponentsInChildren<Growth2SlimeEntryPanel>();
         }
 
@@ -39,13 +41,11 @@ namespace Lobby
                 equipedSlotPanels[i].idx = i;
             }
 
-            SlimeData[] slimeDatas = SlimeManager.Instance.allSlimeDatas.OrderBy(e =>
-            {
-                if (UserDataManager.Instance.userSlimeManager.GetUserSlime(e.key).own)
-                    return 0;
-                else
-                    return 1;
-            }).ToArray();
+            // 등급 높은 순(레전드 → 유니크 → 레어 → 노말). 보유/미보유는 UpdateUI에서 컨테이너로 나누며 이 순서를 유지
+            // → 나중에 새로 얻은 슬라임도 보유 칸에서 등급 순서 자리에 들어감
+            SlimeData[] slimeDatas = SlimeManager.Instance.allSlimeDatas
+                .OrderByDescending(e => e.grade)
+                .ToArray();
 
             for (int i = 0; i < growth1SlimeEntryPanels.Length; i++)
             {
@@ -107,6 +107,11 @@ namespace Lobby
             for (int i = 0; i < equipedSlotPanels.Length; i++)
             {
                 equipedSlotPanels[i].UpdatePanel();
+            }
+
+            for (int i = 0; i < presetButtons.Length; i++)
+            {
+                presetButtons[i].UpdateButton();
             }
 
             for (int i = 0; i < growth1SlimeEntryPanels.Length; i++)

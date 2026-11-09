@@ -14,9 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: MultiTargetTile
   itemName: "\uB2E4\uC911 \uD0C0\uAC9F \uD0C0\uC77C"
-  desc: "\uACF5\uACA9 \uB300\uC0C1 +1 \uCD94\uAC00\uB429\uB2C8\uB2E4."
+  desc: "\uACF5\uACA9 \uB300\uC0C1 +{0} \uCD94\uAC00\uB429\uB2C8\uB2E4."
   level: 1
   maxCount: 3
+  diceCoin: 7
+  levelValues:
+  - 1
+  - 2
+  - 3
   itemPrefab: {fileID: 9205854458609221091, guid: 60b92870a0cfb47399e57ca9fa8b67b4,
     type: 3}
   unlockConditions: []

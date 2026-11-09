@@ -4,7 +4,7 @@ using UnityEngine;
 
 // [S] 희생: 같은 머지 레벨의 아무 슬라임과 합성 가능 → 결과 = 상대 슬라임과 같은 종(key), 머지 레벨 +1
 // - 일반 합성은 결과 종이 랜덤이지만, 희생은 키우고 싶은 종을 골라 올릴 수 있음
-// - 끌어온 쪽이든 놓인 쪽이든 적용 (SlimeSpawner.Merge). 희생끼리 합성은 일반 규칙(랜덤 종)
+// - 끌어온 쪽이든 놓인 쪽이든 적용 (SlimeFieldController.Merge). 희생끼리 합성은 일반 규칙(랜덤 종)
 // - 강화: 5/11 = 합성 결과 슬라임 버프(ResultBuffEnhanceAbility), 8 = 50% 확률로 머지 레벨 +1 추가
 // 평소엔 일반 탄 공격
 public class SacrificeSlime : SlimeGrowth1, IResultBuffSlime
@@ -59,7 +59,7 @@ public class SacrificeSlime : SlimeGrowth1, IResultBuffSlime
             return (false, null, 0);
 
         int lv = mergeLevel + 1;
-        if (extraLevelChance > 0f && Random.value < extraLevelChance)
+        if (SlimeChancePity.RollInGame(key, extraLevelChance))
             lv++;
         return (true, target.key, Mathf.Min(lv, SlimeData.MAX_MERGE_LEVEL));
     }

@@ -21,6 +21,10 @@ public abstract class EnemyDefence : MonoBehaviour
     {
         // 만능 공격(AllRounder 속성 / 만능 공격 타일): 방어 타입 배율 무시 (모든 방어 타입에 100%)
         float multiplier = damage.IgnoreDefence ? 1f : DefenceInfo.Get(damage.attackType, defenceType);
+        // 권능 순혈의 왕관: 아군 공격의 약점 배율만 키움
+        PureCrownAuthority pureCrown = AuthoritySystem.Get<PureCrownAuthority>();
+        if (pureCrown != null && pureCrown.active && damage is AllyUnitDamageData)
+            multiplier = PureCrownAuthority.Apply(multiplier);
         // 거인 사냥 타일: 엘리트/보스 추가 배율
         if (damage is AllyUnitDamageData ad && (enemy is EliteEnemy || enemy is Boss))
             multiplier *= ad.eliteBossDamageMul;

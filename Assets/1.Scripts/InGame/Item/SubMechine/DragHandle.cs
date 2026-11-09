@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 필드에서 끌어 옮길 수 있는 손잡이 공용 (폭격 슬라임 깃발 등)
-// - 입력은 SlimeSpawner 한 곳에서 처리: 누른 위치에서 grabRadius 안의 손잡이를 찾아 드래그
+// - 입력은 SlimeFieldController 한 곳에서 처리: 누른 위치에서 grabRadius 안의 손잡이를 찾아 드래그
 // - 소유 유닛이 선택돼 있으면 그 손잡이가 슬라임/캐릭터보다 우선, 아니면 유닛이 없는 자리에서만 잡힘
 // - 위치 제한은 하위 클래스의 ClampPosition에서
 public abstract class DragHandle : MonoBehaviour

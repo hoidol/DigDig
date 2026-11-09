@@ -48,8 +48,8 @@ public class RandomSpecialEnemySpawner : SpecialEnemySpawner
         //         if (roll < cumulative)
         //         {
         //             Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(state.enemyType);
-        //             Enemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab);
-        //             enemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition());
+        //             Enemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab);
+        //             enemy?.Spawn(EnemyFieldController.Instance.GetSpawnPosition());
         //             state.count--;
                     
         //             // Debug.Log($"RandomSpecialEnemySpawner 적 소환해야됌  {state.enemyType}");

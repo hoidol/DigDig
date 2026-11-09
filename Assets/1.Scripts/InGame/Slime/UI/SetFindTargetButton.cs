@@ -1,50 +1,27 @@
-using UnityEngine;
-using TMPro;
-
-public class SetFindTargetButton : MonoBehaviour
+// 타겟 방식(가까운/먼/랜덤/낮은 체력…) 순환 버튼
+// 타겟을 쓰지 않는 슬라임(회전체·경로 순환 등, Slime.UseFindTarget = false)에게는 숨김
+public class SetFindTargetButton : AllyOptionButton
 {
-    public TMP_Text targetInfoText;
-    IAllyUnit targetAlly;
-    public void SetSlime(IAllyUnit slime)
+    public override bool IsAvailable(IAllyUnit unit)
     {
-        targetAlly = slime;
-        UpdateText();
+        return unit is not Slime slime || slime.UseFindTarget;
     }
 
-    void SetFindTargetType(FindTargetType type)
+    protected override void SetNext()
     {
-        targetAlly.SetFindTargetType(type);
-        UpdateText();
-    }
-
-    //다음 타겟 방식으로 순환
-    public void OnClickedButton()
-    {
-        if (targetAlly == null)
-            return;
-
         int nextFindTargetTypeIdx = ((int)targetAlly.FindTargetType + 1) % (int)FindTargetType.Count;
-
-        SetFindTargetType((FindTargetType)nextFindTargetTypeIdx);
+        targetAlly.SetFindTargetType((FindTargetType)nextFindTargetTypeIdx);
     }
 
-    void UpdateText()
+    protected override string GetText()
     {
-        if (targetInfoText == null || targetAlly == null)
-            return;
-
-        targetInfoText.text = GetFindTargetTypeName(targetAlly.FindTargetType);
-    }
-
-    string GetFindTargetTypeName(FindTargetType type)
-    {
-        switch (type)
+        switch (targetAlly.FindTargetType)
         {
             case FindTargetType.Closest: return TranslateManager.GetText("FindTarget.Closest");
             case FindTargetType.Farthest: return TranslateManager.GetText("FindTarget.Farthest");
             case FindTargetType.Random: return TranslateManager.GetText("FindTarget.Random");
             case FindTargetType.LowHp: return TranslateManager.GetText("FindTarget.LowHp");
-            default: return type.ToString();
+            default: return targetAlly.FindTargetType.ToString();
         }
     }
 }

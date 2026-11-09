@@ -65,8 +65,8 @@ public class SpawnBonusEliteEnemyButton : MonoBehaviour
         StartCoroutine(WaitAcitive());
 
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.BonusElite);
-        EliteEnemy enemy = EnemySpawner.Instance.Instantiate(enemyPrefab) as EliteEnemy;
-        enemy?.Spawn(EnemySpawner.Instance.GetSpawnPosition(), spawnCount);
+        EliteEnemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab) as EliteEnemy;
+        enemy?.Spawn(EnemyFieldController.Instance.GetSpawnPosition(), spawnCount);
 
         spawnCount++;
     }

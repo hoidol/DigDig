@@ -119,7 +119,7 @@ MonoBehaviour:
     - SlimeMergeData
     - EnhanceGradeInfo
     - EnhanceExpInfo
-    - RelicData
+    - AuthorityData
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 79b846eb2dce14c8dadbbe237bc03090, type: 2}

@@ -14,9 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: RangeUpTile
   itemName: "\uC0AC\uAC70\uB9AC \uD0C0\uC77C"
-  desc: "\uC0AC\uC815\uAC70\uB9AC +1.5"
+  desc: "\uC0AC\uC815\uAC70\uB9AC +{0}"
   level: 1
   maxCount: 3
+  diceCoin: 3
+  levelValues:
+  - 2
+  - 2.5
+  - 3
   itemPrefab: {fileID: 6669746329265871750, guid: 84a8588149cc1428d841c2d1a596fdb4,
     type: 3}
   unlockConditions: []

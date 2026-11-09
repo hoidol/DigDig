@@ -8,7 +8,7 @@ public class StatusEffectHandler : MonoBehaviour
     [field: SerializeField] public bool IsStunned { get; set; }
     [field: SerializeField] public bool IsShielded { get; set; }
     public const int MAX_SLOW_STACK = 3;
-    const float SLOW_RATE_PER_STACK = 0.5f;
+    const float SLOW_RATE_PER_STACK = 0.7f;
     [field: SerializeField] public int SlowStack { get; set; } // 슬로우 + 빙결 중첩 합계
     [field: SerializeField] public float MudSlow { get; set; } // 진흙 감속 비율 (MudEffect, 0~0.8)
     // 이동속도 배율 = 슬로우·빙결 중첩 × 진흙 감속
@@ -37,6 +37,7 @@ public class StatusEffectHandler : MonoBehaviour
         return false;
     }
     [SerializeField] List<StatusEffect> effects = new List<StatusEffect>();
+    public IReadOnlyList<StatusEffect> Effects => effects; // 권능 전염의 성배
     Dictionary<string, List<StatusEffectView>> activeEffects = new();
     public void Init()
     {

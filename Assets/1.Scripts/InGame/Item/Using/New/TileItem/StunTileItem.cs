@@ -6,6 +6,12 @@ public class StunTileItem : TileItem //타일 위에 설치되는 아이템
     public float chance = 2f;
     public float duration = 0.3f;
 
+    protected override void ApplyLevelValue(float v)
+    {
+        chance = v; // 레벨 수치 = 스턴 확률
+        hitBehavior = null; // 확률을 들고 있는 behavior 다시 생성
+    }
+
     IBulletBehavior hitBehavior;
     public override IBulletBehavior HitBehavior => hitBehavior ??= new ChanceStunBehavior(chance, duration);
 }

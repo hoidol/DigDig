@@ -13,6 +13,6 @@ public class PurchaseExpButton : ButtonUI
             return;
         }
         KingSlime.Instance.AddCoin(-price);
-        KingSlime.Instance.AddExp(1);
+        // KingSlime.Instance.AddExp(1);
     }
 }

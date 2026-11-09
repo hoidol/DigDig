@@ -38,7 +38,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
     public EnemyDamageData damageData = new EnemyDamageData();
     public TMP_Text hpText;
-    public int pathIdx; // 경로 모드에서 다음에 향할 EnemySpawner.paths 인덱스
+    public int pathIdx; // 경로 모드에서 다음에 향할 EnemyFieldController.paths 인덱스
     Vector2 moveDir; // pathIdx 지점으로 전환할 때 캐싱한 이동 방향 (목표 지점을 지나쳤는지 판정용)
     int moveDirIdx = -1; // moveDir가 어느 pathIdx 기준인지. -1이면 다시 계산
     [SerializeField] private  EnemyDefence enemyDefence;
@@ -85,14 +85,18 @@ public abstract class Enemy : MonoBehaviour, IHittable
         this.wave = wave;
         killedBy = null;
         IsDying = false;
+        // 위치를 먼저 정하고 활성화 → 풀에서 꺼낸 적이 이전 위치(죽은 자리)에서 켜졌다가 옮겨지지 않게.
+        // rigidbody 위치도 바로 맞춤 (transform만 바꾸면 다음 물리 단계까지 이전 위치에 남아 한두 프레임 튐)
+        transform.position = pos;
         gameObject.SetActive(true);
+        rg2d.position = pos;
+        rg2d.linearVelocity = Vector2.zero;
         statusEffectHandler?.Reset();
         pathIdx = 0;
         moveDirIdx = -1;
         blockerCount = 0;
         SpawnId++;
         Apear();
-        transform.position = pos;
         maxHp = GetHp();
         curHp = maxHp;
         hpText.text = ((int)curHp).ToString();
@@ -162,6 +166,12 @@ public abstract class Enemy : MonoBehaviour, IHittable
     }
 
 
+    // 모든 적 정지 (모래시계 권능). Time.time 기준
+    static float freezeAllUntil;
+    public static bool IsFrozenAll => Time.time < freezeAllUntil;
+    public static void FreezeAll(float seconds) => freezeAllUntil = Mathf.Max(freezeAllUntil, Time.time + seconds);
+    public static void ClearFreezeAll() => freezeAllUntil = 0f;
+
     public virtual void Update()
     {
         if (IsDying)
@@ -176,7 +186,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
             return;
         }
 
-        if ((statusEffectHandler != null && statusEffectHandler.IsStunned) || IsBlocked)
+        if ((statusEffectHandler != null && statusEffectHandler.IsStunned) || IsBlocked || IsFrozenAll)
         {
             rg2d.linearVelocity = Vector2.zero;
             return;
@@ -193,7 +203,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     // 0 이하(= 지나침)거나 이번 프레임 이동량 이하면 지점에 스냅 후 다음 지점으로 → 목표를 넘어가지 않음
     public virtual void UpdateMoving()
     {
-        Transform[] paths = EnemySpawner.Instance.paths;
+        Transform[] paths = EnemyFieldController.Instance.paths;
         float speed = enemyData.moveSpeed * (statusEffectHandler != null ? statusEffectHandler.SlowRate : 1f);
         float arriveDist = Mathf.Max(PATH_ARRIVE_DISTANCE, speed * Time.deltaTime);
 
@@ -347,8 +357,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
     {
         IsDying = false;
         gameObject.SetActive(false);
-        if (EnemySpawner.Instance != null)
-            EnemySpawner.Instance.ReturnToPool(this);
+        if (EnemyFieldController.Instance != null)
+            EnemyFieldController.Instance.ReturnToPool(this);
     }
 
     bool HasAnimState(int hash) => animator != null && animator.runtimeAnimatorController != null && animator.HasState(0, hash);
