@@ -16,6 +16,8 @@ public class SlimeData : ScriptableObject
     // public string[] enhanceAbilityDescs;
     public int growth;
     public AttackType attackType;
+    [Tooltip("슬라임 유형 (SlimeData.csv Tags). 형태 하나 + 특성. 장비가 장착 슬라임 구성에 반응하는 기준")]
+    public SlimeTag tags;
     public SlimeEnhanceInfo[] commonSlimeEnhanceInfos;
 
     [Tooltip("공격력 랜덤 폭. 0이면 고정, 0.67이면 중간값 ±67% (9 → 3~15). 데이터에는 중간값만 입력")]
@@ -136,6 +138,12 @@ public class SlimeData : ScriptableObject
                 attackType = parsedAttackType;
             else
                 Debug.LogWarning($"[SlimeData] {key} AttackType '{row.Get("AttackType")}' 파싱 실패");
+        }
+        if (table.HasColumn("Tags"))
+        {
+            tags = SlimeTags.Parse(row.Get("Tags"), out string tagError);
+            if (tagError != null)
+                Debug.LogWarning($"[SlimeData] {key} Tags 모르는 이름: {tagError}");
         }
         if (row.TryGetFloat("ReinforceAttackPower", out float reinforcePercent))
             reinforceAttackPowerPercent = reinforcePercent;

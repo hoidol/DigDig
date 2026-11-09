@@ -75,14 +75,27 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   - 투자는 킹에 쌓이고 주변 버프는 위치로 결정 → 슬라임 개체에 투자가 묶이지 않아 합성과 충돌 없음.
   - (Grant 아이템은 폐기됐지만, 주변 강화는 아이템이 아니라 킹 고유 능력으로 들어오는 것)
 
-## 장비 (2026-11-09 기획 중)
-- **장비는 스탯 성장이 아니라 인게임 특수 능력.** 수치 성장은 KS 업그레이드가 담당하므로 장비에 +% 스탯은 넣지 않는다(기존 `EquipmentData.abilities` 스탯 구조는 바꿀 예정).
-- 장비 **약 12종, 장착 3칸(헬멧·무기·악세사리)**. (현재 enum은 R_Hand/L_Hand/Head/Accessory 4부위 → 3부위로 정리 필요)
-- 의도: **장착한 슬라임 5종 구성에 맞춰 어떤 장비를 낄지 고민**하게 한다. 장비는 슬라임의 작동 방식(탄·설치·회전·버프·처치 감지·확률 등)과 시너지가 나도록 설계.
+## 유물 (2026-11-09, 이전 이름 "장비". 기획 중)
+- **유물은 스탯 성장이 아니라 인게임 특수 능력.** 수치 성장은 KS 업그레이드가 담당 → 유물에 스탯 없음(킹 스탯 = 기본 + 업그레이드, `KingSlimeManager.GetTotalStatValue`).
+- **부위(헬멧·무기 등) 개념 없음, 킹 외형 변화 없음**(`KingSlimePart`/`KingSlimeBody`·`EquipPartType` 삭제). 장비 비교·능력치 변화 창도 삭제 → 유물 정보 창 하나(`RelicInfoCanvas`: 이름·설명·해당 슬라임 수·장착/해제).
+- 의도: **장착한 슬라임 5종 구성에 맞춰 어떤 유물을 고를지 고민**하게 한다. 유물은 슬라임의 작동 방식(태그)과 시너지가 나도록 설계.
+- **묶음(tier) 6개 × 유물 3개 = 18개.** 유저 레벨 **5·10·15·20·25·30**(`RelicData.TIER_UNLOCK_LEVELS`)에 묶음이 하나씩 해금되고, **묶음마다 3개 중 1개를 선택**(2026-11-09 확정).
+  - **해금된 묶음에서 고른 유물은 전부 적용**(최대 6개). 장착 개수 제한·장착/해제 개념 없음. 적용 목록 = `UserRelicManager.GetActiveRelicKeys`(레벨이 모자라 잠긴 묶음의 선택은 저장만 되고 적용 안 됨).
+  - **로비에서 언제든 무료로 변경**(같은 묶음을 다시 고르면 교체). 인게임 중엔 변경 없음.
+  - **상점 유물 뽑기 삭제**(DrawRelic·결과 창·상품 key `DrawRelic_*`). 유물은 레벨 해금으로만 얻음. `AchievementType.DrawRelic`은 값 순서 때문에 남겨 둠(사용 안 함).
+  - 로비 UI: KS 관리 화면 유물 탭 = **3열 그리드, 한 줄 = 한 묶음**(`RelicContainer.slotPanels` 18칸, 잠긴 묶음은 `LockPanel`에 `Lv.N`). 칸 → `RelicInfoCanvas`(이름·설명·해당 슬라임 수·선택하기). 레벨업으로 묶음이 새로 열렸고 아직 안 골랐으면 레벨업 창을 닫은 뒤 유물 탭을 열고 안내(`LobbyManager.OpenRelicSelect`).
+  - 저장: `UserRelicData.selectedKeys`(index = 묶음 - 1). 이전 장비 저장 데이터는 마이그레이션 안 함(출시 전).
+  - 지금 18개는 **임시 데이터**(RelicData.csv `Key/Tier/Grade/MatchTags/Desc`, **설명 원본 = CSV Desc**(아직 번역 안 함), 이름 = Translate `Relic.{Key}`). **능력 구현 없음.**
+- 데이터: `RelicData`(Addressables 폴더 항목 `AddressableResources/RelicData`, 라벨 `RelicData`) → `RelicManager`(Resources/Init, `GetTierRelics`).
+- **슬라임 유형 태그(`SlimeTag`, Flags)**: 유물이 반응하는 기준. SlimeData.csv **`Tags` 열(L열, `Shooter|Status`처럼 |로 구분)** → `SlimeData.tags`. 시트 다운로드 범위 `slimeRange` = A:L. 태그는 **기본 효과 기준**(각성·부가 효과는 안 셈).
+  - 형태(정확히 하나): Shooter 발사(Random, Bounce, Flame, Ice, Lightning, Pierce, Iron, Dopamine, Stigma, Berserker, Hunter) / Zone 장판(Mine, Beam, Mortar, Hail, Inferno, **Thunder**) / Orbit 회전(Orbit, Shield, Mud) / Support 버프(Breeze, Rage, Keen) / Special 특수(Sacrifice, GrowUp, Joker, Scavenger).
+  - 특성: Status 상태이상(Flame, Ice, Stigma, Mud, Hail) / Chance 확률(Ice, Stigma, Hail, Joker) / KillTrigger 처치 감지(Dopamine, Berserker, Scavenger) / Heavy 강타(Iron, Hunter, Mortar) / Transform 변환(Sacrifice, GrowUp, Joker).
+  - 규칙(`SlimeTagTest`): 형태는 슬라임마다 하나, 형태·특성마다 해당 슬라임 **3종 이상**. 새 슬라임 추가 시 Tags도 채울 것.
+- 유물이 반응하는 유형 = `RelicData.matchTags`. 정보 창에 **장착 슬라임 중 해당 종 수 / 장착 수**(태그 중 하나라도 있으면 해당, `RelicData.CountMatchingSlimes`). matchTags가 없으면 숨김.
+- 테스트 `RelicTest`(해금 레벨·선택 가능 여부·묶음마다 3개·이름 번역·설명), `RelicPlayTest`(로비 유물 탭: 18칸·잠김 표시·칸 클릭 → 정보 창 → 선택·같은 묶음 교체·잠긴 묶음 선택 불가·적용 목록).
 
-## 오라 (2026-11-05)
-- **출시 후 업데이트로 미룬다.** 킹슬라임 주변 타일 강화(킹 칸 기준 범위 안 유닛 버프). 상세 기획은 업데이트 때 확정.
-- 로비 `KSManagementCanvas`의 오라 관련 코드는 주석 처리, `KSMenuType.Aura`는 `SelectMenu`에서 무시(enum 값은 유지).
+## 오라 (2026-11-09 폐기)
+- **오라는 하지 않는다.** 로비 오라 메뉴·패널(`KSAuraContainer`/`KSAuraStateContainer`)과 `KSMenuType.Aura` 삭제. (이전: 킹 주변 타일 강화, 출시 후 업데이트 예정이었음)
 
 ## 킹슬라임 로비 업그레이드 (2026-11-03)
 - 로비에서 재화(Gold 또는 Dia)로 킹슬라임 스탯을 **StatType별로** 영구 업그레이드(`UserKingSlimeManager`, Lv 저장).
@@ -90,7 +103,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   - 재화는 StatType마다 하나로 고정(`CurrencyType`). `MaxLv` 0 = 무제한.
   - 증가는 **더하기**: Lv × `ValuePerLv`.
   - 가격(lv → lv+1) = `(BasePrice + PriceAddPerLv × lv) × PriceMulPerLv^lv` (반올림). 선형/지수 모두 이 식으로 조절.
-- 최종 스탯 = 기본값(KingSlimeData) + 장비 + 업그레이드, 계산은 `KingSlimeManager.GetTotalStatValue` 한 곳(로비 표시·인게임 `KingSlimeStatManager` 공용).
+- 최종 스탯 = 기본값(KingSlimeData) + 업그레이드 (유물은 스탯 없음), 계산은 `KingSlimeManager.GetTotalStatValue` 한 곳(로비 표시·인게임 `KingSlimeStatManager` 공용).
   - StartGold = 게임 시작 시 코인, WaveClearGold = wave 종료마다 코인(보스 wave는 보스 처치 시. 무한 상승 게임이라 보스도 지급), MaxSlimeCount = `SlimeSpawner.slimeMaxCount`(기본 `SLIME_MIN_EXIST_COUNT`)에 더함. **더하는 곳은 GameManager 한 곳**(킹 스탯 값, 2026-11-07 SlimeSpawner.Awake에서도 Lv을 더해 두 번 적용되던 버그 수정).
   - 로비 KSManagementCanvas 능력치 표시(`KSStatStateContainer.currentKSAbilityInfoPanels`)는 업그레이드 StatType 전부(최대 슬라임 수·시작 코인·wave 종료 코인 포함). 표시 단위: 치명타 확률은 인게임과 같은 %(값 그대로), 공속은 `ATTACK_SPEED_PER_SECOND` 기준 10초당 발 수.
   - 테스트 `KSUpgradePlayTest`: StatType별 업그레이드(Lv·재화·스탯·표시, 재화 부족/최대 Lv), 로비에서 올린 값이 인게임 킹 스탯·체력·최대 슬라임 수·시작/wave 종료 코인에 반영.
@@ -202,8 +215,8 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 하루 구매 제한은 버튼 `dailyLimit`(0 = 없음, 오늘 구매 기록 수로 판단). 광고 뽑기 = 광고 상품 + dailyLimit (이전 Normal…ProductPanel의 광고 전용 코드는 삭제).
 - 특별 뽑기 카운트(N회마다 A등급 이상)는 **Unique 뽑기 패널 하위 버튼의 구매 횟수 합만** (`DrawProductPanel.PurchaseCount`, specialDrawInterval > 0인 패널만 사용).
 - `ProductContainer.productPanels`를 비워 두면 하위 패널 전부.
-- 뽑기(`DrawSO.Draw`): 확률표 등급 중 **아이템이 없는 등급은 빼고 남은 확률로** 뽑는다(지금 SS 슬라임·장비 없음, 장비는 C 1개뿐). 슬라임 등급 목록은 `SlimeManager.gradeGroupGrowth1SlimeDic`(로드 시 growth 1 슬라임으로 채움).
-- 뽑기 결과 창(DrawSlimeResultCanvas / DrawEquipmentResultCanvas, 공용 `DrawResultCanvas`): 카드(`DrawResultCard`)를 **5열 그리드**(30장이면 스크롤)에 깔고 순서대로 뒤집어 공개(간격 `revealInterval` 0.12초, 뒤집기 0.3초, DOTween·실시간). **S 등급 이상(`revealShakeGrade`)은 뒤집기 전에 0.5초 흔들림**, 흔들리는 동안 다음 카드는 기다림. **닫기 버튼(`closeButton`, 결과 패널 하단)은 전부 공개된 뒤에만 보임.** 카드는 `cardTemplate`(뒷면 + 앞면 = 슬라임 칸 / 장비 썸네일)을 복사해서 씀.
+- 뽑기(`DrawSO.Draw`): 확률표 등급 중 **아이템이 없는 등급은 빼고 남은 확률로** 뽑는다(지금 SS 슬라임 없음, 유물은 임시로 전부 A). 슬라임 등급 목록은 `SlimeManager.gradeGroupGrowth1SlimeDic`(로드 시 growth 1 슬라임으로 채움).
+- 뽑기 결과 창(DrawSlimeResultCanvas / DrawRelicResultCanvas, 공용 `DrawResultCanvas`): 카드(`DrawResultCard`)를 **5열 그리드**(30장이면 스크롤)에 깔고 순서대로 뒤집어 공개(간격 `revealInterval` 0.12초, 뒤집기 0.3초, DOTween·실시간). **S 등급 이상(`revealShakeGrade`)은 뒤집기 전에 0.5초 흔들림**, 흔들리는 동안 다음 카드는 기다림. **닫기 버튼(`closeButton`, 결과 패널 하단)은 전부 공개된 뒤에만 보임.** 카드는 `cardTemplate`(뒷면 + 앞면 = 슬라임 칸 / 유물 썸네일)을 복사해서 씀.
 - 결과 창이 씬에 없으면 지급 후 토스트만. 패널 `LastDrawKeys` = 마지막 결과.
 - 테스트 `DrawShopPlayTest`: 실제 뽑기 버튼 6개(재화 차감·지급 개수·기록), 광고 뽑기 하루 3회, 고급 슬라임 상자 N회차 S 이상, 슬라임 관리 화면(모든 슬라임 1칸씩·보유 먼저·미보유 표시).
 - 출시 전이라 이전 패널 key 구매 기록은 옮기지 않음.

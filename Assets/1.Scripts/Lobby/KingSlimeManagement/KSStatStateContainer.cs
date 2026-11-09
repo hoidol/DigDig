@@ -1,27 +1,20 @@
-
 using UnityEngine;
 
-public class KSStatStateContainer : KSStateContainer
+// KS 관리 화면 상단: 킹 능력치 (기본 + 업그레이드)
+public class KSStatStateContainer : MonoBehaviour
 {
-    public EquippedSlotPanel[] equippedSlotPanels;
-    public KingSlimeBody characterBody;
-    public CurrentKSAbilityInfoPanel[] currentKSAbilityInfoPanels; //현재 끼고 있는 장비 별 능력치 정보
-    public override void OpenContainer()
-    {
+    public CurrentKSAbilityInfoPanel[] currentKSAbilityInfoPanels;
 
+    public void OpenContainer()
+    {
     }
-    public override void UpdatePanel()
+
+    public void UpdatePanel()
     {
-        foreach (EquippedSlotPanel panel in equippedSlotPanels)
+        foreach (CurrentKSAbilityInfoPanel panel in currentKSAbilityInfoPanels)
         {
-            panel.UpdatePanel();
-        }
-
-        characterBody.UpdateCharacter();
-
-        for (int i = 0; i < currentKSAbilityInfoPanels.Length; i++)
-        {
-            currentKSAbilityInfoPanels[i].UpdatePanel(UserDataManager.Instance.userData.characterName);
+            if (panel != null)
+                panel.UpdatePanel(UserDataManager.Instance.userData.characterName);
         }
     }
 }

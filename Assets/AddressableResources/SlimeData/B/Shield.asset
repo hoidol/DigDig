@@ -17,6 +17,7 @@ MonoBehaviour:
     \uBC29\uD328 \uB2F9 \uC801 3\uAE30\uAE4C\uC9C0 \uC801\uC6A9"
   growth: 1
   attackType: 1
+  tags: 4
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:

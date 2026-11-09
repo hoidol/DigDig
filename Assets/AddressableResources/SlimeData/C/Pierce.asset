@@ -16,6 +16,7 @@ MonoBehaviour:
   desc: "\uAD00\uD1B5\uD0C4 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
   growth: 1
   attackType: 1
+  tags: 1
   commonSlimeEnhanceInfos:
   - level: 0
     slimeStats:

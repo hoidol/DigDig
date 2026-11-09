@@ -33,18 +33,6 @@ MonoBehaviour:
     productId: 
     currencyType: 1
     price: 50
-  - key: DrawEquipment_Normal_Ad
-    productId: 
-    currencyType: 4
-    price: 1
-  - key: DrawEquipment_Normal_Dia
-    productId: 
-    currencyType: 1
-    price: 25
-  - key: DrawEquipment_Unique
-    productId: 
-    currencyType: 1
-    price: 50
   - key: Dia_20
     productId: dia_20
     currencyType: 5

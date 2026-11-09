@@ -29,10 +29,9 @@ public class GameCyclePlayTest : InGamePlayTestBase
     static float ExpectedStat(StatType statType)
     {
         float baseValue = KSData.GetKingSlimeStat(statType)?.value ?? 0f;
-        float equipmentValue = EquipmentManager.Instance.GetSumEquipmentAbility(statType).value;
         KSUpgradeInfo info = KSUpgradeData.Instance.GetUpgradeInfo(statType);
         float upgradeValue = info == null ? 0f : info.valuePerLv * KSUser.GetUpgrade(statType).lv;
-        return baseValue + equipmentValue + upgradeValue;
+        return baseValue + upgradeValue;
     }
 
     static T Saved<T>(string fileName) => SaveManager.LoadData<T>(fileName);
@@ -106,7 +105,8 @@ public class GameCyclePlayTest : InGamePlayTestBase
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         FailCanvas.Instance.OnClickedCancel();
-        yield return WaitFrames(3); // LateUpdate에서 저장
+        yield return WaitFrames(3);
+        yield return WaitSaveFlushed();
         Assert.IsTrue(ResultCanvas.Instance.gameObject.activeSelf, "결과 화면");
         Assert.IsTrue(ResultCanvas.Instance.newRecordObj.activeSelf, "최고 기록 갱신 표시");
 
@@ -144,6 +144,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         Assert.AreEqual(2, MyInfo.userMyInfoData.lv);
         Assert.AreEqual(0, MyInfo.userMyInfoData.exp, "레벨업 후 남은 경험치");
         AssertMyInfoPanels();
+        yield return WaitSaveFlushed();
         Assert.AreEqual(2, SavedMyInfo.lv, "저장: 레벨");
         Assert.AreEqual(0, SavedMyInfo.exp, "저장: 레벨업 후 경험치");
         Assert.AreEqual(1, KSUser.GetUpgrade(upgradeStat).lv, "로비 복귀 후 업그레이드 유지");
@@ -161,6 +162,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return WaitFrames(3);
         FailCanvas.Instance.OnClickedCancel();
         yield return WaitFrames(3);
+        yield return WaitSaveFlushed();
         Assert.IsFalse(ResultCanvas.Instance.newRecordObj.activeSelf, "기록보다 낮은데 신기록 표시");
         Assert.AreEqual(gold, User.userData.gold, "wave 0 사망: 골드 0");
         Assert.AreEqual(drawTicket, User.userData.drawTicket, "합성 0: 뽑기권 0");
@@ -175,8 +177,17 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return WaitFrames(30);
         Assert.IsFalse(Lobby.UserLevelUpCanvas.Instance.gameObject.activeInHierarchy, "경험치가 모자란데 레벨업 창");
         Assert.AreEqual(2, MyInfo.userMyInfoData.lv);
+        yield return WaitSaveFlushed();
         Assert.AreEqual(2, SavedUpgradeLv(upgradeStat), "저장: 업그레이드 Lv");
         AssertNoErrors();
+    }
+
+    // 저장은 UserDataManager.LateUpdate에서 몰아서 씀 → 대기 목록이 빌 때까지 기다린 뒤 파일 확인
+    // (EditMode 테스트의 yield null은 에디터 틱이라 몇 번 기다려도 게임 프레임이 돈다는 보장이 없음)
+    IEnumerator WaitSaveFlushed()
+    {
+        var field = typeof(UserDataManager).GetField("dirtySaveManagers", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        yield return WaitUntil(() => ((System.Collections.IList)field.GetValue(User)).Count == 0, "저장 대기 목록이 비지 않음");
     }
 
     // KSManagementCanvas에서 업그레이드 버튼 → Lv·재화·저장 확인
@@ -199,6 +210,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
 
         panel.OnClickedUpgradeButton();
         yield return WaitFrames(3);
+        yield return WaitSaveFlushed();
         Assert.AreEqual(expectedLv, KSUser.GetUpgrade(statType).lv, $"{statType} Lv");
         Assert.AreEqual(currency - price, User.userData.GetCurrency(info.currencyType), $"{info.currencyType} {price} 차감");
         Assert.AreEqual(expectedLv, SavedUpgradeLv(statType), "저장: 업그레이드 Lv");
@@ -220,7 +232,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
     void AssertKingStat(StatType statType)
     {
         float expected = ExpectedStat(statType);
-        Assert.AreEqual(expected, KingSlime.Instance.statMgr.GetValue(statType), EPSILON, $"인게임 {statType} (기본 + 장비 + 업그레이드)");
+        Assert.AreEqual(expected, KingSlime.Instance.statMgr.GetValue(statType), EPSILON, $"인게임 {statType} (기본 + 업그레이드)");
         if (statType == StatType.MaxHp)
             Assert.AreEqual(expected, KingSlime.Instance.health.MaxHp, EPSILON, "킹 최대 체력");
     }

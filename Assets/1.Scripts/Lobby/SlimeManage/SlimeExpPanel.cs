@@ -14,7 +14,8 @@ public class SlimeExpPanel : MonoBehaviour
         int totalPreLvSumExp = enhanceExpInfo.TotalExp(userSlime.enhanceLevel);
         int exp = userSlime.exp - totalPreLvSumExp;
         expText.text = $"{exp}/{enhanceExpInfo.exps[userSlime.enhanceLevel]}";
-        expBar.fillAmount = exp/enhanceExpInfo.exps[userSlime.enhanceLevel];
+        int needExp = enhanceExpInfo.exps[userSlime.enhanceLevel];
+        expBar.fillAmount = needExp > 0 ? (float)exp / needExp : 1f; // 필요 경험치 0(데이터 없음·최대)이면 가득
         
     }
 }

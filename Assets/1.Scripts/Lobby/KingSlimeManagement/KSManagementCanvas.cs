@@ -1,27 +1,21 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-// 오라(Aura)는 출시 후 업데이트에서 추가 예정 → 관련 코드는 주석 처리 (2026-11-05)
+// 킹슬라임 관리: 상단 능력치 + 메뉴(강화 / 유물). 오라는 폐기(2026-11-09)
 public class KSManagementCanvas : BaseLobbyCanvas
 {
-   public KSStatStateContainer kSStatStateContainer;
-   // public KSAuraStateContainer kSAuraStateContainer;
-
+    public KSStatStateContainer kSStatStateContainer;
     public KSUpgradeContainer upgradeContainer;
-
-   public KSEquipmentContainer kSEquipmentContainer;
-   // public KSAuraContainer kSAuraContainer;
+    [FormerlySerializedAs("kSEquipmentContainer")] public RelicContainer relicContainer;
 
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
 
         kSStatStateContainer.OpenContainer();
-        // kSAuraStateContainer.OpenContainer();
-
         upgradeContainer.OpenContainer();
-        kSEquipmentContainer.OpenContainer();
-        // kSAuraContainer.OpenContainer();
+        relicContainer.OpenContainer();
 
         SelectMenu(KSMenuType.Upgrade);
 
@@ -30,35 +24,14 @@ public class KSManagementCanvas : BaseLobbyCanvas
 
     public void SelectMenu(KSMenuType menuType)
     {
-        // 오라 업데이트 전까지 Aura 메뉴는 무시
-        if (menuType == KSMenuType.Aura)
-            return;
-
-        // kSStatStateContainer.gameObject.SetActive(false);
-        // kSAuraStateContainer.gameObject.SetActive(false);
-        //
-        // if(menuType == KSMenuType.Upgrade || menuType == KSMenuType.Equipment)
-        // {
-        //     kSStatStateContainer.gameObject.SetActive(true);
-        // }
-        // else
-        // {
-        //     kSAuraStateContainer.gameObject.SetActive(true);
-        // }
-        kSStatStateContainer.gameObject.SetActive(true);
-
         upgradeContainer.gameObject.SetActive(menuType == KSMenuType.Upgrade);
-        kSEquipmentContainer.gameObject.SetActive(menuType == KSMenuType.Equipment);
-        // kSAuraContainer.gameObject.SetActive(menuType == KSMenuType.Aura);
+        relicContainer.gameObject.SetActive(menuType == KSMenuType.Relic);
     }
 
     public override void UpdateCanvas()
     {
         kSStatStateContainer.UpdatePanel();
-        // kSAuraStateContainer.UpdatePanel();
-
         upgradeContainer.UpdateContainer();
-        kSEquipmentContainer.UpdateContainer();
-        // kSAuraContainer.UpdateContainer();
+        relicContainer.UpdateContainer();
     }
 }

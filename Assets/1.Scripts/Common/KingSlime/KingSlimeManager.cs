@@ -22,12 +22,11 @@ public class KingSlimeManager : MonoSingleton<KingSlimeManager>
         return null;
     }
 
-    // 기본값 + 장비 + 로비 업그레이드
-    public float GetTotalStatValue(KingSlimeData kingslimeData, StatType statType, bool includeEquipment = true)
+    // 기본값 + 로비 업그레이드 (유물은 스탯 없음)
+    public float GetTotalStatValue(KingSlimeData kingslimeData, StatType statType)
     {
         float baseValue = kingslimeData.GetKingSlimeStat(statType)?.value ?? 0f;
-        float equipmentValue = includeEquipment ? EquipmentManager.Instance.GetSumEquipmentAbility(statType).value : 0f;
-        return baseValue + equipmentValue + UserDataManager.Instance.userKingSlimeManager.GetUpgradeValue(statType);
+        return baseValue + UserDataManager.Instance.userKingSlimeManager.GetUpgradeValue(statType);
     }
 }
 public enum KingSlimeName

@@ -165,7 +165,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1811106048190865623}
   - component: {fileID: 2796340661262447239}
-  - component: {fileID: 149863891169921063}
   m_Layer: 0
   m_Name: Halmat
   m_TagString: Untagged
@@ -247,20 +246,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
---- !u!114 &149863891169921063
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3435307903998235091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02cf1a7ca9c5144c4bf0f02426a27480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterPart
-  equipPartType: 2
-  spriteRenderer: {fileID: 0}
 --- !u!1 &4497462110244999402
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,7 +346,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4137370383942186545}
-  - component: {fileID: 8822680263829393830}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -387,18 +371,6 @@ Transform:
   - {fileID: 2836923925410798729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8822680263829393830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5000596623601937421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 266459ba5ff594f90bcd16f17c750e36, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterBody
 --- !u!1 &5227837604964101113
 GameObject:
   m_ObjectHideFlags: 0
@@ -500,7 +472,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2582746388435344469}
   - component: {fileID: 1841039874840590999}
-  - component: {fileID: 8823243272030562525}
   m_Layer: 0
   m_Name: LeftHand
   m_TagString: Untagged
@@ -582,20 +553,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
---- !u!114 &8823243272030562525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5474756483293502023}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02cf1a7ca9c5144c4bf0f02426a27480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterPart
-  equipPartType: 1
-  spriteRenderer: {fileID: 0}
 --- !u!1 &6476358309890415399
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,7 +563,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3895249014919884058}
   - component: {fileID: 679346563085735920}
-  - component: {fileID: 3481028362703334848}
   m_Layer: 0
   m_Name: Hat
   m_TagString: Untagged
@@ -688,20 +644,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
---- !u!114 &3481028362703334848
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6476358309890415399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02cf1a7ca9c5144c4bf0f02426a27480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterPart
-  equipPartType: 2
-  spriteRenderer: {fileID: 0}
 --- !u!1 &7381095557160129484
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,7 +778,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4884130442693788686}
   - component: {fileID: 7229269504705640667}
-  - component: {fileID: 8910850988189541564}
   m_Layer: 0
   m_Name: RightHand
   m_TagString: Untagged
@@ -918,20 +859,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
---- !u!114 &8910850988189541564
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8270850589626866541}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02cf1a7ca9c5144c4bf0f02426a27480, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterPart
-  equipPartType: 1
-  spriteRenderer: {fileID: 0}
 --- !u!1 &8579601813307552457
 GameObject:
   m_ObjectHideFlags: 0

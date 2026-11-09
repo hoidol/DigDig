@@ -20,14 +20,13 @@ public class KSUpgradePlayTest : InGamePlayTestBase
 
     static float Total(StatType statType) => KingSlimeManager.Instance.GetTotalStatValue(KSData, statType);
 
-    // 기본값 + 장비 + Lv × ValuePerLv (GetTotalStatValue와 따로 계산해서 비교)
+    // 기본값 + Lv × ValuePerLv (GetTotalStatValue와 따로 계산해서 비교)
     static float Expected(StatType statType)
     {
         float baseValue = KSData.GetKingSlimeStat(statType)?.value ?? 0f;
-        float equipmentValue = EquipmentManager.Instance.GetSumEquipmentAbility(statType).value;
         KSUpgradeInfo info = KSUpgradeData.Instance.GetUpgradeInfo(statType);
         float upgradeValue = info == null ? 0f : info.valuePerLv * KSUser.GetUpgrade(statType).lv;
-        return baseValue + equipmentValue + upgradeValue;
+        return baseValue + upgradeValue;
     }
 
     static void SetCurrency(CurrencyType type, int value)
@@ -88,7 +87,7 @@ public class KSUpgradePlayTest : InGamePlayTestBase
             Assert.AreEqual(1, upgrade.lv, $"{statType}: Lv");
             Assert.AreEqual(currency - price, Data.GetCurrency(info.currencyType), $"{statType}: {info.currencyType} {price} 차감");
             Assert.AreEqual(before + info.valuePerLv, Total(statType), EPSILON, $"{statType}: 스탯 +{info.valuePerLv}");
-            Assert.AreEqual(Expected(statType), Total(statType), EPSILON, $"{statType}: 기본 + 장비 + 업그레이드");
+            Assert.AreEqual(Expected(statType), Total(statType), EPSILON, $"{statType}: 기본 + 업그레이드");
             Assert.AreEqual(StatData.GetValueToString(statType, Total(statType)), abilityPanel.valueText.text, $"{statType}: 능력치 표시 갱신");
             StringAssert.StartsWith("Lv.1", panel.lvText.text, $"{statType}: Lv 표시");
             Assert.AreEqual(info.GetPrice(1).ToString(), panel.priceText.text, $"{statType}: 다음 가격 표시");
@@ -149,7 +148,7 @@ public class KSUpgradePlayTest : InGamePlayTestBase
 
         KingSlimeStatManager statMgr = KingSlime.Instance.statMgr;
         foreach (StatType statType in AllStatTypes)
-            Assert.AreEqual(expected[statType], statMgr.GetValue(statType), EPSILON, $"{statType}: 인게임 킹 스탯 (기본 + 장비 + 업그레이드)");
+            Assert.AreEqual(expected[statType], statMgr.GetValue(statType), EPSILON, $"{statType}: 인게임 킹 스탯 (기본 + 업그레이드)");
 
         Assert.AreEqual(expected[StatType.MaxHp], KingSlime.Instance.health.MaxHp, EPSILON, "킹 최대 체력");
         Assert.AreEqual(expected[StatType.MaxHp], KingSlime.Instance.CurHp, EPSILON, "시작 체력 = 최대 체력");

@@ -42,7 +42,7 @@ public class KingSlimeStatManager
         {
             var ps = new KingSlimeStat { statType = usingStatTypes[i] };
             // Debug.Log($"ps.statType {ps.statType}");
-            ps.initValue = KingSlimeManager.Instance.GetTotalStatValue(kingslimeData, ps.statType); //CharacterData + 장비 + 로비 업그레이드
+            ps.initValue = KingSlimeManager.Instance.GetTotalStatValue(kingslimeData, ps.statType); //KingSlimeData + 로비 업그레이드
             statList.Add(ps);
             statDic.Add(ps.statType, ps);
         }
@@ -164,7 +164,7 @@ public class KingSlimeStatManager
 public class KingSlimeStat
 {
     public StatType statType;
-    public float initValue; //CharacterData + EquipmentAbility
+    public float initValue; //KingSlimeData + 업그레이드
     public float value; //0~1
 
     public string Title => StatData.GetTitle(statType);

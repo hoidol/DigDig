@@ -32,15 +32,12 @@ public class DrawShopPlayTest : InGamePlayTestBase
 
     static int GetCurrency(CurrencyType type) => Data.GetCurrency(type);
 
-    // (key, 지급 개수, 슬라임 뽑기 여부)
-    static readonly (string key, int count, bool slime)[] DRAWS =
+    // (key, 지급 개수). 유물 뽑기는 삭제(2026-11-09, 유물은 레벨 해금 선택)
+    static readonly (string key, int count)[] DRAWS =
     {
-        ("DrawSlime_Normal_Ad", 10, true),
-        ("DrawSlime_Normal_DrawTicket", 30, true),
-        ("DrawSlime_Unique_Dia", 10, true),
-        ("DrawEquipment_Normal_Ad", 3, false),
-        ("DrawEquipment_Normal_Dia", 10, false),
-        ("DrawEquipment_Unique", 10, false),
+        ("DrawSlime_Normal_Ad", 10),
+        ("DrawSlime_Normal_DrawTicket", 30),
+        ("DrawSlime_Unique_Dia", 10),
     };
 
     [UnityTest]
@@ -54,7 +51,7 @@ public class DrawShopPlayTest : InGamePlayTestBase
     IEnumerator AllDrawButtons_SpendAndGrantBody()
     {
         FillCurrency();
-        foreach (var (key, count, slime) in DRAWS)
+        foreach (var (key, count) in DRAWS)
         {
             current = key;
             ProductPurchaseButton button = FindButton(key);
@@ -64,7 +61,6 @@ public class DrawShopPlayTest : InGamePlayTestBase
 
             int currencyBefore = product.currencyType == CurrencyType.Ad ? 0 : GetCurrency(product.currencyType);
             int records = Purchases.GetPurchaseCount(key);
-            int equipments = UserDataManager.Instance.userEquipmentManager.userEquipmentData.userEquipments.Count;
 
             button.Purchase();
             yield return WaitPurchase();
@@ -75,15 +71,8 @@ public class DrawShopPlayTest : InGamePlayTestBase
             Assert.IsNotNull(panel.LastDrawKeys, $"{key}: 뽑기가 실행되지 않음 (onPurchased 연결 확인)");
             Assert.AreEqual(count, panel.LastDrawKeys.Length, $"{key}: 지급 개수");
 
-            if (slime)
-            {
-                foreach (string k in panel.LastDrawKeys)
-                    Assert.IsTrue(UserDataManager.Instance.userSlimeManager.GetUserSlime(k).own, $"{key}: 뽑은 슬라임 {k} 미보유");
-            }
-            else
-            {
-                Assert.AreEqual(equipments + count, UserDataManager.Instance.userEquipmentManager.userEquipmentData.userEquipments.Count, $"{key}: 장비 지급 수");
-            }
+            foreach (string k in panel.LastDrawKeys)
+                Assert.IsTrue(UserDataManager.Instance.userSlimeManager.GetUserSlime(k).own, $"{key}: 뽑은 슬라임 {k} 미보유");
         }
         AssertNoErrors();
     }
@@ -99,7 +88,7 @@ public class DrawShopPlayTest : InGamePlayTestBase
 
     IEnumerator AdDraw_DailyLimit3Body()
     {
-        foreach (string key in new[] { "DrawSlime_Normal_Ad", "DrawEquipment_Normal_Ad" })
+        foreach (string key in new[] { "DrawSlime_Normal_Ad" })
         {
             current = key;
             ProductPurchaseButton button = FindButton(key);

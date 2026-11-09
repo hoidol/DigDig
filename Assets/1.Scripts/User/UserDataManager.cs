@@ -18,7 +18,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     }
 
     public UserStageManager userStageManager;
-    public UserEquipmentManager userEquipmentManager;
+    public UserRelicManager userRelicManager;
     public UserSlimeManager userSlimeManager;
     public UserPurchaseManager userPurchaseManager;
     public UserMyInfoManager userMyInfoManager;
@@ -55,7 +55,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         Debug.Log("UserManager Awake()");
 
         userStageManager = new UserStageManager();
-        userEquipmentManager = new UserEquipmentManager();
+        userRelicManager = new UserRelicManager();
         userPurchaseManager = new UserPurchaseManager();
         userSlimeManager = new UserSlimeManager();
         userMyInfoManager = new UserMyInfoManager();
@@ -75,7 +75,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         }
 
         userStageManager.LoadData();
-        userEquipmentManager.LoadData();
+        userRelicManager.LoadData();
         userPurchaseManager.LoadData();
         userSlimeManager.LoadData();
         userMyInfoManager.LoadData();
@@ -92,7 +92,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         {
             userData = userData,
             userStageData = userStageManager.userStageData,
-            userEquipmentData = userEquipmentManager.userEquipmentData,
+            userRelicData = userRelicManager.userRelicData,
             userPurchaseData = userPurchaseManager.userPurchaseData,
             userSlimeData = userSlimeManager.userSlimeData,
             userMyInfoData = userMyInfoManager.userMyInfoData,
@@ -108,7 +108,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
 
         SaveIfNotNull(UserDataFileName, data.userData);
         SaveIfNotNull(UserStageManager.UserDataFileName, data.userStageData);
-        SaveIfNotNull(UserEquipmentManager.UserDataFileName, data.userEquipmentData);
+        SaveIfNotNull(UserRelicManager.UserDataFileName, data.userRelicData);
         SaveIfNotNull(UserPurchaseManager.UserDataFileName, data.userPurchaseData);
         SaveIfNotNull(UserSlimeManager.UserDataFileName, data.userSlimeData);
         SaveIfNotNull(UserMyInfoManager.UserDataFileName, data.userMyInfoData);
@@ -125,7 +125,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         {
             { UserDataFileName, JsonUtility.ToJson(data.userData) },
             { UserStageManager.UserDataFileName, JsonUtility.ToJson(data.userStageData) },
-            { UserEquipmentManager.UserDataFileName, JsonUtility.ToJson(data.userEquipmentData) },
+            { UserRelicManager.UserDataFileName, JsonUtility.ToJson(data.userRelicData) },
             { UserPurchaseManager.UserDataFileName, JsonUtility.ToJson(data.userPurchaseData) },
             { UserSlimeManager.UserDataFileName, JsonUtility.ToJson(data.userSlimeData) },
             { UserMyInfoManager.UserDataFileName, JsonUtility.ToJson(data.userMyInfoData) },
@@ -140,7 +140,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         {
             userData = FromSection<UserData>(sections, UserDataFileName),
             userStageData = FromSection<UserStageData>(sections, UserStageManager.UserDataFileName),
-            userEquipmentData = FromSection<UserEquipmentData>(sections, UserEquipmentManager.UserDataFileName),
+            userRelicData = FromSection<UserRelicData>(sections, UserRelicManager.UserDataFileName),
             userPurchaseData = FromSection<UserPurchaseData>(sections, UserPurchaseManager.UserDataFileName),
             userSlimeData = FromSection<UserSlimeData>(sections, UserSlimeManager.UserDataFileName),
             userMyInfoData = FromSection<UserMyInfoData>(sections, UserMyInfoManager.UserDataFileName),
@@ -263,7 +263,7 @@ public class UserCloudData
 {
     public UserData userData;
     public UserStageData userStageData;
-    public UserEquipmentData userEquipmentData;
+    public UserRelicData userRelicData;
     public UserPurchaseData userPurchaseData;
     public UserSlimeData userSlimeData;
     public UserMyInfoData userMyInfoData;

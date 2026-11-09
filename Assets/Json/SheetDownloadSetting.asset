@@ -40,7 +40,7 @@ MonoBehaviour:
     gid: 576911921
     range: B:E
   - enabled: 1
-    csvPath: Json/EquipmentData.csv
+    csvPath: Json/RelicData.csv
     sheetId: 
     gid: 383982687
     range: 
@@ -115,4 +115,4 @@ MonoBehaviour:
     gid: 547841506
     range: A:D
   slimeGid: 1109237000
-  slimeRange: A:K
+  slimeRange: A:L

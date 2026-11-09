@@ -31,7 +31,7 @@ public class StartSetting
             "UserManager",
             "StageManager",
             "EnemyManager",
-            "EquipmentManager",
+            "RelicManager",
             "KingSlimeManager",
             "SlimeManager",
             "SoundManager",

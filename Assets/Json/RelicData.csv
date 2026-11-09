@@ -1,0 +1,19 @@
+Key	Tier	Grade	MatchTags	Desc
+SplitShard	1	A	Shooter	탄이 적을 처치하면 두 갈래로 쪼개집니다. (피해 50%)
+EmberBrazier	1	A	Zone	지뢰 폭발·박격포 착탄·지옥불 자리에 3초간 불길이 남습니다.
+WhirlOrb	1	A	Orbit	회전체가 한 바퀴 돌 때마다 바깥으로 탄을 1발 쏩니다.
+CommandFlag	2	A	Support	십자 버프가 타일 그룹 경계를 넘어 적용됩니다.
+SurveyCompass	2	A	Zone	장판 슬라임이 옆 타일 그룹의 경로도 사용할 수 있습니다.
+PlagueChalice	2	A	Status	상태이상이 2종 이상 걸린 적이 죽으면 주변 적에게 상태이상이 옮겨갑니다.
+RelayCrystal	3	A	KillTrigger	킹 주변 3*3에서 일어난 처치도 모든 처치 감지 슬라임이 감지합니다.
+GamblerDice	3	A	Chance	확률 판정에 실패할 때마다 다음 판정 확률이 10% 오릅니다. 성공하면 초기화.
+HunterCharm	3	A	Heavy	엘리트·보스가 나오면 강타 슬라임이 모두 그 적을 먼저 노립니다.
+PureCrown	4	A		장착 슬라임이 모두 같은 공격 속성이면 약점 피해가 1.5배가 됩니다.
+MixedCrest	4	A		물리·마법이 섞여 있으면 방어 타입 wave 시작 시 약점 속성 슬라임 1마리를 무료 소환합니다.
+TwinRing	4	A	Zone|Orbit	같은 종 2마리가 붙어 있으면 둘 다 머지 레벨 +1 효과를 냅니다.
+AlchemyFlask	5	A	Transform	합성할 때 30% 확률로 레벨이 하나 더 오릅니다.
+GoldenScale	5	A	Special	wave 종료 시 50% 확률로 종료 코인 2배, 실패하면 절반.
+FrostCore	5	A	Status	얼어붙은 적이 죽으면 주변 적을 얼립니다.
+KingSeal	6	A		장착 슬라임 5종의 형태가 모두 다르면 모든 슬라임 공격 속도가 오릅니다.
+Hourglass	6	A	Support	보스 wave 시작 시 5초간 적이 멈춥니다.
+DragonHeart	6	A	Heavy	강타 슬라임이 보스에게 주는 피해가 2배가 됩니다.

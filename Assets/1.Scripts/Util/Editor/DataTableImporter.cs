@@ -37,7 +37,7 @@ public static class DataTableImporter
         new Entry("StageData", new[] { "StageData.csv", "WaveData", "EventData.csv" }, () => LoadAll<StageData>(d => d.LoadData())),
         new Entry("SlimeData", new[] { "SlimeData.csv", "SlimeEnhance" }, () => LoadAll<SlimeData>(d => d.LoadData())),
         new Entry("ItemData", new[] { "ItemData.csv" }, () => LoadAll<ItemData>(d => d.LoadData())),
-        new Entry("EquipmentData", new[] { "EquipmentData.csv" }, () => LoadAll<EquipmentData>(d => d.Edit())),
+        new Entry("RelicData", new[] { "RelicData.csv" }, () => LoadAll<RelicData>(d => d.Edit())),
         new Entry("EnhanceExpInfo", new[] { "EnhanceLevelInfo.csv" }, () => LoadAll<EnhanceExpInfo>(d => d.LoadData())),
         new Entry("KSUpgradeData", new[] { "KSUpgradeData.csv" }, KSUpgradeData.ImportAsset),
         new Entry("ProductData", new[] { "ProductData.csv" }, ProductDataTable.ImportAsset),

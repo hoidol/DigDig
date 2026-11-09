@@ -36,7 +36,7 @@ public class GameManager : MonoSingleton<GameManager>
             BulletManager.Instance.LoadTask,
             ItemManager.Instance.LoadTask,
             EnemyManager.Instance.LoadTask,
-            EquipmentManager.Instance.LoadTask,
+            RelicManager.Instance.LoadTask,
             SlimeManager.Instance.LoadTask
         );
 

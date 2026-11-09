@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afce9f0de977643fda793d34b73759b1, type: 3}
+  m_Name: MixedCrest
+  m_EditorClassIdentifier: Assembly-CSharp::RelicData
+  key: MixedCrest
+  tier: 4
+  thum: {fileID: 0}
+  grade: 2
+  matchTags: 0
+  desc: "\uBB3C\uB9AC\xB7\uB9C8\uBC95\uC774 \uC11E\uC5EC \uC788\uC73C\uBA74 \uBC29\uC5B4
+    \uD0C0\uC785 wave \uC2DC\uC791 \uC2DC \uC57D\uC810 \uC18D\uC131 \uC2AC\uB77C\uC784
+    1\uB9C8\uB9AC\uB97C \uBB34\uB8CC \uC18C\uD658\uD569\uB2C8\uB2E4."

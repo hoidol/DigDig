@@ -13,8 +13,6 @@ Not enough coin	코인이 부족합니다.	Not enough coin
 MaxMiniMe	더 이상 소환할 수 없습니다.\n{0}	
 review_title	플레이해주셔서 감사합니다.	Thank you for playing.
 review_body	더 재밌는 게임이 되기 위해서 소중한 리뷰를 남겨주세요.	Please leave a review to help us make the game even better.
-NormalDrawEquipment	일반 장비 뽑기	
-UniqueDrawEquipment	고급 장비 뽑기	
 Purchased	구매함	Purchased
 TryMerge	합성하기(0)	
 UtillRefresh	갱신까지	
@@ -131,9 +129,7 @@ Currency.Gold	골드	Gold
 Currency.Dia	다이아	Diamond
 Currency_Get	{0} {1:N0} 획득!	Got {0} {1:N0}!
 Draw_Slime_Get	슬라임 {0}마리 획득!	Got {0} slimes!
-Draw_Equipment_Get	장비 {0}개 획득!	Got {0} equipment!
 Draw_SpecialSlime	{0} 이상 슬라임 등장까지 [{1}/{2}]	{0}+ slime guaranteed in [{1}/{2}]
-Draw_SpecialEquipment	{0} 이상 장비 등장까지 [{1}/{2}]	{0}+ equipment guaranteed in [{1}/{2}]
 Ad	광고	AD
 Ad_Watching	광고 시청중...	Watching ad...
 Purchasing	구매중...	Purchasing...
@@ -165,3 +161,24 @@ hour_0	{0}시간	{0}h
 min_0	{0}분	{0}m
 sec_0	{0}초	{0}s
 changedLanguage	언어가 변경되었습니다.	Language changed.
+Relic_MatchSlime	해당 슬라임 {0}/{1}	Matching slimes {0}/{1}
+Relic.SplitShard	분열의 파편	SplitShard
+Relic.EmberBrazier	잔불의 화로	EmberBrazier
+Relic.WhirlOrb	회오리 구슬	WhirlOrb
+Relic.CommandFlag	지휘의 깃발	CommandFlag
+Relic.SurveyCompass	측량사의 나침반	SurveyCompass
+Relic.PlagueChalice	전염의 성배	PlagueChalice
+Relic.RelayCrystal	중계의 수정	RelayCrystal
+Relic.GamblerDice	도박사의 주사위	GamblerDice
+Relic.HunterCharm	사냥꾼의 부적	HunterCharm
+Relic.PureCrown	순혈의 왕관	PureCrown
+Relic.MixedCrest	혼혈의 문장	MixedCrest
+Relic.TwinRing	쌍둥이 반지	TwinRing
+Relic.AlchemyFlask	연금술 플라스크	AlchemyFlask
+Relic.GoldenScale	황금 저울	GoldenScale
+Relic.FrostCore	서리 핵	FrostCore
+Relic.KingSeal	왕의 인장	KingSeal
+Relic.Hourglass	모래시계	Hourglass
+Relic.DragonHeart	용의 심장	DragonHeart
+Relic_Locked	Lv.{0}에 해금됩니다	Unlocks at Lv.{0}
+Relic_TierUnlocked	새 유물 묶음이 해금되었습니다! 하나를 골라 주세요	A new relic set is unlocked! Choose one

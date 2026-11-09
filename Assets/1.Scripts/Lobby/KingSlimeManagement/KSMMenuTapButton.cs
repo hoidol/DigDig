@@ -13,6 +13,5 @@ public class KSMMenuTapButton : TapButton
 public enum KSMenuType
 {
     Upgrade,
-    Equipment,
-    Aura // 출시 후 업데이트 예정. 지금은 KSManagementCanvas.SelectMenu에서 무시 (값 순서 유지: 프리팹에 int로 저장됨)
+    Relic, // 이전 Equipment (프리팹에 int로 저장)
 }
