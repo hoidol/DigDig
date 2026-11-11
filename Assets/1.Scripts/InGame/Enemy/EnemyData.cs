@@ -51,8 +51,8 @@ public enum EnemyType
 public enum DefenceType
 {
     Normal, //일반형 - 직관적으로 데미지 입음
-    Armored, //갑옷형 - 물리 -50% 마법+50% 진동0%
-    Ethereal, //정령형 - 물리 +50% 마법-50% 진동0%
+    Armored, //갑옷형 - 물리 -50% 마법 +50% (배율은 Resources/DefenceInfo)
+    Ethereal, //정령형 - 물리 +50% 마법 -50%
     // 3: 중갑형(HeavyArmor) 삭제 (2026-10-30, 진동 공격 삭제로 약점이 없어짐). 기존 직렬화 값 유지를 위해 번호 비워둠
     // 4: 생체형(Organic) 삭제 (2026-11-07). 기존 직렬화 값 유지를 위해 번호 비워둠
 }

@@ -125,17 +125,6 @@ MonoBehaviour:
   - statType: 3
     values:
     - 0
-  enhanceAbilityInfos:
-  - level: 2
-    desc: "\uACF5\uACA9\uB825 +5% \uC99D\uAC00"
-  - level: 5
-    desc: "\uC9C4\uD759 \uC9C0\uC18D \uC2DC\uAC04 +0.5\uCD08"
-  - level: 8
-    desc: "[\uAC01\uC131] \uC9C4\uD759 \uAD6C\uC2AC \uCD5C\uB300 \uC218 +1"
-  - level: 11
-    desc: "\uD68C\uC804 \uBC18\uACBD 15% \uC99D\uAC00"
-  - level: 14
-    desc: "\uACF5\uACA9 \uC18D\uB3C4 +5% \uC99D\uAC00"
   uniqueSlimeStats: []
   maxOrbCounts: 0100000002000000030000000400000005000000
   splashRadius: 0.5

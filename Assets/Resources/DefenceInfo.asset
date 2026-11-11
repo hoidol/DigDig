@@ -21,10 +21,10 @@ MonoBehaviour:
   - defenceType: 1
     multipliers:
     - 1
-    - 0.2
-    - 2.5
+    - 0.5
+    - 1.5
   - defenceType: 2
     multipliers:
     - 1
-    - 2.5
-    - 0.2
+    - 1.5
+    - 0.5

@@ -127,9 +127,11 @@ Rotation.CounterClockwise	반시계 방향	Counterclockwise
 TileItem_DrawChance	{0}% 확률로 타일 강화 아이템을 얻습니다.	{0}% chance to get a tile item.
 TileItem_NoTile	적용 가능한 타일이 없습니다.	No tile available.
 TileItem_AlreadyInstalled	이미 아이템이 설치된 타일입니다.	This tile already has an item.
+TileItem_BlockedTile	막힌 타일에는 설치할 수 없습니다.	You cannot install on a blocked tile.
+TileItem_SelectBlockedTile	해제할 막힌 타일을 눌러주세요.	Tap a blocked tile to clear it.
 TileItem_RefreshLimit	이번 판 갱신 횟수를 모두 사용했습니다	No refreshes left this game
 TileItem_Level	{0} Lv.{1}	{0} Lv.{1}
-TileItem_Upgrade	강화 {0:0}%\n주사위 코인 {1}	Upgrade {0:0}%\nDice Coin {1}
+TileItem_Upgrade	강화 확률{0:0}%	Upgrade {0:0}%
 TileItem_UpgradeSuccess	강화 성공! Lv.{0}	Upgrade succeeded! Lv.{0}
 TileItem_UpgradeFail	강화 실패	Upgrade failed
 Not enough dice coin	주사위 코인이 부족합니다.	Not enough dice coins.

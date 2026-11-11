@@ -126,19 +126,6 @@ MonoBehaviour:
   - statType: 3
     values:
     - 0
-  enhanceAbilityInfos:
-  - level: 2
-    desc: "\uD06C\uB9AC\uD2F0\uCEEC \uBC84\uD504 +2% \uC99D\uAC00"
-  - level: 5
-    desc: "\uBC84\uD504\uBC1B\uB294 \uC544\uAD70\uC758 \uD06C\uB9AC\uD2F0\uCEEC\uB825
-      +5% \uC99D\uAC00"
-  - level: 8
-    desc: "[\uAC01\uC131] \uC2ED\uC790\uAC00 4\uCE78\uC5D0 \uBAA8\uB450 \uC544\uAD70\uC774
-      \uC788\uC73C\uBA74 \uBC84\uD504 50% \uAC15\uD654"
-  - level: 11
-    desc: "\uD06C\uB9AC\uD2F0\uCEEC \uBC84\uD504 +2% \uC99D\uAC00"
-  - level: 14
-    desc: "\uD06C\uB9AC\uD2F0\uCEEC \uBC84\uD504 +2% \uC99D\uAC00"
   uniqueSlimeStats: []
   buffOpType: 0
   buffValues:

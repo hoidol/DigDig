@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 
 // 다음 웨이브 바로 시작 버튼
-// 현재 wave의 소환이 모두 끝나면(wave 종료 → 휴식) 표시, 누르면 남은 휴식을 건너뛰고 다음 wave 시작
+// 현재 wave 시작 후 SKIP_ENABLE_TIME초가 지나면 표시, 누르면 바로 다음 wave 시작 (이전 wave 남은 소환과 겹쳐 진행)
 public class StartNextWaveButton : MonoBehaviour
 {
     public GameObject childObject;

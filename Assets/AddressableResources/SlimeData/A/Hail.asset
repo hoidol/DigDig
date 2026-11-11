@@ -125,17 +125,6 @@ MonoBehaviour:
   - statType: 3
     values:
     - 0
-  enhanceAbilityInfos:
-  - level: 2
-    desc: "\uACF5\uACA9\uB825 5% \uC99D\uAC00"
-  - level: 5
-    desc: "\uB208 \uC18C\uD658 \uC18D\uB3C4 10%\uC99D\uAC00"
-  - level: 8
-    desc: "[\uAC01\uC131] \uB208 2\uAC1C"
-  - level: 11
-    desc: "\uB208 \uC774\uB3D9 \uC18D\uB3C4 15% \uC99D\uAC00"
-  - level: 14
-    desc: "\uACF5\uACA9\uB825 5% \uC99D\uAC00"
   uniqueSlimeStats: []
   hailCount: 1
   rotationDirection: 0

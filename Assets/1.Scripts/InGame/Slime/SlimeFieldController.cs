@@ -11,9 +11,8 @@ public class SlimeFieldController : MonoSingleton<SlimeFieldController>
     // [field: SerializeField] public int ActiveSlimeCount { get; private set; }
 
     public readonly HashSet<Slime> activeslimes = new();
-    public int ignoreSlimeCount =0; //씬 상에는 있지만 카운딩 안되는 슬라임 개수
     public int slimeMaxCount;
-    public int CountedSlimeCount => KingSlime.Instance.slimeInventory.curSlimes.Count - ignoreSlimeCount; // 최대 수 판정에 쓰는 슬라임 수
+    public int CountedSlimeCount => KingSlime.Instance.slimeInventory.curSlimes.Count; // 최대 수 판정에 쓰는 슬라임 수
     public int mergeCount;
     public int reinforceCount;
     // public int mergeCoinGetCounter;
@@ -221,7 +220,7 @@ public class SlimeFieldController : MonoSingleton<SlimeFieldController>
         return true;
     }
 
-    // 슬라임끼리 놓으면 머지 시도(머지가 안 되면 두 슬라임 자리 교체), 빈 타일이면 이동, 그 외엔 원위치
+    // 슬라임끼리 놓으면 머지 시도(머지가 안 되면 두 슬라임 자리 교체), 킹 ↔ 슬라임은 자리 교체, 빈 타일이면 이동, 그 외엔 원위치
     void EndDrag()
     {
         ITileObject source = dragObject;
@@ -236,7 +235,12 @@ public class SlimeFieldController : MonoSingleton<SlimeFieldController>
             return;
         }
 
-        Vector3 dropPos = GetMouseWorldPos();
+        DropAt(source, GetMouseWorldPos(), originPos);
+    }
+
+    // 드래그한 오브젝트를 dropPos에 놓음 (테스트에서 마우스 없이 호출)
+    void DropAt(ITileObject source, Vector3 dropPos, Vector3 originPos)
+    {
         if (source is Slime sourceSlime)
         {
             Slime target = FindSlime(dropPos, sourceSlime);
@@ -250,6 +254,16 @@ public class SlimeFieldController : MonoSingleton<SlimeFieldController>
         }
 
         Tile tile = TileManager.Instance.GetNearestTile(dropPos);
+        // 킹 ↔ 슬라임: 머지 대상이 아니므로 자리 교체
+        if (tile != null && tile.tileObject != null && tile.tileObject != source
+            && (source is KingSlime || tile.tileObject is KingSlime)
+            && SwapTileObjects(source, tile.tileObject))
+        {
+            GameEventBus.Publish(new DragEndEvent(source, tile));
+            SelectTile(TileManager.Instance.GetTile(source));
+            return;
+        }
+
         if (tile != null && tile.IsEmpty)
         {
             TileManager.Instance.RemoveTileObject(source);
@@ -286,7 +300,10 @@ public class SlimeFieldController : MonoSingleton<SlimeFieldController>
 
     // 두 슬라임의 타일을 맞바꾼다. 타일 아이템 효과는 SetTileObject가 OnExit/OnEnter로 옮김
     // 둘 다 옮겨 놓은 것과 같이 EndDrag(새 타일) 처리 → 지옥불 위치 등 타일 기준 상태 갱신
-    public static bool SwapSlimes(Slime a, Slime b)
+    public static bool SwapSlimes(Slime a, Slime b) => SwapTileObjects(a, b);
+
+    // 두 타일 오브젝트(슬라임·킹)의 타일을 맞바꾼다. 킹 ↔ 슬라임 교체에도 사용
+    public static bool SwapTileObjects(ITileObject a, ITileObject b)
     {
         if (a == null || b == null || a == b)
             return false;

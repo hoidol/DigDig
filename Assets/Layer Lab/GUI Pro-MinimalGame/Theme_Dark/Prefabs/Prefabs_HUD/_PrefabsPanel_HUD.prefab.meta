@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c45580acc8aa04179a22e97ed4cb34dd
+guid: 48b37c6f56940431a80c2f760833eb27
 PrefabImporter:
   externalObjects: {}
   userData: 
@@ -9,6 +9,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 358058
   packageName: GUI Pro - Minimal Game Dark
-  packageVersion: 1.0.1
+  packageVersion: 2.0.0
   assetPath: Assets/Layer Lab/GUI Pro-MinimalGame/Theme_Dark/Prefabs/Prefabs_HUD/_PrefabsPanel_HUD.prefab
-  uploadId: 866768
+  uploadId: 1018740

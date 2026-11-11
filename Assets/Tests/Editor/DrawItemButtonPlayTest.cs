@@ -71,7 +71,7 @@ public class DrawItemButtonPlayTest : InGamePlayTestBase
         Assert.IsTrue(shown.All(d => d.itemPrefab is TileItem), "타일 아이템이 아닌 선택지");
 
         // 타일 선택이 필요한 아이템 선택 → 타일 선택 단계
-        int idx = shown.FindIndex(d => ((TileItem)d.itemPrefab).NeedTile);
+        int idx = shown.FindIndex(d => ((TileItem)d.itemPrefab).NeedTile && d.itemPrefab is not PioneerTileItem); // 개척은 막힌 칸을 고름
         Assert.GreaterOrEqual(idx, 0, "타일에 설치하는 선택지가 없음");
         ItemData picked = shown[idx];
         panels[idx].OnClickedButton();

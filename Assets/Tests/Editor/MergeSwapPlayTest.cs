@@ -20,7 +20,80 @@ public class MergeSwapPlayTest : InGamePlayTestBase
         AssertNoErrors();
     }
 
-    static readonly MethodInfo DROP = typeof(SlimeFieldController).GetMethod("Merge",
+    // 킹 ↔ 슬라임: 서로 위에 놓으면 자리 교체 (SlimeFieldController.DropAt)
+    [UnityTest]
+    public IEnumerator KingSlime_SwapWithSlime()
+    {
+        if (!Application.isPlaying) { BeforeEnterPlayMode(); yield return new EnterPlayMode(); }
+        yield return WaitGameStart();
+        yield return KingBody();
+        AssertNoErrors();
+    }
+
+    static readonly MethodInfo DROP_AT = typeof(SlimeFieldController).GetMethod("DropAt",
+        BindingFlags.NonPublic | BindingFlags.Instance);
+
+    // 드래그해서 target 칸 위에 놓은 것처럼: 손으로 옮긴 위치에서 DropAt 호출
+    static IEnumerator DragDrop(ITileObject source, Tile target)
+    {
+        Vector3 origin = source.Transform.position;
+        source.StartDrag();
+        source.Transform.position = target.transform.position;
+        DROP_AT.Invoke(SlimeFieldController.Instance, new object[] { source, target.transform.position, origin });
+        yield return WaitFrames(3);
+    }
+
+    IEnumerator KingBody()
+    {
+        Assert.IsNotNull(DROP_AT, "SlimeFieldController.DropAt 없음");
+        KingSlime king = KingSlime.Instance;
+        Tile kingTile = TileManager.Instance.GetTile(king);
+        Assert.IsNotNull(kingTile, "킹이 타일 위에 없음");
+
+        // 1) 킹을 슬라임 위에 놓음 → 교체
+        Tile slimeTile = GetFreeTile(kingTile);
+        Slime slime = SpawnSlime("Iron", slimeTile, 0);
+        yield return WaitFrames(2);
+        yield return DragDrop(king, slimeTile);
+        Assert.AreSame(slimeTile, TileManager.Instance.GetTile(king), "킹 → 슬라임: 킹이 슬라임 칸으로 안 감");
+        Assert.AreSame(kingTile, TileManager.Instance.GetTile(slime), "킹 → 슬라임: 슬라임이 킹 칸으로 안 옴");
+        Assert.AreEqual((Vector2)slimeTile.transform.position, (Vector2)king.transform.position, "킹 위치");
+        Assert.AreEqual((Vector2)kingTile.transform.position, (Vector2)slime.transform.position, "슬라임 위치");
+        Assert.IsTrue(KingSlime.Instance.slimeInventory.curSlimes.Contains(slime), "교체인데 슬라임이 사라짐");
+
+        // 2) 슬라임을 킹 위에 놓음 → 다시 교체 (원래 자리로)
+        yield return DragDrop(slime, slimeTile);
+        Assert.AreSame(kingTile, TileManager.Instance.GetTile(king), "슬라임 → 킹: 킹이 원래 칸으로 안 감");
+        Assert.AreSame(slimeTile, TileManager.Instance.GetTile(slime), "슬라임 → 킹: 슬라임이 킹 칸으로 안 감");
+        Assert.AreEqual((Vector2)kingTile.transform.position, (Vector2)king.transform.position, "킹 위치");
+        Assert.AreEqual((Vector2)slimeTile.transform.position, (Vector2)slime.transform.position, "슬라임 위치");
+
+        // 3) 킹이 타일 아이템 칸의 슬라임과 교체 → 아이템 효과가 킹에게, 슬라임에선 빠짐
+        Tile itemTile = GetFreeTile(kingTile, slimeTile);
+        KingSlime.Instance.AddItem("AttackPowerTile", itemTile).Forget();
+        yield return WaitFrames(2);
+        Assert.IsNotNull(itemTile.tileItem, "공격력 타일 설치 안 됨");
+        Slime onItem = SpawnSlime("Bounce", itemTile, 0);
+        yield return WaitFrames(2);
+        float buffed = onItem.statDic[StatType.AttackPower];
+        yield return DragDrop(king, itemTile);
+        Assert.AreSame(itemTile, TileManager.Instance.GetTile(king), "아이템 칸: 킹이 안 감");
+        Assert.AreSame(kingTile, TileManager.Instance.GetTile(onItem), "아이템 칸: 슬라임이 안 옴");
+        Assert.Less(onItem.statDic[StatType.AttackPower], buffed, "아이템 칸에서 나간 슬라임에 효과가 남음");
+        Assert.AreSame(itemTile.tileItem, king.shotModifier?.tileItem, "킹에 아이템 칸 연결 안 됨");
+
+        // 4) 빈 칸 이동은 그대로
+        Tile empty = GetFreeTile(kingTile, slimeTile, itemTile);
+        yield return DragDrop(king, empty);
+        Assert.AreSame(empty, TileManager.Instance.GetTile(king), "킹 빈 칸 이동 안 됨");
+        Assert.IsNull(itemTile.tileObject, "킹이 떠난 칸이 비지 않음");
+
+        SlimeFieldController.Instance.RemoveFieldSlime(slime);
+        SlimeFieldController.Instance.RemoveFieldSlime(onItem);
+        yield return WaitFrames(2);
+    }
+
+    static readonly MethodInfo DROP =typeof(SlimeFieldController).GetMethod("Merge",
         BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(Slime), typeof(Slime), typeof(Vector3) }, null);
 
     static IEnumerator Drop(Slime source, Slime target)

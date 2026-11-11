@@ -125,19 +125,4 @@ MonoBehaviour:
   - statType: 3
     values:
     - 0
-  enhanceAbilityInfos:
-  - level: 2
-    desc: "\uACF5\uACA9\uB825 +5% \uC99D\uAC00"
-  - level: 5
-    desc: "\uD76C\uC0DD\uC73C\uB85C \uC131\uC7A5\uD55C \uC2AC\uB77C\uC784 \uACF5\uACA9\uB825
-      +5%"
-  - level: 8
-    desc: "[\uAC01\uC131] \uD569\uC131 \uC2DC 30% \uD655\uB960\uB85C \uBA38\uC9C0
-      \uB808\uBCA8 +1 \uCD94\uAC00"
-  - level: 11
-    desc: "\uD76C\uC0DD\uC73C\uB85C \uC131\uC7A5\uD55C \uC2AC\uB77C\uC784  \uACF5\uACA9\uC18D\uB3C4
-      +5%"
-  - level: 14
-    desc: "\uD76C\uC0DD\uC73C\uB85C \uC131\uC7A5\uD55C \uC2AC\uB77C\uC784  \uACF5\uACA9\uB825
-      +5%"
   uniqueSlimeStats: []

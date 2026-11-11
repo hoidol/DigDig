@@ -67,10 +67,6 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4294967295
       objectReference: {fileID: 0}
-    - target: {fileID: 4905095055622667418, guid: 0bf4e80ada34545b4b6528f03c4cc796, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 8a141e03e839a4e81b90ac33fd30993a, type: 3}
     - target: {fileID: 4905095055622667492, guid: 0bf4e80ada34545b4b6528f03c4cc796, type: 3}
       propertyPath: m_Name
       value: Badge_Crimped_01_Yellow

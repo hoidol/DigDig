@@ -19,18 +19,52 @@ public class WaveTypeTest
         Assert.AreEqual(expected, GameManager.GetWaveType(waveIdx));
     }
 
-    // 4 wave마다 Ethereal → Armored 번갈아, 나머지는 Normal
+    // 스킵: wave 시작 후 SKIP_ENABLE_TIME(20)초부터 (소환이 끝나기 전이라 다음 wave와 겹침), 보스 wave는 불가
+    [TestCase(WaveType.Battle, 0f, false)]
+    [TestCase(WaveType.Battle, 19.9f, false)]
+    [TestCase(WaveType.Battle, 20f, true)]
+    [TestCase(WaveType.Elite, 25f, true)]
+    [TestCase(WaveType.Boss, 50f, false)]
+    public void CanSkipWave(WaveType waveType, float elapsed, bool expected)
+    {
+        Assert.AreEqual(expected, GameManager.CanSkipWave(waveType, elapsed));
+        Assert.Less(GameSetting.SKIP_ENABLE_TIME, GameSetting.WAVE_SPAWN_TIME, "스킵 가능 시점이 소환 종료보다 앞이어야 겹침");
+    }
+
+    // 3 wave마다 Ethereal → Armored 번갈아, 나머지는 Normal (DEFENCE_WAVE_INTERVAL = 3)
     [TestCase(0, DefenceType.Normal)]
-    [TestCase(2, DefenceType.Normal)]
-    [TestCase(3, DefenceType.Ethereal)]  // 4번째
-    [TestCase(4, DefenceType.Normal)]
-    [TestCase(7, DefenceType.Armored)]   // 8번째
-    [TestCase(11, DefenceType.Ethereal)] // 12번째
-    [TestCase(15, DefenceType.Armored)]  // 16번째
-    [TestCase(19, DefenceType.Ethereal)] // 20번째 (보스 wave, 보스 자체는 항상 Normal)
+    [TestCase(1, DefenceType.Normal)]
+    [TestCase(2, DefenceType.Ethereal)]  // 3번째
+    [TestCase(3, DefenceType.Normal)]
+    [TestCase(5, DefenceType.Armored)]   // 6번째
+    [TestCase(8, DefenceType.Ethereal)]  // 9번째
+    [TestCase(11, DefenceType.Armored)]  // 12번째
+    [TestCase(19, DefenceType.Normal)]   // 20번째 (보스 wave)
     public void GetWaveDefenceType(int waveIdx, DefenceType expected)
     {
+        Assert.AreEqual(GameSetting.DEFENCE_WAVE_INTERVAL == 3, true, "간격이 바뀌면 이 기대값도 고칠 것");
         Assert.AreEqual(expected, GameManager.GetWaveDefenceType(waveIdx));
+    }
+
+    // 기본 배율 (Resources/DefenceInfo 에셋이 없을 때. 에셋 값은 DefenceTypePlayTest가 실제 전투로 확인)
+    [TestCase(AttackType.Physic, DefenceType.Armored, 0.5f)]
+    [TestCase(AttackType.Magic, DefenceType.Armored, 1.5f)]
+    [TestCase(AttackType.Physic, DefenceType.Ethereal, 1.5f)]
+    [TestCase(AttackType.Magic, DefenceType.Ethereal, 0.5f)]
+    [TestCase(AttackType.AllRounder, DefenceType.Armored, 1f)]
+    public void DefenceDefaultMultiplier(AttackType attack, DefenceType defence, float expected)
+    {
+        Assert.AreEqual(expected, DefenceInfo.GetDefault(attack, defence), 0.0001f);
+    }
+
+    // 아군 최소 피해: 1 미만이면 1, 원래 피해 0은 0
+    [TestCase(3f, 0.6f, 1f)]
+    [TestCase(3f, 0f, 1f)]
+    [TestCase(5f, 2.5f, 2.5f)]
+    [TestCase(0f, 0f, 0f)]
+    public void AllyMinDamage(float baseDamage, float finalDamage, float expected)
+    {
+        Assert.AreEqual(expected, AllyUnitDamageData.GetMinGuaranteedDamage(baseDamage, finalDamage), 0.0001f);
     }
 }
 

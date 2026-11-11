@@ -240,5 +240,53 @@
             "enhanceLevel": 0,
             "exp": 0
         }
+    ],
+    "selectedPresetIdx": 0,
+    "presets": [
+        {
+            "keys": [
+                "Flame",
+                "Ice",
+                "Random",
+                "Orbit",
+                "Lightning"
+            ]
+        },
+        {
+            "keys": [
+                "Flame",
+                "Ice",
+                "Random",
+                "Orbit",
+                "Lightning"
+            ]
+        },
+        {
+            "keys": [
+                "Flame",
+                "Ice",
+                "Random",
+                "Orbit",
+                "Lightning"
+            ]
+        },
+        {
+            "keys": [
+                "Flame",
+                "Ice",
+                "Random",
+                "Orbit",
+                "Lightning"
+            ]
+        },
+        {
+            "keys": [
+                "Flame",
+                "Ice",
+                "Random",
+                "Orbit",
+                "Lightning"
+            ]
+        }
     ]
 }

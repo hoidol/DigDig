@@ -182,6 +182,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 577547553208854973}
+  - component: {fileID: 926633893}
   m_Layer: 5
   m_Name: Rewards_Mailbox
   m_TagString: Untagged
@@ -196,7 +197,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 577547553208854970}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -211,6 +212,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &926633893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 577547553208854970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99cf42140c3104393ba145bec6abebb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  otherPanels:
+  - {fileID: 0}
 --- !u!1 &577547553301484420
 GameObject:
   m_ObjectHideFlags: 0
@@ -1211,6 +1226,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 577547554364192962}
     m_Modifications:
+    - target: {fileID: 30930610552730877, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10.056999
+      objectReference: {fileID: 0}
+    - target: {fileID: 30930610552730877, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.331902
+      objectReference: {fileID: 0}
     - target: {fileID: 4059040738194741956, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1381,6 +1404,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 577547554364192962}
     m_Modifications:
+    - target: {fileID: 30930610552730877, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10.056999
+      objectReference: {fileID: 0}
+    - target: {fileID: 30930610552730877, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.331902
+      objectReference: {fileID: 0}
     - target: {fileID: 4823164820473312692, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
       propertyPath: m_Name
       value: ListItem_Mailbox (1)
@@ -1518,6 +1549,14 @@ PrefabInstance:
     - target: {fileID: 4684912148603097587, guid: 2816504f258864baa9e5686c055c9172, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052259411191217737, guid: 2816504f258864baa9e5686c055c9172, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10.057007
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052259411191217737, guid: 2816504f258864baa9e5686c055c9172, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.331902
       objectReference: {fileID: 0}
     - target: {fileID: 6340597162168722449, guid: 2816504f258864baa9e5686c055c9172, type: 3}
       propertyPath: m_Pivot.x
@@ -1769,6 +1808,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5244604745996552673, guid: b2b8ac86c290e4a5c883c59687dd30ef, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -13.900002
+      objectReference: {fileID: 0}
+    - target: {fileID: 5244604745996552673, guid: b2b8ac86c290e4a5c883c59687dd30ef, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.399998
+      objectReference: {fileID: 0}
+    - target: {fileID: 5273690494179425475, guid: b2b8ac86c290e4a5c883c59687dd30ef, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -13.900002
+      objectReference: {fileID: 0}
+    - target: {fileID: 5273690494179425475, guid: b2b8ac86c290e4a5c883c59687dd30ef, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.399998
+      objectReference: {fileID: 0}
     - target: {fileID: 7821762446848171073, guid: b2b8ac86c290e4a5c883c59687dd30ef, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1816,6 +1871,14 @@ PrefabInstance:
     - target: {fileID: 7884402356701948259, guid: b2b8ac86c290e4a5c883c59687dd30ef, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891981239817033187, guid: b2b8ac86c290e4a5c883c59687dd30ef, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -13.900002
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891981239817033187, guid: b2b8ac86c290e4a5c883c59687dd30ef, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.399998
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2b8ac86c290e4a5c883c59687dd30ef, type: 3}
@@ -1831,6 +1894,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 577547554364192962}
     m_Modifications:
+    - target: {fileID: 30930610552730877, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10.056999
+      objectReference: {fileID: 0}
+    - target: {fileID: 30930610552730877, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.331902
+      objectReference: {fileID: 0}
     - target: {fileID: 4823164820473312692, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
       propertyPath: m_Name
       value: ListItem_Mailbox
@@ -1945,6 +2016,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Delete All
       objectReference: {fileID: 0}
+    - target: {fileID: 6407656016846069987, guid: 4a5ddf34ff4f848adaa272a41dc88356, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10.057007
+      objectReference: {fileID: 0}
+    - target: {fileID: 6407656016846069987, guid: 4a5ddf34ff4f848adaa272a41dc88356, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.331902
+      objectReference: {fileID: 0}
     - target: {fileID: 6696627703857724091, guid: 4a5ddf34ff4f848adaa272a41dc88356, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2047,6 +2126,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 577547554364192962}
     m_Modifications:
+    - target: {fileID: 30930610552730877, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10.056999
+      objectReference: {fileID: 0}
+    - target: {fileID: 30930610552730877, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.331902
+      objectReference: {fileID: 0}
     - target: {fileID: 4823164820473312692, guid: a0566a6cdaa834ee4947db39b46501cd, type: 3}
       propertyPath: m_Name
       value: ListItem_Mailbox (2)

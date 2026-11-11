@@ -60,10 +60,10 @@ public class DefenceInfo : ScriptableObject
             return 1f;
         switch (defenceType)
         {
-            case DefenceType.Armored: // 갑옷형 - 물리 -80% 마법 +100%
-                return attackType == AttackType.Physic ? 0.2f : attackType == AttackType.Magic ? 2.0f : 1f;
-            case DefenceType.Ethereal: // 정령형 - 물리 +100% 마법 -80%
-                return attackType == AttackType.Physic ? 2.0f : attackType == AttackType.Magic ? 0.2f : 1f;
+            case DefenceType.Armored: // 갑옷형 - 물리 -50% 마법 +50%
+                return attackType == AttackType.Physic ? 0.5f : attackType == AttackType.Magic ? 1.5f : 1f;
+            case DefenceType.Ethereal: // 정령형 - 물리 +50% 마법 -50%
+                return attackType == AttackType.Physic ? 1.5f : attackType == AttackType.Magic ? 0.5f : 1f;
             default: // 일반형
                 return 1f;
         }

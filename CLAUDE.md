@@ -19,15 +19,17 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 경로 **마지막 지점에 도착하면 캐릭터 체력 감소** 후 사라짐 (보상 없음). → 디펜스 구조: 경로 위에서 처치해야 함.
 - 스폰 위치는 `paths[0]`. `paths`가 비어 있으면 이전 방식(플레이어 추적)으로 동작.
 - (2026-11-08) **적 애니메이션**: 적 프리팹 자식의 스프라이트 프리팹(Layer Lab) Animator. **Walk가 기본**(스폰·풀 재사용 시 Walk부터). **처치되면 Dead 재생 → 끝나기 0.1초 전(`DEAD_ANIM_END_EARLY_TIME`, 최소 1프레임 전)에 비활성화 후 풀로**(Dead 클립이 루프여도 1회, 최대 `Enemy.DEAD_ANIM_MAX_TIME`). Dead 중엔 충돌·이동·피해 없음, `EnemyDeadEvent`(보상·처치 감지)는 죽는 즉시 발행되고 활성 적 수에서도 바로 빠진다. **경로 끝 도착은 Dead 없이 바로 비활성화.** Dead 상태가 없는 프리팹(현재 보스)은 바로 비활성화. 테스트 `EnemyAnimPlayTest`.
+- (2026-11-10) **적 머리 위 체력바**: InGame 씬 `EnemyWorldCanvas`(World Space) 하위의 `EnemyHpUI`(HpBarBg, `thumImage` = Filled 바) 하나를 템플릿으로 적마다 복사·풀링. 스폰 시 붙고 `HpPoint` 위치를 따라감, 피해마다 갱신, **Dead 시작·경로 끝·회수 시 숨김**. **보스는 머리 위 체력바 없이 `BossCanvas`**(`Enemy.UseHpUI` false). 테스트 `EnemyHpUIPlayTest`.
 
 ## 슬라임 소환 / 합성
 - 소환 버튼: **10코인**, 장착한 **5종 중 1종이 랜덤**으로 mergeLv 0으로 **16칸** 중 빈 칸에 등장.
 - 합성 조건: **같은 key + 같은 mergeLv** 끼리만 (ice 0 + ice 0 O / ice + flame X / ice 0 + ice 1 X).
 - (2026-11-09) **머지가 안 되는 슬라임 위에 놓으면 두 슬라임 자리 교체**(`SlimeFieldController.SwapSlimes`). 타일 아이템 효과도 칸을 따라 바뀜. 이전엔 원위치. 테스트 `MergeSwapPlayTest`.
+- (2026-11-11) **킹슬라임도 슬라임과 자리 교체**: 킹을 슬라임 위에 놓거나 슬라임을 킹 위에 놓으면 맞바꿈(`SlimeFieldController.SwapTileObjects`, `SwapSlimes`도 이걸 씀). 테스트 `MergeSwapPlayTest.KingSlime_SwapWithSlime`.
 - mergeLv는 0부터 시작. 최대치는 `SlimeData.MAX_MERGE_LEVEL` = 4 (0~4, 5단계).
 - 합성 결과 key: 현재 코드는 장착 5종 중 **랜덤** (`Slime.Merge`). 기획 의도 확인 필요.
 - 슬라임 판매/버리기 기능 없음.
-- 게임 시작 시 타일 중 **랜덤 5칸은 사용 불가**(`BLOCKED_TILE_COUNT`, 2026-10-18). 소환/드래그/캐릭터 배치 모두 막힌 칸에는 못 놓음.
+- 게임 시작 시 타일 중 **랜덤 5칸은 사용 불가**(`BLOCKED_TILE_COUNT`, 2026-10-18). 소환/드래그/캐릭터 배치 모두 막힌 칸에는 못 놓음. (2026-11-10) 막힌 칸은 숨기지 않고 **깨진 타일 이미지**(`TileManager.breakTile`)로 보여줌, 해제되면 `baseTile`.
 
 ### 의도
 - **소환 가격은 올리지 않는다.** 싸게 계속 뽑는 뽑기 재미가 핵심.
@@ -41,7 +43,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 랜덤 데미지(Random 등, 2026-11-05 Wacky에서 key 변경. 저장 데이터 마이그레이션은 안 함: 필요하면 데이터 초기화): 데이터에는 **중간값만** 입력, SlimeData의 `attackPowerRandomRatio`로 `중간값 × (1 ± 비율)` 범위 결정. `3~15` 같은 범위 직접 입력은 쓰지 않는다.
 - (2026-11-05) 슬라임 스크립트는 **등급별 폴더**(`Slime/Unit/{C,B,A,S}/{Key}Slime/`, 데이터 스크립트는 `Slime/SlimeData/{C,B,A,S}/`, 프리팹은 `3.Prefabs/Slime/{C,B,A,S}/` — `SlimeData.LoadData`가 grade로 찾음). 신규 key: B = Shield(철벽)·Dopamine(광란)·Mine·Breeze·Rage·Stigma(낙인), A = Mud·Keen(설의, 2026-11-06 B→A)·Beam(광선 링크)·Berserker·Hail(빙석)·Inferno(지옥)·Mortar(박격포, 2026-11-06 Boom에서 key 변경), S = Sacrifice·GrowUp·Scavenger(시체수집)·Joker·Hunter(사냥꾼, 2026-11-06). 대부분 아직 뼈대(일반 탄)만 있음.
 - (2026-11-09) **강화 능력(EnhanceAbility) 폐지.** 강화 레벨(0~14, 로비 영구 성장)은 유지하되 **스탯(공격력·공속, 슬라임 특성 수치)만 올린다.** 가시방패·포위 진형·화상 같은 레벨 해금 특수 능력(각성 포함)은 없다. 강화 데이터 = `EnhanceSlimeData`(이전 EnhanceAbilitySlimeData) + SlimeEnhance CSV(Key/Level/AttackPower). 공속·특성 수치의 레벨별 증가는 아직 미구현(시트 형식 정해서 추가 예정).
-- (2026-11-09) **[각성] = 진화로 발현.** 최대 머지 레벨 슬라임이 진화 타일(`EvolutionTile`)에 올라가면 `Slime.Evolve` → `isEvolved` + `OnEvolve`로 그 슬라임의 각성 능력이 켜진다(이전 강화 8 능력). 수치는 각 슬라임 클래스 `EVOLVE_*` const(임시). 합성·교체로 새 슬라임이 되면 사라짐.
+- (2026-11-09) **[각성] = 진화로 발현.** 최대 머지 레벨 슬라임이 진화 타일(`EvolutionTile`, 1회용)에 올라가면 `Slime.Evolve` → `isEvolved` + `OnEvolve`로 그 슬라임의 각성 능력이 켜진다(이전 강화 8 능력). 수치는 각 슬라임 클래스 `EVOLVE_*` const(임시). 합성·교체로 새 슬라임이 되면 사라짐.
   - C: 탄성·관통 = 탄 피해 +20%, 냉기 = 탄 1회 튕김, 번개 = 맞은 적 1초 감속, 천둥 = 10% 확률 1초 감속, 강철 = 엘리트·보스 배율 +0.2, 회전 = 3% 확률 0.1초 스턴, 랜덤 = 6번째 공격마다 4방향 원형 발사, 화염 = 5초마다 사거리 안 적 최대 7기에 공격력 피해 + 화상.
   - B: 철벽 = 가시방패(막힌 적 1초마다 최대 체력 1%), 광란 = 추가 탄 2발, 지뢰 = 2개씩 설치, 낙인 = 최대 5중첩, 십자 버프(산들바람·격노·설의) = **포위 진형**(같은 그룹 안 범위 4칸이 모두 슬라임이면 버프 증가분 +50%).
   - A: 광선 = 레이저 감속 0.5초, 버서커 = 최대 중첩 시 공격력 ×1.2, 빙석 = 눈 2개, 지옥 = 화상(2초, 초당 공격력 30%), 박격포 = 슬로우 확률 50%, 진흙 = 구슬 최대 +1.
@@ -87,6 +89,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 
 ## 인게임 직접 강화 (2026-11-04)
 - 코인으로 **종(key) 단위** 강화(`ReinforcePanel`, 가격 30×(lv+1)). 레벨은 `KingSlimeStatManager.slimeDic`의 `reinforceLevel`.
+- (2026-11-11) `ReinforceCanvas` = **장착 5종을 `reinforcePanels[]`에 장착 슬롯 순서대로** 보여주고 바로 강화. **필드에 그 종이 없어도 강화 가능**(이후 소환분에 적용). 슬롯머신(릴 3개로 대상·종류·수치 결정) 기능은 폐기, 코드 주석으로 남김. 테스트 `ReinforcePlayTest`.
 - 효과는 주로 **공격력 %**: 레벨당 `SlimeData.reinforceAttackPowerPercent`(SlimeData.csv `ReinforceAttackPower`, 기본 10) 합연산. **%는 종마다 다르게** 준다.
 - **슬라임 특성의 시각적 변화(탄 수, Orbit 체인 수 등)는 강화가 아니라 머지 레벨업으로** 준다. 강화는 수치 담당.
 - 그 종이 필드에서 잠깐 0마리가 돼도(머지 등) 강화 레벨은 유지(`slimeDic` 항목을 지우지 않음).
@@ -153,7 +156,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - (2026-11-06) **넉백(적 밀어내기, `Enemy.Push`/`PushBehavior`)은 삭제.** 적 이동 방해는 슬로우·빙결·스턴·철벽 막기로만. **스턴은 모든 출처 공통으로 엘리트/보스도 걸리고 시간만 절반**(`StatusEffectHandler.Apply`).
 
 ## 타일 아이템 (2026-10-22)
-- 아이템 획득(2026-11-01): `DrawItemButton`으로 코인을 내면 `SelectItemCanvas`가 열린다. **Draw**(확률 연출, `drawDuration` 0이면 생략) → **SelectItem**(TileItem 중 겹치지 않는 랜덤 3개, 반드시 하나 선택) → **SelectTile**(눌러서 설치, 이미 아이템이 있는 타일은 불가). **열려 있어도 게임은 멈추지 않는다**(2026-11-07 확인, 이전엔 일시정지). 설치 칸을 직접 고르는 것이 배치 고민 포인트. PioneerTile은 설치가 없어 타일 선택 생략. (이전: 랜덤 1개를 랜덤 타일에 바로 설치)
+- 아이템 획득(2026-11-01): `DrawItemButton`으로 코인을 내면 `SelectItemCanvas`가 열린다. **Draw**(확률 연출, `drawDuration` 0이면 생략) → **SelectItem**(TileItem 중 겹치지 않는 랜덤 3개, 반드시 하나 선택) → **SelectTile**(눌러서 설치, 이미 아이템이 있는 타일은 불가). **열려 있어도 게임은 멈추지 않는다**(2026-11-07 확인, 이전엔 일시정지). 설치 칸을 직접 고르는 것이 배치 고민 포인트. PioneerTile은 설치 대신 해제할 막힌 칸을 고름. (이전: 랜덤 1개를 랜덤 타일에 바로 설치)
   - 선택지 갱신(2026-11-04): SelectItem 단계에서 `AdRefreshItemButton`으로 광고를 보면 선택지 3개를 다시 뽑는다(가능하면 지금 보이는 것 제외). **한 판에 2번**(`REFRESH_COUNT_PER_GAME`), 광고 제거 구매자는 광고 없이 갱신.
   - 뽑기 가격(2026-10-25): **처음 10코인, 뽑을 때마다 +2** (`INIT_DRAW_ITEM_PRICE`/`INCREASE_DRAW_ITEM_PRICE`, 횟수는 `GameManager.drawItemCount`).
   - 성공 확률(2026-10-28): **처음 100%, 성공할 때마다 -5%** (최소 10%, `INIT/DECREASE/MIN_DRAW_ITEM_CHANCE`). 코인은 먼저 내고 실패하면 코인만 소모, 가격·확률은 그대로. → 골드 소비의 확률 포인트(뒤로 갈수록 "걸어볼지" 고민).
@@ -161,7 +164,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   - 비용 = **주사위 코인(`KingSlime.diceCoin`, 엘리트 처치 보상) × (현재 레벨 + 1)** — 기본값은 ItemData.csv `DiceCoin`. **Lv1 시작, 최대 = `MaxCount`(3)**. Lv1→2 = DiceCoin×2, Lv2→3 = ×3.
   - **성공 확률 70% → 50%**(`TileItem.UPGRADE_CHANCES`, Lv1→2 / Lv2→3). 코인은 먼저 내고 실패하면 코인만 소모·레벨 유지(뽑기 실패와 같은 방식). 골드 소비 확률 포인트와 같은 의도.
   - 레벨별 수치 = ItemData.csv **`Values`** 열(`1.3/1.5/1.7`, 시트 범위 A:G) → `ItemData.levelValues`. 아이템마다 대표 수치 하나에 들어감(`TileItem.ApplyLevelValue`): 스탯 타일 = 배율/증가량, 광폭 = 공격력 배율, 연발 = 추가 발수, 치명타·둔화·스턴 = 확률, 거인 사냥 = 배율, 코인 = 처치 코인, 다중 타겟 = 탄 수. Values가 비면 프리팹 값 그대로. 지금 값은 임시. **설명(Desc)의 `{0}` = 현재 레벨 수치**(`TileItem.GetDescription`, 배율형은 % 증가량: 1.5 → 50).
-  - **DiceCoin 0(카운팅 제외·최대 버프·개척·만능 공격)·진화 타일은 강화 불가**(버튼 숨김). 최대 레벨이어도 숨김. 강화 가능 아이템은 이름 옆에 `Lv.N`.
+  - **DiceCoin 0(슬라임 수 증가·최대 버프·개척·만능 공격)·진화 타일은 강화 불가**(버튼 숨김). 최대 레벨이어도 숨김. 강화 가능 아이템은 이름 옆에 `Lv.N`.
   - 유닛이 올라가 있으면 효과를 뺐다가 새 수치로 다시 건다(버프 중복 없음). 테스트 `TileItemUpgradePlayTest`.
 - 타일 아이템(`TileItem`)은 획득하면 고른 타일에 설치되고, 그 타일에 슬라임이나 캐릭터가 올라와 있는 동안만 효과가 적용된다(`OnEnter`/`OnExit`).
 - 아이템 제거(2026-10-28): 아이템 타일을 선택하면 `TileItemInfoPanel`의 `SellTileItemButton`으로 그 타일 아이템 객체 하나만 판매 → **10코인 고정**(`SELL_TILE_ITEM_PRICE`). 같은 key의 다른 타일 객체는 유지. 판매 후에는 타일 선택 해제(TilePointer 숨김, 위에 유닛이 있어도 동일).
@@ -174,10 +177,10 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 2026-10-23 목록 (Key = 클래스명에서 `Item` 뺀 것, ItemData.csv에 행 추가):
   AttackPowerTile(공 +50%), AttackSpeedTile(공속 +30%), BurstShotTile, MultiTargetTile, RangeUpTile(사거리 +2),
   SlowTile(10% 슬로우), StunTile(2% 0.3초 스턴), CriticalTile(10% 2배), TrueDamageTile(방어 배율 무시 → 항상 100%),
-  IgnoreCountingTile(2026-11-04, 올라간 슬라임은 최대 슬라임 수에 안 셈 → `SlimeFieldController.ignoreSlimeCount`/`CountedSlimeCount`. 최대치 12마리 막힘을 푸는 수단),
+  AddSlimeSpawnCount(2026-11-11, 이전 IgnoreCountingTile = 올라간 슬라임을 최대 수에 안 세는 타일. **타일에 설치하지 않고 획득 즉시 최대 슬라임 수 +1**(`AddSlimeSpawnCountItem`, `NeedTile` false → 타일 선택 단계 없음). 보유 상한 MaxCount 3. 최대치 12마리 막힘을 푸는 수단),
   ExpandBuffRangeTile(2026-11-06, 올라간 십자 버프 슬라임의 범위 십자 4칸 → 8방향. 장착 슬라임에 버프 슬라임이 없으면 안 나옴. 배치 고민 포인트),
-  EvolutionTile(2026-11-06, 최대 머지 레벨(4) 슬라임이 올라가면 진화 `Slime.Evolve`, 슬라임당 1회(`isEvolved`, 합성·교체로 새로 생기면 초기화), 타일은 남아 재사용. **뽑기(2026-11-09): 필드의 진화 안 한 레벨 4 슬라임 수 > 설치된 진화 타일 수일 때만, 뽑기 시도마다 40%(`EvolutionTileItem.DRAW_CHANCE`)로 선택지 3개 중 하나로 확정 등장**(실패하면 그 뽑기엔 안 나옴). 같으면 안 나옴(예: 5마리/4개 → 40%, 5마리/5개 → 0%, 타일이 더 많은 경우는 없어야 함). 보유 상한(MaxCount) 대신 이 규칙만 씀(`TileItem.IgnoreMaxCount`/`DrawChance`, `ItemManager.GetDrawTileItems`). 강화 불가. 테스트 `EvolutionTileDrawPlayTest`. 진화 = 슬라임 고유 [각성] 발현, 위 슬라임 섹션 참고),
-  GoldTile(처치 시 코인 +1), PioneerTile(획득 즉시 막힌 칸 1개 해제, 설치 안 함, 막힌 칸 없으면 안 나옴), BerserkTile(공 ×2, 사거리 ×0.5), GiantSlayerTile(엘리트·보스에게 데미지 ×2, 방어 배율과 곱연산).
+  EvolutionTile(2026-11-06, 최대 머지 레벨(4) 슬라임이 올라가면 진화 `Slime.Evolve`, 슬라임당 1회(`isEvolved`, 합성·교체로 새로 생기면 초기화). **(2026-11-10) 1회용: 슬라임을 진화시키면 타일 아이템은 사라짐**(다음 프레임에 `KingSlime.RemoveItem`, 판매 코인 없음). 진화 못 하는 슬라임(최대 레벨 미만·희생/성장/조커)이 올라가면 그대로 남음. **뽑기(2026-11-09): 필드의 진화 안 한 레벨 4 슬라임 수 > 설치된 진화 타일 수일 때만, 뽑기 시도마다 40%(`EvolutionTileItem.DRAW_CHANCE`)로 선택지 3개 중 하나로 확정 등장**(실패하면 그 뽑기엔 안 나옴). 같으면 안 나옴(예: 5마리/4개 → 40%, 5마리/5개 → 0%, 타일이 더 많은 경우는 없어야 함). 보유 상한(MaxCount) 대신 이 규칙만 씀(`TileItem.IgnoreMaxCount`/`DrawChance`, `ItemManager.GetDrawTileItems`). 강화 불가. 테스트 `EvolutionTileDrawPlayTest`. 진화 = 슬라임 고유 [각성] 발현, 위 슬라임 섹션 참고),
+  GoldTile(처치 시 코인 +1), PioneerTile(2026-11-10 **선택 후 막힌 칸을 눌러 그 칸을 해제**(`TileItem.CanPickTile`, 막히지 않은 칸은 토스트), 설치 안 함, 막힌 칸 없으면 안 나옴. 권능 곡괭이는 랜덤 해제 그대로), BerserkTile(공 ×2, 사거리 ×0.5), GiantSlayerTile(엘리트·보스에게 데미지 ×2, 방어 배율과 곱연산).
 - 공격 타입 변경 타일 (2026-10-27): PhysicTile / MagicTile = 올라간 유닛의 공격 타입을 해당 속성으로 바꿈(`AttackTypeTileItem`).
   - 의도: 방어 타입 상성을 **배치로 맞추는 수단**. 슬라임 속성은 랜덤 소환이라 못 고르지만, 타일 위로 옮겨서 이번 wave 상성에 맞출 수 있다.
   - 범위: 유닛의 주 공격(탄·Orbit 적중, 그 탄에서 이어지는 번개 체인/낙뢰). 폭발 등 고유 속성이 정해진 부가 효과는 그대로.
@@ -206,7 +209,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - WaveType: Battle, Elite, Boss (2026-10-30, 이전 Normal/Hard/Elite/Boss). wave마다 `Wave` 인스턴스를 새로 생성(`GameManager.accWaves`에 누적).
 - **2026-10-30: 휴식(break time) 없음.** UI(`WaveTimerPanel`)는 `GameManager.mainWaveTimer` 기준 현재 wave 남은 시간을 `분:초`로만 표시. 아래 휴식 관련 내용은 이전 기획.
   - 적 스폰은 wave 시작 후 **`WAVE_SPAWN_TIME`초 동안만**, 남은 시간(`WAVE_TIME`까지)은 스폰 없이 남은 적 처리.
-  - `StartNextWaveButton`은 **현재 wave의 소환이 끝나면**(`Wave.isSpawnEnd`) 노출 → 남은 시간을 기다리지 않고 다음 wave 시작. 보스 wave에서는 안 나옴.
+  - (2026-11-11) `StartNextWaveButton`은 **현재 wave 시작 후 20초(`SKIP_ENABLE_TIME`)부터** 노출 → 바로 다음 wave 시작. 이전 wave의 남은 소환(`WAVE_SPAWN_TIME` 40초까지)은 계속되어 **다음 wave와 겹쳐서 나온다**(의도). 보스 wave에서는 안 나옴. 규칙 = `GameManager.CanSkipWave(waveType, elapsed)`. (이전: 소환이 끝나면 노출)
 - 전투 웨이브 흐름: **웨이브 30초**(`WAVE_TIME`, 30초 내내 1초마다 1마리 스폰) → **휴식 10초**(`BREAK_TIME`) → 다음 wave.
   - 각 Wave가 자기 타이머를 가지고, 시간이 다 되면 스스로 종료(스폰 중지) → `GameManager.EndWave` → 휴식(`GameManager.isBreak`).
   - 휴식 중에는 TimeBar 숨기고 "다음 웨이브까지 N초" 카운트다운 + 다음 웨이브 시작 버튼 표시.
@@ -233,14 +236,15 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 전투 웨이브의 특수 스폰(BundleWave 등 랜덤 스포너 호출)은 2026-10-16 제거. 일반 스폰만 사용.
 
 ### 적 방어 타입 (2026-10-16)
-- (2026-11-08) **일반 적 방어 타입 = wave 번호가 4의 배수(`DEFENCE_WAVE_INTERVAL`)면 Ethereal → Armored 순서로 번갈아(4=정령, 8=갑옷, 12=정령…), 나머지는 Normal** (`GameManager.GetWaveDefenceType`). WaveData의 DefenceTypes/DefenceWaveTypes는 사용 안 함(아래는 이전 기획).
+- (2026-11-08, 2026-11-10 간격 4→3) **일반 적 방어 타입 = wave 번호가 3의 배수(`DEFENCE_WAVE_INTERVAL`)면 Ethereal → Armored 순서로 번갈아(3=정령, 6=갑옷, 9=정령…), 나머지는 Normal** (`GameManager.GetWaveDefenceType`). WaveData의 DefenceTypes/DefenceWaveTypes는 사용 안 함(아래는 이전 기획).
 - (2026-10-30) 방어 타입 설정은 **WaveData/{난이도}.csv의 구간 단위**: 행마다 `StartWave`(waveIdx), `DefenceTypes`(등장 목록), `DefenceWaveTypes`(구간 시작부터 순서대로, `(wave - StartWave) % 개수`). wave에는 `StartWave <= wave`인 가장 늦은 행이 적용(예: 0/9/19 → wave 18은 9 행). 마지막 행은 무한히 반복.
 - **한 wave 안에서는 모든 일반 적이 같은 방어 타입.** wave가 바뀌면 다음 칸. `Random`은 DefenceTypes 중 하나를 wave 시작 시 한 번 뽑음.
 - 적의 방어 타입 기준은 **프리팹의 `Enemy.defenceType`** (2026-10-30, 이전엔 EnemyData.defenceType). 적 프리팹은 `Stage/{order}/Enemy` 폴더(하위 Elite/BonusElite 포함)에 종류×방어 타입별로 두고(엘리트·보스는 Normal만), EnemyData는 (종류, 방어 타입) 데이터가 없으면 같은 종류의 Normal 데이터를 공유(엘리트는 Normal 하나).
 - **2026-10-30: 공격 속성은 물리(Physic)·마법(Magic) 두 가지 + 만능.** 진동(Vibrational) 삭제 → 진동형이던 Bounce/Pierce/Boom은 물리로, 진동 약점뿐이던 **중갑형(HeavyArmor) 방어 타입도 삭제**(enum 번호는 비워 둠: DefenceType 3, DefenceWaveType 4).
 - 공격 속성(Physic/Magic) × 방어 타입 배율은 `Resources/DefenceInfo` 에셋 한 곳에서 관리 (인스펙터 표). 방어형 클래스마다 계산을 따로 두지 않는다.
   - (2026-10-30) 적 프리팹의 `EnemyDefence` 컴포넌트(방어 타입별 하위 클래스)가 `CalculateDamage`로 최종 피해 배율(표 배율·만능 무시·거인 사냥 포함)을 반환, `Enemy.TakeDamage`는 이것만 호출. 수치는 여전히 표에서 가져오고, 하위 클래스는 방어형별 특수 처리 자리. 프리팹에 컴포넌트가 없으면 `Enemy.Awake`에서 `enemyData.defenceType`에 맞는 것을 붙인다.
-  - 기본값(물/마): 갑옷 0.2/2.5 · 정령 2.5/0.2 · 일반 1/1
+  - 기본값(물/마): **갑옷 0.5/1.5 · 정령 1.5/0.5** · 일반 1/1 (2026-11-10 완화, 이전 0.2/2.5는 12.5배 차이라 물리가 거의 안 통함)
+  - (2026-11-10) **아군 최소 피해 보장**: 배율·내성으로 1 미만이 되면 1(`AllyUnitDamageData.GetMinGuaranteedDamage`, 원래 피해가 0인 공격은 0). 이전엔 1 미만 = 0이라 공격력 낮은 물리 슬라임이 갑옷 적에게 0 피해.
   - (2026-11-07) **생체형(Organic) 방어 타입 삭제**(enum 번호 비워 둠: DefenceType 4, DefenceWaveType 5). 프리팹·EnemyData 에셋·CSV 행(EnemyData, WaveData 69 구간)도 삭제.
   - 방어 타입 설명(`DefenceInfo.Desc`)은 배율 표에서 자동 생성 → 표만 고치면 UI 설명도 맞춰짐. 수치 대신 `약점 : 마법형`(배율 >1, 잘 통함) / `내성 : 물리형`(배율 <1, 안 통함) 두 줄로 표기(1배는 생략).
   - **2026-10-27 의도: 방어 타입을 크게 체감되는 판단 요소로 만든다.** wave마다 "어떤 공격 속성 슬라임을 좋은 칸/킹 오라/아이템 칸에 둘지" 다시 고민하게 하는 장치. (현재 슬라임 에셋 attackType이 전부 AllRounder라 효과 없음 → 속성 부여 필요)
@@ -266,6 +270,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 출시 전이라 이전 패널 key 구매 기록은 옮기지 않음.
 - 재화 상품(`CurrencyProductPanel` → `DiaProductPanel`/`GoldProductPanel`): 패널 `amount`만큼 지급, 제목은 `{재화} {amount}` 자동. 상품 가격은 CSV에서.
 - (2026-11-07) 상품 데이터 = `Json/ProductData.csv`(key, productId, currencyType, price) → DataTableImporter(`Tools/Data/Import ProductData`, Play 시 자동) → `Resources/ProductData.asset`(`ProductDataTable`) → `ProductManager.Awake`에서 불러옴(씬 인스펙터 `productDatas`는 무시). price는 float: 재화 상품 = 개수(정수), 인앱 = 스토어 가격을 못 받을 때 표시용 달러. **인앱 상품은 productId가 있어야 결제**(없으면 재화 차감으로 처리돼 구매 불가, `ProductDataTableTest`가 검사).
+  - (2026-11-10) **인앱 상품 정보(key·스토어 productId·소모/비소모)는 `InAppProductInfo` 한 곳.** 추가 = 거기 한 줄 + CSV에 같은 key의 InApp 행(가격 표시용). productId는 임포트할 때 클래스에서 key로 채움(CSV productId 열은 무시). IAP 매니저의 상품 목록·구매 복원도 이 목록 사용. 코드용 key 상수(`REMOVE_AD_KEY`, `GAME_SPEED_UP_KEY`)도 GameSetting에서 이동.
 
 ## 서버 (Firebase RTDB, 2026-11-05)
 - 인스턴스 URL은 `FirebaseDatabaseConfig` 한 곳에서 관리(asia-southeast1). 랭킹 = 인스턴스 1개, 유저 데이터 = 여러 인스턴스(샤드, 나중에 확장).
@@ -299,6 +304,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   - **테스트 중엔 광고·인앱 결제를 띄우지 않고 바로 성공**(`AdManager.SkipAdForTest`, `ProductManager.SkipInAppPurchaseForTest`). 테스트 기본 클래스가 플레이 진입 후(`WaitGameStart`/`WaitLobbyStart`) 켜고 TearDown에서 끔. 기본값 false라 실제 게임엔 영향 없음.
   - 공용 준비는 `InGamePlayTestBase`(씬 열기, 에러 수집, 저장 파일 `Assets/User*.json` 백업·복원 — 플레이 중 업적 처치 수 등이 저장되기 때문).
   - `TileItemPlayTest`: 타일 index 6*6 중복 없음, 모든 타일 아이템 설치→전투→판매, 스탯 타일 효과, 버프 범위 확장(대각선 버프). `DrawItemButtonPlayTest`: 뽑기 버튼 성공/실패/코인 부족 흐름(실패는 `Random.InitState` 시드로 고정).
+  - `DefenceTypePlayTest`(2026-11-10): 일반·갑옷·정령 적이 실제 경로(wave → 프리팹 → 풀 → EnemyDefence)로 물리·마법 슬라임 피해를 배율표대로 받는지.
   - `WaveResultPlayTest`: wave를 강제로 넘겨(`waveTimer`/`mainWaveTimer` = 0) 엘리트·보스 주기, 보스 wave는 시간으로 안 넘어감, 보스 처치 → 다음 wave + 종료 코인. 사망 → 실패 화면 → 결과 화면 보상(골드 = waveIdx, 경험치 = waveIdx/2, 뽑기권 = 합성 횟수)·최고 wave 기록·홈 → 로비. 부활 흐름.
   - `EvolutionPlayTest`(2026-11-09): 진화 타일 흐름(최대 레벨만 진화·옮겨도 유지·타일 재사용·슬라임 위 설치 시 진화·희생/성장/조커 제외·새 소환은 미진화) + 각성 효과(상태 값, 발사 탄 스펙, 가시방패·화염 스킬 실제 피해, 포위 진형 버프, 시체수집 엘리트 보너스).
   - `GameCyclePlayTest`(2026-11-09): 로비 KS 업그레이드(버튼) → 전투 버튼(에너지 차감) → 인게임 스탯 반영 → 사망·부활(보상 없음) → 사망·포기 → 결과 보상 → 로비 레벨업 창(레벨마다 하나씩, 2레벨 연속) → 재업그레이드 → 2판 wave 0 사망(보상 0, 최고 기록 유지). 단계마다 UserDataManager 메모리 값과 **저장 파일(SaveManager.LoadData)** 을 같이 확인.

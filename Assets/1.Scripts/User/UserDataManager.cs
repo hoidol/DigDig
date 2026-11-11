@@ -8,7 +8,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     public const string UserDataFileName = "UserData";
     // public static string STAGE_KEY = GameSetting.FIRST_STAGE_KEY;// "Gateway1";
     public bool isAdRemoved = false;
-    public bool IsGameSpeedUp => userPurchaseManager.HasPurchased(GameSetting.GAME_SPEED_UP_KEY);
+    public bool IsGameSpeedUp => userPurchaseManager.HasPurchased(InAppProductInfo.GAME_SPEED_UP_KEY);
     public static DifficultyType difficultyType = DifficultyType.Normal;
 
     [field: SerializeField]
@@ -80,7 +80,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userSlimeManager.LoadData();
         userMyInfoManager.LoadData();
         userKingSlimeManager.LoadData();
-        isAdRemoved = userPurchaseManager.HasPurchased(GameSetting.REMOVE_AD_KEY);
+        isAdRemoved = userPurchaseManager.HasPurchased(InAppProductInfo.REMOVE_AD_KEY);
     }
 
     // 클라우드 저장용 묶음 (FirebaseDatabase)

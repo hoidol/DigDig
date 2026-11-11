@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 
 // 진화 타일(EvolutionTileItem) → Slime.Evolve → 슬라임별 [각성] 발현 검사
-// - 진화 타일 흐름: 최대 머지 레벨만 진화, 옮겨도 유지, 타일 재사용, 이미 올라가 있는 슬라임에 설치해도 진화, 희생·성장·조커는 진화 안 함
+// - 진화 타일 흐름: 최대 머지 레벨만 진화, 진화시키면 타일 사라짐, 옮겨도 유지, 이미 올라가 있는 슬라임에 설치해도 진화, 희생·성장·조커는 진화 안 함
 // - 각성 효과: 상태 값(개수·확률), 발사 탄 스펙(효과·배율), 실제 피해(가시방패·화염 각성 스킬), 포위 진형 버프, 시체수집 보너스
 public class EvolutionPlayTest : InGamePlayTestBase
 {
@@ -28,6 +28,14 @@ public class EvolutionPlayTest : InGamePlayTestBase
         AssertNoErrors();
     }
 
+    // 진화 타일은 진화시킨 다음 프레임에 제거됨
+    static IEnumerator WaitTileItemRemoved(Tile tile)
+    {
+        float end = Time.realtimeSinceStartup + 2f;
+        while (tile.tileItem != null && Time.realtimeSinceStartup < end)
+            yield return WaitFrames(1);
+    }
+
     IEnumerator EvolutionTileBody()
     {
         Tile evoTile = GetFreeTile();
@@ -43,11 +51,14 @@ public class EvolutionPlayTest : InGamePlayTestBase
         SlimeFieldController.Instance.RemoveFieldSlime(low);
         yield return WaitFrames(2);
 
-        // 최대 레벨은 올라가면 진화
+        // 최대 레벨은 올라가면 진화, 진화 타일은 사라짐(1회용)
         Slime max = SpawnSlime("Iron", evoTile, MAX);
         yield return WaitFrames(2);
         Assert.IsTrue(max.isEvolved, "최대 레벨인데 진화 타일 위에서 진화하지 않음");
         Assert.IsFalse(max.CanEvolve, "진화 후에도 CanEvolve가 true");
+        yield return WaitTileItemRemoved(evoTile);
+        Assert.IsNull(evoTile.tileItem, "진화 후에도 진화 타일이 남아 있음");
+        Assert.IsFalse(KingSlime.Instance.itemInventory.curItems.Any(i => i is EvolutionTileItem), "진화 타일이 인벤토리에 남아 있음");
 
         // 다른 칸으로 옮겨도 진화 유지
         Tile other = GetFreeTile(evoTile);
@@ -56,15 +67,16 @@ public class EvolutionPlayTest : InGamePlayTestBase
         yield return WaitFrames(2);
         Assert.IsTrue(max.isEvolved, "진화 타일에서 내려오자 진화가 풀림");
 
-        // 타일은 남아서 다른 최대 레벨 슬라임도 진화
-        Assert.IsInstanceOf<EvolutionTileItem>(evoTile.tileItem, "진화 후 타일 아이템이 사라짐");
+        // 사라진 칸에 다른 최대 레벨 슬라임을 올려도 진화 안 함
         Slime second = SpawnSlime("Bounce", evoTile, MAX);
         yield return WaitFrames(2);
-        Assert.IsTrue(second.isEvolved, "진화 타일 재사용 안 됨");
+        Assert.IsFalse(second.isEvolved, "진화 타일이 사라진 칸에서 진화함");
         SlimeFieldController.Instance.RemoveFieldSlime(second);
         yield return WaitFrames(2);
 
-        // 희생·성장·조커는 진화하지 않음 (최대 레벨에서 쓸 각성이 없음)
+        // 희생·성장·조커는 진화하지 않음 (최대 레벨에서 쓸 각성이 없음), 진화 타일도 남음
+        KingSlime.Instance.AddItem("EvolutionTile", evoTile).Forget();
+        yield return WaitFrames(2);
         foreach (string key in new[] { "Sacrifice", "GrowUp", "Joker" })
         {
             Slime s = SpawnSlime(key, evoTile, MAX);
@@ -74,6 +86,7 @@ public class EvolutionPlayTest : InGamePlayTestBase
             SlimeFieldController.Instance.RemoveFieldSlime(s);
             yield return WaitFrames(2);
         }
+        Assert.IsInstanceOf<EvolutionTileItem>(evoTile.tileItem, "진화하지 않는 슬라임인데 진화 타일이 사라짐");
 
         // 진화 타일 뽑기 후보 수에 진화한 슬라임·진화 안 하는 슬라임은 안 셈
         Slime growUp = SpawnSlime("GrowUp", GetFreeTile(evoTile, other), MAX);
@@ -92,6 +105,8 @@ public class EvolutionPlayTest : InGamePlayTestBase
         KingSlime.Instance.AddItem("EvolutionTile", other).Forget();
         yield return WaitFrames(2);
         Assert.IsTrue(fresh.isEvolved, "슬라임 위에 진화 타일을 설치했는데 진화하지 않음");
+        yield return WaitTileItemRemoved(other);
+        Assert.IsNull(other.tileItem, "슬라임 위에 설치해 진화시킨 진화 타일이 남아 있음");
         SlimeFieldController.Instance.RemoveFieldSlime(fresh);
         yield return WaitFrames(2);
     }

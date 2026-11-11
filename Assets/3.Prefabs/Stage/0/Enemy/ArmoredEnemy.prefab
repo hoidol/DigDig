@@ -458,6 +458,7 @@ MonoBehaviour:
   hpText: {fileID: 7405565396758039830}
   pathIdx: 0
   enemyDefence: {fileID: 0}
+  animator: {fileID: 0}
   wave: 0
   killedBy:
     damage: 0
@@ -468,7 +469,6 @@ MonoBehaviour:
     eliteBossDamageMul: 1
   face: 0
   moving: 0
-  animator: {fileID: 0}
 --- !u!114 &4281134898832954647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -635,12 +635,12 @@ PrefabInstance:
     - target: {fileID: 3613676713923577443, guid: 84ccd47ae94098f489358e7e865939be,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: -0.9
+      value: -0.7
       objectReference: {fileID: 0}
     - target: {fileID: 3613676713923577443, guid: 84ccd47ae94098f489358e7e865939be,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.9
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 3613676713923577443, guid: 84ccd47ae94098f489358e7e865939be,
         type: 3}

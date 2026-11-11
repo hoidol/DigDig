@@ -46,6 +46,14 @@ public class AllyUnitDamageData : DamageData
 
     public override bool IgnoreDefence => ignoreDefence || base.IgnoreDefence;
 
+    public const float MIN_DAMAGE = 1f;
+    public static float GetMinGuaranteedDamage(float baseDamage, float finalDamage)
+    {
+        if (baseDamage <= 0f)
+            return 0f;
+        return Mathf.Max(MIN_DAMAGE, finalDamage);
+    }
+
     public void Init(IAllyUnit allyUnit)
     {
         this.allyUnit = allyUnit;
@@ -65,8 +73,8 @@ public class AllyUnitDamageData : DamageData
         if (crt)
             damage *= critPower;
 
-        if (damage < 1)
-            damage = 0;
+        // 최소 피해 보장: 내성·배율로 1 미만이 돼도 1 (원래 피해가 0인 공격은 그대로 0)
+        damage = GetMinGuaranteedDamage(this.damage, damage);
         string dText = $"{(int)damage}";
 
         if (!crt)

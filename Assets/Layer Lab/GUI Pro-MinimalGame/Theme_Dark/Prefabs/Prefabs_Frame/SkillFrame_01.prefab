@@ -19,6 +19,18 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 919398446596271530, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919398446596271530, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919398446596271530, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1323661813538921727, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
       propertyPath: m_Name
       value: SkillFrame_01
@@ -166,6 +178,22 @@ PrefabInstance:
     - target: {fileID: 4749749537874090105, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
       propertyPath: m_Color.r
       value: 0.0627451
+      objectReference: {fileID: 0}
+    - target: {fileID: 6226900255066390026, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
+      propertyPath: m_Color.a
+      value: 0.69803923
+      objectReference: {fileID: 0}
+    - target: {fileID: 6226900255066390026, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
+      propertyPath: m_Color.b
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6226900255066390026, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6226900255066390026, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6642308437982548606, guid: 7deccafcb17e0469fb8c327a213ed1f7, type: 3}
       propertyPath: m_fontColor.b

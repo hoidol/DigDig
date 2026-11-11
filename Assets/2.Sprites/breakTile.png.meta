@@ -1,0 +1,256 @@
+fileFormatVersion: 2
+guid: 9fb435581743a4107b1a67bc3b05110f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5213614483408278570
+    second: breakTile_0
+  - first:
+      213: 5773380387648506145
+    second: breakTile_1
+  - first:
+      213: -1704700592363420597
+    second: breakTile_2
+  - first:
+      213: -3932571479866311841
+    second: breakTile_3
+  - first:
+      213: 2477357640280900114
+    second: breakTile_4
+  - first:
+      213: 7736577495713812315
+    second: breakTile_5
+  - first:
+      213: -7603854674212691397
+    second: breakTile_6
+  - first:
+      213: 7509866017188742589
+    second: breakTile_7
+  - first:
+      213: 4679359802479243540
+    second: breakTile_8
+  - first:
+      213: 5516907608541974247
+    second: breakTile_9
+  - first:
+      213: -6418710175295179696
+    second: breakTile_10
+  - first:
+      213: -3216924646192012399
+    second: breakTile_11
+  - first:
+      213: 913528771828817868
+    second: breakTile_12
+  - first:
+      213: 3784117172422613417
+    second: breakTile_13
+  - first:
+      213: 8867981009246131553
+    second: breakTile_14
+  - first:
+      213: -6766180568552878206
+    second: breakTile_15
+  - first:
+      213: 7095432090574185430
+    second: breakTile_16
+  - first:
+      213: -615483727229126085
+    second: breakTile_17
+  - first:
+      213: -4714845382026356595
+    second: breakTile_18
+  - first:
+      213: -4017506465110101543
+    second: breakTile_19
+  - first:
+      213: 3221098144941135713
+    second: breakTile_20
+  - first:
+      213: -4350882863857735399
+    second: breakTile_21
+  - first:
+      213: -2212657572760605188
+    second: breakTile_22
+  - first:
+      213: -3867340595769133093
+    second: breakTile_23
+  - first:
+      213: -7065217687250973586
+    second: breakTile_24
+  - first:
+      213: -8076963300718542572
+    second: breakTile_25
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: breakTile_0
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 12
+        width: 104
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a24d16fefba7a5840800000000000000
+      internalID: 5213614483408278570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: da0a4458728584be68059153caf4ad14
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      breakTile_0: 5213614483408278570
+      breakTile_1: 5773380387648506145
+      breakTile_10: -6418710175295179696
+      breakTile_11: -3216924646192012399
+      breakTile_12: 913528771828817868
+      breakTile_13: 3784117172422613417
+      breakTile_14: 8867981009246131553
+      breakTile_15: -6766180568552878206
+      breakTile_16: 7095432090574185430
+      breakTile_17: -615483727229126085
+      breakTile_18: -4714845382026356595
+      breakTile_19: -4017506465110101543
+      breakTile_2: -1704700592363420597
+      breakTile_20: 3221098144941135713
+      breakTile_21: -4350882863857735399
+      breakTile_22: -2212657572760605188
+      breakTile_23: -3867340595769133093
+      breakTile_24: -7065217687250973586
+      breakTile_25: -8076963300718542572
+      breakTile_3: -3932571479866311841
+      breakTile_4: 2477357640280900114
+      breakTile_5: 7736577495713812315
+      breakTile_6: -7603854674212691397
+      breakTile_7: 7509866017188742589
+      breakTile_8: 4679359802479243540
+      breakTile_9: 5516907608541974247
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -44,6 +44,21 @@ public class ProductDataTableTest
         Assert.IsEmpty(missing, "productId 없는 인앱 상품");
     }
 
+    // InAppProductInfo의 상품은 모두 CSV에 InApp 행이 있어야 함(가격 표시·구매 버튼용), productId는 겹치지 않음
+    [Test]
+    public void InAppProductInfo_MatchesCsv()
+    {
+        foreach (InAppProductInfo.Info info in InAppProductInfo.PRODUCTS)
+        {
+            var data = table.productDatas.FirstOrDefault(d => d.key == info.key);
+            Assert.IsNotNull(data, $"{info.key}: ProductData.csv에 행 없음");
+            Assert.AreEqual(CurrencyType.InApp, data.currencyType, $"{info.key}: currencyType이 InApp 아님");
+            Assert.AreEqual(info.productId, data.productId, $"{info.key}: productId 다름 (Import ProductData 다시 실행)");
+        }
+        var dupIds = InAppProductInfo.PRODUCTS.GroupBy(i => i.productId).Where(g => g.Count() > 1).Select(g => g.Key).ToList();
+        Assert.IsEmpty(dupIds, "productId 중복");
+    }
+
     // 재화 상품 가격은 정수 (재화는 정수로 차감)
     [Test]
     public void CurrencyPrices_AreIntegers()

@@ -316,7 +316,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 4.45
+  m_fontSize: 4.8
   m_fontSizeBase: 7
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -455,9 +455,9 @@ MonoBehaviour:
   damageData:
     damage: 0
     attackType: 0
-  hpText: {fileID: 196730089043889122}
   pathIdx: 0
   enemyDefence: {fileID: 0}
+  animator: {fileID: 0}
   wave: 0
   killedBy:
     damage: 0
@@ -468,7 +468,6 @@ MonoBehaviour:
     eliteBossDamageMul: 1
   face: 0
   moving: 0
-  animator: {fileID: 0}
   patternCoolTime: 0
   enemyAttackPattern: {fileID: 1577385391926972519}
 --- !u!114 &4281134898832954647
@@ -606,12 +605,12 @@ PrefabInstance:
     - target: {fileID: 6801508175226355044, guid: bcde0fe15a2dfea458fb858ef58bb371,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.70918
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6801508175226355044, guid: bcde0fe15a2dfea458fb858ef58bb371,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.93885005
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6801508175226355044, guid: bcde0fe15a2dfea458fb858ef58bb371,
         type: 3}

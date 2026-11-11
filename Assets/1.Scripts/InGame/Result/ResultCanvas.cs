@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class ResultCanvas : CanvasUI<ResultCanvas>
 {
     public TMP_Text curWaveText;
-    public TMP_Text bestWaveText;
+    // public TMP_Text bestWaveText;
     public GameObject newRecordObj;
     public RewardPanel[] rewardPanels;
     public GameObject adDoubleRewardButton; // 광고 보고 보상 2배 (한 판에 1번)
@@ -43,8 +43,8 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         // wave 표시 UI가 씬에 없어도 보상은 지급되도록 (없으면 표시만 생략). 제목(최종/최고 웨이브)은 UI에 있으므로 숫자만
         if (curWaveText != null)
             curWaveText.text = (GameManager.Instance.waveIdx + 1).ToString();
-        if (bestWaveText != null)
-            bestWaveText.text = (Mathf.Max(userStage.maxWave, GameManager.Instance.waveIdx) + 1).ToString();
+        // if (bestWaveText != null)
+        //     bestWaveText.text = (Mathf.Max(userStage.maxWave, GameManager.Instance.waveIdx) + 1).ToString();
         if (newRecordObj != null)
             newRecordObj.SetActive(GameManager.Instance.waveIdx > userStage.maxWave);
 

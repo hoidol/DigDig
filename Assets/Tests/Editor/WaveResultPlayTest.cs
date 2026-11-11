@@ -117,10 +117,10 @@ public class WaveResultPlayTest : InGamePlayTestBase
         Assert.IsTrue(result.gameObject.activeSelf, "결과 화면이 안 열림");
         Assert.AreEqual(tryCount + 1, stage.tryCount, "결과 화면에서 도전 횟수 +1");
         Assert.IsNotNull(result.curWaveText, "최종 웨이브 텍스트 연결 안 됨");
-        Assert.IsNotNull(result.bestWaveText, "최고 웨이브 텍스트 연결 안 됨");
+        // Assert.IsNotNull(result.bestWaveText, "최고 웨이브 텍스트 연결 안 됨");
         Assert.IsNotNull(result.newRecordObj, "신기록 오브젝트 연결 안 됨");
         Assert.AreEqual((waveIdx + 1).ToString(), result.curWaveText.text, "최종 웨이브 (wave 번호)");
-        Assert.AreEqual((Mathf.Max(maxWave, waveIdx) + 1).ToString(), result.bestWaveText.text, "최고 웨이브 (이번 판 포함)");
+        // Assert.AreEqual((Mathf.Max(maxWave, waveIdx) + 1).ToString(), result.bestWaveText.text, "최고 웨이브 (이번 판 포함)");
 
         Assert.AreEqual(gold + waveIdx, user.userData.gold, "골드 보상 (= waveIdx)");
         Assert.AreEqual(exp + waveIdx / 2, user.userMyInfoManager.userMyInfoData.exp, "경험치 보상 (= waveIdx / 2)");

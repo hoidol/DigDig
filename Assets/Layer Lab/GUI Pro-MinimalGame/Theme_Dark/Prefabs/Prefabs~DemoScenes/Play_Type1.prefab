@@ -1785,7 +1785,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4472682577519705669}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2600,6 +2600,10 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 19.8
       objectReference: {fileID: 0}
+    - target: {fileID: 8877473093255514164, guid: 3f493434438304502af0ac21c357cc9e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f493434438304502af0ac21c357cc9e, type: 3}
 --- !u!224 &7920157473686856936 stripped
@@ -3106,6 +3110,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 905595611899554278, guid: b56d2478f2f3d411ead35342b9f102af, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4596896274356848804, guid: b56d2478f2f3d411ead35342b9f102af, type: 3}
       propertyPath: m_Name
       value: Alert_Ad_01
@@ -3235,6 +3243,10 @@ PrefabInstance:
     - target: {fileID: 2752290388255682070, guid: 292f0f9f790e24da5bcabcd788ab9e4e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4908052863076316334, guid: 292f0f9f790e24da5bcabcd788ab9e4e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 63.804993
       objectReference: {fileID: 0}
     - target: {fileID: 5975855001846496731, guid: 292f0f9f790e24da5bcabcd788ab9e4e, type: 3}
       propertyPath: m_Name

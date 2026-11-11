@@ -31,7 +31,7 @@ MonoBehaviour:
     wave: 0
   enemyHp: 20
   addHpRatioPerWave: 0.4
-  multiHpPerWave: 1.1
+  multiHpPerWave: 1.03
   enemyPrefabs:
   - {fileID: -6271259298118201455, guid: 31b80da535408400eb25396f283ccbf4, type: 3}
   - {fileID: -623162833200235267, guid: a4539bd405902458e82cf81911974cb7, type: 3}

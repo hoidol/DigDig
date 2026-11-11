@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using UnityEngine.UI;
 
 // 타일 아이템 플레이 테스트 (CLAUDE.md "타일 아이템")
 public class TileItemPlayTest : InGamePlayTestBase
@@ -45,15 +46,41 @@ public class TileItemPlayTest : InGamePlayTestBase
             current = data.key;
             var tileItemPrefab = (TileItem)data.itemPrefab;
 
-            // 개척 타일: 설치 없이 막힌 칸 1개 해제
-            if (!tileItemPrefab.NeedTile)
+            // 개척 타일: 고른 막힌 칸만 해제 (설치 없음). 막힌 칸은 깨진 타일 이미지로 보이고, 해제되면 원래 이미지
+            if (tileItemPrefab is PioneerTileItem pioneer)
             {
-                int blockedBefore = TileManager.Instance.tiles.Count(t => t.isBlocked);
-                if (blockedBefore == 0)
+                Tile blocked = TileManager.Instance.tiles.FirstOrDefault(t => t.isBlocked);
+                if (blocked == null)
                     continue;
+                Image image = blocked.GetComponent<Image>();
+                Assert.IsTrue(blocked.gameObject.activeSelf, "막힌 칸이 꺼져 있음 (보여야 함)");
+                if (TileManager.Instance.breakTile != null)
+                    Assert.AreEqual(TileManager.Instance.breakTile, image.sprite, "막힌 칸이 깨진 타일 이미지가 아님");
+                Tile free = GetFreeTile();
+                Assert.IsFalse(pioneer.CanPickTile(free), "개척 타일로 막히지 않은 칸을 고를 수 있음");
+                Assert.IsTrue(pioneer.CanPickTile(blocked), "개척 타일로 막힌 칸을 고를 수 없음");
+
+                int blockedBefore = TileManager.Instance.tiles.Count(t => t.isBlocked);
+                KingSlime.Instance.AddItem(data.key, blocked).Forget();
+                yield return WaitFrames(2);
+                Assert.IsFalse(blocked.isBlocked, $"{data.key}: 고른 막힌 칸이 해제되지 않음");
+                Assert.AreEqual(blockedBefore - 1, TileManager.Instance.tiles.Count(t => t.isBlocked), $"{data.key}: 막힌 칸이 1개만 해제되어야 함");
+                Assert.IsNull(blocked.tileItem, $"{data.key}: 개척 타일이 설치됨");
+                Assert.AreNotEqual(TileManager.Instance.breakTile, image.sprite, "해제 후에도 깨진 타일 이미지");
+                Assert.IsTrue(blocked.IsEmpty, "해제된 칸에 배치할 수 없음");
+                continue;
+            }
+
+            // 슬라임 수 증가: 설치 없이 최대 슬라임 수 +1
+            if (tileItemPrefab is AddSlimeSpawnCountItem)
+            {
+                Assert.IsFalse(tileItemPrefab.NeedTile, $"{data.key}: 타일 선택이 필요함");
+                int maxBefore = SlimeFieldController.Instance.slimeMaxCount;
+                int installedBefore = TileManager.Instance.tiles.Count(t => t.tileItem != null);
                 KingSlime.Instance.AddItem(data.key).Forget();
                 yield return WaitFrames(2);
-                Assert.AreEqual(blockedBefore - 1, TileManager.Instance.tiles.Count(t => t.isBlocked), $"{data.key}: 막힌 칸이 1개 해제되지 않음");
+                Assert.AreEqual(maxBefore + AddSlimeSpawnCountItem.ADD_COUNT, SlimeFieldController.Instance.slimeMaxCount, $"{data.key}: 최대 슬라임 수가 안 늘어남");
+                Assert.AreEqual(installedBefore, TileManager.Instance.tiles.Count(t => t.tileItem != null), $"{data.key}: 타일에 설치됨");
                 continue;
             }
 

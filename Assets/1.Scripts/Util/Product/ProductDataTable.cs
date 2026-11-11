@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 상품 데이터. Json/ProductData.csv 한 행 = 상품 하나 (key, productId, currencyType, price)
+// 상품 데이터. Json/ProductData.csv 한 행 = 상품 하나 (key, currencyType, price)
+// 인앱 상품의 productId는 InAppProductInfo에서 key로 채운다(CSV productId 열은 쓰지 않음)
 // DataTableImporter가 CSV → Resources/ProductData.asset, ProductManager가 시작할 때 불러옴
 public class ProductDataTable : ScriptableObject
 {
@@ -53,10 +54,14 @@ public class ProductDataTable : ScriptableObject
                 continue;
             }
 
-            var data = new ProductData { key = key, productId = row.Get("productId"), currencyType = currencyType };
+            var data = new ProductData { key = key, currencyType = currencyType };
             if (row.TryGetFloat("price", out float price)) data.price = price;
-            if (currencyType == CurrencyType.InApp && string.IsNullOrEmpty(data.productId))
-                Debug.LogWarning($"[ProductDataTable] {row.lineNumber}줄 {key} 인앱 상품인데 productId 없음 → 결제 불가");
+            if (currencyType == CurrencyType.InApp)
+            {
+                data.productId = InAppProductInfo.GetProductId(key);
+                if (string.IsNullOrEmpty(data.productId))
+                    Debug.LogWarning($"[ProductDataTable] {row.lineNumber}줄 {key} 인앱 상품인데 InAppProductInfo에 없음 → 결제 불가");
+            }
             datas.Add(data);
         }
         productDatas = datas;

@@ -15,6 +15,8 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     [SerializeField] BossBehaviour[] bossBehaviours;
     // public BossBehaviour curBossBehaviour;
 
+    public override bool UseHpUI => false; // 체력은 BossCanvas에 표시
+
     public override void Awake()
     {
         base.Awake();

@@ -6,15 +6,7 @@ using UnityEngine.Purchasing;
 
 public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
 {
-    [Serializable]
-    public class IAPProductInfo
-    {
-        public string productId;
-        public ProductType productType;
-    }
-
-    [SerializeField] private List<IAPProductInfo> productList = new();
-
+    // 상품 목록 = InAppProductInfo.PRODUCTS
     public bool IsInitialized { get; private set; }
 
     public event Action OnStoreInitialized;
@@ -42,7 +34,7 @@ public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
 
     private void HandleStoreConnected()
     {
-        List<ProductDefinition> definitions = productList
+        List<ProductDefinition> definitions = InAppProductInfo.PRODUCTS
             .Select(info => new ProductDefinition(info.productId, info.productType))
             .ToList();
 
@@ -164,20 +156,17 @@ public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
             .ToHashSet();
 
         UserPurchaseManager userPurchaseManager = UserDataManager.Instance.userPurchaseManager;
-        for (int i = 0; i < productList.Count; i++)
+        foreach (InAppProductInfo.Info info in InAppProductInfo.PRODUCTS)
         {
-            IAPProductInfo info = productList[i];
             if (info.productType != ProductType.NonConsumable || !ownedIds.Contains(info.productId))
                 continue;
-
-            ProductData productData = ProductManager.Instance.productDatas.FirstOrDefault(p => p.productId == info.productId);
-            if (productData == null || userPurchaseManager.HasPurchased(productData.key))
+            if (userPurchaseManager.HasPurchased(info.key))
                 continue;
 
-            userPurchaseManager.AddUserPurchase(productData);
+            userPurchaseManager.AddUserPurchase(info.key, info.productId);
             Debug.Log($"[IAP] 구매 복원 : {info.productId}");
         }
 
-        UserDataManager.Instance.isAdRemoved = userPurchaseManager.HasPurchased(GameSetting.REMOVE_AD_KEY);
+        UserDataManager.Instance.isAdRemoved = userPurchaseManager.HasPurchased(InAppProductInfo.REMOVE_AD_KEY);
     }
 }

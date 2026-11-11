@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
@@ -12,17 +13,42 @@ public class Tile : MonoBehaviour
     public bool IsEmpty => !isBlocked && tileObject == null;
     public bool CanAddTileItem => !isBlocked && tileItem == null;
 
-    // 막힌 타일은 오브젝트를 꺼서 안 보이게 함 (콜라이더도 꺼져서 드롭 대상에서도 빠짐)
+    Image image;
+    Sprite defaultSprite; // 씬에 지정된 원래 타일 이미지 (TileManager.baseTile이 없을 때 사용)
+
+    Image TileImage
+    {
+        get
+        {
+            if (image == null)
+            {
+                image = GetComponent<Image>();
+                if (image != null)
+                    defaultSprite = image.sprite;
+            }
+            return image;
+        }
+    }
+
+    // 막힌 타일은 깨진 타일 이미지로 보여줌. 콜라이더는 켜 둬서 개척 타일로 눌러 해제할 수 있음
+    // 드롭·소환·아이템 설치는 isBlocked(IsEmpty/CanAddTileItem)로 막힘
     public void Block()
     {
         isBlocked = true;
-        gameObject.SetActive(false);
+        SetSprite(TileManager.Instance != null ? TileManager.Instance.breakTile : null);
     }
 
     public void Unblock()
     {
         isBlocked = false;
-        gameObject.SetActive(true);
+        SetSprite(TileManager.Instance != null ? TileManager.Instance.baseTile : null);
+    }
+
+    void SetSprite(Sprite sprite)
+    {
+        Image img = TileImage;
+        if (img != null)
+            img.sprite = sprite != null ? sprite : defaultSprite;
     }
 
     public void SetTileObject(ITileObject obj)

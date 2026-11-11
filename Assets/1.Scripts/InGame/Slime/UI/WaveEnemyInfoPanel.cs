@@ -7,7 +7,7 @@ public class WaveEnemyInfoPanel : MonoBehaviour
 {
     public GameObject obj;
     public DefenceTypePanel defenceTypePanel;
-    public TMP_Text waveText;
+    // public TMP_Text waveText;
     // public TMP_Text defenceTypeDesc;
     // public Image thumImage;
 
@@ -39,7 +39,7 @@ public class WaveEnemyInfoPanel : MonoBehaviour
 
     public void SetWaveInfo(int w)
     {
-        waveText.text = string.Format(TranslateManager.GetText("WaveEnemyInfo"), w+1);
+        // waveText.text = string.Format(TranslateManager.GetText("WaveEnemyInfo"), w+1);
         defenceTypePanel.SetDefenceType(GameManager.Instance.GetWave(w).waveDefenceType);
     }
 }

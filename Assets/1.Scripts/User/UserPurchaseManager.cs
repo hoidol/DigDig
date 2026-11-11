@@ -29,7 +29,7 @@ public class UserPurchaseManager : UserBaseManager
 
     public UserPurchase AddUserPurchase(string key, string productId = null)
     {
-        if(key == GameSetting.REMOVE_AD_KEY)
+        if(key == InAppProductInfo.REMOVE_AD_KEY)
         {
             UserDataManager.Instance.isAdRemoved = true;
         }

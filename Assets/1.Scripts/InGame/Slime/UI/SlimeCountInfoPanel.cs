@@ -9,8 +9,7 @@ public class SlimeCountInfoPanel : MonoBehaviour
       GameEventBus.Subscribe<SpawnSlimeEvent>(OnSpawnSlimeEvent);  
       GameEventBus.Subscribe<RemoveSlimeEvent>(OnRemoveSlimeEvent);
       GameEventBus.Subscribe<StartGameEvent>(e => UpdatePanel()); // 로비 업그레이드(MaxSlimeCount)로 상한이 바뀜
-      GameEventBus.Subscribe<TileObjectChangedEvent>(e => UpdatePanel()); // 카운팅 제외 타일에 올리거나 내리면 수가 바뀜
-      GameEventBus.Subscribe<TileItemChangedEvent>(e => UpdatePanel()); // 슬라임이 있는 칸에 설치/판매
+      GameEventBus.Subscribe<AddedItemEvent>(e => UpdatePanel()); // 슬라임 수 증가 아이템으로 상한이 바뀜
       UpdatePanel();
     }
 

@@ -5,6 +5,7 @@ using UnityEngine;
 // 확률(TileItem.UPGRADE_CHANCES)로 성공하면 레벨 +1, 실패하면 코인만 소모. 강화 불가·최대 레벨이면 숨김
 public class UpgradeTileItemButton : ButtonUI
 {
+    public TMP_Text upgradeInfoText;
     public TMP_Text priceText;
     Tile tile;
 
@@ -34,8 +35,9 @@ public class UpgradeTileItemButton : ButtonUI
         gameObject.SetActive(show);
         if (!show)
             return;
-        if (priceText != null)
-            priceText.text = string.Format(TranslateManager.GetText("TileItem_Upgrade"), item.UpgradeChance, item.UpgradeCost);
+        if (upgradeInfoText != null)
+            upgradeInfoText.text = string.Format(TranslateManager.GetText("TileItem_Upgrade"), item.UpgradeChance);
+    priceText.text = item.UpgradeCost.ToString();
         if (button != null)
             button.interactable = KingSlime.Instance.diceCoin >= item.UpgradeCost;
     }

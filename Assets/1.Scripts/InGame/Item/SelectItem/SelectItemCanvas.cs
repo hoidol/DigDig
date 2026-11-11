@@ -13,11 +13,13 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     public GameObject selectItemContainer;
     public GameObject selectTileContainer; // 타일을 눌러야 하므로 레이캐스트로 필드를 가리면 안 됨
     public SelectItemPanel[] selectItemPanels;
+    public SelectItemPanel selectedPanel;
     public SelectItemStep step;
     public float drawDuration = 1f; // Draw 연출 시간(초). 0이면 연출 없이 바로 판정
 
     ItemData selectedItem;
     List<ItemData> shownItems = new(); // 지금 선택지 (갱신 시 겹치지 않게)
+    
 
     // 확률 판정 없이 아이템 선택부터 시작
     public override void OpenCanvas(Action closeCallback = null)
@@ -118,6 +120,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
         if (data.itemPrefab is TileItem tileItem && tileItem.NeedTile)
         {
             SetStep(SelectItemStep.SelectTile);
+            selectedPanel.SetItemData(data);
             SlimeFieldController.Instance.tilePickCallback = OnTilePicked;
             return;
         }
@@ -127,9 +130,10 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 
     void OnTilePicked(Tile tile)
     {
-        if (!tile.CanAddTileItem)
+        TileItem tileItem = selectedItem.itemPrefab as TileItem;
+        if (tileItem != null && !tileItem.CanPickTile(tile))
         {
-            ToastCanvas.Toast(TranslateManager.GetText("TileItem_AlreadyInstalled"));
+            ToastCanvas.Toast(TranslateManager.GetText(tileItem.PickFailMessageKey(tile)));
             return;
         }
         Install(tile);

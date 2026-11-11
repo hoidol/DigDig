@@ -125,17 +125,5 @@ MonoBehaviour:
   - statType: 3
     values:
     - 0
-  enhanceAbilityInfos:
-  - level: 2
-    desc: "\uACF5\uACA9\uB825 5% \uC99D\uAC00"
-  - level: 5
-    desc: "\uACF5\uACA9 \uC18D\uB3C4 5% \uC99D\uAC00"
-  - level: 8
-    desc: "[\uAC01\uC131] \uAD00\uD1B5\uD560 \uB54C\uB9C8\uB2E4 \uD53C\uD574\uB7C9\uC774
-      \uB204\uC801 \uC99D\uAC00"
-  - level: 11
-    desc: "\uAD00\uD1B5\uD0C4 \uD06C\uAE30 30% \uC99D\uAC00"
-  - level: 14
-    desc: "\uACF5\uACA9 \uC18D\uB3C4 5% \uC99D\uAC00"
   uniqueSlimeStats: []
   pierceCount: 020000000300000004000000050000000600000007000000

@@ -25,6 +25,9 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
     [SerializeField] protected Transform root;
     [SerializeField] protected Transform hpPoint;
+    public Transform HpPoint => hpPoint != null ? hpPoint : transform; // 머리 위 체력바·데미지 텍스트 위치
+    // 머리 위 체력바(EnemyWorldCanvas) 사용 여부. 보스는 BossCanvas로 표시
+    public virtual bool UseHpUI => true;
     protected Rigidbody2D rg2d;
     public Rigidbody2D Rigidbody2D => rg2d;
     protected Collider2D col2d;
@@ -37,7 +40,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public const float MOVE_SPEED = 2; //떨어지면서 등장하는 시간
 
     public EnemyDamageData damageData = new EnemyDamageData();
-    public TMP_Text hpText;
+    // public TMP_Text hpText;
     public int pathIdx; // 경로 모드에서 다음에 향할 EnemyFieldController.paths 인덱스
     Vector2 moveDir; // pathIdx 지점으로 전환할 때 캐싱한 이동 방향 (목표 지점을 지나쳤는지 판정용)
     int moveDirIdx = -1; // moveDir가 어느 pathIdx 기준인지. -1이면 다시 계산
@@ -101,8 +104,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         Apear();
         maxHp = GetHp();
         curHp = maxHp;
-        hpText.text = ((int)curHp).ToString();
-        hpText.gameObject.SetActive(true);
+        if (UseHpUI)
+            EnemyWorldCanvas.Instance?.Attach(this); // 머리 위 체력바
         // 풀에서 재사용될 때 Dead 상태에 멈춰 있지 않도록 Walk부터
         PlayAnim(WALK_ANIM_HASH);
 
@@ -276,10 +279,10 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (statusEffectHandler != null)
             multiplier *= statusEffectHandler.StigmaDamageMul;
         curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, multiplier));
-        if (curHp > 1)
-            hpText.text = ((int)curHp).ToString();
-        else if (0 < curHp && curHp <= 1)
-            hpText.text = "1";
+        // if (curHp > 1)
+        //     hpText.text = ((int)curHp).ToString();
+        // else if (0 < curHp && curHp <= 1)
+        //     hpText.text = "1";
 
         OnHpChanged();
         if (curHp < 1)
@@ -304,7 +307,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
     protected virtual void OnHpChanged()
     {
-
+        EnemyWorldCanvas.Instance?.Refresh(this);
     }
     public virtual void Reward()
     {
@@ -331,7 +334,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         if (col2d != null)
             col2d.enabled = false;
         rg2d.linearVelocity = Vector2.zero;
-        hpText.gameObject.SetActive(false);
+        EnemyWorldCanvas.Instance?.Release(this); // Dead 애니메이션 중엔 체력바 숨김
         PlayAnim(DEAD_ANIM_HASH);
     }
 
@@ -365,6 +368,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     public void Deactivate()
     {
         IsDying = false;
+        EnemyWorldCanvas.Instance?.Release(this);
         gameObject.SetActive(false);
         if (EnemyFieldController.Instance != null)
             EnemyFieldController.Instance.ReturnToPool(this);

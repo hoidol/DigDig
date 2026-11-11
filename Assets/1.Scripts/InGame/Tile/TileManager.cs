@@ -7,6 +7,8 @@ public class TileManager : MonoSingleton<TileManager>
     public Tile[] tiles;
     readonly List<Tile> emptyTiles = new();
     List<Tile> usingTiles = new List<Tile>();
+    public Sprite baseTile;  // 사용 가능한 타일 이미지 (없으면 타일에 원래 지정된 이미지)
+    public Sprite breakTile; // 막힌 타일 이미지
 
     void Awake()
     {
@@ -98,7 +100,18 @@ public class TileManager : MonoSingleton<TileManager>
     }
     public bool HasBlockedTile => usingTiles.Count < tiles.Length;
 
-    // 막힌 타일 중 랜덤 하나 해제 (개척 타일 아이템). 해제할 게 없으면 false
+    // 지정한 막힌 타일 해제 (개척 타일: 누른 칸). 막힌 칸이 아니면 false
+    public bool UnblockTile(Tile tile)
+    {
+        if (tile == null || !tile.isBlocked)
+            return false;
+        tile.Unblock();
+        if (!usingTiles.Contains(tile))
+            usingTiles.Add(tile);
+        return true;
+    }
+
+    // 막힌 타일 중 랜덤 하나 해제 (개척자의 곡괭이 권능). 해제할 게 없으면 false
     public bool UnblockRandomTile()
     {
         List<Tile> blocked = new List<Tile>();
@@ -110,10 +123,7 @@ public class TileManager : MonoSingleton<TileManager>
         if (blocked.Count == 0)
             return false;
 
-        Tile target = blocked[Random.Range(0, blocked.Count)];
-        target.Unblock();
-        usingTiles.Add(target);
-        return true;
+        return UnblockTile(blocked[Random.Range(0, blocked.Count)]);
     }
 
     void Start()

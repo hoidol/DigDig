@@ -335,7 +335,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1386282022752368377}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1188,6 +1188,14 @@ PrefabInstance:
       propertyPath: m_text
       value: Get!
       objectReference: {fileID: 0}
+    - target: {fileID: 6052259411191217737, guid: 2816504f258864baa9e5686c055c9172, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10.056999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052259411191217737, guid: 2816504f258864baa9e5686c055c9172, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.331898
+      objectReference: {fileID: 0}
     - target: {fileID: 6340597162168722449, guid: 2816504f258864baa9e5686c055c9172, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1609,6 +1617,10 @@ PrefabInstance:
       propertyPath: m_fontSizeMax
       value: 37.9
       objectReference: {fileID: 0}
+    - target: {fileID: 8877473093255514164, guid: 3f493434438304502af0ac21c357cc9e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f493434438304502af0ac21c357cc9e, type: 3}
 --- !u!224 &4562347192281627075 stripped
@@ -1722,6 +1734,14 @@ PrefabInstance:
     - target: {fileID: 7905313718942946651, guid: c64758649c7be4f23820e20c2897dba5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8426582443186447834, guid: c64758649c7be4f23820e20c2897dba5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 10.057007
+      objectReference: {fileID: 0}
+    - target: {fileID: 8426582443186447834, guid: c64758649c7be4f23820e20c2897dba5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.331902
       objectReference: {fileID: 0}
     - target: {fileID: 8891324612789906924, guid: c64758649c7be4f23820e20c2897dba5, type: 3}
       propertyPath: m_AnchorMax.y

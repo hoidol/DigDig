@@ -125,18 +125,6 @@ MonoBehaviour:
   - statType: 3
     values:
     - 0
-  enhanceAbilityInfos:
-  - level: 2
-    desc: "\uACF5\uACA9\uB825 +5% \uC99D\uAC00"
-  - level: 5
-    desc: "\uD654\uC5FC(\uC9C0\uC625\uBD88) \uD53C\uD574 15% \uC99D\uAC00"
-  - level: 8
-    desc: "[\uAC01\uC131] \uC9C0\uC625\uBD88 \uD53C\uD574\uB97C \uC785\uC740 \uC801\uC5D0\uAC8C
-      \uD654\uC0C1"
-  - level: 11
-    desc: "\uD654\uC0C1 \uC9C0\uC18D \uC2DC\uAC04 +1\uCD08"
-  - level: 14
-    desc: "\uACF5\uACA9 \uC18D\uB3C4 +5% \uC99D\uAC00"
   uniqueSlimeStats: []
   hellfireWidth: 1
   burnDuration: 2

@@ -449,6 +449,12 @@ MonoBehaviour:
   - key: TileItem_AlreadyInstalled
     kr: "\uC774\uBBF8 \uC544\uC774\uD15C\uC774 \uC124\uCE58\uB41C \uD0C0\uC77C\uC785\uB2C8\uB2E4."
     en: This tile already has an item.
+  - key: TileItem_BlockedTile
+    kr: "\uB9C9\uD78C \uD0C0\uC77C\uC5D0\uB294 \uC124\uCE58\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4."
+    en: You cannot install on a blocked tile.
+  - key: TileItem_SelectBlockedTile
+    kr: "\uD574\uC81C\uD560 \uB9C9\uD78C \uD0C0\uC77C\uC744 \uB20C\uB7EC\uC8FC\uC138\uC694."
+    en: Tap a blocked tile to clear it.
   - key: TileItem_RefreshLimit
     kr: "\uC774\uBC88 \uD310 \uAC31\uC2E0 \uD69F\uC218\uB97C \uBAA8\uB450 \uC0AC\uC6A9\uD588\uC2B5\uB2C8\uB2E4"
     en: No refreshes left this game
@@ -456,8 +462,8 @@ MonoBehaviour:
     kr: '{0} Lv.{1}'
     en: '{0} Lv.{1}'
   - key: TileItem_Upgrade
-    kr: "\uAC15\uD654 {0:0}%\\n\uC8FC\uC0AC\uC704 \uCF54\uC778 {1}"
-    en: Upgrade {0:0}%\nDice Coin {1}
+    kr: "\uAC15\uD654 \uD655\uB960{0:0}%"
+    en: Upgrade {0:0}%
   - key: TileItem_UpgradeSuccess
     kr: "\uAC15\uD654 \uC131\uACF5! Lv.{0}"
     en: Upgrade succeeded! Lv.{0}
