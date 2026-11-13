@@ -33,10 +33,11 @@ public class StartSetting
             "EnemyManager",
             "AuthorityManager",
             "KingSlimeManager",
-            "SlimeManager",
+            "MinionManager",
             "SoundManager",
             "AchievementManager",
             "EnergeManager",
+            "TutorialManager",
             //"FirebaseManager"
 //공용
             // "InAppPurchaseManager",

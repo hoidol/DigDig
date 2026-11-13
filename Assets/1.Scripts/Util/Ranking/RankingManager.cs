@@ -35,9 +35,29 @@ public static class RankingManager
     static readonly HashSet<DifficultyType> loading = new HashSet<DifficultyType>();
     static string cachedUid;
 
+    // 테스트용: 에디터에는 Firebase 네이티브 라이브러리가 없어서, 값을 넣으면 서버 대신 이 함수로 랭킹을 만든다 (기본 null)
+    // 로그인 확인(RankingButton)도 건너뛰고 내 uid는 UidForTest
+    public static Func<DifficultyType, RankingResult> FetchForTest;
+    public static string UidForTest;
+    public static bool IsTestMode => FetchForTest != null;
+
+    // 내 uid (로그인 전이면 null)
+    public static string MyUid
+    {
+        get
+        {
+            if (IsTestMode)
+                return UidForTest;
+            return FirebaseManager.Instance != null && FirebaseManager.Instance.firebaseAuth != null ? FirebaseManager.Instance.firebaseAuth.UserId : null;
+        }
+    }
+
     // 내 기록 업로드 → (10분 지났으면) 랭킹 목록 불러오기. 실패 시 null (이전 캐시가 있으면 그걸 반환)
     public static async UniTask<RankingResult> GetRankingAsync(DifficultyType difficulty)
     {
+        if (IsTestMode)
+            return FetchForTest(difficulty);
+
         await UniTask.WaitWhile(() => loading.Contains(difficulty)); // 같은 난이도 중복 요청 방지
         loading.Add(difficulty);
         try
@@ -144,20 +164,28 @@ public static class RankingManager
             });
         }
 
-        // RTDB는 오름차순 → wave 내림차순, 같은 wave면 먼저 달성한 순
-        ranks = ranks.OrderByDescending(e => e.wave).ThenBy(e => e.updatedAt).ToList();
+        Debug.Log($"[RankingManager] 랭킹 불러오기 완료 ({difficulty}) {ranks.Count}명");
+        return BuildResult(difficulty, ranks, uid, Time.realtimeSinceStartup);
+    }
+
+    // 순위 매기기: wave 내림차순, 같은 wave면 먼저 달성한(updatedAt이 작은) 순. 상위 TOP_COUNT명만, 내 기록이 그 안에 있으면 my
+    public static RankingResult BuildResult(DifficultyType difficulty, IEnumerable<RankData> datas, string myUid, float fetchedAt)
+    {
+        List<RankData> ranks = datas.OrderByDescending(e => e.wave).ThenBy(e => e.updatedAt).Take(TOP_COUNT).ToList();
         for (int i = 0; i < ranks.Count; i++)
             ranks[i].num = i + 1;
 
-        Debug.Log($"[RankingManager] 랭킹 불러오기 완료 ({difficulty}) {ranks.Count}명");
         return new RankingResult
         {
             difficulty = difficulty,
             ranks = ranks,
-            my = ranks.FirstOrDefault(e => e.uid == uid),
-            fetchedAt = Time.realtimeSinceStartup,
+            my = ranks.FirstOrDefault(e => e.uid == myUid),
+            fetchedAt = fetchedAt,
         };
     }
+
+    // 내 순위가 목록 밖일 때 순위 칸 글씨: 기록이 있으면 "100+", 없으면 "-"
+    public static string GetOutOfRankLabel(int myWave) => myWave > 0 ? $"{TOP_COUNT}+" : "-";
 
     // 내 최고 wave (표시용, 1부터). 플레이 기록 없으면 0
     public static int GetMyWave(DifficultyType difficulty)
@@ -173,7 +201,11 @@ public static class RankingManager
     // 닉네임이 기본값(GUID)이면 Guest#uid앞4자리
     public static string GetMyNickname(string uid)
     {
-        string nickname = UserDataManager.Instance.userMyInfoManager.userMyInfoData.nickname;
+        return GetDisplayNickname(UserDataManager.Instance.userMyInfoManager.userMyInfoData.nickname, uid);
+    }
+
+    public static string GetDisplayNickname(string nickname, string uid)
+    {
         if (string.IsNullOrWhiteSpace(nickname) || Guid.TryParse(nickname, out _))
             return $"Guest#{(uid ?? "????").Substring(0, Mathf.Min(4, (uid ?? "????").Length))}";
         return nickname;

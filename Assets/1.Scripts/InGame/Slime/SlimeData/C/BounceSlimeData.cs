@@ -1,9 +1,0 @@
-using UnityEngine;
-
-
-[CreateAssetMenu(fileName ="Bounce",menuName = "SlimeData/C/Bounce")]
-public class BounceSlimeData : EnhanceSlimeData
-{
-    public int[] bounces ={2,3,4,5,6};
-    // public int[] shootCounts = {1,2,2,3,3,4};
-}

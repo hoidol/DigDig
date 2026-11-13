@@ -15,19 +15,19 @@ public class ReinforceCanvas : CanvasUI<ReinforceCanvas>
         UpdatePanels();
     }
 
-    // 장착 슬라임(UserSlimeData.equiptedSlimes, 5칸)을 패널에 순서대로. 장착이 비었거나 패널이 남으면 숨김
+    // 장착 슬라임(UserMinionData.equiptedMinions, 5칸)을 패널에 순서대로. 장착이 비었거나 패널이 남으면 숨김
     public void UpdatePanels()
     {
-        UserSlime[] equipped = UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes;
+        UserMinion[] equipped = UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions;
         for (int i = 0; i < reinforcePanels.Length; i++)
         {
             ReinforcePanel panel = reinforcePanels[i];
             if (panel == null)
                 continue;
-            SlimeData data = equipped != null && i < equipped.Length && equipped[i] != null ? equipped[i].SlimeData : null;
+            MinionData data = equipped != null && i < equipped.Length && equipped[i] != null ? equipped[i].MinionData : null;
             panel.gameObject.SetActive(data != null);
             if (data != null)
-                panel.SetSlimeData(data);
+                panel.SetMinionData(data);
         }
     }
 

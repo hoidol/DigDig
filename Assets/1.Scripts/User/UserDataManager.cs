@@ -8,7 +8,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     public const string UserDataFileName = "UserData";
     // public static string STAGE_KEY = GameSetting.FIRST_STAGE_KEY;// "Gateway1";
     public bool isAdRemoved = false;
-    public bool IsGameSpeedUp => userPurchaseManager.HasPurchased(InAppProductInfo.GAME_SPEED_UP_KEY);
+    public bool IsGameSpeedUp => userPurchaseManager.HasPurchasedAny(InAppProductInfo.GAME_SPEED_UP_KEYS);
     public static DifficultyType difficultyType = DifficultyType.Normal;
 
     [field: SerializeField]
@@ -19,7 +19,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
 
     public UserStageManager userStageManager;
     public UserAuthorityManager userAuthorityManager;
-    public UserSlimeManager userSlimeManager;
+    public UserMinionManager userMinionManager;
     public UserPurchaseManager userPurchaseManager;
     public UserMyInfoManager userMyInfoManager;
     public UserKingSlimeManager userKingSlimeManager;
@@ -57,7 +57,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userStageManager = new UserStageManager();
         userAuthorityManager = new UserAuthorityManager();
         userPurchaseManager = new UserPurchaseManager();
-        userSlimeManager = new UserSlimeManager();
+        userMinionManager = new UserMinionManager();
         userMyInfoManager = new UserMyInfoManager();
         userKingSlimeManager = new UserKingSlimeManager();
 
@@ -77,10 +77,10 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userStageManager.LoadData();
         userAuthorityManager.LoadData();
         userPurchaseManager.LoadData();
-        userSlimeManager.LoadData();
+        userMinionManager.LoadData();
         userMyInfoManager.LoadData();
         userKingSlimeManager.LoadData();
-        isAdRemoved = userPurchaseManager.HasPurchased(InAppProductInfo.REMOVE_AD_KEY);
+        isAdRemoved = userPurchaseManager.HasPurchasedAny(InAppProductInfo.REMOVE_AD_KEYS);
     }
 
     // 클라우드 저장용 묶음 (FirebaseDatabase)
@@ -94,7 +94,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             userStageData = userStageManager.userStageData,
             userAuthorityData = userAuthorityManager.userAuthorityData,
             userPurchaseData = userPurchaseManager.userPurchaseData,
-            userSlimeData = userSlimeManager.userSlimeData,
+            userMinionData = userMinionManager.userMinionData,
             userMyInfoData = userMyInfoManager.userMyInfoData,
             userKSData = userKingSlimeManager.userKSData,
         };
@@ -110,7 +110,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         SaveIfNotNull(UserStageManager.UserDataFileName, data.userStageData);
         SaveIfNotNull(UserAuthorityManager.UserDataFileName, data.userAuthorityData);
         SaveIfNotNull(UserPurchaseManager.UserDataFileName, data.userPurchaseData);
-        SaveIfNotNull(UserSlimeManager.UserDataFileName, data.userSlimeData);
+        SaveIfNotNull(UserMinionManager.UserDataFileName, data.userMinionData);
         SaveIfNotNull(UserMyInfoManager.UserDataFileName, data.userMyInfoData);
         SaveIfNotNull(UserKingSlimeManager.UserDataFileName, data.userKSData);
 
@@ -127,7 +127,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             { UserStageManager.UserDataFileName, JsonUtility.ToJson(data.userStageData) },
             { UserAuthorityManager.UserDataFileName, JsonUtility.ToJson(data.userAuthorityData) },
             { UserPurchaseManager.UserDataFileName, JsonUtility.ToJson(data.userPurchaseData) },
-            { UserSlimeManager.UserDataFileName, JsonUtility.ToJson(data.userSlimeData) },
+            { UserMinionManager.UserDataFileName, JsonUtility.ToJson(data.userMinionData) },
             { UserMyInfoManager.UserDataFileName, JsonUtility.ToJson(data.userMyInfoData) },
             { UserKingSlimeManager.UserDataFileName, JsonUtility.ToJson(data.userKSData) },
         };
@@ -142,7 +142,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             userStageData = FromSection<UserStageData>(sections, UserStageManager.UserDataFileName),
             userAuthorityData = FromSection<UserAuthorityData>(sections, UserAuthorityManager.UserDataFileName),
             userPurchaseData = FromSection<UserPurchaseData>(sections, UserPurchaseManager.UserDataFileName),
-            userSlimeData = FromSection<UserSlimeData>(sections, UserSlimeManager.UserDataFileName),
+            userMinionData = FromSection<UserMinionData>(sections, UserMinionManager.UserDataFileName),
             userMyInfoData = FromSection<UserMyInfoData>(sections, UserMyInfoManager.UserDataFileName),
             userKSData = FromSection<UserKSData>(sections, UserKingSlimeManager.UserDataFileName),
         });
@@ -265,7 +265,7 @@ public class UserCloudData
     public UserStageData userStageData;
     public UserAuthorityData userAuthorityData;
     public UserPurchaseData userPurchaseData;
-    public UserSlimeData userSlimeData;
+    public UserMinionData userMinionData;
     public UserMyInfoData userMyInfoData;
     public UserKSData userKSData;
 }

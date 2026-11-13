@@ -10,9 +10,9 @@ public class ReinforcePanel : MonoBehaviour
     public TMP_Text priceText;
     public Image thumImage;
     public Button reinforceButton; // 연결하면 클릭 시 강화 (인스펙터 OnClick에 OnClickReinforce를 따로 걸지 말 것)
-    SlimeData slimeData;
+    MinionData minionData;
 
-    public SlimeData SlimeData => slimeData;
+    public MinionData MinionData => minionData;
 
     void Awake()
     {
@@ -20,20 +20,20 @@ public class ReinforcePanel : MonoBehaviour
             reinforceButton.onClick.AddListener(OnClickReinforce);
     }
 
-    public void SetSlimeData(SlimeData slimeData)
+    public void SetMinionData(MinionData minionData)
     {
-        this.slimeData = slimeData;
+        this.minionData = minionData;
         if (lvText != null)
             lvText.text = $"Lv.{GetReinforceLevel()}";
         if (priceText != null)
             priceText.text = GetPrice().ToString();
         if (thumImage != null)
-            thumImage.sprite = slimeData.thum;
+            thumImage.sprite = minionData.thum;
     }
 
     int GetReinforceLevel()
     {
-        return KingSlime.Instance.statMgr.GetReinforceLevel(slimeData.key);
+        return KingSlime.Instance.statMgr.GetReinforceLevel(minionData.key);
     }
 
     // 레벨 0 → 30, 1 → 60, 2 → 90 ... (최대 레벨 없음)
@@ -42,7 +42,7 @@ public class ReinforcePanel : MonoBehaviour
 
     public void OnClickReinforce()
     {
-        if (slimeData == null)
+        if (minionData == null)
             return;
 
         int price = GetPrice();
@@ -53,7 +53,8 @@ public class ReinforcePanel : MonoBehaviour
         }
 
         KingSlime.Instance.AddCoin(-price);
-        KingSlime.Instance.statMgr.LevelUpSlime(slimeData.key);
-        SetSlimeData(slimeData);
+        KingSlime.Instance.statMgr.LevelUpMinion(minionData.key);
+        AchievementManager.Report(AchievementType.UpgradeReinforce);
+        SetMinionData(minionData);
     }
 }

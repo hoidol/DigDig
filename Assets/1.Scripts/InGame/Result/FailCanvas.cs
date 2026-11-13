@@ -14,20 +14,18 @@ public class FailCanvas : CanvasUI<FailCanvas>
 
     bool isWatchingAd; // 광고 보는 동안 중복 클릭 방지
 
-    static string Today => DateTime.Now.ToString("yyyyMMdd");
-
     // 오늘 남은 부활 횟수
     public static int LeftResurrectionCount
     {
         get
         {
-            if (PlayerPrefs.GetString(DAILY_RESURRECTION_DATE_KEY, "") != Today)
+            if (!DailyCheck.IsTodayPrefs(DAILY_RESURRECTION_DATE_KEY))
                 return MAX_DAILY_RESURRECTION_COUNT;
             return PlayerPrefs.GetInt(DAILY_RESURRECTION_COUNT_KEY, MAX_DAILY_RESURRECTION_COUNT);
         }
         private set
         {
-            PlayerPrefs.SetString(DAILY_RESURRECTION_DATE_KEY, Today);
+            DailyCheck.MarkTodayPrefs(DAILY_RESURRECTION_DATE_KEY);
             PlayerPrefs.SetInt(DAILY_RESURRECTION_COUNT_KEY, value);
             PlayerPrefs.Save();
         }
@@ -47,17 +45,11 @@ public class FailCanvas : CanvasUI<FailCanvas>
         adRetryButton.SetActive(count > 0);
     }
 
-    // 광고 성공 시에만 횟수 차감 후 부활 (광고 제거 구매자는 광고 없이)
+    // 광고 성공 시에만 횟수 차감 후 부활 (광고 제거 구매자는 AdManager.Show가 광고 없이 성공 처리)
     public void OnClickeResume()
     {
         if (isWatchingAd || LeftResurrectionCount <= 0)
             return;
-
-        if (UserDataManager.Instance.isAdRemoved)
-        {
-            Resurrect();
-            return;
-        }
 
         isWatchingAd = true;
         AdManager.Show("resurrection", AdType.RA, async (success) =>

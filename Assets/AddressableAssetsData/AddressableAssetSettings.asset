@@ -115,8 +115,8 @@ MonoBehaviour:
     - CharacterBulletObject
     - Level1ItemData
     - Level2ItemData
-    - SlimeData
-    - SlimeMergeData
+    - MinionData
+    - MinionMergeData
     - EnhanceGradeInfo
     - EnhanceExpInfo
     - AuthorityData

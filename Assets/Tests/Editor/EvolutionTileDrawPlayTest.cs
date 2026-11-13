@@ -33,16 +33,16 @@ public class EvolutionTileDrawPlayTest : InGamePlayTestBase
     IEnumerator Draw_ChanceAndLimitBody()
     {
         Assert.IsNotNull(ItemManager.Instance.GetItemData(KEY), "진화 타일 ItemData 없음");
-        SlimeFieldController.Instance.slimeMaxCount = 99;
+        MinionFieldController.Instance.minionMaxCount = 99;
 
         // 최대 레벨 슬라임 0 → 안 나옴
         Assert.AreEqual(0, CountAppear(), "최대 레벨 슬라임이 없는데 등장");
 
         // 최대 레벨 슬라임 2마리, 진화 타일 0 → 약 40%
-        SpawnSlime("Ice", GetFreeTile(), SlimeData.MAX_MERGE_LEVEL);
-        SpawnSlime("Ice", GetFreeTile(), SlimeData.MAX_MERGE_LEVEL);
+        SpawnMinion("Ice", GetFreeTile(), MinionData.MAX_MERGE_LEVEL);
+        SpawnMinion("Ice", GetFreeTile(), MinionData.MAX_MERGE_LEVEL);
         yield return WaitFrames(2);
-        Assert.AreEqual(2, EvolutionTileItem.EvolvableSlimeCount);
+        Assert.AreEqual(2, EvolutionTileItem.EvolvableMinionCount);
         int appear = CountAppear();
         Assert.That(appear, Is.InRange(DRAWS * 0.3f, DRAWS * 0.5f), $"등장 {appear}/{DRAWS} (기대 약 40%)");
 

@@ -13,17 +13,17 @@ public class SheetDownloadSetting : ScriptableObject
     [Tooltip("항목의 sheetId가 비어 있으면 사용. 시트 URL의 /d/ 와 /edit 사이 값")]
     public string defaultSheetId;
     //public string gId = "1244868266";
-    // 슬라임 강화 데이터는 등급별 탭 → entries에 Json/SlimeEnhance/SlimeEnhance_{등급}.csv로 각각 등록
+    // 슬라임 강화 데이터는 등급별 탭 → entries에 Json/MinionEnhance/MinionEnhance_{등급}.csv로 각각 등록
     public Entry[] entries = Array.Empty<Entry>();
 
     // 슬라임 전용 (sheetId는 defaultSheetId 사용, gid를 비우면 건너뜀)
-    [Header("Slime")]
-    [Tooltip("Slime 탭 gid → " + SLIME_CSV_PATH)]
-    public string slimeGid = "1109237000";
-    [Tooltip("Slime 탭에서 받을 범위 (A열 별명 제외)")]
-    public string slimeRange = "B1:F";
+    [Header("Minion")]
+    [Tooltip("Minion 탭 gid → " + MINION_CSV_PATH)]
+    public string minionGid = "1109237000";
+    [Tooltip("Minion 탭에서 받을 범위 (A열 별명 제외)")]
+    public string minionRange = "B1:F";
 
-    public const string SLIME_CSV_PATH = "Json/SlimeData.csv";
+    public const string MINION_CSV_PATH = "Json/MinionData.csv";
 
     [Serializable]
     public class Entry

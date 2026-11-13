@@ -35,7 +35,7 @@ public static class DataTableImporter
         new Entry("CharacterData", new[] { "CharacterData.csv" }, () => LoadAll<KingSlimeData>(d => d.LoadData())),
         new Entry("EnemyData", new[] { "EnemyData.csv" }, () => LoadAll<EnemyData>(d => d.LoadData())),
         new Entry("StageData", new[] { "StageData.csv", "WaveData", "EventData.csv" }, () => LoadAll<StageData>(d => d.LoadData())),
-        new Entry("SlimeData", new[] { "SlimeData.csv", "SlimeEnhance" }, () => LoadAll<SlimeData>(d => d.LoadData())),
+        new Entry("MinionData", new[] { "MinionData.csv", "MinionEnhance" }, () => LoadAll<MinionData>(d => d.LoadData())),
         new Entry("ItemData", new[] { "ItemData.csv" }, () => LoadAll<ItemData>(d => d.LoadData())),
         new Entry("AuthorityData", new[] { "AuthorityData.csv" }, () => LoadAll<AuthorityData>(d => d.Edit())),
         new Entry("EnhanceExpInfo", new[] { "EnhanceLevelInfo.csv" }, () => LoadAll<EnhanceExpInfo>(d => d.LoadData())),
@@ -81,8 +81,8 @@ public static class DataTableImporter
     [MenuItem(MENU_ROOT + "Import StageData", priority = 41)]
     static void ImportStageData() => ImportByName("StageData");
 
-    [MenuItem(MENU_ROOT + "Import SlimeData", priority = 42)]
-    static void ImportSlimeData() => ImportByName("SlimeData");
+    [MenuItem(MENU_ROOT + "Import MinionData", priority = 42)]
+    static void ImportMinionData() => ImportByName("MinionData");
 
     [MenuItem(MENU_ROOT + "Import ItemData", priority = 43)]
     static void ImportItemData() => ImportByName("ItemData");

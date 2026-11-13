@@ -28,7 +28,9 @@ if unity status 2>/dev/null | awk -v p="$TEST" '$3 == p' | grep -q .; then
     echo "컴파일 에러:"; echo "$errors"; exit 1
   fi
 
-  "${cli[@]}" test run --mode editor ${FILTER:+--filter "$FILTER"} --async-tests true >/dev/null
+  filter_args=() # zsh는 ${FILTER:+--filter "$FILTER"}를 한 단어로 넘기므로 배열로
+  [[ -n $FILTER ]] && filter_args=(--filter "$FILTER")
+  "${cli[@]}" test run --mode editor "${filter_args[@]}" --async-tests true >/dev/null
   sleep 20
   # 플레이 모드 진입·도메인 리로드 중엔 응답이 없으므로 completed가 나올 때까지 대기
   while true; do

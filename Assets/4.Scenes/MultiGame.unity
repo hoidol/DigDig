@@ -945,7 +945,7 @@ GameObject:
   - component: {fileID: 26425248}
   - component: {fileID: 26425247}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1642,7 +1642,7 @@ GameObject:
   - component: {fileID: 46228695}
   - component: {fileID: 46228694}
   m_Layer: 5
-  m_Name: SlimePanel
+  m_Name: MinionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4748,7 +4748,7 @@ GameObject:
   - component: {fileID: 143548241}
   - component: {fileID: 143548240}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6752,7 +6752,7 @@ GameObject:
   - component: {fileID: 187673840}
   - component: {fileID: 187673839}
   m_Layer: 5
-  m_Name: SlimePanel
+  m_Name: MinionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9752,7 +9752,7 @@ GameObject:
   - component: {fileID: 261256081}
   - component: {fileID: 261256080}
   m_Layer: 0
-  m_Name: SlimeSpawner
+  m_Name: MinionSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9770,11 +9770,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02955f8baa8dc471cb87f1b3fa508097, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSpawner
-  ignoreSlimeCount: 0
-  slimeMaxCount: 0
+  ignoreMinionCount: 0
+  minionMaxCount: 0
   mergeCount: 0
   reinforceCount: 0
-  slimeLayer:
+  minionLayer:
     serializedVersion: 2
     m_Bits: 0
   characterLayer:
@@ -13365,7 +13365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterManageCanvas
   init: 0
-  slimeSlotPanels: []
+  minionSlotPanels: []
 --- !u!114 &342555245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14387,7 +14387,7 @@ GameObject:
   - component: {fileID: 365411225}
   - component: {fileID: 365411224}
   m_Layer: 5
-  m_Name: SlimeInfoPanel
+  m_Name: MinionInfoPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14482,7 +14482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb0915251dd014143851f71a7a0d73b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeInfoPanel
-  slimePanel: {fileID: 365411224}
+  minionPanel: {fileID: 365411224}
 --- !u!1 &366920460
 GameObject:
   m_ObjectHideFlags: 0
@@ -16609,7 +16609,7 @@ GameObject:
   - component: {fileID: 406143029}
   - component: {fileID: 406143028}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16814,7 +16814,7 @@ GameObject:
   - component: {fileID: 411249626}
   - component: {fileID: 411249625}
   m_Layer: 5
-  m_Name: SlimePanel
+  m_Name: MinionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17557,7 +17557,7 @@ GameObject:
   - component: {fileID: 433817245}
   - component: {fileID: 433817244}
   m_Layer: 5
-  m_Name: SlimeSlotPanel (6)
+  m_Name: MinionSlotPanel (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17738,7 +17738,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSlotPanel
   idx: 0
-  slimePanel: {fileID: 1942352768}
+  minionPanel: {fileID: 1942352768}
   sellPanel: {fileID: 2052089948}
   priceText: {fileID: 87584879}
   selling: 0
@@ -19054,7 +19054,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.MinionStatPanel
 --- !u!1 &469913459
 GameObject:
   m_ObjectHideFlags: 0
@@ -19203,7 +19203,7 @@ MonoBehaviour:
   maxExp: 0
   hpPoint: {fileID: 2026818008}
   itemInventory: {fileID: 0}
-  slimeInventory: {fileID: 0}
+  minionInventory: {fileID: 0}
   tileCheckers: []
   health: {fileID: 473240678}
   weapon: {fileID: 0}
@@ -19385,7 +19385,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8cb0ac32b2624944a0ba72fa697731a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeInventory
-  curSlimes: []
+  curMinions: []
 --- !u!1 &474787508
 GameObject:
   m_ObjectHideFlags: 0
@@ -21723,7 +21723,7 @@ GameObject:
   - component: {fileID: 533145849}
   - component: {fileID: 533145848}
   m_Layer: 5
-  m_Name: SlimePanel
+  m_Name: MinionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23071,7 +23071,7 @@ GameObject:
   - component: {fileID: 556760226}
   - component: {fileID: 556760225}
   m_Layer: 5
-  m_Name: SlimePanel
+  m_Name: MinionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24020,7 +24020,7 @@ GameObject:
   - component: {fileID: 578531000}
   - component: {fileID: 578531001}
   m_Layer: 5
-  m_Name: SlimeCountInfoPanel (1)
+  m_Name: MinionCountInfoPanel (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24058,7 +24058,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b39813fb443114464bbb97f79e46cf29, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeCountInfoPanel
+  m_EditorClassIdentifier: Assembly-CSharp::MinionCountInfoPanel
   infoText: {fileID: 458737481}
 --- !u!1 &579640174
 GameObject:
@@ -26856,7 +26856,7 @@ GameObject:
   - component: {fileID: 639041503}
   - component: {fileID: 639041502}
   m_Layer: 5
-  m_Name: SlimeSlotPanel
+  m_Name: MinionSlotPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27037,7 +27037,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSlotPanel
   idx: 0
-  slimePanel: {fileID: 900571669}
+  minionPanel: {fileID: 900571669}
   sellPanel: {fileID: 97808309}
   priceText: {fileID: 1911623082}
   selling: 0
@@ -27975,7 +27975,7 @@ GameObject:
   - component: {fileID: 673281771}
   - component: {fileID: 673281770}
   m_Layer: 5
-  m_Name: SlimeSpawnButton
+  m_Name: MinionSpawnButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28014,7 +28014,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce5408595f31047e6a1e48a30dbc617d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeSpawnButton
+  m_EditorClassIdentifier: Assembly-CSharp::MinionSpawnButton
   button: {fileID: 0}
   priceText: {fileID: 2083330411}
 --- !u!114 &673281771
@@ -28188,7 +28188,7 @@ GameObject:
   - component: {fileID: 680312972}
   - component: {fileID: 680312971}
   m_Layer: 5
-  m_Name: SlimeSlotPanel (3)
+  m_Name: MinionSlotPanel (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28369,7 +28369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSlotPanel
   idx: 0
-  slimePanel: {fileID: 2099053013}
+  minionPanel: {fileID: 2099053013}
   sellPanel: {fileID: 1973603924}
   priceText: {fileID: 1497379577}
   selling: 0
@@ -29612,7 +29612,7 @@ GameObject:
   - component: {fileID: 727518103}
   - component: {fileID: 727518102}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29863,7 +29863,7 @@ GameObject:
   - component: {fileID: 734337824}
   - component: {fileID: 734337823}
   m_Layer: 5
-  m_Name: SlimeSlotContainer (1)
+  m_Name: MinionSlotContainer (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31375,7 +31375,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.MinionStatPanel
 --- !u!1 &794629920
 GameObject:
   m_ObjectHideFlags: 0
@@ -31769,7 +31769,7 @@ GameObject:
   - component: {fileID: 805558205}
   - component: {fileID: 805558204}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33713,7 +33713,7 @@ GameObject:
   - component: {fileID: 858709154}
   - component: {fileID: 858709157}
   m_Layer: 5
-  m_Name: SlimeSpawnButon
+  m_Name: MinionSpawnButon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34415,7 +34415,7 @@ GameObject:
   - component: {fileID: 868742116}
   - component: {fileID: 868742115}
   m_Layer: 5
-  m_Name: SlimeSlotPanel (1)
+  m_Name: MinionSlotPanel (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34596,7 +34596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSlotPanel
   idx: 0
-  slimePanel: {fileID: 1565213110}
+  minionPanel: {fileID: 1565213110}
   sellPanel: {fileID: 1179151858}
   priceText: {fileID: 309046863}
   selling: 0
@@ -35333,7 +35333,7 @@ GameObject:
   - component: {fileID: 900571670}
   - component: {fileID: 900571669}
   m_Layer: 5
-  m_Name: SlimePanel
+  m_Name: MinionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35908,7 +35908,7 @@ GameObject:
   - component: {fileID: 910524546}
   - component: {fileID: 910524545}
   m_Layer: 5
-  m_Name: SlimeSlotPanel (7)
+  m_Name: MinionSlotPanel (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36089,7 +36089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSlotPanel
   idx: 0
-  slimePanel: {fileID: 187673839}
+  minionPanel: {fileID: 187673839}
   sellPanel: {fileID: 2045838854}
   priceText: {fileID: 1129976875}
   selling: 0
@@ -37314,7 +37314,7 @@ GameObject:
   - component: {fileID: 948873342}
   - component: {fileID: 948873341}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37432,7 +37432,7 @@ GameObject:
   - component: {fileID: 966469983}
   - component: {fileID: 966469982}
   m_Layer: 5
-  m_Name: SlimeSlotPanel (4)
+  m_Name: MinionSlotPanel (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37613,7 +37613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSlotPanel
   idx: 0
-  slimePanel: {fileID: 46228694}
+  minionPanel: {fileID: 46228694}
   sellPanel: {fileID: 335413840}
   priceText: {fileID: 502814034}
   selling: 0
@@ -37736,7 +37736,7 @@ GameObject:
   - component: {fileID: 970213493}
   - component: {fileID: 970213492}
   m_Layer: 5
-  m_Name: SlimeSlotPanel (8)
+  m_Name: MinionSlotPanel (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37917,7 +37917,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSlotPanel
   idx: 0
-  slimePanel: {fileID: 556760225}
+  minionPanel: {fileID: 556760225}
   sellPanel: {fileID: 1619948159}
   priceText: {fileID: 416787979}
   selling: 0
@@ -40289,7 +40289,7 @@ GameObject:
   - component: {fileID: 1023086706}
   - component: {fileID: 1023086705}
   m_Layer: 5
-  m_Name: SlimeSlotPanel (2)
+  m_Name: MinionSlotPanel (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40470,7 +40470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSlotPanel
   idx: 0
-  slimePanel: {fileID: 533145848}
+  minionPanel: {fileID: 533145848}
   sellPanel: {fileID: 924631516}
   priceText: {fileID: 1149487310}
   selling: 0
@@ -44907,7 +44907,7 @@ MonoBehaviour:
   <gameTimer>k__BackingField: 0
   mainWaveTimer: 0
   waveIdx: 0
-  slimeSpawnCount: 0
+  minionSpawnCount: 0
   drawItemCount: 0
   accWaves: []
   clearWaveIdxes: 
@@ -46696,7 +46696,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.MinionStatPanel
   titleText: {fileID: 0}
   valueText: {fileID: 0}
   thumImage: {fileID: 0}
@@ -46711,7 +46711,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.MinionStatPanel
 --- !u!1 &1225779078
 GameObject:
   m_ObjectHideFlags: 0
@@ -47095,7 +47095,7 @@ GameObject:
   - component: {fileID: 1241706026}
   - component: {fileID: 1241706025}
   m_Layer: 5
-  m_Name: SlimeMergeDragUI
+  m_Name: MinionMergeDragUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50001,13 +50001,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c37ba716c999d4211ac44281c1c3c950, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeSettingPanel
+  m_EditorClassIdentifier: Assembly-CSharp::MinionSettingPanel
   obj: {fileID: 1835317151}
   setFindTargetButton: {fileID: 1520893910}
   setBuffRangeButton: {fileID: 1142840909}
   setRotationDirectionButton: {fileID: 1673257290}
   characterShortcutInfoPanel: {fileID: 479152368}
-  slimeShortcutInfoPanel: {fileID: 1472114640}
+  minionShortcutInfoPanel: {fileID: 1472114640}
   attackTypePanel: {fileID: 46652507}
 --- !u!1 &1326019815
 GameObject:
@@ -53671,7 +53671,7 @@ GameObject:
   - component: {fileID: 1455873986}
   - component: {fileID: 1455873985}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54045,7 +54045,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.MinionStatPanel
   titleText: {fileID: 0}
   valueText: {fileID: 0}
   thumImage: {fileID: 0}
@@ -54060,7 +54060,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.MinionStatPanel
 --- !u!1 &1469056217
 GameObject:
   m_ObjectHideFlags: 0
@@ -54362,7 +54362,7 @@ GameObject:
   - component: {fileID: 1472114641}
   - component: {fileID: 1472114640}
   m_Layer: 5
-  m_Name: SlimeShortcutInfoPanel
+  m_Name: MinionShortcutInfoPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54399,8 +54399,8 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f99c5338056b845ed99ace6080cfa862, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SlimeShortcutInfoPanel
-  slimeStatPanels:
+  m_EditorClassIdentifier: Assembly-CSharp::MinionShortcutInfoPanel
+  minionStatPanels:
   - {fileID: 469370098}
   - {fileID: 794027598}
   - {fileID: 1853936843}
@@ -54502,7 +54502,7 @@ GameObject:
   - component: {fileID: 1475040961}
   - component: {fileID: 1475040959}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -56607,7 +56607,7 @@ GameObject:
   - component: {fileID: 1519204469}
   - component: {fileID: 1519204468}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58365,7 +58365,7 @@ GameObject:
   - component: {fileID: 1565213111}
   - component: {fileID: 1565213110}
   m_Layer: 5
-  m_Name: SlimePanel
+  m_Name: MinionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58973,7 +58973,7 @@ GameObject:
   - component: {fileID: 1580917931}
   - component: {fileID: 1580917930}
   m_Layer: 5
-  m_Name: SlimeSlotPanel (5)
+  m_Name: MinionSlotPanel (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59154,7 +59154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MiniMeSlotPanel
   idx: 0
-  slimePanel: {fileID: 411249625}
+  minionPanel: {fileID: 411249625}
   sellPanel: {fileID: 2079542103}
   priceText: {fileID: 1423648940}
   selling: 0
@@ -66075,7 +66075,7 @@ GameObject:
   - component: {fileID: 1799124227}
   - component: {fileID: 1799124226}
   m_Layer: 5
-  m_Name: SlimeSlotContainer
+  m_Name: MinionSlotContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68222,7 +68222,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.MinionStatPanel
 --- !u!1 &1854192406
 GameObject:
   m_ObjectHideFlags: 0
@@ -71241,7 +71241,7 @@ GameObject:
   - component: {fileID: 1942352769}
   - component: {fileID: 1942352768}
   m_Layer: 5
-  m_Name: SlimePanel
+  m_Name: MinionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72927,7 +72927,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.MinionStatPanel
 --- !u!1 &2010274403
 GameObject:
   m_ObjectHideFlags: 0
@@ -74320,7 +74320,7 @@ GameObject:
   - component: {fileID: 2039660093}
   - component: {fileID: 2039660092}
   m_Layer: 5
-  m_Name: SlimeLevelPanel
+  m_Name: MinionLevelPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77053,7 +77053,7 @@ GameObject:
   - component: {fileID: 2099053014}
   - component: {fileID: 2099053013}
   m_Layer: 5
-  m_Name: SlimePanel
+  m_Name: MinionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77583,7 +77583,7 @@ GameObject:
   - component: {fileID: 2109228957}
   - component: {fileID: 2109228956}
   m_Layer: 5
-  m_Name: SlimeTitleText (TMP) (1)
+  m_Name: MinionTitleText (TMP) (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -63,8 +63,8 @@ public static class SheetDownloader
         if (string.IsNullOrEmpty(defaultSheetId))
             return jobs;
 
-        if (!string.IsNullOrWhiteSpace(setting.slimeGid))
-            jobs.Add(new Job { csvPath = SheetDownloadSetting.SLIME_CSV_PATH, sheetId = defaultSheetId, gid = setting.slimeGid.Trim(), range = setting.slimeRange });
+        if (!string.IsNullOrWhiteSpace(setting.minionGid))
+            jobs.Add(new Job { csvPath = SheetDownloadSetting.MINION_CSV_PATH, sheetId = defaultSheetId, gid = setting.minionGid.Trim(), range = setting.minionRange });
 
         return jobs;
     }
@@ -236,7 +236,7 @@ public static class SheetDownloader
             .ToArray();
 
         setting.entries = csvPaths
-            .Where(p => p != SheetDownloadSetting.SLIME_CSV_PATH)
+            .Where(p => p != SheetDownloadSetting.MINION_CSV_PATH)
             .Select(p => new SheetDownloadSetting.Entry { csvPath = p })
             .ToArray();
         AssetDatabase.CreateAsset(setting, SheetDownloadSetting.DEFAULT_ASSET_PATH);

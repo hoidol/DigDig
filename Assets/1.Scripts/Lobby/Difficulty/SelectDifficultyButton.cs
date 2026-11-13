@@ -8,7 +8,7 @@ public class SelectDifficultyButton : ButtonUI
     // 비워 두면 자식 TMP_Text 순서대로(0 = 이름, 1 = 설명) 자동 연결
     public TMP_Text titleText;
     public TMP_Text descText;
-
+    public GameObject highlightObject;
     public override void Awake()
     {
         base.Awake();
@@ -33,6 +33,8 @@ public class SelectDifficultyButton : ButtonUI
             titleText.text = DifficultyDisplayButton.GetDifficultyText(difficultyType);
         if (descText != null)
             descText.text = GetDescText(difficultyType);
+
+        highlightObject.SetActive(UserDataManager.difficultyType == difficultyType); 
     }
 
     // 잠김 = 해금 조건, 열림 = 최고 기록 wave (기록 없으면 "기록 없음")

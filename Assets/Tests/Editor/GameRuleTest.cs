@@ -150,55 +150,55 @@ public class KSUpgradePriceTest
 
 public class MergeRuleTest
 {
-    const int MAX = SlimeData.MAX_MERGE_LEVEL;
+    const int MAX = MinionData.MAX_MERGE_LEVEL;
 
     [Test]
     public void SameKeySameLv_CanMerge()
     {
-        Assert.IsTrue(Slime.CanMerge("Ice", 0, 1, "Ice", 0, 1));
-        Assert.IsTrue(Slime.CanMerge("Ice", MAX - 1, 1, "Ice", MAX - 1, 1));
+        Assert.IsTrue(Minion.CanMerge("Ice", 0, 1, "Ice", 0, 1));
+        Assert.IsTrue(Minion.CanMerge("Ice", MAX - 1, 1, "Ice", MAX - 1, 1));
     }
 
     [Test]
     public void DifferentKey_CannotMerge()
     {
-        Assert.IsFalse(Slime.CanMerge("Ice", 0, 1, "Flame", 0, 1));
+        Assert.IsFalse(Minion.CanMerge("Ice", 0, 1, "Flame", 0, 1));
     }
 
     [Test]
     public void DifferentLv_CannotMerge()
     {
-        Assert.IsFalse(Slime.CanMerge("Ice", 0, 1, "Ice", 1, 1));
+        Assert.IsFalse(Minion.CanMerge("Ice", 0, 1, "Ice", 1, 1));
     }
 
     [Test]
     public void MaxLv_CannotMerge()
     {
-        Assert.IsFalse(Slime.CanMerge("Ice", MAX, 1, "Ice", MAX, 1));
+        Assert.IsFalse(Minion.CanMerge("Ice", MAX, 1, "Ice", MAX, 1));
     }
 
     [Test]
     public void Sacrifice_AnyKeySameLv_CanMerge()
     {
-        Assert.IsTrue(SacrificeSlime.CanSacrificeMerge(0, 1, 0, 1));
-        Assert.IsTrue(SacrificeSlime.CanSacrificeMerge(MAX - 1, 1, MAX - 1, 1));
+        Assert.IsTrue(SacrificeMinion.CanSacrificeMerge(0, 1, 0, 1));
+        Assert.IsTrue(SacrificeMinion.CanSacrificeMerge(MAX - 1, 1, MAX - 1, 1));
     }
 
     [Test]
     public void Sacrifice_DifferentLv_CannotMerge()
     {
-        Assert.IsFalse(SacrificeSlime.CanSacrificeMerge(0, 1, 1, 1));
+        Assert.IsFalse(SacrificeMinion.CanSacrificeMerge(0, 1, 1, 1));
     }
 
     [Test]
     public void Sacrifice_MaxLv_CannotMerge()
     {
-        Assert.IsFalse(SacrificeSlime.CanSacrificeMerge(MAX, 1, MAX, 1));
+        Assert.IsFalse(SacrificeMinion.CanSacrificeMerge(MAX, 1, MAX, 1));
     }
 }
 
 // 슬라임 확률 연속 실패 보정: 연속 4회 실패 후 다음 시도부터 성공 +50%p, 성공하면 초기화
-public class SlimeChancePityTest
+public class MinionChancePityTest
 {
     [TestCase(0.3f, 0, 0.3f)]
     [TestCase(0.3f, 3, 0.3f)]   // 3연속 실패까지는 그대로
@@ -207,7 +207,7 @@ public class SlimeChancePityTest
     [TestCase(0.7f, 4, 1f)]     // 최대 100%
     public void GetChance(float baseChance, int failStreak, float expected)
     {
-        Assert.AreEqual(expected, SlimeChancePity.GetChance(baseChance, failStreak), 0.0001f);
+        Assert.AreEqual(expected, MinionChancePity.GetChance(baseChance, failStreak), 0.0001f);
     }
 
     [Test]
@@ -215,16 +215,16 @@ public class SlimeChancePityTest
     {
         int streak = 0;
         for (int i = 0; i < 3; i++)
-            streak = SlimeChancePity.NextFailStreak(streak, false);
+            streak = MinionChancePity.NextFailStreak(streak, false);
         Assert.AreEqual(3, streak);
-        Assert.AreEqual(0, SlimeChancePity.NextFailStreak(streak, true)); // 3연속 실패 후 성공 → 초기화
-        Assert.AreEqual(5, SlimeChancePity.NextFailStreak(4, false));
+        Assert.AreEqual(0, MinionChancePity.NextFailStreak(streak, true)); // 3연속 실패 후 성공 → 초기화
+        Assert.AreEqual(5, MinionChancePity.NextFailStreak(4, false));
     }
 
     [Test]
     public void Roll_ZeroOrFullChance_NoStreakChange()
     {
-        SlimeChancePity pity = new SlimeChancePity();
+        MinionChancePity pity = new MinionChancePity();
         Assert.IsFalse(pity.Roll("Joker", 0f));
         Assert.IsTrue(pity.Roll("Joker", 1f));
         Assert.AreEqual(0, pity.GetFailStreak("Joker"));
@@ -247,7 +247,7 @@ public class UserLevelTest
 }
 
 // 슬라임 조합 프리셋: 프리셋 key → 실제 장착 key 정리
-public class SlimePresetTest
+public class MinionPresetTest
 {
     static readonly string[] Current = { "A", "B", "C", "D", "E" };
     static readonly string[] Owned = { "A", "B", "C", "D", "E", "F", "G" };
@@ -256,7 +256,7 @@ public class SlimePresetTest
     public void ValidPresetUsedAsIs()
     {
         string[] preset = { "F", "G", "A", "B", "C" };
-        CollectionAssert.AreEqual(preset, UserSlimeManager.ResolvePresetKeys(preset, Current, Owned));
+        CollectionAssert.AreEqual(preset, UserMinionManager.ResolvePresetKeys(preset, Current, Owned));
     }
 
     [Test]
@@ -265,14 +265,14 @@ public class SlimePresetTest
         string[] preset = { "X", "G", "A", "B", "C" };
         // 0번 칸 X 미보유 → 현재 0번 칸 A는 이미 사용 → 현재 장착 중 남은 D
         CollectionAssert.AreEqual(new[] { "D", "G", "A", "B", "C" },
-            UserSlimeManager.ResolvePresetKeys(preset, Current, Owned));
+            UserMinionManager.ResolvePresetKeys(preset, Current, Owned));
     }
 
     [Test]
     public void DuplicateAndEmptyKeysReplaced()
     {
         string[] preset = { "F", "F", null, "B", "C" };
-        string[] result = UserSlimeManager.ResolvePresetKeys(preset, Current, Owned);
+        string[] result = UserMinionManager.ResolvePresetKeys(preset, Current, Owned);
         Assert.AreEqual(5, result.Length);
         CollectionAssert.AllItemsAreUnique(result);
         CollectionAssert.AllItemsAreNotNull(result);
@@ -291,5 +291,27 @@ public class EliteRewardTest
         Assert.AreEqual(60, EliteEnemy.GetEliteRewardGold(9));  // wave 10
         Assert.AreEqual(90, EliteEnemy.GetEliteRewardGold(14)); // wave 15
         Assert.AreEqual(30, EliteEnemy.GetEliteRewardGold(0));  // 최소 1단계
+    }
+}
+
+// 에너지: 게임 시작에 5 소모, 10분마다 1 충전
+public class EnergeRuleTest
+{
+    [Test]
+    public void PlayNeedsCostEnerge()
+    {
+        Assert.AreEqual(5, GameSetting.PLAY_COST_ENERGE);
+        Assert.IsTrue(EnergeManager.CanPlay(5));
+        Assert.IsFalse(EnergeManager.CanPlay(4));
+    }
+
+    [Test]
+    public void ChargesOnePerTenMinutes()
+    {
+        Assert.AreEqual(10, EnergeManager.CHARGE_INTERVAL_MINUTES);
+        Assert.AreEqual(0, EnergeManager.GetChargeCount(9.9));
+        Assert.AreEqual(1, EnergeManager.GetChargeCount(10));
+        Assert.AreEqual(3, EnergeManager.GetChargeCount(35));
+        Assert.AreEqual(0, EnergeManager.GetChargeCount(-20)); // 기기 시간을 되돌린 경우
     }
 }

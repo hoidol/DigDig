@@ -28,7 +28,7 @@ public class TapButton : ButtonUI
         {
             //image.sprite = Resources.Load<Sprite>("UI/btn_rectangle_night");
 
-            image.color = Color.gray;
+            image.color = ColorSetting.inactiveColor;
         }
     }
     public override void OnClickedBtn()

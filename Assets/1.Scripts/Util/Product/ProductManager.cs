@@ -48,12 +48,7 @@ public class ProductManager : MonoSingleton<ProductManager>
         }
         if(productData.currencyType == CurrencyType.Ad)
         {
-            // 광고 제거 구매자는 광고 없이 바로 지급
-            if (UserDataManager.Instance.isAdRemoved)
-            {
-                success?.Invoke(true);
-                return;
-            }
+            // 광고 제거 구매자는 AdManager.Show가 광고 없이 성공 처리
             AdManager.Show($"product_{productData.key}", AdType.RA, success);
             return;
         }

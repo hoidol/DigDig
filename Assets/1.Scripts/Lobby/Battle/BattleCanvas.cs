@@ -65,15 +65,12 @@ public class BattleCanvas : BaseLobbyCanvas
             ToastCanvas.Toast(string.Format(TranslateManager.GetText("Difficulty_Locked"), StageData.UNLOCK_WAVE));
             return;
         }
-        // #if !UNITY_EDITOR
-        // if(UserDataManager.Instance.userData.energe <GameSetting.PLAY_COST_ENERGE)
-        // {
-        //     ToastCanvas.Toast( TranslateManager.GetText("Not enough energe"));
-        //     return;
-        // }
-        // #endif
-        // UserDataManager.STAGE_KEY = curUserStage.key;
+        // 게임 시작 = 에너지 PLAY_COST_ENERGE 소모. 모자라면 시작 안 함
+        if (!EnergeManager.TryUsePlayCost())
+        {
+            ToastCanvas.Toast(string.Format(TranslateManager.GetText("Energe_NotEnough"), EnergeManager.CHARGE_INTERVAL_MINUTES));
+            return;
+        }
         SceneManager.LoadScene("InGame");
-        UserDataManager.Instance.AddEnerge(-GameSetting.PLAY_COST_ENERGE);
     }
 }

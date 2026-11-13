@@ -33,6 +33,12 @@ public class SoundManager : MonoSingleton<SoundManager>
         PlayBGM(BGMType.Main);
     }
 
+    // 저장된 볼륨·음소거 설정을 믹서에 다시 적용 (설정 창에서 바꿨을 때)
+    public void ApplyVolumes()
+    {
+        AudioVolumeUtil.ApplyAllFromPlayerPrefs(audioMixer);
+    }
+
     //사운드 실행하기
     public void PlaySound(SFXType _sType)
     {

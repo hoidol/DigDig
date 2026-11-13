@@ -109,7 +109,7 @@ public abstract class TileItem : Item, ITileItem
     public virtual bool CanPickTile(Tile tile) => tile.CanAddTileItem;
     public virtual string PickFailMessageKey(Tile tile) => tile.isBlocked ? "TileItem_BlockedTile" : "TileItem_AlreadyInstalled";
 
-    // 위에 올라간 유닛이 탄을 쏠 때마다 호출 (Slime.FireBullet, Weapon.Shoot). 발사 직후라 데미지 데이터 초기화가 끝난 상태
+    // 위에 올라간 유닛이 탄을 쏠 때마다 호출 (Minion.FireBullet, Weapon.Shoot). 발사 직후라 데미지 데이터 초기화가 끝난 상태
     public virtual void OnFired(AllyBulletObject bullet)
     {
         ModifyDamageData(bullet.DamageData);

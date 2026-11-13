@@ -68,10 +68,10 @@ public class TileItemUpgradePlayTest : InGamePlayTestBase
         KingSlime.Instance.AddItem(KEY, tile).Forget();
         yield return WaitFrames(2);
         var item = (TileItem)tile.tileItem;
-        Slime slime = SpawnSlime("Ice", tile);
+        Minion minion = SpawnMinion("Ice", tile);
         yield return WaitFrames(2);
         Assert.AreEqual(1, item.upgradeLevel);
-        float atkLv1 = slime.statDic[StatType.AttackPower];
+        float atkLv1 = minion.statDic[StatType.AttackPower];
         // Desc "공격력 {0}% 증가" → 현재 레벨 수치 (배율 1.5 → 50%)
         StringAssert.Contains(TileItemTestFormat(data.GetLevelValue(1)), item.GetDescription());
         StringAssert.DoesNotContain("{0}", item.GetDescription());
@@ -100,7 +100,7 @@ public class TileItemUpgradePlayTest : InGamePlayTestBase
         }
         Assert.AreEqual(2, item.upgradeLevel, "강화 성공 안 됨");
         yield return WaitFrames(2);
-        float atkLv2 = slime.statDic[StatType.AttackPower];
+        float atkLv2 = minion.statDic[StatType.AttackPower];
         Assert.Greater(atkLv2, atkLv1, "올라간 슬라임 공격력이 레벨 수치로 갱신 안 됨");
         StringAssert.Contains(TileItemTestFormat(data.GetLevelValue(2)), item.GetDescription(), "설명이 레벨 수치로 안 바뀜");
         Assert.AreEqual(atkLv1 / data.GetLevelValue(1) * data.GetLevelValue(2), atkLv2, 0.01f, "버프 중복 적용");

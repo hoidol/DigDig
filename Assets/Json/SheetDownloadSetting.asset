@@ -75,22 +75,22 @@ MonoBehaviour:
     gid: 1703370116
     range: B:D
   - enabled: 1
-    csvPath: Json/SlimeEnhance/SlimeEnhance_C.csv
+    csvPath: Json/MinionEnhance/MinionEnhance_C.csv
     sheetId: 
     gid: 1944598144
     range: A:C
   - enabled: 1
-    csvPath: Json/SlimeEnhance/SlimeEnhance_B.csv
+    csvPath: Json/MinionEnhance/MinionEnhance_B.csv
     sheetId: 
     gid: 1615882530
     range: A:C
   - enabled: 1
-    csvPath: Json/SlimeEnhance/SlimeEnhance_A.csv
+    csvPath: Json/MinionEnhance/MinionEnhance_A.csv
     sheetId: 
     gid: 1014026992
     range: A:C
   - enabled: 1
-    csvPath: Json/SlimeEnhance/SlimeEnhance_S.csv
+    csvPath: Json/MinionEnhance/MinionEnhance_S.csv
     sheetId: 
     gid: 547841506
     range: A:C
@@ -99,5 +99,5 @@ MonoBehaviour:
     sheetId: 
     gid: 556486007
     range: A:F
-  slimeGid: 1109237000
-  slimeRange: A:L
+  minionGid: 1109237000
+  minionRange: A:L

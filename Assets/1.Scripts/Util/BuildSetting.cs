@@ -25,4 +25,10 @@ public class BuildSetting : ScriptableObject
 
     [Header("Build Settings")]
     public bool isTestMode = false;
+
+    [Header("체크하면 에너지를 항상 최대로 취급 (게임 시작 시 차감 안 함, 저장값은 그대로)")]
+    public bool ignoreEnerge = false;
+
+    [Header("체크하면 튜토리얼을 시작하지 않음 (완료 기록은 그대로)")]
+    public bool skipTutorial = false;
 }

@@ -11,8 +11,18 @@ public class UserCumulativeAchievementManager : UserSubAchievementManager
     {
         get; private set;
     }
+    bool isLoaded;
     void Awake()
     {
+        EnsureLoaded();
+    }
+
+    // 부모 매니저 Awake가 먼저 돌 수 있어서, 누가 먼저 부르든 한 번만 로드
+    public void EnsureLoaded()
+    {
+        if (isLoaded)
+            return;
+        isLoaded = true;
         UserDataFileName = "UserCumulativeAchievement";
         LoadData();
     }
@@ -34,7 +44,7 @@ public class UserCumulativeAchievementManager : UserSubAchievementManager
 
 
 
-    public UserAchievement GetUserAchievement(AchievementType type)
+    public UserCumulativeAchievement GetUserAchievement(AchievementType type)
     {
         for (int i = 0; i < userCumulativeAchievementData.userCumulativeAchievements.Count; i++)
         {
@@ -56,7 +66,6 @@ public class UserCumulativeAchievementManager : UserSubAchievementManager
 [System.Serializable]
 public class UserCumulativeAchievementData : UserAchievementData
 {
-    //장비 보유 상태
     public List<UserCumulativeAchievement> userCumulativeAchievements = new List<UserCumulativeAchievement>();
 }
 public class UserAchievement

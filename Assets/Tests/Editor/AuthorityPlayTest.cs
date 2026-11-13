@@ -51,6 +51,9 @@ public class AuthorityPlayTest : InGamePlayTestBase
         Assert.IsTrue(info.selectedPanel.activeSelf, "정보 창 선택됨 표시");
         Assert.IsFalse(info.selectButton.activeSelf, "선택한 권능인데 선택 버튼이 보임");
         Assert.IsTrue(slots[0].selectedPanel.activeSelf, "목록 선택됨 표시");
+        Assert.IsTrue(slots[0].highlightObject.activeSelf, "고른 권능 강조 표시");
+        Assert.IsFalse(slots[1].highlightObject.activeSelf, "고르지 않은 권능에 강조 표시");
+        Assert.AreEqual(slots[0].authorityData.Desc, slots[0].descText.text, "목록 칸 설명");
 
         // 같은 묶음의 다른 권능 → 교체
         info.OpenCanvas(slots[1].authorityData);
@@ -59,6 +62,8 @@ public class AuthorityPlayTest : InGamePlayTestBase
         Assert.AreEqual(slots[1].authorityData.key, Authorities.GetSelectedKey(1), "같은 묶음은 교체");
         Assert.IsFalse(slots[0].selectedPanel.activeSelf, "이전 선택 표시가 남음");
         Assert.IsTrue(slots[1].selectedPanel.activeSelf);
+        Assert.IsFalse(slots[0].highlightObject.activeSelf, "이전 선택 강조가 남음");
+        Assert.IsTrue(slots[1].highlightObject.activeSelf, "새로 고른 권능 강조 표시");
 
         // 잠긴 묶음 3 → 선택 안 됨
         info.OpenCanvas(slots[6].authorityData);

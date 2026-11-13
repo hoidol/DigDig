@@ -58,8 +58,8 @@ public class AllyUnitDamageData : DamageData
     {
         this.allyUnit = allyUnit;
         // 슬라임 치명타 확률 스탯(설의 버프 등). 연발 탄도 SetBullet → Init을 거치므로 같이 적용됨. 캐릭터 탄은 KingSlimeBulletObject에서 덮어씀
-        critChance = allyUnit is Slime slime ? slime.CritChance : 0;
-        critPower = allyUnit is Slime ? GameSetting.INIT_CRIT_POWER : 2f; // 슬라임 치명타 배율 (캐릭터 탄은 발사 시 캐릭터 스탯으로 덮어씀)
+        critChance = allyUnit is Minion minion ? minion.CritChance : 0;
+        critPower = allyUnit is Minion ? GameSetting.INIT_CRIT_POWER : 2f; // 슬라임 치명타 배율 (캐릭터 탄은 발사 시 캐릭터 스탯으로 덮어씀)
         ignoreDefence = false;
         eliteBossDamageMul = 1f;
     }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 타일 위 오브젝트(Slime, Character)에 스탯 버프를 거는 타일 아이템. 수치는 프리팹 인스펙터에서 설정
+// 타일 위 오브젝트(Minion, Character)에 스탯 버프를 거는 타일 아이템. 수치는 프리팹 인스펙터에서 설정
 public abstract class StatBuffTileItem : TileItem
 {
     public StatOpType opType = StatOpType.Multiply;

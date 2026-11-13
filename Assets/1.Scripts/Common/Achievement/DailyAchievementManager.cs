@@ -1,67 +1,67 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
+// 일일 업적: 목표(Goal) 달성 → 보상 1번. 날짜가 바뀌면 진행도·수령 여부 모두 초기화
 public class DailyAchievementManager : SubAchievementManager
 {
+    public const string CSV_PATH = "Json/DailyAchievement";
     public UserDailyAchievementManager userDailyAchievementManager;
     public DailyAchievementData[] dailyAchievementDatas;
 
     public override void Init()
     {
         userDailyAchievementManager = GetComponentInChildren<UserDailyAchievementManager>();
+        userDailyAchievementManager.EnsureLoaded();
         category = AchievementCategory.Daily;
-        SetDailyAchievementData();
-    }
-    void SetDailyAchievementData()
-    {
-        List<DailyAchievementData> list = new List<DailyAchievementData>();
-        TextAsset csv = Resources.Load<TextAsset>("Json/DailyAchievement");
+
+        TextAsset csv = Resources.Load<TextAsset>(CSV_PATH);
         if (csv == null)
         {
             Debug.LogWarning("[DailyAchievementManager] CSV 파일 없음: Resources/Json/DailyAchievement.csv");
-            dailyAchievementDatas = list.ToArray();
+            dailyAchievementDatas = new DailyAchievementData[0];
             return;
         }
-
-        string[] lines = csv.text.Split('\n');
-        string[] headers = lines[0].Trim().Split('\t');
-        int iType = System.Array.IndexOf(headers, "Type");
-        int iGoal = System.Array.IndexOf(headers, "Goal");
-        int iRewardType = System.Array.IndexOf(headers, "RewardType");
-        int iRewardValue = System.Array.IndexOf(headers, "RewardValue");
-
-        for (int i = 1; i < lines.Length; i++)
-        {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = lines[i].Trim().Split('\t');
-
-            if (!System.Enum.TryParse(cols[iType].Trim(), out AchievementType type)) continue;
-            if (!System.Enum.TryParse(cols[iRewardType].Trim(), out RewardType rewardType)) continue;
-
-            list.Add(new DailyAchievementData
-            {
-                type = type,
-                goal = int.Parse(cols[iGoal].Trim()),
-                rewardData = new RewardData { rewardType = rewardType, value = cols[iRewardValue].Trim() }
-            });
-        }
-        dailyAchievementDatas = list.ToArray();
+        dailyAchievementDatas = ParseCsv(csv.text).ToArray();
     }
 
+    // Type / Goal / RewardType / RewardValue
+    public static List<DailyAchievementData> ParseCsv(string text)
+    {
+        List<DailyAchievementData> list = new List<DailyAchievementData>();
+        foreach (AchievementCsv.Row row in AchievementCsv.Parse(text))
+        {
+            if (!AchievementCsv.TryGetTypes(row, "DailyAchievement.csv", out AchievementType type, out RewardData rewardData))
+                continue;
+            list.Add(new DailyAchievementData { type = type, goal = row.GetInt("Goal"), rewardData = rewardData });
+        }
+        return list;
+    }
+
+    // 저장은 AchievementManager가 프레임 끝에 한 번
     public override void Achieve(AchievementType type, int count)
     {
-        UserDailyAchievement userDailyAchievement = userDailyAchievementManager.GetUserAchievement(type) as UserDailyAchievement;
-        userDailyAchievement.value += count;
+        userDailyAchievementManager.GetUserAchievement(type).value += count;
+    }
+
+    // 날짜가 바뀌었으면 초기화하고 true
+    public bool ResetIfNewDay()
+    {
+        UserDailyAchievementData data = userDailyAchievementManager.userDailyAchievementData;
+        if (DailyCheck.IsToday(data.date))
+            return false;
+        data.userDailyAchievements.Clear();
+        data.date = DailyCheck.Today;
         userDailyAchievementManager.SaveData();
+        return true;
     }
 
     public override void GetReward(AchievementData achievementData)
     {
-        achievementData.rewardData.Receive();
-
         UserDailyAchievement userDailyAchievement = achievementData.GetUserAchievement() as UserDailyAchievement;
+        if (userDailyAchievement.getReward || !achievementData.CheckCanClear())
+            return;
+
+        achievementData.rewardData.Receive();
         userDailyAchievement.getReward = true;
         userDailyAchievementManager.SaveData();
     }
@@ -71,7 +71,7 @@ public class DailyAchievementManager : SubAchievementManager
         int count = 0;
         for (int i = 0; i < dailyAchievementDatas.Length; i++)
         {
-            UserDailyAchievement userAchievement = userDailyAchievementManager.GetUserAchievement(dailyAchievementDatas[i].type) as UserDailyAchievement;
+            UserDailyAchievement userAchievement = userDailyAchievementManager.GetUserAchievement(dailyAchievementDatas[i].type);
             if (!userAchievement.getReward && dailyAchievementDatas[i].CheckCanClear())
             {
                 count++;
@@ -88,18 +88,18 @@ public class DailyAchievementData : AchievementData
 
     public override UserAchievement GetUserAchievement()
     {
-        return AchievementManager.Instance.dailyAchievementManager.userDailyAchievementManager.GetUserAchievement(type) as UserDailyAchievement;
+        return AchievementManager.Instance.dailyAchievementManager.userDailyAchievementManager.GetUserAchievement(type);
     }
-
 
     public override bool CheckCanClear()
     {
-        UserDailyAchievement achievement = GetUserAchievement() as UserDailyAchievement;
-        return achievement.value >= goal;
+        return GetUserAchievement().value >= goal;
     }
 
     public override int GetGoal()
     {
         return goal;
     }
+
+    protected override int GetDisplayValue() => Mathf.Min(GetUserAchievement().value, goal);
 }

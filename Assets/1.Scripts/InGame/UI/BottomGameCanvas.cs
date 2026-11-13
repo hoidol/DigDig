@@ -23,14 +23,14 @@ public class BottomGameCanvas : MonoBehaviour
         }
 
         buttonObject.SetActive(false);
-        allySettingPanel.SetSlime(e.tile.tileObject as IAllyUnit);
+        allySettingPanel.SetMinion(e.tile.tileObject as IAllyUnit);
         tileItemInfoPanel.SetTile(e.tile);
     }
 
     void OnTileDeselectedEvent(TileDeselectedEvent e)
     {
         buttonObject.SetActive(true);
-        allySettingPanel.SetSlime(null);
+        allySettingPanel.SetMinion(null);
         tileItemInfoPanel.SetTile(null);
     }
 

@@ -6,7 +6,7 @@ BurstShotTile	연발 타일	같은 방향으로 {0}발 연속 추가 발사	1	3	
 CriticalTile	치명타 타일	치명타 확률 +{0}% 증가 데미지 2배	1	3	3	30/40/50
 GiantSlayerTile	거인 사냥 타일	엘리트 또는 보스에게 데미지 {0}배	1	3	3	2/2.5/3
 GoldTile	코인 타일	적 처치 시 코인 +{0}	1	3	4	1/2/3
-AddSlimeSpawnCount	슬라임 수 증가	최대 슬라임 수 +1	1	3	0	
+AddMinionSpawnCount	슬라임 수 증가	최대 슬라임 수 +1	1	3	0	
 MaxExpandBuffRangeTile	최대 버프	4방향에서 8방향으로 확장시킴	1	3	0	
 MultiTargetTile	다중 타겟 타일	공격 대상 +{0} 추가됩니다.	1	3	7	1/2/3
 PioneerTile	개척 타일	막힌 칸 해제	1	3	0	

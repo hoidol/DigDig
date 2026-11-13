@@ -53,6 +53,7 @@ public abstract class InGamePlayTestBase
     {
         FailCanvas.DAILY_RESURRECTION_COUNT_KEY,
         FailCanvas.DAILY_RESURRECTION_DATE_KEY,
+        TutorialManager.GetCompletedPrefsKey(TutorialType.FirstPlay), // 튜토리얼 플레이 테스트가 완료 기록을 남김
     };
     const string PREFS_BACKUP_FILE = "PlayerPrefs.txt";
 
@@ -114,8 +115,30 @@ public abstract class InGamePlayTestBase
 
     protected const string LOBBY_SCENE_PATH = "Assets/4.Scenes/Lobby.unity";
 
+    // 테스트 중엔 에디터 소리를 끈다 (게임 뷰 음소거와 같은 설정). 끝나면 테스트 전 값으로 되돌림
+    // 도메인 리로드를 넘어 이전 값을 기억해야 해서 SessionState에 둔다 (-1 = 저장 안 됨)
+    const string PREV_MUTE_KEY = "PlayTest.PrevAudioMute";
+
+    static void MuteAudio(bool mute)
+    {
+        int prev = SessionState.GetInt(PREV_MUTE_KEY, -1);
+        if (mute)
+        {
+            if (prev == -1)
+                SessionState.SetInt(PREV_MUTE_KEY, EditorUtility.audioMasterMute ? 1 : 0);
+            EditorUtility.audioMasterMute = true;
+        }
+        else if (prev != -1)
+        {
+            EditorUtility.audioMasterMute = prev == 1;
+            SessionState.EraseInt(PREV_MUTE_KEY);
+        }
+    }
+
     protected static void BeforeEnterPlayMode(string scenePath = SCENE_PATH)
     {
+        MuteAudio(true); // 플레이 시작 직후 나는 소리(BGM)부터 막는다
+        SessionState.SetBool(TutorialManager.DISABLE_FOR_TEST_KEY, true); // 튜토리얼(로비 → InGame 이동 포함)은 시작 전에 꺼야 함
         BackupSaves();
         EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
     }
@@ -130,7 +153,7 @@ public abstract class InGamePlayTestBase
 
         double timeout = EditorApplication.timeSinceStartup + START_TIMEOUT;
         while (UserDataManager.Instance == null || BlockCanvas.Instance == null || ProductManager.Instance == null
-            || SlimeManager.Instance == null || !SlimeManager.Instance.LoadTask.Status.IsCompleted()
+            || MinionManager.Instance == null || !MinionManager.Instance.LoadTask.Status.IsCompleted()
             || AuthorityManager.Instance == null || !AuthorityManager.Instance.LoadTask.Status.IsCompleted())
         {
             Assert.Less(EditorApplication.timeSinceStartup, timeout, "로비가 시작되지 않음");
@@ -146,9 +169,17 @@ public abstract class InGamePlayTestBase
     {
         AdManager.SkipAdForTest = skip;
         ProductManager.SkipInAppPurchaseForTest = skip;
+        EnergeManager.DisableIgnoreForTest = skip; // BuildSetting.ignoreEnerge와 상관없이 실제 차감
+        MuteAudio(skip);
     }
 
     protected IEnumerator WaitGameStart()
+    {
+        yield return WaitUntilReady(() => GameManager.Instance != null && GameManager.Instance.isPlaying, "게임이 시작되지 않음");
+    }
+
+    // 플레이 진입 후 isReady가 될 때까지 대기 (에러 수집·결제 생략 시작). 튜토리얼처럼 wave 시작 전에 확인할 때
+    protected IEnumerator WaitUntilReady(System.Func<bool> isReady, string failMessage)
     {
         SkipPayments(true);
         LogAssert.ignoreFailingMessages = true;
@@ -156,9 +187,9 @@ public abstract class InGamePlayTestBase
         Application.logMessageReceived += OnLog;
 
         double timeout = EditorApplication.timeSinceStartup + START_TIMEOUT;
-        while (GameManager.Instance == null || !GameManager.Instance.isPlaying)
+        while (!isReady())
         {
-            Assert.Less(EditorApplication.timeSinceStartup, timeout, "게임이 시작되지 않음");
+            Assert.Less(EditorApplication.timeSinceStartup, timeout, failMessage);
             Unpause();
             yield return null;
         }
@@ -173,6 +204,7 @@ public abstract class InGamePlayTestBase
         if (Application.isPlaying)
             yield return new ExitPlayMode();
         RestoreSaves();
+        SessionState.EraseBool(TutorialManager.DISABLE_FOR_TEST_KEY);
     }
 
     // 콘솔 Error Pause로 멈추면 풀어 준다
@@ -229,10 +261,10 @@ public abstract class InGamePlayTestBase
         return TileManager.Instance.tiles.FirstOrDefault(t => t.IsEmpty && t.CanAddTileItem && !except.Contains(t));
     }
 
-    protected static Slime SpawnSlime(string key, Tile tile, int lv = 0)
+    protected static Minion SpawnMinion(string key, Tile tile, int lv = 0)
     {
-        Slime slime = KingSlime.Instance.AddSlime(key, lv);
-        tile.SetTileObject(slime);
-        return slime;
+        Minion minion = KingSlime.Instance.AddMinion(key, lv);
+        tile.SetTileObject(minion);
+        return minion;
     }
 }

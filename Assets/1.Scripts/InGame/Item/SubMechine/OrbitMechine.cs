@@ -8,7 +8,7 @@ public class OrbitMachine : SubMachine
     public float rotationSpeed = 80f; //충분히느리게 
     public float damage;
     public AttackType attackType;
-    public IAllyUnit owner; // 적중 시 타일 효과 기준 유닛 (OrbitSlime)
+    public IAllyUnit owner; // 적중 시 타일 효과 기준 유닛 (OrbitMinion)
     public RotationDirection rotationDirection = DEFAULT_ROTATION_DIRECTION; // 화면 기준 회전 방향 (슬라임 설정 버튼으로 변경)
 
     public const RotationDirection DEFAULT_ROTATION_DIRECTION = RotationDirection.CounterClockwise; // 기존 동작(z 양수 회전)

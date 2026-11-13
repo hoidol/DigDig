@@ -30,8 +30,17 @@ public class CurrencyPanel : MonoBehaviour
             panel.UpdatePanel();
     }
 
+    public static void UpdateAllPanels()
+    {
+        foreach (var panels in currencyPanelDict.Values)
+            foreach (var panel in panels)
+                panel.UpdatePanel();
+    }
+
     public virtual void UpdatePanel()
     {
-        currencyText.text= UserDataManager.Instance.userData.GetCurrency(currencyType).ToString();
+        // 에너지는 BuildSetting.ignoreEnerge면 최대로 표시
+        int value = currencyType == CurrencyType.Energe ? EnergeManager.Current : UserDataManager.Instance.userData.GetCurrency(currencyType);
+        currencyText.text = value.ToString();
     }
 }

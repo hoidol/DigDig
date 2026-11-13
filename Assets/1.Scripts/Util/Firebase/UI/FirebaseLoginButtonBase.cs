@@ -42,7 +42,7 @@ public abstract class FirebaseLoginButtonBase : ButtonUI
         }
     }
 
-    // 세 로그인 버튼 공통 완료 처리 : 성공하면 로그인 창 닫고 토스트, 실패하면 실패 토스트
+    // 세 로그인 버튼 공통 완료 처리 : 성공하면 토스트(설정 창은 그대로 두고 버튼만 갱신), 실패하면 실패 토스트
     protected void OnSignInCompleted(bool success)
     {
         if (!success)
@@ -51,10 +51,6 @@ public abstract class FirebaseLoginButtonBase : ButtonUI
             return;
         }
 
-        // RankingButton 등 다른 곳에서 이미 닫았을 수 있어 열려 있을 때만 닫음
-        FirebaseLoginCanvas canvas = FirebaseLoginCanvas.Instance;
-        if (canvas != null && canvas.gameObject.activeSelf)
-            canvas.CloseCanvas();
         ToastCanvas.Toast(TranslateManager.GetText("Login_Done"));
     }
 }

@@ -111,6 +111,30 @@ public class TileManager : MonoSingleton<TileManager>
         return true;
     }
 
+    // 튜토리얼이 지정한 칸(indices)이 막혀 있으면 풀고, 대신 다른 빈 칸을 하나씩 막아 막힌 칸 수를 유지
+    public void EnsureUsable(ICollection<Vector2Int> indices)
+    {
+        foreach (Vector2Int index in indices)
+        {
+            Tile tile = GetTile(index);
+            if (tile == null || !UnblockTile(tile))
+                continue;
+
+            List<Tile> candidates = new List<Tile>();
+            foreach (Tile t in tiles)
+            {
+                if (t.IsEmpty && !indices.Contains(t.index))
+                    candidates.Add(t);
+            }
+            if (candidates.Count == 0)
+                continue;
+
+            Tile blockTile = candidates[Random.Range(0, candidates.Count)];
+            blockTile.Block();
+            usingTiles.Remove(blockTile);
+        }
+    }
+
     // 막힌 타일 중 랜덤 하나 해제 (개척자의 곡괭이 권능). 해제할 게 없으면 false
     public bool UnblockRandomTile()
     {

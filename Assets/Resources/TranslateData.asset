@@ -105,16 +105,16 @@ MonoBehaviour:
     kr: "{0}\uBC1C\uC0AC\uB9C8\uB2E4 \uD3ED\uD0C4 \uBC1C\uC0AC (\uCD5C\uB300 2\uBC88
       \uD295\uAE40)"
     en: 
-  - key: New Slime
+  - key: New Minion
     kr: "\uC0C8\uB85C\uC6B4 \uC2AC\uB77C\uC784"
-    en: New Slime
+    en: New Minion
   - key: Not enough exp
     kr: "\uACBD\uD5D8\uCE58\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4."
     en: Not enough EXP.
-  - key: Not enough energe
-    kr: "\uC5D0\uB108\uC9C0\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4. \uC5D0\uB108\uC9C0\uB97C
-      1\uBD84\uB9C8\uB2E4 1\uAC1C\uC529 \uCDA9\uC804\uB429\uB2C8\uB2E4."
-    en: 
+  - key: Energe_NotEnough
+    kr: "\uC5D0\uB108\uC9C0\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4. \uC5D0\uB108\uC9C0\uB294
+      {0}\uBD84\uB9C8\uB2E4 1\uC529 \uCDA9\uC804\uB429\uB2C8\uB2E4."
+    en: Not enough energy. Energy recharges by 1 every {0} minutes.
   - key: DefenceType.Normal
     kr: "\uC77C\uBC18\uD615"
     en: Normal
@@ -151,143 +151,143 @@ MonoBehaviour:
   - key: Difficulty_NoRecord
     kr: "\uAE30\uB85D \uC5C6\uC74C"
     en: No record
-  - key: Slime.Random
+  - key: Minion.Random
     kr: "\uB79C\uB364"
     en: Random
-  - key: Slime.Bounce
+  - key: Minion.Bounce
     kr: "\uD0C4\uC131"
     en: Bounce
-  - key: Slime.Flame
+  - key: Minion.Flame
     kr: "\uD654\uC5FC"
     en: Flame
-  - key: Slime.Orbit
+  - key: Minion.Orbit
     kr: "\uADA4\uB3C4"
     en: Orbit
-  - key: Slime.Ice
+  - key: Minion.Ice
     kr: "\uC5BC\uC74C"
     en: Ice
-  - key: Slime.Lightning
+  - key: Minion.Lightning
     kr: "\uB77C\uC774\uD2B8\uB2DD"
     en: Lightning
-  - key: Slime.Pierce
+  - key: Minion.Pierce
     kr: "\uAD00\uD1B5"
     en: Pierce
-  - key: Slime.Iron
+  - key: Minion.Iron
     kr: "\uAC15\uCCA0"
     en: Iron
-  - key: Slime.Thunder
+  - key: Minion.Thunder
     kr: "\uCC9C\uB465"
     en: Thunder
-  - key: Slime.Shield
+  - key: Minion.Shield
     kr: "\uCCA0\uBCBD"
     en: Shield
-  - key: Slime.Dopamine
+  - key: Minion.Dopamine
     kr: "\uAD11\uB780"
     en: Frenzy
-  - key: Slime.Mine
+  - key: Minion.Mine
     kr: "\uC9C0\uB8B0"
     en: Mine
-  - key: Slime.Breeze
+  - key: Minion.Breeze
     kr: "\uC0B0\uB4E4\uBC14\uB78C"
     en: Breeze
-  - key: Slime.Rage
+  - key: Minion.Rage
     kr: "\uACA9\uB178"
     en: Rage
-  - key: Slime.Stigma
+  - key: Minion.Stigma
     kr: "\uB099\uC778"
     en: Stigma
-  - key: Slime.Mud
+  - key: Minion.Mud
     kr: "\uC9C4\uD759"
     en: Mud
-  - key: Slime.Beam
+  - key: Minion.Beam
     kr: "\uAD11\uC120 \uB9C1\uD06C"
     en: Beam Link
-  - key: Slime.Berserker
+  - key: Minion.Berserker
     kr: "\uBC84\uC11C\uCEE4"
     en: Berserker
-  - key: Slime.Mortar
+  - key: Minion.Mortar
     kr: "\uBC15\uACA9\uD3EC"
     en: Mortar
-  - key: Slime.Hail
+  - key: Minion.Hail
     kr: "\uBE59\uC11D"
     en: Hail
-  - key: Slime.Inferno
+  - key: Minion.Inferno
     kr: "\uC9C0\uC625"
     en: Inferno
-  - key: Slime.Keen
+  - key: Minion.Keen
     kr: "\uC124\uC758"
     en: Keen
-  - key: Slime.Sacrifice
+  - key: Minion.Sacrifice
     kr: "\uD76C\uC0DD"
     en: Sacrifice
-  - key: Slime.GrowUp
+  - key: Minion.GrowUp
     kr: "\uC131\uC7A5"
     en: Grow Up
-  - key: Slime.Scavenger
+  - key: Minion.Scavenger
     kr: "\uC218\uD655"
     en: Scavenger
-  - key: Slime.Joker
+  - key: Minion.Joker
     kr: "\uC870\uCEE4"
     en: Joker
-  - key: Slime.Hunter
+  - key: Minion.Hunter
     kr: "\uC0AC\uB0E5\uAFBC"
     en: Hunter
-  - key: Slime.Random.Desc
+  - key: Minion.Random.Desc
     kr: "{0}~{1} \uD53C\uD574\uB97C \uAC00\uC9C4 \uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
     en: Fires shots that deal {0}~{1} damage.
-  - key: Slime.Ice.Desc
+  - key: Minion.Ice.Desc
     kr: "\uBE59\uACB0\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4. {0}\uCD08 \uB3D9\uC548
       \uBE59\uACB0 \uC0C1\uD0DC\uB97C \uBD80\uC5EC\uD569\uB2C8\uB2E4."
     en: Fires frost shots that freeze for {0}s.
-  - key: Slime.Flame.Desc
+  - key: Minion.Flame.Desc
     kr: "\uD654\uC5FC\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4. \uD654\uC5FC \uC2DC
       {0}\uCD08 \uB3D9\uC548 \uCD08\uB2F9 {1} \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
     en: Fires fire shots. Burns for {0}s, dealing {1} damage per second.
-  - key: Slime.Pierce.Desc
+  - key: Minion.Pierce.Desc
     kr: "{0}\uB9CC\uD07C \uAD00\uD1B5\uD558\uB294 \uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4"
     en: Fires shots that pierce {0} times
-  - key: Slime.Lightning.Desc
+  - key: Minion.Lightning.Desc
     kr: "{0}\uAE30 \uC801\uC5D0\uAC8C \uCCB4\uC778 \uB370\uBBF8\uC9C0\uB97C \uC785\uD799\uB2C8\uB2E4."
     en: Deals chain damage to {0} enemies.
-  - key: Slime.Iron.Desc
+  - key: Minion.Iron.Desc
     kr: "\uC5D8\uB9AC\uD2B8, \uBCF4\uC2A4\uC5D0\uAC8C {0}\uBC30 \uB370\uBBF8\uC9C0\uB97C
       \uC90D\uB2C8\uB2E4."
     en: Deals {0}x damage to Elites and Bosses.
-  - key: Slime.Thunder.Desc
+  - key: Minion.Thunder.Desc
     kr: "\uBC88\uAC1C\uB97C \uB5A8\uC5B4\uB728\uB824 \uC8FC\uBCC0 \uC801\uC5D0\uAC8C
       \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4. (\uBC94\uC704 {0}, \uCD5C\uB300 {1}\uAE30)"
     en: Strikes lightning that damages nearby enemies. (Range {0}, up to {1} enemies)
-  - key: Slime.Mine.Desc
+  - key: Minion.Mine.Desc
     kr: "\uC801 \uC774\uB3D9 \uACBD\uB85C\uC5D0 \uC9C0\uB8B0\uB97C \uC124\uCE58\uD569\uB2C8\uB2E4.
       \uBC1F\uC73C\uBA74 \uD3ED\uBC1C\uD574 \uC8FC\uBCC0 \uC801\uC5D0\uAC8C \uD53C\uD574\uB97C
       \uC90D\uB2C8\uB2E4. (\uCD5C\uB300 {0}\uAC1C, \uBC94\uC704 {1}, \uCD5C\uB300
       {2}\uAE30)"
     en: Plants mines on the enemy path that explode when stepped on, damaging nearby
       enemies. (Up to {0} mines, range {1}, up to {2} enemies)
-  - key: Slime.Stigma.Desc
+  - key: Minion.Stigma.Desc
     kr: "\uC801\uC911 \uC2DC {0:0}% \uD655\uB960\uB85C \uB099\uC778\uC744 \uC0C8\uAE41\uB2C8\uB2E4.
       \uB099\uC778 \uC911\uCCA9\uB2F9 \uBC1B\uB294 \uD53C\uD574 {1:0}% \uC99D\uAC00
       (\uCD5C\uB300 {2}\uC911\uCCA9)"
     en: '{0:0}% chance on hit to brand the enemy. Each brand stack increases damage
       taken by {1:0}% (max {2} stacks)'
-  - key: Slime.Rage.Desc
+  - key: Minion.Rage.Desc
     kr: "\uC2ED\uC790\uBC94\uC704 4\uCE78 \uC2AC\uB77C\uC784\uC758 \uACF5\uACA9\uB825
       {0}% \uC99D\uAC00"
-    en: Increases attack power of slimes in the 4 cross tiles by {0}%
-  - key: Slime.Breeze.Desc
+    en: Increases attack power of minions in the 4 cross tiles by {0}%
+  - key: Minion.Breeze.Desc
     kr: "\uC2ED\uC790\uBC94\uC704 4\uCE78 \uC2AC\uB77C\uC784\uC758 \uACF5\uACA9\uC18D\uB3C4
       {0}% \uC99D\uAC00"
-    en: Increases attack speed of slimes in the 4 cross tiles by {0}%
-  - key: Slime.Dopamine.Desc
+    en: Increases attack speed of minions in the 4 cross tiles by {0}%
+  - key: Minion.Dopamine.Desc
     kr: "\uC8FC\uBCC0(\uBC94\uC704 {0})\uC5D0\uC11C \uC801\uC774 \uC8FD\uC73C\uBA74
       \uACF5\uACA9\uB825 {1}%\uC758 \uD0C4\uC744 {2}\uBC1C \uB354 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
     en: When an enemy dies nearby (range {0}), fires {2} extra shots dealing {1}%
       attack power.
-  - key: Slime.Keen.Desc
+  - key: Minion.Keen.Desc
     kr: "\uC2ED\uC790\uBC94\uC704 4\uCE78 \uC2AC\uB77C\uC784\uC758 \uD06C\uB9AC\uD2F0\uCEEC
       \uD655\uB960 {0}% \uC99D\uAC00"
-    en: Increases crit chance of slimes in the 4 cross tiles by {0}%
-  - key: Slime.Mud.Desc
+    en: Increases crit chance of minions in the 4 cross tiles by {0}%
+  - key: Minion.Mud.Desc
     kr: "\uC9C4\uD759 \uAD6C\uC2AC(\uCD5C\uB300 {0}\uAC1C)\uC774 \uC8FC\uBCC0\uC744
       \uB3CC\uB2E4 \uC801\uC5D0 \uB2FF\uC73C\uBA74 \uD130\uC838 \uC8FC\uBCC0\uC5D0
       \uC9C4\uD759\uC744 \uBB3B\uD799\uB2C8\uB2E4. \uC9C4\uD759 \uC911\uCCA9\uB2F9
@@ -295,55 +295,55 @@ MonoBehaviour:
       {3:0}%)"
     en: Mud orbs (up to {0}) circle around and burst on enemies, splashing mud. Each
       mud stack slows by {1:0}% (max {2:0}%, Elite/Boss {3:0}%)
-  - key: Slime.Beam.Desc
+  - key: Minion.Beam.Desc
     kr: "\uB2E4\uB978 \uAD11\uC120 \uC2AC\uB77C\uC784\uACFC \uB808\uC774\uC800\uB85C
       \uC5F0\uACB0\uB429\uB2C8\uB2E4. \uB808\uC774\uC800\uC5D0 \uB2FF\uC740 \uC801\uC5D0\uAC8C
       {0}\uCD08\uB9C8\uB2E4 \uD53C\uD574 (\uD63C\uC790\uBA74 \uAE30\uBCF8 \uACF5\uACA9)"
-    en: Links to other Beam slimes with lasers. Damages enemies touching a laser
+    en: Links to other Beam minions with lasers. Damages enemies touching a laser
       every {0}s (basic attack when alone)
-  - key: Slime.Berserker.Desc
+  - key: Minion.Berserker.Desc
     kr: "\uC8FC\uBCC0(\uBC94\uC704 {0})\uC5D0\uC11C \uC801\uC774 \uC8FD\uC744 \uB54C\uB9C8\uB2E4
       \uACF5\uACA9\uC18D\uB3C4 {1}% \uC99D\uAC00 (\uCD5C\uB300 {2}\uC911\uCCA9, {3}\uCD08
       \uB3D9\uC548 \uCC98\uCE58\uAC00 \uC5C6\uC73C\uBA74 \uCD08\uAE30\uD654)"
     en: Each enemy death nearby (range {0}) increases attack speed by {1}% (max {2}
       stacks, resets after {3}s without a kill)
-  - key: Slime.Mortar.Desc
+  - key: Minion.Mortar.Desc
     kr: "\uAE43\uBC1C \uC704\uCE58\uC5D0 \uD3ED\uD0C4\uC744 \uB5A8\uC5B4\uB728\uB9BD\uB2C8\uB2E4(\uCD5C\uB300
       {0}\uAE30). \uB9DE\uC740 \uC801\uC740 {1:0}% \uD655\uB960\uB85C \uB290\uB824\uC9D1\uB2C8\uB2E4."
     en: Drops bombs on the flag (up to {0} enemies). Hit enemies have a {1:0}% chance
       to be slowed.
-  - key: Slime.Hail.Desc
+  - key: Minion.Hail.Desc
     kr: "\uD0C0\uC77C\uADF8\uB8F9 \uC8FC\uC704 \uC801 \uACBD\uB85C\uB97C \uB3C4\uB294
       \uB208\uC744 \uC18C\uD658\uD569\uB2C8\uB2E4. \uB2FF\uC740 \uC801\uC5D0\uAC8C
       \uD53C\uD574\uB97C \uC8FC\uACE0 {0}% \uD655\uB960\uB85C \uC5BC\uB9BD\uB2C8\uB2E4."
     en: Summons hail that circles the enemy path around its tile group. Damages enemies
       it touches with a {0}% chance to freeze.
-  - key: Slime.Inferno.Desc
+  - key: Minion.Inferno.Desc
     kr: "\uAC00\uC7A5 \uAC00\uAE4C\uC6B4 \uC801 \uACBD\uB85C \uAD6C\uAC04\uC5D0 \uC9C0\uC625\uBD88\uC744
       \uD53C\uC6CC \uC548\uC5D0 \uC788\uB294 \uC801\uC5D0\uAC8C \uD53C\uD574\uB97C
       \uC90D\uB2C8\uB2E4. (\uD0C0\uC77C\uADF8\uB8F9 \uAC00\uC6B4\uB370 \uCE78\uC5D0\uC11C\uB294
       \uBC1C\uB3D9 \uC548 \uD568)"
     en: Ignites hellfire on the nearest enemy path segment, damaging enemies inside.
       (Inactive on the center tile of a tile group)
-  - key: Slime.Sacrifice.Desc
+  - key: Minion.Sacrifice.Desc
     kr: "\uAC19\uC740 \uBCC4\uC758 \uC544\uBB34 \uC2AC\uB77C\uC784\uACFC \uD569\uCE58\uBA74
       \uADF8 \uC2AC\uB77C\uC784\uC73C\uB85C \uAC15\uD654\uB429\uB2C8\uB2E4."
-    en: Merge with any slime of the same star to upgrade into that slime.
-  - key: Slime.GrowUp.Desc
+    en: Merge with any minion of the same star to upgrade into that minion.
+  - key: Minion.GrowUp.Desc
     kr: "{0:0}\uCD08 \uD6C4 \uB79C\uB364\uD55C \uC2AC\uB77C\uC784\uC73C\uB85C \uC131\uC7A5\uD569\uB2C8\uB2E4(\uBCC4
       +{1})."
-    en: Grows into a random slime after {0:0}s (+{1} star).
-  - key: Slime.Scavenger.Desc
+    en: Grows into a random minion after {0:0}s (+{1} star).
+  - key: Minion.Scavenger.Desc
     kr: "\uC0AC\uAC70\uB9AC \uC548\uC5D0\uC11C \uC801\uC774 \uC8FD\uC73C\uBA74 {0}\uACE8\uB4DC\uB97C
       \uC5BB\uC2B5\uB2C8\uB2E4."
     en: Gain {0} gold whenever an enemy dies within range.
-  - key: Slime.Joker.Desc
+  - key: Minion.Joker.Desc
     kr: "\uC6D0\uD558\uB294 \uC2AC\uB77C\uC784\uC73C\uB85C \uBCC0\uC2E0\uD569\uB2C8\uB2E4.
       {0:0}% \uD655\uB960\uB85C \uC2E4\uD328\uD574 \uBCC4\uC774 1 \uB5A8\uC5B4\uC9D1\uB2C8\uB2E4(\uBCC4
       1\uC774\uBA74 \uC0AC\uB77C\uC9D0)."
-    en: Transforms into any slime you choose. {0:0}% chance to fail and lose 1 star
+    en: Transforms into any minion you choose. {0:0}% chance to fail and lose 1 star
       (vanishes at 1 star).
-  - key: Slime.Hunter.Desc
+  - key: Minion.Hunter.Desc
     kr: "{0}\uD68C \uACF5\uACA9\uB9C8\uB2E4 \uC800\uACA9 \uAD00\uD1B5\uD0C4\uC744
       \uBC1C\uC0AC\uD574 {1}\uCD08 \uC2A4\uD134 + \uCE58\uBA85 \uD53C\uD574\uB97C
       \uC90D\uB2C8\uB2E4."
@@ -358,9 +358,9 @@ MonoBehaviour:
   - key: AttackRange_title
     kr: "\uC0AC\uAC70\uB9AC"
     en: Range
-  - key: MaxSlimeCount_title
+  - key: MaxMinionCount_title
     kr: "\uCD5C\uB300 \uC2AC\uB77C\uC784 \uC218"
-    en: Max Slimes
+    en: Max Minions
   - key: StartGold_title
     kr: "\uC2DC\uC791 \uCF54\uC778"
     en: Starting Coins
@@ -491,12 +491,12 @@ MonoBehaviour:
   - key: Currency_Get
     kr: "{0} {1:N0} \uD68D\uB4DD!"
     en: Got {0} {1:N0}!
-  - key: Draw_Slime_Get
+  - key: Draw_Minion_Get
     kr: "\uC2AC\uB77C\uC784 {0}\uB9C8\uB9AC \uD68D\uB4DD!"
-    en: Got {0} slimes!
-  - key: Draw_SpecialSlime
+    en: Got {0} minions!
+  - key: Draw_SpecialMinion
     kr: "{0} \uC774\uC0C1 \uC2AC\uB77C\uC784 \uB4F1\uC7A5\uAE4C\uC9C0 [{1}/{2}]"
-    en: '{0}+ slime guaranteed in [{1}/{2}]'
+    en: '{0}+ minion guaranteed in [{1}/{2}]'
   - key: Ad
     kr: "\uAD11\uACE0"
     en: AD
@@ -592,9 +592,9 @@ MonoBehaviour:
   - key: changedLanguage
     kr: "\uC5B8\uC5B4\uAC00 \uBCC0\uACBD\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
     en: Language changed.
-  - key: Authority_MatchSlime
+  - key: Authority_MatchMinion
     kr: "\uD574\uB2F9 \uC2AC\uB77C\uC784 {0}/{1}"
-    en: Matching slimes {0}/{1}
+    en: Matching minions {0}/{1}
   - key: Authority_Locked
     kr: "Lv.{0}\uC5D0 \uD574\uAE08\uB429\uB2C8\uB2E4"
     en: Unlocks at Lv.{0}
@@ -659,7 +659,7 @@ MonoBehaviour:
   - key: Authority_GamblerCoinWin
     kr: "\uB3C4\uBC15\uAFBC\uC758 \uB3D9\uC804: \uD55C \uB2E8\uACC4 \uB192\uC740
       \uC2AC\uB77C\uC784!"
-    en: 'Gambler''s Coin: a higher-level slime!'
+    en: 'Gambler''s Coin: a higher-level minion!'
   - key: Authority_GamblerCoinLose
     kr: "\uB3C4\uBC15\uAFBC\uC758 \uB3D9\uC804: \uCF54\uC778\uC744 2\uBC30 \uB0C8\uC2B5\uB2C8\uB2E4"
     en: 'Gambler''s Coin: paid double'
@@ -670,7 +670,245 @@ MonoBehaviour:
   - key: Authority_MixedCrestSpawn
     kr: "\uD63C\uD608\uC758 \uBB38\uC7A5: \uC57D\uC810 \uC18D\uC131 \uC2AC\uB77C\uC784
       \uC18C\uD658!"
-    en: 'Mixed Crest: summoned a slime with the weak type!'
+    en: 'Mixed Crest: summoned a minion with the weak type!'
   - key: Authority_HourglassFreeze
     kr: "\uBAA8\uB798\uC2DC\uACC4: \uBAA8\uB4E0 \uC801\uC774 \uBA48\uCDA5\uB2C8\uB2E4!"
     en: 'Hourglass: all enemies are frozen!'
+  - key: Purchase_Package
+    kr: "\uD328\uD0A4\uC9C0 \uAD6C\uB9E4 \uC644\uB8CC! \uBCF4\uC0C1\uC774 \uC9C0\uAE09\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
+    en: Package purchased! Rewards have been delivered.
+  - key: Purchase_RemoveAd
+    kr: "\uAD11\uACE0\uAC00 \uC81C\uAC70\uB418\uC5C8\uC2B5\uB2C8\uB2E4. \uC774\uC81C
+      \uAD11\uACE0 \uC5C6\uC774 \uBCF4\uC0C1\uC744 \uBC1B\uC2B5\uB2C8\uB2E4."
+    en: Ads removed. You now get rewards without watching ads.
+  - key: Purchase_GameSpeedUp
+    kr: "\uAC8C\uC784 \uC18D\uB3C4 \uC99D\uAC00 \uAD6C\uB9E4 \uC644\uB8CC! \uC774\uC81C
+      5\uBC30\uC18D\uAE4C\uC9C0 \uC4F8 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    en: Game speed boost purchased! You can now play at up to 5x speed.
+  - key: Product.RemoveAd.Desc
+    kr: "\uAD11\uACE0 \uC5C6\uC774 \uBC14\uB85C \uBCF4\uC0C1\uC744 \uBC1B\uC2B5\uB2C8\uB2E4."
+    en: Get rewards instantly without watching ads.
+  - key: Product.GameSpeedUp.Desc
+    kr: "\uAC8C\uC784 \uC18D\uB3C4\uB97C 5\uBC30\uAE4C\uC9C0 \uC62C\uB9B4 \uC218
+      \uC788\uC2B5\uB2C8\uB2E4."
+    en: Play at up to 5x game speed.
+  - key: Product.RemoveAdPackage.Desc
+    kr: "\uAD11\uACE0 \uC81C\uAC70 + \uCD94\uAC00 \uBCF4\uC0C1"
+    en: Ad removal + bonus rewards
+  - key: Product.GameSpeedUpPackage.Desc
+    kr: "\uAC8C\uC784 \uC18D\uB3C4 5\uBC30 + \uCD94\uAC00 \uBCF4\uC0C1"
+    en: 5x game speed + bonus rewards
+  - key: Achievement.KillEnemy
+    kr: "\uC801 \uCC98\uCE58"
+    en: Defeat enemies
+  - key: Achievement.ClearStage
+    kr: "\uC2A4\uD14C\uC774\uC9C0 \uD074\uB9AC\uC5B4"
+    en: Clear stages
+  - key: Achievement.Login
+    kr: "\uC811\uC18D"
+    en: Log in
+  - key: Achievement.LevelUpMinion
+    kr: "\uC2AC\uB77C\uC784 \uAC15\uD654"
+    en: Enhance minions
+  - key: Achievement.TryStage
+    kr: "\uC804\uD22C \uB3C4\uC804"
+    en: Play battles
+  - key: Achievement.DrawMinion
+    kr: "\uC2AC\uB77C\uC784 \uBF51\uAE30"
+    en: Draw minions
+  - key: Achievement.KillBonusElite
+    kr: "\uBCF4\uB108\uC2A4 \uC5D8\uB9AC\uD2B8 \uCC98\uCE58"
+    en: Defeat bonus elites
+  - key: Achievement.DrawItem
+    kr: "\uD0C0\uC77C \uC544\uC774\uD15C \uBF51\uAE30"
+    en: Draw tile items
+  - key: Achievement.UpgradeReinforce
+    kr: "\uC778\uAC8C\uC784 \uAC15\uD654"
+    en: Reinforce in battle
+  - key: Achievement.Watch_Ad
+    kr: "\uAD11\uACE0 \uC2DC\uCCAD"
+    en: Watch ads
+  - key: Achievement.SpawnMinion
+    kr: "\uC2AC\uB77C\uC784 \uC18C\uD658"
+    en: Summon minions
+  - key: Achievement.MergeMinion
+    kr: "\uC2AC\uB77C\uC784 \uD569\uC131"
+    en: Merge minions
+  - key: Setting_UidCopied
+    kr: "Player ID\uB97C \uBCF5\uC0AC\uD588\uC2B5\uB2C8\uB2E4."
+    en: Player ID copied.
+  - key: Setting_ComingSoon
+    kr: "\uC900\uBE44 \uC911\uC785\uB2C8\uB2E4."
+    en: Coming soon.
+  - key: Lobby_Battle
+    kr: "\uBC30\uD2C0"
+    en: Battle
+  - key: Lobby_My
+    kr: "\uB9C8\uC774"
+    en: My
+  - key: Lobby_Shop
+    kr: "\uC0C1\uC810"
+    en: Shop
+  - key: Lobby_Minion
+    kr: "\uC2AC\uB77C\uC784"
+    en: Minions
+  - key: Lobby_Town
+    kr: "\uD0C0\uC6B4"
+    en: Town
+  - key: Lobby_Authority
+    kr: "\uAD8C\uB2A5"
+    en: Authority
+  - key: Common_Desc
+    kr: "\uC124\uBA85"
+    en: Description
+  - key: Common_Selected
+    kr: "\uC120\uD0DD\uB428"
+    en: Selected
+  - key: Common_Select
+    kr: "\uC120\uD0DD\uD558\uAE30"
+    en: Select
+  - key: Common_Chance
+    kr: "\uD655\uB960"
+    en: Chance
+  - key: Common_Grade
+    kr: "\uB4F1\uAE09"
+    en: Grade
+  - key: Common_Upgrade
+    kr: "\uAC15\uD654"
+    en: Upgrade
+  - key: Common_Equip
+    kr: "\uC7A5\uCC29\uD558\uAE30"
+    en: Equip
+  - key: Common_LevelUp
+    kr: "\uB808\uBCA8\uC5C5"
+    en: Level Up
+  - key: Common_TouchToContinue
+    kr: "\uD654\uBA74\uC744 \uD130\uCE58\uD558\uBA74 \uB2EB\uD799\uB2C8\uB2E4"
+    en: Touch to Continue
+  - key: Achievement_Cumulative
+    kr: "\uC5C5\uC801 \uD018\uC2A4\uD2B8"
+    en: Achievements
+  - key: Achievement_Daily
+    kr: "\uC77C\uC77C \uD018\uC2A4\uD2B8"
+    en: Daily Quests
+  - key: Achievement_Claim
+    kr: "\uBC1B\uAE30"
+    en: Claim
+  - key: Achievement_Processing
+    kr: "\uC9C4\uD589 \uC911"
+    en: In Progress
+  - key: Achievement_Complete
+    kr: "\uC644\uB8CC"
+    en: Completed
+  - key: Draw_Result
+    kr: "\uACB0\uACFC"
+    en: RESULT
+  - key: Authority_TierTitle
+    kr: "Lv {0} \uAD8C\uB2A5"
+    en: Lv {0} Authority
+  - key: KS_Stats
+    kr: "\uB2A5\uB825\uCE58"
+    en: Stats
+  - key: KS_Category_Attack
+    kr: "\uACF5\uACA9"
+    en: Attack
+  - key: KS_Category_Support
+    kr: "\uBCF4\uC870"
+    en: Support
+  - key: LevelUp_Title
+    kr: "\uB808\uBCA8\uC5C5!"
+    en: Level Up!
+  - key: LevelUp_Congrats
+    kr: "\uCD95\uD558\uB4DC\uB9BD\uB2C8\uB2E4."
+    en: Congratulations!
+  - key: Ranking_Title
+    kr: "\uB7AD\uD0B9"
+    en: RANKING
+  - key: Ranking_Empty
+    kr: "\uB7AD\uD0B9 \uC5C6\uC74C"
+    en: No rankings yet
+  - key: Difficulty_Title
+    kr: "\uB09C\uC774\uB3C4 \uC124\uC815"
+    en: Difficulty
+  - key: Difficulty_Desc
+    kr: "\uB09C\uC774\uB3C4\uC5D0 \uB530\uB77C\uC11C \uC2A4\uD14C\uC774\uC9C0\uAC00
+      \uB354 \uC5B4\uB824\uC6CC\uC9D1\uB2C8\uB2E4."
+    en: Stages get harder at higher difficulties.
+  - key: Setting_Title
+    kr: "\uC124\uC815"
+    en: Setting
+  - key: Setting_Haptic
+    kr: "\uC9C4\uB3D9"
+    en: Haptic
+  - key: Setting_Language
+    kr: "\uC5B8\uC5B4"
+    en: Language
+  - key: Setting_GuestLogin
+    kr: "\uAC8C\uC2A4\uD2B8 \uB85C\uADF8\uC778"
+    en: Guest Login
+  - key: Setting_SignInGoogle
+    kr: "Google\uB85C \uB85C\uADF8\uC778"
+    en: Sign in with Google
+  - key: Setting_SignInApple
+    kr: "Apple\uB85C \uB85C\uADF8\uC778"
+    en: Sign in with Apple
+  - key: Setting_LoginHint
+    kr: "\uB85C\uADF8\uC778 \uC2DC \uB354 \uB9CE\uC740 \uAE30\uB2A5\uC774 \uD65C\uC131\uD654\uB429\uB2C8\uB2E4."
+    en: Sign in to unlock more features.
+  - key: Setting_Save
+    kr: "\uC800\uC7A5"
+    en: SAVE
+  - key: Setting_Load
+    kr: "\uBD88\uB7EC\uC624\uAE30"
+    en: LOAD
+  - key: Setting_Privacy
+    kr: "\uAC1C\uC778\uC815\uBCF4 \uCC98\uB9AC\uBC29\uCE68"
+    en: Privacy
+  - key: Setting_Terms
+    kr: "\uC774\uC6A9\uC57D\uAD00"
+    en: Terms of Service
+  - key: Shop_Title_Draw
+    kr: "\uC2AC\uB77C\uC784 \uBF51\uAE30"
+    en: DRAW MINION
+  - key: Shop_Title_Single
+    kr: "\uB0B1\uAC1C \uAD6C\uB9E4"
+    en: Single Items
+  - key: Shop_Title_Package
+    kr: "\uC2A4\uD398\uC15C \uD328\uD0A4\uC9C0"
+    en: SPECIAL PACKAGE
+  - key: Shop_NormalChest
+    kr: "\uC77C\uBC18 \uC2AC\uB77C\uC784 \uC0C1\uC790"
+    en: Minion Chest
+  - key: Shop_UniqueChest
+    kr: "\uACE0\uAE09 \uC2AC\uB77C\uC784 \uC0C1\uC790"
+    en: Premium Minion Chest
+  - key: Shop_NoAd
+    kr: "\uAD11\uACE0 \uC81C\uAC70"
+    en: No Ads
+  - key: Product.RemoveAd
+    kr: "\uAD11\uACE0 \uC81C\uAC70"
+    en: Remove Ads
+  - key: Product.GameSpeedUp
+    kr: "\uAC8C\uC784 \uBC30\uC18D"
+    en: Game Speed Up
+  - key: Product.RemoveAdPackage
+    kr: "\uAD11\uACE0 \uC81C\uAC70 \uD328\uD0A4\uC9C0"
+    en: Ad Remove Package
+  - key: Product.GameSpeedUpPackage
+    kr: "\uAC8C\uC784 \uBC30\uC18D \uD328\uD0A4\uC9C0"
+    en: Game Speed Up Package
+  - key: Minion_SelectToSwap
+    kr: "\uAD50\uCCB4\uD560 \uC2AC\uB77C\uC784\uC744 \uC120\uD0DD\uD574\uC8FC\uC138\uC694."
+    en: Select a minion to replace.
+  - key: Minion_MergeLevel
+    kr: "\uBA38\uC9C0 \uB808\uBCA8"
+    en: Merge Level
+  - key: Minion_Unowned
+    kr: "\uBBF8\uBCF4\uC720"
+    en: Not Owned
+  - key: Minion_Current
+    kr: "\uD604\uC7AC \uC2AC\uB77C\uC784"
+    en: Equipped Minions
+  - key: Minion_List
+    kr: "\uC2AC\uB77C\uC784 \uB9AC\uC2A4\uD2B8"
+    en: Minion List

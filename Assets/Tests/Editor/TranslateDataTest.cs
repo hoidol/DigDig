@@ -63,11 +63,11 @@ public class TranslateDataTest
         expected.AddRange(Enum.GetValues(typeof(DifficultyType)).Cast<DifficultyType>().Select(d => $"Difficulty.{d}"));
         expected.AddRange(Enum.GetValues(typeof(StatType)).Cast<StatType>().Where(s => s != StatType.Count).Select(s => $"{s}_title"));
         expected.AddRange(Enum.GetValues(typeof(GradeType)).Cast<GradeType>().Where(g => Grade.GetGradeText(g) != null).Select(g => $"Grade.{g}"));
-        foreach (string guid in AssetDatabase.FindAssets("t:SlimeData", new[] { "Assets/AddressableResources/SlimeData" }))
+        foreach (string guid in AssetDatabase.FindAssets("t:MinionData", new[] { "Assets/AddressableResources/MinionData" }))
         {
-            var data = AssetDatabase.LoadAssetAtPath<SlimeData>(AssetDatabase.GUIDToAssetPath(guid));
+            var data = AssetDatabase.LoadAssetAtPath<MinionData>(AssetDatabase.GUIDToAssetPath(guid));
             if (data != null && !string.IsNullOrEmpty(data.key) && data.growth == 1)
-                expected.Add($"Slime.{data.key}");
+                expected.Add($"Minion.{data.key}");
         }
 
         var missing = expected.Distinct().Where(k => !keys.Contains(k)).ToList();

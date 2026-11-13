@@ -9,6 +9,7 @@ public class ColorSetting
    public static Color enemyDamageColor = new Color32(0xFF, 0x00, 0x00, 0xFF);//FF0000
 
    public static Color activeColor = new Color32(0x25, 0x9C, 0xFF, 0xFF); //259CFF
+   public static Color inactiveColor = new Color32(0x52, 0x4B, 0x4A, 0xFF); //524B4A
 
 
 }

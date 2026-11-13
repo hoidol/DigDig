@@ -167,6 +167,6 @@ public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
             Debug.Log($"[IAP] 구매 복원 : {info.productId}");
         }
 
-        UserDataManager.Instance.isAdRemoved = userPurchaseManager.HasPurchased(InAppProductInfo.REMOVE_AD_KEY);
+        UserDataManager.Instance.isAdRemoved = userPurchaseManager.HasPurchasedAny(InAppProductInfo.REMOVE_AD_KEYS);
     }
 }

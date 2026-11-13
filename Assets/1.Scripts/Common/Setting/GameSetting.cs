@@ -6,8 +6,8 @@ public class GameSetting
    // public const int MAX_MF_GROUP_POINT = 5; //MemoryFragment
    public static string FIRST_STAGE_KEY = "Normal"; // 난이도마다 스테이지 하나, key = 난이도 이름
    public static KingSlimeName INIT_CHARACTER_NAME = KingSlimeName.Lucky;
-   public static string[] INIT_SLIME_KEYS = { "Flame", "Ice", "Random", "Orbit", "Lightning" };
-   public static int SLIME_SLOT_COUNT = 5;
+   public static string[] INIT_MINION_KEYS = { "Flame", "Ice", "Random", "Orbit", "Lightning" };
+   public static int MINION_SLOT_COUNT = 5;
    public static int PLAY_COST_ENERGE = 5;
    public static int MAX_ENERGE = 30;
 
@@ -36,7 +36,7 @@ public class GameSetting
    public const int BLOCKED_TILE_COUNT = 3; // 게임 시작 시 랜덤으로 막는 타일 수
 
    public const int LEVEL_TO_GROWUP2 = 2;//0,1,2 되어야됌
-   public const int SLIME_MIN_EXIST_COUNT = 10;
+   public const int MINION_MIN_EXIST_COUNT = 10;
 
    public static float ATTACK_SPEED_PER_SECOND = 50f; // AttackSpeed가 이 값이면 초당 1회 공격 (Orbit은 이때 orbitRotationSpeed로 회전)
 

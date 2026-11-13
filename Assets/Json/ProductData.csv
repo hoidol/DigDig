@@ -1,9 +1,14 @@
 key	productId	currencyType	price
 RemoveAd	remove_ad	InApp	4.99
+RemoveAdPackage	remove_ad_package	InApp	7.99
 GameSpeedUp	game_speed_up	InApp	2.99
-DrawSlime_Normal_Ad		Ad	1
-DrawSlime_Normal_DrawTicket		DrawTicket	30
-DrawSlime_Unique_Dia		Dia	50
+GameSpeedUpPackage	game_speed_up_package	InApp	5.99
+DrawMinion_Normal_Ad		Ad	1
+DrawMinion_Normal_DrawTicket		DrawTicket	30
+DrawMinion_Unique_Dia		Dia	50
+DrawEquipment_Normal_Ad		Ad	1
+DrawEquipment_Normal_Dia		Dia	25
+DrawEquipment_Unique		Dia	50
 Dia_20	dia_20	InApp	1.99
 Dia_110	dia_110	InApp	5.9
 Dia_550	dia_550	InApp	17.9

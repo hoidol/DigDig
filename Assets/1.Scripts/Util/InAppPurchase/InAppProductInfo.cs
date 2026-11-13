@@ -24,12 +24,21 @@ public static class InAppProductInfo
     // 코드에서 구매 여부를 확인하는 상품 key
     public const string REMOVE_AD_KEY = "RemoveAd";
     public const string GAME_SPEED_UP_KEY = "GameSpeedUp"; // 구매하면 인게임 배속 5배까지
+    // 패키지 (같은 효과 + 재화 지급, 지급 목록은 PackageProductPanel.rewards)
+    public const string REMOVE_AD_PACKAGE_KEY = "RemoveAdPackage";
+    public const string GAME_SPEED_UP_PACKAGE_KEY = "GameSpeedUpPackage";
+
+    // 이 중 하나라도 샀으면 효과 적용
+    public static readonly string[] REMOVE_AD_KEYS = { REMOVE_AD_KEY, REMOVE_AD_PACKAGE_KEY };
+    public static readonly string[] GAME_SPEED_UP_KEYS = { GAME_SPEED_UP_KEY, GAME_SPEED_UP_PACKAGE_KEY };
 
     public static readonly IReadOnlyList<Info> PRODUCTS = new List<Info>
     {
         // 비소모성 (구매 복원 대상)
         new Info(REMOVE_AD_KEY, "remove_ad", ProductType.NonConsumable),
         new Info(GAME_SPEED_UP_KEY, "game_speed_up", ProductType.NonConsumable),
+        new Info(REMOVE_AD_PACKAGE_KEY, "remove_ad_package", ProductType.NonConsumable),
+        new Info(GAME_SPEED_UP_PACKAGE_KEY, "game_speed_up_package", ProductType.NonConsumable),
 
         // 소모성
         new Info("Dia_20", "dia_20", ProductType.Consumable),

@@ -48,23 +48,23 @@ public static class AuthoritySystem
     }
 
     // 무료 소환 (혼혈의 문장 등): 빈 칸·최대 슬라임 수 확인, 소환 가격(소환 횟수)은 올리지 않음
-    public static Slime SpawnFreeSlime(string key, int lv = 0)
+    public static Minion SpawnFreeMinion(string key, int lv = 0)
     {
         Tile tile = TileManager.Instance.GetRandomEmptyTile();
-        if (tile == null || SlimeFieldController.Instance.slimeMaxCount <= SlimeFieldController.Instance.CountedSlimeCount)
+        if (tile == null || MinionFieldController.Instance.minionMaxCount <= MinionFieldController.Instance.CountedMinionCount)
             return null;
-        Slime slime = KingSlime.Instance.AddSlime(key, lv);
-        tile.SetTileObject(slime);
-        GameManager.Instance.slimeSpawnCount--; // AddSlime → SpawnSlimeEvent로 오른 소환 횟수를 되돌림
-        return slime;
+        Minion minion = KingSlime.Instance.AddMinion(key, lv);
+        tile.SetTileObject(minion);
+        GameManager.Instance.minionSpawnCount--; // AddMinion → SpawnMinionEvent로 오른 소환 횟수를 되돌림
+        return minion;
     }
 
     // 장착 슬라임 5종 데이터 (조건형 권능: 순혈의 왕관·왕의 인장·혼혈의 문장)
-    public static List<SlimeData> EquippedSlimeDatas()
+    public static List<MinionData> EquippedMinionDatas()
     {
-        return UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes
-            .Where(s => s != null && s.SlimeData != null)
-            .Select(s => s.SlimeData)
+        return UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions
+            .Where(s => s != null && s.MinionData != null)
+            .Select(s => s.MinionData)
             .ToList();
     }
 }

@@ -1,4 +1,6 @@
 Type	Goal	RewardType	RewardValue
-KillEnemy	220	Gold	100
+KillEnemy	500	Gold	100
 TryStage	3	Gold	100
-SpawnSlime			
+SpawnMinion	50	Gold	100
+MergeMinion	30	Gold	100
+DrawItem	20	Gold	100

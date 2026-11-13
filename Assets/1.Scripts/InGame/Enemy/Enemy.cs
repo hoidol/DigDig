@@ -320,6 +320,12 @@ public abstract class Enemy : MonoBehaviour, IHittable
             return;
         EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
         GameEventBus.Publish(new EnemyDeadEvent(this));
+        if (curHp <= 0) // 업적은 처치만 (경로 끝 도착 제외)
+        {
+            AchievementManager.Report(AchievementType.KillEnemy);
+            if (enemyType == EnemyType.BonusElite)
+                AchievementManager.Report(AchievementType.KillBonusElite);
+        }
 
         if (curHp <= 0 && HasAnimState(DEAD_ANIM_HASH))
             StartDying();

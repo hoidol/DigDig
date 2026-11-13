@@ -12,20 +12,20 @@ public class ReinforceTargetSlotContainer : ReinforceSlotContainer
         targets[0] = UserDataManager.Instance.userData.characterName;
         for (int i = 0; i < 5; i++)
         {
-            targets[i + 1] = UserDataManager.Instance.userSlimeManager.userSlimeData.userSlimes[i].key;
+            targets[i + 1] = UserDataManager.Instance.userMinionManager.userMinionData.userMinions[i].key;
         }
         targets[6] = ReinforceSlot.NONE_KEY; //꽝!
         return targets;
     }
 
-    // 슬라임이면 SlimeData.thum, 캐릭터면 CharacterData.thum, 꽝이면 noneThum
+    // 슬라임이면 MinionData.thum, 캐릭터면 CharacterData.thum, 꽝이면 noneThum
     protected override Sprite GetThum(string key)
     {
         if (key == ReinforceSlot.NONE_KEY)
             return noneThum;
 
-        if (SlimeManager.Instance.slimeDataDic.TryGetValue(key, out SlimeData slimeData))
-            return slimeData.thum;
+        if (MinionManager.Instance.minionDataDic.TryGetValue(key, out MinionData minionData))
+            return minionData.thum;
 
         if (Enum.TryParse(key, out KingSlimeName characterName))
             return KingSlimeManager.Instance.GetKingSlimeData(characterName).thum;

@@ -26,8 +26,8 @@ public class DefenceTypePlayTest : InGamePlayTestBase
         Assert.AreEqual(DefenceType.Ethereal, GameManager.GetWaveDefenceType(N - 1), $"wave {N} = 정령");
         Assert.AreEqual(DefenceType.Armored, GameManager.GetWaveDefenceType(armoredWaveIdx), $"wave {N * 2} = 갑옷");
 
-        Slime physic = SpawnSlime("Iron", GetFreeTile());
-        Slime magic = SpawnSlime("Ice", GetFreeTile());
+        Minion physic = SpawnMinion("Iron", GetFreeTile());
+        Minion magic = SpawnMinion("Ice", GetFreeTile());
         yield return WaitFrames(2);
         Assert.AreEqual(AttackType.Physic, physic.AttackType, "Iron 공격 속성");
         Assert.AreEqual(AttackType.Magic, magic.AttackType, "Ice 공격 속성");
@@ -38,7 +38,7 @@ public class DefenceTypePlayTest : InGamePlayTestBase
             Enemy prefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Normal, defenceType);
             Assert.AreEqual(defenceType, prefab.defenceType, $"{defenceType}: 다른 방어 타입 프리팹이 선택됨 ({prefab.name})");
 
-            foreach (Slime attacker in new[] { physic, magic })
+            foreach (Minion attacker in new[] { physic, magic })
             {
                 // 풀에서 꺼낸 개체도 같은지 보려고 두 번 생성
                 for (int n = 0; n < 2; n++)

@@ -31,7 +31,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
 
     [SerializeField] Transform hpPoint;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
-    public SlimeInventory slimeInventory;
+    public MinionInventory minionInventory;
     // public OreInventory oreInventory; //패시브 스킬로 제공!
     public TileChecker[] tileCheckers;
     public KingSlimeHealth health;
@@ -81,7 +81,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
 
         rg = GetComponentInChildren<Rigidbody2D>();
         itemInventory = GetComponentInChildren<ItemInventory>();
-        slimeInventory = GetComponentInChildren<SlimeInventory>();
+        minionInventory = GetComponentInChildren<MinionInventory>();
         // abilityInventory = GetComponentInChildren<AbilityInventory>();
         // statInventory = GetComponentInChildren<StatInventory>();
         health = GetComponentInChildren<KingSlimeHealth>();
@@ -218,30 +218,30 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         UpdateCharacter();
     }
 
-    public Slime AddSlime(string key, int lv = 0)
+    public Minion AddMinion(string key, int lv = 0)
     {
-        Slime slime = SlimeFieldController.Instance.Instantiate(key);
-        slime.Spawn((Vector2)transform.position + UnityEngine.Random.insideUnitCircle, lv);
+        Minion minion = MinionFieldController.Instance.Instantiate(key);
+        minion.Spawn((Vector2)transform.position + UnityEngine.Random.insideUnitCircle, lv);
 
-        statMgr.AddSlime(key);
-        slimeInventory.AddSlime(slime);
-        slimeInventory.UpdateInventory();
+        statMgr.AddMinion(key);
+        minionInventory.AddMinion(minion);
+        minionInventory.UpdateInventory();
 
-        GameEventBus.Publish(new SpawnSlimeEvent(key, lv));
+        GameEventBus.Publish(new SpawnMinionEvent(key, lv));
         UpdateCharacter();
-        return slime;
+        return minion;
     }
 
-    public void RemoveSlime(Slime slime)
+    public void RemoveMinion(Minion minion)
     {
-        statMgr.RemoveSlime(slime.key);
+        statMgr.RemoveMinion(minion.key);
 
-        slimeInventory.RemoveSlime(slime);
-        slimeInventory.UpdateInventory();
+        minionInventory.RemoveMinion(minion);
+        minionInventory.UpdateInventory();
         UpdateCharacter();
 
 
-        GameEventBus.Publish(new RemoveSlimeEvent(slime.key));
+        GameEventBus.Publish(new RemoveMinionEvent(minion.key));
     }
 
     public void AddCoin(int count)
@@ -323,7 +323,7 @@ public enum StatType
     CritChance, //float
     CritPower, //float
     AttackRange,
-    MaxSlimeCount,
+    MaxMinionCount,
     StartGold, 
     WaveClearGold,
     BurnDPS,

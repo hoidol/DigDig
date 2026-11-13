@@ -29,7 +29,7 @@ public class UserPurchaseManager : UserBaseManager
 
     public UserPurchase AddUserPurchase(string key, string productId = null)
     {
-        if(key == InAppProductInfo.REMOVE_AD_KEY)
+        if (InAppProductInfo.REMOVE_AD_KEYS.Contains(key))
         {
             UserDataManager.Instance.isAdRemoved = true;
         }
@@ -47,10 +47,10 @@ public class UserPurchaseManager : UserBaseManager
     // 오늘(기기 날짜 기준) 구매 횟수. 하루 제한 상품용
     public int GetTodayPurchaseCount(string key)
     {
-        System.DateTime today = TimeManager.Now.Date;
-        return userPurchaseData.userPurchases.Count(p => p.key == key && TimeManager.StringToDateTime(p.purchaseTime).Date == today);
+        return userPurchaseData.userPurchases.Count(p => p.key == key && DailyCheck.IsToday(TimeManager.StringToDateTime(p.purchaseTime)));
     }
     public bool HasPurchased(string key) => userPurchaseData.userPurchases.Any(p => p.key == key );
+    public bool HasPurchasedAny(string[] keys) => userPurchaseData.userPurchases.Any(p => keys.Contains(p.key));
     public override void SaveData()
     {
         SaveManager.SaveData(UserDataFileName, userPurchaseData);

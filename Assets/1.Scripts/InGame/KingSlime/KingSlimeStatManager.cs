@@ -8,7 +8,7 @@ public class KingSlimeStatManager
 {
     [SerializeField] List<KingSlimeStat> statList = new();
     public Dictionary<StatType, KingSlimeStat> statDic = new Dictionary<StatType, KingSlimeStat>();
-    public Dictionary<string, InGameUserSlimeData> slimeDic = new Dictionary<string, InGameUserSlimeData>();
+    public Dictionary<string, InGameUserMinionData> minionDic = new Dictionary<string, InGameUserMinionData>();
 
     // public Dictionary<LevelUpStatType, CharacterLevelUpStat> levelUpStatDic = new Dictionary<LevelUpStatType, CharacterLevelUpStat>();
     public Dictionary<string, CharacterItemStat> itemStatDic = new Dictionary<string, CharacterItemStat>();
@@ -53,10 +53,10 @@ public class KingSlimeStatManager
         //     levelUpStatDic.Add(pl.type, pl);
         // }
 
-        slimeDic.Clear();
-        UserDataManager.Instance.userSlimeManager.userSlimeData.userSlimes.ForEach(s =>
+        minionDic.Clear();
+        UserDataManager.Instance.userMinionManager.userMinionData.userMinions.ForEach(s =>
         {
-            slimeDic.Add(s.key, new InGameUserSlimeData()
+            minionDic.Add(s.key, new InGameUserMinionData()
             {
                 key = s.key,
                 count = 0,
@@ -119,39 +119,39 @@ public class KingSlimeStatManager
         }
     }
 
-    public void AddSlime(string key, int count = 1)
+    public void AddMinion(string key, int count = 1)
     {
-        if (!slimeDic.ContainsKey(key))
+        if (!minionDic.ContainsKey(key))
         {
-            slimeDic.Add(key, new InGameUserSlimeData()
+            minionDic.Add(key, new InGameUserMinionData()
             {
                 key = key,
                 count = 0
             });
         }
-        slimeDic[key].count += count;
+        minionDic[key].count += count;
     }
 
-    public int GetReinforceLevel(string key) => slimeDic.TryGetValue(key, out var slime) ? slime.reinforceLevel : 0;
+    public int GetReinforceLevel(string key) => minionDic.TryGetValue(key, out var minion) ? minion.reinforceLevel : 0;
 
     // 필드에 그 종이 있는지 (강화는 필드에 있을 때만)
-    public bool HasSlimeOnField(string key) => slimeDic.TryGetValue(key, out var slime) && slime.count > 0;
+    public bool HasMinionOnField(string key) => minionDic.TryGetValue(key, out var minion) && minion.count > 0;
 
-    public void LevelUpSlime(string key)
+    public void LevelUpMinion(string key)
     {
-        if (slimeDic.ContainsKey(key))
+        if (minionDic.ContainsKey(key))
         {
-            slimeDic[key].reinforceLevel += 1;
-            GameEventBus.Publish(new SlimeLevelUpReinforceEvent() { key = key, reinforceLevel = slimeDic[key].reinforceLevel });
+            minionDic[key].reinforceLevel += 1;
+            GameEventBus.Publish(new MinionLevelUpReinforceEvent() { key = key, reinforceLevel = minionDic[key].reinforceLevel });
         }
 
     }
 
-    public void RemoveSlime(string key)
+    public void RemoveMinion(string key)
     {
         // 수가 0이 돼도 항목은 남긴다: 머지로 그 종이 잠깐 사라져도 강화 레벨(종 단위 투자)은 유지
-        if (slimeDic.ContainsKey(key))
-            slimeDic[key].count = Mathf.Max(0, slimeDic[key].count - 1);
+        if (minionDic.ContainsKey(key))
+            minionDic[key].count = Mathf.Max(0, minionDic[key].count - 1);
     }
     
     public CharacterItemStat GetCharacterItemStat(string key)
@@ -193,7 +193,7 @@ public class CharacterItemStat
 }
 
 [System.Serializable]
-public class SlimeLevelUpReinforceEvent
+public class MinionLevelUpReinforceEvent
 {
     public string key;
     public int reinforceLevel;

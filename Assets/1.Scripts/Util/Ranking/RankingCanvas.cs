@@ -13,24 +13,54 @@ public class RankingCanvas : CanvasUI<RankingCanvas>
     public GameObject loadingObject;        // 불러오는 중 표시 (선택)
     public GameObject emptyObject;          // 랭킹 없음/실패 표시 (선택)
     public TMP_Text refreshTimeText;        // 다음 갱신까지 남은 시간 (선택)
-    public RankingDifficultyTabButton[] tabButtons;
+
+    public TMP_Dropdown difficultDropdown; // 난이도 선택 (옵션은 코드가 DifficultyType 순서 + 번역 이름으로 채움. 잠긴 난이도도 볼 수 있음)
 
     readonly List<RankingPanel> panels = new List<RankingPanel>();
     DifficultyType currentDifficulty;
     int requestId; // 늦게 도착한 이전 요청 결과 무시용
 
+    static readonly DifficultyType[] DIFFICULTIES = (DifficultyType[])Enum.GetValues(typeof(DifficultyType));
+    bool dropdownReady;
+
+    public DifficultyType CurrentDifficulty => currentDifficulty;
+
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
+        SetupDropdown();
         SelectDifficulty(UserDataManager.difficultyType);
+    }
+
+    void SetupDropdown()
+    {
+        if (difficultDropdown == null)
+            return;
+        // 언어가 바뀔 수 있으니 열 때마다 이름을 다시 채움
+        difficultDropdown.ClearOptions();
+        List<string> names = new List<string>();
+        foreach (DifficultyType difficulty in DIFFICULTIES)
+            names.Add(TranslateManager.GetText($"Difficulty.{difficulty}"));
+        difficultDropdown.AddOptions(names);
+        if (!dropdownReady)
+        {
+            dropdownReady = true;
+            difficultDropdown.onValueChanged.AddListener(OnDropdownChanged);
+        }
+    }
+
+    void OnDropdownChanged(int index)
+    {
+        if (index < 0 || index >= DIFFICULTIES.Length)
+            return;
+        SelectDifficulty(DIFFICULTIES[index]);
     }
 
     public void SelectDifficulty(DifficultyType difficulty)
     {
         currentDifficulty = difficulty;
-        foreach (var tab in tabButtons)
-            if (tab != null)
-                tab.SetSelected(tab.difficulty == difficulty);
+        if (difficultDropdown != null)
+            difficultDropdown.SetValueWithoutNotify(Array.IndexOf(DIFFICULTIES, difficulty));
 
         LoadAsync(difficulty).Forget();
     }
@@ -81,14 +111,14 @@ public class RankingCanvas : CanvasUI<RankingCanvas>
 
         // 목록 밖이거나 기록 없음 → 로컬 기록으로 표시
         int myWave = RankingManager.GetMyWave(currentDifficulty);
-        string uid = FirebaseManager.Instance.firebaseAuth.UserId;
+        string uid = RankingManager.MyUid;
         myRankingPanel.SetRanking(new RankData
         {
             num = 0,
             uid = uid,
             nickname = RankingManager.GetMyNickname(uid),
             wave = myWave,
-        }, true, myWave > 0 ? $"{RankingManager.TOP_COUNT}+" : "-");
+        }, true, RankingManager.GetOutOfRankLabel(myWave));
     }
 
     void Update()

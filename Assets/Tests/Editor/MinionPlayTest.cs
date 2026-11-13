@@ -1,0 +1,85 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
+
+// 로드된 모든 슬라임 key × (머지 레벨 0 / 최대 / 최대+진화)를 하나씩 소환해 싸우게 하고 에러가 없는지 본다
+// 진화 = EvolutionTileItem과 같은 Minion.Evolve (각성 능력 발현). 진화하지 않는 슬라임(CanEvolve false)은 진화 없이 싸움
+public class MinionPlayTest : InGamePlayTestBase
+{
+    const float TIME_SCALE = 4f;
+    const float MINION_TEST_TIME = 6f; // 슬라임 하나당 게임 시간(초)
+
+    [UnityTest]
+    public IEnumerator AllMinions_SpawnAndFight_NoErrors()
+    {
+        if (!Application.isPlaying) { BeforeEnterPlayMode(); yield return new EnterPlayMode(); }
+        yield return WaitGameStart();
+
+        Time.timeScale = TIME_SCALE;
+        var failed = new List<string>();
+        foreach (string key in MinionManager.Instance.minionDataDic.Keys.ToList())
+        {
+            for (int step = 0; step < 3; step++)
+            {
+                int lv = step == 0 ? 0 : MinionData.MAX_MERGE_LEVEL;
+                bool evolve = step == 2;
+                current = evolve ? $"{key}/{lv}/진화" : $"{key}/{lv}";
+                int before = errors.Count;
+                Minion minion = null;
+                try
+                {
+                    Tile tile = GetFreeTile();
+                    Assert.IsNotNull(tile, "빈 타일 없음");
+                    minion = SpawnMinion(key, tile, lv);
+                    if (evolve && minion.CanEvolve)
+                    {
+                        minion.Evolve();
+                        if (!minion.isEvolved)
+                            errors.Add($"[{current}] Evolve 후 isEvolved가 false");
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    errors.Add($"[{current}] 소환 중 예외: {e.GetType().Name} {e.Message.Split('\n')[0]}");
+                }
+
+                yield return WaitRealtime(MINION_TEST_TIME / TIME_SCALE);
+
+                try
+                {
+                    if (minion != null)
+                        MinionFieldController.Instance.RemoveFieldMinion(minion);
+                }
+                catch (System.Exception e)
+                {
+                    errors.Add($"[{current}] 제거 중 예외: {e.GetType().Name} {e.Message.Split('\n')[0]}");
+                }
+                yield return WaitRealtime(0.2f);
+
+                if (errors.Count > before)
+                    failed.Add(current);
+            }
+        }
+
+        AssertNoErrors($"에러 난 슬라임: {string.Join(", ", failed)}");
+    }
+
+    // 장착 여부와 상관없이 MinionData.csv에 있는 key는 모두 로드돼야 한다 (데이터 에셋 누락 검출)
+    [UnityTest]
+    public IEnumerator AllCsvMinions_AreLoaded()
+    {
+        if (!Application.isPlaying) { BeforeEnterPlayMode(); yield return new EnterPlayMode(); }
+        yield return WaitGameStart();
+
+        var csvKeys = System.IO.File.ReadAllLines("Assets/Json/MinionData.csv")
+            .Skip(1)
+            .Select(l => l.Split('\t')[0].Trim())
+            .Where(k => k.Length > 0)
+            .ToList();
+        var missing = csvKeys.Where(k => !MinionManager.Instance.minionDataDic.ContainsKey(k)).ToList();
+        Assert.IsEmpty(missing, "CSV에는 있는데 MinionData 에셋이 없는 슬라임");
+    }
+}

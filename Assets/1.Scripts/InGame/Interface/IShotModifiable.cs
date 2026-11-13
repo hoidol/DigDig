@@ -1,4 +1,4 @@
-// 발사 방식을 바꿀 수 있는 유닛 (Slime, Character). 타일 아이템이 OnEnter/OnExit에서 값을 더하고 뺀다
+// 발사 방식을 바꿀 수 있는 유닛 (Minion, Character). 타일 아이템이 OnEnter/OnExit에서 값을 더하고 뺀다
 public interface IShotModifiable
 {
     ShotModifier ShotModifier { get; }

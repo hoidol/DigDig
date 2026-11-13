@@ -35,9 +35,9 @@ public class DrawShopPlayTest : InGamePlayTestBase
     // (key, 지급 개수). 권능 뽑기는 삭제(2026-11-09, 권능은 레벨 해금 선택)
     static readonly (string key, int count)[] DRAWS =
     {
-        ("DrawSlime_Normal_Ad", 10),
-        ("DrawSlime_Normal_DrawTicket", 30),
-        ("DrawSlime_Unique_Dia", 10),
+        ("DrawMinion_Normal_Ad", 10),
+        ("DrawMinion_Normal_DrawTicket", 20),
+        ("DrawMinion_Unique_Dia", 10),
     };
 
     [UnityTest]
@@ -72,7 +72,7 @@ public class DrawShopPlayTest : InGamePlayTestBase
             Assert.AreEqual(count, panel.LastDrawKeys.Length, $"{key}: 지급 개수");
 
             foreach (string k in panel.LastDrawKeys)
-                Assert.IsTrue(UserDataManager.Instance.userSlimeManager.GetUserSlime(k).own, $"{key}: 뽑은 슬라임 {k} 미보유");
+                Assert.IsTrue(UserDataManager.Instance.userMinionManager.GetUserMinion(k).own, $"{key}: 뽑은 슬라임 {k} 미보유");
         }
         AssertNoErrors();
     }
@@ -88,7 +88,7 @@ public class DrawShopPlayTest : InGamePlayTestBase
 
     IEnumerator AdDraw_DailyLimit3Body()
     {
-        foreach (string key in new[] { "DrawSlime_Normal_Ad" })
+        foreach (string key in new[] { "DrawMinion_Normal_Ad" })
         {
             current = key;
             ProductPurchaseButton button = FindButton(key);
@@ -107,19 +107,19 @@ public class DrawShopPlayTest : InGamePlayTestBase
 
     // 고급 슬라임 상자: specialDrawInterval회마다 1개는 특별 확률표(S 이상)
     [UnityTest]
-    public IEnumerator UniqueSlime_SpecialDrawEveryInterval()
+    public IEnumerator UniqueMinion_SpecialDrawEveryInterval()
     {
         if (!Application.isPlaying) { BeforeEnterPlayMode(LOBBY_SCENE_PATH); yield return new EnterPlayMode(); }
         yield return WaitLobbyStart();
-        yield return UniqueSlime_SpecialDrawEveryIntervalBody();
+        yield return UniqueMinion_SpecialDrawEveryIntervalBody();
     }
 
-    IEnumerator UniqueSlime_SpecialDrawEveryIntervalBody()
+    IEnumerator UniqueMinion_SpecialDrawEveryIntervalBody()
     {
-        const string KEY = "DrawSlime_Unique_Dia";
+        const string KEY = "DrawMinion_Unique_Dia";
         FillCurrency();
         ProductPurchaseButton button = FindButton(KEY);
-        var panel = (UniqueDrawSlimeProductPanel)PanelOf(button);
+        var panel = (UniqueDrawMinionProductPanel)PanelOf(button);
         int interval = panel.specialDrawInterval;
         Assert.Greater(interval, 0, "특별 뽑기 주기 0");
 
@@ -129,7 +129,7 @@ public class DrawShopPlayTest : InGamePlayTestBase
 
         button.Purchase();
         yield return WaitPurchase();
-        GradeType top = SlimeManager.Instance.GetSlimeData(panel.LastDrawKeys[0]).grade;
+        GradeType top = MinionManager.Instance.GetMinionData(panel.LastDrawKeys[0]).grade;
         Assert.GreaterOrEqual(top, GradeType.S, $"{interval}회차인데 S 이상이 없음 (최고 {top})");
 
         // 진행도 표시 0/interval로 돌아감
@@ -139,56 +139,68 @@ public class DrawShopPlayTest : InGamePlayTestBase
 
     // 슬라임 관리 화면: 모든 슬라임이 한 번씩, 보유/미보유 컨테이너, 각 컨테이너 등급 높은 순, 미보유 표시, 장착 슬롯 5개
     [UnityTest]
-    public IEnumerator SlimeManageCanvas_ShowsAllSlimes()
+    public IEnumerator MinionManageCanvas_ShowsAllMinions()
     {
         if (!Application.isPlaying) { BeforeEnterPlayMode(LOBBY_SCENE_PATH); yield return new EnterPlayMode(); }
         yield return WaitLobbyStart();
-        yield return SlimeManageCanvas_ShowsAllSlimesBody();
+        yield return MinionManageCanvas_ShowsAllMinionsBody();
     }
 
-    IEnumerator SlimeManageCanvas_ShowsAllSlimesBody()
+    IEnumerator MinionManageCanvas_ShowsAllMinionsBody()
     {
-        var canvas = Object.FindFirstObjectByType<Lobby.SlimeManageCanvas>(FindObjectsInactive.Include);
-        Assert.IsNotNull(canvas, "SlimeManageCanvas 없음");
+        var canvas = Object.FindFirstObjectByType<Lobby.MinionManageCanvas>(FindObjectsInactive.Include);
+        Assert.IsNotNull(canvas, "MinionManageCanvas 없음");
 
         // 아직 미보유인 슬라임 하나를 보유로 바꿔서 화면에 반영되는지도 확인
-        var slimeManager = UserDataManager.Instance.userSlimeManager;
-        SlimeData newlyOwned = SlimeManager.Instance.allSlimeDatas.FirstOrDefault(d => !slimeManager.GetUserSlime(d.key).own);
+        var minionManager = UserDataManager.Instance.userMinionManager;
+        MinionData newlyOwned = MinionManager.Instance.allMinionDatas.FirstOrDefault(d => !minionManager.GetUserMinion(d.key).own);
         if (newlyOwned != null)
-            slimeManager.AddUserSlime(newlyOwned.key);
+            minionManager.AddUserMinion(newlyOwned.key);
 
         canvas.OpenCanvas(null);
         yield return WaitFrames(3);
 
-        var shown = canvas.growth1SlimeEntryPanels.Where(p => p.gameObject.activeSelf).ToList();
-        var shownKeys = shown.Select(p => p.slimeData.key).ToList();
-        var allKeys = SlimeManager.Instance.allSlimeDatas.Select(d => d.key).ToList();
-        Assert.AreEqual(allKeys.Count, shown.Count, $"표시된 슬라임 수 (칸 {canvas.growth1SlimeEntryPanels.Length}개)");
+        var shown = canvas.growth1MinionEntryPanels.Where(p => p.gameObject.activeSelf).ToList();
+        var shownKeys = shown.Select(p => p.minionData.key).ToList();
+        var allKeys = MinionManager.Instance.allMinionDatas.Select(d => d.key).ToList();
+        Assert.AreEqual(allKeys.Count, shown.Count, $"표시된 슬라임 수 (칸 {canvas.growth1MinionEntryPanels.Length}개)");
         Assert.AreEqual(shownKeys.Count, shownKeys.Distinct().Count(), "같은 슬라임이 여러 칸");
         CollectionAssert.AreEquivalent(allKeys, shownKeys, "빠진 슬라임");
 
         // 보유/미보유 컨테이너 분리, 미보유 표시
         foreach (var panel in shown)
         {
-            bool own = slimeManager.GetUserSlime(panel.slimeData.key).own;
-            Assert.AreEqual(own ? canvas.ownContainer : canvas.unownContainer, panel.transform.parent, $"{panel.slimeData.key} 컨테이너");
-            Assert.AreEqual(!own, panel.unownPanel.activeSelf, $"{panel.slimeData.key} 미보유 표시");
+            bool own = minionManager.GetUserMinion(panel.minionData.key).own;
+            Assert.AreEqual(own ? canvas.ownContainer : canvas.unownContainer, panel.transform.parent, $"{panel.minionData.key} 컨테이너");
+            Assert.AreEqual(!own, panel.unownPanel.activeSelf, $"{panel.minionData.key} 미보유 표시");
+
+            // 카드 틀 색 = 등급
+            GradeCardColor cardColor = Grade.GetCardColor(panel.minionData.grade);
+            Assert.IsNotNull(panel.minionPanel.bgImage, $"{panel.minionData.key} bgImage 연결");
+            Assert.IsNotNull(panel.minionPanel.innerBorder, $"{panel.minionData.key} innerBorder 연결");
+            Assert.IsNotNull(panel.minionPanel.hightLightImage, $"{panel.minionData.key} hightLightImage 연결");
+            Assert.AreEqual((Color32)cardColor.bg, (Color32)panel.minionPanel.bgImage.color, $"{panel.minionData.key} 카드 Bg 색");
+            Assert.AreEqual((Color32)cardColor.innerBorder, (Color32)panel.minionPanel.innerBorder.color, $"{panel.minionData.key} 카드 InnerBorder 색");
+            Assert.AreEqual((Color32)cardColor.highLight, (Color32)panel.minionPanel.hightLightImage.color, $"{panel.minionData.key} 카드 HighLight 색");
+        }
+        Assert.Greater(shown.Select(p => (Color32)p.minionPanel.bgImage.color).Distinct().Count(), 1, "등급이 달라도 카드 색이 모두 같음");
+        {
         }
 
         // 각 컨테이너 안에서 화면 순서 = 등급 높은 순 (레전드 → 유니크 → 레어 → 노말). 새로 얻은 슬라임도 등급 자리에
         foreach (Transform container in new[] { canvas.ownContainer, canvas.unownContainer })
         {
-            var grades = container.GetComponentsInChildren<Lobby.Growth1SlimeEntryPanel>(false)
-                .Where(p => p.transform.parent == container && p.slimeData != null)
+            var grades = container.GetComponentsInChildren<Lobby.Growth1MinionEntryPanel>(false)
+                .Where(p => p.transform.parent == container && p.minionData != null)
                 .OrderBy(p => p.transform.GetSiblingIndex())
-                .Select(p => p.slimeData.grade).ToList();
+                .Select(p => p.minionData.grade).ToList();
             for (int i = 1; i < grades.Count; i++)
                 Assert.GreaterOrEqual((int)grades[i - 1], (int)grades[i], $"{container.name} {i}번째 칸 등급 순서: {string.Join(",", grades)}");
         }
         if (newlyOwned != null)
-            Assert.IsFalse(shown.First(p => p.slimeData.key == newlyOwned.key).unownPanel.activeSelf, "새로 얻은 슬라임이 미보유로 보임");
+            Assert.IsFalse(shown.First(p => p.minionData.key == newlyOwned.key).unownPanel.activeSelf, "새로 얻은 슬라임이 미보유로 보임");
 
-        Assert.AreEqual(slimeManager.userSlimeData.equiptedSlimes.Length, canvas.equipedSlotPanels.Length, "장착 슬롯 수");
+        Assert.AreEqual(minionManager.userMinionData.equiptedMinions.Length, canvas.equipedSlotPanels.Length, "장착 슬롯 수");
         AssertNoErrors();
     }
 }

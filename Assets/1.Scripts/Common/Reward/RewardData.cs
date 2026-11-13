@@ -12,8 +12,8 @@ public class RewardData
     {
         switch (rewardType)
         {
-            case RewardType.Slime:
-                return SlimeManager.Instance.GetSlimeData(value).Title;
+            case RewardType.Minion:
+                return MinionManager.Instance.GetMinionData(value).Title;
         }
         return value;
     }
@@ -21,18 +21,19 @@ public class RewardData
     {
         switch (rewardType)
         {
-            case RewardType.Slime:
-                return SlimeManager.Instance.GetSlimeData(value).thum;
+            case RewardType.Minion:
+                return MinionManager.Instance.GetMinionData(value).thum;
             case RewardType.Gold:
                 return Resources.Load<Sprite>("Icons/Gold");
+            // 아래 재화는 Resources/Icons/Currency 아이콘 (이전 경로 Icons/Dia 등은 파일이 없었음)
             case RewardType.Dia:
-                return Resources.Load<Sprite>("Icons/Dia");
+                return CurrencyInfo.GetSprite(CurrencyType.Dia);
             case RewardType.Energe:
-                return Resources.Load<Sprite>("Icons/Energe");
+                return Resources.Load<Sprite>("Icons/Currency/Energy");
             case RewardType.Exp:
                 return Resources.Load<Sprite>("Icons/Exp");
             case RewardType.DrawTicket:
-                return Resources.Load<Sprite>("Icons/DrawTicket");
+                return CurrencyInfo.GetSprite(CurrencyType.DrawTicket);
         }
         return null;
     }
@@ -40,9 +41,9 @@ public class RewardData
     {
         switch (rewardType)
         {
-            case RewardType.Slime:
+            case RewardType.Minion:
                 RewardCanvas.Instance.OpenCanvas(this);
-                UserDataManager.Instance.userSlimeManager.AddUserSlime(value);
+                UserDataManager.Instance.userMinionManager.AddUserMinion(value);
                 break;
             case RewardType.Gold:
                 UserDataManager.Instance.AddGold(int.Parse(value));
@@ -71,7 +72,7 @@ public class UserReward
 }
 public enum RewardType
 {
-    Slime,
+    Minion,
     Gold,
     Dia,
     Energe,

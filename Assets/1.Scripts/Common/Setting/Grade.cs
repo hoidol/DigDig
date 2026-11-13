@@ -25,6 +25,25 @@ public class Grade
                 return Color.white;
         }
     }
+    // 등급별 카드 틀 색 (슬라임 칸의 Bg / InnerBorder / HighLight). 등급 라벨(MinionGradePanel) 색과 같은 계열
+    public static GradeCardColor GetCardColor(GradeType grade)
+    {
+        switch (grade)
+        {
+            case GradeType.B:
+                return new GradeCardColor("#344FB4", "#4A6BD6", "#A9BEFF");
+            case GradeType.A:
+                return new GradeCardColor("#8A4FBA", "#A866DB", "#DDB5FF");
+            case GradeType.S:
+                return new GradeCardColor("#CAB046", "#E7D34A", "#FFF3A5");
+            case GradeType.SS:
+                return new GradeCardColor("#BA182E", "#DB3348", "#FFA3AE");
+            case GradeType.SSS:
+                return new GradeCardColor("#D9661A", "#F58E3A", "#FFD0A3");
+            default:
+                return new GradeCardColor("#8E8E8E", "#B4B4B4", "#EDEDED");
+        }
+    }
     public static string GetGradeText(GradeType grade)
     {
         switch (grade)
@@ -52,6 +71,16 @@ public class Grade
     }
 }
 
+public struct GradeCardColor
+{
+    public Color bg, innerBorder, highLight;
+    public GradeCardColor(string bgHex, string innerBorderHex, string highLightHex)
+    {
+        ColorUtility.TryParseHtmlString(bgHex, out bg);
+        ColorUtility.TryParseHtmlString(innerBorderHex, out innerBorder);
+        ColorUtility.TryParseHtmlString(highLightHex, out highLight);
+    }
+}
 
 public enum GradeType : int
 {

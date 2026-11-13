@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 지점 배열을 순서대로 이은 닫힌 고리(마지막 → 첫 지점까지) 계산. 경로를 도는 이동 오브젝트용 (HailSlime 등)
+// 지점 배열을 순서대로 이은 닫힌 고리(마지막 → 첫 지점까지) 계산. 경로를 도는 이동 오브젝트용 (HailMinion 등)
 public static class PathLoop
 {
     // 고리 전체 길이 (지점이 2개 미만이면 0)

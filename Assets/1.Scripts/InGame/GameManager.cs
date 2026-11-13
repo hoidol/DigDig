@@ -31,9 +31,9 @@ public class GameManager : MonoSingleton<GameManager>
     // public float breakTimer;
     public int waveIdx;
     // public DefenceType waveDefenceType; // 이번 wave에 소환될 적의 방어 타입 (wave 시작 시 DefenceWaveTypes로 결정)
-    public int slimeSpawnCount;
+    public int minionSpawnCount;
     public int drawItemCount;
-    public SlimeChancePity slimeChancePity = new SlimeChancePity(); // 슬라임 확률 연속 실패 보정 (한 판 동안 유지)
+    public MinionChancePity minionChancePity = new MinionChancePity(); // 슬라임 확률 연속 실패 보정 (한 판 동안 유지)
 
     async void Start()
     {
@@ -43,12 +43,12 @@ public class GameManager : MonoSingleton<GameManager>
             ItemManager.Instance.LoadTask,
             EnemyManager.Instance.LoadTask,
             AuthorityManager.Instance.LoadTask,
-            SlimeManager.Instance.LoadTask
+            MinionManager.Instance.LoadTask
         );
 
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
         GameEventBus.Subscribe<KingSlimeHpChangedEvent>(OnCharacterHpChangedEvent);
-        GameEventBus.Subscribe<SpawnSlimeEvent>(OnSpawnMinieEvent);
+        GameEventBus.Subscribe<SpawnMinionEvent>(OnSpawnMinieEvent);
 
         Debug.Log($"UserManager.STAGE_KEY {UserDataManager.difficultyType}");
         stageData = StageManager.Instance.GetStageData(UserDataManager.difficultyType);
@@ -67,21 +67,44 @@ public class GameManager : MonoSingleton<GameManager>
         else
             Debug.LogWarning("GameManager 캐릭터를 올릴 빈 타일 없음");
 
-        SlimeFieldController.Instance.slimeMaxCount += (int)KingSlime.Instance.statMgr.GetValue(StatType.MaxSlimeCount);
+        MinionFieldController.Instance.minionMaxCount += (int)KingSlime.Instance.statMgr.GetValue(StatType.MaxMinionCount);
 
         // 권능: 로비에서 해금된 묶음마다 고른 것 전부 (타일·킹 배치 후, 게임 시작 전)
         AuthoritySystem.Begin(UserDataManager.Instance.userAuthorityManager.GetActiveAuthorityKeys());
 
         GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
+        // 첫 플레이 튜토리얼: 페이드 전에 시작해 킹 위치 지정 같은 준비가 화면이 밝아지기 전에 끝나게 한다
+        if (TutorialManager.Instance != null)
+            TutorialManager.Instance.TryBegin(TutorialType.FirstPlay);
+
         FadeCanvs.Instance.FadeIn(stageData.Title, () =>
         {
-            StartGame();
+            StartGameAfterTutorial().Forget();
         });
     }
 
-    void StartGame()
+    // 튜토리얼이 진행 중이면 끝나거나 튜토리얼이 wave 시작을 요청할 때(StartWaveTutorialStep)까지 대기
+    async UniTaskVoid StartGameAfterTutorial()
     {
+        while (!isGameStarted && TutorialManager.Instance != null && TutorialManager.Instance.IsPlaying)
+        {
+            if (await UniTask.Yield(PlayerLoopTiming.Update, destroyCancellationToken).SuppressCancellationThrow())
+                return;
+        }
+        StartGame();
+    }
+
+    bool isGameStarted;
+    public bool IsGameStarted => isGameStarted;
+
+    // wave 0 시작. 한 판에 한 번만 (튜토리얼이 먼저 불렀으면 페이드 뒤 호출은 무시)
+    public void StartGame()
+    {
+        if (isGameStarted)
+            return;
+        isGameStarted = true;
+
         waveIdx = 0;
         gameTimer = 0;
         isPlaying = true;
@@ -292,9 +315,9 @@ public class GameManager : MonoSingleton<GameManager>
         killEnemyCount++;
     }
 
-    public void OnSpawnMinieEvent(SpawnSlimeEvent e)
+    public void OnSpawnMinieEvent(SpawnMinionEvent e)
     {
-        slimeSpawnCount++;
+        minionSpawnCount++;
     }
     public Wave GetWave(int wIdx)
     {

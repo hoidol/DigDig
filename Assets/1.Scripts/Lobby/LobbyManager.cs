@@ -18,13 +18,20 @@ namespace Lobby
 
         async void Start()
         {
+            // 처음 실행한 유저는 로비 대신 바로 InGame (첫 플레이 튜토리얼). 에너지 소모 없음
+            if (TutorialManager.TryRedirectToFirstPlay())
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("InGame");
+                return;
+            }
+
             await UniTask.WhenAll(
                 StageManager.Instance.LoadTask,
                 BulletManager.Instance.LoadTask,
                 ItemManager.Instance.LoadTask,
                 EnemyManager.Instance.LoadTask,
                 AuthorityManager.Instance.LoadTask,
-                SlimeManager.Instance.LoadTask
+                MinionManager.Instance.LoadTask
             );
             var fadeDone = new UniTaskCompletionSource();
             StartLobby(fadeDone.Task);
@@ -137,7 +144,7 @@ namespace Lobby
 public enum LobbyState
 {
     Shop,
-    Slime,
+    Minion,
     Battle,
     KingSlimeManagement,
     Town

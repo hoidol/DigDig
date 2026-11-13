@@ -176,7 +176,7 @@ public enum ReinforceSlotType
 public enum ReinforceTargetType //총 7개
 {
     KingSlime, //1개
-    Slime, //5개
+    Minion, //5개
     None, //꽝
 }
 

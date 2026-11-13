@@ -55,9 +55,9 @@ public class AuthorityAbilityTest
     [Test]
     public void KingSeal_AllDifferentForms()
     {
-        var five = new[] { SlimeTag.Shooter | SlimeTag.Status, SlimeTag.Zone, SlimeTag.Orbit, SlimeTag.Support, SlimeTag.Special };
+        var five = new[] { MinionTag.Shooter | MinionTag.Status, MinionTag.Zone, MinionTag.Orbit, MinionTag.Support, MinionTag.Special };
         Assert.IsTrue(KingSealAuthority.AllDifferentForms(five));
-        Assert.IsFalse(KingSealAuthority.AllDifferentForms(new[] { SlimeTag.Shooter, SlimeTag.Shooter | SlimeTag.Heavy, SlimeTag.Orbit, SlimeTag.Support, SlimeTag.Special }), "형태 중복");
+        Assert.IsFalse(KingSealAuthority.AllDifferentForms(new[] { MinionTag.Shooter, MinionTag.Shooter | MinionTag.Heavy, MinionTag.Orbit, MinionTag.Support, MinionTag.Special }), "형태 중복");
         Assert.IsFalse(KingSealAuthority.AllDifferentForms(five.Take(4)), "5종 미만");
     }
 

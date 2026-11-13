@@ -59,6 +59,7 @@ public class DrawItemButton : ButtonUI
 
         int price = GetDrawPrice();
         KingSlime.Instance.AddCoin(-price);
+        AchievementManager.Report(AchievementType.DrawItem); // 시도마다 (확률 실패 포함)
         System.Action onFail = null;
         if (AuthoritySystem.Has<ArtisanHammerAuthority>())
             onFail = () => KingSlime.Instance.AddCoin(ArtisanHammerAuthority.GetRefund(price));

@@ -68,6 +68,16 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return UpgradeInLobby(upgradeStat, 1);
 
         // ── 2. 전투 버튼 → 인게임: 에너지 차감, 업그레이드 반영 ──
+        current = "에너지 부족";
+        User.userData.energe = GameSetting.PLAY_COST_ENERGE - 1;
+        Lobby.LobbyManager.Instance.OpenCanvas(LobbyState.Battle);
+        yield return WaitFrames(3);
+        (Lobby.LobbyManager.Instance.GetLobbyCanvas(LobbyState.Battle) as BattleCanvas).OnClickedBtn();
+        yield return WaitFrames(10);
+        Assert.AreEqual("Lobby", UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, "에너지가 모자라면 시작 안 함");
+        Assert.AreEqual(GameSetting.PLAY_COST_ENERGE - 1, User.userData.energe, "에너지가 모자라면 차감 안 함");
+        User.userData.energe = GameSetting.MAX_ENERGE;
+
         current = "1판 시작";
         int energe = User.userData.energe;
         yield return StartGameFromLobby();
@@ -100,7 +110,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         while (GameManager.Instance.waveIdx < FIRST_RUN_WAVE)
             yield return SkipWave();
         Assert.AreEqual(FIRST_RUN_WAVE, GameManager.Instance.waveIdx);
-        SlimeFieldController.Instance.mergeCount = FIRST_RUN_MERGE;
+        MinionFieldController.Instance.mergeCount = FIRST_RUN_MERGE;
 
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
@@ -168,7 +178,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
 
         gold = User.userData.gold;
         drawTicket = User.userData.drawTicket;
-        SlimeFieldController.Instance.mergeCount = 0;
+        MinionFieldController.Instance.mergeCount = 0;
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         FailCanvas.Instance.OnClickedCancel();

@@ -44,7 +44,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 
     public override void CloseCanvas()
     {
-        SlimeFieldController.Instance.tilePickCallback = null;
+        MinionFieldController.Instance.tilePickCallback = null;
         base.CloseCanvas();
     }
 
@@ -121,7 +121,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
         {
             SetStep(SelectItemStep.SelectTile);
             selectedPanel.SetItemData(data);
-            SlimeFieldController.Instance.tilePickCallback = OnTilePicked;
+            MinionFieldController.Instance.tilePickCallback = OnTilePicked;
             return;
         }
 

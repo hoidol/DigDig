@@ -34,19 +34,13 @@ public class AdRefreshItemButton : ButtonUI
             return;
         }
 
-        // 광고 제거 구매자는 광고 없이 바로 갱신
-        if (UserDataManager.Instance.isAdRemoved)
-        {
-            Refresh();
-            return;
-        }
-
+        // 광고 제거 구매자는 AdManager.Show가 광고 없이 성공 처리
         button.interactable = false; // 광고 보는 동안 중복 클릭 방지
         AdManager.Show("refresh_item", AdType.RA, async (success) =>
         {
             await UniTask.SwitchToMainThread(); // 광고 SDK 콜백은 메인 스레드가 아닐 수 있음
             if (success)
-                Refresh();
+                Refresh(); // 안에서 UpdateButton
             else
                 UpdateButton();
         });

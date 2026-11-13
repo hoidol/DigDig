@@ -32,8 +32,8 @@ public class RewardCanvas : CanvasUI<RewardCanvas>
         valueText.text = rewardData.GetValueToString();
         switch (rewardData.rewardType)
         {
-            case RewardType.Slime:
-                titleText.text = TranslateManager.GetText("New Slime");
+            case RewardType.Minion:
+                titleText.text = TranslateManager.GetText("New Minion");
             break;
         }
     }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class TileItemInfoPanel : MonoBehaviour
 {
     public GameObject obj;
-    public TMP_Text nameText;
+    public TMP_Text lvText;
     public TMP_Text descText;
     public Image thumImage;
     public SellTileItemButton sellTileItemButton;
@@ -31,7 +31,7 @@ public class TileItemInfoPanel : MonoBehaviour
 
         ItemData data = item.itemData;
         // 강화 가능한 아이템은 레벨 표시
-        nameText.text = item.CanUpgrade ? string.Format(TranslateManager.GetText("TileItem_Level"), data.Title, item.upgradeLevel) : data.Title;
+        lvText.text = item.CanUpgrade ? $"Lv.{item.upgradeLevel}" : "Lv.1";
         descText.text = item.GetDescription();
         thumImage.sprite = data.thum;
         thumImage.gameObject.SetActive(data.thum != null);

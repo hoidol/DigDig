@@ -7,13 +7,13 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-// 진화 타일(EvolutionTileItem) → Slime.Evolve → 슬라임별 [각성] 발현 검사
+// 진화 타일(EvolutionTileItem) → Minion.Evolve → 슬라임별 [각성] 발현 검사
 // - 진화 타일 흐름: 최대 머지 레벨만 진화, 진화시키면 타일 사라짐, 옮겨도 유지, 이미 올라가 있는 슬라임에 설치해도 진화, 희생·성장·조커는 진화 안 함
 // - 각성 효과: 상태 값(개수·확률), 발사 탄 스펙(효과·배율), 실제 피해(가시방패·화염 각성 스킬), 포위 진형 버프, 시체수집 보너스
 public class EvolutionPlayTest : InGamePlayTestBase
 {
     const float TIME_SCALE = 4f;
-    const int MAX = SlimeData.MAX_MERGE_LEVEL;
+    const int MAX = MinionData.MAX_MERGE_LEVEL;
     const string ELITE_PREFAB_PATH = "Assets/3.Prefabs/Stage/0/Enemy/EliteEnemy/NormalEliteEnemy.prefab";
     const float SPAWN_TIMEOUT = 10f; // 실시간(초)
 
@@ -45,14 +45,14 @@ public class EvolutionPlayTest : InGamePlayTestBase
         Assert.IsInstanceOf<EvolutionTileItem>(evoTile.tileItem, "진화 타일이 설치되지 않음");
 
         // 최대 레벨 미만은 진화 안 함
-        Slime low = SpawnSlime("Iron", evoTile, MAX - 1);
+        Minion low = SpawnMinion("Iron", evoTile, MAX - 1);
         yield return WaitFrames(2);
         Assert.IsFalse(low.isEvolved, "최대 레벨 미만인데 진화함");
-        SlimeFieldController.Instance.RemoveFieldSlime(low);
+        MinionFieldController.Instance.RemoveFieldMinion(low);
         yield return WaitFrames(2);
 
         // 최대 레벨은 올라가면 진화, 진화 타일은 사라짐(1회용)
-        Slime max = SpawnSlime("Iron", evoTile, MAX);
+        Minion max = SpawnMinion("Iron", evoTile, MAX);
         yield return WaitFrames(2);
         Assert.IsTrue(max.isEvolved, "최대 레벨인데 진화 타일 위에서 진화하지 않음");
         Assert.IsFalse(max.CanEvolve, "진화 후에도 CanEvolve가 true");
@@ -68,10 +68,10 @@ public class EvolutionPlayTest : InGamePlayTestBase
         Assert.IsTrue(max.isEvolved, "진화 타일에서 내려오자 진화가 풀림");
 
         // 사라진 칸에 다른 최대 레벨 슬라임을 올려도 진화 안 함
-        Slime second = SpawnSlime("Bounce", evoTile, MAX);
+        Minion second = SpawnMinion("Bounce", evoTile, MAX);
         yield return WaitFrames(2);
         Assert.IsFalse(second.isEvolved, "진화 타일이 사라진 칸에서 진화함");
-        SlimeFieldController.Instance.RemoveFieldSlime(second);
+        MinionFieldController.Instance.RemoveFieldMinion(second);
         yield return WaitFrames(2);
 
         // 희생·성장·조커는 진화하지 않음 (최대 레벨에서 쓸 각성이 없음), 진화 타일도 남음
@@ -79,25 +79,25 @@ public class EvolutionPlayTest : InGamePlayTestBase
         yield return WaitFrames(2);
         foreach (string key in new[] { "Sacrifice", "GrowUp", "Joker" })
         {
-            Slime s = SpawnSlime(key, evoTile, MAX);
+            Minion s = SpawnMinion(key, evoTile, MAX);
             yield return WaitFrames(2);
             Assert.IsFalse(s.CanEvolve, $"{key}: CanEvolve가 true");
             Assert.IsFalse(s.isEvolved, $"{key}: 진화함");
-            SlimeFieldController.Instance.RemoveFieldSlime(s);
+            MinionFieldController.Instance.RemoveFieldMinion(s);
             yield return WaitFrames(2);
         }
         Assert.IsInstanceOf<EvolutionTileItem>(evoTile.tileItem, "진화하지 않는 슬라임인데 진화 타일이 사라짐");
 
         // 진화 타일 뽑기 후보 수에 진화한 슬라임·진화 안 하는 슬라임은 안 셈
-        Slime growUp = SpawnSlime("GrowUp", GetFreeTile(evoTile, other), MAX);
+        Minion growUp = SpawnMinion("GrowUp", GetFreeTile(evoTile, other), MAX);
         yield return WaitFrames(2);
-        Assert.AreEqual(0, EvolutionTileItem.EvolvableSlimeCount, "진화할 수 없는 슬라임이 진화 후보로 셈");
-        SlimeFieldController.Instance.RemoveFieldSlime(growUp);
+        Assert.AreEqual(0, EvolutionTileItem.EvolvableMinionCount, "진화할 수 없는 슬라임이 진화 후보로 셈");
+        MinionFieldController.Instance.RemoveFieldMinion(growUp);
 
         // 진화된 슬라임을 없애고 같은 종을 다시 소환하면(풀 재사용 포함) 진화 안 된 상태
-        SlimeFieldController.Instance.RemoveFieldSlime(max);
+        MinionFieldController.Instance.RemoveFieldMinion(max);
         yield return WaitFrames(2);
-        Slime fresh = SpawnSlime("Iron", other, MAX);
+        Minion fresh = SpawnMinion("Iron", other, MAX);
         yield return WaitFrames(2);
         Assert.IsFalse(fresh.isEvolved, "새로 소환한 슬라임이 진화 상태");
 
@@ -107,14 +107,14 @@ public class EvolutionPlayTest : InGamePlayTestBase
         Assert.IsTrue(fresh.isEvolved, "슬라임 위에 진화 타일을 설치했는데 진화하지 않음");
         yield return WaitTileItemRemoved(other);
         Assert.IsNull(other.tileItem, "슬라임 위에 설치해 진화시킨 진화 타일이 남아 있음");
-        SlimeFieldController.Instance.RemoveFieldSlime(fresh);
+        MinionFieldController.Instance.RemoveFieldMinion(fresh);
         yield return WaitFrames(2);
     }
 
     // ── 상태 값으로 보이는 각성 ─────────────────────────────
 
     [UnityTest]
-    public IEnumerator Evolve_ChangesSlimeValues()
+    public IEnumerator Evolve_ChangesMinionValues()
     {
         if (!Application.isPlaying) { BeforeEnterPlayMode(); yield return new EnterPlayMode(); }
         yield return WaitGameStart();
@@ -125,70 +125,70 @@ public class EvolutionPlayTest : InGamePlayTestBase
     IEnumerator ValuesBody()
     {
         // 빙석: 눈 1개 → 2개
-        HailSlime hail = (HailSlime)SpawnSlime("Hail", GetFreeTile(), MAX);
+        HailMinion hail = (HailMinion)SpawnMinion("Hail", GetFreeTile(), MAX);
         yield return WaitFrames(2);
         Assert.AreEqual(1, hail.hailCount);
         hail.Evolve();
         yield return WaitFrames(3);
-        Assert.AreEqual(HailSlime.EVOLVE_HAIL_COUNT, hail.hailCount, "빙석: 눈 개수");
-        Assert.GreaterOrEqual(hail.GetComponentsInChildren<HailStone>(true).Length, HailSlime.EVOLVE_HAIL_COUNT, "빙석: 눈 오브젝트가 늘지 않음");
-        SlimeFieldController.Instance.RemoveFieldSlime(hail);
+        Assert.AreEqual(HailMinion.EVOLVE_HAIL_COUNT, hail.hailCount, "빙석: 눈 개수");
+        Assert.GreaterOrEqual(hail.GetComponentsInChildren<HailStone>(true).Length, HailMinion.EVOLVE_HAIL_COUNT, "빙석: 눈 오브젝트가 늘지 않음");
+        MinionFieldController.Instance.RemoveFieldMinion(hail);
 
         // 진흙: 구슬 최대 +1
-        MudSlime mud = (MudSlime)SpawnSlime("Mud", GetFreeTile(), MAX);
+        MudMinion mud = (MudMinion)SpawnMinion("Mud", GetFreeTile(), MAX);
         int orbs = mud.maxOrbCount;
         mud.Evolve();
-        Assert.AreEqual(orbs + MudSlime.EVOLVE_ADD_ORB_COUNT, mud.maxOrbCount, "진흙: 구슬 최대 수");
-        SlimeFieldController.Instance.RemoveFieldSlime(mud);
+        Assert.AreEqual(orbs + MudMinion.EVOLVE_ADD_ORB_COUNT, mud.maxOrbCount, "진흙: 구슬 최대 수");
+        MinionFieldController.Instance.RemoveFieldMinion(mud);
 
         // 광란: 추가 탄 2발
-        DopamineSlime dopamine = (DopamineSlime)SpawnSlime("Dopamine", GetFreeTile(), MAX);
+        DopamineMinion dopamine = (DopamineMinion)SpawnMinion("Dopamine", GetFreeTile(), MAX);
         dopamine.Evolve();
-        Assert.AreEqual(DopamineSlime.EVOLVE_EXTRA_SHOT_COUNT, dopamine.extraShotCount, "광란: 추가 탄 수");
-        SlimeFieldController.Instance.RemoveFieldSlime(dopamine);
+        Assert.AreEqual(DopamineMinion.EVOLVE_EXTRA_SHOT_COUNT, dopamine.extraShotCount, "광란: 추가 탄 수");
+        MinionFieldController.Instance.RemoveFieldMinion(dopamine);
 
         // 지뢰: 한 번에 2개
-        MineSlime mine = (MineSlime)SpawnSlime("Mine", GetFreeTile(), MAX);
+        MineMinion mine = (MineMinion)SpawnMinion("Mine", GetFreeTile(), MAX);
         Assert.AreEqual(1, mine.ShootCount);
         mine.Evolve();
-        Assert.AreEqual(MineSlime.EVOLVE_MINES_PER_THROW, mine.ShootCount, "지뢰: 한 번에 던지는 수");
-        SlimeFieldController.Instance.RemoveFieldSlime(mine);
+        Assert.AreEqual(MineMinion.EVOLVE_MINES_PER_THROW, mine.ShootCount, "지뢰: 한 번에 던지는 수");
+        MinionFieldController.Instance.RemoveFieldMinion(mine);
 
         // 사냥꾼: 2회마다 저격
-        HunterSlime hunter = (HunterSlime)SpawnSlime("Hunter", GetFreeTile(), MAX);
-        Assert.Greater(hunter.snipeInterval, HunterSlime.EVOLVE_SNIPE_INTERVAL);
+        HunterMinion hunter = (HunterMinion)SpawnMinion("Hunter", GetFreeTile(), MAX);
+        Assert.Greater(hunter.snipeInterval, HunterMinion.EVOLVE_SNIPE_INTERVAL);
         hunter.Evolve();
-        Assert.AreEqual(HunterSlime.EVOLVE_SNIPE_INTERVAL, hunter.snipeInterval, "사냥꾼: 저격 주기");
-        SlimeFieldController.Instance.RemoveFieldSlime(hunter);
+        Assert.AreEqual(HunterMinion.EVOLVE_SNIPE_INTERVAL, hunter.snipeInterval, "사냥꾼: 저격 주기");
+        MinionFieldController.Instance.RemoveFieldMinion(hunter);
 
         // 박격포: 슬로우 확률 50%
-        MortarSlime mortar = (MortarSlime)SpawnSlime("Mortar", GetFreeTile(), MAX);
-        Assert.Less(mortar.slowChance, MortarSlime.EVOLVE_SLOW_CHANCE);
+        MortarMinion mortar = (MortarMinion)SpawnMinion("Mortar", GetFreeTile(), MAX);
+        Assert.Less(mortar.slowChance, MortarMinion.EVOLVE_SLOW_CHANCE);
         mortar.Evolve();
-        Assert.AreEqual(MortarSlime.EVOLVE_SLOW_CHANCE, mortar.slowChance, 0.0001f, "박격포: 슬로우 확률");
-        SlimeFieldController.Instance.RemoveFieldSlime(mortar);
+        Assert.AreEqual(MortarMinion.EVOLVE_SLOW_CHANCE, mortar.slowChance, 0.0001f, "박격포: 슬로우 확률");
+        MinionFieldController.Instance.RemoveFieldMinion(mortar);
 
         // 회전: 모든 구슬에 스턴
-        OrbitSlime orbit = (OrbitSlime)SpawnSlime("Orbit", GetFreeTile(), MAX);
+        OrbitMinion orbit = (OrbitMinion)SpawnMinion("Orbit", GetFreeTile(), MAX);
         Assert.IsFalse(orbit.orbitMachine.orbitOrbs.Any(o => o.bulletBehaviors.OfType<StunOnHitBehavior>().Any()), "회전: 진화 전에 스턴이 있음");
         orbit.Evolve();
         Assert.IsTrue(orbit.orbitMachine.orbitOrbs.Count > 0 && orbit.orbitMachine.orbitOrbs.All(o => o.bulletBehaviors.OfType<StunOnHitBehavior>().Any()), "회전: 구슬에 스턴이 붙지 않음");
-        SlimeFieldController.Instance.RemoveFieldSlime(orbit);
+        MinionFieldController.Instance.RemoveFieldMinion(orbit);
 
         // 철벽: 모든 방패에 가시
-        ShieldSlime shield = (ShieldSlime)SpawnSlime("Shield", GetFreeTile(), MAX);
+        ShieldMinion shield = (ShieldMinion)SpawnMinion("Shield", GetFreeTile(), MAX);
         shield.Evolve();
         Assert.IsTrue(shield.orbitMachine.orbitOrbs.Count > 0 && shield.orbitMachine.orbitOrbs.OfType<ShieldOrbitOrb>().All(o => o.thornMaxHpRatio > 0), "철벽: 방패에 가시가 붙지 않음");
-        SlimeFieldController.Instance.RemoveFieldSlime(shield);
+        MinionFieldController.Instance.RemoveFieldMinion(shield);
 
         // 버서커: 최대 중첩일 때 공격력 ×1.2
-        BerserkerSlime berserker = (BerserkerSlime)SpawnSlime("Berserker", GetFreeTile(), MAX);
+        BerserkerMinion berserker = (BerserkerMinion)SpawnMinion("Berserker", GetFreeTile(), MAX);
         berserker.stack = berserker.maxStack;
-        berserker.UpdateSlime();
+        berserker.UpdateMinion();
         float ap = berserker.statDic[StatType.AttackPower];
         berserker.Evolve();
-        Assert.AreEqual(ap * BerserkerSlime.EVOLVE_MAX_STACK_ATTACK_POWER_MUL, berserker.statDic[StatType.AttackPower], ap * 0.001f, "버서커: 최대 중첩 공격력");
-        SlimeFieldController.Instance.RemoveFieldSlime(berserker);
+        Assert.AreEqual(ap * BerserkerMinion.EVOLVE_MAX_STACK_ATTACK_POWER_MUL, berserker.statDic[StatType.AttackPower], ap * 0.001f, "버서커: 최대 중첩 공격력");
+        MinionFieldController.Instance.RemoveFieldMinion(berserker);
         yield return WaitFrames(2);
     }
 
@@ -215,7 +215,7 @@ public class EvolutionPlayTest : InGamePlayTestBase
         // 강철: 엘리트·보스 배율 +0.2
         CheckBullet("Iron", spec => GetIronMul(spec) > 0f, "강철: 배율", compare: true);
         // 낙인: 최대 중첩 5
-        CheckBullet("Stigma", spec => GetStigmaMaxStack(spec) >= StigmaSlime.EVOLVE_MAX_STACK, "낙인: 최대 중첩");
+        CheckBullet("Stigma", spec => GetStigmaMaxStack(spec) >= StigmaMinion.EVOLVE_MAX_STACK, "낙인: 최대 중첩");
         yield return WaitFrames(2);
     }
 
@@ -235,8 +235,8 @@ public class EvolutionPlayTest : InGamePlayTestBase
     void CheckBullet(string key, System.Func<BulletSpec, bool> evolvedCheck, string label, bool compare = false)
     {
         current = key;
-        Slime slime = SpawnSlime(key, GetFreeTile(), MAX);
-        AllyBulletObject before = slime.GetBullet();
+        Minion minion = SpawnMinion(key, GetFreeTile(), MAX);
+        AllyBulletObject before = minion.GetBullet();
         Assert.IsNotNull(before, $"{label}: 탄 없음");
         if (compare)
             ironBefore = GetIronMul(before.spec);
@@ -244,14 +244,14 @@ public class EvolutionPlayTest : InGamePlayTestBase
             Assert.IsFalse(evolvedCheck(before.spec), $"{label}: 진화 전에 이미 적용됨");
         before.gameObject.SetActive(false);
 
-        slime.Evolve();
-        AllyBulletObject after = slime.GetBullet();
+        minion.Evolve();
+        AllyBulletObject after = minion.GetBullet();
         if (compare)
-            Assert.AreEqual(ironBefore + IronSlime.EVOLVE_ELITE_BOSS_MUL_ADD, GetIronMul(after.spec), 0.0001f, label);
+            Assert.AreEqual(ironBefore + IronMinion.EVOLVE_ELITE_BOSS_MUL_ADD, GetIronMul(after.spec), 0.0001f, label);
         else
             Assert.IsTrue(evolvedCheck(after.spec), $"{label}: 진화 후 적용 안 됨");
         after.gameObject.SetActive(false);
-        SlimeFieldController.Instance.RemoveFieldSlime(slime);
+        MinionFieldController.Instance.RemoveFieldMinion(minion);
     }
 
     // ── 실제 피해로 보는 각성 ──────────────────────────────
@@ -277,7 +277,7 @@ public class EvolutionPlayTest : InGamePlayTestBase
         enemy.AddBlocker(); // 제자리에 묶어 둠
 
         // 가시방패: 막힌 적에게 1초마다 최대 체력 1% (피해는 철벽 슬라임 누적 피해로 확인 → 킹 공격과 구분)
-        ShieldSlime shield = (ShieldSlime)SpawnSlime("Shield", GetFreeTile(), MAX);
+        ShieldMinion shield = (ShieldMinion)SpawnMinion("Shield", GetFreeTile(), MAX);
         ShieldOrbitOrb orb = shield.orbitMachine.orbitOrbs.OfType<ShieldOrbitOrb>().First();
         typeof(ShieldOrbitOrb).GetMethod("TryBlock", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(orb, new object[] { enemy });
         Assert.AreEqual(1, orb.BlockedCount, "방패가 적을 막지 못함");
@@ -286,26 +286,26 @@ public class EvolutionPlayTest : InGamePlayTestBase
         Assert.AreEqual(0f, shield.AccumulatedDamage, "진화 전인데 가시 피해");
         shield.Evolve();
         yield return WaitRealtime(2.5f / TIME_SCALE);
-        Assert.GreaterOrEqual(shield.AccumulatedDamage, enemy.MaxHp * ShieldSlime.EVOLVE_THORN_MAX_HP_RATIO * 0.99f, "가시방패 피해가 없음");
-        SlimeFieldController.Instance.RemoveFieldSlime(shield);
+        Assert.GreaterOrEqual(shield.AccumulatedDamage, enemy.MaxHp * ShieldMinion.EVOLVE_THORN_MAX_HP_RATIO * 0.99f, "가시방패 피해가 없음");
+        MinionFieldController.Instance.RemoveFieldMinion(shield);
         yield return WaitFrames(2);
 
         // 화염 각성: 5초마다 사거리 안 적에게 피해 + 화상 (일반 공격은 공속 0으로 막고 확인)
         enemy.AddBlocker();
-        FlameSlime flame = (FlameSlime)SpawnSlime("Flame", GetFreeTile(), MAX);
+        FlameMinion flame = (FlameMinion)SpawnMinion("Flame", GetFreeTile(), MAX);
         enemy.transform.position = flame.transform.position;
         flame.statDic[StatType.AttackSpeed] = 0;
         flame.AccumulatedDamage = 0;
-        yield return WaitRealtime((FlameSlime.EVOLVE_SKILL_COOLTIME + 1f) / TIME_SCALE);
+        yield return WaitRealtime((FlameMinion.EVOLVE_SKILL_COOLTIME + 1f) / TIME_SCALE);
         Assert.AreEqual(0f, flame.AccumulatedDamage, "진화 전인데 화염 피해");
 
         flame.Evolve();
         flame.statDic[StatType.AttackSpeed] = 0;
         enemy.transform.position = flame.transform.position;
-        yield return WaitRealtime((FlameSlime.EVOLVE_SKILL_COOLTIME + 1f) / TIME_SCALE);
+        yield return WaitRealtime((FlameMinion.EVOLVE_SKILL_COOLTIME + 1f) / TIME_SCALE);
         Assert.Greater(flame.AccumulatedDamage, 0f, "화염 각성 스킬 피해 없음");
         Assert.IsTrue(enemy.GetComponent<StatusEffectHandler>().HasEffect("Flame"), "화염 각성 스킬 화상 없음");
-        SlimeFieldController.Instance.RemoveFieldSlime(flame);
+        MinionFieldController.Instance.RemoveFieldMinion(flame);
         Time.timeScale = 1f;
         yield return WaitFrames(2);
     }
@@ -336,7 +336,7 @@ public class EvolutionPlayTest : InGamePlayTestBase
         AssertNoErrors();
     }
 
-    static bool IsUsable(Tile t) => t.tileItem == null && (t.tileObject == null || t.tileObject is Slime);
+    static bool IsUsable(Tile t) => t.tileItem == null && (t.tileObject == null || t.tileObject is Minion);
 
     static readonly Vector2Int[] CROSS = { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(-1, 0), new Vector2Int(1, 0) };
 
@@ -360,16 +360,16 @@ public class EvolutionPlayTest : InGamePlayTestBase
         {
             if (t.isBlocked)
                 t.Unblock();
-            if (t.tileObject is Slime s)
-                SlimeFieldController.Instance.RemoveFieldSlime(s);
+            if (t.tileObject is Minion s)
+                MinionFieldController.Instance.RemoveFieldMinion(s);
         }
         yield return WaitFrames(2);
 
-        Slime[] hosts = cross.Select(t => SpawnSlime("Iron", t, 0)).ToArray();
+        Minion[] hosts = cross.Select(t => SpawnMinion("Iron", t, 0)).ToArray();
         yield return WaitFrames(2);
         float baseAp = hosts[0].statDic[StatType.AttackPower];
 
-        CrossBuffSlime rage = (CrossBuffSlime)SpawnSlime("Rage", center, MAX);
+        CrossBuffMinion rage = (CrossBuffMinion)SpawnMinion("Rage", center, MAX);
         yield return WaitFrames(3);
         float buffed = hosts[0].statDic[StatType.AttackPower];
         Assert.Greater(buffed, baseAp, "격노 버프가 걸리지 않음");
@@ -378,19 +378,19 @@ public class EvolutionPlayTest : InGamePlayTestBase
 
         rage.Evolve();
         yield return WaitFrames(3);
-        float expected = 1f + (rage.buffValue - 1f) * (1f + CrossBuffSlime.EVOLVE_SURROUND_BONUS);
+        float expected = 1f + (rage.buffValue - 1f) * (1f + CrossBuffMinion.EVOLVE_SURROUND_BONUS);
         Assert.AreEqual(expected, rage.EffectiveBuffValue, 0.0001f, "포위 진형 버프 값");
         Assert.AreEqual(baseAp * expected, hosts[0].statDic[StatType.AttackPower], baseAp * 0.001f, "포위 진형 버프가 주변 슬라임에 적용 안 됨");
 
         // 한 칸이 비면 포위 해제 → 원래 버프 값
-        SlimeFieldController.Instance.RemoveFieldSlime(hosts[3]);
+        MinionFieldController.Instance.RemoveFieldMinion(hosts[3]);
         yield return WaitFrames(3);
         Assert.IsFalse(rage.IsSurrounded());
         Assert.AreEqual(buffed, hosts[0].statDic[StatType.AttackPower], baseAp * 0.001f, "포위가 풀렸는데 보너스가 남음");
 
-        SlimeFieldController.Instance.RemoveFieldSlime(rage);
+        MinionFieldController.Instance.RemoveFieldMinion(rage);
         for (int i = 0; i < 3; i++)
-            SlimeFieldController.Instance.RemoveFieldSlime(hosts[i]);
+            MinionFieldController.Instance.RemoveFieldMinion(hosts[i]);
         yield return WaitFrames(2);
     }
 
@@ -415,13 +415,13 @@ public class EvolutionPlayTest : InGamePlayTestBase
         elite.curHp = 0f;
         Assert.LessOrEqual(elite.CurHp, 0f);
 
-        ScavengerSlime normal = (ScavengerSlime)SpawnSlime("Scavenger", GetFreeTile(), MAX);
-        ScavengerSlime evolved = (ScavengerSlime)SpawnSlime("Scavenger", GetFreeTile(), MAX);
+        ScavengerMinion normal = (ScavengerMinion)SpawnMinion("Scavenger", GetFreeTile(), MAX);
+        ScavengerMinion evolved = (ScavengerMinion)SpawnMinion("Scavenger", GetFreeTile(), MAX);
         evolved.Evolve();
         yield return WaitFrames(2);
 
-        MethodInfo onDead = typeof(ScavengerSlime).GetMethod("OnEnemyDead", BindingFlags.NonPublic | BindingFlags.Instance);
-        int coinPerKill = ((ScavengerSlimeData)SlimeManager.Instance.GetSlimeData("Scavenger")).coinPerKill;
+        MethodInfo onDead = typeof(ScavengerMinion).GetMethod("OnEnemyDead", BindingFlags.NonPublic | BindingFlags.Instance);
+        int coinPerKill = ((ScavengerMinionData)MinionManager.Instance.GetMinionData("Scavenger")).coinPerKill;
 
         elite.transform.position = normal.transform.position;
         int coin = KingSlime.Instance.coin;
@@ -431,11 +431,11 @@ public class EvolutionPlayTest : InGamePlayTestBase
         elite.transform.position = evolved.transform.position;
         coin = KingSlime.Instance.coin;
         onDead.Invoke(evolved, new object[] { new EnemyDeadEvent(elite) });
-        Assert.AreEqual(coin + coinPerKill + ScavengerSlime.EVOLVE_ELITE_BOSS_BONUS_COIN, KingSlime.Instance.coin, "진화 후 엘리트 보너스 코인");
+        Assert.AreEqual(coin + coinPerKill + ScavengerMinion.EVOLVE_ELITE_BOSS_BONUS_COIN, KingSlime.Instance.coin, "진화 후 엘리트 보너스 코인");
 
         Object.Destroy(holder);
-        SlimeFieldController.Instance.RemoveFieldSlime(normal);
-        SlimeFieldController.Instance.RemoveFieldSlime(evolved);
+        MinionFieldController.Instance.RemoveFieldMinion(normal);
+        MinionFieldController.Instance.RemoveFieldMinion(evolved);
         yield return WaitFrames(2);
     }
 }

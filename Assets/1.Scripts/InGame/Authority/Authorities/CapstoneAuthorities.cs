@@ -19,26 +19,26 @@ public class PureCrownAuthority : Authority
     // 약점(> 1)일 때만 키움. 내성(< 1)·보통은 그대로
     public static float Apply(float multiplier) => multiplier > 1f ? multiplier * WEAKNESS_MUL : multiplier;
 
-    public override void OnBegin() => active = IsPure(AuthoritySystem.EquippedSlimeDatas().Select(d => d.attackType));
+    public override void OnBegin() => active = IsPure(AuthoritySystem.EquippedMinionDatas().Select(d => d.attackType));
 }
 
-// 왕의 인장: 장착 5종의 형태가 모두 다르면 모든 슬라임 공속 ×1.2 (Slime.UpdateSlime)
+// 왕의 인장: 장착 5종의 형태가 모두 다르면 모든 슬라임 공속 ×1.2 (Minion.UpdateMinion)
 public class KingSealAuthority : Authority
 {
     public const float ATTACK_SPEED_MUL = 1.2f;
     public const int REQUIRED_COUNT = 5;
     public bool active;
 
-    public static bool AllDifferentForms(IEnumerable<SlimeTag> tags)
+    public static bool AllDifferentForms(IEnumerable<MinionTag> tags)
     {
-        var forms = tags.Select(SlimeTags.GetForm).ToList();
-        return forms.Count >= REQUIRED_COUNT && forms.All(f => f != SlimeTag.None) && forms.Distinct().Count() == forms.Count;
+        var forms = tags.Select(MinionTags.GetForm).ToList();
+        return forms.Count >= REQUIRED_COUNT && forms.All(f => f != MinionTag.None) && forms.Distinct().Count() == forms.Count;
     }
 
-    public override void OnBegin() => active = AllDifferentForms(AuthoritySystem.EquippedSlimeDatas().Select(d => d.tags));
+    public override void OnBegin() => active = AllDifferentForms(AuthoritySystem.EquippedMinionDatas().Select(d => d.tags));
 }
 
-// 혈통의 플라스크: 합성할 때 50% 확률로 결과가 랜덤 종 대신 같은 종 유지 (Slime.Merge)
+// 혈통의 플라스크: 합성할 때 50% 확률로 결과가 랜덤 종 대신 같은 종 유지 (Minion.Merge)
 public class BloodlineFlaskAuthority : Authority
 {
     public const float KEEP_CHANCE = 0.5f;

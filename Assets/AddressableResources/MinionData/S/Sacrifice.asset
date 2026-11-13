@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40081d93b92b24f80a4a25629a6be7ca, type: 3}
+  m_Name: Sacrifice
+  m_EditorClassIdentifier: Assembly-CSharp::SacrificeMinionData
+  key: Sacrifice
+  desc: "\uD569\uCE58\uBA74 \uB3D9\uC77C\uD55C \uC2AC\uB77C\uC784\uC73C\uB85C"
+  growth: 1
+  attackType: 2
+  tags: 4112
+  commonMinionEnhanceInfos:
+  - level: 0
+    minionStats:
+    - statType: 0
+      values:
+      - 3
+      - 2
+  - level: 1
+    minionStats:
+    - statType: 0
+      values:
+      - 3
+      - 2
+  - level: 2
+    minionStats:
+    - statType: 0
+      values:
+      - 4
+      - 2
+  - level: 3
+    minionStats:
+    - statType: 0
+      values:
+      - 4
+      - 2
+  - level: 4
+    minionStats:
+    - statType: 0
+      values:
+      - 5
+      - 3
+  - level: 5
+    minionStats:
+    - statType: 0
+      values:
+      - 5
+      - 3
+  - level: 6
+    minionStats:
+    - statType: 0
+      values:
+      - 5
+      - 4
+  - level: 7
+    minionStats:
+    - statType: 0
+      values:
+      - 5
+      - 4
+  - level: 8
+    minionStats:
+    - statType: 0
+      values:
+      - 5
+      - 4
+  - level: 9
+    minionStats:
+    - statType: 0
+      values:
+      - 6
+      - 4
+  - level: 10
+    minionStats:
+    - statType: 0
+      values:
+      - 6
+      - 4
+  - level: 11
+    minionStats:
+    - statType: 0
+      values:
+      - 6
+      - 4
+  - level: 12
+    minionStats:
+    - statType: 0
+      values:
+      - 6
+      - 4
+  - level: 13
+    minionStats:
+    - statType: 0
+      values:
+      - 6
+      - 5
+  - level: 14
+    minionStats:
+    - statType: 0
+      values:
+      - 6
+      - 5
+  attackPowerRandomRatio: 0
+  reinforceAttackPowerPercent: 5
+  prefab: {fileID: 1358385290756183109, guid: abc4ecac51bc4e71b80cfc65197eb86c, type: 3}
+  unlockConditions: []
+  thum: {fileID: 0}
+  grade: 3
+  displayStatTypes: 000000000200000005000000
+  baseMinionStats:
+  - statType: 2
+    values:
+    - 30
+  - statType: 5
+    values:
+    - 3
+  - statType: 3
+    values:
+    - 0
+  uniqueMinionStats: []

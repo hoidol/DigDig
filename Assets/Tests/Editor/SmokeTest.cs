@@ -5,7 +5,7 @@ public class SmokeTest
     [Test]
     public void MaxMergeLevel_Is4()
     {
-        Assert.AreEqual(4, SlimeData.MAX_MERGE_LEVEL);
+        Assert.AreEqual(4, MinionData.MAX_MERGE_LEVEL);
     }
 
     [Test]

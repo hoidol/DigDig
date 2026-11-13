@@ -12,8 +12,18 @@ public class UserDailyAchievementManager : UserSubAchievementManager
     {
         get; private set;
     }
+    bool isLoaded;
     void Awake()
     {
+        EnsureLoaded();
+    }
+
+    // 부모 매니저 Awake가 먼저 돌 수 있어서, 누가 먼저 부르든 한 번만 로드
+    public void EnsureLoaded()
+    {
+        if (isLoaded)
+            return;
+        isLoaded = true;
         UserDataFileName = "UserDailyAchievement";
         LoadData();
     }
@@ -37,7 +47,7 @@ public class UserDailyAchievementManager : UserSubAchievementManager
 
 
 
-    public UserAchievement GetUserAchievement(AchievementType type)
+    public UserDailyAchievement GetUserAchievement(AchievementType type)
     {
         for (int i = 0; i < userDailyAchievementData.userDailyAchievements.Count; i++)
         {
@@ -60,7 +70,7 @@ public class UserDailyAchievementManager : UserSubAchievementManager
 [System.Serializable]
 public class UserDailyAchievementData : UserAchievementData
 {
-    //장비 보유 상태
+    public string date; // 이 기록의 날짜 (DailyCheck.Today). 오늘이 아니면 초기화
     public List<UserDailyAchievement> userDailyAchievements = new List<UserDailyAchievement>();
 }
 

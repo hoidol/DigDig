@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class KingSlimeManageCanvas : CanvasUI<KingSlimeManageCanvas>
 {
-    public SlimeSlotPanel[] slimeSlotPanels;
+    public MinionSlotPanel[] minionSlotPanels;
     // public OwnItemPanel[] ownItemPanels;
 
 
@@ -24,11 +24,11 @@ public class KingSlimeManageCanvas : CanvasUI<KingSlimeManageCanvas>
             return;
 
         init = true;
-        slimeSlotPanels = GetComponentsInChildren<SlimeSlotPanel>();
+        minionSlotPanels = GetComponentsInChildren<MinionSlotPanel>();
         // ownItemPanels = GetComponentsInChildren<OwnItemPanel>();
-        for (int i = 0; i < slimeSlotPanels.Length; i++)
+        for (int i = 0; i < minionSlotPanels.Length; i++)
         {
-            slimeSlotPanels[i].idx = i;
+            minionSlotPanels[i].idx = i;
         }
 
     }
@@ -52,22 +52,22 @@ public class KingSlimeManageCanvas : CanvasUI<KingSlimeManageCanvas>
 
     public void UpdateCanvas()
     {
-        // SlimeFieldController.Instance.slimeSlotCount
-        // for (int i = 0; i < slimeSlotPanels.Length; i++)
+        // MinionFieldController.Instance.minionSlotCount
+        // for (int i = 0; i < minionSlotPanels.Length; i++)
         // {
-        //     if (i < SlimeFieldController.Instance.slimeSlotCount)
+        //     if (i < MinionFieldController.Instance.minionSlotCount)
         //     {
-        //         slimeSlotPanels[i].gameObject.SetActive(true);
+        //         minionSlotPanels[i].gameObject.SetActive(true);
         //     }
         //     else
         //     {
-        //         slimeSlotPanels[i].gameObject.SetActive(false);
+        //         minionSlotPanels[i].gameObject.SetActive(false);
         //     }
         // }
 
-        for (int i = 0; i < slimeSlotPanels.Length; i++)
+        for (int i = 0; i < minionSlotPanels.Length; i++)
         {
-            slimeSlotPanels[i].UpdatePanel();
+            minionSlotPanels[i].UpdatePanel();
         }
 
         // for (int i = 0; i < ownItemPanels.Length; i++)

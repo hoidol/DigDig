@@ -28,8 +28,13 @@ public class TestCanvas : MonoBehaviour
 
     void Awake()
     {
-        // 테스트 모드가 아니면 오브젝트 자체를 끈다 (씬에서 활성 상태로 둬야 Awake가 호출됨)
-        gameObject.SetActive(BuildSetting.Instance != null && BuildSetting.Instance.isTestMode);
+        // 테스트 모드가 아니면 오브젝트를 삭제 (씬에서 활성 상태로 둬야 Awake가 호출됨)
+        // Destroy는 프레임 끝에 처리되므로 먼저 꺼서 Start/Update가 돌지 않게 함
+        if (BuildSetting.Instance == null || !BuildSetting.Instance.isTestMode)
+        {
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
     }
 
     void Start()

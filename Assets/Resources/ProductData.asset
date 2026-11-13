@@ -17,19 +17,39 @@ MonoBehaviour:
     productId: remove_ad
     currencyType: 5
     price: 4.99
+  - key: RemoveAdPackage
+    productId: remove_ad_package
+    currencyType: 5
+    price: 7.99
   - key: GameSpeedUp
     productId: game_speed_up
     currencyType: 5
     price: 2.99
-  - key: DrawSlime_Normal_Ad
+  - key: GameSpeedUpPackage
+    productId: game_speed_up_package
+    currencyType: 5
+    price: 5.99
+  - key: DrawMinion_Normal_Ad
     productId: 
     currencyType: 4
     price: 1
-  - key: DrawSlime_Normal_DrawTicket
+  - key: DrawMinion_Normal_DrawTicket
     productId: 
     currencyType: 3
     price: 30
-  - key: DrawSlime_Unique_Dia
+  - key: DrawMinion_Unique_Dia
+    productId: 
+    currencyType: 1
+    price: 50
+  - key: DrawEquipment_Normal_Ad
+    productId: 
+    currencyType: 4
+    price: 1
+  - key: DrawEquipment_Normal_Dia
+    productId: 
+    currencyType: 1
+    price: 25
+  - key: DrawEquipment_Unique
     productId: 
     currencyType: 1
     price: 50

@@ -22,7 +22,7 @@ public class TableReader
 
     static readonly Dictionary<string, (DateTime writeTime, TableReader table)> cacheDic = new Dictionary<string, (DateTime, TableReader)>();
 
-    // relativePath: Assets/Json 기준 경로 (ex. "EnemyData.csv", "SlimeEnhance/Flame.csv")
+    // relativePath: Assets/Json 기준 경로 (ex. "EnemyData.csv", "MinionEnhance/Flame.csv")
     public static string GetFullPath(string relativePath) => Path.Combine(Application.dataPath, ROOT_FOLDER, relativePath);
 
     // 파일이 없으면 경고 후 null 반환

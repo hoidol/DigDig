@@ -10,7 +10,7 @@ public class AchievementCanvas : CanvasUI<AchievementCanvas>
     {
         GameEventBus.Subscribe<UpdateAchievementEvent>(OnUpdateAchievementEvent);
     }
-    void OnDsable()
+    void OnDisable()
     {
         GameEventBus.Unsubscribe<UpdateAchievementEvent>(OnUpdateAchievementEvent);
     }
@@ -29,6 +29,7 @@ public class AchievementCanvas : CanvasUI<AchievementCanvas>
 
     public void OpenCanvas()
     {
+        AchievementManager.Instance.CheckNewDay(); // 날짜가 바뀌었으면 일일 업적 초기화
         for (int i = 0; i < achievementContainers.Length; i++)
         {
             achievementContainers[i].OpenContainer();
@@ -38,6 +39,7 @@ public class AchievementCanvas : CanvasUI<AchievementCanvas>
 
     public void UpdateCanvas()
     {
+        CurrencyPanel.UpdateAllPanels(); // 보상으로 받은 재화 표시
         for (int i = 0; i < achievementContainers.Length; i++)
         {
             achievementContainers[i].UpdateContainer();

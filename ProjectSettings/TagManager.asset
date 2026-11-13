@@ -22,7 +22,7 @@ TagManager:
   - PhysicArea
   - AllyUnit
   - GroundMiniMeBody
-  - Slime
+  - Minion
   - Event
   - Stone
   - Tile

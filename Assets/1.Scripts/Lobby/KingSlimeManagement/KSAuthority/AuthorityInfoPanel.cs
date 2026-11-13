@@ -16,13 +16,13 @@ public class AuthorityInfoPanel : MonoBehaviour
         nameText.text = data.Title;
         descText.text = data.Desc;
 
-        bool showMatch = data.matchTags != SlimeTag.None;
+        bool showMatch = data.matchTags != MinionTag.None;
         matchText.gameObject.SetActive(showMatch);
         if (showMatch)
         {
-            var equippedTags = AuthorityManager.GetEquippedSlimeTags();
-            int count = AuthorityData.CountMatchingSlimes(data.matchTags, equippedTags);
-            matchText.text = string.Format(TranslateManager.GetText("Authority_MatchSlime"), count, equippedTags.Count);
+            var equippedTags = AuthorityManager.GetEquippedMinionTags();
+            int count = AuthorityData.CountMatchingMinions(data.matchTags, equippedTags);
+            matchText.text = string.Format(TranslateManager.GetText("Authority_MatchMinion"), count, equippedTags.Count);
         }
     }
 }

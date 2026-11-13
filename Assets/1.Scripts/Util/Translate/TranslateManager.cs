@@ -106,8 +106,11 @@ public class TranslateManager
             translateTexts[i].UpdatePanel();
         }
 
-        PopupCanvas.Instance.OpenCanvas(TranslateManager.GetText("changedLanguage"));
         PlayerPrefs.SetInt("LanguageType", (int)curLanguageType);
+        if (PopupCanvas.Instance != null)
+            PopupCanvas.Instance.OpenCanvas(TranslateManager.GetText("changedLanguage"));
+        else
+            ToastCanvas.Toast(TranslateManager.GetText("changedLanguage"));
 
         changedLanguageObs.ForEach(e => e.Invoke());
     }

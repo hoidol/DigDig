@@ -38,6 +38,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         // 한 판 = 결과 화면까지 (부활해도 같은 판)
         UserDataManager.Instance.userStageManager.TryStage(stageKey);
         GameEventBus.Publish(new TryStageEvent(stageKey));
+        AchievementManager.Report(AchievementType.TryStage);
 
         UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(stageKey);
         // wave 표시 UI가 씬에 없어도 보상은 지급되도록 (없으면 표시만 생략). 제목(최종/최고 웨이브)은 UI에 있으므로 숫자만
@@ -64,7 +65,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         myInfo.AddExp(rewardExp);
         UserMyInfoManager.unshownGainExp += rewardExp; // 로비에서 바가 차오르는 연출
 
-        rewardDrawTicket = SlimeFieldController.Instance.mergeCount;
+        rewardDrawTicket = MinionFieldController.Instance.mergeCount;
         if (rewardDrawTicket > 0)
             UserDataManager.Instance.AddDrawTicket(rewardDrawTicket);
 
@@ -115,12 +116,6 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             return;
         if (rewardExp <= 0 && rewardDrawTicket <= 0 && rewardGold <= 0)
             return;
-
-        if (UserDataManager.Instance.isAdRemoved)
-        {
-            GiveDoubleReward();
-            return;
-        }
 
         isWatchingAd = true;
         AdManager.Show("result_double_reward", AdType.RA, async (success) =>

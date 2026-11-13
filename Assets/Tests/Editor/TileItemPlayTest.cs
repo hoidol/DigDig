@@ -9,8 +9,8 @@ using UnityEngine.UI;
 // 타일 아이템 플레이 테스트 (CLAUDE.md "타일 아이템")
 public class TileItemPlayTest : InGamePlayTestBase
 {
-    const string HOST_SLIME = "Ice";
-    const string CROSS_BUFF_SLIME = "Breeze";
+    const string HOST_MINION = "Ice";
+    const string CROSS_BUFF_MINION = "Breeze";
     const float ITEM_TEST_TIME = 4f; // 아이템 하나당 게임 시간(초)
     const float TIME_SCALE = 4f;
 
@@ -72,14 +72,14 @@ public class TileItemPlayTest : InGamePlayTestBase
             }
 
             // 슬라임 수 증가: 설치 없이 최대 슬라임 수 +1
-            if (tileItemPrefab is AddSlimeSpawnCountItem)
+            if (tileItemPrefab is AddMinionSpawnCountItem)
             {
                 Assert.IsFalse(tileItemPrefab.NeedTile, $"{data.key}: 타일 선택이 필요함");
-                int maxBefore = SlimeFieldController.Instance.slimeMaxCount;
+                int maxBefore = MinionFieldController.Instance.minionMaxCount;
                 int installedBefore = TileManager.Instance.tiles.Count(t => t.tileItem != null);
                 KingSlime.Instance.AddItem(data.key).Forget();
                 yield return WaitFrames(2);
-                Assert.AreEqual(maxBefore + AddSlimeSpawnCountItem.ADD_COUNT, SlimeFieldController.Instance.slimeMaxCount, $"{data.key}: 최대 슬라임 수가 안 늘어남");
+                Assert.AreEqual(maxBefore + AddMinionSpawnCountItem.ADD_COUNT, MinionFieldController.Instance.minionMaxCount, $"{data.key}: 최대 슬라임 수가 안 늘어남");
                 Assert.AreEqual(installedBefore, TileManager.Instance.tiles.Count(t => t.tileItem != null), $"{data.key}: 타일에 설치됨");
                 continue;
             }
@@ -94,10 +94,10 @@ public class TileItemPlayTest : InGamePlayTestBase
             Assert.AreEqual(data.key, installed.key, $"{data.key}: 다른 아이템이 설치됨 ({installed.GetType().Name})");
             Assert.IsInstanceOf(tileItemPrefab.GetType(), installed, $"{data.key}: 프리팹과 다른 클래스");
 
-            Slime slime = null;
+            Minion minion = null;
             try
             {
-                slime = SpawnSlime(installed is ExpandBuffRangeTileItem ? CROSS_BUFF_SLIME : HOST_SLIME, tile);
+                minion = SpawnMinion(installed is ExpandBuffRangeTileItem ? CROSS_BUFF_MINION : HOST_MINION, tile);
             }
             catch (System.Exception e)
             {
@@ -107,8 +107,8 @@ public class TileItemPlayTest : InGamePlayTestBase
 
             try
             {
-                if (slime != null)
-                    SlimeFieldController.Instance.RemoveFieldSlime(slime);
+                if (minion != null)
+                    MinionFieldController.Instance.RemoveFieldMinion(minion);
                 KingSlime.Instance.RemoveItem(installed);
             }
             catch (System.Exception e)
@@ -130,7 +130,7 @@ public class TileItemPlayTest : InGamePlayTestBase
         yield return WaitGameStart();
 
         Tile plainTile = GetFreeTile();
-        Slime plain = SpawnSlime(HOST_SLIME, plainTile);
+        Minion plain = SpawnMinion(HOST_MINION, plainTile);
 
         (string key, StatType stat, int sign)[] cases =
         {
@@ -146,7 +146,7 @@ public class TileItemPlayTest : InGamePlayTestBase
             Tile tile = GetFreeTile(plainTile);
             KingSlime.Instance.AddItem(c.key, tile).Forget();
             yield return WaitFrames(2);
-            Slime onItem = SpawnSlime(HOST_SLIME, tile);
+            Minion onItem = SpawnMinion(HOST_MINION, tile);
             yield return WaitFrames(2);
 
             float before = plain.statDic[c.stat];
@@ -156,7 +156,7 @@ public class TileItemPlayTest : InGamePlayTestBase
             else
                 Assert.Less(after, before, $"{current}: 스탯이 내려가지 않음");
 
-            SlimeFieldController.Instance.RemoveFieldSlime(onItem);
+            MinionFieldController.Instance.RemoveFieldMinion(onItem);
             KingSlime.Instance.RemoveItem((TileItem)tile.tileItem);
             yield return WaitFrames(2);
         }
@@ -181,24 +181,24 @@ public class TileItemPlayTest : InGamePlayTestBase
         }
         Assert.IsNotNull(center, "테스트할 자리 없음 (대각선이 같은 그룹인 빈 칸 2개)");
 
-        Slime target = SpawnSlime(HOST_SLIME, diagonal);
-        Slime buffer = SpawnSlime(CROSS_BUFF_SLIME, center);
+        Minion target = SpawnMinion(HOST_MINION, diagonal);
+        Minion buffer = SpawnMinion(CROSS_BUFF_MINION, center);
         yield return WaitFrames(3);
         float noExpand = target.AttackSpeed;
-        Assert.IsFalse(((CrossBuffSlime)buffer).IsRangeExpanded);
+        Assert.IsFalse(((CrossBuffMinion)buffer).IsRangeExpanded);
 
-        SlimeFieldController.Instance.RemoveFieldSlime(buffer);
+        MinionFieldController.Instance.RemoveFieldMinion(buffer);
         KingSlime.Instance.AddItem("MaxExpandBuffRangeTile", center).Forget();
         yield return WaitFrames(2);
         Assert.IsInstanceOf<ExpandBuffRangeTileItem>(center.tileItem, "버프 범위 확장 아이템이 설치되지 않음");
 
-        buffer = SpawnSlime(CROSS_BUFF_SLIME, center);
+        buffer = SpawnMinion(CROSS_BUFF_MINION, center);
         yield return WaitFrames(3);
-        Assert.IsTrue(((CrossBuffSlime)buffer).IsRangeExpanded, "확장 타일 위인데 범위 확장 안 됨");
+        Assert.IsTrue(((CrossBuffMinion)buffer).IsRangeExpanded, "확장 타일 위인데 범위 확장 안 됨");
         Assert.Greater(target.AttackSpeed, noExpand, "대각선 슬라임이 버프를 받지 못함");
 
         // 타일에서 내리면 다시 4방향
-        SlimeFieldController.Instance.RemoveFieldSlime(buffer);
+        MinionFieldController.Instance.RemoveFieldMinion(buffer);
         yield return WaitFrames(3);
         Assert.AreEqual(noExpand, target.AttackSpeed, 0.0001f, "버프 슬라임이 사라졌는데 버프가 남음");
         AssertNoErrors();

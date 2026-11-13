@@ -92,7 +92,7 @@ public class WaveResultPlayTest : InGamePlayTestBase
             yield return SkipWave();
         int waveIdx = GameManager.Instance.waveIdx;
         Assert.AreEqual(6, waveIdx);
-        SlimeFieldController.Instance.mergeCount = 3;
+        MinionFieldController.Instance.mergeCount = 3;
 
         var user = UserDataManager.Instance;
         string stageKey = GameManager.Instance.stageData.key;

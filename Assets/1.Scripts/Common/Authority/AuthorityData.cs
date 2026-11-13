@@ -22,7 +22,7 @@ public class AuthorityData : ScriptableObject
     public Sprite thum; // 권능은 등급 없음
 
     [Tooltip("어울리는 슬라임 유형 (AuthorityData.csv MatchTags, \"Zone|Heavy\"). 로비에서 장착 슬라임 중 해당 종 수 표시")]
-    public SlimeTag matchTags;
+    public MinionTag matchTags;
 
     [TextArea] public string desc; // AuthorityData.csv Desc (설명 원본, 아직 번역 안 함)
 
@@ -30,14 +30,14 @@ public class AuthorityData : ScriptableObject
     public string Desc => desc;
 
     // 장착 슬라임 중 matchTags 중 하나라도 가진 종 수
-    public static int CountMatchingSlimes(SlimeTag matchTags, IEnumerable<SlimeTag> equippedSlimeTags)
+    public static int CountMatchingMinions(MinionTag matchTags, IEnumerable<MinionTag> equippedMinionTags)
     {
-        if (matchTags == SlimeTag.None)
+        if (matchTags == MinionTag.None)
             return 0;
         int count = 0;
-        foreach (SlimeTag tags in equippedSlimeTags)
+        foreach (MinionTag tags in equippedMinionTags)
         {
-            if ((tags & matchTags) != SlimeTag.None)
+            if ((tags & matchTags) != MinionTag.None)
                 count++;
         }
         return count;
@@ -61,7 +61,7 @@ public class AuthorityData : ScriptableObject
             desc = row.Get("Desc");
         if (table.HasColumn("MatchTags"))
         {
-            matchTags = SlimeTags.Parse(row.Get("MatchTags"), out string tagError);
+            matchTags = MinionTags.Parse(row.Get("MatchTags"), out string tagError);
             if (tagError != null)
                 Debug.LogWarning($"[AuthorityData] {key} MatchTags 모르는 이름: {tagError}");
         }

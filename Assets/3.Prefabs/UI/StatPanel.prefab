@@ -90,7 +90,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1a402420a4ea542c7bceb5c079d3b1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InGame.SlimeStatPanel
+  m_EditorClassIdentifier: Assembly-CSharp::InGame.MinionStatPanel
   titleText: {fileID: 7927660349094455021}
   valueText: {fileID: 6707597937904232154}
   thumImage: {fileID: 2609040982999632766}

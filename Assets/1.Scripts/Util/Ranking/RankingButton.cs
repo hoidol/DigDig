@@ -1,12 +1,18 @@
 using Firebase.Auth;
 
-// 로그인돼 있으면 바로 RankingCanvas, 아니면 FirebaseLoginCanvas → 로그인 성공 시 RankingCanvas
+// 로그인돼 있으면 바로 RankingCanvas, 아니면 설정 창(SettingCanvas, 로그인) → 로그인 성공 시 RankingCanvas
 public class RankingButton : ButtonUI
 {
     bool waitingLogin;
 
     public override void OnClickedBtn()
     {
+        if (RankingManager.IsTestMode) // 테스트: 로그인 확인 없이 바로
+        {
+            RankingCanvas.Instance.OpenCanvas();
+            return;
+        }
+
         FirebaseAuth auth = FirebaseManager.Instance != null ? FirebaseManager.Instance.firebaseAuth : null;
         if (auth == null || !auth.IsReady)
         {
@@ -24,7 +30,7 @@ public class RankingButton : ButtonUI
             return;
         waitingLogin = true;
         FirebaseAuth.OnSignedIn += OnSignedIn;
-        FirebaseLoginCanvas.Instance.OpenCanvas(StopWaitingLogin); // 로그인 없이 닫으면 대기 해제
+        SettingCanvas.Instance.OpenCanvas(StopWaitingLogin); // 로그인 없이 닫으면 대기 해제
     }
 
     void OnSignedIn(FirebaseUser user)
@@ -32,7 +38,7 @@ public class RankingButton : ButtonUI
         if (!waitingLogin)
             return;
         StopWaitingLogin();
-        FirebaseLoginCanvas.Instance.CloseCanvas();
+        SettingCanvas.Instance.CloseCanvas();
         RankingCanvas.Instance.OpenCanvas();
     }
 

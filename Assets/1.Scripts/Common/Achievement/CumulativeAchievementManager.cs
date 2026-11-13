@@ -1,62 +1,51 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
+// 누적 업적: 목표 = InitGoal + IncreaseGoal × 클리어 횟수. 보상을 받으면 목표만큼 빼고(초과분은 이월) 다음 목표로
 public class CumulativeAchievementManager : SubAchievementManager
 {
+    public const string CSV_PATH = "Json/CumulativeAchievement";
     public UserCumulativeAchievementManager userCumulativeAchievementManager;
     public CumulativeAchievementData[] cumulativeAchievementDatas;
     public override void Init()
     {
         userCumulativeAchievementManager = GetComponentInChildren<UserCumulativeAchievementManager>();
+        userCumulativeAchievementManager.EnsureLoaded();
         category = AchievementCategory.Cumulative;
-        SetCumulativeAchievementData();
-    }
-    void SetCumulativeAchievementData()
-    {
-        List<CumulativeAchievementData> list = new List<CumulativeAchievementData>();
-        TextAsset csv = Resources.Load<TextAsset>("Json/CumulativeAchievement");
+
+        TextAsset csv = Resources.Load<TextAsset>(CSV_PATH);
         if (csv == null)
         {
             Debug.LogWarning("[CumulativeAchievementManager] CSV 파일 없음: Resources/Json/CumulativeAchievement.csv");
-            cumulativeAchievementDatas = list.ToArray();
+            cumulativeAchievementDatas = new CumulativeAchievementData[0];
             return;
         }
+        cumulativeAchievementDatas = ParseCsv(csv.text).ToArray();
+    }
 
-        string[] lines = csv.text.Split('\n');
-        string[] headers = lines[0].Trim().Split('\t');
-        int iType = System.Array.IndexOf(headers, "Type");
-        int iInitGoal = System.Array.IndexOf(headers, "InitGoal");
-        int iIncreaseGoal = System.Array.IndexOf(headers, "IncreaseGoal");
-        int iRewardType = System.Array.IndexOf(headers, "RewardType");
-        int iRewardValue = System.Array.IndexOf(headers, "RewardValue");
-
-        for (int i = 1; i < lines.Length; i++)
+    // Type / InitGoal / IncreaseGoal / RewardType / RewardValue
+    public static List<CumulativeAchievementData> ParseCsv(string text)
+    {
+        List<CumulativeAchievementData> list = new List<CumulativeAchievementData>();
+        foreach (AchievementCsv.Row row in AchievementCsv.Parse(text))
         {
-            if (string.IsNullOrWhiteSpace(lines[i])) continue;
-            string[] cols = lines[i].Trim().Split('\t');
-
-            if (!System.Enum.TryParse(cols[iType].Trim(), out AchievementType type)) continue;
-            if (!System.Enum.TryParse(cols[iRewardType].Trim(), out RewardType rewardType)) continue;
-
+            if (!AchievementCsv.TryGetTypes(row, "CumulativeAchievement.csv", out AchievementType type, out RewardData rewardData))
+                continue;
             list.Add(new CumulativeAchievementData
             {
                 type = type,
-                initGoal = int.Parse(cols[iInitGoal].Trim()),
-                increaseGoal = int.Parse(cols[iIncreaseGoal].Trim()),
-                rewardData = new RewardData { rewardType = rewardType, value = cols[iRewardValue].Trim() }
+                initGoal = row.GetInt("InitGoal"),
+                increaseGoal = row.GetInt("IncreaseGoal"),
+                rewardData = rewardData
             });
         }
-        cumulativeAchievementDatas = list.ToArray();
+        return list;
     }
 
-
+    // 저장은 AchievementManager가 프레임 끝에 한 번
     public override void Achieve(AchievementType type, int count)
     {
-        UserCumulativeAchievement userCumulativeAchievement = userCumulativeAchievementManager.GetUserAchievement(type) as UserCumulativeAchievement;
-        userCumulativeAchievement.value += count;
-        userCumulativeAchievementManager.SaveData();
+        userCumulativeAchievementManager.GetUserAchievement(type).value += count;
     }
 
     public AchievementData GetAchievementData(AchievementType type)
@@ -73,14 +62,15 @@ public class CumulativeAchievementManager : SubAchievementManager
 
     public override void GetReward(AchievementData achievementData)
     {
+        if (!achievementData.CheckCanClear())
+            return;
+
         achievementData.rewardData.Receive();
 
         UserCumulativeAchievement userCumulative = achievementData.GetUserAchievement() as UserCumulativeAchievement;
         int goal = achievementData.GetGoal();
-        int remainValue = userCumulative.value - goal;
-
+        userCumulative.value -= goal;
         userCumulative.clearCount++;
-        userCumulative.value = remainValue;
         userCumulativeAchievementManager.SaveData();
     }
 
@@ -90,7 +80,6 @@ public class CumulativeAchievementManager : SubAchievementManager
         int count = 0;
         for (int i = 0; i < cumulativeAchievementDatas.Length; i++)
         {
-            UserCumulativeAchievement userAchievement = userCumulativeAchievementManager.GetUserAchievement(cumulativeAchievementDatas[i].type) as UserCumulativeAchievement;
             if (cumulativeAchievementDatas[i].CheckCanClear())
             {
                 count++;
@@ -104,13 +93,13 @@ public class CumulativeAchievementData : AchievementData
 {
     public int initGoal;
     public int increaseGoal;
-    public int GetGoal(int clearCount)
-    {
-        return initGoal + increaseGoal * clearCount;
-    }
+    public int GetGoal(int clearCount) => GetGoal(initGoal, increaseGoal, clearCount);
+
+    public static int GetGoal(int initGoal, int increaseGoal, int clearCount) => initGoal + increaseGoal * clearCount;
+
     public override UserAchievement GetUserAchievement()
     {
-        return AchievementManager.Instance.cumulativeAchievementManager.userCumulativeAchievementManager.GetUserAchievement(type) as UserCumulativeAchievement;
+        return AchievementManager.Instance.cumulativeAchievementManager.userCumulativeAchievementManager.GetUserAchievement(type);
     }
 
     public override bool CheckCanClear()

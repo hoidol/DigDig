@@ -8,7 +8,7 @@ using UnityEngine.TestTools;
 public class AuthorityPlayInGameTest : InGamePlayTestBase
 {
     // 장판·회전·버프·처치 감지·상태이상·강타 슬라임을 섞어 모든 권능 훅이 불리게
-    static readonly string[] SLIMES = { "Mine", "Thunder", "Mortar", "Inferno", "Orbit", "Shield", "Mud", "Dopamine", "Berserker", "Scavenger", "Breeze", "Ice", "Flame", "Iron", "Hunter", "Random" };
+    static readonly string[] MINIONS = { "Mine", "Thunder", "Mortar", "Inferno", "Orbit", "Shield", "Mud", "Dopamine", "Berserker", "Scavenger", "Breeze", "Ice", "Flame", "Iron", "Hunter", "Random" };
 
     static string[] AllAuthorityKeys => AuthorityManager.Instance.authorityDatas.Select(r => r.key).ToArray();
 
@@ -35,13 +35,13 @@ public class AuthorityPlayInGameTest : InGamePlayTestBase
         Assert.AreEqual(MerchantLedgerAuthority.ApplyDiscount(10, 0), 5);
 
         // 슬라임 배치 (최대 수 제한 풀기)
-        SlimeFieldController.Instance.slimeMaxCount = 99;
-        foreach (string key in SLIMES)
+        MinionFieldController.Instance.minionMaxCount = 99;
+        foreach (string key in MINIONS)
         {
             Tile tile = TileManager.Instance.GetRandomEmptyTile();
             if (tile == null) break;
             current = key;
-            SpawnSlime(key, tile, 1);
+            SpawnMinion(key, tile, 1);
         }
 
         // 쌍둥이 반지: 같은 종 둘을 붙이면 둘 다 twinBonus 1
@@ -50,9 +50,9 @@ public class AuthorityPlayInGameTest : InGamePlayTestBase
         if (a != null)
         {
             Tile b = TileManager.Instance.GetTilesAround(a, new[] { Vector2Int.right }).First(n => n.IsEmpty);
-            Slime s1 = SpawnSlime("Random", a, 0);
+            Minion s1 = SpawnMinion("Random", a, 0);
             float before = s1.AttackPower;
-            Slime s2 = SpawnSlime("Random", b, 0);
+            Minion s2 = SpawnMinion("Random", b, 0);
             yield return WaitFrames(2);
             Assert.AreEqual(1, s1.twinBonus, "붙은 같은 종 → 보너스");
             Assert.AreEqual(1, s2.twinBonus);

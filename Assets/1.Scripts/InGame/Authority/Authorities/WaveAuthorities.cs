@@ -4,13 +4,13 @@ using UnityEngine;
 
 // 묶음 5 (Lv.25) 위기 대응
 
-// 사냥꾼의 부적: 엘리트·보스가 있으면 강타(Heavy) 슬라임이 먼저 노림 (Slime.FindTargets),
+// 사냥꾼의 부적: 엘리트·보스가 있으면 강타(Heavy) 슬라임이 먼저 노림 (Minion.FindTargets),
 // 엘리트를 처치하면 타일 아이템 무료 뽑기 (성공 100%)
 public class HunterCharmAuthority : Authority
 {
     public const int MAX_CANDIDATES = 64;
 
-    public static bool IsHeavy(SlimeData data) => data != null && SlimeTags.Has(data.tags, SlimeTag.Heavy);
+    public static bool IsHeavy(MinionData data) => data != null && MinionTags.Has(data.tags, MinionTag.Heavy);
 
     // 기존 우선순위를 유지한 채 엘리트·보스를 앞으로 (OrderBy는 안정 정렬)
     public static List<Transform> PreferEliteBoss(List<Transform> candidates, int count)
@@ -45,7 +45,7 @@ public class MixedCrestAuthority : Authority
     }
 
     // 이 방어 타입에 약점(배율 > 1)인 공격 속성의 장착 슬라임 key
-    public static List<string> GetWeakKeys(IEnumerable<SlimeData> equipped, DefenceType defenceType)
+    public static List<string> GetWeakKeys(IEnumerable<MinionData> equipped, DefenceType defenceType)
     {
         return equipped.Where(d => d.attackType != AttackType.AllRounder && DefenceInfo.Get(d.attackType, defenceType) > 1f)
             .Select(d => d.key).ToList();
@@ -56,7 +56,7 @@ public class MixedCrestAuthority : Authority
 
     void OnWaveStart(WaveStartEvent e)
     {
-        var equipped = AuthoritySystem.EquippedSlimeDatas();
+        var equipped = AuthoritySystem.EquippedMinionDatas();
         if (!IsMixed(equipped.Select(d => d.attackType)))
             return;
         DefenceType defenceType = GameManager.GetWaveDefenceType(e.waveIdx);
@@ -65,7 +65,7 @@ public class MixedCrestAuthority : Authority
         List<string> keys = GetWeakKeys(equipped, defenceType);
         if (keys.Count == 0)
             return;
-        if (AuthoritySystem.SpawnFreeSlime(keys[Random.Range(0, keys.Count)]) != null)
+        if (AuthoritySystem.SpawnFreeMinion(keys[Random.Range(0, keys.Count)]) != null)
             ToastCanvas.Toast(TranslateManager.GetText("Authority_MixedCrestSpawn"));
     }
 }

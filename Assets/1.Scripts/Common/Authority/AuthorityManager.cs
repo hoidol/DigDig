@@ -40,11 +40,11 @@ public class AuthorityManager : MonoSingleton<AuthorityManager>
     }
 
     // 로비에 장착된 슬라임들의 유형 태그 (권능 해당 종 수 계산용)
-    public static List<SlimeTag> GetEquippedSlimeTags()
+    public static List<MinionTag> GetEquippedMinionTags()
     {
-        return UserDataManager.Instance.userSlimeManager.userSlimeData.equiptedSlimes
-            .Where(s => s != null && s.SlimeData != null)
-            .Select(s => s.SlimeData.tags)
+        return UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions
+            .Where(s => s != null && s.MinionData != null)
+            .Select(s => s.MinionData.tags)
             .ToList();
     }
 }

@@ -38,7 +38,7 @@ public class EmberBrazierAuthority : Authority
     public const float LIFETIME = 3f;
     public const float DPS_RATIO = 0.2f;
 
-    // 장판 피해 지점에서 호출 (Mine.Explode, MortarBulletObject.Explode, ThunderBulletObject.Strike, InfernoSlime.Fire)
+    // 장판 피해 지점에서 호출 (Mine.Explode, MortarBulletObject.Explode, ThunderBulletObject.Strike, InfernoMinion.Fire)
     public static void OnZoneDamage(Vector2 pos, float radius, float attackPower, LayerMask mask)
     {
         if (!AuthoritySystem.Has<EmberBrazierAuthority>())
@@ -54,13 +54,13 @@ public class WhirlOrbAuthority : Authority
 {
     public static void OnRevolution(OrbitMachine machine)
     {
-        if (!AuthoritySystem.Has<WhirlOrbAuthority>() || !(machine.owner is Slime slime) || slime == null || !slime.gameObject.activeInHierarchy)
+        if (!AuthoritySystem.Has<WhirlOrbAuthority>() || !(machine.owner is Minion minion) || minion == null || !minion.gameObject.activeInHierarchy)
             return;
-        var spec = new AllyBulletSpec { damage = slime.AttackPower };
+        var spec = new AllyBulletSpec { damage = minion.AttackPower };
         spec.StartBulletSpec();
-        AllyBulletObject b = spec.Instantiate(slime);
-        b.transform.position = slime.transform.position;
-        b.Shoot(UnityEngine.Random.insideUnitCircle.normalized, slime.AttackPower);
+        AllyBulletObject b = spec.Instantiate(minion);
+        b.transform.position = minion.transform.position;
+        b.Shoot(UnityEngine.Random.insideUnitCircle.normalized, minion.AttackPower);
     }
 }
 
@@ -127,9 +127,9 @@ public class RelayCrystalAuthority : Authority
     public const float AREA_TILES = 1.5f; // 킹 칸 중심에서 가로·세로 1.5칸 = 3*3
 
     // 감지 범위 판정: 내 범위 안이거나, 권능이 있고 킹 주변 3*3 안
-    public static bool InDetectRange(Vector2 slimePos, float range, Vector2 deadPos)
+    public static bool InDetectRange(Vector2 minionPos, float range, Vector2 deadPos)
     {
-        if (Vector2.Distance(slimePos, deadPos) <= range)
+        if (Vector2.Distance(minionPos, deadPos) <= range)
             return true;
         return AuthoritySystem.Has<RelayCrystalAuthority>() && KingSlime.Instance != null && IsInKingArea(KingSlime.Instance.transform.position, deadPos, TileSize());
     }
@@ -155,13 +155,13 @@ public class RelayCrystalAuthority : Authority
     public override void OnBegin() => cachedTileSize = 0f; // 판마다 타일 배치가 다를 수 있음
 }
 
-// 지휘의 깃발: 십자 버프가 타일 그룹 경계를 넘어 적용 (CrossBuffSlime)
+// 지휘의 깃발: 십자 버프가 타일 그룹 경계를 넘어 적용 (CrossBuffMinion)
 public class CommandFlagAuthority : Authority
 {
     public static bool IgnoreGroupBorder => AuthoritySystem.Has<CommandFlagAuthority>();
 }
 
-// 측량사의 나침반: 지뢰·지옥불이 옆 타일 그룹의 경로도 사용 (MineSlime·InfernoSlime)
+// 측량사의 나침반: 지뢰·지옥불이 옆 타일 그룹의 경로도 사용 (MineMinion·InfernoMinion)
 public class SurveyCompassAuthority : Authority
 {
     // 내 그룹 + (권능이 있으면) 가로·세로로 붙은 그룹. 그룹 좌표 = 칸 index / 3
@@ -189,7 +189,7 @@ public class SurveyCompassAuthority : Authority
     }
 }
 
-// 쌍둥이 반지: 같은 종 2마리가 상하좌우로 붙어 있으면 둘 다 공격력이 머지 레벨 +1 수치 (Slime.twinBonus)
+// 쌍둥이 반지: 같은 종 2마리가 상하좌우로 붙어 있으면 둘 다 공격력이 머지 레벨 +1 수치 (Minion.twinBonus)
 public class TwinRingAuthority : Authority
 {
     static readonly Vector2Int[] OFFSETS = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -203,18 +203,18 @@ public class TwinRingAuthority : Authority
     public override void OnEnd()
     {
         GameEventBus.Unsubscribe<TileObjectChangedEvent>(OnTileChanged);
-        foreach (Slime s in FieldSlimes())
+        foreach (Minion s in FieldMinions())
             s.SetTwinBonus(0);
     }
 
     void OnTileChanged(TileObjectChangedEvent e) => Refresh();
 
-    static IEnumerable<Slime> FieldSlimes()
+    static IEnumerable<Minion> FieldMinions()
     {
         if (TileManager.Instance == null)
             yield break;
         foreach (Tile t in TileManager.Instance.tiles)
-            if (t != null && t.tileObject is Slime s && s != null)
+            if (t != null && t.tileObject is Minion s && s != null)
                 yield return s;
     }
 
@@ -222,10 +222,10 @@ public class TwinRingAuthority : Authority
     {
         foreach (Tile tile in TileManager.Instance.tiles)
         {
-            if (tile == null || !(tile.tileObject is Slime slime) || slime == null)
+            if (tile == null || !(tile.tileObject is Minion minion) || minion == null)
                 continue;
-            bool twin = TileManager.Instance.GetTilesAround(tile, OFFSETS).Any(t => t.tileObject is Slime other && other != slime && other.key == slime.key);
-            slime.SetTwinBonus(twin ? 1 : 0);
+            bool twin = TileManager.Instance.GetTilesAround(tile, OFFSETS).Any(t => t.tileObject is Minion other && other != minion && other.key == minion.key);
+            minion.SetTwinBonus(twin ? 1 : 0);
         }
     }
 }
