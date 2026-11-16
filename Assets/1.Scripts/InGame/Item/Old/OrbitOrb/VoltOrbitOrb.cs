@@ -23,7 +23,7 @@ public class VoltOrbitOrb : OrbitOrb
     void Strike(Vector2 pos)
     {
         // InGameUtil.DamageEnemies(pos, voltRadius, voltDamage, layerMask);
-        EffectManager.Instance.Play(EffectType.Spark, pos);
+        EffectManager.Instance.Play(EffectType.Thunder, pos);
     }
 }
 

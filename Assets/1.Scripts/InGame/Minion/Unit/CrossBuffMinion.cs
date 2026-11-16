@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 십자 4칸 버프 슬라임 공용 (Breeze 공속 / Rage 공격력 / Keen 치명타 확률)
-// 기본 탄 발사 + 내 타일 기준 상하좌우 4칸(설정 버튼으로 대각 4칸 선택 가능) 슬라임에게 Buff(BuffStatType, 값, BuffOpType)
+// 기본 탄 발사 + 내 타일 기준 상하좌우 4칸(설정 버튼으로 대각 4칸 선택 가능) 슬라임·킹에게 Buff(BuffStatType, 값, BuffOpType)
 // 범위는 내 타일의 TileGroup 안에서만 (바로 옆 칸이라도 그룹이 다르면 영향 없음)
 // 타일 위 오브젝트가 바뀔 때마다(소환/이동/머지) 대상을 다시 계산 → 들어온 슬라임은 버프, 나간 슬라임은 해제
 // 여러 버프 슬라임이 같은 슬라임을 감싸면 버프는 각각 적용 (Multiply는 곱, Add는 합)
@@ -52,8 +52,8 @@ public abstract class CrossBuffMinion : MinionGrowth1, IBuffRangeUnit
     protected abstract StatType BuffStatType { get; }
     protected virtual StatOpType BuffOpType => crossBuffMinionData.buffOpType;
 
-    // 버프를 준 슬라임 → 걸어준 Buff들 (RemoveBuff는 참조로 지우므로 인스턴스를 들고 있음)
-    readonly Dictionary<Minion, List<Buff>> appliedBuffs = new Dictionary<Minion, List<Buff>>();
+    // 버프를 준 대상(슬라임·킹) → 걸어준 Buff들 (RemoveBuff는 참조로 지우므로 인스턴스를 들고 있음)
+    readonly Dictionary<IBuffable, List<Buff>> appliedBuffs = new Dictionary<IBuffable, List<Buff>>();
     float appliedValue; // 지금 걸려 있는 버프 값 (포위 여부 등으로 바뀌면 전부 다시 걸기)
 
     // 포위 진형 보너스까지 반영한 실제 버프 값. Multiply는 증가분에만 배율 (1.2 → 1.3), Add는 값 전체 (20 → 30)
@@ -134,12 +134,12 @@ public abstract class CrossBuffMinion : MinionGrowth1, IBuffRangeUnit
     }
 
     // 버프 대상 조건. 하위 클래스에서 제외 규칙을 추가할 수 있음
-    protected virtual bool CanBuff(Minion minion) => minion != this;
+    protected virtual bool CanBuff(IBuffable target) => !ReferenceEquals(target, this);
 
-    // 내 타일 기준 십자/대각 4칸(버프 범위 확장 타일 위면 8방향), 같은 TileGroup 안의 슬라임 (내 타일이 없으면 빈 목록)
-    List<Minion> GetTargets()
+    // 내 타일 기준 십자/대각 4칸(버프 범위 확장 타일 위면 8방향), 같은 TileGroup 안의 슬라임·킹 (내 타일이 없으면 빈 목록)
+    List<IBuffable> GetTargets()
     {
-        List<Minion> targets = new List<Minion>();
+        List<IBuffable> targets = new List<IBuffable>();
         if (TileManager.Instance == null)
             return targets;
 
@@ -151,8 +151,8 @@ public abstract class CrossBuffMinion : MinionGrowth1, IBuffRangeUnit
         {
             if (tile.tileGroup != center.tileGroup && !CommandFlagAuthority.IgnoreGroupBorder) // 지휘의 깃발: 경계 무시
                 continue;
-            if (tile.tileObject is Minion minion && CanBuff(minion))
-                targets.Add(minion);
+            if (tile.tileObject is IBuffable target && CanBuff(target))
+                targets.Add(target);
         }
         return targets;
     }
@@ -162,7 +162,7 @@ public abstract class CrossBuffMinion : MinionGrowth1, IBuffRangeUnit
         if (crossBuffMinionData == null) // Spawn 전
             return;
 
-        List<Minion> targets = GetTargets();
+        List<IBuffable> targets = GetTargets();
 
         // 포위 진형 등으로 버프 값이 바뀌었으면 전부 해제 후 새 값으로 다시 걸기
         float value = EffectiveBuffValue;
@@ -173,42 +173,57 @@ public abstract class CrossBuffMinion : MinionGrowth1, IBuffRangeUnit
         }
 
         // 범위에서 빠진 슬라임 버프 해제
-        List<Minion> removed = new List<Minion>();
+        List<IBuffable> removed = new List<IBuffable>();
         foreach (var pair in appliedBuffs)
         {
             if (!targets.Contains(pair.Key))
                 removed.Add(pair.Key);
         }
-        foreach (Minion minion in removed)
+        foreach (IBuffable target in removed)
         {
-            if (minion != null) // 이미 Destroy된 슬라임은 해제 생략
-                RemoveBuffs(minion, appliedBuffs[minion]);
-            appliedBuffs.Remove(minion);
+            if (!IsDestroyed(target)) // 이미 Destroy된 대상은 해제 생략
+                RemoveBuffs(target, appliedBuffs[target]);
+            appliedBuffs.Remove(target);
         }
 
         // 새로 들어온 슬라임 버프 적용
-        foreach (Minion minion in targets)
+        foreach (IBuffable target in targets)
         {
-            if (appliedBuffs.ContainsKey(minion))
+            if (appliedBuffs.ContainsKey(target))
                 continue;
-            List<Buff> buffs = new List<Buff> { new Buff(BuffStatType, appliedValue, BuffOpType) };
-            appliedBuffs.Add(minion, buffs);
+            List<Buff> buffs = new List<Buff> { new Buff(BuffStatType, appliedValue, BuffOpType) { effectType = GetBuffEffectType(BuffStatType) } };
+            appliedBuffs.Add(target, buffs);
             foreach (Buff buff in buffs)
-                minion.AddBuff(buff);
+                target.AddBuff(buff);
         }
     }
 
-    static void RemoveBuffs(Minion minion, List<Buff> buffs)
+    // 버프 받는 미니언을 따라다니는 이펙트: 공속(Breeze) / 공격력(Rage) / 치명타 확률(Keen)
+    public static EffectType? GetBuffEffectType(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.AttackSpeed: return EffectType.AttackSpeedUp;
+            case StatType.AttackPower: return EffectType.AttackPowerUp;
+            case StatType.CritChance: return EffectType.CritChanceUp;
+            default: return null;
+        }
+    }
+
+    static void RemoveBuffs(IBuffable target, List<Buff> buffs)
     {
         foreach (Buff buff in buffs)
-            minion.RemoveBuff(buff);
+            target.RemoveBuff(buff);
     }
+
+    // Unity 오브젝트가 Destroy됐는지 (인터페이스로 들고 있으면 == null 비교가 Unity 규칙을 안 탐)
+    static bool IsDestroyed(IBuffable target) => target == null || (target is Object obj && obj == null);
 
     void ClearBuffs()
     {
         foreach (var pair in appliedBuffs)
         {
-            if (pair.Key != null)
+            if (!IsDestroyed(pair.Key))
                 RemoveBuffs(pair.Key, pair.Value);
         }
         appliedBuffs.Clear();

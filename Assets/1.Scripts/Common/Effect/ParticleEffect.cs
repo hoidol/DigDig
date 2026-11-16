@@ -33,6 +33,35 @@ public class ParticleEffect : Effect
     }
 
 
+    // 대상(미니언 등)을 따라다니며 duration초 재생. 대상이 꺼지면 같이 끝남
+    Transform followTarget;
+    public Transform FollowTarget => followTarget;
+
+    public void PlayFollow(Transform target, float playDuration)
+    {
+        followTarget = target;
+        Play(target.position);
+        timer = playDuration;
+    }
+
+    public override void EndEffect()
+    {
+        followTarget = null;
+        base.EndEffect();
+    }
+
+    void LateUpdate()
+    {
+        if (followTarget == null)
+            return;
+        if (!followTarget.gameObject.activeInHierarchy)
+        {
+            EndEffect();
+            return;
+        }
+        transform.position = followTarget.position;
+    }
+
     private void Update()
     {
         if (timer <= 0)

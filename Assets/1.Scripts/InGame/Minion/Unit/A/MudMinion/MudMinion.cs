@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // [A] 진흙: 공격 주기(공속)마다 진흙 구슬(MudOrb)을 하나씩 만들어 주변을 회전 (최대 maxOrbCount개, 머지 레벨로 증가)
-// 구슬이 적에 닿으면 스플래시 피해 + 진흙 1중첩 후 사라짐 → 중첩당 이동속도 15% 감소 (최대 80%, 엘리트·보스 60%, MudEffect)
-// 최대 개수면 생성하지 않고 공격 타이머를 유지 → 구슬이 터지면 바로 다시 생성
+// 구슬이 적에 닿으면 스플래시 피해 + 진흙 1중첩 (구슬은 사라지지 않음) → 중첩당 이동속도 5% 감소 (최대 15중첩 = 75%, MudEffect)
+// 최대 개수면 더 생성하지 않음
 public class MudMinion : MinionGrowth1, IRotationDirectionUnit
 {
     // 회전 방향 설정 (설정 버튼). 사거리 안 적 유무만 보고 타겟 방향은 안 쓰므로 타겟 방식 버튼은 숨김

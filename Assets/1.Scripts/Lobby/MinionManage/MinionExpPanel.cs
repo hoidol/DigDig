@@ -11,13 +11,22 @@ public class MinionExpPanel : MonoBehaviour
     {
         UserMinion userMinion = UserDataManager.Instance.userMinionManager.GetUserMinion(minionData.key);
         
+        // 모인 경험치 / 이번 레벨 필요량 (레벨업하면 필요량만큼 소모). 레벨은 등급별 시작 레벨 보정(EnhanceLevel)
         EnhanceExpInfo enhanceExpInfo = MinionManager.Instance.GetEnhanceExpInfo(minionData.grade);
-        int totalPreLvSumExp = enhanceExpInfo.TotalExp(userMinion.enhanceLevel);
-        int exp = userMinion.exp - totalPreLvSumExp;
-        expText.text = $"{exp}/{enhanceExpInfo.exps[userMinion.enhanceLevel]}";
-        int needExp = enhanceExpInfo.exps[userMinion.enhanceLevel];
-        // expBar.fillAmount = needExp > 0 ? (float)exp / needExp : 1f; // 필요 경험치 0(데이터 없음·최대)이면 가득
-        slider.value = needExp > 0 ? (float)exp / needExp : 1f;
+        int lv = userMinion.EnhanceLevel;
+        if (enhanceExpInfo == null || enhanceExpInfo.IsMaxLevel(lv))
+        {
+            if (expText != null)
+                expText.text = "MAX";
+            if (slider != null)
+                slider.value = 1f;
+            return;
+        }
+        int needExp = enhanceExpInfo.exps[lv];
+        if (expText != null)
+            expText.text = $"{userMinion.exp}/{needExp}";
+        if (slider != null)
+            slider.value = needExp > 0 ? Mathf.Clamp01((float)userMinion.exp / needExp) : 1f;
         
     }
 }

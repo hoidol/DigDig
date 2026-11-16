@@ -8,6 +8,8 @@ public class MinionData : ScriptableObject
 {
     public const int MAX_MERGE_LEVEL = 4; // mergeLevel 0 ~ MAX_MERGE_LEVEL
     public static readonly int MAX_ENHANCE_LEVEL = 15;
+    // 등급별 시작 강화 레벨: C 0, B 2, A 4, S 6, SS 8, SSS 10 (2026-11-14). EnhanceLevelInfo.csv에서 시작 레벨 전 필요 경험치는 0
+    public static int GetStartEnhanceLevel(GradeType grade) => (int)grade * 2;
     public static int[] ABILITY_LEVELS = { 2, 5, 8, 11, 14 };
 
     public string key;
@@ -36,8 +38,14 @@ public class MinionData : ScriptableObject
     }
 
 
+    [Tooltip("쿨타임 스킬이 있는 미니언 (머리 위 MinionGameStatePanel에 쿨타임 바 표시). 쿨타임 값·동작은 각 미니언 클래스")]
+    public bool hasSkill;
+
     [Tooltip("인게임 직접 강화 1레벨당 공격력 증가(%). 종마다 다름 (MinionData.csv ReinforceAttackPower)")]
     public float reinforceAttackPowerPercent = 10f;
+
+    [Tooltip("이 미니언의 공격 소리 (공격 모션과 같은 시점). AudioClip이 비면 SoundManager의 공통 소리 SFXType.MinionAttack. sfxType은 쓰지 않음")]
+    public SFXData attackSfx;
 
     public Minion prefab;
     public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
@@ -144,6 +152,9 @@ public class MinionData : ScriptableObject
             if (tagError != null)
                 Debug.LogWarning($"[MinionData] {key} Tags 모르는 이름: {tagError}");
         }
+        // 쿨타임 스킬 여부 (MinionData.csv HasSkill: TRUE/FALSE) → 머리 위 쿨타임 바
+        if (table.HasColumn("HasSkill"))
+            hasSkill = string.Equals(row.Get("HasSkill")?.Trim(), "TRUE", System.StringComparison.OrdinalIgnoreCase);
         if (row.TryGetFloat("ReinforceAttackPower", out float reinforcePercent))
             reinforceAttackPowerPercent = reinforcePercent;
 
@@ -210,6 +221,19 @@ public class MinionData : ScriptableObject
 
         string typeFilter = typeof(T) == typeof(Minion) ? "t:Prefab" : "t:Sprite";
         string[] guids = UnityEditor.AssetDatabase.FindAssets($"{fileName} {typeFilter}", new[] { folder });
+
+        // 스프라이트: 같은 이름 중 .png 우선(작업용 .psd 제외), Multiple로 잘린 이미지면 가장 큰 조각(본체)
+        if (typeof(T) == typeof(Sprite))
+        {
+            Sprite best = guids.Select(UnityEditor.AssetDatabase.GUIDToAssetPath)
+                .Where(p => System.IO.Path.GetFileNameWithoutExtension(p) == fileName)
+                .OrderBy(p => p.EndsWith(".psd", System.StringComparison.OrdinalIgnoreCase) ? 1 : 0)
+                .Select(p => UnityEditor.AssetDatabase.LoadAllAssetsAtPath(p).OfType<Sprite>().OrderByDescending(s => s.rect.width * s.rect.height).FirstOrDefault())
+                .FirstOrDefault(s => s != null);
+            if (best != null)
+                return best as T;
+        }
+
         foreach (string guid in guids)
         {
             string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);

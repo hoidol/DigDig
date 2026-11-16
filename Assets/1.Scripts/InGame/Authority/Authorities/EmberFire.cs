@@ -69,7 +69,7 @@ public class EmberFire : MonoBehaviour
 
     void Tick()
     {
-        EffectManager.Instance.Play(EffectType.Spark, pos);
+        EffectManager.Instance.Play(EffectType.Thunder, pos);
         foreach (Collider2D col in Physics2D.OverlapCircleAll(pos, radius, mask))
         {
             if (col.TryGetComponent(out IHittable hit))

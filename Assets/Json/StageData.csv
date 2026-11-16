@@ -1,4 +1,4 @@
-Key	Difficulty	EnemyHp	AddHpRatioPerWave	MultiHpPerWave
-Normal	Normal	10	0.3	1.03
-Hard	Hard	15	0.35	1.03
-Hell	Hell	20	0.4	1.03
+Key	Difficulty	EnemyHp	AddHpRatioPerWave	MultiHpPerWave					
+Normal	Normal	40	0.3	1.03					
+Hard	Hard	50	0.35	1.03					
+Hell	Hell	60	0.4	1.03					

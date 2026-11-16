@@ -18,14 +18,12 @@ public class GameSetting
    public const int DEFENCE_WAVE_INTERVAL = 3;
 
    public const float WAVE_TIME = 60;
-   public const float WAVE_SPAWN_TIME = 40;
-   public const float SKIP_ENABLE_TIME = 20; // 웨이브 시작 후 스킵(다음 wave 바로 시작) 가능해지는 시간. 남은 소환은 다음 wave와 겹쳐 진행
-   public const float ENEMY_SPAWN_INTERVAL = 1f;
+   public const int WAVE_ENEMY_COUNT = 40; // 한 wave에 소환하는 일반 적 총 수 (ENEMY_SPAWN_INTERVAL 간격, 2026-11-15 시간 기준 → 마리 수 기준)
+   public const float ENEMY_SPAWN_INTERVAL = 0.5f;
 
    public const float ENEMY_HP_INCREASE_INTERVAL = 10f; // 페이즈 시작 후 이 시간(초)마다 체력 증가
    public const float ENEMY_HP_REACH_RATIO = 0.5f; // 웨이브 끝에 (다음 페이즈 체력 - 현재 페이즈 체력)의 10%까지 도달
-   public const int INIT_DRAW_ITEM_PRICE = 10;
-   public const int INCREASE_DRAW_ITEM_PRICE = 1;
+   public const int DRAW_ITEM_DICE_COIN_PRICE = 15; // 타일 아이템 뽑기 가격 = 주사위 코인 고정 (뽑을수록 오르지 않음, 2026-11-14)
    public const int INIT_DRAW_ITEM_CHANCE = 100; // 아이템 뽑기 성공 확률(%). 성공할 때마다 감소
    public const int DECREASE_DRAW_ITEM_CHANCE = 5;
    public const int MIN_DRAW_ITEM_CHANCE = 10;
@@ -42,5 +40,5 @@ public class GameSetting
 
    // public const int MERGE_REINFORCE_MAX_EXP =3;
 
-   public static float INIT_CRIT_POWER =1.5f;
+   public static float INIT_CRIT_POWER = 1.5f;
 }

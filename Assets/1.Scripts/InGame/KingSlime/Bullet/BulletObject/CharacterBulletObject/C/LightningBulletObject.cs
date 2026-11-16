@@ -7,9 +7,14 @@ public class LightningBulletObject : AllyBulletObject
 {
     LightningBulletSpec lightningBulletSpec;
     public LineRenderer lineRenderer;
+    [Tooltip("전기 이펙트(LightningLine_Yellow 프리팹). 있으면 lineRenderer 대신 사용")]
+    public LightningLine lightningLine;
 
     const float LASER_SPEED = 40f; // 레이저가 다음 지점까지 뻗어나가는 속도
     const float LINE_DURATION = 0.05f; // 다 뻗은 뒤 사라지기 전 유지 시간
+    const float LIGHTNING_LINE_DURATION = 0.15f; // 전기 이펙트는 지지직이 보이도록 조금 더 유지
+
+    readonly List<Vector3> linePoints = new List<Vector3>();
 
     // LightningChainOnHitBehavior lightningChainOnHitBehavior;
     public override void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
@@ -26,7 +31,8 @@ public class LightningBulletObject : AllyBulletObject
     {
         base.Shoot(dir, damage); // 발사 정보 저장 (연발 타일이 같은 탄을 다시 쏠 때 사용)
         allyUnitDamageData.damage = damage;
-        lineRenderer.positionCount = 0;
+        if (lineRenderer != null)
+            lineRenderer.positionCount = 0;
         OnHit(allyUnit.Transform.position);
         // lightningChainOnHitBehavior.OnHit(this, transform.position);
     }
@@ -50,14 +56,14 @@ public class LightningBulletObject : AllyBulletObject
             if (next == null)
                 break;
 
-            points.Add(next.Transform.position);
+            points.Add(Enemy.GetHitPosition(next)); // 선은 몸통(HitPoint)으로
             hitTargets.Add(next);
 
             originPos = next.Transform.position;
             radius = lightningBulletSpec.searchRadius;
         }
 
-        if (lineRenderer != null && points.Count > 1)
+        if ((lightningLine != null || lineRenderer != null) && points.Count > 1)
         {
             direction = Vector2.zero;
             StartCoroutine(ShowLine(points, hitTargets));
@@ -79,9 +85,23 @@ public class LightningBulletObject : AllyBulletObject
 
     IEnumerator ShowLine(List<Vector3> points, List<IHittable> hitTargets)
     {
-        lineRenderer.enabled = true;
-        lineRenderer.positionCount = 1;
-        lineRenderer.SetPosition(0, points[0]);
+        bool useLightningLine = lightningLine != null;
+        if (useLightningLine)
+        {
+            if (lineRenderer != null)
+                lineRenderer.enabled = false;
+            linePoints.Clear();
+            linePoints.Add(points[0]);
+            linePoints.Add(points[0]);
+            lightningLine.SetPoints(linePoints);
+            lightningLine.Play();
+        }
+        else
+        {
+            lineRenderer.enabled = true;
+            lineRenderer.positionCount = 1;
+            lineRenderer.SetPosition(0, points[0]);
+        }
 
         for (int i = 1; i < points.Count; i++)
         {
@@ -89,19 +109,27 @@ public class LightningBulletObject : AllyBulletObject
             Vector3 to = points[i];
             float duration = Mathf.Max(Vector3.Distance(from, to) / LASER_SPEED, 0.01f);
 
-            lineRenderer.positionCount = i + 1;
+            if (useLightningLine)
+            {
+                // 마지막 점 = 뻗어 나가는 끝(EndFx가 따라감)
+                if (i > 1)
+                    linePoints.Add(from);
+            }
+            else
+                lineRenderer.positionCount = i + 1;
+
             float t = 0f;
             while (t < duration)
             {
                 t += Time.deltaTime;
-                lineRenderer.SetPosition(i, Vector3.Lerp(from, to, t / duration));
+                SetLineTip(useLightningLine, i, Vector3.Lerp(from, to, t / duration));
                 yield return null;
             }
-            lineRenderer.SetPosition(i, to);
+            SetLineTip(useLightningLine, i, to);
 
             // 레이저가 도달한 순간 데미지 적용
             IHittable target = hitTargets[i - 1];
-            EffectManager.Instance.Play(EffectType.Spark, target.Transform.position);
+            EffectManager.Instance.Play(EffectType.Thunder, to);
             
             float finalDamage = damage * damageMultiplier;
             for (int j = 0; j < forces.Count; j++)
@@ -119,10 +147,24 @@ public class LightningBulletObject : AllyBulletObject
                 b.OnHit(this, target, default, direction);
         }
 
-        yield return new WaitForSeconds(LINE_DURATION);
+        yield return new WaitForSeconds(useLightningLine ? LIGHTNING_LINE_DURATION : LINE_DURATION);
 
-        lineRenderer.enabled = false;
+        if (useLightningLine)
+            lightningLine.Stop();
+        else
+            lineRenderer.enabled = false;
         Release();
+    }
+
+    void SetLineTip(bool useLightningLine, int idx, Vector3 pos)
+    {
+        if (useLightningLine)
+        {
+            linePoints[linePoints.Count - 1] = pos;
+            lightningLine.SetPoints(linePoints);
+        }
+        else
+            lineRenderer.SetPosition(idx, pos);
     }
 
 }

@@ -176,6 +176,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
 
 
     IAllyUnit targetUnit; // 현재 선택된 아군 (슬라임 or 캐릭터)
+    public Tile SelectedTile => selectedTile;
     Tile selectedTile; // 정보를 보여주는 타일 (빈 타일 포함). 위에 유닛이 있으면 그 유닛이 targetUnit
     // 클릭한 타일을 선택하고, 위에 슬라임 or 캐릭터가 있으면 드래그 시작
     void BeginDrag()
@@ -353,6 +354,10 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         Minion merged = KingSlime.Instance.AddMinion(mergeResultKey, lv);
         if (tile != null)
             tile.SetTileObject(merged);
+        if (merged != null)
+            merged.PlayMergeHop(); // 떨어지는 등장 대신 제자리에서 살짝 뛰었다 착지
+        if (EffectManager.Instance != null && merged != null)
+            EffectManager.Instance.Play(EffectType.Merge, merged.transform.position); // 머지 이펙트 (Resources/Effect/MergedEffect)
         mergeCount++;
         AchievementManager.Report(AchievementType.MergeMinion);
         // Character.Instance.AddMergeCoin(1);

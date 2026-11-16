@@ -47,14 +47,13 @@ namespace Lobby
 
         public void OnClickedLevelUp()
         {
-            int exp = MinionManager.Instance.GetEnhanceExpInfo(userMinion.enhanceLevel, minionData.grade);
-            if (userMinion.exp < exp)
+            // 이번 레벨 필요 경험치를 소모하고 레벨업 (최대 레벨·경험치 부족이면 안내만)
+            if (!UserDataManager.Instance.userMinionManager.LevelUp(minionData.key))
             {
                 ToastCanvas.Toast(TranslateManager.GetText("Not enough exp"));
                 return;
             }
-
-            UserDataManager.Instance.userMinionManager.LevelUp(minionData.key);
+            minionPanel.SetData(minionData);
             UpdateCanvas();
         }
         public void OnClickedEquipt()

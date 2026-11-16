@@ -13,7 +13,6 @@ public class StatusEffectHandler : MonoBehaviour
     [field: SerializeField] public float MudSlow { get; set; } // 진흙 감속 비율 (MudEffect, 0~0.8)
     // 이동속도 배율 = 슬로우·빙결 중첩 × 진흙 감속
     public float SlowRate => Mathf.Pow(SLOW_RATE_PER_STACK, Mathf.Min(SlowStack, MAX_SLOW_STACK)) * (1f - MudSlow);
-    [field: SerializeField] public int StigmaStack { get; set; }               // 낙인 중첩 (StigmaEffect)
     [field: SerializeField] public float StigmaDamageMul { get; set; } = 1f;   // 낙인으로 받는 피해 배율 (Enemy.TakeDamage)
 
     // 방어막 소모 시도. 막으면 true 반환
@@ -74,7 +73,6 @@ public class StatusEffectHandler : MonoBehaviour
         IsShielded = false;
         SlowStack = 0;
         MudSlow = 0f;
-        StigmaStack = 0;
         StigmaDamageMul = 1f;
     }
 

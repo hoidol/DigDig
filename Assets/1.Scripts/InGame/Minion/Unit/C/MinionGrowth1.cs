@@ -6,15 +6,6 @@ using UnityEngine;
 public abstract class MinionGrowth1 : Minion
 {
     
-    public override void Spawn(Vector2 pos, int mLv)
-    {
-        base.Spawn(pos,mLv);
-        int count = transform.Find("StarContainer").childCount; //.Find($"Merge{mLv}");
-        for(int i = 0; i < count; i++)
-        {
-            transform.Find("StarContainer").GetChild(i).gameObject.SetActive(false);
-        }
-        transform.Find("StarContainer").Find($"Merge{mLv}").gameObject.SetActive(true);
+    // 머지 레벨 표시는 머리 위 MinionGameStatePanel (이전 StarContainer 별 표시는 삭제)
 
-    }
 }

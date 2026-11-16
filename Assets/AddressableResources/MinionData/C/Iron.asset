@@ -22,103 +22,104 @@ MonoBehaviour:
     minionStats:
     - statType: 0
       values:
-      - 5
-      - 5
+      - 18
+      - 18
   - level: 1
     minionStats:
     - statType: 0
       values:
-      - 5
-      - 5
+      - 19
+      - 19
   - level: 2
     minionStats:
     - statType: 0
       values:
-      - 6
-      - 6
+      - 20
+      - 20
   - level: 3
     minionStats:
     - statType: 0
       values:
-      - 6
-      - 6
+      - 21
+      - 21
   - level: 4
     minionStats:
     - statType: 0
       values:
-      - 7
-      - 7
+      - 22
+      - 22
   - level: 5
     minionStats:
     - statType: 0
       values:
-      - 7
-      - 7
+      - 23
+      - 23
   - level: 6
     minionStats:
     - statType: 0
       values:
-      - 8
-      - 8
+      - 24
+      - 24
   - level: 7
     minionStats:
     - statType: 0
       values:
-      - 8
-      - 8
+      - 25
+      - 25
   - level: 8
     minionStats:
     - statType: 0
       values:
-      - 8
-      - 8
+      - 26
+      - 26
   - level: 9
     minionStats:
     - statType: 0
       values:
-      - 9
-      - 9
+      - 27
+      - 27
   - level: 10
     minionStats:
     - statType: 0
       values:
-      - 9
-      - 9
+      - 28
+      - 28
   - level: 11
     minionStats:
     - statType: 0
       values:
-      - 9
-      - 9
+      - 29
+      - 29
   - level: 12
     minionStats:
     - statType: 0
       values:
-      - 10
-      - 10
+      - 30
+      - 30
   - level: 13
     minionStats:
     - statType: 0
       values:
-      - 10
-      - 10
+      - 31
+      - 31
   - level: 14
     minionStats:
     - statType: 0
       values:
-      - 10
-      - 10
+      - 32
+      - 32
   attackPowerRandomRatio: 0
+  hasSkill: 0
   reinforceAttackPowerPercent: 5
   prefab: {fileID: 1358385290756183109, guid: 3c41b69840b0424aabd8863bdf67d004, type: 3}
   unlockConditions: []
-  thum: {fileID: 0}
+  thum: {fileID: 5103231540499187363, guid: f015d282bcabe4ecaba48ae172b2ea55, type: 3}
   grade: 0
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 2
     values:
-    - 30
+    - 50
   - statType: 5
     values:
     - 3

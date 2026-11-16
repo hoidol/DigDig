@@ -7,6 +7,9 @@ public class EnhanceExpInfo : ScriptableObject
     public int[] exps;
     public int[] prices;//강화 가격
 
+    // 마지막 레벨(필요 경험치 칸의 끝)이면 최대
+    public bool IsMaxLevel(int lv) => exps == null || lv >= exps.Length - 1;
+
     public int TotalExp(int lv)
     {
         int sum = 0;

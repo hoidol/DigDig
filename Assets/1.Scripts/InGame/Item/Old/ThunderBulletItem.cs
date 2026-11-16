@@ -58,6 +58,6 @@
 //             * damageRates[Mathf.Clamp(count - 1, 0, damageRates.Length - 1)];
 
 //         InGameUtil.DamageEnemies(pos, strikeRadius, damage, hittableLayer);
-//         EffectManager.Instance.Play(EffectType.Spark, pos);
+//         EffectManager.Instance.Play(EffectType.Thunder, pos);
 //     }
 // }

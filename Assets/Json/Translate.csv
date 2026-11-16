@@ -68,6 +68,7 @@ Minion.Keen	설의	Keen
 Minion.Sacrifice	희생	Sacrifice
 Minion.GrowUp	성장	Grow Up
 Minion.Scavenger	수확	Scavenger
+Minion.Darkness	다크니스	Darkness
 Minion.Joker	조커	Joker
 Minion.Hunter	사냥꾼	Hunter
 Minion.Random.Desc	{0}~{1} 피해를 가진 탄을 발사합니다.	Fires shots that deal {0}~{1} damage.
@@ -92,7 +93,15 @@ Minion.Inferno.Desc	가장 가까운 적 경로 구간에 지옥불을 피워 �
 Minion.Sacrifice.Desc	같은 별의 아무 슬라임과 합치면 그 슬라임으로 강화됩니다.	Merge with any slime of the same star to upgrade into that slime.
 Minion.GrowUp.Desc	{0:0}초 후 랜덤한 슬라임으로 성장합니다(별 +{1}).	Grows into a random slime after {0:0}s (+{1} star).
 Minion.Scavenger.Desc	사거리 안에서 적이 죽으면 {0}골드를 얻습니다.	Gain {0} gold whenever an enemy dies within range.
-Minion.Joker.Desc	원하는 슬라임으로 변신합니다. {0:0}% 확률로 실패해 별이 1 떨어집니다(별 1이면 사라짐).	Transforms into any slime you choose. {0:0}% chance to fail and lose 1 star (vanishes at 1 star).
+Minion.Darkness.Desc	{0:0}초마다 변신 준비가 됩니다. 선택하면 머리 위 목록에서 원하는 미니언으로 변신합니다(레벨 유지, 성공 확률 {1:0}%, 성공 시 {2:0}% 확률로 레벨 +1).	Ready to transform every {0:0}s. Tap it to pick any equipped minion from the list above its head (level kept, {1:0}% success, {2:0}% chance of +1 level).
+Minion.Joker.Desc	{0:0}초마다 카드를 뽑습니다. 스페이드: 주변 적 전부에게 공격력 {1}% 가시 피해 / 다이아: {2}초간 공격속도 {3}배·공격력 절반 / 클로버: 코인 획득 / 하트: 꽝	Every {0:0}s draws a card. Spade: thorns deal {1}% attack damage to all nearby enemies / Diamond: {3}x attack speed and half attack for {2}s / Clover: gain coins / Heart: miss
+Joker_Card_Spade	스페이드!	Spade!
+Joker_Card_Diamond	다이아!	Diamond!
+Joker_Card_Clover	클로버!	Clover!
+Joker_Card_Heart	꽝!	Miss!
+Darkness_Transform_Success	변환 성공!	Transformed!
+Darkness_Transform_Grow	변환 성공! 성장!	Transformed! Level up!
+Darkness_Transform_Fail	변환 실패...	Transform failed...
 Minion.Hunter.Desc	{0}회 공격마다 저격 관통탄을 발사해 {1}초 스턴 + 치명 피해를 줍니다.	Every {0} attacks, fires a piercing sniper shot that stuns for {1}s and always crits.
 Joker_Fail_Vanish	변신 실패! 조커가 사라졌습니다.	Transform failed! The Joker vanished.
 Joker_Fail_LevelDown	변신 실패! 별이 1 떨어졌습니다.	Transform failed! Lost 1 star.
@@ -132,7 +141,7 @@ TileItem_SelectBlockedTile	해제할 막힌 타일을 눌러주세요.	Tap a blo
 TileItem_RefreshLimit	이번 판 갱신 횟수를 모두 사용했습니다	No refreshes left this game
 TileItem_Level	{0} Lv.{1}	{0} Lv.{1}
 TileItem_Upgrade	강화 {0:0}%	Upgrade {0:0}%
-TileItem_UpgradeSuccess	강화 성공! Lv.{0}	Upgrade succeeded! Lv.{0}
+TileItem_UpgradeSuccess	강화 성공!	Upgrade succeeded!
 TileItem_UpgradeFail	강화 실패	Upgrade failed
 Not enough dice coin	주사위 코인이 부족합니다.	Not enough dice coins.
 Draw_Success	뽑기 성공!	Draw succeeded!
@@ -283,3 +292,5 @@ Unlock_BestWave	Wave {0} 도달 시 해금됩니다	Unlocks after reaching Wave 
 Unlock_BestWaveDifficulty	{0} 난이도 Wave {1} 도달 시 해금됩니다	Unlocks after reaching Wave {1} on {0}
 Unlock_CurrentWave	Wave {0}부터 사용할 수 있습니다	Available from Wave {0}
 TileTitle	현재 타일	
+Minion_Stack	중첩 {0}	Stack {0}
+DamageText_Weak	약점!	WEAK!

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -81,11 +82,124 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     public List<Buff> activeBuffs = new List<Buff>();
     public ShotModifier shotModifier = new ShotModifier(); // 타일 아이템의 발사 방식 효과
     public ShotModifier ShotModifier => shotModifier;
+    // 몸 애니메이션 (Root/BodyRoot의 Animator, 컨트롤러 5.Animation/Minion/Minion.controller): Idle 기본, Attack·Skill 트리거
+    static readonly int ANIM_ATTACK = Animator.StringToHash("Attack");
+    static readonly int ANIM_SKILL = Animator.StringToHash("Skill");
+    protected Animator bodyAnimator;
+
+    public void PlayAttackAnim() => SetAnimTrigger(ANIM_ATTACK);
+    // 공격 소리: MinionData.attackSfx, 클립이 없으면 공통 SFXType.MinionAttack
+    public void PlayAttackSound()
+    {
+        SoundManager soundManager = SoundManager.Instance;
+        if (soundManager != null)
+            soundManager.PlaySound(minionData != null ? minionData.attackSfx : null, SFXType.MinionAttack);
+    }
+    public void PlaySkillAnim() => SetAnimTrigger(ANIM_SKILL);
+
+    // 스킬로 강화되는 동안(공속 버프 등) 미니언을 따라다니는 이펙트 (Resources/Effect/PowerUpEffect, EffectType.PowerUp)
+    ParticleEffect powerUpEffect;
+    public void PlayPowerUpEffect(float duration)
+    {
+        StopPowerUpEffect();
+        if (EffectManager.Instance == null)
+            return;
+        powerUpEffect = EffectManager.Instance.GetEffect(EffectType.PowerUp) as ParticleEffect;
+        if (powerUpEffect != null)
+            powerUpEffect.PlayFollow(transform, duration);
+    }
+    public void StopPowerUpEffect()
+    {
+        // 이미 끝나서 다른 미니언이 재사용 중이면 건드리지 않음
+        if (powerUpEffect != null && powerUpEffect.FollowTarget == transform)
+            powerUpEffect.EndEffect();
+        powerUpEffect = null;
+    }
+
+    // 받은 버프의 이펙트 (Buff.effectType). activeBuffs 기준으로 켜고 끔 → 버프가 빠지면 이펙트도 같이 꺼짐
+    readonly BuffEffectDisplay buffEffectDisplay = new BuffEffectDisplay();
+    void RefreshBuffEffects() => buffEffectDisplay.Refresh(transform, activeBuffs, isActiveAndEnabled);
+    void ClearBuffEffects() => buffEffectDisplay.Clear(transform);
+
+    void SetAnimTrigger(int hash)
+    {
+        if (bodyAnimator != null && bodyAnimator.isActiveAndEnabled && bodyAnimator.runtimeAnimatorController != null)
+            bodyAnimator.SetTrigger(hash);
+    }
+
     public virtual void Awake()
     {
         if (rootTr == null)
             rootTr = transform.Find("Root");
+        if (rootTr != null)
+        {
+            bodyAnimator = rootTr.GetComponentInChildren<Animator>(true);
+            rootBaseLocalPos = rootTr.localPosition;
+        }
+        if (bodyAnimator != null)
+            bodyRootBaseScale = bodyAnimator.transform.localScale;
+    }
 
+    // ---- 등장 연출 (2026-11-16): 살짝 위에서 떨어져 착지하며 찌그러졌다 돌아옴 ----
+    // 미니언 위치(transform)가 아니라 몸(Root)만 움직임 → 칸 이동·드래그와 겹쳐도 어긋나지 않음
+    const float SPAWN_DROP_HEIGHT = 0.6f;
+    const float SPAWN_DROP_TIME = 0.25f;
+    const float SPAWN_SQUASH_TIME = 0.2f;
+    static readonly Vector3 SPAWN_SQUASH_SCALE = new Vector3(1.25f, 0.75f, 1f);
+    Vector3 rootBaseLocalPos;
+    Vector3 bodyRootBaseScale = Vector3.one;
+    Sequence spawnSeq;
+
+    void PlaySpawnDrop()
+    {
+        if (rootTr == null)
+            return;
+        StopSpawnDrop();
+
+        Transform bodyRoot = bodyAnimator != null ? bodyAnimator.transform : null;
+        rootTr.localPosition = rootBaseLocalPos + Vector3.up * SPAWN_DROP_HEIGHT;
+
+        spawnSeq = DOTween.Sequence().SetLink(gameObject);
+        spawnSeq.Append(rootTr.DOLocalMove(rootBaseLocalPos, SPAWN_DROP_TIME).SetEase(Ease.InQuad));
+        AppendLandSquash(bodyRoot);
+    }
+
+    // 머지 결과: 제자리에서 살짝 뛰어올랐다 내려와 착지 (Spawn의 떨어지는 연출 대신)
+    const float MERGE_HOP_HEIGHT = 0.35f;
+    const float MERGE_HOP_UP_TIME = 0.15f;
+    const float MERGE_HOP_DOWN_TIME = 0.15f;
+
+    public void PlayMergeHop()
+    {
+        if (rootTr == null)
+            return;
+        StopSpawnDrop();
+
+        Transform bodyRoot = bodyAnimator != null ? bodyAnimator.transform : null;
+        spawnSeq = DOTween.Sequence().SetLink(gameObject);
+        spawnSeq.Append(rootTr.DOLocalMove(rootBaseLocalPos + Vector3.up * MERGE_HOP_HEIGHT, MERGE_HOP_UP_TIME).SetEase(Ease.OutQuad));
+        spawnSeq.Append(rootTr.DOLocalMove(rootBaseLocalPos, MERGE_HOP_DOWN_TIME).SetEase(Ease.InQuad));
+        AppendLandSquash(bodyRoot);
+    }
+
+    // 착지: 납작해졌다가 통통 튀며 원래 크기
+    void AppendLandSquash(Transform bodyRoot)
+    {
+        if (bodyRoot == null)
+            return;
+        spawnSeq.Append(bodyRoot.DOScale(Vector3.Scale(bodyRootBaseScale, SPAWN_SQUASH_SCALE), SPAWN_SQUASH_TIME * 0.35f).SetEase(Ease.OutQuad));
+        spawnSeq.Append(bodyRoot.DOScale(bodyRootBaseScale, SPAWN_SQUASH_TIME * 0.65f).SetEase(Ease.OutBack));
+    }
+
+    void StopSpawnDrop()
+    {
+        if (spawnSeq != null && spawnSeq.IsActive())
+            spawnSeq.Kill();
+        spawnSeq = null;
+        if (rootTr != null)
+            rootTr.localPosition = rootBaseLocalPos;
+        if (bodyAnimator != null)
+            bodyAnimator.transform.localScale = bodyRootBaseScale;
     }
     public UserMinion userMinion;
     public MinionEnhanceInfo minionEnhanceInfo;
@@ -95,7 +209,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         userMinion = UserDataManager.Instance.userMinionManager.GetUserMinion(key);
 
         minionData = MinionManager.Instance.GetMinionData(key);
-        minionEnhanceInfo = minionData.GetCommonMinionEnhanceInfo(userMinion.enhanceLevel);
+        minionEnhanceInfo = minionData.GetCommonMinionEnhanceInfo(userMinion.EnhanceLevel);
         transform.position = pos;
         this.mergeLevel = mLv;
         twinBonus = 0; // 풀링 재사용
@@ -111,7 +225,50 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
         InitMinion();
         UpdateMinion();
+
+        // 머리 위 상태 표시 (머지 레벨 / 스킬 쿨타임). 씬에 GameWorldCanvas가 없으면 생략
+        GameWorldCanvas worldCanvas = GameWorldCanvas.Instance;
+        if (worldCanvas != null)
+            worldCanvas.AttachMinionState(this);
+        PlaySpawnDrop();
     }
+
+    // 머리 위 상태 표시(MinionGameStatePanel) 위치. 프리팹에서 지정, 비워 두면 미니언 위치 + DEFAULT_STATE_POINT_OFFSET
+    public const float DEFAULT_STATE_POINT_OFFSET = 0.9f;
+    [SerializeField] protected Transform statePoint;
+    public Vector3 StatePointPosition => statePoint != null ? statePoint.position : transform.position + Vector3.up * DEFAULT_STATE_POINT_OFFSET;
+
+    // 쿨타임 스킬 진행도 0~1 (1 = 사용 가능). MinionData.hasSkill인 미니언이 재정의
+    public virtual float SkillProgress => 0f;
+
+    // 머리 위 추가 상태 글씨 (MinionGameStatePanel.stateText). null이면 숨김 (버서커 "중첩 N" 등)
+    public virtual string StateText => null;
+
+    // 테스트 창(Tools/Test/Minion Test)용: 스킬 쿨타임을 바로 채움. 시간형 = 다 참, 횟수형 = 1회 남김(다음 처치·공격에 발동)
+    public virtual void FillSkillForTest() { }
+
+    // ---- 스킬 공용 도우미 (2026-11-15) ----
+    // 사거리 안 가장 가까운 적 (없으면 null)
+    protected Transform FindClosestTargetInRange()
+    {
+        var targets = InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, FindTargetType.Closest, 1);
+        return targets != null && targets.Count > 0 ? targets[0] : null;
+    }
+
+    // baseAngle(도)부터 count방향 같은 간격으로 1발씩 (멀티 타겟 X)
+    protected void FireCircle(float baseAngle, int count)
+    {
+        float angleStep = 360f / count;
+        for (int i = 0; i < count; i++)
+        {
+            float rad = (baseAngle + i * angleStep) * Mathf.Deg2Rad;
+            FireBullet(new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)));
+        }
+    }
+
+    // 첫 방향 = target 쪽
+    protected void FireCircleAt(Transform target, int count)
+        => FireCircle(Vector2.SignedAngle(Vector2.right, target.position - transform.position), count);
 
     public virtual void InitMinion()
     {
@@ -120,7 +277,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
     public virtual void InitMinionStat()
     {
-        statDic[StatType.AttackPower] = minionData.GetMinionStat(StatType.AttackPower, userMinion.enhanceLevel).GetValue<float>(StatMergeLevel);
+        statDic[StatType.AttackPower] = minionData.GetMinionStat(StatType.AttackPower, userMinion.EnhanceLevel).GetValue<float>(StatMergeLevel);
         statDic[StatType.AttackSpeed] = GetDataStat(StatType.AttackSpeed); // MinionData.csv (강화·머지 레벨 무관)
         statDic[StatType.AttackRange] = GetDataStat(StatType.AttackRange);
         statDic[StatType.CritChance] = GetDataStat(StatType.CritChance); // % 단위. MinionData.csv (기본 0)
@@ -129,7 +286,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     // 데이터 스탯 값 (없으면 0)
     float GetDataStat(StatType statType)
     {
-        MinionStat stat = minionData.GetMinionStat(statType, userMinion.enhanceLevel);
+        MinionStat stat = minionData.GetMinionStat(statType, userMinion.EnhanceLevel);
         return stat != null ? stat.GetValue<float>(StatMergeLevel) : 0f;
     }
 
@@ -156,24 +313,25 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     public virtual void OnEnable()
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
-        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Subscribe<MinionLevelUpReinforceEvent>(OnMinionLevelUpReinforceEvent);
     }
 
     public virtual void OnDisable()
     {
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
-        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Unsubscribe<MinionLevelUpReinforceEvent>(OnMinionLevelUpReinforceEvent);
+        StopPowerUpEffect();
+        ClearBuffEffects();
+        StopSpawnDrop(); // 풀 반납 시 몸 위치·크기 원래대로
+
+        GameWorldCanvas worldCanvas = GameWorldCanvas.Instance;
+        if (worldCanvas != null)
+            worldCanvas.ReleaseMinionState(this);
     }
 
     void OnEnemyDeadEvent(EnemyDeadEvent e)
     {
         CheckTarget(e.enemy);
-    }
-    void OnDestroyedStoneEvent(DestroyedStoneEvent e)
-    {
-        CheckTarget(e.stone);
     }
 
     void OnMinionLevelUpReinforceEvent(MinionLevelUpReinforceEvent e)
@@ -222,11 +380,19 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
                 findTargetType = prevType;
 
                 if (attackTimer == 0) // 발사에 성공해야 타이머가 리셋됨
+                {
                     shotModifier.CountAttack();
+                    if (UseFindTarget) // 회전체·경로 순환(타겟을 노리지 않음)은 공격 모션·소리 없음
+                    {
+                        PlayAttackAnim();
+                        PlayAttackSound();
+                    }
+                }
             }
         }
 
-        if (targetTr == null)
+        // 타겟이 없으면 마지막으로 노린 방향 유지 (타겟을 노리지 않는 미니언은 방향 고정)
+        if (targetTr == null && UseFindTarget)
         {
             rootTr.localScale = new Vector3(fireDir.x >= 0 ? 1 : -1, 1, 1);
         }
@@ -234,21 +400,23 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
 
     public Transform targetTr;
-    Vector2 fireDir;
+    Vector2 fireDir; // 마지막으로 노린 방향 (바라보는 방향 유지용)
     public virtual Vector2 AttackDirecton()
     {
-        Vector2 fireDir = Vector2.zero;
+        Vector2 dir = Vector2.zero;
 
         targetTr = FindTarget();
         onTargetListener?.Invoke(targetTr);
 
         if (targetTr != null)
         {
-            fireDir = (targetTr.position - transform.position).normalized;
-            rootTr.localScale = new Vector3(fireDir.x >= 0 ? 1 : -1, 1, 1);
+            dir = (targetTr.position - transform.position).normalized;
+            fireDir = dir;
+            if (UseFindTarget) // 타겟을 노리지 않는 미니언(회전체 등)은 적 쪽으로 돌지 않음
+                rootTr.localScale = new Vector3(dir.x >= 0 ? 1 : -1, 1, 1);
         }
 
-        return fireDir.normalized;
+        return dir;
     }
 
 
@@ -363,12 +531,14 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     {
         activeBuffs.Add(buff);
         UpdateMinion();
+        RefreshBuffEffects();
     }
 
     public void RemoveBuff(Buff buff)
     {
         activeBuffs.Remove(buff);
         UpdateMinion();
+        RefreshBuffEffects();
     }
     bool isDraging;
     public virtual void StartDrag()

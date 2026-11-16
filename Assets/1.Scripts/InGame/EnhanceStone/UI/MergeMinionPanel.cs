@@ -25,10 +25,10 @@ public class MergeMinionPanel : ButtonUI
             resourcesObject.SetActive(true);
             for(int i = 0; i < minionImages.Length; i++)
             {
-                minionImages[i].sprite = MinionManager.Instance.GetMinionData(minionMergeData.growth1MinionKeys[i]).thum; 
+                minionImages[i].SetThum(MinionManager.Instance.GetMinionData(minionMergeData.growth1MinionKeys[i]).thum); 
             }
         }
-        icon.sprite = data.thum;
+        icon.SetThum(data.thum);
         titleText.text = data.Title;
 
         gameObject.SetActive(true);

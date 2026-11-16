@@ -246,12 +246,28 @@ public class UserMinionManager : UserBaseManager
         RequestSave();
     }
 
-    public void LevelUp(string key)
+    // 레벨업 가능: 최대 레벨이 아니고 모인 경험치 >= 이번 레벨 필요량
+    public bool CanLevelUp(string key)
     {
-        GetUserMinion(key).enhanceLevel++;
+        UserMinion userMinion = GetUserMinion(key);
+        EnhanceExpInfo info = MinionManager.Instance.GetEnhanceExpInfo(userMinion.MinionData.grade);
+        int lv = userMinion.EnhanceLevel;
+        return info != null && !info.IsMaxLevel(lv) && userMinion.exp >= info.exps[lv];
+    }
+
+    // 이번 레벨 필요 경험치를 소모하고 레벨 +1 (조건은 CanLevelUp)
+    public bool LevelUp(string key)
+    {
+        if (!CanLevelUp(key))
+            return false;
+        UserMinion userMinion = GetUserMinion(key);
+        int lv = userMinion.EnhanceLevel;
+        userMinion.exp -= MinionManager.Instance.GetEnhanceExpInfo(userMinion.MinionData.grade).exps[lv];
+        userMinion.enhanceLevel = lv + 1;
         GameEventBus.Publish(new LevelUpMinionEvent(key));
         AchievementManager.Report(AchievementType.LevelUpMinion);
         RequestSave();
+        return true;
     }
 }
 
@@ -279,9 +295,12 @@ public class UserMinion
     public int equipedIdx = -1;
     public bool Equiping => equipedIdx >= 0;
     public bool own;
-    public int enhanceLevel = 0;
-    public int exp;
+    public int enhanceLevel = 0; // 저장값. 읽을 때는 EnhanceLevel (등급별 시작 레벨 보정)
+    public int exp; // 지금 모인 경험치. 레벨업하면 그 레벨 필요량만큼 소모
     public MinionData MinionData => MinionManager.Instance.GetMinionData(key);
+
+    // 실제 강화 레벨: 등급별 시작 레벨(MinionData.GetStartEnhanceLevel)보다 낮으면 시작 레벨
+    public int EnhanceLevel => Mathf.Max(enhanceLevel, MinionData.GetStartEnhanceLevel(MinionData.grade));
 }
 
 [System.Serializable]

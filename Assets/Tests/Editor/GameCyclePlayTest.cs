@@ -154,7 +154,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
             foreach (var panel in Object.FindObjectsByType<MyInfoPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
                 Assert.AreEqual($"LV.{lv}", panel.lvText.text, $"Lv.{lv} MyInfoPanel 레벨 표시");
-                Assert.AreEqual(0f, panel.barImage.fillAmount, 0.001f, $"Lv.{lv} 레벨업 창 동안 바는 빈 칸");
+                Assert.AreEqual(0f, panel.expSlider.value, 0.001f, $"Lv.{lv} 레벨업 창 동안 바는 빈 칸");
             }
             levelUp.CloseCanvas();
             yield return WaitFrames(3);

@@ -21,7 +21,7 @@ public class CuttingRayBehavior : IBulletBehavior
         {
             IHittable target = laserHit.collider.GetComponent<IHittable>();
             if (target == null || target == hit) continue;
-            EffectManager.Instance.Play(EffectType.Spark, laserHit.point);
+            EffectManager.Instance.Play(EffectType.Thunder, laserHit.point);
             target.TakeDamage(dmg);
         }
 

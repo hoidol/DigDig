@@ -8057,6 +8057,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -27.699951
       objectReference: {fileID: 0}
+    - target: {fileID: 6176457618306534921, guid: b8b7692686228402093c7c6bc00ffa5f,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6176457618306534921, guid: b8b7692686228402093c7c6bc00ffa5f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7141681962191361836, guid: b8b7692686228402093c7c6bc00ffa5f,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -8594,6 +8604,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5077434295587247362}
     m_Modifications:
+    - target: {fileID: 107751171199130227, guid: bfdc69c0dc7104feda827a21a9eb4cb5,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 107751171199130227, guid: bfdc69c0dc7104feda827a21a9eb4cb5,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4023325854299145046, guid: bfdc69c0dc7104feda827a21a9eb4cb5,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -9365,6 +9385,16 @@ PrefabInstance:
     - target: {fileID: 2913160582047290137, guid: bec1cd312b64f41f6ad2425323dcf1e1,
         type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935709589653500593, guid: bec1cd312b64f41f6ad2425323dcf1e1,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935709589653500593, guid: bec1cd312b64f41f6ad2425323dcf1e1,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7814826431085029712, guid: bec1cd312b64f41f6ad2425323dcf1e1,
@@ -11372,6 +11402,16 @@ PrefabInstance:
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
       objectReference: {fileID: 0}
+    - target: {fileID: 5883591329122190362, guid: 3a5685bdd2f6440c18216b29cccb42b2,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5883591329122190362, guid: 3a5685bdd2f6440c18216b29cccb42b2,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5974323477910817764, guid: 3a5685bdd2f6440c18216b29cccb42b2,
         type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -11726,6 +11766,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1017332788967823597, guid: 293a99023348f46979fee3f3af80ae23,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4086238597686575560, guid: 293a99023348f46979fee3f3af80ae23,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4086238597686575560, guid: 293a99023348f46979fee3f3af80ae23,
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -13296,6 +13346,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2318468600277101754}
     m_Modifications:
+    - target: {fileID: 2752290388255682070, guid: 292f0f9f790e24da5bcabcd788ab9e4e,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2752290388255682070, guid: 292f0f9f790e24da5bcabcd788ab9e4e,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2873753693010420318, guid: 292f0f9f790e24da5bcabcd788ab9e4e,
         type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -13469,6 +13529,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 50.54004
+      objectReference: {fileID: 0}
+    - target: {fileID: 6743208605279097269, guid: b797947e8b0f54d87967d4b951307a22,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6743208605279097269, guid: b797947e8b0f54d87967d4b951307a22,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8050096707905572573, guid: b797947e8b0f54d87967d4b951307a22,
         type: 3}
@@ -14067,6 +14137,16 @@ PrefabInstance:
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
       objectReference: {fileID: 0}
+    - target: {fileID: 4615625187973639713, guid: 50924af9b3f5b47afa7ca679a83c554a,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4615625187973639713, guid: 50924af9b3f5b47afa7ca679a83c554a,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5064846663894689104, guid: 50924af9b3f5b47afa7ca679a83c554a,
         type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -14600,6 +14680,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2951703607449480568, guid: 1a759ba3efdf14e8e844eefc9b897619,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5534377014767194056, guid: 1a759ba3efdf14e8e844eefc9b897619,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5534377014767194056, guid: 1a759ba3efdf14e8e844eefc9b897619,
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

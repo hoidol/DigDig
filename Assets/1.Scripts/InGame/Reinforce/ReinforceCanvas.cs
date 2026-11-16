@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+// (2026-11-14) 사용 안 함: 강화 칸은 InGame 화면에 바로 보이는 ReinforceContainer가 관리. 씬에서 정리한 뒤 삭제
+
 // 인게임 직접 강화 (CLAUDE.md "인게임 직접 강화"): 장착한 슬라임 5종을 패널마다 하나씩 보여주고 코인으로 종(key) 단위 강화
 // (2026-11-11) 슬롯머신(릴 3개를 돌려 대상·종류·수치 결정) 기능은 사용 안 함 → 아래 주석
 public class ReinforceCanvas : CanvasUI<ReinforceCanvas>

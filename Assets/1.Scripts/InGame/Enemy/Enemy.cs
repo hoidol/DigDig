@@ -26,6 +26,15 @@ public abstract class Enemy : MonoBehaviour, IHittable
     [SerializeField] protected Transform root;
     [SerializeField] protected Transform hpPoint;
     public Transform HpPoint => hpPoint != null ? hpPoint : transform; // 머리 위 체력바·데미지 텍스트 위치
+    [Tooltip("맞는 위치(몸통). 번개 연쇄 선 등이 여기를 향함. 비우면 적 위치(발밑)")]
+    [SerializeField] protected Transform hitPoint;
+    public Vector3 HitPosition => hitPoint != null ? hitPoint.position : transform.position;
+
+    // 적이면 HitPoint, 그 외(돌 등)는 Transform 위치
+    public static Vector3 GetHitPosition(IHittable target)
+    {
+        return target is Enemy enemy ? enemy.HitPosition : target.Transform.position;
+    }
     // 머리 위 체력바(EnemyWorldCanvas) 사용 여부. 보스는 BossCanvas로 표시
     public virtual bool UseHpUI => true;
     protected Rigidbody2D rg2d;
@@ -278,7 +287,9 @@ public abstract class Enemy : MonoBehaviour, IHittable
         // 낙인 중첩만큼 받는 피해 증가 (모든 공격)
         if (statusEffectHandler != null)
             multiplier *= statusEffectHandler.StigmaDamageMul;
-        curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, multiplier));
+        // 피해 숫자 연출용: 방어 타입 표 배율(약점·내성, 만능은 1)과 최대 체력(피해량 비례 크기)
+        float typeMultiplier = damage.IgnoreDefence ? 1f : DefenceInfo.Get(damage.attackType, defenceType);
+        curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, multiplier, typeMultiplier, maxHp));
         // if (curHp > 1)
         //     hpText.text = ((int)curHp).ToString();
         // else if (0 < curHp && curHp <= 1)

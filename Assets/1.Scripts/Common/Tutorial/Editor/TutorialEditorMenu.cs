@@ -194,6 +194,7 @@ public static class TutorialEditorMenu
         fingerGO.SetActive(false);
 
         touch.gameObject.SetActive(false);
+        tutorialCanvas.EnsureFocus();
         return tutorialCanvas;
     }
 
@@ -223,6 +224,21 @@ public static class TutorialEditorMenu
         image.color = color;
         image.raycastTarget = true;
         return image;
+    }
+
+    // 이미 만든 튜토리얼 프리팹에 포커스(반전 마스크) 오브젝트 추가. 모양(구멍 스프라이트·어두운 색)은 프리팹에서 고친다
+    [MenuItem("Tools/Tutorial/Add Focus To Tutorial Prefabs")]
+    public static void AddFocusToPrefabs()
+    {
+        GameObject root = PrefabUtility.LoadPrefabContents(FIRST_PLAY_PREFAB_PATH);
+        TutorialCanvas canvas = root.GetComponentInChildren<TutorialCanvas>(true);
+        if (canvas != null && (canvas.focusRoot == null || canvas.focusBlocker == null))
+        {
+            canvas.EnsureFocus();
+            PrefabUtility.SaveAsPrefabAsset(root, FIRST_PLAY_PREFAB_PATH);
+            Debug.Log($"[Tutorial] 포커스 추가 {FIRST_PLAY_PREFAB_PATH}");
+        }
+        PrefabUtility.UnloadPrefabContents(root);
     }
 
     [MenuItem("Tools/Tutorial/Reset Tutorial Progress")]

@@ -45,25 +45,34 @@ public abstract class BattleWave : Wave
 
     CancellationTokenSource cts;
 
-    // 시작 즉시 1마리, 이후 spawnInterval마다 1마리. wave 시작 후 WAVE_SPAWN_TIME초까지만 (경과 시간은 정지 중 멈추는 waveTimer 기준)
+    // 시작 즉시 1마리, 이후 ENEMY_SPAWN_INTERVAL마다 1마리, 총 WAVE_ENEMY_COUNT마리 소환하면 끝
+    // (wave 시간이 먼저 끝나면 EndWave에서 남은 소환 취소)
     async UniTaskVoid SpawnLoop(CancellationToken token)
     {
-        while (GameSetting.WAVE_TIME - waveTimer < GameSetting.WAVE_SPAWN_TIME)
+        for (int i = 0; i < GameSetting.WAVE_ENEMY_COUNT; i++)
         {
             Spawn(EnemyType.Normal);
 
+            if (i == GameSetting.WAVE_ENEMY_COUNT - 1)
+                break; // 마지막 소환 뒤에는 기다리지 않음
             if (await UniTask.Delay(TimeSpan.FromSeconds(GameSetting.ENEMY_SPAWN_INTERVAL), cancellationToken: token).SuppressCancellationThrow())
                 return;
         }
         EndSpawnEnemy();
     }
 
+    // 한 wave의 소환이 끝나는 시점(초): 첫 마리 즉시 + (총 수 - 1) × 간격
+    public static float SpawnDuration => (GameSetting.WAVE_ENEMY_COUNT - 1) * GameSetting.ENEMY_SPAWN_INTERVAL;
+
     public void Spawn(EnemyType type)
     {
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type, waveDefenceType);
         // Debug.Log($"PhaseEnemySpawnPattern Spawn type {type}, GameManager.Instance.phaseDefenceType {waveDefenceType}");
         Enemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab);
-        enemy.Spawn(EnemyFieldController.Instance.GetSpawnPosition(), waveIdx);
+        EnemyFieldController field = EnemyFieldController.Instance;
+        enemy.Spawn(field.GetNormalSpawnPosition(), waveIdx); // 일반 적: 소환 위치 번갈아
+        // 소환 지점을 쓰면 paths[0]을 건너뛰고 바로 paths[1]로 → 각 지점에서 paths[1]로 오는 길에 한 줄로 합쳐짐
+        enemy.pathIdx = field.NormalStartPathIdx;
     }
 
     public virtual void EndSpawnEnemy()

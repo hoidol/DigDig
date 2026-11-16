@@ -8,6 +8,8 @@ public class BeamMinionData : EnhanceMinionData
 {
     // mergeLv별 레이저 두께 (적중 판정 폭). 레이저 하나의 두께는 연결된 두 슬라임 값의 평균
     public float[] lineWidths = { 0.15f, 0.2f, 0.25f, 0.3f, 0.35f };
+    // mergeLv별 레이저 이펙트 크기 배율 (보이는 크기만, 판정은 lineWidths). 레이저 하나 = 두 슬라임 값의 평균
+    public float[] effectScales = { 1f, 1.06f, 1.12f, 1.18f, 1.25f };
     // 레이저 피해 = 연결된 두 슬라임 공격력 평균 × 배율. 배율 = 1 - 감소율 × (전체 레이저 수 - 1), 최소 minLineDamageMul
     // (모두 연결이라 레이저 수가 n(n-1)/2로 빠르게 늘어남 → 레이저 하나의 피해를 줄여 총합 폭증을 막음)
     public float damageReductionPerLine = 0.1f; // 강화 11에서 완화

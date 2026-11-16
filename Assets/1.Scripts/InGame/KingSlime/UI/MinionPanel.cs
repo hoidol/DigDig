@@ -20,7 +20,7 @@ public class MinionPanel : MonoBehaviour
             nameText.text = minion.MinionData.Title;
 
         if (thumImage != null)
-            thumImage.sprite = minion.MinionData.thum;
+            thumImage.SetThum(minion.MinionData.thum);
 
         if (descText != null)
             descText.text = minion.minionData.GetDescription(minion.mergeLevel);

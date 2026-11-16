@@ -19,16 +19,15 @@ public class WaveTypeTest
         Assert.AreEqual(expected, GameManager.GetWaveType(waveIdx));
     }
 
-    // 스킵: wave 시작 후 SKIP_ENABLE_TIME(20)초부터 (소환이 끝나기 전이라 다음 wave와 겹침), 보스 wave는 불가
-    [TestCase(WaveType.Battle, 0f, false)]
-    [TestCase(WaveType.Battle, 19.9f, false)]
-    [TestCase(WaveType.Battle, 20f, true)]
-    [TestCase(WaveType.Elite, 25f, true)]
-    [TestCase(WaveType.Boss, 50f, false)]
-    public void CanSkipWave(WaveType waveType, float elapsed, bool expected)
+    // 스킵: 그 wave의 적이 모두 소환된 뒤부터, 보스 wave는 불가
+    [TestCase(WaveType.Battle, false, false)]
+    [TestCase(WaveType.Battle, true, true)]
+    [TestCase(WaveType.Elite, false, false)]
+    [TestCase(WaveType.Elite, true, true)]
+    [TestCase(WaveType.Boss, true, false)]
+    public void CanSkipWave(WaveType waveType, bool isSpawnEnd, bool expected)
     {
-        Assert.AreEqual(expected, GameManager.CanSkipWave(waveType, elapsed));
-        Assert.Less(GameSetting.SKIP_ENABLE_TIME, GameSetting.WAVE_SPAWN_TIME, "스킵 가능 시점이 소환 종료보다 앞이어야 겹침");
+        Assert.AreEqual(expected, GameManager.CanSkipWave(waveType, isSpawnEnd));
     }
 
     // 3 wave마다 Ethereal → Armored 번갈아, 나머지는 Normal (DEFENCE_WAVE_INTERVAL = 3)
@@ -313,5 +312,16 @@ public class EnergeRuleTest
         Assert.AreEqual(1, EnergeManager.GetChargeCount(10));
         Assert.AreEqual(3, EnergeManager.GetChargeCount(35));
         Assert.AreEqual(0, EnergeManager.GetChargeCount(-20)); // 기기 시간을 되돌린 경우
+    }
+
+    // 다크니스 변환: 성공 시 10% 확률로 머지 레벨 +1, 최대 레벨이면 그대로
+    [Test]
+    public void Darkness_TransformMergeLevel()
+    {
+        Assert.AreEqual(1, DarknessMinion.GetTransformMergeLevel(1, false));
+        Assert.AreEqual(2, DarknessMinion.GetTransformMergeLevel(1, true));
+        Assert.AreEqual(MinionData.MAX_MERGE_LEVEL, DarknessMinion.GetTransformMergeLevel(MinionData.MAX_MERGE_LEVEL, true));
+        Assert.AreEqual(0.7f, DarknessMinion.TRANSFORM_SUCCESS_CHANCE, 0.0001f);
+        Assert.AreEqual(0.1f, DarknessMinion.TRANSFORM_GROW_CHANCE, 0.0001f);
     }
 }

@@ -6,7 +6,8 @@ public class DamageData
     public AttackType attackType;
     // 만능(AllRounder) 공격은 방어 타입 배율 무시 (Enemy.TakeDamage에서 확인)
     public virtual bool IgnoreDefence => attackType == AttackType.AllRounder;
-    public virtual float ApplyDamage(Vector2 pos, float multiplier = 1f)
+    // typeMultiplier = 방어 타입 표 배율(약점·내성 표시용), targetMaxHp = 맞은 대상 최대 체력(피해 숫자 크기용, 0이면 기본 크기)
+    public virtual float ApplyDamage(Vector2 pos, float multiplier = 1f, float typeMultiplier = 1f, float targetMaxHp = 0f)
     {
         float damage = this.damage * multiplier;
         if (damage < 1)
@@ -21,7 +22,7 @@ public class DamageData
 [System.Serializable]
 public class EnemyDamageData : DamageData
 {
-    public override float ApplyDamage(Vector2 pos, float multiplier = 1f)
+    public override float ApplyDamage(Vector2 pos, float multiplier = 1f, float typeMultiplier = 1f, float targetMaxHp = 0f)
     {
         float damage = this.damage * multiplier;
         if (damage < 1)
@@ -64,7 +65,7 @@ public class AllyUnitDamageData : DamageData
         eliteBossDamageMul = 1f;
     }
 
-    public override float ApplyDamage(Vector2 pos, float multiplier = 1f)
+    public override float ApplyDamage(Vector2 pos, float multiplier = 1f, float typeMultiplier = 1f, float targetMaxHp = 0f)
     {
         float damage = this.damage * multiplier;
 
@@ -77,14 +78,32 @@ public class AllyUnitDamageData : DamageData
         damage = GetMinGuaranteedDamage(this.damage, damage);
         string dText = $"{(int)damage}";
 
+        float size = GetDamageTextSize(damage, targetMaxHp);
+        DamageTextType type = GetDamageTextType(typeMultiplier);
         if (!crt)
-        {
-            DamageText.SetText(pos, dText, ColorSetting.characterDamageColor);
-        }
+            DamageText.SetText(pos, dText, size, type);
         else
-        {
-            CRTDamageText.SetText(pos, dText, ColorSetting.characterCrtDamageColor);
-        }
+            CRTDamageText.SetText(pos, dText, size, type);
         return damage;
+    }
+
+    // 피해 숫자 크기: 대상 최대 체력 대비 피해 비율로 1 ~ 1.5배 (최대 체력의 절반 이상이면 1.5배). 최대 체력을 모르면 1
+    public const float DAMAGE_TEXT_MAX_SIZE = 1.5f;
+    public static float GetDamageTextSize(float damage, float targetMaxHp)
+    {
+        if (targetMaxHp <= 0f)
+            return 1f;
+        float ratio = Mathf.Clamp01(damage / targetMaxHp * 2f);
+        return Mathf.Lerp(1f, DAMAGE_TEXT_MAX_SIZE, ratio);
+    }
+
+    // 방어 타입 표 배율 > 1 = 약점, < 1 = 내성
+    public static DamageTextType GetDamageTextType(float typeMultiplier)
+    {
+        if (typeMultiplier > 1.001f)
+            return DamageTextType.Weak;
+        if (typeMultiplier < 0.999f)
+            return DamageTextType.Resist;
+        return DamageTextType.Normal;
     }
 }

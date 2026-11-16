@@ -44,7 +44,7 @@ public class ThunderBulletObject : AllyBulletObject
         // 대기 중 타겟이 움직였으면 현재 위치에 떨어짐 (죽었으면 처음 노린 지점)
         Vector2 strikePos = target != null && target.gameObject.activeInHierarchy ? (Vector2)target.position : fallbackPos;
         transform.position = strikePos;
-        EffectManager.Instance.Play(EffectType.SmallExplosion, strikePos);
+        EffectManager.Instance.Play(EffectType.Thunder, strikePos);
         EmberBrazierAuthority.OnZoneDamage(strikePos, thunderBulletSpec.strikeRadius, damage * damageMultiplier, thunderBulletSpec.hitLayerMask);
 
         IHittable[] targets = Physics2D.OverlapCircleAll(strikePos, thunderBulletSpec.strikeRadius, thunderBulletSpec.hitLayerMask)
@@ -56,7 +56,7 @@ public class ThunderBulletObject : AllyBulletObject
 
         foreach (IHittable hit in targets)
         {
-            EffectManager.Instance.Play(EffectType.Spark, hit.Transform.position);
+            EffectManager.Instance.Play(EffectType.Thunder, hit.Transform.position);
 
             float finalDamage = damage * damageMultiplier;
             for (int j = 0; j < forces.Count; j++)

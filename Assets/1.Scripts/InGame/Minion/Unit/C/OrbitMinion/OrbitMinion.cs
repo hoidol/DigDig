@@ -71,9 +71,10 @@ public class OrbitMinion : MinionGrowth1, IRotationDirectionUnit
         Debug.Log($"OrbitMinion UpdateMinion() {key} MergeLevel {mergeLevel} AttackPower {AttackPower}");
         orbitMachine.UpdateOrbitMachine();
     }
+    // 발사 없음. 타이머만 리셋 (안 하면 attackTimer가 1 이상으로 남아 매 프레임 타겟을 찾음)
     public override void Fire(Vector2 dir)
     {
-
+        attackTimer = 0;
     }
 
     public override AllyBulletObject GetBullet()

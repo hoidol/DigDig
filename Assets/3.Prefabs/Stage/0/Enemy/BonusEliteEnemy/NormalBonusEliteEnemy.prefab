@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2171130541231898771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6717267313935108664}
+  m_Layer: 0
+  m_Name: HitPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6717267313935108664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2171130541231898771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.09, y: 0.52, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2067649798771837938}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2413917189497250997
 GameObject:
   m_ObjectHideFlags: 0
@@ -27,7 +58,7 @@ Transform:
   m_GameObject: {fileID: 2413917189497250997}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.62, z: 0}
+  m_LocalPosition: {x: 0, y: -0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -176,7 +207,7 @@ Transform:
   m_GameObject: {fileID: 6602446230950223363}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.37, z: 0}
+  m_LocalPosition: {x: 0, y: 2.21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -219,6 +250,7 @@ Transform:
   - {fileID: 9135191519818829126}
   - {fileID: 1785538122060063186}
   - {fileID: 4298944854010302825}
+  - {fileID: 6717267313935108664}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &7536888476502838592
@@ -262,12 +294,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyType: 2
   defenceType: 0
-  enemyData: {fileID: 11400000, guid: bbdaafbb62f16490dbed594e13531637, type: 2}
+  enemyData: {fileID: 11400000, guid: 9fa54e4fe7a8d4f9c9222d9bd579f9d9, type: 2}
   <statusEffectHandler>k__BackingField: {fileID: 4281134898832954647}
   maxHp: 0
   curHp: 0
   root: {fileID: 3385698616241527368}
   hpPoint: {fileID: 9135191519818829126}
+  hitPoint: {fileID: 6717267313935108664}
   followingPlayer: 0
   apearTime: 2
   damageData:
@@ -543,6 +576,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170532579737872930, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.153
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170532579737872930, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.567
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

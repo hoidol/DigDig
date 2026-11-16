@@ -22,97 +22,98 @@ MonoBehaviour:
     minionStats:
     - statType: 0
       values:
-      - 3
-      - 1
+      - 7
+      - 7
   - level: 1
     minionStats:
     - statType: 0
       values:
-      - 4
-      - 1
+      - 8
+      - 8
   - level: 2
     minionStats:
     - statType: 0
       values:
-      - 4
-      - 2
+      - 9
+      - 9
   - level: 3
     minionStats:
     - statType: 0
       values:
-      - 4
-      - 2
+      - 10
+      - 10
   - level: 4
     minionStats:
     - statType: 0
       values:
-      - 5
-      - 2
+      - 11
+      - 11
   - level: 5
     minionStats:
     - statType: 0
       values:
-      - 5
-      - 2
+      - 12
+      - 12
   - level: 6
     minionStats:
     - statType: 0
       values:
-      - 5
-      - 3
+      - 13
+      - 13
   - level: 7
     minionStats:
     - statType: 0
       values:
-      - 5
-      - 3
+      - 14
+      - 14
   - level: 8
     minionStats:
     - statType: 0
       values:
-      - 5
-      - 3
+      - 15
+      - 15
   - level: 9
     minionStats:
     - statType: 0
       values:
-      - 6
-      - 3
+      - 16
+      - 16
   - level: 10
     minionStats:
     - statType: 0
       values:
-      - 6
-      - 3
+      - 17
+      - 17
   - level: 11
     minionStats:
     - statType: 0
       values:
-      - 6
-      - 3
+      - 18
+      - 18
   - level: 12
     minionStats:
     - statType: 0
       values:
-      - 6
-      - 3
+      - 19
+      - 19
   - level: 13
     minionStats:
     - statType: 0
       values:
-      - 6
-      - 4
+      - 20
+      - 20
   - level: 14
     minionStats:
     - statType: 0
       values:
-      - 7
-      - 4
+      - 21
+      - 21
   attackPowerRandomRatio: 0
+  hasSkill: 1
   reinforceAttackPowerPercent: 5
   prefab: {fileID: 1358385290756183109, guid: 17add7f164a343a09c081355752c0be2, type: 3}
   unlockConditions: []
-  thum: {fileID: 0}
+  thum: {fileID: -6182518920641396402, guid: f0c46fdae5ce8483187223142991eb3c, type: 3}
   grade: 2
   displayStatTypes: 000000000200000005000000
   baseMinionStats:

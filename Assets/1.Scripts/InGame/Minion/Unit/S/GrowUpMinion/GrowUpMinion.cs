@@ -5,13 +5,11 @@ using UnityEngine;
 // - 시간은 게임 진행 중에만 흐름. 드래그 중에 시간이 다 되면 놓은 뒤 성장
 // - 옮겨도 시간은 유지, 합성하면 사라짐 (일반 합성 규칙)
 // - 성장 전까지는 일반 탄 공격
-// 프리팹: growBar(선택)에 진행도 표시용 Transform 연결 (localScale.x = 진행도 0~1)
+// 성장까지 진행도 = SkillProgress → 머리 위 MinionGameStatePanel.cooltimeSlider (MinionData.hasSkill 켜 둠)
 public class GrowUpMinion : MinionGrowth1
 {
     // 최대 머지 레벨에서는 쓸 수 있는 각성이 없어 진화하지 않음 (머지 레벨을 올리는 슬라임)
     public override bool CanEvolve => false;
-
-    public Transform growBar;
 
     GrowUpMinionData growUpMinionData;
     AllyBulletSpec allyBulletSpec;
@@ -22,6 +20,9 @@ public class GrowUpMinion : MinionGrowth1
     float growTimer;
     bool isDragging;
     bool isGrown;
+
+    public override float SkillProgress => growTime > 0f ? Mathf.Clamp01(growTimer / growTime) : 1f;
+    public override void FillSkillForTest() { growTimer = growTime; }
 
     public override void Spawn(Vector2 pos, int lv)
     {
@@ -38,7 +39,6 @@ public class GrowUpMinion : MinionGrowth1
         isDragging = false;
         isGrown = false;
         base.InitMinion();
-        UpdateGrowBar();
     }
 
     public override void Update()
@@ -55,18 +55,8 @@ public class GrowUpMinion : MinionGrowth1
             return;
 
         growTimer += Time.deltaTime;
-        UpdateGrowBar();
         if (growTimer >= growTime && !isDragging)
             Grow();
-    }
-
-    void UpdateGrowBar()
-    {
-        if (growBar == null)
-            return;
-        Vector3 scale = growBar.localScale;
-        scale.x = growTime > 0f ? Mathf.Clamp01(growTimer / growTime) : 1f;
-        growBar.localScale = scale;
     }
 
     void Grow()

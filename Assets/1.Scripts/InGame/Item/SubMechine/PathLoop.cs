@@ -63,6 +63,30 @@ public static class PathLoop
         return best;
     }
 
+    // pos와 가장 가까운 고리 위 점까지, 첫 지점부터 잰 거리 (GetPoint의 distance로 쓰면 그 점)
+    public static float GetNearestTravel(Transform[] points, float total, Vector2 pos)
+    {
+        if (points == null || points.Length < 2 || total <= 0f)
+            return 0f;
+        float best = 0f, minDist = float.MaxValue, acc = 0f;
+        for (int i = 0; i < points.Length; i++)
+        {
+            Vector2 a = points[i].position;
+            Vector2 b = points[(i + 1) % points.Length].position;
+            Vector2 ab = b - a;
+            float len = ab.magnitude;
+            float t = ab.sqrMagnitude > 0f ? Mathf.Clamp01(Vector2.Dot(pos - a, ab) / ab.sqrMagnitude) : 0f;
+            float dist = (a + ab * t - pos).sqrMagnitude;
+            if (dist < minDist)
+            {
+                minDist = dist;
+                best = acc + len * t;
+            }
+            acc += len;
+        }
+        return best;
+    }
+
     // 첫 지점부터 distance만큼 간 위치 (total = GetLength, distance는 total을 넘으면 반복)
     public static Vector2 GetPoint(Transform[] points, float total, float distance)
     {

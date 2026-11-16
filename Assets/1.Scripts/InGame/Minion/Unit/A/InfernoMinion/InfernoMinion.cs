@@ -1,7 +1,9 @@
 using System.Linq;
 using UnityEngine;
 
-// [A] 지옥: 탄을 쏘지 않고, 자기 TileGroup의 enemyRoots 중 슬라임과 가장 가까운 2개 사이에 지옥불(Hellfire) 생성
+// (2026-11-15) 스킬: 평소엔 기본 탄 공격, SKILL_COOLTIME초가 차면 지옥불을 SKILL_DURATION초 동안 소환
+//   지옥불이 있는 동안은 공격 주기마다 지옥불 피해(아래), 사라지면 쿨타임이 다시 참. 지옥불을 놓을 수 없는 칸이면 찬 채로 대기
+// [A] 지옥: 자기 TileGroup의 enemyRoots 중 슬라임과 가장 가까운 2개 사이에 지옥불(Hellfire) 생성
 // 공격 주기(공속)마다 지옥불 안에 있는 적 전부에게 AttackPower 피해. 영역을 벗어나면 바로 피해 없음
 // TileGroup 3*3의 가운데 칸이면 지옥불 없음 (위치가 지옥불을 결정 → 배치 포인트)
 // [각성] (진화) 지옥불 피해를 입은 적에게 화상(FlameEffect, 초당 AttackPower × burnDpsRatio, burnDuration초)
@@ -12,8 +14,18 @@ public class InfernoMinion : MinionGrowth1
 
     InfernoMinionData infernoMinionData;
     readonly AllyUnitDamageData damageData = new AllyUnitDamageData();
+    AllyBulletSpec allyBulletSpec;
 
     bool isDragging;
+
+    public const float SKILL_COOLTIME = 12f;
+    public const float SKILL_DURATION = 10f;
+    float skillTimer;     // 쿨타임 진행 (지옥불이 없을 때만)
+    float hellfireTimer;  // 지옥불 남은 시간
+    bool IsHellfireActive => hellfireTimer > 0f;
+
+    public override float SkillProgress => IsHellfireActive ? 0f : Mathf.Clamp01(skillTimer / SKILL_COOLTIME);
+    public override void FillSkillForTest() { skillTimer = SKILL_COOLTIME; }
 
     public override void Spawn(Vector2 pos, int lv)
     {
@@ -24,7 +36,42 @@ public class InfernoMinion : MinionGrowth1
     public override void InitMinion()
     {
         isDragging = false;
+        allyBulletSpec = new AllyBulletSpec();
+        skillTimer = 0;
+        hellfireTimer = 0;
+        if (hellfire != null)
+            hellfire.Hide();
         base.InitMinion();
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if (IsHellfireActive)
+        {
+            hellfireTimer -= Time.deltaTime;
+            if (hellfireTimer <= 0f)
+            {
+                hellfireTimer = 0f;
+                if (hellfire != null)
+                    hellfire.Hide();
+            }
+            return;
+        }
+        if (skillTimer < SKILL_COOLTIME)
+        {
+            skillTimer += Time.deltaTime;
+            return;
+        }
+        // 지옥불을 놓을 수 있을 때 소환 (드래그 중·가운데 칸이면 대기)
+        hellfireTimer = SKILL_DURATION; // RefreshHellfire가 켜진 상태에서만 보이게 먼저 설정
+        if (isDragging || !RefreshHellfire())
+        {
+            hellfireTimer = 0f;
+            return;
+        }
+        skillTimer = 0;
+        PlaySkillAnim();
     }
 
     public override void OnDisable()
@@ -52,7 +99,8 @@ public class InfernoMinion : MinionGrowth1
     {
         base.EndDrag(t);
         isDragging = false;
-        RefreshHellfire();
+        if (IsHellfireActive)
+            RefreshHellfire();
     }
 
     // 지금 타일 기준으로 지옥불 위치 갱신. 만들 수 없으면(타일 없음/가운데 칸/경로 점 부족) 숨김
@@ -60,6 +108,12 @@ public class InfernoMinion : MinionGrowth1
 
     bool RefreshHellfire()
     {
+        if (!IsHellfireActive)
+        {
+            if (hellfire != null)
+                hellfire.Hide();
+            return false;
+        }
         Tile tile = TileManager.Instance.GetTile(this);
         TileGroup group = tile != null ? tile.GetComponentInParent<TileGroup>() : null;
         // 측량사의 나침반: 옆 그룹 경로까지 후보 → 가장 가까운 경로를 쓰는 그룹
@@ -109,9 +163,14 @@ public class InfernoMinion : MinionGrowth1
         }
     }
 
-    // 타겟 방향은 쓰지 않음. 공격 주기마다 지옥불 안 적 전부에게 피해
+    // 지옥불이 없으면 기본 탄. 있으면 타겟 방향은 쓰지 않고 공격 주기마다 지옥불 안 적 전부에게 피해
     public override void Fire(Vector2 dir)
     {
+        if (!IsHellfireActive)
+        {
+            base.Fire(dir);
+            return;
+        }
         if (isDragging || !RefreshHellfire())
             return;
 
@@ -134,6 +193,11 @@ public class InfernoMinion : MinionGrowth1
         attackTimer = 0; // 안에 적이 없어도 주기는 그대로 돈다
     }
 
-    // 탄을 쏘지 않음 (Fire 재정의)
-    public override AllyBulletObject GetBullet() => null;
+    // 지옥불이 없을 때 쓰는 기본 탄
+    public override AllyBulletObject GetBullet()
+    {
+        allyBulletSpec.damage = AttackPower;
+        allyBulletSpec.StartBulletSpec();
+        return allyBulletSpec.Instantiate(this);
+    }
 }

@@ -67,7 +67,7 @@ public class MinionMergeInfoPanel : MonoBehaviour
 
             UpdateStar();
         }
-        List<MinionStat> minionStats = minionData.GetDisplayMinionStats(userMinion.enhanceLevel);
+        List<MinionStat> minionStats = minionData.GetDisplayMinionStats(userMinion.EnhanceLevel);
 
         for (int i = 0; i < statPanels.Length; i++)
         {

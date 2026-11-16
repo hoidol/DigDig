@@ -1,0 +1,59 @@
+{
+    "userCumulativeAchievements": [
+        {
+            "type": 2,
+            "value": 3,
+            "clearCount": 1
+        },
+        {
+            "type": 0,
+            "value": 3937,
+            "clearCount": 0
+        },
+        {
+            "type": 4,
+            "value": 0,
+            "clearCount": 0
+        },
+        {
+            "type": 3,
+            "value": 0,
+            "clearCount": 0
+        },
+        {
+            "type": 5,
+            "value": 90,
+            "clearCount": 0
+        },
+        {
+            "type": 10,
+            "value": 91,
+            "clearCount": 0
+        },
+        {
+            "type": 11,
+            "value": 34,
+            "clearCount": 0
+        },
+        {
+            "type": 9,
+            "value": 3,
+            "clearCount": 0
+        },
+        {
+            "type": 6,
+            "value": 3,
+            "clearCount": 0
+        },
+        {
+            "type": 7,
+            "value": 11,
+            "clearCount": 0
+        },
+        {
+            "type": 8,
+            "value": 3,
+            "clearCount": 0
+        }
+    ]
+}

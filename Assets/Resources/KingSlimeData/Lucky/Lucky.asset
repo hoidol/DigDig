@@ -16,13 +16,13 @@ MonoBehaviour:
   kingslimeStats:
   - statType: 0
     initValue: 0
-    value: 8
+    value: 25
   - statType: 1
     initValue: 0
     value: 20
   - statType: 2
     initValue: 0
-    value: 50
+    value: 80
   - statType: 3
     initValue: 0
     value: 1
@@ -31,7 +31,7 @@ MonoBehaviour:
     value: 1.5
   - statType: 5
     initValue: 0
-    value: 4
+    value: 3
   - statType: 6
     initValue: 0
     value: 0

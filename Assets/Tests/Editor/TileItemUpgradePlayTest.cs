@@ -82,9 +82,16 @@ public class TileItemUpgradePlayTest : InGamePlayTestBase
         panel.SetTile(tile);
         Assert.IsTrue(button.gameObject.activeSelf, "강화 가능한 아이템인데 버튼 숨김");
 
-        // 코인 부족 → 아무 일 없음
+        // 실제 Button 클릭 경로(onClick)로 누른다. OnClickedBtn 직접 호출은 interactable·리스너 연결을 건너뛰어 버그를 못 잡음
+        void Click()
+        {
+            Assert.IsTrue(button.button.IsInteractable(), "강화 버튼이 눌리지 않는 상태(interactable false)");
+            button.button.onClick.Invoke();
+        }
+
+        // 코인 부족 → 버튼은 눌리고(토스트) 레벨·코인 그대로
         KingSlime.Instance.AddDiceCoin(-KingSlime.Instance.diceCoin);
-        button.OnClickedBtn();
+        Click();
         Assert.AreEqual(1, item.upgradeLevel);
         Assert.AreEqual(0, KingSlime.Instance.diceCoin);
 
@@ -95,7 +102,7 @@ public class TileItemUpgradePlayTest : InGamePlayTestBase
             int cost = item.UpgradeCost;
             Assert.AreEqual(data.diceCoin * 2, cost);
             KingSlime.Instance.AddDiceCoin(cost);
-            button.OnClickedBtn();
+            Click();
             Assert.AreEqual(0, KingSlime.Instance.diceCoin, "강화 비용을 내지 않음");
         }
         Assert.AreEqual(2, item.upgradeLevel, "강화 성공 안 됨");
@@ -110,7 +117,7 @@ public class TileItemUpgradePlayTest : InGamePlayTestBase
         while (!item.IsMaxLevel && tries++ < 50)
         {
             KingSlime.Instance.AddDiceCoin(item.UpgradeCost);
-            button.OnClickedBtn();
+            Click();
         }
         Assert.AreEqual(data.MaxLevel, item.upgradeLevel);
         panel.SetTile(tile);

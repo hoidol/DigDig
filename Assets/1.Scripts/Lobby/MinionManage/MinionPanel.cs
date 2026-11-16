@@ -25,18 +25,19 @@ namespace Lobby
 
             if (thumImge != null)
             {
-                thumImge.sprite = uMData.thum;
+                thumImge.SetThum(uMData.thum); // SetNativeSize 후 칸 크기에 맞춤 (MinionEquipedSlotPanel.thumImage와 같은 방식)
                 if (userMinion.own)
                 {
                     thumImge.color = Color.white;
                 }
                 else
                 {
-                    thumImge.color = Color.gray;
+                    thumImge.color = Color.black;
                 }
             }
-                
-            if(minionGradePanel != null){
+
+            if (minionGradePanel != null)
+            {
                 minionGradePanel.SetMinionData(uMData);
             }
 
@@ -51,23 +52,24 @@ namespace Lobby
 
             if (enhanceLvText != null)
             {
-                int enhanceLevel = userMinion.enhanceLevel;
-                if(enhanceLevel == MinionData.MAX_ENHANCE_LEVEL)
+                int enhanceLevel = userMinion.EnhanceLevel;
+                EnhanceExpInfo expInfo = MinionManager.Instance.GetEnhanceExpInfo(uMData.grade);
+                if (expInfo != null && expInfo.IsMaxLevel(enhanceLevel))
                 {
                     enhanceLvText.text = "MAX";
-                }   
+                }
                 else
                 {
-                    enhanceLvText.text = enhanceLevel.ToString();    
+                    enhanceLvText.text = enhanceLevel.ToString();
                 }
-                
+
             }
 
-            if(mineMeExpPanel != null)
+            if (mineMeExpPanel != null)
             {
-                mineMeExpPanel.SetMinion(uMData);    
+                mineMeExpPanel.SetMinion(uMData);
             }
-            
+
         }
 
     }

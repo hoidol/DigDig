@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 
 // 철벽 슬라임 방패: 닿은 적의 이동을 멈춘다 (최대 maxBlockCount기, 초과한 적은 그냥 지나감)
-// 적 탄에 닿으면 탄 제거. 피해는 OrbitOrb와 같이 닿을 때 줌
+// 적 탄에 닿으면 탄 제거. 피해는 막은 적에게만(2026-11-15): 막는 순간 1번 + 막혀 있는 동안 공격 주기(공속)마다
+// 막지 못하고 지나가는 적(정원 초과, 엘리트·보스)은 피해 없음
 // 막는 동안 방패는 그 자리에 멈추고(SeparateOrbitMachine.SetSpeedMul 0), 막던 적이 모두 죽거나 빠지면 다시 회전
 public class ShieldOrbitOrb : OrbitOrb
 {
@@ -19,6 +20,7 @@ public class ShieldOrbitOrb : OrbitOrb
     {
         public Enemy enemy;
         public int spawnId; // 풀링 재사용 후의 같은 객체는 해제하지 않음
+        public float hitTimer; // 1이 되면 피해 (공격 타이머와 같은 기준)
     }
     readonly List<Blocked> blocked = new List<Blocked>();
 
@@ -31,8 +33,7 @@ public class ShieldOrbitOrb : OrbitOrb
             Destroy(enemyBullet.gameObject);
             return;
         }
-        base.OnTriggerEnter2D(other);
-
+        // 닿기만 한 적은 피해 없음 (base.OnTriggerEnter2D 안 부름) → 막았을 때만 TryBlock에서 피해
         if (((1 << other.gameObject.layer) & layerMask.value) == 0) return;
         if (!other.TryGetComponent(out Enemy enemy)) return;
         TryBlock(enemy);
@@ -56,6 +57,7 @@ public class ShieldOrbitOrb : OrbitOrb
         blocked.Add(new Blocked { enemy = enemy, spawnId = enemy.SpawnId });
         enemy.AddBlocker();
         UpdateRotation();
+        OnHit(null, enemy); // 막는 순간 1번
     }
 
     void Unblock(Enemy enemy)
@@ -80,7 +82,38 @@ public class ShieldOrbitOrb : OrbitOrb
         if (removed > 0)
             UpdateRotation();
 
+        UpdateBlockedHit();
         UpdateThorn();
+    }
+
+    // 막혀 있는 적마다 공격 주기(공속, ATTACK_SPEED_PER_SECOND면 초당 1번)마다 피해
+    void UpdateBlockedHit()
+    {
+        if (blocked.Count == 0)
+            return;
+        float attackSpeed = orbitMachine != null && orbitMachine.owner is Minion minion ? minion.AttackSpeed : GameSetting.ATTACK_SPEED_PER_SECOND;
+        float add = Time.deltaTime * attackSpeed / GameSetting.ATTACK_SPEED_PER_SECOND;
+        for (int i = 0; i < blocked.Count; i++)
+        {
+            Blocked b = blocked[i];
+            b.hitTimer += add;
+            blocked[i] = b;
+        }
+        // 피해 중 적이 죽어 목록이 바뀔 수 있으므로 복사본으로 판정
+        foreach (Blocked b in blocked.ToArray())
+        {
+            if (b.hitTimer < 1f)
+                continue;
+            int index = blocked.FindIndex(x => x.enemy == b.enemy);
+            if (index >= 0)
+            {
+                Blocked cur = blocked[index];
+                cur.hitTimer -= 1f;
+                blocked[index] = cur;
+            }
+            if (b.enemy != null && b.enemy.gameObject.activeInHierarchy && b.enemy.SpawnId == b.spawnId)
+                OnHit(null, b.enemy);
+        }
     }
 
     void UpdateThorn()

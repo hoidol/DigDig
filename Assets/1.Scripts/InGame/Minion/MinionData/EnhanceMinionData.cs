@@ -76,7 +76,7 @@ public abstract class EnhanceMinionData : MinionData
                 continue;
 
             var stats = new List<MinionStat>();
-            AddStat(stats, StatType.AttackPower, row.Get("AttackPower"));
+            AddStat(stats, StatType.AttackPower, ToMergeLinear(row.Get("AttackPower")));
             enhanceInfos.Add(new MinionEnhanceInfo { level = level, minionStats = stats.ToArray() });
         }
 
@@ -84,6 +84,16 @@ public abstract class EnhanceMinionData : MinionData
 
         UnityEditor.EditorUtility.SetDirty(this);
         Debug.Log($"[EnhanceMinionData] {key} 강화 데이터 LoadData 완료 ({foundFile}, {commonMinionEnhanceInfos.Length}레벨)");
+    }
+
+    // (2026-11-15) AttackPower 값이 하나면 머지 레벨에 비례: 표시 머지 레벨 1 = 값, 2 = 2배, 3 = 3배 … (초기값 + 초기값 × (머지 레벨 - 1))
+    // → "기본/증가량" 선형 형식(값/값)으로 바꿔 저장. "/"로 여러 값을 쓴 경우는 그대로
+    public static string ToMergeLinear(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw) || raw.Contains("/") || raw.Contains("~"))
+            return raw;
+        string v = raw.Trim();
+        return $"{v}/{v}";
     }
 
     // 표에서 내 key 블록의 행만 (Key가 빈 행은 위 Key를 이어받음)

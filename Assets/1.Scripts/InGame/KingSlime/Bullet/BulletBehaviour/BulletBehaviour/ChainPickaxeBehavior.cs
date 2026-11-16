@@ -33,7 +33,7 @@ public class ChainPickaxeBehavior : IBulletBehavior
         for (int i = 0; i < hitCount; i++)
         {
             candidates[i].stone.TakeDamage(new DamageData { damage = damage });
-            EffectManager.Instance.Play(EffectType.Spark, candidates[i].stone.transform.position);
+            EffectManager.Instance.Play(EffectType.Thunder, candidates[i].stone.transform.position);
         }
         }
         return false;

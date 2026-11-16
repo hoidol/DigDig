@@ -17,6 +17,9 @@ public class SpawnMinionTutorialStep : TutorialStep
     [Header("손 터치 연출 위치. 비워 두면 씬의 소환 버튼(MinionSpawnButton)")]
     public Transform fingerTarget;
 
+    [Header("포커스: 소환 버튼(fingerTarget)만 밝게, 나머지 어둡게. 버튼 밖 터치는 막힘")]
+    public bool useFocus = true;
+
     public override void Prepare()
     {
         Tutorial.ReserveTile(tileIndex);
@@ -47,7 +50,11 @@ public class SpawnMinionTutorialStep : TutorialStep
         GameEventBus.Subscribe<SpawnMinionEvent>(OnSpawnMinion);
         SetBlock(false);
         if (Canvas != null && fingerTarget != null)
+        {
+            if (useFocus)
+                Canvas.ShowFocus(fingerTarget);
             Canvas.PlayFingerTap(fingerTarget);
+        }
     }
 
     protected override void OnExit()
@@ -58,7 +65,10 @@ public class SpawnMinionTutorialStep : TutorialStep
         MinionSpawnButton.forcedMinionKey = null;
         MinionSpawnButton.forcedTile = null;
         if (Canvas != null)
+        {
             Canvas.HideFinger();
+            Canvas.HideFocus();
+        }
     }
 
     void OnSpawnMinion(SpawnMinionEvent e)
@@ -71,7 +81,10 @@ public class SpawnMinionTutorialStep : TutorialStep
     {
         SetBlock(true);
         if (Canvas != null)
+        {
             Canvas.HideFinger();
+            Canvas.HideFocus();
+        }
         yield return null;
         Complete();
     }

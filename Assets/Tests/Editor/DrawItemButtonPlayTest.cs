@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 
 // 아이템 뽑기 버튼 흐름 (CLAUDE.md "타일 아이템 > 아이템 획득")
-// 코인 지불 → Draw(확률) → SelectItem(겹치지 않는 3개) → SelectTile(눌러서 설치)
+// 주사위 코인 지불(고정 가격) → Draw(확률) → SelectItem(겹치지 않는 3개) → SelectTile(눌러서 설치)
 public class DrawItemButtonPlayTest : InGamePlayTestBase
 {
     const int TEST_COIN = 1000;
@@ -29,8 +29,9 @@ public class DrawItemButtonPlayTest : InGamePlayTestBase
         Assert.IsNotNull(canvas, "SelectItemCanvas 없음");
     }
 
-    static void SetCoin(int coin) => KingSlime.Instance.AddCoin(coin - KingSlime.Instance.coin);
-    static int Price(int drawCount) => GameSetting.INIT_DRAW_ITEM_PRICE + drawCount * GameSetting.INCREASE_DRAW_ITEM_PRICE;
+    static void SetCoin(int coin) => KingSlime.Instance.AddDiceCoin(coin - KingSlime.Instance.diceCoin); // 뽑기 = 주사위 코인
+    static int Coin => KingSlime.Instance.diceCoin;
+    static int Price(int drawCount) => GameSetting.DRAW_ITEM_DICE_COIN_PRICE; // 고정 (뽑은 횟수와 무관)
     void Click() => drawButton.button.onClick.Invoke(); // 실제 Button 이벤트로 누름
 
     // 판정 Random.Range(0, 100) < chance 가 원하는 결과가 나오는 시드
@@ -55,7 +56,7 @@ public class DrawItemButtonPlayTest : InGamePlayTestBase
         Assert.AreEqual(100, DrawItemButton.GetDrawChance(), "처음 확률은 100%");
 
         Click();
-        Assert.AreEqual(TEST_COIN - Price(0), KingSlime.Instance.coin, "뽑기 가격만큼 코인이 빠지지 않음");
+        Assert.AreEqual(TEST_COIN - Price(0), Coin, "뽑기 가격만큼 주사위 코인이 빠지지 않음");
         Assert.IsTrue(canvas.gameObject.activeSelf, "SelectItemCanvas가 열리지 않음");
         Assert.AreEqual(SelectItemStep.Draw, canvas.step);
 
@@ -96,10 +97,12 @@ public class DrawItemButtonPlayTest : InGamePlayTestBase
         Assert.IsFalse(canvas.gameObject.activeSelf, "설치 후 캔버스가 닫히지 않음");
         Assert.IsNull(MinionFieldController.Instance.tilePickCallback, "설치 후에도 타일 선택 모드");
 
-        // 다음 가격 +증가분
+        // 다음 가격도 같음 (고정)
+        int normalCoin = KingSlime.Instance.coin;
         SetCoin(TEST_COIN);
         Click();
-        Assert.AreEqual(TEST_COIN - Price(1), KingSlime.Instance.coin, "두 번째 뽑기 가격");
+        Assert.AreEqual(TEST_COIN - GameSetting.DRAW_ITEM_DICE_COIN_PRICE, Coin, "두 번째 뽑기 가격 (고정)");
+        Assert.AreEqual(normalCoin, KingSlime.Instance.coin, "뽑기에 일반 코인이 빠짐");
         AssertNoErrors();
     }
 
@@ -114,7 +117,7 @@ public class DrawItemButtonPlayTest : InGamePlayTestBase
         SetCoin(TEST_COIN);
         Random.InitState(FindSeed(chance, false)); // 판정은 누르는 순간 동기로 한 번
         Click();
-        Assert.AreEqual(TEST_COIN - Price(10), KingSlime.Instance.coin);
+        Assert.AreEqual(TEST_COIN - Price(10), Coin);
 
         yield return WaitRealtime(DRAW_WAIT);
         Assert.IsFalse(canvas.gameObject.activeSelf, "실패했는데 캔버스가 닫히지 않음");
@@ -133,8 +136,8 @@ public class DrawItemButtonPlayTest : InGamePlayTestBase
         SetCoin(Price(0) - 1);
         Click();
         yield return WaitFrames(2);
-        Assert.AreEqual(Price(0) - 1, KingSlime.Instance.coin, "코인이 모자란데 빠짐");
-        Assert.IsFalse(canvas.gameObject.activeSelf, "코인이 모자란데 캔버스가 열림");
+        Assert.AreEqual(Price(0) - 1, Coin, "주사위 코인이 모자란데 빠짐");
+        Assert.IsFalse(canvas.gameObject.activeSelf, "주사위 코인이 모자란데 캔버스가 열림");
         AssertNoErrors();
     }
 }

@@ -22,8 +22,10 @@ public class TutorialManager : MonoSingleton<TutorialManager>
         get
         {
 #if UNITY_EDITOR
-            if (UnityEditor.SessionState.GetBool(DISABLE_FOR_TEST_KEY, false))
-                return true;
+            // 테스트가 값을 정해 두었으면(true = 끔 / false = 켬) BuildSetting.skipTutorial보다 우선
+            bool testValue = UnityEditor.SessionState.GetBool(DISABLE_FOR_TEST_KEY, false);
+            if (testValue == UnityEditor.SessionState.GetBool(DISABLE_FOR_TEST_KEY, true))
+                return testValue;
 #endif
             return BuildSetting.Instance != null && BuildSetting.Instance.skipTutorial;
         }

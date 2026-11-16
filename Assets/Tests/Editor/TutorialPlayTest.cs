@@ -110,13 +110,38 @@ public class TutorialPlayTest : InGamePlayTestBase
         Assert.IsTrue(button.gameObject.activeInHierarchy, $"{current}: 소환 버튼이 안 보임");
         Assert.AreEqual(spawn.minionKey, MinionSpawnButton.forcedMinionKey, $"{current}: 지정 소환 준비 안 됨");
         Assert.GreaterOrEqual(KingSlime.Instance.coin, MinionSpawnButton.GetSpawnPrice(), $"{current}: 코인을 채워 주지 않음");
-        button.OnClickedBtn();
+
+        // 포커스: 버튼 위 터치는 버튼이 받고, 버튼 밖 터치는 어두운 화면이 막는다
+        TutorialCanvas canvas = TutorialManager.Instance.CurrentTutorial.canvas;
+        if (spawn.useFocus)
+        {
+            yield return WaitFrames(1);
+            Assert.IsTrue(canvas.IsFocusing, $"{current}: 포커스가 안 나옴");
+            Vector2 buttonPos = TutorialCanvas.GetScreenPos(button.transform);
+            GameObject hit = RaycastTop(buttonPos);
+            Assert.IsTrue(hit != null && hit.transform.IsChildOf(button.transform), $"{current}: 소환 버튼 위 터치가 버튼에 안 닿음 ({(hit != null ? hit.name : "없음")})");
+            Vector2 farPos = new Vector2(buttonPos.x < Screen.width / 2f ? Screen.width - 5 : 5, buttonPos.y < Screen.height / 2f ? Screen.height - 5 : 5);
+            hit = RaycastTop(farPos);
+            Assert.IsTrue(hit != null && hit.GetComponent<TutorialFocusBlocker>() != null, $"{current}: 버튼 밖 터치가 막히지 않음 ({(hit != null ? hit.name : "없음")})");
+        }
+
+        button.button.onClick.Invoke(); // 실제 Button 이벤트로 누름
+        yield return WaitFrames(1);
+        Assert.IsFalse(canvas != null && canvas.IsFocusing, $"{current}: 소환 후에도 포커스가 남음");
         yield return WaitFrames(3);
 
         Minion minion = TileManager.Instance.GetTile(spawn.tileIndex).tileObject as Minion;
         Assert.IsNotNull(minion, $"{current}: 소환이 {spawn.tileIndex} 칸에 없음");
         Assert.AreEqual(spawn.minionKey, minion.key, $"{current}: 소환 종");
         Assert.AreEqual(0, minion.mergeLevel, $"{current}: 소환 레벨");
+    }
+
+    static GameObject RaycastTop(Vector2 screenPos)
+    {
+        var results = new System.Collections.Generic.List<UnityEngine.EventSystems.RaycastResult>();
+        var data = new UnityEngine.EventSystems.PointerEventData(UnityEngine.EventSystems.EventSystem.current) { position = screenPos };
+        UnityEngine.EventSystems.EventSystem.current.RaycastAll(data, results);
+        return results.Count > 0 ? results[0].gameObject : null;
     }
 
     static IEnumerator Drop(ITileObject source, Tile target)

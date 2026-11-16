@@ -25,7 +25,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 
 ## 슬라임 소환 / 합성
 - 소환 버튼: **10코인**, 장착한 **5종 중 1종이 랜덤**으로 mergeLv 0으로 **16칸** 중 빈 칸에 등장.
+- (2026-11-16) **등장 연출**: 미니언이 생길 때마다(소환·합성 결과·성장/변신 교체 등 `Minion.Spawn`) 몸(`Root`)이 0.6 위에서 떨어져 착지하며 납작해졌다 통통 돌아옴(DOTween, `PlaySpawnDrop`). 미니언 위치가 아니라 몸만 움직여 칸 이동·드래그와 겹쳐도 어긋나지 않음. **머지 결과는 떨어지지 않고 제자리에서 0.35 살짝 뛰었다 착지**(`PlayMergeHop`, `MinionFieldController.Merge`).
 - 합성 조건: **같은 key + 같은 mergeLv** 끼리만 (ice 0 + ice 0 O / ice + flame X / ice 0 + ice 1 X).
+- (2026-11-15) **머지 이펙트**: 머지할 때마다 결과 미니언 위치에 `Resources/Effect/MergedEffect`(EffectType.Merge, `MinionFieldController.Merge`). 자주 나오는 연출이라 화려하지 않게: 파티클은 원·스파크 하나만, 대신 **귀여운 글씨 "레벨업!"**(`LevelUpText`, 힙피 폰트 + `Font/hippie SDF Outline` 머티리얼, `PopTextEffect` = DOTween으로 튀어나옴 → 출렁 → 둥실 → 사라짐).
 - (2026-11-09) **머지가 안 되는 슬라임 위에 놓으면 두 슬라임 자리 교체**(`MinionFieldController.SwapMinions`). 타일 아이템 효과도 칸을 따라 바뀜. 이전엔 원위치. 테스트 `MergeSwapPlayTest`.
 - (2026-11-11) **킹슬라임도 슬라임과 자리 교체**: 킹을 슬라임 위에 놓거나 슬라임을 킹 위에 놓으면 맞바꿈(`MinionFieldController.SwapTileObjects`, `SwapMinions`도 이걸 씀). 테스트 `MergeSwapPlayTest.KingSlime_SwapWithMinion`.
 - mergeLv는 0부터 시작. 최대치는 `MinionData.MAX_MERGE_LEVEL` = 4 (0~4, 5단계).
@@ -40,39 +42,51 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 강화 레벨(`userMinion.enhanceLevel`, 로비에서 영구 성장)과 머지 레벨(`mergeLevel`, 인게임 합성)은 별개.
   - 슬라임 에셋의 `level: N` 블록 = 강화 레벨, 그 안의 `values` 배열 = mergeLv별 값.
   - `values` 2개 = `기본/증가량`(선형), 그 외 = mergeLv별 값(모자라면 마지막 값).
+  - (2026-11-15) **MinionEnhance CSV의 AttackPower가 값 하나면 머지 레벨에 비례**: 표시 머지 레벨 1 = 값, 2 = 2배, 3 = 3배 …(`EnhanceMinionData.ToMergeLinear`가 `값/값`으로 저장). 시트 범위는 A:C(Key/Level/AttackPower).
+- (2026-11-14) **미니언 머리 위 상태(`MinionGameStatePanel`)**: 미니언마다 Canvas를 두지 않고 `GameWorldCanvas` 하위 템플릿 하나를 미니언마다 복사·풀링(`Minion.Spawn` → 붙음, `OnDisable` → 반납), LateUpdate에서 `Minion.statePoint`(프리팹에서 지정하는 기준 위치, 적 `HpPoint`와 같은 역할. 비우면 미니언 위치 + 0.9) + 패널 `offset`을 따라감. **쿨타임 스킬이 있는 미니언(`MinionData.hasSkill`, 에셋 인스펙터) = `mergeLvForCooltime`(머지 레벨 + 쿨타임 Slider `cooltimeSlider`, `Minion.SkillProgress`), 없으면 `mergeLv`(머지 레벨만)**. 머지 레벨 표시는 mergeLevel + 1. 미니언 프리팹의 별 표시(`StarContainer`)는 삭제, 프리팹 구조 = `StateTr`(y 1.5, statePoint) + `Root > BodyRoot(Animator) > Body`(SpriteRenderer, 이미지 = `2.Sprites/Minion/Growth1/{Key}`).
+- (2026-11-15) **미니언 몸 애니메이션**: 미니언 프리팹 공용 컨트롤러 `5.Animation/Minion/Minion.controller`(BodyRoot Animator, 대상 = `Body`). `Minion_Idle`(기본, 스케일만 살짝 움찔 루프) · `Minion_Attack`(트리거 `Attack`, 바라보는 방향으로 아주 살짝 나갔다 복귀 0.2초, 공격 성공 시 `Minion.PlayAttackAnim`. 회전체·경로 순환 미니언(`UseFindTarget` false)은 안 함) · `Minion_Skill`(트리거 `Skill`, 회전 없이 1.2배로 살짝 커졌다 돌아옴 0.35초(2026-11-16), `PlaySkillAnim`. **지금은 Random 스킬만 사용**, 다른 스킬은 기획 후).
+- (2026-11-15) **미니언 스킬** (MinionData.csv `HasSkill`(TRUE/FALSE → `MinionData.hasSkill`) + `SkillInfo` 열이 기획 원본, 수치는 각 클래스 `SKILL_*` const). 스킬 공속 버프는 각 미니언이 `AddBuff`(공속 Multiply)로 걸고 자기 `skillBuffTimer`가 끝나면 `RemoveBuff`(Random·Hunter·Dopamine), 공용 도우미 = `FindClosestTargetInRange`·`FireCircle(At)`, 진행도 = `SkillProgress`(머리 위 바). **사거리에 적이 없으면 쿨타임이 찬 채로 대기**(낭비 방지).
+  - Bounce = 7초마다 5방향 도탄 원형 발사(첫 방향 = 가장 가까운 적) · Flame = 8초마다 사거리 안 적 전부 화상(**쿨타임이 차면 적이 없어도 바로 발동**, Random과 함께 대기 규칙 예외, 발동 시 미니언 위치에 `Resources/Effect/FlameEffect`(EffectType.Flame, 이전엔 씬에 놓여 있던 파티클)) · **Random = 9초마다 2초간 공속 ×3**(이전 10초 5방향 발사는 폐기, 버프 중엔 쿨타임 멈춤, **쿨타임이 차면 적이 없어도 바로 발동**) · Hunter = 공격 15회마다 4초간 공속 ×3 + 타겟 3명(**버프 중엔 저격탄 없음**, 그동안 공격은 저격 횟수에 안 셈, 2026-11-16) · Scavenger = 처치 코인 조건의 처치 20마리마다 10 + 2×머지 레벨 코인 · GrowUp = 성장 타이머(기존).
+  - **Inferno = 평소 기본 탄, 12초 차면 지옥불 10초**(그동안 공격 주기마다 지옥불 피해), 지옥불이 사라지면 쿨타임 다시 참. 놓을 수 없는 칸(가운데 칸 등)이면 대기. (이전: 지옥불 항상, 탄 없음)
+  - **Hail = 평소 기본 탄, 10초마다 눈 소환 → 12초 동안 경로 순환 후 사라짐**, 눈이 있어도 쿨타임은 계속 참(겹쳐서 여럿 가능). 첫 눈은 미니언과 가장 가까운 경로 지점부터, 각성 = 한 번에 2개. **눈 피해 = 공격력 × 머지 레벨별 배율 150%·170%·190%·210%·230%**(`HailMinionData.stoneDamageMuls`, 2026-11-16). 탄을 쏘므로 `UseFindTarget` true(타겟 방식 버튼·공격 모션 있음). (이전: 눈 항상, 탄 없음)
+  - (2026-11-15) **스킬 강화 이펙트**: 스킬 공속 버프(Random·Hunter·Dopamine)가 켜지면 버프 시간 동안 `Resources/Effect/PowerUpEffect`(EffectType.PowerUp)가 미니언을 따라다님(`Minion.PlayPowerUpEffect(시간)`/`StopPowerUpEffect`, 미니언이 꺼지면 같이 끝남). 새로 스킬로 강화되는 미니언도 이걸 호출.
+  - Berserker = 머리 위 글씨 **"중첩 N"**(`Minion.StateText` → `MinionGameStatePanel.stateText`, 번역 `Minion_Stack`) + 바에 중첩 비율(stack / 최대).
+  - **Dopamine = 감지 범위 안 처치(경로 끝 제외) 30번 → 5초간 공속 ×3**(버프 중 처치는 안 셈, 추가 탄 기본 효과는 그대로) · **Stigma = 10초마다 공격 사거리 안 적 전부 낙인**(확률 없음, 각성 피해 증가량 적용, 발동 시 미니언 위치에 `Resources/Effect/StigmaEffect`(EffectType.Stigma, 이전엔 씬에 놓여 있던 파티클), 2026-11-16). (2026-11-16) **낙인이 걸린 적은 몸에 보라색 `Stigma` 표시**(적 공용 `StatusEffect.prefab` 하위, Flame과 같은 `StatusEffectView`, `StigmaEffect.EffectKey`), 적이 죽을 때까지 유지. **크기는 프리팹 = 일반 적 기준, `StatusEffectView.eliteScale`(엘리트·보너스 엘리트)/`bossScale` 배율**로 키움(값은 사용자가 조정). 보스 프리팹(`3.Prefabs/Boss/Boss`)에도 `StatusEffect.prefab`을 붙여 다른 상태이상 표시도 보스에 나옴. **MinionData.csv Evolution 열은 아직 기획 전 → 구현하지 않는다**(2026-11-15). 미니언은 돌 파괴(`DestroyedStoneEvent`)를 감지하지 않음(돌 없음, 2026-11-15), 광란 각성(추가 탄 2발) 삭제.
 - Ice / Flame / Random / Bounce: mergeLv가 오를수록 한 번에 발사하는 탄 수 증가(`shootCounts`), 탄마다 **서로 다른 타겟**을 노림.
 - Orbit: 발사가 없으므로 **공속 = 회전 속도**(2026-10-23). `orbitRotationSpeed × AttackSpeed / GameSetting.ATTACK_SPEED_PER_SECOND`(=50, 초당 1회 공격 기준. 슬라임·캐릭터 공격 타이머도 같은 값 사용) → 공속 강화/버프(타일 아이템, 킹 오라)가 회전 속도로 반영됨.
 - 랜덤 데미지(Random 등, 2026-11-05 Wacky에서 key 변경. 저장 데이터 마이그레이션은 안 함: 필요하면 데이터 초기화): 데이터에는 **중간값만** 입력, MinionData의 `attackPowerRandomRatio`로 `중간값 × (1 ± 비율)` 범위 결정. `3~15` 같은 범위 직접 입력은 쓰지 않는다.
-- (2026-11-05) 슬라임 스크립트는 **등급별 폴더**(`Minion/Unit/{C,B,A,S}/{Key}Minion/`, 데이터 스크립트는 `Minion/MinionData/{C,B,A,S}/`, 프리팹은 `3.Prefabs/Minion/{C,B,A,S}/` — `MinionData.LoadData`가 grade로 찾음). 신규 key: B = Shield(철벽)·Dopamine(광란)·Mine·Breeze·Rage·Stigma(낙인), A = Mud·Keen(설의, 2026-11-06 B→A)·Beam(광선 링크)·Berserker·Hail(빙석)·Inferno(지옥)·Mortar(박격포, 2026-11-06 Boom에서 key 변경), S = Sacrifice·GrowUp·Scavenger(시체수집)·Joker·Hunter(사냥꾼, 2026-11-06). 대부분 아직 뼈대(일반 탄)만 있음.
+- (2026-11-05) 슬라임 스크립트는 **등급별 폴더**(`Minion/Unit/{C,B,A,S}/{Key}Minion/`, 데이터 스크립트는 `Minion/MinionData/{C,B,A,S}/`, 프리팹은 `3.Prefabs/Minion/{C,B,A,S}/` — `MinionData.LoadData`가 grade로 찾음). 신규 key: B = Shield(철벽)·Dopamine(광란)·Mine·Breeze·Rage·Stigma(낙인), A = Mud·Keen(설의, 2026-11-06 B→A)·Beam(광선 링크)·Berserker·Hail(빙석)·Inferno(지옥)·Mortar(박격포, 2026-11-06 Boom에서 key 변경), S = Sacrifice·GrowUp·Scavenger(시체수집)·Darkness(다크니스, 이전 Joker)·Hunter(사냥꾼, 2026-11-06)·Joker(카드, 2026-11-16 신규). 대부분 아직 뼈대(일반 탄)만 있음.
 - (2026-11-09) **강화 능력(EnhanceAbility) 폐지.** 강화 레벨(0~14, 로비 영구 성장)은 유지하되 **스탯(공격력·공속, 슬라임 특성 수치)만 올린다.** 가시방패·포위 진형·화상 같은 레벨 해금 특수 능력(각성 포함)은 없다. 강화 데이터 = `EnhanceMinionData`(이전 EnhanceAbilityMinionData) + MinionEnhance CSV(Key/Level/AttackPower). 공속·특성 수치의 레벨별 증가는 아직 미구현(시트 형식 정해서 추가 예정).
 - (2026-11-09) **[각성] = 진화로 발현.** 최대 머지 레벨 슬라임이 진화 타일(`EvolutionTile`, 1회용)에 올라가면 `Minion.Evolve` → `isEvolved` + `OnEvolve`로 그 슬라임의 각성 능력이 켜진다(이전 강화 8 능력). 수치는 각 슬라임 클래스 `EVOLVE_*` const(임시). 합성·교체로 새 슬라임이 되면 사라짐.
   - C: 탄성·관통 = 탄 피해 +20%, 냉기 = 탄 1회 튕김, 번개 = 맞은 적 1초 감속, 천둥 = 10% 확률 1초 감속, 강철 = 엘리트·보스 배율 +0.2, 회전 = 3% 확률 0.1초 스턴, 랜덤 = 6번째 공격마다 4방향 원형 발사, 화염 = 5초마다 사거리 안 적 최대 7기에 공격력 피해 + 화상.
-  - B: 철벽 = 가시방패(막힌 적 1초마다 최대 체력 1%), 광란 = 추가 탄 2발, 지뢰 = 2개씩 설치, 낙인 = 최대 5중첩, 십자 버프(산들바람·격노·설의) = **포위 진형**(같은 그룹 안 범위 4칸이 모두 슬라임이면 버프 증가분 +50%).
+  - B: 철벽 = 가시방패(막힌 적 1초마다 최대 체력 1%), 지뢰 = 2개씩 설치, 낙인 = 피해 증가 25%(2026-11-16, 이전 최대 5중첩), 십자 버프(산들바람·격노·설의) = **포위 진형**(같은 그룹 안 범위 4칸이 모두 슬라임이면 버프 증가분 +50%).
   - A: 광선 = 레이저 감속 0.5초, 버서커 = 최대 중첩 시 공격력 ×1.2, 빙석 = 눈 2개, 지옥 = 화상(2초, 초당 공격력 30%), 박격포 = 슬로우 확률 50%, 진흙 = 구슬 최대 +1.
-  - S: 사냥꾼 = 2회마다 저격, 시체수집 = 엘리트·보스 +30코인. **희생·성장·조커는 진화하지 않음**(`CanEvolve` false: 머지 레벨을 올리는 각성이라 최대 레벨에선 의미 없음).
+  - S: 사냥꾼 = 2회마다 저격, 시체수집 = 엘리트·보스 +30코인. **희생·성장·다크니스는 진화하지 않음**(`CanEvolve` false: 머지 레벨을 올리는 각성이라 최대 레벨에선 의미 없음).
 - (2026-11-05) C등급 신규: **Iron(강철, 물리)** = 엘리트/보스에게 데미지 ×2(`IronMinionData.eliteBossDamageMul`). 배율은 탄 스펙의 `BigEnemyDamageForce`(IBulletForce, 2026-11-06)로 실어 연발 탄에도 유지, **거인 사냥 타일과 곱연산**(×4: force가 피해량을 키우고 거인 사냥은 `DamageData.eliteBossDamageMul`로 EnemyDefence에서 곱함). 다른 IBulletForce와는 합연산. 엘리트 wave용 배치 카드.
   **Thunder(천둥, 마법)** = 탄이 날아가지 않고 발사 방향 첫 적 위치에 낙뢰 → 주변 범위 피해(최대 5기). 머지 레벨이 오를수록 범위 증가(`strikeRadiuses`). 발사 0.1초 뒤 피해(타일 효과가 OnFired로 붙은 다음).
 - (2026-11-06) **Mine(지뢰, B)** = 슬라임이 있는 타일의 `TileGroup.enemyRoots`(순서대로 이은 선 = 그 그룹 근처 적 경로) 위 랜덤 지점에 지뢰를 던져 설치. 적이 사거리에 없어도 미리 깔고, 밟히면 범위 폭발. **동시에 깔린 지뢰 수 상한이 머지 레벨로 증가**(`maxMineCounts`), 상한이면 대기했다가 터지면 바로 다음 지뢰. 어느 그룹에 두느냐 = 어느 경로 구간을 막느냐가 배치 포인트. 슬라임이 합성돼 사라져도 깔린 지뢰는 남는다. 지뢰는 **탄이 아니라 독립 오브젝트 `Mine`**(MineMinion이 던짐, 자체 풀링): 폭발 범위·최대 피해 적 수·유지 시간은 MineMinionData, 트리거 범위는 고정(`Mine.TRIGGER_RANGE`). 탄이 아니라서 발사 훅(`TileItem.OnFired`)의 타일 효과는 안 붙고, 피해량·치명타 확률은 던질 때 슬라임 스탯으로 고정.
-- (2026-11-06) **Stigma(낙인, B)** = 일반 탄 + 적중 시 확률(`stigmaChances`, 머지 레벨로 증가)로 낙인 1중첩(`StigmaEffect`). 중첩당 그 적이 받는 **모든 아군 피해** +5%(최대 3중첩, `Enemy.TakeDamage`에서 `StatusEffectHandler.StigmaDamageMul` 곱). 낙인은 적이 죽을 때까지 유지. 딜러 보조형 → 다른 슬라임과 같은 적을 때리게 배치하는 게 포인트. 여러 낙인 슬라임이 섞이면 최대 중첩/중첩당 피해는 큰 값.
-- (2026-11-06) **Berserker(버서커, A)** = 기본 탄 + 주변(`detectRanges`, mergeLv별)에서 적/돌이 죽을 때마다 **공속 중첩**(중첩당 `attackSpeedPerStacks`%, 최대 10). 광란(Dopamine)과 같은 처치 감지 구조. **마지막 처치 후 `stackDuration`(5초) 동안 처치가 없으면 중첩 초기화** → 적이 계속 죽는 자리(다른 딜러 옆, 경로 가까이)에 두는 배치 포인트.
+- (2026-11-06) **Stigma(낙인, B)** = 일반 탄 + 적중 시 확률(`stigmaChances`, 머지 레벨로 증가)로 낙인(`StigmaEffect`). 낙인 걸린 적이 받는 **모든 아군 피해** +`damageBonus`(15%, `Enemy.TakeDamage`에서 `StatusEffectHandler.StigmaDamageMul` 곱). **(2026-11-16) 중첩 없음**(이전 중첩당 5%·최대 3중첩). 낙인은 적이 죽을 때까지 유지. 딜러 보조형 → 다른 슬라임과 같은 적을 때리게 배치하는 게 포인트. 여러 낙인 슬라임이 섞이면 피해 증가량은 큰 값.
+- (2026-11-06) **Berserker(버서커, A)** = (2026-11-16) **근접 공격(탄 없음)**: 공격 사거리(AttackRange 1.5) 안 타겟을 공격 주기마다 바로 때림(타일 적중형 효과는 타격마다 직접 적용, 연발 등 발사형은 적용 안 됨). **처치 감지 범위 = 공격 사거리**(이전 `detectRanges`·감지 범위 표시 삭제). 사거리 안에서 적이 죽을 때마다 **공속 중첩**(중첩당 `attackSpeedPerStacks`%, 최대 10). 광란(Dopamine)과 같은 처치 감지 구조. **마지막 처치 후 `stackDuration`(5초) 동안 처치가 없으면 중첩 초기화** → 적이 계속 죽는 자리(다른 딜러 옆, 경로 가까이)에 두는 배치 포인트.
 - (2026-11-06) **Inferno(지옥, A)** = 탄 없음. 자기 TileGroup `enemyRoots` 중 **슬라임과 가장 가까운 2개 사이**에 지옥불(`Hellfire`, 길이 = 두 점 거리, 폭 = `hellfireWidth`) → **공격 주기마다 그 안에 있는 적 전부** 피해, 벗어나면 바로 피해 없음. **TileGroup 3*3 가운데 칸이면 지옥불 없음**(index % 3 == 1). 같은 그룹 안에서도 칸 위치가 덮는 경로 구간을 정함 → 배치 포인트. 드래그 중엔 숨김.
-- (2026-11-06) **Mud(진흙, A)** = 탄 없음. **공속 = 진흙 구슬 생성 주기**(공격마다 1개, 최대 `maxOrbCounts` 머지 레벨로 증가, OrbitMachine으로 회전, 회전 속도는 고정). 구슬이 적에 닿으면 **스플래시**(`splashRadiuses`) 피해 + 진흙 1중첩 후 **구슬은 사라짐** → 최대치면 대기했다 터지면 바로 재생성. **진흙 중첩당 이동속도 15% 감소, 최대 80%(엘리트·보스 60%)**, 멈추지는 않음(`MudEffect`, 마지막 적중 후 `mudDuration` 지나면 전부 해제). 슬로우·빙결 중첩과는 별개로 곱함(`StatusEffectHandler.SlowRate`). 4중첩 굳음(스턴)은 다수 배치 시 보스까지 영구 속박돼 폐기(2026-11-06).
-- (2026-11-06) B등급 **Dopamine(광란)** = 기본 탄 + 슬라임 주변 `detectRanges`(mergeLv별) 안에서 적/돌이 죽으면 **추가 탄**(공격력 × `extraShotDamageMuls`, mergeLv별) `extraShotCount`발. 추가 발사 후 `extraShotCoolTime` 쿨타임, 일반 공격 타이머는 리셋하지 않음. → 적 경로 근처(처치가 잦은 칸)에 둘지 고민.
-- (2026-11-06) B등급 **Shield(철벽)** = 방패(`ShieldOrbitOrb`, `SeparateOrbitMachine`으로 방패마다 따로 회전)가 닿은 적의 **이동을 멈춤**(`Enemy.AddBlocker`). 방패당 최대 `blockCountPerShield`기(기본 3), 초과분은 통과. **엘리트/보스는 막기 무시**(`Enemy.CanBeBlocked`, 슬롯도 안 차지). 막는 동안 그 방패는 정지, 막던 적이 모두 죽거나 빠지면 다시 회전. → 경로 근처에 두면 적을 붙잡아 다른 슬라임이 처리.
-- (2026-11-06) A등급 **Beam(광선 링크)** = 필드(타일 위)의 광선 슬라임끼리 **모두 레이저 연결**(`BeamLinkNetwork`, n마리 → n(n-1)/2개). 레이저 두께 = 머지 레벨별 `lineWidths`(두 슬라임 평균). 레이저에 닿은 적에게 **0.25초마다(고정)** 피해(두 슬라임 공격력 평균 × 배율, 배율은 전체 레이저 수가 늘수록 감소). **연결된 슬라임은 기본 공격 안 함**, 혼자면 기본 탄. → 광선 슬라임 둘을 적 경로를 가로지르게 배치하는 고민. 타일 아이템 발사 효과는 레이저에 적용 안 됨.
+- (2026-11-06) **Mud(진흙, A)** = 탄 없음. **공속 = 진흙 구슬 생성 주기**(공격마다 1개, 최대 `maxOrbCounts` 머지 레벨로 증가, OrbitMachine으로 회전, 회전 속도는 고정). 구슬이 적에 닿으면 **스플래시**(`splashRadius`) 피해 + 진흙 1중첩, **(2026-11-16) 구슬은 사라지지 않고 계속 회전**(같은 적은 그 구슬에 0.5초마다 한 번, 최대 개수면 더 안 만듦). **진흙 중첩당 이동속도 5% 감소, 최대 15중첩(75%), 엘리트·보스도 같음**(이전 15%·최대 80%/60%, 구슬 소멸), 멈추지는 않음(`MudEffect`, 마지막 적중 후 `mudDuration` 지나면 전부 해제). 슬로우·빙결 중첩과는 별개로 곱함(`StatusEffectHandler.SlowRate`). 4중첩 굳음(스턴)은 다수 배치 시 보스까지 영구 속박돼 폐기(2026-11-06).
+- (2026-11-06) B등급 **Dopamine(광란)** = 기본 탄 + 슬라임 주변 `detectRanges`(mergeLv별) 안에서 적이 죽으면 **추가 탄**(공격력 × `extraShotDamageMuls`, mergeLv별) `extraShotCount`발. 추가 발사 후 `extraShotCoolTime` 쿨타임, 일반 공격 타이머는 리셋하지 않음. → 적 경로 근처(처치가 잦은 칸)에 둘지 고민.
+- (2026-11-06) B등급 **Shield(철벽)** = 방패(`ShieldOrbitOrb`, `SeparateOrbitMachine`으로 방패마다 따로 회전)가 닿은 적의 **이동을 멈춤**(`Enemy.AddBlocker`). 방패당 최대 `blockCountPerShield`기(기본 3), 초과분은 통과. **엘리트/보스는 막기 무시**(`Enemy.CanBeBlocked`, 슬롯도 안 차지). (2026-11-15) **피해는 막은 적에게만**: 막는 순간 1번 + 막혀 있는 동안 공격 주기(공속)마다 공격력 피해. 닿기만 하고 지나가는 적(정원 초과·엘리트·보스)은 피해 없음. 막는 동안 그 방패는 정지, 막던 적이 모두 죽거나 빠지면 다시 회전. → 경로 근처에 두면 적을 붙잡아 다른 슬라임이 처리.
+- (2026-11-06) A등급 **Beam(광선 링크)** = 필드(타일 위)의 광선 슬라임끼리 **모두 레이저 연결**(`BeamLinkNetwork`, n마리 → n(n-1)/2개). 레이저 두께 = 머지 레벨별 `lineWidths`(두 슬라임 평균). (2026-11-15) 레이저 모양 = 전기 이펙트 `LightningLine_Yellow`(`BeamMinion.linkEffectPrefab`, 비우면 단색 LineRenderer). (2026-11-16) **레이저 양 끝 = 프리팹 자식 `BeamPoint`(`BeamMinion.beamPoint`, 비우면 미니언 위치)**, 이펙트 크기는 판정 폭과 분리해 **머지 레벨이 높을수록 약간 크게**(`BeamMinionData.effectScales` 1~1.25, 판정 폭은 `lineWidths`). 번개(Lightning, C급) 연쇄는 낮은 등급이라 약한 변형 `LightningLine_Weak`(번개 선만 가늘게 + 끝점 작은 빛) — **등급이 높을수록 화려하게**. 레이저에 닿은 적에게 **0.25초마다(고정)** 피해(두 슬라임 공격력 평균 × 배율, 배율은 전체 레이저 수가 늘수록 감소). **연결된 슬라임은 기본 공격 안 함**, 혼자면 기본 탄. → 광선 슬라임 둘을 적 경로를 가로지르게 배치하는 고민. 타일 아이템 발사 효과는 레이저에 적용 안 됨.
 - (2026-11-06) A등급 **Hail(빙석)** = 탄 없이 **내 TileGroup의 `enemyRoots`를 순서대로 빙빙 도는 눈**(`HailStone`, 마지막 지점 → 첫 지점으로 이어 고리로 순환, 여러 개면 같은 간격). Orbit과 다른 방식(회전체 아님). 닿으면 피해 + 머지 레벨별 확률(30~50%)로 얼음, 같은 적은 0.5초 쿨. 눈 1개. 이동 속도 = 공속 비례. → 적 경로가 지나는 그룹에 둘지 고민.
-- (2026-11-06) A등급 **Mortar(박격포, 이전 key Boom. 저장 데이터 마이그레이션 안 함)** = 드래그로 옮기는 **깃발(`MortarFlag`) 자리에 폭탄을 포물선으로 떨어뜨림**(비행 중 충돌 없음, 착탄 지점 범위 피해, 최대 `maxHitCount`기). 높은 공격력 + 느린 공속. 깃발 폭발 범위 안에 적이 있을 때만 발사. 맞은 적 **25% 확률 슬로우(머지 레벨과 무관, 고정)**. 깃발은 슬라임 사거리 안으로만 옮길 수 있고, 처음엔 내 TileGroup 적 경로에서 가장 가까운 지점. 깃발 드래그는 `MinionFieldController`에서 처리(공용 `DragHandle`): 선택된 슬라임의 깃발은 유닛보다 우선, 아닌 깃발은 유닛이 없는 자리에서만 잡힘. → 깃발을 어디 꽂을지(경로 꺾이는 곳, 철벽이 막는 곳)가 배치 포인트. 낙뢰처럼 타일 발사 효과(치명타·둔화·연발 등)가 적용됨.
-- (2026-11-06) S등급 **Hunter(사냥꾼)** = 평소 일반 탄, **3회 공격마다 저격탄**(관통 감쇠 없음 + 스턴 0.2초 + 확정 치명타 `BulletSpec.mustCrit`). 한 공격의 탄이 여러 발이면 전부 저격탄. 저격탄은 Pierce 탄 프리팹을 같이 씀.
+- (2026-11-06) A등급 **Mortar(박격포, 이전 key Boom. 저장 데이터 마이그레이션 안 함)** = 드래그로 옮기는 **깃발(`MortarFlag`) 자리에 폭탄을 포물선으로 떨어뜨림**(비행 중 충돌 없음, 착탄 지점 범위 피해, 최대 `maxHitCount`기). 높은 공격력 + 느린 공속. 깃발 폭발 범위 안에 적이 있을 때만 발사. 맞은 적 **25% 확률 슬로우(머지 레벨과 무관, 고정)**. 깃발은 슬라임 사거리 안으로만 옮길 수 있고, 처음엔 내 TileGroup 적 경로에서 가장 가까운 지점. 깃발 드래그는 `MinionFieldController`에서 처리(공용 `DragHandle`): 선택된 슬라임의 깃발은 유닛보다 우선, 아닌 깃발은 유닛이 없는 자리에서만 잡힘. → 깃발을 어디 꽂을지(경로 꺾이는 곳, 철벽이 막는 곳)가 배치 포인트. 낙뢰처럼 타일 발사 효과(치명타·둔화·연발 등)가 적용됨. (2026-11-16) 착탄 이펙트 = `Resources/Effect/MortarExplosion`(EffectType.MortarExplosion, 크기 0.7).
+- (2026-11-06) S등급 **Hunter(사냥꾼)** = 평소 일반 탄, **5회 공격마다 저격탄**(2026-11-16, 이전 3회)(관통 감쇠 없음 + 스턴 0.2초 + 확정 치명타 `BulletSpec.mustCrit`). 한 공격의 탄이 여러 발이면 전부 저격탄. (2026-11-16) 저격탄은 **부적을 던짐** = 전용 탄 프리팹 `AddressableResources/BulletObject/Level1/Amulet`(관통 탄 동작 그대로 + `Amulet.png` 그림이 빙글빙글 도는 `BulletSpin`, key `Amulet`).
 - (2026-11-06) S등급 4종 (모두 평소엔 일반 탄 공격):
   - **Sacrifice(희생)** = 같은 머지 레벨의 **아무 종과 합성 가능 → 결과 = 상대 종, 머지 레벨 +1**(일반 합성은 결과 종 랜덤). 끌어온 쪽/놓인 쪽 상관없음(`MinionFieldController.Merge`), 희생끼리는 일반 규칙. → 키우고 싶은 종을 골라 올리는 카드.
-  - **GrowUp(성장)** = 타일 위에서 게임 진행 중 **25초 지나면 장착 슬라임 중 랜덤 종(성장 제외)으로 성장, 머지 레벨 +1**. 드래그 중이면 놓은 뒤 성장, 옮겨도 시간 유지.
+  - **GrowUp(성장)** = 타일 위에서 게임 진행 중 **25초 지나면 장착 슬라임 중 랜덤 종(성장 제외)으로 성장, 머지 레벨 +1**. 드래그 중이면 놓은 뒤 성장, 옮겨도 시간 유지. (2026-11-14) 성장까지 진행도는 머리 위 `MinionGameStatePanel` 쿨타임 바(`hasSkill` 켬, `SkillProgress`), 프리팹 GrowBar 삭제.
   - **Scavenger(시체수집)** = 공격 사거리 안에서 적이 **처치되면(누가 잡든) 1코인**. 경로 끝 도착은 제외(체력 0일 때만). → 처치가 몰리는 자리에 두는 배치 포인트.
-  - **Joker(조커)** = 필드의 조커 선택 → 변신 버튼(`JokerTransformButton`) → **장착 슬라임 중 원하는 종으로 변신**(`JokerSelectCanvas`, 일시정지). 머지 레벨 유지, 단 **30% 확률로 실패 → 머지 레벨 -1, 가장 낮은 단계(별 1)면 조커가 사라짐**. 아껴 뒀다가 필요한 종이 생기면 쓰는 카드(걸어볼지 고민).
-  - (2026-11-09) **확률 연속 실패 보정**(`MinionChancePity`, `GameManager.minionChancePity`): 조커 변신 성공 판정은 슬라임 key별로 연속 실패를 세고, **4연속 실패하면 다음 시도부터 성공 확률 +50%p**(성공할 때까지 유지), **성공하면 초기화**(4회 전 성공도). 한 판 동안 유지. 의도: 확률에 거는 재미는 두되 연속 실패로 짜증나지 않게. 전투 중 적중 확률(낙인·빙석 등)은 대상 아님.
+  - **Darkness(다크니스)** (2026-11-16 스킬형, **이전 key Joker → 이름 변경**, 이미지 `Darkness.png`. 저장 데이터 마이그레이션 안 함) = 필드(타일 위)에서 게임 진행 중 **15초 쿨타임**(`DarknessMinion.SKILL_COOLTIME`, 머리 위 쿨타임 바)이 차면, 다크니스를 선택했을 때 **머리 위에 변신 목록**(`DarknessTransformPopup`, GameWorldCanvas 하위, 선택지 = `DarknessTransformOption` 템플릿 복사) → **장착 미니언 중 원하는 종으로 변신, 머지 레벨 유지(증가 없음)**. (2026-11-16) **성공 확률 70%**(`DarknessMinion.TRANSFORM_SUCCESS_CHANCE`, 연속 실패 보정 `MinionChancePity` 적용): 성공 = 변신 + 위에 "변환 성공!", **성공 시 10%(`TRANSFORM_GROW_CHANCE`)로 머지 레벨 +1**(최대 레벨이면 그대로, "변환 성공! 성장!"), 실패 = 다크니스 그대로·쿨타임만 처음부터 + "변환 실패..."(공용 글씨 이펙트 `EffectManager.PlayPopText` → `Resources/Effect/PopTextEffect`, EffectType.PopText). 게임은 멈추지 않고, 선택 해제·드래그 중엔 목록 숨김. 쿨타임이 찬 뒤엔 쓸 때까지 대기(아껴 두는 카드). **충전된 동안 몸 뒤에 검은 연기**(`Resources/Effect/DarknessReadyEffect`, EffectType.DarknessReady, CartoonVFX 연기 머티리얼 + 보라 스파크 + 보라 빛 번짐으로 조립, 정렬 UnderDefault). (이전: 변신 버튼 + `JokerSelectCanvas`(일시정지), 30% 확률 실패 → 머지 레벨 -1 / 별 1이면 사라짐 — 스크립트 삭제)
+  - **Joker(조커, 2026-11-16 신규 S)** = 카드를 쓰는 미니언. 평소 일반 탄, **5초마다 카드 한 장(4종 같은 확률)**: **스페이드** = 공격 사거리 안 적 전부 공격력 300% 가시 피해 · **다이아** = 5초간 공속 ×5·공격력 ×0.5(PowerUpEffect) · **클로버(임시)** = 코인 5 + 2×머지 레벨 · **하트** = 꽝. 뽑은 카드는 머리 위에 **카드 그림 + 글씨**(그림 = `JokerMinion.cardSprites`(스페이드·다이아·클로버·하트 순) → 이펙트 `LevelUpText/CardImage`, 글씨와 같이 튀어나오고 사라짐(`PopTextEffect.fadeSprites`), `Resources/Effect/JokerCardEffect`, EffectType.JokerCard, 번역 `Joker_Card_*`, 하트 = "꽝!"). 사거리에 적이 없으면 대기, 다이아 중엔 쿨타임 멈춤. 수치는 `JokerMinion` const(임시). 의도: 꽝이 섞인 확률의 재미. 기본 탄 = **카드를 던짐**(전용 탄 프리팹 `AddressableResources/BulletObject/Level1/Card`, 일반 탄 동작 + 발사마다 `2.Sprites/Minion/Growth1/Weapon/Card`의 4장 중 랜덤 그림(`BulletRandomSprite`) + 회전(`BulletSpin`), key `Card`). 각성은 아직 없음.
+  - (2026-11-09) **확률 연속 실패 보정**(`MinionChancePity`, `GameManager.minionChancePity`, 2026-11-16 다크니스 변환 성공 판정에 사용): 조커 변신 성공 판정은 슬라임 key별로 연속 실패를 세고, **4연속 실패하면 다음 시도부터 성공 확률 +50%p**(성공할 때까지 유지), **성공하면 초기화**(4회 전 성공도). 한 판 동안 유지. 의도: 확률에 거는 재미는 두되 연속 실패로 짜증나지 않게. 전투 중 적중 확률(낙인·빙석 등)은 대상 아님.
   - 성장·변신은 공용 `MinionFieldController.ReplaceMinion`(같은 타일에 교체, 선택 유지).
-- (2026-11-06) **십자 버프 슬라임**(공용 부모 `CrossBuffMinion` / `CrossBuffMinionData.buffValues`, mergeLv별): 기본 탄 + 내 타일 기준 **십자 4칸 슬라임에게 버프**. 범위는 **같은 TileGroup 안에서만**(Grant 기획과 같은 규칙). 타일 오브젝트가 바뀔 때마다 대상 재계산, 여러 개가 겹치면 각각 적용(Multiply는 곱). → 배치 고민 포인트.
+- (2026-11-06) **십자 버프 슬라임**(공용 부모 `CrossBuffMinion` / `CrossBuffMinionData.buffValues`, mergeLv별): 기본 탄 + 내 타일 기준 **십자 4칸 슬라임에게 버프**. (2026-11-15) **킹슬라임도 범위 안이면 버프를 받는다**(대상 = `IBuffable`, 킹에도 버프 이펙트). 포위 진형 판정에는 킹을 세지 않음(4칸 모두 슬라임). 범위는 **같은 TileGroup 안에서만**(Grant 기획과 같은 규칙). 타일 오브젝트가 바뀔 때마다 대상 재계산, 여러 개가 겹치면 각각 적용(Multiply는 곱). → 배치 고민 포인트.
   - 범위 8방향은 `ExpandBuffRangeTile` 타일. 포위 진형은 진화(각성)로 발현, 고른 모양(십자/대각)의 4칸 기준.
   - B등급 Breeze(산들바람) = 공속 ×, Rage(격노) = 공격력 ×. A등급 Keen(설의) = 치명타 확률 +%(Add) (2026-11-06 B에서 승급).
+  - (2026-11-15) **버프 받는 미니언 표시 이펙트**: 버프를 받는 동안 그 미니언을 따라다님 — 공속 `AttackSpeedUpEffect`(파랑) · 공격력 `AttackPowerUpEffect`(빨강) · 치명타 `CritChanceUpEffect`(노랑)(`Resources/Effect`, PowerUpEffect 복사). `Buff.effectType`에 이펙트를 달면 받는 쪽이 버프 목록 기준으로 켜고 끔(공용 `BuffEffectDisplay`, 미니언·킹, 같은 종류는 하나만) → 범위에서 빠지거나 버프 미니언이 사라지면 같이 꺼짐. 매핑 = `CrossBuffMinion.GetBuffEffectType`.
   - 슬라임 `CritChance` 스탯(기본 0, 버프로만 오름)은 `AllyUnitDamageData.Init`에서 탄 데미지 데이터로 들어간다(연발·Orbit 포함). 타일 치명타는 그 위에 더함.
 
 ### 장착 조합 프리셋 (2026-11-09)
@@ -81,11 +95,14 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 빈 프리셋은 처음 로드할 때 현재 장착 조합으로 채움. 프리셋 key가 미보유·중복이면 현재 장착 → 보유 슬라임으로 대체(`ResolvePresetKeys`, `MinionPresetTest`).
 - 이미 장착된 슬라임을 다른 칸에 장착하면 두 칸을 맞바꾼다(5칸 항상 채움).
 
-- (2026-11-12) 슬라임 관리 화면의 슬라임 칸(`Growth1MinionEntryPanel`)은 **씬에 1개만 두고 슬라임 수만큼 코드가 복사**(`MinionManageCanvas.EnsureEntryPanels`). 경험치 표시(`MinionExpPanel`)는 Slider + 글씨. **카드 틀(Bg(Mask)·InnerBorder·HightLight) 색 = 등급**(`Grade.GetCardColor`, `MinionPanel.bgImage`/`innerBorder`/`hightLightImage`가 연결된 패널만. 등급 라벨 `MinionGradePanel`과 같은 계열 색).
+- (2026-11-12) 슬라임 관리 화면의 슬라임 칸(`Growth1MinionEntryPanel`)은 **씬에 1개만 두고 슬라임 수만큼 코드가 복사**(`MinionManageCanvas.EnsureEntryPanels`). 경험치 표시(`MinionExpPanel`)는 Slider + 글씨. **카드 틀(Bg(Mask)·InnerBorder·HightLight) 색 = 등급**(`Grade.GetCardColor`, `MinionPanel.bgImage`/`innerBorder`/`hightLightImage`가 연결된 패널만. 등급 라벨 `MinionGradePanel`과 같은 계열 색). (2026-11-13) **칸 어디를 눌러도 정보 창**(`MinionEntryPanel.OnPointerClick`, 이전엔 썸네일 버튼만 반응).
+
+- (2026-11-14) **장착 슬롯(`MinionEquipedSlotPanel`) 클릭**: 미니언 관리 화면 = 정보 창(`MinionInfoCanvas`), 장착 창(`MinionEquipCanvas`) 안 = 그 칸에 장착. 버튼은 코드에서 연결(`slotButton`, 비우면 썸네일 Button). 장착 창 슬롯은 `slotPanels`(비우면 하위 전부).
+- (2026-11-14) **미니언 강화 레벨은 등급별 시작 레벨부터**: C 0 · B 2 · A 4 · S 6 · SS 8 · SSS 10(`MinionData.GetStartEnhanceLevel`). 읽을 때는 `UserMinion.EnhanceLevel`(저장값이 더 낮으면 시작 레벨). **경험치는 레벨업 시 소모**: 표시 = 모인 exp / 이번 레벨 필요량(EnhanceLevelInfo.csv), 최대 레벨이면 `MAX`(`EnhanceExpInfo.IsMaxLevel` = 마지막 칸). 레벨업 = `UserMinionManager.LevelUp`(필요량 차감).
 
 ### 유닛 설정 버튼 (2026-11-09)
 - 선택한 유닛 패널(`AllySettingPanel`)의 설정 버튼은 **유닛이 쓸 수 있는 설정만 노출**(공용 `AllyOptionButton.IsAvailable`). 누를 때마다 다음 값으로 순환.
-  - 타겟 방식(`SetFindTargetButton`): 타겟을 노리지 않는 슬라임(`Minion.UseFindTarget = false`: Orbit·Mud·Shield·Hail)엔 숨김.
+  - 타겟 방식(`SetFindTargetButton`): 타겟을 노리지 않는 슬라임(`Minion.UseFindTarget = false`: Orbit·Mud·Shield)엔 숨김. (Hail은 2026-11-15부터 기본 탄을 쏴서 표시)
   - 버프 범위(`SetBuffRangeButton`, `IBuffRangeUnit`): 십자 버프 슬라임 = **십자 4칸 ↔ 대각 4칸**. 버프 범위 확장 타일 위면 모양과 상관없이 8방향.
   - 회전 방향(`SetRotationDirectionButton`, `IRotationDirectionUnit`): 회전체(Orbit·Mud·Shield, `OrbitMachine.rotationDirection`, 기본 반시계) / 경로 순환(Hail, 기본은 데이터) = **시계 ↔ 반시계**.
   - 의도: 같은 슬라임이라도 **버프가 닿는 칸·회전체가 경로를 쓸고 지나가는 방향**을 플레이어가 골라 배치 고민을 늘린다.
@@ -93,7 +110,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 
 ## 인게임 직접 강화 (2026-11-04)
 - 코인으로 **종(key) 단위** 강화(`ReinforcePanel`, 가격 30×(lv+1)). 레벨은 `KingSlimeStatManager.minionDic`의 `reinforceLevel`.
+- (2026-11-14) **강화 칸은 InGame 화면에 항상 보인다**: `ReinforceContainer`가 장착 5종을 `reinforcePanels[]`(비우면 하위 전부)에 장착 슬롯 순서대로 채움(킹 `statMgr` 준비 후). 이전의 강화 버튼(`ReinforceOpenButton`) → `ReinforceCanvas` 창 방식은 사용 안 함(씬 정리 후 삭제).
 - (2026-11-11) `ReinforceCanvas` = **장착 5종을 `reinforcePanels[]`에 장착 슬롯 순서대로** 보여주고 바로 강화. **필드에 그 종이 없어도 강화 가능**(이후 소환분에 적용). 슬롯머신(릴 3개로 대상·종류·수치 결정) 기능은 폐기, 코드 주석으로 남김. 테스트 `ReinforcePlayTest`.
+- (2026-11-15) **강화 이펙트**: 강화하면 그 종의 필드(타일 위) 미니언마다 `Resources/Effect/ReinforcedEffect`(EffectType.Reinforce, `MergedEffect`를 복사해 글씨만 **"강화됨!"**) — 머지 "레벨업!"과 같은 연출로 어느 미니언이 강해졌는지 보여줌. 필드에 그 종이 없으면 이펙트 없음.
 - 효과는 주로 **공격력 %**: 레벨당 `MinionData.reinforceAttackPowerPercent`(MinionData.csv `ReinforceAttackPower`, 기본 10) 합연산. **%는 종마다 다르게** 준다.
 - **슬라임 특성의 시각적 변화(탄 수, Orbit 체인 수 등)는 강화가 아니라 머지 레벨업으로** 준다. 강화는 수치 담당.
 - 그 종이 필드에서 잠깐 0마리가 돼도(머지 등) 강화 레벨은 유지(`minionDic` 항목을 지우지 않음).
@@ -128,8 +147,8 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
     - 테스트 `AuthorityAbilityTest`(능력 클래스 존재·규칙 계산), `AuthorityPlayInGameTest`(18개 모두 켜고 실제 전투: 곡괭이·쌍둥이·잔불·모래시계 확인 + 에러 없음).
 - 데이터: `AuthorityData`(Addressables 폴더 항목 `AddressableResources/AuthorityData`, 라벨 `AuthorityData`) → `AuthorityManager`(Resources/Init, `GetTierAuthorities`).
 - **슬라임 유형 태그(`MinionTag`, Flags)**: 권능이 반응하는 기준. MinionData.csv **`Tags` 열(L열, `Shooter|Status`처럼 |로 구분)** → `MinionData.tags`. 시트 다운로드 범위 `minionRange` = A:L. 태그는 **기본 효과 기준**(부가 효과는 안 셈).
-  - 형태(정확히 하나): Shooter 발사(Random, Bounce, Flame, Ice, Lightning, Pierce, Iron, Dopamine, Stigma, Berserker, Hunter) / Zone 장판(Mine, Beam, Mortar, Hail, Inferno, **Thunder**) / Orbit 회전(Orbit, Shield, Mud) / Support 버프(Breeze, Rage, Keen) / Special 특수(Sacrifice, GrowUp, Joker, Scavenger).
-  - 특성: Status 상태이상(Flame, Ice, Stigma, Mud, Hail) / Chance 확률(Ice, Stigma, Hail, Joker) / KillTrigger 처치 감지(Dopamine, Berserker, Scavenger) / Heavy 강타(Iron, Hunter, Mortar) / Transform 변환(Sacrifice, GrowUp, Joker).
+  - 형태(정확히 하나): Shooter 발사(Random, Bounce, Flame, Ice, Lightning, Pierce, Iron, Dopamine, Stigma, Berserker, Hunter, Joker) / Zone 장판(Mine, Beam, Mortar, Hail, Inferno, **Thunder**) / Orbit 회전(Orbit, Shield, Mud) / Support 버프(Breeze, Rage, Keen) / Special 특수(Sacrifice, GrowUp, Darkness, Scavenger).
+  - 특성: Status 상태이상(Flame, Ice, Stigma, Mud, Hail) / Chance 확률(Ice, Stigma, Hail, Joker(카드). 다크니스 변환 70%는 태그 미반영) / KillTrigger 처치 감지(Dopamine, Berserker, Scavenger) / Heavy 강타(Iron, Hunter, Mortar) / Transform 변환(Sacrifice, GrowUp, Darkness).
   - 규칙(`MinionTagTest`): 형태는 슬라임마다 하나, 형태·특성마다 해당 슬라임 **3종 이상**. 새 슬라임 추가 시 Tags도 채울 것.
 - 권능이 반응하는 유형 = `AuthorityData.matchTags`. 정보 창에 **장착 슬라임 중 해당 종 수 / 장착 수**(태그 중 하나라도 있으면 해당, `AuthorityData.CountMatchingMinions`). matchTags가 없으면 숨김.
 - 테스트 `AuthorityTest`(해금 레벨·선택 가능 여부·묶음마다 3개·이름 번역·설명), `AuthorityPlayTest`(로비 권능 탭: 18칸·잠김 표시·칸 클릭 → 정보 창 → 선택·같은 묶음 교체·잠긴 묶음 선택 불가·적용 목록).
@@ -155,6 +174,14 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 선택 단위는 **유닛이 아니라 Tile**. 슬라임·캐릭터·아이템 타일을 클릭하면 정보가 뜬다. 타일 밖을 누르면 해제.
 - `TilePointer`는 선택된 타일 위치 표시만 담당(입력 판정은 `MinionFieldController` 한 곳). **빈 타일(유닛·아이템 없음)은 반응 없음**: 포인터·정보 패널(`TileItemInfoPanel` 등) 모두 숨기고 버튼은 그대로(선택 해제와 같은 화면). `TileItemInfoPanel`은 **아이템이 설치된 타일에서만** 뜬다(유닛만 있는 타일은 유닛 정보만). 드래그 중엔 숨기고, 선택은 옮긴 유닛을 따라간다(머지 시 결과 슬라임 선택).
 
+## 피해 숫자 연출 (2026-11-15)
+- 의도: 타격감 + **방어 타입 상성을 숫자로 체감**(약점·내성). 연출은 `WorldTextBase.Play` 한 곳(피해·치명타·킹 피해·회복 글씨 공용), 옵션 = `WorldTextStyle`(size·crit·type).
+- 공통: 처음 0.08초에 최종 크기의 1.4배로 튀었다 돌아옴 + 흰색에서 원래 색으로 번쩍 + 좌우 랜덤으로 살짝 튀었다 떨어지는 포물선(`DOJump`) 후 사라짐.
+- **치명타(`CRTDamageText`)**: 1.6배 + 좌우 흔들림(`DOPunchRotation`) + 숫자 뒤 `!`, 더 높이 튐.
+- **약점/내성**: `Enemy.TakeDamage`가 방어 타입 표 배율(`DefenceInfo.Get`, 만능은 1)을 `ApplyDamage(typeMultiplier)`로 넘김 → >1 약점 = 1.25배 + 위에 작게 `DamageText_Weak`("약점!") + `ColorSetting.weakDamageColor`(치명타면 치명타 색 유지) / <1 내성 = 0.8배 + 회색(`resistDamageColor`) + 번쩍임 없이 아래로 힘없이.
+- **피해량 비례 크기**: 대상 최대 체력 대비 피해 비율로 1 ~ 1.5배(최대 체력 절반 이상이면 1.5, `AllyUnitDamageData.GetDamageTextSize`).
+- 같은 적 피해 합치기(숫자 누적)는 아직 안 함(보류).
+
 ## 슬로우 / 빙결 (2026-10-31)
 - 둘은 **이펙트만 다르고 감속은 같다**(`IceEffect : SlowEffect`). 적중마다 이동속도 ×0.5, **둘을 합쳐 최대 3중첩**(최저 12.5%). 효과가 끝나면 그 효과가 쌓은 중첩만 풀린다.
 - (2026-11-06) **넉백(적 밀어내기, `Enemy.Push`/`PushBehavior`)은 삭제.** 적 이동 방해는 슬로우·빙결·스턴·철벽 막기로만. **스턴은 모든 출처 공통으로 엘리트/보스도 걸리고 시간만 절반**(`StatusEffectHandler.Apply`).
@@ -162,8 +189,8 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 타일 아이템 (2026-10-22)
 - 아이템 획득(2026-11-01): `DrawItemButton`으로 코인을 내면 `SelectItemCanvas`가 열린다. **Draw**(확률 연출, `drawDuration` 0이면 생략) → **SelectItem**(TileItem 중 겹치지 않는 랜덤 3개, 반드시 하나 선택) → **SelectTile**(눌러서 설치, 이미 아이템이 있는 타일은 불가). **열려 있어도 게임은 멈추지 않는다**(2026-11-07 확인, 이전엔 일시정지). 설치 칸을 직접 고르는 것이 배치 고민 포인트. PioneerTile은 설치 대신 해제할 막힌 칸을 고름. (이전: 랜덤 1개를 랜덤 타일에 바로 설치)
   - 선택지 갱신(2026-11-04): SelectItem 단계에서 `AdRefreshItemButton`으로 광고를 보면 선택지 3개를 다시 뽑는다(가능하면 지금 보이는 것 제외). **한 판에 2번**(`REFRESH_COUNT_PER_GAME`), 광고 제거 구매자는 광고 없이 갱신.
-  - 뽑기 가격(2026-10-25): **처음 10코인, 뽑을 때마다 +2** (`INIT_DRAW_ITEM_PRICE`/`INCREASE_DRAW_ITEM_PRICE`, 횟수는 `GameManager.drawItemCount`).
-  - 성공 확률(2026-10-28): **처음 100%, 성공할 때마다 -5%** (최소 10%, `INIT/DECREASE/MIN_DRAW_ITEM_CHANCE`). 코인은 먼저 내고 실패하면 코인만 소모, 가격·확률은 그대로. → 골드 소비의 확률 포인트(뒤로 갈수록 "걸어볼지" 고민).
+  - (2026-11-14) 뽑기 가격: **주사위 코인(`KingSlime.diceCoin`) 15개 고정**(`GameSetting.DRAW_ITEM_DICE_COIN_PRICE`, 뽑을수록 오르지 않음, 일반 코인은 안 씀). 장인의 망치 환불도 주사위 코인. (이전: 일반 코인 처음 10, 뽑을 때마다 증가)
+  - 성공 확률(2026-10-28): **처음 100%, 성공할 때마다 -5%** (최소 10%, `INIT/DECREASE/MIN_DRAW_ITEM_CHANCE`). 주사위 코인은 먼저 내고 실패하면 코인만 소모, 확률은 그대로. → 골드 소비의 확률 포인트(뒤로 갈수록 "걸어볼지" 고민).
 - (2026-11-09) **타일 아이템 강화**: 아이템 타일 선택 → `TileItemInfoPanel`의 `UpgradeTileItemButton`. **설치된 타일 객체 하나 단위**(같은 key 다른 타일은 그대로, 판매하면 투자도 사라짐).
   - 비용 = **주사위 코인(`KingSlime.diceCoin`, 엘리트 처치 보상) × (현재 레벨 + 1)** — 기본값은 ItemData.csv `DiceCoin`. **Lv1 시작, 최대 = `MaxCount`(3)**. Lv1→2 = DiceCoin×2, Lv2→3 = ×3.
   - **성공 확률 70% → 50%**(`TileItem.UPGRADE_CHANCES`, Lv1→2 / Lv2→3). 코인은 먼저 내고 실패하면 코인만 소모·레벨 유지(뽑기 실패와 같은 방식). 골드 소비 확률 포인트와 같은 의도.
@@ -183,7 +210,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   SlowTile(10% 슬로우), StunTile(2% 0.3초 스턴), CriticalTile(10% 2배), TrueDamageTile(방어 배율 무시 → 항상 100%),
   AddMinionSpawnCount(2026-11-11, 이전 IgnoreCountingTile = 올라간 슬라임을 최대 수에 안 세는 타일. **타일에 설치하지 않고 획득 즉시 최대 슬라임 수 +1**(`AddMinionSpawnCountItem`, `NeedTile` false → 타일 선택 단계 없음). 보유 상한 MaxCount 3. 최대치 12마리 막힘을 푸는 수단),
   ExpandBuffRangeTile(2026-11-06, 올라간 십자 버프 슬라임의 범위 십자 4칸 → 8방향. 장착 슬라임에 버프 슬라임이 없으면 안 나옴. 배치 고민 포인트),
-  EvolutionTile(2026-11-06, 최대 머지 레벨(4) 슬라임이 올라가면 진화 `Minion.Evolve`, 슬라임당 1회(`isEvolved`, 합성·교체로 새로 생기면 초기화). **(2026-11-10) 1회용: 슬라임을 진화시키면 타일 아이템은 사라짐**(다음 프레임에 `KingSlime.RemoveItem`, 판매 코인 없음). 진화 못 하는 슬라임(최대 레벨 미만·희생/성장/조커)이 올라가면 그대로 남음. **뽑기(2026-11-09): 필드의 진화 안 한 레벨 4 슬라임 수 > 설치된 진화 타일 수일 때만, 뽑기 시도마다 40%(`EvolutionTileItem.DRAW_CHANCE`)로 선택지 3개 중 하나로 확정 등장**(실패하면 그 뽑기엔 안 나옴). 같으면 안 나옴(예: 5마리/4개 → 40%, 5마리/5개 → 0%, 타일이 더 많은 경우는 없어야 함). 보유 상한(MaxCount) 대신 이 규칙만 씀(`TileItem.IgnoreMaxCount`/`DrawChance`, `ItemManager.GetDrawTileItems`). 강화 불가. 테스트 `EvolutionTileDrawPlayTest`. 진화 = 슬라임 고유 [각성] 발현, 위 슬라임 섹션 참고),
+  EvolutionTile(2026-11-06, 최대 머지 레벨(4) 슬라임이 올라가면 진화 `Minion.Evolve`, 슬라임당 1회(`isEvolved`, 합성·교체로 새로 생기면 초기화). **(2026-11-10) 1회용: 슬라임을 진화시키면 타일 아이템은 사라짐**(다음 프레임에 `KingSlime.RemoveItem`, 판매 코인 없음). 진화 못 하는 슬라임(최대 레벨 미만·희생/성장/다크니스)이 올라가면 그대로 남음. **뽑기(2026-11-09): 필드의 진화 안 한 레벨 4 슬라임 수 > 설치된 진화 타일 수일 때만, 뽑기 시도마다 40%(`EvolutionTileItem.DRAW_CHANCE`)로 선택지 3개 중 하나로 확정 등장**(실패하면 그 뽑기엔 안 나옴). 같으면 안 나옴(예: 5마리/4개 → 40%, 5마리/5개 → 0%, 타일이 더 많은 경우는 없어야 함). 보유 상한(MaxCount) 대신 이 규칙만 씀(`TileItem.IgnoreMaxCount`/`DrawChance`, `ItemManager.GetDrawTileItems`). 강화 불가. 테스트 `EvolutionTileDrawPlayTest`. 진화 = 슬라임 고유 [각성] 발현, 위 슬라임 섹션 참고),
   GoldTile(처치 시 코인 +1), PioneerTile(2026-11-10 **선택 후 막힌 칸을 눌러 그 칸을 해제**(`TileItem.CanPickTile`, 막히지 않은 칸은 토스트), 설치 안 함, 막힌 칸 없으면 안 나옴. 권능 곡괭이는 랜덤 해제 그대로), BerserkTile(공 ×2, 사거리 ×0.5), GiantSlayerTile(엘리트·보스에게 데미지 ×2, 방어 배율과 곱연산).
 - 공격 타입 변경 타일 (2026-10-27): PhysicTile / MagicTile = 올라간 유닛의 공격 타입을 해당 속성으로 바꿈(`AttackTypeTileItem`).
   - 의도: 방어 타입 상성을 **배치로 맞추는 수단**. 슬라임 속성은 랜덤 소환이라 못 고르지만, 타일 위로 옮겨서 이번 wave 상성에 맞출 수 있다.
@@ -212,8 +239,8 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - wave 0~19 (총 20), 19 = 보스. 각 wave의 WaveType은 WaveData에 **하나로 고정**, 선택 없이 바로 진행.
 - WaveType: Battle, Elite, Boss (2026-10-30, 이전 Normal/Hard/Elite/Boss). wave마다 `Wave` 인스턴스를 새로 생성(`GameManager.accWaves`에 누적).
 - **2026-10-30: 휴식(break time) 없음.** UI(`WaveTimerPanel`)는 `GameManager.mainWaveTimer` 기준 현재 wave 남은 시간을 `분:초`로만 표시. 아래 휴식 관련 내용은 이전 기획.
-  - 적 스폰은 wave 시작 후 **`WAVE_SPAWN_TIME`초 동안만**, 남은 시간(`WAVE_TIME`까지)은 스폰 없이 남은 적 처리.
-  - (2026-11-11) `StartNextWaveButton`은 **현재 wave 시작 후 20초(`SKIP_ENABLE_TIME`)부터** 노출 → 바로 다음 wave 시작. 이전 wave의 남은 소환(`WAVE_SPAWN_TIME` 40초까지)은 계속되어 **다음 wave와 겹쳐서 나온다**(의도). 보스 wave에서는 안 나옴. 규칙 = `GameManager.CanSkipWave(waveType, elapsed)`. (이전: 소환이 끝나면 노출)
+  - (2026-11-15) 적 스폰은 **시간이 아니라 마리 수 기준: 한 wave에 일반 적 총 `WAVE_ENEMY_COUNT`(40)마리**, `ENEMY_SPAWN_INTERVAL` 간격(시작 즉시 1마리). 다 소환하면 남은 시간(`WAVE_TIME`까지)은 스폰 없이 남은 적 처리. wave 시간이 먼저 끝나면 남은 소환은 취소. 일반 적 소환 위치 = `EnemyFieldController.enemySpawnPointTrs` 순서대로 번갈아(비면 `paths[0]`), 엘리트·보스는 `paths[0]`. 소환 지점에서 나온 일반 적은 `paths[0]`을 건너뛰고 바로 `paths[1]`로 → 각 지점에서 `paths[1]`로 오는 길에 한 줄로 합쳐짐(`NormalStartPathIdx`). (이전: `WAVE_SPAWN_TIME`초 동안)
+  - (2026-11-15) `StartNextWaveButton`은 **현재 wave의 적이 모두 소환되면**(`Wave.isSpawnEnd`, 일반 적 `WAVE_ENEMY_COUNT`마리 소환 완료) 노출 → 바로 다음 wave 시작. 필드에 남은 적은 그대로 진행. 보스 wave에서는 안 나옴. 규칙 = `GameManager.CanSkipWave(waveType, isSpawnEnd)`. (이전 2026-11-11: wave 시작 후 20초 `SKIP_ENABLE_TIME`부터 노출, 남은 소환과 겹침 → 삭제)
 - 전투 웨이브 흐름: **웨이브 30초**(`WAVE_TIME`, 30초 내내 1초마다 1마리 스폰) → **휴식 10초**(`BREAK_TIME`) → 다음 wave.
   - 각 Wave가 자기 타이머를 가지고, 시간이 다 되면 스스로 종료(스폰 중지) → `GameManager.EndWave` → 휴식(`GameManager.isBreak`).
   - 휴식 중에는 TimeBar 숨기고 "다음 웨이브까지 N초" 카운트다운 + 다음 웨이브 시작 버튼 표시.
@@ -292,7 +319,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - **집계는 행동이 일어나는 곳에서 `AchievementManager.Report(type, 횟수)` 직접 호출**(씬 이벤트 구독 방식은 폐기). 일일·누적에 같이 쌓이고, 저장은 프레임 끝에 한 번.
   - KillEnemy = 처치만(경로 끝 도착 제외, 보너스 엘리트 포함) · KillBonusElite · TryStage = 결과 화면(부활해도 한 판) · LevelUpMinion = 로비 강화 · **DrawMinion = 뽑은 장수**(10회 = 10) · **DrawItem = 시도마다**(확률 실패 포함) · UpgradeReinforce = 인게임 강화 · **SpawnMinion = 소환 버튼만**(무료 소환·합성 결과 제외) · MergeMinion = 합성(자리 교체 제외) · **Login = 접속한 날 수**(날짜가 바뀐 뒤 첫 확인 때 1) · **Watch_Ad = 광고 보상을 받을 때마다, 광고 제거 구매자 포함**. ClearStage는 사용 안 함.
   - **광고 제거 여부 확인은 `AdManager.Show` 안에서만**(제거 구매자 = 광고 없이 성공). 호출하는 쪽에서 `isAdRemoved`를 따로 보지 않는다 → Watch_Ad 집계도 Show 한 곳.
-- UI(`AchievementCanvas`, 일일/누적 탭): **패널은 씬의 첫 패널을 모자란 만큼 코드가 복사**(`AchievementContainer`), 남는 패널은 숨김. 진행도 = Slider + `값/목표`(일일은 목표까지만 표시). 상태 오브젝트는 하나만: 일일 = 진행 중 `processingObj` / 받을 수 있음 `claimObj` / 받음 `gottenRewardObj`, 누적 = 진행 중 / 받을 수 있음 둘뿐. 받을 수 있으면 패널·탭·로비 업적 버튼 redDot. 이름 = Translate `Achievement.{Type}`.
+- UI(`AchievementCanvas`, 일일/누적 탭): **패널은 씬의 첫 패널을 모자란 만큼 코드가 복사**(`AchievementContainer`), 남는 패널은 숨김. 진행도 = Slider + `값/목표`(일일은 목표까지만 표시). 상태 오브젝트는 하나만: 일일 = 진행 중 `processingObj` / 받을 수 있음 `claimObj` / 받음 `gottenRewardObj`, 누적 = 진행 중 / 받을 수 있음 둘뿐. 받을 수 있으면 패널·탭·로비 업적 버튼 redDot. **(2026-11-13) 표시 순서 = 받을 수 있음 → 진행 중 → 완료(일일 보상 받음)**, 같은 상태끼리는 CSV 순서. 갱신할 때마다 다시 정렬(`AchievementContainer.SortPanels`, 패널 `State`). 이름 = Translate `Achievement.{Type}`.
 - 테스트 `AchievementRuleTest`(CSV 전부 읽힘·목표 계산·자정 판단·이름 key), `AchievementPlayTest`(로비: 창 구성·탭·집계 → 표시 → 보상·누적 이월·광고·날짜 변경 초기화·저장 파일 / 인게임: 소환 버튼·합성·강화·아이템 뽑기·처치·보너스 엘리트).
 
 ## 서버 (Firebase RTDB, 2026-11-05)
@@ -334,13 +361,14 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - **전용 화면 `TutorialCanvas`**(Tutorial의 자식): 화면 블록(전체 화면 투명 Raycast 이미지 → UI와 필드 입력 모두 막음) + **화면 중앙 대화창**(터치하면 다음 대사). **튜토리얼 동안 화면은 기본으로 막혀 있고, 직접 조작하는 블록(킹 이동·소환)만 그 블록 동안 푼다.**
 - **불필요한 UI 숨김** = `Tutorial.hideObjectNames`(**씬 오브젝트 이름 또는 경로**, 프리팹은 씬 오브젝트를 참조할 수 없어서. `TutorialSceneFinder`가 꺼진 오브젝트까지 찾음, 없거나 이름이 겹치면 경고). 시작할 때 끄고 끝나면 다시 켬. 중간에 보이게 하려면 `SetActiveTutorialStep`(`targetNames`).
 - **블록(TutorialStep) = `Common/Tutorial/Steps/`**, 인스펙터에서 자식 순서로 조립(대화를 사이사이 끼워 넣는 용도): `Dialogue`(화자 + 대사 목록, 번역 key면 번역문) · `Wait`(초) · `WaitFadeEnd` · **`StartWave`(튜토리얼 도중 wave 0 시작 → 이후 블록은 적이 나오는 중에 진행, `GameManager.StartGame`. 없으면 튜토리얼이 끝난 뒤 시작)** · `SetActive` · `ShowSpawnButton`(숨긴 소환 버튼 켜기, 씬 연결 없이) · `SetKingTile`(킹을 칸으로 바로 옮김) · `MoveKing`(플레이어가 킹을 지정 칸으로 드래그) · `SpawnMinion`(**1기 = 블록 하나**, 여러 기는 블록을 이어 둠. 소환 버튼을 누르면 **지정 key가 지정 칸에**: `MinionSpawnButton.forcedMinionKey`/`forcedTile`, 장착과 무관. 코인이 모자라면 모자란 만큼 채워 주고 소환은 평소처럼 코인을 냄) · `MergeMinion`(from 칸 미니언을 to 칸 미니언 위로 드래그해 합성).
+  - (2026-11-13) **포커스(`TutorialCanvas.ShowFocus(대상)`/`HideFocus`)**: 대상 UI만 밝게 두고 나머지 화면을 어둡게 + **대상 밖 터치는 막고 대상 위 터치만 통과**. 스텐실 반전 마스크: `Focus/Hole`(Image + Mask, 그림 안 보임, 대상 Image 스프라이트로 모양을 맞춤) 자식 `Dim`(`TutorialFocusDim`, 스텐실 비교를 NotEqual로 바꾼 머티리얼 → 구멍 밖에만 그려짐). 터치 막기는 Mask 밖의 `Blocker`(`TutorialFocusBlocker`)가 담당(Mask 자식은 Mask 레이캐스트 필터 때문에 구멍 밖을 못 막음). 대상을 매 프레임 따라가고 살짝 커졌다 작아짐, 대상이 꺼져 있으면 어둡게 안 함. 소환 블록은 `useFocus`(기본 켬)로 소환 버튼에 포커스. 프리팹엔 메뉴 `Tools/Tutorial/Add Focus To Tutorial Prefabs`로 구워 둠(모양·색은 프리팹에서), 없으면 실행 중에 기본 모양 생성.
   - 드래그 블록(`DragTutorialStep`: MoveKing·MergeMinion): 지정 유닛만 드래그·지정 칸에만 드롭(`MinionFieldController.dragFilter`/`dropFilter`, 다른 칸이면 원위치). **손 드래그 연출(유닛 칸 → 목표 칸)이 완료할 때까지 반복**(손 = 프리팹의 `TutorialHand` 이미지, `TutorialCanvas.finger`, 손끝 = pivot), 플레이어가 드래그하는 동안만 숨김. 소환 블록은 버튼 위 손가락 터치 연출(`fingerTarget`).
   - **화자**: `TutorialCanvas.speakers`(key·이름·초상화)에 한 번 등록, 대화 블록은 `speakerKey`로 고름 → 화자가 바뀌면 이름·초상화도 바뀜. 킹슬라임 화자 이름 = **"마왕을 꿈꾸는 슬라임"**(key `KingSlime`). 초상화가 없으면 숨김(이미지는 준비 중). 이름은 아직 번역 시트에 없음(글씨 그대로).
   - 칸 지정 = `Tile.index`(6*6, x 왼→오 0~5, y 위→아래 0~5). 블록이 쓰는 칸이 막힌 칸이면 시작할 때 풀고 다른 빈 칸을 대신 막는다(`TileManager.EnsureUsable`, 막힌 칸 수 유지).
 - **FirstPlay(첫 플레이) 튜토리얼**: 처음 실행한 유저는 **로비 대신 바로 InGame**(`LobbyManager.Start` → `TutorialManager.TryRedirectToFirstPlay`, 에너지 소모 없음, 앱을 켠 동안 1번만). `GameManager.Start`가 페이드 전에 시작. 흐름(2026-11-13): 킹을 오른쪽 아래 그룹에 둠 → 대화 → **wave 시작 → 3초 뒤** 킹을 왼쪽 위 그룹의 왼쪽 아래 칸(0,2)으로 드래그 → 블록 → 대화 → 다시 킹 이동(칸은 인스펙터 입력) → 소환 버튼 보이기 → **소환 3기(1번째·3번째를 같은 종으로 지정) → 3번째를 1번째 위로 합성**. 이후 단계는 미정.
   - **프리팹 = `3.Prefabs/Tutorial/FirstPlayTutorial`**(전용 Canvas + 블록, 매니저 `tutorialPrefabs`에 등록). 대사·칸·모양·숨길 UI 이름 모두 프리팹에서 고침. 메뉴 `Tools/Tutorial/Create Tutorial Prefabs`(없으면 생성·등록) · `Reset Tutorial Progress`(완료 기록 삭제).
 - 테스트 `TutorialPlayTest`: 튜토리얼을 끝까지 진행(대화 터치·드롭·소환 버튼) → wave 시작 블록 전 wave 미시작, 킹 칸·소환 종/칸·합성 결과, 끝나면 완료 기록·오브젝트 삭제·wave 진행.
-- 끄기: `BuildSetting.skipTutorial` / 자동 테스트는 플레이 진입 전에 `SessionState`(`TutorialManager.DISABLE_FOR_TEST_KEY`)로 끔(`InGamePlayTestBase.BeforeEnterPlayMode`, `TutorialPlayTest`만 켬).
+- 끄기: `BuildSetting.skipTutorial` / 자동 테스트는 플레이 진입 전에 `SessionState`(`TutorialManager.DISABLE_FOR_TEST_KEY`)로 끔(`InGamePlayTestBase.BeforeEnterPlayMode`, `TutorialPlayTest`만 켬) — 테스트가 정한 값이 `skipTutorial`보다 우선(skipTutorial을 켜 둬도 `TutorialPlayTest`는 돌아감).
 
 ## 기능 해금 버튼 (2026-11-13)
 - **`UnlockGate`**(잠글 버튼 오브젝트에 붙임) + **`UnlockCondition`**(종류·value·count, `ConditionData`와 같은 모양이지만 별개 — ConditionData는 인게임 능력·탄 CSV용이라 건드리지 않음). 조건은 **모두 만족해야 해금**.
@@ -352,7 +380,17 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 튜토리얼 (2026-11-13, 작업 중)
 - **킹 이동 안내(`MoveKingTutorialStep`) 동안 게임 슬로우**: 게임 속도 0.3 → 5초(실제 시간)에 걸쳐 0까지 줄임, 단계가 끝나면 이전 속도로 복구. 드래그·손가락 연출·목표 칸 표시·킹 애니메이션은 실제 시간이라 원래 속도로 보인다.
 
+## 사운드 (2026-11-16, 준비만)
+- 사운드 파일은 **프리팹 `Resources/Init/SoundManager`의 `sfxDatas`/`bgmDatas` 칸에 드래그**. 칸은 `SFXType`/`BGMType` enum마다 하나씩 enum 순서로 자동 생성(`SoundManager.OnValidate`, 칸 이름 = 종류). 클립이 빈 종류는 재생해도 무음.
+- enum은 번호로 직렬화되므로 **새 종류는 맨 뒤에만 추가**. 자주 나는 소리는 `minInterval`(겹침 방지)·`pitchRandom`으로 조절. BGM은 BGM 믹서 그룹의 AudioSource 하나(`PlayBGM`/`StopBGM`), 루프 SFX는 `StopSound`. 이전 `BGMPlayer` 자식 방식은 삭제.
+- **미니언 공격 소리 = 종마다 `MinionData.attackSfx`(SFXData, 에셋 인스펙터)**, AudioClip이 비면 공통 `SFXType.MinionAttack`(`SoundManager.PlaySound(SFXData, fallback)`). 재생 시점 = 공격 모션과 같음(`Minion.Update`에서 공격 성공 + `UseFindTarget`일 때 `PlayAttackSound`) → 회전체·경로 순환(Orbit·Mud·Shield)은 공격 소리 없음(적중 소리는 따로).
+- (2026-11-16) SFX 칸 전부 = **Universal Sound FX에서 고른 임시 소리**(복사본 `Assets/7.Sounds/SFX/`, 새 guid). 귀여운 톤 위주(RETRO·CARTOON·PUZZLE), 자주 나는 소리(적중·코인·처치·공격)는 볼륨 낮게 + minInterval + pitchRandom.
+- (2026-11-16) **SFX 종류는 클립이 있는 것만 둔다**: 안 쓰기로 한 PopupClose·DragStart·DrawItemFail·ItemSelectAppear·ItemSelect는 enum에서 삭제(87종). 빈 칸으로 남겨 두지 않음.
+- (2026-11-16) **BGM은 로비·인게임 2종뿐**(`BGMType` Lobby/InGame). 엘리트·보스 wave·튜토리얼·실패·결과 BGM은 없음(만들지 않음).
+- 그 외에는 아직 Click만 게임 코드에서 재생(나머지 위치 연결은 소리 파일이 준비된 뒤).
+
 ## 테스트 (2026-11-07)
+- (2026-11-15) **수동 테스트 창 `Tools/Test/Minion Test`**(`Test/Editor/MinionTestWindow`, 에디터 전용, InGame Play 중): 미니언 key·머지 레벨·진화·칸 지정 소환, 선택한 미니언 스탯·버프·스킬 진행도 + **쿨타임 채우기**(`Minion.FillSkillForTest`, 스킬 미니언마다 재정의: 시간형 = 다 참, 횟수형 = 1회 남김), 킹 무적·코인 무한·속도, wave 이동·적 종류/방어 타입 소환·적 정지(허수아비), 선택 칸 타일 아이템 설치·레벨·제거. 값은 EditorPrefs. 기기용 `TestCanvas`(배속·골드·다음 wave)는 그대로. **새 스킬 미니언을 만들면 `FillSkillForTest`도 재정의.**
 - **테스트는 메인 에디터가 아니라 테스트 전용 복사본(`~/KingSlime-Test`, git worktree)에서 돌린다** (2026-11-08). `Tools/run-tests.sh [필터]` = 메인의 커밋 + 작업 중 변경을 복사본에 동기화(`Tools/sync-test-project.sh`) → 복사본 에디터가 열려 있으면 그 에디터에서, 아니면 배치모드로 실행. 백그라운드로 돌리고 끝나면 결과를 알려준다. 메인 씬·저장 파일을 건드리지 않으므로 작업 중에도 가능.
 - EditMode 테스트는 `Assets/Tests/Editor/`(asmdef 없음 → `Assembly-CSharp-Editor`라서 게임 코드를 바로 참조). 게임 스크립트에 asmdef가 없으므로 테스트에도 asmdef를 만들지 않는다.
 - 기획 규칙은 **씬·싱글톤 없이 계산할 수 있는 static 함수**로 빼서 테스트한다(예: `Minion.CanMerge`, `SacrificeMinion.CanSacrificeMerge`, `DrawItemButton.GetDrawChance(int)`). 기획이 바뀌면 `GameRuleTest.cs`의 기대값도 같이 고친다.
@@ -380,6 +418,8 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 비밀 값(테스터 그룹 `FIREBASE_GROUPS`, `KS_APPLE_TEAM_ID`, 키스토어 `KS_KEYSTORE_*`)은 `~/.kingslime-release/config.sh`(git 밖). 키스토어가 없으면 디버그 키로 서명.
 
 ## 데이터 파이프라인
+- (2026-11-16) **`EffectType` 같은 enum은 프리팹·에셋에 번호로 저장되므로 항상 맨 뒤에만 추가**(중간에 넣으면 기존 프리팹 값이 다른 항목을 가리킴. 다크니스 이펙트가 사라졌던 원인).
+- 이펙트 글씨 색은 **회색 금지**: 밝은 회색 타일 위에서 안 보임.
 - (2026-11-08) **번역**: `Json/Translate.csv`(시트 Key / Kr / En) → DataTableImporter(`Tools/Data/Import TranslateData`, Play 시 자동) → `Resources/TranslateData.asset` → `TranslateManager.GetText`가 처음 호출될 때 로드. 한국어 기기 = Kr, 그 외 = En, 칸이 비면 Kr로 대체, key가 없으면 `*key`. 코드에서 보여주는 문구는 한글 리터럴 대신 key로(조합 key: `Difficulty.{난이도}`, `Minion.{Key}`/`Minion.{Key}.Desc`, `{StatType}_title`, `Grade.{등급}`). `TranslateDataTest`가 코드 key가 시트에 다 있는지 검사. (2026-11-12) **로비 씬의 고정 글씨(제목·탭·버튼 이름 등, 코드가 참조하지 않는 TMP_Text)는 `TranslateText`(key, `formatArg` = 번역문 `{0}` 자리)** 로 출력, 언어를 바꾸면 꺼져 있는 창까지 다시 그림. 업적 패널 버튼 글씨는 프리팹(`DailyAchievementPanel`/`CumulativeAchievementPanel`)에 붙임. 새 고정 글씨를 놓으면 TranslateText + 시트 key도 추가(`SettingPlayTest`가 key 존재·언어 변경 반영 검사). BGM·SFX·ON/OFF·DISCORD·BEST·NEW·WAVE·MY·PLAY처럼 두 언어가 같은 글씨와 Layer Lab 샘플 UI(Progression_Pass2, Shop_List, Character_Hero_List)는 제외. InGame 씬은 아직 미적용. 슬라임 설명 중 CSV Desc를 그대로 쓰는 종(Bounce, Orbit 등)과 아이템 이름·설명(ItemData.csv)은 아직 번역 안 됨.
 - **MinionData 배열 필드(bounces, shootCounts 등)는 에셋에 직렬화된 값이 코드 초기값보다 우선.** 코드 기본값만 바꾸면 기존 에셋엔 반영 안 됨 → 에셋도 같이 수정.
 - 기획 데이터는 `Assets/Json/**/*.csv`(엑셀 → TSV). 에디터에서 `LoadData`(DataTableImporter)를 실행해야 에셋(`AddressableResources`)에 반영됨.

@@ -77,7 +77,7 @@ public class EvolutionPlayTest : InGamePlayTestBase
         // 희생·성장·조커는 진화하지 않음 (최대 레벨에서 쓸 각성이 없음), 진화 타일도 남음
         KingSlime.Instance.AddItem("EvolutionTile", evoTile).Forget();
         yield return WaitFrames(2);
-        foreach (string key in new[] { "Sacrifice", "GrowUp", "Joker" })
+        foreach (string key in new[] { "Sacrifice", "GrowUp", "Darkness" })
         {
             Minion s = SpawnMinion(key, evoTile, MAX);
             yield return WaitFrames(2);
@@ -130,8 +130,7 @@ public class EvolutionPlayTest : InGamePlayTestBase
         Assert.AreEqual(1, hail.hailCount);
         hail.Evolve();
         yield return WaitFrames(3);
-        Assert.AreEqual(HailMinion.EVOLVE_HAIL_COUNT, hail.hailCount, "빙석: 눈 개수");
-        Assert.GreaterOrEqual(hail.GetComponentsInChildren<HailStone>(true).Length, HailMinion.EVOLVE_HAIL_COUNT, "빙석: 눈 오브젝트가 늘지 않음");
+        Assert.AreEqual(HailMinion.EVOLVE_HAIL_COUNT, hail.hailCount, "빙석: 한 번에 소환하는 눈 개수"); // 눈 오브젝트는 스킬 쿨타임(10초)이 차야 생김
         MinionFieldController.Instance.RemoveFieldMinion(hail);
 
         // 진흙: 구슬 최대 +1
@@ -140,12 +139,6 @@ public class EvolutionPlayTest : InGamePlayTestBase
         mud.Evolve();
         Assert.AreEqual(orbs + MudMinion.EVOLVE_ADD_ORB_COUNT, mud.maxOrbCount, "진흙: 구슬 최대 수");
         MinionFieldController.Instance.RemoveFieldMinion(mud);
-
-        // 광란: 추가 탄 2발
-        DopamineMinion dopamine = (DopamineMinion)SpawnMinion("Dopamine", GetFreeTile(), MAX);
-        dopamine.Evolve();
-        Assert.AreEqual(DopamineMinion.EVOLVE_EXTRA_SHOT_COUNT, dopamine.extraShotCount, "광란: 추가 탄 수");
-        MinionFieldController.Instance.RemoveFieldMinion(dopamine);
 
         // 지뢰: 한 번에 2개
         MineMinion mine = (MineMinion)SpawnMinion("Mine", GetFreeTile(), MAX);
@@ -214,8 +207,8 @@ public class EvolutionPlayTest : InGamePlayTestBase
         CheckBullet("Thunder", spec => spec.bulletBehaviors.OfType<SlowOnHitBehavior>().Any(), "천둥: 감속");
         // 강철: 엘리트·보스 배율 +0.2
         CheckBullet("Iron", spec => GetIronMul(spec) > 0f, "강철: 배율", compare: true);
-        // 낙인: 최대 중첩 5
-        CheckBullet("Stigma", spec => GetStigmaMaxStack(spec) >= StigmaMinion.EVOLVE_MAX_STACK, "낙인: 최대 중첩");
+        // 낙인: 피해 증가량 EVOLVE_DAMAGE_BONUS
+        CheckBullet("Stigma", spec => GetStigmaDamageBonus(spec) >= StigmaMinion.EVOLVE_DAMAGE_BONUS, "낙인: 피해 증가량");
         yield return WaitFrames(2);
     }
 
@@ -223,12 +216,12 @@ public class EvolutionPlayTest : InGamePlayTestBase
 
     static float GetIronMul(BulletSpec spec) => spec.bulletForces.OfType<BigEnemyDamageForce>().Select(f => f.mul).DefaultIfEmpty(0f).First();
 
-    static int GetStigmaMaxStack(BulletSpec spec)
+    static float GetStigmaDamageBonus(BulletSpec spec)
     {
         StigmaOnHitBehavior b = spec.bulletBehaviors.OfType<StigmaOnHitBehavior>().FirstOrDefault();
         if (b == null)
-            return 0;
-        return (int)typeof(StigmaOnHitBehavior).GetField("maxStack", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(b);
+            return 0f;
+        return (float)typeof(StigmaOnHitBehavior).GetField("damageBonus", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(b);
     }
 
     // 진화 전 탄은 조건 불충족, 진화 후 탄은 충족 (강철은 진화 전후 배율 비교)

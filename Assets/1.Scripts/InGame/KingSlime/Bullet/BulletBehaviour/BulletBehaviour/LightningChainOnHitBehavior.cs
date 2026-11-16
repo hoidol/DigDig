@@ -95,7 +95,7 @@ public class LightningChainOnHitBehavior
 
             // 레이저가 도달한 순간 데미지 적용
             IHittable target = hitTargets[i - 1];
-            EffectManager.Instance.Play(EffectType.Spark, target.Transform.position);
+            EffectManager.Instance.Play(EffectType.Thunder, target.Transform.position);
             target.TakeDamage(chainDamageData);
         }
 

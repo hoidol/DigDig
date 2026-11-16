@@ -28,7 +28,7 @@ public class ReinforcePlayTest : InGamePlayTestBase
         AssertNoErrors();
     }
 
-    // 실제 씬 연결: 강화 버튼 → 창 → 칸 버튼 클릭으로 강화 → 닫기 (테스트용 패널 없이)
+    // 실제 씬 연결: 게임 화면에 강화 칸이 바로 보임 → 칸 버튼 클릭으로 강화 (테스트용 패널 없이)
     [UnityTest]
     public IEnumerator Reinforce_SceneUI()
     {
@@ -39,16 +39,16 @@ public class ReinforcePlayTest : InGamePlayTestBase
     }
 
     // 씬 패널이 아직 5개가 안 되면 테스트용으로 채움
-    static void EnsurePanels(ReinforceCanvas canvas)
+    static void EnsurePanels(ReinforceContainer container)
     {
-        if (canvas.reinforcePanels != null && canvas.reinforcePanels.Count(p => p != null) >= GameSetting.MINION_SLOT_COUNT)
+        if (container.reinforcePanels != null && container.reinforcePanels.Count(p => p != null) >= GameSetting.MINION_SLOT_COUNT)
             return;
-        canvas.reinforcePanels = new ReinforcePanel[GameSetting.MINION_SLOT_COUNT];
-        for (int i = 0; i < canvas.reinforcePanels.Length; i++)
+        container.reinforcePanels = new ReinforcePanel[GameSetting.MINION_SLOT_COUNT];
+        for (int i = 0; i < container.reinforcePanels.Length; i++)
         {
             var go = new GameObject($"ReinforcePanel{i}(Test)", typeof(RectTransform));
-            go.transform.SetParent(canvas.transform, false);
-            canvas.reinforcePanels[i] = go.AddComponent<ReinforcePanel>();
+            go.transform.SetParent(container.transform, false);
+            container.reinforcePanels[i] = go.AddComponent<ReinforcePanel>();
         }
     }
 
@@ -60,24 +60,23 @@ public class ReinforcePlayTest : InGamePlayTestBase
 
     IEnumerator Body()
     {
-        ReinforceCanvas canvas = ReinforceCanvas.Instance;
-        Assert.IsNotNull(canvas, "InGame 씬에 ReinforceCanvas 없음");
-        EnsurePanels(canvas);
-        canvas.OpenCanvas();
+        ReinforceContainer container = ReinforceContainer.Instance;
+        Assert.IsNotNull(container, "InGame 씬에 ReinforceContainer 없음");
+        EnsurePanels(container);
+        container.UpdatePanels();
         yield return WaitFrames(1);
 
         UserMinion[] equipped = Equipped;
         for (int i = 0; i < GameSetting.MINION_SLOT_COUNT; i++)
         {
-            ReinforcePanel panel = canvas.reinforcePanels[i];
+            ReinforcePanel panel = container.reinforcePanels[i];
             Assert.IsTrue(panel.gameObject.activeSelf, $"{i}번 패널이 꺼져 있음");
             Assert.IsNotNull(panel.MinionData, $"{i}번 패널 슬라임 없음");
             Assert.AreEqual(equipped[i].key, panel.MinionData.key, $"{i}번 패널이 장착 순서와 다름");
         }
-        Assert.IsTrue(canvas.gameObject.activeSelf, "열자마자 닫힘 (슬롯머신 자동 닫기가 남아 있음)");
 
         // 필드에 없는 종도 강화 가능, 가격 30 → 60 → 90
-        ReinforcePanel first = canvas.reinforcePanels[0];
+        ReinforcePanel first = container.reinforcePanels[0];
         string key = first.MinionData.key;
         Assert.IsFalse(Stat.HasMinionOnField(key), "테스트 전제: 필드에 그 종이 없어야 함");
         Assert.AreEqual(0, Stat.GetReinforceLevel(key), "게임 시작 시 강화 레벨 0");
@@ -107,17 +106,15 @@ public class ReinforcePlayTest : InGamePlayTestBase
         // 다른 종은 영향 없음
         for (int i = 1; i < GameSetting.MINION_SLOT_COUNT; i++)
         {
-            string otherKey = canvas.reinforcePanels[i].MinionData.key;
+            string otherKey = container.reinforcePanels[i].MinionData.key;
             if (otherKey != key)
                 Assert.AreEqual(0, Stat.GetReinforceLevel(otherKey), $"다른 종({otherKey}) 레벨이 오름");
         }
 
-        // 창을 닫았다 열어도 레벨·가격 유지
-        canvas.CloseCanvas();
-        canvas.OpenCanvas();
+        // 다시 갱신해도 레벨·가격 유지
+        container.UpdatePanels();
         yield return WaitFrames(1);
-        Assert.AreEqual(ReinforcePanel.GetPrice(3), canvas.reinforcePanels[0].GetPrice(), "다시 열었을 때 가격");
-        canvas.CloseCanvas();
+        Assert.AreEqual(ReinforcePanel.GetPrice(3), container.reinforcePanels[0].GetPrice(), "다시 갱신했을 때 가격");
     }
 
     IEnumerator EffectBody()
@@ -194,23 +191,14 @@ public class ReinforcePlayTest : InGamePlayTestBase
 
     IEnumerator SceneUIBody()
     {
-        ReinforceCanvas canvas = ReinforceCanvas.Instance;
-        Assert.IsNotNull(canvas, "InGame 씬에 ReinforceCanvas 없음");
-        // 씬에서 켜 둔 채 저장하면 게임 시작부터 창이 떠 있다 → 나머지를 끝까지 확인한 뒤 마지막에 실패 처리
-        bool openAtStart = canvas.gameObject.activeSelf;
-        if (openAtStart)
-            canvas.gameObject.SetActive(false);
-
-        // 강화 버튼 → 창
-        ReinforceOpenButton open = Object.FindFirstObjectByType<ReinforceOpenButton>(FindObjectsInactive.Include);
-        Assert.IsNotNull(open, "InGame 씬에 강화 버튼(ReinforceOpenButton) 없음");
-        Assert.IsTrue(open.gameObject.activeInHierarchy, "강화 버튼이 화면에 안 보임 (부모가 꺼져 있음)");
-        open.GetComponent<Button>().onClick.Invoke();
-        yield return WaitFrames(2);
-        Assert.IsTrue(canvas.gameObject.activeInHierarchy, "강화 버튼을 눌러도 창이 안 열림");
+        // 게임 화면에 바로 보임 (버튼·창 없이)
+        ReinforceContainer container = ReinforceContainer.Instance;
+        Assert.IsNotNull(container, "InGame 씬에 ReinforceContainer 없음");
+        Assert.IsTrue(container.gameObject.activeInHierarchy, "강화 칸이 게임 화면에 안 보임 (ReinforceContainer가 꺼져 있음)");
+        yield return WaitFrames(1);
 
         // 칸 5개 + 표시
-        ReinforcePanel[] panels = canvas.reinforcePanels.Where(p => p != null).ToArray();
+        ReinforcePanel[] panels = container.reinforcePanels.Where(p => p != null).ToArray();
         Assert.AreEqual(GameSetting.MINION_SLOT_COUNT, panels.Length, "씬의 ReinforcePanel 수 (장착 5종)");
         for (int i = 0; i < panels.Length; i++)
         {
@@ -236,13 +224,5 @@ public class ReinforcePlayTest : InGamePlayTestBase
         Assert.AreEqual("Lv.1", panels[1].lvText.text, "강화 후 레벨 글씨");
         Assert.AreEqual("60", panels[1].priceText.text, "강화 후 가격 글씨");
         Assert.AreEqual("Lv.0", panels[0].lvText.text, "다른 칸 글씨가 바뀜");
-
-        // 닫기 버튼
-        Button close = canvas.GetComponentsInChildren<Button>(true).FirstOrDefault(b => b.name.StartsWith("CloseButton"));
-        Assert.IsNotNull(close, "강화 창 닫기 버튼 없음");
-        close.onClick.Invoke();
-        yield return WaitFrames(2);
-        Assert.IsFalse(canvas.gameObject.activeSelf, "닫기 버튼을 눌러도 창이 안 닫힘");
-        Assert.IsFalse(openAtStart, "게임 시작 시 강화 창이 열려 있음 (InGame 씬에서 ReinforceCanvas를 꺼 두고 저장해야 함)");
     }
 }

@@ -89,7 +89,7 @@ public class PlagueChaliceAuthority : Authority
             case StunEffect stun: return new StunEffect(stun.duration);
             case FlameEffect flame: return new FlameEffect(flame.duration, flame.DamagePerSecond);
             case PoisonEffect poison: return new PoisonEffect(poison.duration, poison.DamagePerTick);
-            case StigmaEffect stigma: return new StigmaEffect(stigma.maxStack, stigma.damagePerStack);
+            case StigmaEffect stigma: return new StigmaEffect(stigma.damageBonus);
             default: return null;
         }
     }
@@ -117,7 +117,7 @@ public class PlagueChaliceAuthority : Authority
                 if (copy != null)
                     target.ApplyStatusEffect(copy);
             }
-        EffectManager.Instance.Play(EffectType.Spark, e.position);
+        EffectManager.Instance.Play(EffectType.Thunder, e.position);
     }
 }
 

@@ -15,6 +15,8 @@ public class EnemyFieldController : MonoSingleton<EnemyFieldController>
 
     public EnemyArea enemyAreaPrefab;
     public readonly List<EnemyArea> enemyAreas = new();
+    public Transform[] enemySpawnPointTrs; // 일반 적 소환 위치 (순서대로 번갈아: 0, 1, 0, 1 …). 엘리트·보스는 paths[0]
+    int normalSpawnCount;
 
     void Start()
     {
@@ -97,9 +99,23 @@ public class EnemyFieldController : MonoSingleton<EnemyFieldController>
     public int DyingEnemyCount => dyingEnemies.Count;
     public Vector2 PathStartPosition => paths[0].position;
 
+    // 엘리트·보너스 엘리트·보스 소환 위치 = 경로 시작(paths[0])
     public Vector2 GetSpawnPosition(float howFar = -1)
     {
         return PathStartPosition;
+    }
+
+    // 일반 적 소환 위치: enemySpawnPointTrs를 0, 1, 0, 1 … 순서대로 번갈아 씀. 비어 있으면 경로 시작
+    // 소환 지점에서 나온 적은 paths[0]을 건너뛰고 paths[1]부터 따라감 (NormalStartPathIdx)
+    // 일반 적이 처음 향할 경로 지점: 소환 지점이 있으면 1 (paths[1]로 오는 길에 한 줄로 합쳐짐), 없으면 0
+    public int NormalStartPathIdx => enemySpawnPointTrs != null && enemySpawnPointTrs.Length > 0 && paths.Length > 1 ? 1 : 0;
+
+    public Vector2 GetNormalSpawnPosition()
+    {
+        if (enemySpawnPointTrs == null || enemySpawnPointTrs.Length == 0)
+            return PathStartPosition;
+        Transform point = enemySpawnPointTrs[normalSpawnCount++ % enemySpawnPointTrs.Length];
+        return point != null ? point.position : PathStartPosition;
     }
 
 }

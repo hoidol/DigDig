@@ -37,9 +37,9 @@ public class UpgradeTileItemButton : ButtonUI
             return;
         if (upgradeInfoText != null)
             upgradeInfoText.text = string.Format(TranslateManager.GetText("TileItem_Upgrade"), item.UpgradeChance);
-    priceText.text = item.UpgradeCost.ToString();
-        if (button != null)
-            button.interactable = KingSlime.Instance.diceCoin >= item.UpgradeCost;
+        if (priceText != null)
+            priceText.text = item.UpgradeCost.ToString();
+        // 코인이 모자라도 버튼은 눌리게 둔다 → 누르면 "주사위 코인 부족" 토스트 (비활성화하면 눌러도 아무 반응이 없어 고장처럼 보임)
     }
 
     public override void OnClickedBtn()
@@ -55,9 +55,8 @@ public class UpgradeTileItemButton : ButtonUI
         }
         KingSlime.Instance.AddDiceCoin(-cost);
         bool success = item.TryUpgrade(Random.Range(0f, 100f));
-        ToastCanvas.Toast(success
-            ? string.Format(TranslateManager.GetText("TileItem_UpgradeSuccess"), item.upgradeLevel)
-            : TranslateManager.GetText("TileItem_UpgradeFail"));
+        // 강화 성공! / 강화 실패 (레벨은 이름 옆 Lv.N으로 보임)
+        ToastCanvas.Toast(TranslateManager.GetText(success ? "TileItem_UpgradeSuccess" : "TileItem_UpgradeFail"));
 
         // 이름(Lv)·버튼 갱신
         TileItemInfoPanel panel = GetComponentInParent<TileItemInfoPanel>(true);

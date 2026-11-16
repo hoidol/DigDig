@@ -26,7 +26,7 @@ public int ApplyOrder => 0;
         damageData.damage = damage;
         for(int i = 0; i < targets.Length; i++)
         {
-            EffectManager.Instance.Play(EffectType.Spark, targets[i].transform.position);    
+            EffectManager.Instance.Play(EffectType.Thunder, targets[i].transform.position);    
             targets[i].GetComponent<IHittable>().TakeDamage(damageData);
         }
         return true;

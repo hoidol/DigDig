@@ -24,6 +24,7 @@ public class DailyAchievementPanel : AchievementPanel
         SetStateObj(claimObj, canClaim);
         SetStateObj(processingObj, !gotten && !canClaim);
         SetStateObj(redDot, canClaim);
+        State = gotten ? AchievementPanelState.Completed : canClaim ? AchievementPanelState.Claimable : AchievementPanelState.Processing;
     }
 
     public override void OnClickedGetReward()

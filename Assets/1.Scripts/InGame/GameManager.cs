@@ -209,18 +209,18 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
 
-    // 스킵 가능: 현재 wave 시작 후 SKIP_ENABLE_TIME초 지난 뒤 (경과 시간은 정지 중 멈추는 waveTimer 기준)
-    // 이전 wave의 남은 소환은 계속돼 다음 wave와 겹쳐서 나옴. 보스 wave는 안 나옴 (보스 처치 시 자동으로 다음 wave)
+    // 스킵 가능(다음 wave 바로 시작): 현재 wave의 적이 모두 소환된 뒤 (Wave.isSpawnEnd, 2026-11-15)
+    // 필드에 남은 적은 그대로 진행. 보스 wave는 안 나옴 (보스 처치 시 자동으로 다음 wave)
     public bool CanSkipWave()
     {
         if (!isPlaying || CurrentWave == null)
             return false;
-        return CanSkipWave(CurrentWave.waveType, GameSetting.WAVE_TIME - CurrentWave.waveTimer);
+        return CanSkipWave(CurrentWave.waveType, CurrentWave.isSpawnEnd);
     }
 
-    public static bool CanSkipWave(WaveType waveType, float elapsed)
+    public static bool CanSkipWave(WaveType waveType, bool isSpawnEnd)
     {
-        return waveType != WaveType.Boss && elapsed >= GameSetting.SKIP_ENABLE_TIME;
+        return waveType != WaveType.Boss && isSpawnEnd;
     }
 
     void Update()

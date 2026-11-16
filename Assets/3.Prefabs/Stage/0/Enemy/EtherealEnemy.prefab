@@ -46,6 +46,37 @@ SortingGroup:
   m_SortingOrder: 0
   m_SortAtRoot: 0
   m_Sort3DAs2D: 0
+--- !u!1 &5911745901931771559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4054751225352925496}
+  m_Layer: 0
+  m_Name: HitPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4054751225352925496
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5911745901931771559}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.045, y: 0.171, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2067649798771837938}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6561835792214058121
 GameObject:
   m_ObjectHideFlags: 0
@@ -73,7 +104,7 @@ Transform:
   m_GameObject: {fileID: 6561835792214058121}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.6000001, z: 0}
+  m_LocalPosition: {x: 0, y: -0.2, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -176,7 +207,7 @@ Transform:
   m_GameObject: {fileID: 6602446230950223363}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.99, z: 0}
+  m_LocalPosition: {x: 0, y: 1.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -219,6 +250,7 @@ Transform:
   - {fileID: 8553044135037665800}
   - {fileID: 9135191519818829126}
   - {fileID: 8284843821539208721}
+  - {fileID: 4054751225352925496}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &7536888476502838592
@@ -274,12 +306,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NormalEnemy
   enemyType: 0
   defenceType: 2
-  enemyData: {fileID: 11400000, guid: 1c61f3553bc7143269c6e8f661bc537e, type: 2}
+  enemyData: {fileID: 11400000, guid: 3fbfda3086e3c44cda0288e5f7aae726, type: 2}
   <statusEffectHandler>k__BackingField: {fileID: 0}
   maxHp: 0
   curHp: 0
   root: {fileID: 8553044135037665800}
   hpPoint: {fileID: 9135191519818829126}
+  hitPoint: {fileID: 4054751225352925496}
   followingPlayer: 0
   apearTime: 2
   damageData:
@@ -424,6 +457,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170532579737872930, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.042
+      objectReference: {fileID: 0}
+    - target: {fileID: 8170532579737872930, guid: cd87c0ae3df394ff69cf67f302fc27e0,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.288
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

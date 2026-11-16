@@ -2,20 +2,22 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 장착 슬라임 1종의 인게임 강화 칸 (ReinforceCanvas.reinforcePanels). 가격 = 30 × (현재 레벨 + 1)
+// 장착 슬라임 1종의 인게임 강화 칸 (ReinforceContainer.reinforcePanels). 가격 = 30 × (현재 레벨 + 1)
 // 강화는 종(key) 단위 → 필드에 그 종이 없어도 강화 가능, 이후 소환되는 슬라임에도 적용
 public class ReinforcePanel : MonoBehaviour
 {
     public TMP_Text lvText;
     public TMP_Text priceText;
     public Image thumImage;
-    public Button reinforceButton; // 연결하면 클릭 시 강화 (인스펙터 OnClick에 OnClickReinforce를 따로 걸지 말 것)
+    public Button reinforceButton; // 클릭 시 강화. 비워 두면 같은 오브젝트의 Button (인스펙터 OnClick에 OnClickReinforce를 따로 걸지 말 것)
     MinionData minionData;
 
     public MinionData MinionData => minionData;
 
     void Awake()
     {
+        if (reinforceButton == null)
+            reinforceButton = GetComponent<Button>();
         if (reinforceButton != null)
             reinforceButton.onClick.AddListener(OnClickReinforce);
     }
@@ -28,7 +30,7 @@ public class ReinforcePanel : MonoBehaviour
         if (priceText != null)
             priceText.text = GetPrice().ToString();
         if (thumImage != null)
-            thumImage.sprite = minionData.thum;
+            thumImage.SetThum(minionData.thum);
     }
 
     int GetReinforceLevel()
@@ -56,5 +58,18 @@ public class ReinforcePanel : MonoBehaviour
         KingSlime.Instance.statMgr.LevelUpMinion(minionData.key);
         AchievementManager.Report(AchievementType.UpgradeReinforce);
         SetMinionData(minionData);
+        PlayReinforcedEffects(minionData.key);
+    }
+
+    // 강화가 적용된 필드(타일 위) 미니언마다 "강화됨!" 이펙트 (머지 "레벨업!"과 같은 방식)
+    static void PlayReinforcedEffects(string key)
+    {
+        if (MinionFieldController.Instance == null || TileManager.Instance == null || EffectManager.Instance == null)
+            return;
+        foreach (Minion minion in MinionFieldController.Instance.activeminions)
+        {
+            if (minion != null && minion.key == key && TileManager.Instance.GetTile(minion) != null)
+                EffectManager.Instance.Play(EffectType.Reinforce, minion.transform.position);
+        }
     }
 }

@@ -17,6 +17,7 @@ public class CumulativeAchievementPanel : AchievementPanel
         SetStateObj(claimObj, canClaim);
         SetStateObj(processingObj, !canClaim);
         SetStateObj(redDot, canClaim);
+        State = canClaim ? AchievementPanelState.Claimable : AchievementPanelState.Processing; // 누적은 완료 없음
     }
 
     public override void OnClickedGetReward()

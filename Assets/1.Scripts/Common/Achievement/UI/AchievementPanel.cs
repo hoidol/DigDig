@@ -2,6 +2,14 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
 
+// 정렬 순서 = 값 순서 (AchievementContainer.SortPanels)
+public enum AchievementPanelState
+{
+    Claimable,  // 보상 받을 수 있음
+    Processing, // 진행 중
+    Completed,  // 완료 (일일: 보상 받음)
+}
+
 // 업적 한 칸: 이름, 진행도(슬라이더 + 글씨), 보상, 상태 오브젝트(claimObj 등), 받을 수 있으면 redDot
 public abstract class AchievementPanel : MonoBehaviour
 {
@@ -15,9 +23,13 @@ public abstract class AchievementPanel : MonoBehaviour
     public GameObject redDot;     // 보상을 받을 수 있을 때
 
     public AchievementData achievementData { get; private set; }
-    public virtual void SetAchievementData(AchievementData aData)
+    public int dataIndex { get; private set; } // CSV 순서 (같은 상태끼리 정렬 기준)
+    public AchievementPanelState State { get; protected set; } = AchievementPanelState.Processing;
+
+    public virtual void SetAchievementData(AchievementData aData, int index)
     {
         achievementData = aData;
+        dataIndex = index;
         if (achievementData == null || !achievementData.conditionData.Unlock())
         {
             achievementData = null;

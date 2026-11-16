@@ -76,13 +76,31 @@ public class AchievementPlayTest : InGamePlayTestBase
         }
         Assert.AreEqual(canClaim, panel.claimObj.activeSelf, $"{who}: claimObj (받을 수 있음)");
         Assert.AreEqual(canClaim, panel.redDot.activeSelf, $"{who}: redDot");
+        bool gotten = panel is DailyAchievementPanel && (data.GetUserAchievement() as UserDailyAchievement).getReward;
+        AchievementPanelState expected = gotten ? AchievementPanelState.Completed : canClaim ? AchievementPanelState.Claimable : AchievementPanelState.Processing;
+        Assert.AreEqual(expected, panel.State, $"{who}: 정렬 상태");
     }
 
     static void AssertAllPanels(string step)
     {
         foreach (AchievementContainer container in AchievementCanvas.Instance.achievementContainers)
+        {
             foreach (AchievementPanel panel in ActivePanels(container))
                 AssertPanel(panel, step);
+            AssertSorted(container, step);
+        }
+    }
+
+    // 표시 순서: 받을 수 있음 → 진행 중 → 완료, 같은 상태끼리는 CSV 순서
+    static void AssertSorted(AchievementContainer container, string step)
+    {
+        AchievementPanel[] panels = ActivePanels(container);
+        for (int i = 1; i < panels.Length; i++)
+        {
+            AchievementPanel prev = panels[i - 1], cur = panels[i];
+            bool ok = prev.State < cur.State || (prev.State == cur.State && prev.dataIndex < cur.dataIndex);
+            Assert.IsTrue(ok, $"[{step}] {container.name} 정렬 순서 틀림: {prev.achievementData.type}({prev.State}) 다음 {cur.achievementData.type}({cur.State})");
+        }
     }
 
     [UnityTest]
@@ -123,9 +141,10 @@ public class AchievementPlayTest : InGamePlayTestBase
         Assert.IsFalse(cumulativeContainer.gameObject.activeInHierarchy, "처음엔 누적 탭이 꺼져 있어야 함");
 
         Assert.AreEqual(Daily.dailyAchievementDatas.Select(d => d.type).ToArray(),
-            ActivePanels(dailyContainer).Select(p => p.achievementData.type).ToArray(), "일일 패널 = CSV 순서");
-        Assert.AreEqual(Cumulative.cumulativeAchievementDatas.Select(d => d.type).ToArray(),
-            ActivePanels(cumulativeContainer).Select(p => p.achievementData.type).ToArray(), "누적 패널 = CSV 순서");
+            ActivePanels(dailyContainer).Select(p => p.achievementData.type).ToArray(), "일일 패널 = CSV 순서 (모두 진행 중)");
+        Assert.AreEqual(AchievementType.Login, ActivePanels(cumulativeContainer)[0].achievementData.type, "받을 수 있는 Login 누적이 맨 위");
+        CollectionAssert.AreEquivalent(Cumulative.cumulativeAchievementDatas.Select(d => d.type).ToArray(),
+            ActivePanels(cumulativeContainer).Select(p => p.achievementData.type).ToArray(), "누적 패널 = CSV 행 전부");
         AssertAllPanels("처음");
         Assert.IsTrue(ActivePanels(dailyContainer).All(p => ((DailyAchievementPanel)p).processingObj.activeSelf), "기록이 없으면 일일은 모두 진행 중");
 
@@ -339,8 +358,6 @@ public class AchievementPlayTest : InGamePlayTestBase
         var reinforcePanel = UnityEngine.Object.FindFirstObjectByType<ReinforcePanel>(FindObjectsInactive.Include);
         if (reinforcePanel == null)
             reinforcePanel = new GameObject("ReinforcePanel(Test)", typeof(RectTransform)).AddComponent<ReinforcePanel>();
-        ReinforceCanvas.Instance.OpenCanvas();
-        yield return WaitFrames(1);
         reinforcePanel.SetMinionData(MinionManager.Instance.GetMinionData(UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions[0].key));
         KingSlime.Instance.AddCoin(-KingSlime.Instance.coin);
         reinforcePanel.OnClickReinforce();
@@ -348,15 +365,14 @@ public class AchievementPlayTest : InGamePlayTestBase
         KingSlime.Instance.AddCoin(100000);
         reinforcePanel.OnClickReinforce();
         Assert.AreEqual(1, CumulativeValue(AchievementType.UpgradeReinforce), "인게임 강화 1번");
-        ReinforceCanvas.Instance.CloseCanvas();
 
         // 타일 아이템 뽑기 = 시도마다 DrawItem 1 (확률 실패 포함)
         var drawButton = UnityEngine.Object.FindFirstObjectByType<DrawItemButton>(FindObjectsInactive.Include);
         Assert.IsNotNull(drawButton, "DrawItemButton 없음");
-        KingSlime.Instance.AddCoin(-KingSlime.Instance.coin);
+        KingSlime.Instance.AddDiceCoin(-KingSlime.Instance.diceCoin); // 뽑기 = 주사위 코인
         drawButton.OnClickedBtn();
         Assert.AreEqual(0, CumulativeValue(AchievementType.DrawItem), "코인 부족인데 뽑기 집계");
-        KingSlime.Instance.AddCoin(100000);
+        KingSlime.Instance.AddDiceCoin(100000);
         drawButton.OnClickedBtn();
         Assert.AreEqual(1, CumulativeValue(AchievementType.DrawItem), "아이템 뽑기 시도 1번");
         Assert.AreEqual(1, DailyValue(AchievementType.DrawItem));

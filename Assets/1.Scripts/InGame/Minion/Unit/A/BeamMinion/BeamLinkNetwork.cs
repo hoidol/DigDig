@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 광선 슬라임(BeamMinion) 레이저 연결 관리. 필드의 광선 슬라임 전체를 하나의 망으로 보고 프레임마다 다시 계산
-// - 연결: 타일 위 광선 슬라임 모든 쌍을 연결 (n마리 → n(n-1)/2개). 레이저 두께 = 두 슬라임 lineWidth(머지 레벨별) 평균
+// - 연결: 타일 위 광선 슬라임 모든 쌍을 연결 (n마리 → n(n-1)/2개). 레이저 두께(판정) = 두 슬라임 lineWidth(머지 레벨별) 평균, 이펙트 크기 = 두 슬라임 effectScale 평균, 양 끝 = BeamMinion.beamPoint
 // - 피해: TICK_INTERVAL(0.25초 고정)마다 레이저마다 닿은 적 전부에게 피해 = 두 슬라임 공격력 평균 × 배율
 //         배율 = 1 - 감소율 × (전체 레이저 수 - 1), 최소 minLineDamageMul (감소율은 두 슬라임 중 낮은 값)
 //   → 같은 적이 레이저 2개에 걸쳐 있으면 2번 맞음. 누적 데미지는 두 슬라임에 반씩
@@ -20,6 +20,8 @@ public static class BeamLinkNetwork
     static readonly List<BeamMinion> beams = new List<BeamMinion>();
     static readonly List<Link> links = new List<Link>();
     static readonly List<LineRenderer> linePool = new List<LineRenderer>();
+    // 전기 이펙트(BeamMinion.linkEffectPrefab)가 있으면 LineRenderer 대신 사용
+    static readonly List<LightningLine> effectPool = new List<LightningLine>();
     static readonly AllyUnitDamageData damageData = new AllyUnitDamageData();
     static int lastTickFrame = -1;
     static float tickTimer;
@@ -40,6 +42,16 @@ public static class BeamLinkNetwork
             if (line != null)
                 line.gameObject.SetActive(false);
         }
+        foreach (LightningLine effect in effectPool)
+            HideEffect(effect);
+    }
+
+    static void HideEffect(LightningLine effect)
+    {
+        if (effect == null)
+            return;
+        effect.Stop();
+        effect.gameObject.SetActive(false);
     }
 
     public static void Tick()
@@ -82,6 +94,18 @@ public static class BeamLinkNetwork
     static void UpdateLines()
     {
         linePool.RemoveAll(l => l == null); // 씬 전환으로 파괴된 것
+        effectPool.RemoveAll(e => e == null);
+
+        LightningLine effectPrefab = links.Count > 0 ? links[0].a.linkEffectPrefab : null;
+        if (effectPrefab != null)
+        {
+            UpdateEffects(effectPrefab);
+            for (int i = 0; i < linePool.Count; i++)
+                linePool[i].gameObject.SetActive(false);
+            return;
+        }
+        for (int i = 0; i < effectPool.Count; i++)
+            HideEffect(effectPool[i]);
 
         for (int i = 0; i < links.Count; i++)
         {
@@ -92,11 +116,35 @@ public static class BeamLinkNetwork
             line.gameObject.SetActive(true);
             line.startWidth = line.endWidth = GetWidth(links[i]);
             line.startColor = line.endColor = links[i].a.lineColor;
-            line.SetPosition(0, links[i].a.transform.position);
-            line.SetPosition(1, links[i].b.transform.position);
+            line.SetPosition(0, links[i].a.BeamPos);
+            line.SetPosition(1, links[i].b.BeamPos);
         }
         for (int i = links.Count; i < linePool.Count; i++)
             linePool[i].gameObject.SetActive(false);
+    }
+
+    static void UpdateEffects(LightningLine prefab)
+    {
+        for (int i = 0; i < links.Count; i++)
+        {
+            if (i >= effectPool.Count)
+            {
+                LightningLine created = Object.Instantiate(prefab);
+                created.name = "BeamLinkEffect";
+                effectPool.Add(created);
+            }
+
+            LightningLine effect = effectPool[i];
+            Vector3 from = links[i].a.BeamPos;
+            Vector3 to = links[i].b.BeamPos;
+            effect.widthScale = (links[i].a.EffectScale + links[i].b.EffectScale) * 0.5f;
+            if (!effect.gameObject.activeSelf || !effect.IsPlaying)
+                effect.Play(from, to);
+            else
+                effect.SetEndPoints(from, to);
+        }
+        for (int i = links.Count; i < effectPool.Count; i++)
+            HideEffect(effectPool[i]);
     }
 
     static float GetWidth(Link link) => (link.a.LineWidth + link.b.LineWidth) * 0.5f;
@@ -132,8 +180,8 @@ public static class BeamLinkNetwork
 
     static void HitLine(Link link)
     {
-        Vector2 from = link.a.transform.position;
-        Vector2 to = link.b.transform.position;
+        Vector2 from = link.a.BeamPos;
+        Vector2 to = link.b.BeamPos;
         Vector2 dir = to - from;
         float dist = dir.magnitude;
         if (dist <= 0f)

@@ -18,11 +18,8 @@ public class DrawItemButton : ButtonUI
         if (chanceText != null)
             chanceText.text = $"{GetDrawChance()}%";
     }
-    // 처음 10코인, 뽑을 때마다 2코인씩 증가
-    int GetDrawPrice()
-    {
-        return GameSetting.INIT_DRAW_ITEM_PRICE + GameManager.Instance.drawItemCount * GameSetting.INCREASE_DRAW_ITEM_PRICE;
-    }
+    // 주사위 코인(KingSlime.diceCoin) 고정 가격. 뽑을수록 오르지 않음 (확률만 내려감)
+    public static int GetDrawPrice() => GameSetting.DRAW_ITEM_DICE_COIN_PRICE;
 
     // 성공 확률(%): 처음 100%, 성공할 때마다 5%씩 감소 (최소 MIN_DRAW_ITEM_CHANCE)
     public static int GetDrawChance()
@@ -37,12 +34,12 @@ public class DrawItemButton : ButtonUI
         return Mathf.Max(chance, GameSetting.MIN_DRAW_ITEM_CHANCE);
     }
 
-    // 코인을 내고 SelectItemCanvas를 연다 (확률 판정 → 아이템 3개 중 선택 → 타일 선택)
+    // 주사위 코인을 내고 SelectItemCanvas를 연다 (확률 판정 → 아이템 3개 중 선택 → 타일 선택)
     public override void OnClickedBtn()
     {
-        if (KingSlime.Instance.coin < GetDrawPrice())
+        if (KingSlime.Instance.diceCoin < GetDrawPrice())
         {
-            ToastCanvas.Toast("Not enough coin");
+            ToastCanvas.Toast(TranslateManager.GetText("Not enough dice coin"));
             return;
         }
         Tile tile = TileManager.Instance.GetRandomTileForItem();
@@ -58,11 +55,11 @@ public class DrawItemButton : ButtonUI
         }
 
         int price = GetDrawPrice();
-        KingSlime.Instance.AddCoin(-price);
+        KingSlime.Instance.AddDiceCoin(-price);
         AchievementManager.Report(AchievementType.DrawItem); // 시도마다 (확률 실패 포함)
         System.Action onFail = null;
         if (AuthoritySystem.Has<ArtisanHammerAuthority>())
-            onFail = () => KingSlime.Instance.AddCoin(ArtisanHammerAuthority.GetRefund(price));
+            onFail = () => KingSlime.Instance.AddDiceCoin(ArtisanHammerAuthority.GetRefund(price));
         SelectItemCanvas.Instance.OpenDraw(GetDrawChance(), UpdateButton, onFail);
     }
 }

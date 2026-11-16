@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-// [B] 광란: 기본 탄 발사 + 주변(detectRanges)에서 적/돌이 죽으면 추가 탄 발사 (추가 탄은 공격력 ×extraShotDamageMuls)
+// [B] 광란: 기본 탄 발사 + 주변(detectRanges)에서 적이 죽으면 추가 탄 발사 (추가 탄은 공격력 ×extraShotDamageMuls)
 [CreateAssetMenu(fileName = "Dopamine", menuName = "MinionData/B/Dopamine")]
 public class DopamineMinionData : EnhanceMinionData
 {

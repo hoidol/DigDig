@@ -146,16 +146,21 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         GameEventBus.Publish(new KingSlimeUpdateEvent(this));
     }
 
+    // 받은 버프의 이펙트 (Buff.effectType, 십자 버프 미니언 등)
+    readonly BuffEffectDisplay buffEffectDisplay = new BuffEffectDisplay();
+
     public void AddBuff(Buff buff)
     {
         statMgr.activeBuffs.Add(buff);
         UpdateCharacter();
+        buffEffectDisplay.Refresh(transform, statMgr.activeBuffs);
     }
 
     public void RemoveBuff(Buff buff)
     {
         statMgr.activeBuffs.Remove(buff);
         UpdateCharacter();
+        buffEffectDisplay.Refresh(transform, statMgr.activeBuffs);
     }
 
     // public void AddExp(int e)

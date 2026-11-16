@@ -29,7 +29,7 @@ MonoBehaviour:
     value: Heal
     id: 
     wave: 0
-  enemyHp: 20
+  enemyHp: 60
   addHpRatioPerWave: 0.4
   multiHpPerWave: 1.03
   enemyPrefabs:

@@ -13,6 +13,8 @@ public class HailMinionData : EnhanceMinionData
     // mergeLv별 얼음(슬로우) 확률 (%)
     public float[] iceChances = { 30f, 35f, 40f, 45f, 50f };
     public float iceDuration = 1f;
+    // mergeLv별 눈 피해 배율 (빙석 공격력 × 배율, 1.5 = 150%)
+    public float[] stoneDamageMuls = { 1.5f, 1.7f, 1.9f, 2.1f, 2.3f };
 
     public override string GetDescription(int mergeLv = 0)
     {

@@ -17,7 +17,7 @@ public class MinionMergeDragUI : MonoSingleton<MinionMergeDragUI>
     public void SetMinion(Minion minion)
     {
         MinionData minionData = MinionManager.Instance.GetMinionData(minion.key);
-        image.sprite = minionData.thum;
+        image.SetThum(minionData.thum);
         gameObject.SetActive(true);
     }
 

@@ -9,12 +9,20 @@ public class BeamMinion : MinionGrowth1
     BeamMinionData beamMinionData;
     AllyBulletSpec allyBulletSpec;
 
+    [Tooltip("레이저가 나가는 위치. 비어 있으면 미니언 위치")]
+    public Transform beamPoint;
+    [Tooltip("레이저 연결 이펙트(LightningLine_Yellow). 비어 있으면 단색 LineRenderer(lineMaterial)")]
+    public LightningLine linkEffectPrefab;
     public Material lineMaterial; // 레이저 머티리얼 (비어 있으면 Sprites/Default)
     public Color lineColor = new Color(1f, 0.3f, 0.3f, 0.9f);
 
     public float damageReductionPerLine;
 
     public float LineWidth => beamMinionData.lineWidths.GetByMergeLevel(mergeLevel);
+    // 레이저 이펙트 크기 배율 (머지 레벨이 높을수록 약간 크게). 적중 판정 폭은 LineWidth
+    public float EffectScale => beamMinionData.effectScales.GetByMergeLevel(mergeLevel);
+    // 레이저 양 끝 위치
+    public Vector3 BeamPos => beamPoint != null ? beamPoint.position : transform.position;
     public float MinLineDamageMul => beamMinionData.minLineDamageMul;
 
     // 이번 프레임 레이저 연결 수 (BeamLinkNetwork가 매 프레임 갱신)

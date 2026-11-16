@@ -2,6 +2,7 @@ using UnityEngine;
 
 // [B] 철벽: 방패(ShieldOrbitOrb)가 슬라임 주위를 돈다. 방패 수 = mergeLevel + 1
 // 방패는 닿은 적의 이동을 멈춤 (방패당 최대 blockCountPerShield기). 막는 동안 그 방패만 정지 (SeparateOrbitMachine)
+// 피해는 막은 적에게만: 막는 순간 + 막혀 있는 동안 공격 주기(공속)마다 공격력 피해 (ShieldOrbitOrb)
 // [각성] (진화) 가시방패: 막힌 적에게 1초마다 최대 체력 × EVOLVE_THORN_MAX_HP_RATIO 피해
 // 프리팹: orbitMachine의 orbitOrbPrefab에 ShieldOrbitOrb 프리팹 연결
 public class ShieldMinion : MinionGrowth1, IRotationDirectionUnit

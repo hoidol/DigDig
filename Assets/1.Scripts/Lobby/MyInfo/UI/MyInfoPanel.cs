@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MyInfoPanel : MonoBehaviour
 {
     public TMP_Text expText;
-    public Image barImage;
+    public Slider expSlider; // 슬라이더 모양은 MinionExpPanel(슬라임 관리 화면)과 같음
     public TMP_Text nickText;
     public TMP_Text lvText;
 
@@ -51,12 +51,12 @@ public class MyInfoPanel : MonoBehaviour
         var myInfo = UserDataManager.Instance.userMyInfoManager;
         if (myInfo.IsMaxLv)
         {
-            barImage.fillAmount = 1f;
+            expSlider.value = 1f;
             expText.text = "MAX";
         }
         else
         {
-            barImage.fillAmount = (float)myInfo.userMyInfoData.exp / (float)myInfo.GetMaxExp();
+            expSlider.value = (float)myInfo.userMyInfoData.exp / (float)myInfo.GetMaxExp();
             expText.text = $"{myInfo.userMyInfoData.exp}/{myInfo.GetMaxExp()}";
         }
         nickText.text = UserDataManager.Instance.userMyInfoManager.userMyInfoData.nickname;
@@ -105,12 +105,12 @@ public class MyInfoPanel : MonoBehaviour
         lvText.text = $"LV.{lv}";
         if (UserMyInfoManager.IsMaxLevel(lv))
         {
-            barImage.fillAmount = 1f;
+            expSlider.value = 1f;
             expText.text = "MAX";
             return;
         }
         int maxExp = myInfo.GetMaxExp(lv);
-        barImage.fillAmount = maxExp > 0 ? Mathf.Clamp01(exp / maxExp) : 1f;
+        expSlider.value = maxExp > 0 ? Mathf.Clamp01(exp / maxExp) : 1f;
         expText.text = $"{Mathf.RoundToInt(exp)}/{maxExp}";
     }
 
