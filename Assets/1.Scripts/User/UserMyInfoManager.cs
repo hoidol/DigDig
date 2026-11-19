@@ -26,6 +26,9 @@ public class UserMyInfoManager : UserBaseManager
     // 인게임 결과로 받았지만 로비 경험치 바에 아직 안 보여준 경험치 (로비 진입 시 바가 차오르는 연출에 쓰고 0으로. 저장 안 함)
     public static int unshownGainExp;
 
+    // 마지막 LevelUp에서 새로 받은 미니언 key (저장 안 함)
+    [System.NonSerialized] public List<string> lastUnlockedMinionKeys = new List<string>();
+
     public override void LoadData()
     {
         userMyInfoData = SaveManager.LoadData<UserMyInfoData>(UserDataFileName);
@@ -91,6 +94,8 @@ public class UserMyInfoManager : UserBaseManager
             userMyInfoData.lv++;
             // 최대 레벨에 도달하면 남은 경험치는 버림
             userMyInfoData.exp = IsMaxLv ? 0 : remainExp;
+            // 이 레벨에 지급되는 미니언 (로비 레벨업 창 뒤에 토스트)
+            lastUnlockedMinionKeys = UserDataManager.Instance.userMinionManager.GrantLevelUnlockMinions(userMyInfoData.lv);
             RequestSave();
             GameEventBus.Publish(new ChangedUserExpEvent());
             return true;

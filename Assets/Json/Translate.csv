@@ -286,6 +286,10 @@ Unlock_BestWaveDifficulty	{0} 난이도 Wave {1} 도달 시 해금됩니다	Unlo
 Unlock_CurrentWave	Wave {0}부터 사용할 수 있습니다	Available from Wave {0}
 TileTitle	현재 타일	
 Minion_Stack	중첩 {0}	Stack {0}
+Minion_LevelUnlocked	새 미니언 {0} 획득!	New minion: {0}!
 DamageText_Weak	약점!	WEAK!
 PopText_Success	성공!	Success!
 PopText_Fail	실패..	Failed..
+NextWave_DiceCoinLeft_Title	웨이브 시작	Start Wave
+NextWave_DiceCoinLeft_Body	주사위 코인이 남았습니다.\n그래도 웨이브를 시작할까요?	You still have dice coins left.\nStart the wave anyway?
+BonusElite_NextDiceCoin	다음 웨이브 +{0}	Next wave +{0}

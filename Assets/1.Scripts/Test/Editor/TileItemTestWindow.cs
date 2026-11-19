@@ -87,8 +87,7 @@ public class TileItemTestWindow : EditorWindow
         {
             if (king.coin < 100000)
                 king.AddCoin(100000 - king.coin);
-            if (king.diceCoin < 1000)
-                king.AddDiceCoin(1000 - king.diceCoin);
+            // 주사위 코인은 채우지 않음 (필요하면 직접 추가)
         }
         if (freezeEnemies)
             Enemy.FreezeAll(1f);

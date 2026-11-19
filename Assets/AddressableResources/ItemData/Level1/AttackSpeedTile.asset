@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AttackSpeedTile
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: AttackSpeedTile
-  itemName: "\uACF5\uACA9\uC18D\uB3C4 \uD0C0\uC77C"
+  itemName: "\uACF5\uACA9\uC18D\uB3C4 \uB8EC"
   desc: "\uACF5\uACA9\uC18D\uB3C4 {0}% \uC99D\uAC00"
   level: 1
   maxCount: 3

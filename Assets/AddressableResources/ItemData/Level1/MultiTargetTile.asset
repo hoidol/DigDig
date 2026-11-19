@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MultiTargetTile
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: MultiTargetTile
-  itemName: "\uB2E4\uC911 \uD0C0\uAC9F \uD0C0\uC77C"
+  itemName: "\uB2E4\uC911 \uD0C0\uAC9F \uB8EC"
   desc: "\uACF5\uACA9 \uB300\uC0C1 +{0} \uCD94\uAC00\uB429\uB2C8\uB2E4."
   level: 1
   maxCount: 3

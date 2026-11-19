@@ -59,6 +59,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
 
     public async UniTask<(bool, string, int)> Merge(Minion minion1, Minion minion2)
     {
+
         // 희생 슬라임은 끌어온 쪽이든 놓인 쪽이든 희생 규칙(상대 종으로 +1)으로 합성
         if (minion2 is SacrificeMinion && minion1 is not SacrificeMinion)
             return await minion2.Merge(minion1);
@@ -107,6 +108,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
     // public bool IsMerging { get; private set; }
 
     ITileObject dragObject; // 드래그 중인 타일 오브젝트 (슬라임 or 캐릭터)
+    public bool IsDragging => dragObject != null || dragHandle != null; // 유닛·손잡이(깃발) 드래그 중
     Vector3 originPos;
     Vector3 offset;
 
@@ -189,6 +191,10 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         if (dragFilter != null && (tileObject == null || !dragFilter(tileObject)))
             return;
 
+        // (2026-11-20) 유닛이 아닌 곳에서 일반 적을 누르면 wave 적 정보 다시 보기
+        if (tileObject == null && dragFilter == null && IsNormalEnemyAt(mousePos) && WaveEnemyInfoPanel.Instance != null)
+            WaveEnemyInfoPanel.Instance.ShowByEnemyClick();
+
         // 유닛을 눌렀으면 유닛이 서 있는 타일, 아니면 누른 위치의 타일 (타일 밖이면 null → 선택 해제)
         Tile tile = tileObject != null ? TileManager.Instance.GetTile(tileObject) : null;
         SelectTile(tile ?? TileManager.Instance.GetNearestTile(mousePos));
@@ -202,6 +208,19 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         originPos = tileObject.Transform.position;
         offset = originPos - mousePos;
         offset.z = 0;
+    }
+
+    const float ENEMY_CLICK_RADIUS = 0.3f; // 적이 작고 움직여서 살짝 넓게 판정
+
+    static bool IsNormalEnemyAt(Vector2 pos)
+    {
+        foreach (Collider2D col in Physics2D.OverlapCircleAll(pos, ENEMY_CLICK_RADIUS))
+        {
+            NormalEnemy enemy = col.GetComponentInParent<NormalEnemy>();
+            if (enemy != null && enemy.gameObject.activeInHierarchy && !enemy.IsDying)
+                return true;
+        }
+        return false;
     }
 
     DragHandle dragHandle; // 드래그 중인 손잡이 (폭격 슬라임 깃발 등)
@@ -264,8 +283,8 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             }
         }
 
-        // 킹 ↔ 슬라임: 머지 대상이 아니므로 자리 교체
-        if (canDrop && tile != null && tile.tileObject != null && tile.tileObject != source
+        // 킹 ↔ 슬라임: 머지 대상이 아니므로 자리 교체 (카드 소환 모드에선 미니언이 움직이므로 안 함)
+        if (canDrop && !LockMinionPosition && tile != null && tile.tileObject != null && tile.tileObject != source
             && (source is KingSlime || tile.tileObject is KingSlime)
             && SwapTileObjects(source, tile.tileObject))
         {
@@ -274,7 +293,8 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             return;
         }
 
-        if (canDrop && tile != null && tile.IsEmpty)
+        // 카드 소환 모드: 미니언은 빈 칸으로 이동 불가(머지만), 킹은 이동 가능
+        if (canDrop && tile != null && tile.IsEmpty && !(LockMinionPosition && source is Minion))
         {
             TileManager.Instance.RemoveTileObject(source);
             tile.SetTileObject(source);
@@ -288,6 +308,9 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         GameEventBus.Publish(new DragEndEvent(source, tile));
         SelectTile(TileManager.Instance.GetTile(source)); // 선택은 옮긴 유닛을 따라감 (원위치면 원래 타일)
     }
+
+    // (2026-11-19) 카드 소환 모드: 한 번 놓은 미니언은 자리 고정. 드래그는 머지용으로만 (빈 칸 이동·자리 교체 없음)
+    public static bool LockMinionPosition => GameSetting.USE_WAVE_MINION_OFFER;
 
     Minion FindMinion(Vector2 pos, Minion exclude)
     {
@@ -339,8 +362,8 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         var (result, mergeResultKey, lv) = await Merge(source, target);
         if (!result)
         {
-            // 머지가 안 되는 슬라임끼리면 자리 교체 (둘 중 하나라도 타일 밖이면 원위치)
-            if (!SwapMinions(source, target))
+            // 머지가 안 되는 슬라임끼리면 자리 교체 (둘 중 하나라도 타일 밖이면 원위치, 카드 소환 모드는 항상 원위치)
+            if (LockMinionPosition || !SwapMinions(source, target))
                 source.transform.position = sourceOriginPos;
             SelectTile(TileManager.Instance.GetTile(source)); // 선택은 옮긴 슬라임을 따라감
             return;
@@ -361,8 +384,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         if (merged != null)
             merged.PlayMergeHop(); // 떨어지는 등장 대신 제자리에서 살짝 뛰었다 착지
         if (EffectManager.Instance != null && merged != null)
-            EffectManager.Instance.Play(EffectType.Merge, merged.transform.position); // 머지 이펙트 (Resources/Effect/MergedEffect)
-        mergeCount++;
+            EffectManager.Instance.Play(EffectType.Merge, merged.transform.position); // 머지 이펙트 (Resources/Effect/MergedEffect)        mergeCount++;
         AchievementManager.Report(AchievementType.MergeMinion);
         // Character.Instance.AddMergeCoin(1);
         GameEventBus.Publish(new MergedMinionEvent());

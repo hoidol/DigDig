@@ -26,6 +26,10 @@ public abstract class Wave : MonoBehaviour
         if (!GameManager.Instance.isPlaying)
             return;
 
+        // 카드 소환 모드: 시간으로 끝나지 않음 (적을 다 처리하면 GameManager가 종료)
+        if (GameSetting.USE_WAVE_MINION_OFFER)
+            return;
+
         if (waveTimer <= 0)
         {
             EndWave();

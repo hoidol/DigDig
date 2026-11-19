@@ -10,13 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0bda2368e9f954f18b0c76e35cec534b, type: 3}
-  m_Name: TigerWraith
+  m_Name: Boss
   m_EditorClassIdentifier: 
   type: 3
-  attackSpeed: 5
-  attackRange: 4
+  defenceType: 0
   exp: 3
   hpMultiplier: 80
-  attackPowerMultiplier: 1
-  gold: 10
-  moveSpeed: 0.19
+  moveSpeed: 0.6

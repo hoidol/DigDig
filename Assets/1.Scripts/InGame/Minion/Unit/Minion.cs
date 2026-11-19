@@ -503,10 +503,17 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         int lv = 0;
         if (MinionData.growth == 1)
         {
-            UserMinion userMinion = UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions[Random.Range(0, UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions.Length)];
-            pickedMinionKey = userMinion.key;
-            if (AuthoritySystem.Has<BloodlineFlaskAuthority>())
-                pickedMinionKey = BloodlineFlaskAuthority.PickResultKey(key, pickedMinionKey, Random.value);
+            if (GameSetting.USE_WAVE_MINION_OFFER)
+            {
+                pickedMinionKey = key; // (2026-11-19) 카드 소환 모드: 합성 결과 = 같은 종
+            }
+            else
+            {
+                UserMinion userMinion = UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions[Random.Range(0, UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions.Length)];
+                pickedMinionKey = userMinion.key;
+                if (AuthoritySystem.Has<BloodlineFlaskAuthority>())
+                    pickedMinionKey = BloodlineFlaskAuthority.PickResultKey(key, pickedMinionKey, Random.value);
+            }
             lv = mergeLevel + 1;
         }
         else if (MinionData.growth == 0)

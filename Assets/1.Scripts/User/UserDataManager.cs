@@ -80,6 +80,8 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userMinionManager.LoadData();
         userMyInfoManager.LoadData();
         userKingSlimeManager.LoadData();
+        // 레벨 지급 미니언: 미니언 로드가 레벨 로드보다 먼저라 여기서 (이미 지난 레벨분도 채움)
+        userMinionManager.GrantLevelUnlockMinions(userMyInfoManager.userMyInfoData.lv);
         isAdRemoved = userPurchaseManager.HasPurchasedAny(InAppProductInfo.REMOVE_AD_KEYS);
     }
 

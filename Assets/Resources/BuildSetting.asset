@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BuildSetting
   m_EditorClassIdentifier: Assembly-CSharp::BuildSetting
   isTestMode: 1
-  ignoreEnerge: 0
+  ignoreEnerge: 1
   skipTutorial: 1

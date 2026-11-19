@@ -119,7 +119,7 @@ MonoBehaviour:
     playOnAwake: 0
   - name: MinionMerge
     sfxType: 8
-    audioClip: {fileID: 8300000, guid: b666ebcd3c7535449abb116b0bc5f5ef, type: 3}
+    audioClip: {fileID: 8300000, guid: 560b59f7bba57425da9d11fb4794b676, type: 3}
     volume: 0.8
     pitch: 1
     pitchRandom: 0.05

@@ -9,8 +9,7 @@ public class BossWave : Wave
         base.StartWave(wIdx, dType);
         GameEventBus.Subscribe<BossDeadEvent>(OnBossDeadEvent);
         boss = Instantiate(GameManager.Instance.stageData.boss);
-        boss.Spawn(EnemyFieldController.Instance.GetSpawnPosition(), wIdx);
-        BossCanvas.Instance.SetBoss(boss); // BossSpawnEvent는 Boss.Spawn에서 발행
+        boss.Spawn(EnemyFieldController.Instance.GetSpawnPosition(), wIdx); // BossSpawnEvent는 Boss.Spawn에서 발행, 체력바는 머리 위(EnemyWorldCanvas)
     }
 
     // 보스 wave는 시간으로 끝나지 않음. 보스 처치 시 종료
@@ -26,12 +25,14 @@ public class BossWave : Wave
             return;
         boss = null;
         GameEventBus.Unsubscribe<BossDeadEvent>(OnBossDeadEvent);
-        CloseBossCanvas();
 
         if (KingSlime.Instance.CurHp <= 0)
             return;
 
         isSpawnEnd = true;
+        // 카드 소환 모드: 남은 적까지 다 처리되면 GameManager가 준비 단계로 (여기서 다음 wave를 바로 시작하지 않음)
+        if (GameSetting.USE_WAVE_MINION_OFFER)
+            return;
         base.EndWave();
         GameManager.Instance.StartNextWave();
     }
@@ -41,17 +42,8 @@ public class BossWave : Wave
     {
         GameEventBus.Unsubscribe<BossDeadEvent>(OnBossDeadEvent);
         if (boss != null)
-        {
             Destroy(boss.gameObject);
-            CloseBossCanvas();
-        }
     }
 
-    // 보스 체력 창 닫기 (보스 처치 / 부활로 보스 제거)
-    static void CloseBossCanvas()
-    {
-        if (BossCanvas.Instance != null && BossCanvas.Instance.gameObject.activeSelf)
-            BossCanvas.Instance.CloseCanvas();
-    }
 
 }

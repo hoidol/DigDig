@@ -90,6 +90,24 @@ public class StageUnlockTest
         Assert.AreEqual(expected, NormalEnemy.GetKillGold(waveIdx));
     }
 
+    // 인게임 킹 레벨: 필요 경험치 = 25 + 8 × 레벨
+    [TestCase(0, 25)]
+    [TestCase(1, 33)]
+    [TestCase(2, 41)]
+    public void KingMaxExp(int lv, int expected)
+    {
+        Assert.AreEqual(expected, KingSlime.GetMaxExp(lv));
+    }
+
+    // 엘리트 경험치: wave 5 = 10, 10 = 15, 15 = 20 (waveIdx = 번호 - 1)
+    [TestCase(4, 10)]
+    [TestCase(9, 15)]
+    [TestCase(14, 20)]
+    public void EliteExp(int waveIdx, int expected)
+    {
+        Assert.AreEqual(expected, EliteEnemy.GetEliteExp(waveIdx));
+    }
+
     // 빙결: 머지 레벨별 배율 0.7~0.3, 다시 걸리면 강한 배율 유지 + 시간은 긴 쪽 (0.3 3초 → 2초 후 0.7 3초 = 0.3, 남은 3초)
     [Test]
     public void IceSlow_KeepStrongerAndLonger()

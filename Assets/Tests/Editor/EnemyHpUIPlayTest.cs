@@ -80,10 +80,11 @@ public class EnemyHpUIPlayTest : InGamePlayTestBase
         yield return WaitFrames(1);
         Assert.IsFalse(canvas.HasHpUI(next), "회수된 적의 체력바가 남아 있음");
 
-        // 보스는 머리 위 체력바 대신 BossCanvas
+        // 보스·엘리트는 큰 체력바(머리 위)
         Boss bossPrefab = GameManager.Instance.stageData.boss;
         Assert.IsNotNull(bossPrefab, "스테이지 보스 프리팹 없음");
-        Assert.IsFalse(bossPrefab.UseHpUI, "보스가 머리 위 체력바를 사용함");
+        Assert.IsTrue(bossPrefab.UseHpUI && bossPrefab.UseBigHpUI, "보스가 큰 체력바를 사용하지 않음");
+        Assert.IsFalse(prefab.UseBigHpUI, "일반 적이 큰 체력바를 사용함");
     }
 
     static EnemyHpUI FindUI(EnemyWorldCanvas canvas, Enemy enemy)

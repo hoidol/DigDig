@@ -7,6 +7,26 @@ public class GameSetting
    public static string FIRST_STAGE_KEY = "Normal"; // 난이도마다 스테이지 하나, key = 난이도 이름
    public static KingSlimeName INIT_CHARACTER_NAME = KingSlimeName.Lucky;
    public static string[] INIT_MINION_KEYS = { "Flame", "Ice", "Random", "Orbit", "Lightning" };
+   // (2026-11-19) 유저 레벨에 따라 순서대로 지급하는 미니언 (레벨 = 표시 레벨 LV.N, 0부터). 이 레벨이 되면 보유 처리
+   public static readonly (string key, int lv)[] MINION_LEVEL_UNLOCKS =
+   {
+      ("Bounce", 1),
+      ("Iron", 2),
+      ("Breeze", 3),
+      ("Pierce", 4),
+      ("Mine", 6),
+      ("Berserker", 7),
+      ("Mortar", 8),
+      ("Scavenger", 9),
+   };
+   // (2026-11-19) wave마다 카드 3장 지급 → 드래그로 소환 (MinionOfferSystem). 골드 소환·강화·코인 표시는 숨김. 합성 결과 = 같은 종
+   public const bool USE_WAVE_MINION_OFFER = true;
+   // (2026-11-19) 카드 소환 비용 = 주사위 코인(KingSlime.diceCoin). 브레이크타임마다 WAVE_DICE_COIN 지급, 카드 가격 = MinionData.offerDiceCoinPrice(기본값이 OFFER_MINION_DICE_COIN_PRICE)
+   public const int WAVE_DICE_COIN = 5;
+   public const int OFFER_MINION_DICE_COIN_PRICE = 2;
+   // 게임에서 쓰는 미니언 =초기 지급 + 레벨 지급. 뽑기·미니언 관리 화면은 이 목록만
+   public static bool IsUsedMinion(string key) =>
+      System.Array.IndexOf(INIT_MINION_KEYS, key) >= 0 || System.Array.FindIndex(MINION_LEVEL_UNLOCKS, e => e.key == key) >= 0;
    public static int MINION_SLOT_COUNT = 5;
    public static int PLAY_COST_ENERGE = 5;
    public static int MAX_ENERGE = 30;
@@ -18,12 +38,23 @@ public class GameSetting
    public const int BOSS_WAVE_INTERVAL = 20;
    // 일반 적 처치 코인이 이 wave 수마다 +1 (NormalEnemy.GetKillGold, 2026-11-19 이전 10)
    public const int KILL_GOLD_WAVE_INTERVAL = 20;
+
+   // (2026-11-20) 인게임 킹 레벨: 처치 경험치로 레벨업. 필요 경험치 = 25 + 8 × 레벨 (Lv0 25, Lv1 33, Lv2 41 …)
+   public const int KING_LEVEL_BASE_EXP = 25;
+   public const int KING_LEVEL_EXP_PER_LEVEL = 8;
+   public const int NORMAL_ENEMY_EXP = 1;
+   // 엘리트 경험치 = 10 + 5 × (엘리트 순번 - 1): wave 5 = 10, 10 = 15, 15 = 20 …
+   public const int ELITE_EXP_BASE = 10;
+   public const int ELITE_EXP_PER_STEP = 5;
+   // 보너스 엘리트: 경험치 10 고정 + 다음 브레이크타임 주사위 코인 +1
+   public const int BONUS_ELITE_EXP = 10;
+   public const int BONUS_ELITE_NEXT_DICE_COIN = 1;
    // 보스 wave(20 wave) 구간 체력 배율의 기본값: StageData.csv CycleHpMuls가 비었을 때만 구간마다 곱함 (StageData.GetCycleHpMul)
    public const float HP_MUL_PER_BOSS_CYCLE = 1.1f;
    // N번째 wave가 DEFENCE_WAVE_INTERVAL의 배수면 일반 적이 Ethereal → Armored 순서로 번갈아 등장, 나머지는 Normal
    public const int DEFENCE_WAVE_INTERVAL = 3;
 
-   public const float WAVE_TIME = 35;
+   public const float WAVE_TIME = 90; // (2026-11-19) 카드 소환 모드: 이 시간 안에 적을 다 처리 못 하면 남은 적 1마리당 킹 피해 1 (GameManager.OnWaveTimeOver). 보스 wave는 제외
    public const int WAVE_ENEMY_COUNT = 40; // 한 wave에 소환하는 일반 적 총 수 (ENEMY_SPAWN_INTERVAL 간격, 2026-11-15 시간 기준 → 마리 수 기준)
    public const float ENEMY_SPAWN_INTERVAL = 0.5f;
 
@@ -42,7 +73,7 @@ public class GameSetting
    public const int BLOCKED_TILE_COUNT = 3; // 게임 시작 시 랜덤으로 막는 타일 수
 
    public const int LEVEL_TO_GROWUP2 = 2;//0,1,2 되어야됌
-   public const int MINION_MIN_EXIST_COUNT = 10;
+   public const int MINION_MIN_EXIST_COUNT = 12;
 
    public static float ATTACK_SPEED_PER_SECOND = 50f; // AttackSpeed가 이 값이면 초당 1회 공격 (Orbit은 이때 orbitRotationSpeed로 회전)
 

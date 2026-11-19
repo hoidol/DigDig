@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BerserkTile
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: BerserkTile
-  itemName: "\uAD11\uD3ED \uD0C0\uC77C"
+  itemName: "\uAD11\uD3ED \uB8EC"
   desc: "\uACF5\uACA9\uB825 +{0}% \uC0AC\uAC70\uB9AC -50%"
   level: 1
   maxCount: 3

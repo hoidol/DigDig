@@ -42,6 +42,7 @@ namespace Lobby
 
             // 칸에 넣는 순서 = 등급 낮은 순 (C → B → A → S). 화면 순서(보유 먼저)는 UpdateCanvas에서 정렬
             MinionData[] minionDatas = MinionManager.Instance.allMinionDatas
+                .Where(e => GameSetting.IsUsedMinion(e.key)) // 게임에서 쓰는 미니언만 (초기 지급 + 레벨 지급)
                 .OrderBy(e => e.grade)
                 .ToArray();
 

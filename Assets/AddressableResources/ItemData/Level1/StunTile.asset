@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StunTile
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: StunTile
-  itemName: "\uC2A4\uD134 \uD0C0\uC77C"
+  itemName: "\uC2A4\uD134 \uB8EC"
   desc: "{0}% \uD655\uB960\uB85C 0.3\uCD08\uAC04 \uC2A4\uD134"
   level: 1
   maxCount: 3

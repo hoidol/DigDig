@@ -42,11 +42,13 @@ public class NormalEnemy : Enemy
 
     public override void Reward()
     {
-        if (Random.Range(0f, 10f) < 1)
+        // 카드 소환 모드: 주사위 코인은 wave 준비 단계 지급만 (처치로는 못 얻음)
+        if (!GameSetting.USE_WAVE_MINION_OFFER && Random.Range(0f, 10f) < 1)
         {
             KingSlime.Instance.AddDiceCoin(1);
             DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{1}");    
         }
+        KingSlime.Instance.AddExp(GameSetting.NORMAL_ENEMY_EXP);
         int gold = GetKillGold(wave);
         KingSlime.Instance.AddCoin(gold);
         SoundManager.Play(SFXType.CoinGet);

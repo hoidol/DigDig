@@ -13,6 +13,7 @@ public class YesOrNoCanvas : CanvasUI<YesOrNoCanvas>
         titleText.text = title;
         bodyText.text = body;
         resultCallback = rCallback;
+        noButton.gameObject.SetActive(true); // onlyYes로 열었던 뒤에도 No 버튼이 보이게
     }
     public void OpenCanvas(string title, string body, bool onlyYes, Action closeCallback = null)
     {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GoldTile
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: GoldTile
-  itemName: "\uCF54\uC778 \uD0C0\uC77C"
+  itemName: "\uCF54\uC778 \uB8EC"
   desc: "\uC801 \uCC98\uCE58 \uC2DC \uCF54\uC778 +{0}"
   level: 1
   maxCount: 3

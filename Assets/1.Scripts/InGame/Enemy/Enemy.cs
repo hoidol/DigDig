@@ -35,8 +35,10 @@ public abstract class Enemy : MonoBehaviour, IHittable
     {
         return target is Enemy enemy ? enemy.HitPosition : target.Transform.position;
     }
-    // 머리 위 체력바(EnemyWorldCanvas) 사용 여부. 보스는 BossCanvas로 표시
+    // 머리 위 체력바(EnemyWorldCanvas) 사용 여부
     public virtual bool UseHpUI => true;
+    // 큰 체력바(체력 글씨 포함) 사용: 엘리트·보너스 엘리트·보스
+    public virtual bool UseBigHpUI => enemyType != EnemyType.Normal;
     protected Rigidbody2D rg2d;
     public Rigidbody2D Rigidbody2D => rg2d;
     protected Collider2D col2d;

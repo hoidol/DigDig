@@ -195,6 +195,24 @@ public class UserMinionManager : UserBaseManager
         return userMinion;
     }
 
+    // 유저 레벨 lv까지 지급되는 미니언 key (GameSetting.MINION_LEVEL_UNLOCKS, 씬 없이 계산)
+    public static string[] GetLevelUnlockKeys(int lv) =>
+        GameSetting.MINION_LEVEL_UNLOCKS.Where(e => lv >= e.lv).Select(e => e.key).ToArray();
+
+    // 레벨 지급 미니언 중 아직 없는 것을 보유 처리. 새로 받은 key 반환 (로드 후·레벨업 시 호출)
+    public List<string> GrantLevelUnlockMinions(int lv)
+    {
+        List<string> granted = new List<string>();
+        foreach (string key in GetLevelUnlockKeys(lv))
+        {
+            if (GetUserMinion(key).own)
+                continue;
+            AddUserMinion(key);
+            granted.Add(key);
+        }
+        return granted;
+    }
+
     public UserMinion EquiptUserMinion(UserMinion userMinion, int idx)
     {
         if (userMinion == null || userMinion.equipedIdx == idx)

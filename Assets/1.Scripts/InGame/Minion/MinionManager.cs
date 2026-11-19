@@ -32,7 +32,7 @@ public class MinionManager : MonoSingleton<MinionManager>
             {
                 minionDataDic[minionData.key] = minionData;
                 // 뽑기(DrawMinion)용 등급별 목록 (growth 1 슬라임만)
-                if (minionData.growth != 1)
+                if (minionData.growth != 1 || !GameSetting.IsUsedMinion(minionData.key))
                     continue;
                 if (!gradeGroupGrowth1MinionDic.ContainsKey(minionData.grade))
                     gradeGroupGrowth1MinionDic.Add(minionData.grade, new List<string>());

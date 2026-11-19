@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MinionData", menuName = "MinionData/MinionData")]
 public class MinionData : ScriptableObject
 {
-    public const int MAX_MERGE_LEVEL = 4; // mergeLevel 0 ~ MAX_MERGE_LEVEL
+    public const int MAX_MERGE_LEVEL = 4; // mergeLevel 0 ~ MAX_MERGE_LEVEL (표시 5성 = mergeLevel 4가 최대. 2026-11-19 잠시 3(4성)으로 줄였다가 되돌림)
     public static readonly int MAX_ENHANCE_LEVEL = 15;
     // 등급별 시작 강화 레벨: C 0, B 2, A 4, S 6, SS 8, SSS 10 (2026-11-14). EnhanceLevelInfo.csv에서 시작 레벨 전 필요 경험치는 0
     public static int GetStartEnhanceLevel(GradeType grade) => (int)grade * 2;
@@ -40,6 +40,9 @@ public class MinionData : ScriptableObject
 
     [Tooltip("쿨타임 스킬이 있는 미니언 (머리 위 MinionGameStatePanel에 쿨타임 바 표시). 쿨타임 값·동작은 각 미니언 클래스")]
     public bool hasSkill;
+
+    [Tooltip("wave 카드(MinionOfferCard)로 이 미니언을 놓을 때 드는 주사위 코인. 보통 2, 비싼 유닛은 더 높게 (2026-11-19)")]
+    public int offerDiceCoinPrice = GameSetting.OFFER_MINION_DICE_COIN_PRICE;
 
     [Tooltip("인게임 직접 강화 1레벨당 공격력 증가(%). 종마다 다름 (MinionData.csv ReinforceAttackPower)")]
     public float reinforceAttackPowerPercent = 10f;

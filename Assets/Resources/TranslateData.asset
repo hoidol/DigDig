@@ -115,6 +115,9 @@ MonoBehaviour:
     kr: "\uC5D0\uB108\uC9C0\uAC00 \uBD80\uC871\uD569\uB2C8\uB2E4. \uC5D0\uB108\uC9C0\uB294
       {0}\uBD84\uB9C8\uB2E4 1\uC529 \uCDA9\uC804\uB429\uB2C8\uB2E4."
     en: Not enough energy. Energy recharges by 1 every {0} minutes.
+  - key: Energe_OfflineCharged
+    kr: "\uC790\uB9AC\uB97C \uBE44\uC6B4 \uB3D9\uC548 \uC5D0\uB108\uC9C0 {0} \uCDA9\uC804!"
+    en: Recharged {0} energy while you were away!
   - key: DefenceType.Normal
     kr: "\uC77C\uBC18\uD615"
     en: Normal
@@ -143,8 +146,8 @@ MonoBehaviour:
     kr: "\uB09C\uC774\uB3C4 {0}(\uC73C)\uB85C \uC124\uC815\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
     en: Difficulty set to {0}.
   - key: Difficulty_Locked
-    kr: "\uC774\uC804 \uB09C\uC774\uB3C4 Wave {0} \uB3C4\uB2EC \uC2DC \uD574\uAE08"
-    en: Unlocks after reaching Wave {0} on the previous difficulty
+    kr: "\uC774\uC804 \uB09C\uC774\uB3C4 \uD074\uB9AC\uC5B4(Wave {0}) \uC2DC \uD574\uAE08"
+    en: Unlocks after clearing the previous difficulty (Wave {0})
   - key: Difficulty_BestWave
     kr: "\uCD5C\uACE0 \uAE30\uB85D Wave {0}"
     en: Best Wave {0}
@@ -152,93 +155,96 @@ MonoBehaviour:
     kr: "\uAE30\uB85D \uC5C6\uC74C"
     en: No record
   - key: Minion.Random
-    kr: "\uB79C\uB364"
-    en: Random
+    kr: "\uBB49\uCE58"
+    en: Munchi
   - key: Minion.Bounce
-    kr: "\uD0C4\uC131"
-    en: Bounce
+    kr: "\uCF69\uCF69\uC774"
+    en: Boing
   - key: Minion.Flame
-    kr: "\uD654\uC5FC"
-    en: Flame
+    kr: "\uBD88\uB625\uC774"
+    en: Ember
   - key: Minion.Orbit
-    kr: "\uADA4\uB3C4"
-    en: Orbit
+    kr: "\uBE59\uBE59\uC774"
+    en: Whirly
   - key: Minion.Ice
-    kr: "\uC5BC\uC74C"
-    en: Ice
+    kr: "\uB208\uC1A1\uC774"
+    en: Flurry
   - key: Minion.Lightning
-    kr: "\uB77C\uC774\uD2B8\uB2DD"
-    en: Lightning
+    kr: "\uCC0C\uB9BF\uC774"
+    en: Zappy
   - key: Minion.Pierce
-    kr: "\uAD00\uD1B5"
-    en: Pierce
+    kr: "\uBFB0\uC871\uC774"
+    en: Pointy
   - key: Minion.Iron
-    kr: "\uAC15\uCCA0"
-    en: Iron
+    kr: "\uCCA0\uCEF9\uC774"
+    en: Clank
   - key: Minion.Thunder
-    kr: "\uCC9C\uB465"
-    en: Thunder
+    kr: "\uB465\uB465\uC774"
+    en: Rumble
   - key: Minion.Shield
-    kr: "\uCCA0\uBCBD"
-    en: Shield
+    kr: "\uB3CC\uC1E0"
+    en: Rocky
   - key: Minion.Dopamine
-    kr: "\uAD11\uB780"
-    en: Frenzy
+    kr: "\uAE54\uAE54\uC774"
+    en: Giggles
   - key: Minion.Mine
-    kr: "\uC9C0\uB8B0"
-    en: Mine
+    kr: "\uCF85\uCF85\uC774"
+    en: Kaboom
   - key: Minion.Breeze
-    kr: "\uC0B0\uB4E4\uBC14\uB78C"
-    en: Breeze
+    kr: "\uD314\uB791\uC774"
+    en: Flutter
   - key: Minion.Rage
-    kr: "\uACA9\uB178"
-    en: Rage
+    kr: "\uBC84\uB7ED\uC774"
+    en: Huffy
   - key: Minion.Stigma
-    kr: "\uB099\uC778"
-    en: Stigma
+    kr: "\uB204\uB354\uAE30"
+    en: Patches
   - key: Minion.Mud
-    kr: "\uC9C4\uD759"
-    en: Mud
+    kr: "\uB450\uAECD\uC774"
+    en: Croaky
   - key: Minion.Beam
-    kr: "\uAD11\uC120 \uB9C1\uD06C"
-    en: Beam Link
+    kr: "\uB618\uB9DD\uC774"
+    en: Blinky
   - key: Minion.Berserker
-    kr: "\uBC84\uC11C\uCEE4"
-    en: Berserker
+    kr: "\uB291\uB3CC\uC774"
+    en: Fang
   - key: Minion.Mortar
-    kr: "\uBC15\uACA9\uD3EC"
-    en: Mortar
+    kr: "\uB2EC\uADF8\uB77D"
+    en: Rattles
   - key: Minion.Hail
-    kr: "\uBE59\uC11D"
-    en: Hail
+    kr: "\uBD81\uC2E4\uC774"
+    en: Fuzzy
   - key: Minion.Inferno
-    kr: "\uC9C0\uC625"
-    en: Inferno
+    kr: "\uD65C\uD65C\uC774"
+    en: Blaze
   - key: Minion.Keen
-    kr: "\uC124\uC758"
-    en: Keen
+    kr: "\uB098\uBE44"
+    en: Whiskers
   - key: Minion.Sacrifice
-    kr: "\uD76C\uC0DD"
-    en: Sacrifice
+    kr: "\uBABD\uC2E4\uC774"
+    en: Halo
   - key: Minion.GrowUp
-    kr: "\uC131\uC7A5"
-    en: Grow Up
+    kr: "\uC54C\uCF69\uC774"
+    en: Eggy
   - key: Minion.Scavenger
-    kr: "\uC218\uD655"
-    en: Scavenger
+    kr: "\uC90D\uC90D\uC774"
+    en: Coiny
   - key: Minion.Joker
-    kr: "\uC870\uCEE4"
-    en: Joker
+    kr: "\uD0A5\uD0A5\uC774"
+    en: Tricky
   - key: Minion.Hunter
-    kr: "\uC0AC\uB0E5\uAFBC"
-    en: Hunter
+    kr: "\uC800\uC2B9\uC774"
+    en: Reapy
+  - key: Minion.Darkness
+    kr: "\uAE4C\uB9DD\uC774"
+    en: Shady
   - key: Minion.Random.Desc
     kr: "{0}~{1} \uD53C\uD574\uB97C \uAC00\uC9C4 \uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
     en: Fires shots that deal {0}~{1} damage.
   - key: Minion.Ice.Desc
     kr: "\uBE59\uACB0\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4. {0}\uCD08 \uB3D9\uC548
-      \uBE59\uACB0 \uC0C1\uD0DC\uB97C \uBD80\uC5EC\uD569\uB2C8\uB2E4."
-    en: Fires frost shots that freeze for {0}s.
+      \uC774\uB3D9\uC18D\uB3C4\uB97C {1}% \uB0AE\uCDA5\uB2C8\uB2E4."
+    en: Fires frost shots that slow enemies by {1}% for {0}s.
   - key: Minion.Flame.Desc
     kr: "\uD654\uC5FC\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4. \uD654\uC5FC \uC2DC
       {0}\uCD08 \uB3D9\uC548 \uCD08\uB2F9 {1} \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
@@ -440,18 +446,17 @@ MonoBehaviour:
     kr: "\uBC18\uC2DC\uACC4 \uBC29\uD5A5"
     en: Counterclockwise
   - key: TileItem_DrawChance
-    kr: "{0}% \uD655\uB960\uB85C \uD0C0\uC77C \uAC15\uD654 \uC544\uC774\uD15C\uC744
-      \uC5BB\uC2B5\uB2C8\uB2E4."
-    en: '{0}% chance to get a tile item.'
+    kr: "{0}% \uD655\uB960\uB85C \uB8EC\uC744 \uC5BB\uC2B5\uB2C8\uB2E4."
+    en: '{0}% chance to get a rune.'
   - key: TileItem_NoTile
-    kr: "\uC801\uC6A9 \uAC00\uB2A5\uD55C \uD0C0\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
-    en: No tile available.
+    kr: "\uB8EC\uC744 \uC0C8\uAE38 \uCE78\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
+    en: No tile to place a rune.
   - key: TileItem_AlreadyInstalled
-    kr: "\uC774\uBBF8 \uC544\uC774\uD15C\uC774 \uC124\uCE58\uB41C \uD0C0\uC77C\uC785\uB2C8\uB2E4."
-    en: This tile already has an item.
+    kr: "\uC774\uBBF8 \uB8EC\uC774 \uC0C8\uACA8\uC9C4 \uCE78\uC785\uB2C8\uB2E4."
+    en: This tile already has a rune.
   - key: TileItem_BlockedTile
-    kr: "\uB9C9\uD78C \uD0C0\uC77C\uC5D0\uB294 \uC124\uCE58\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4."
-    en: You cannot install on a blocked tile.
+    kr: "\uB9C9\uD78C \uCE78\uC5D0\uB294 \uB8EC\uC744 \uC0C8\uAE38 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4."
+    en: You cannot place a rune on a blocked tile.
   - key: TileItem_SelectBlockedTile
     kr: "\uD574\uC81C\uD560 \uB9C9\uD78C \uD0C0\uC77C\uC744 \uB20C\uB7EC\uC8FC\uC138\uC694."
     en: Tap a blocked tile to clear it.
@@ -664,9 +669,8 @@ MonoBehaviour:
     kr: "\uB3C4\uBC15\uAFBC\uC758 \uB3D9\uC804: \uCF54\uC778\uC744 2\uBC30 \uB0C8\uC2B5\uB2C8\uB2E4"
     en: 'Gambler''s Coin: paid double'
   - key: Authority_HunterCharmDraw
-    kr: "\uC0AC\uB0E5\uAFBC\uC758 \uBD80\uC801: \uD0C0\uC77C \uC544\uC774\uD15C \uBB34\uB8CC
-      \uBF51\uAE30!"
-    en: 'Hunter''s Charm: free tile item draw!'
+    kr: "\uC0AC\uB0E5\uAFBC\uC758 \uBD80\uC801: \uB8EC \uBB34\uB8CC \uBF51\uAE30!"
+    en: 'Hunter''s Charm: free rune draw!'
   - key: Authority_MixedCrestSpawn
     kr: "\uD63C\uD608\uC758 \uBB38\uC7A5: \uC57D\uC810 \uC18D\uC131 \uC2AC\uB77C\uC784
       \uC18C\uD658!"
@@ -720,8 +724,8 @@ MonoBehaviour:
     kr: "\uBCF4\uB108\uC2A4 \uC5D8\uB9AC\uD2B8 \uCC98\uCE58"
     en: Defeat bonus elites
   - key: Achievement.DrawItem
-    kr: "\uD0C0\uC77C \uC544\uC774\uD15C \uBF51\uAE30"
-    en: Draw tile items
+    kr: "\uB8EC \uBF51\uAE30"
+    en: Draw runes
   - key: Achievement.UpgradeReinforce
     kr: "\uC778\uAC8C\uC784 \uAC15\uD654"
     en: Reinforce in battle
@@ -930,6 +934,25 @@ MonoBehaviour:
   - key: Minion_Stack
     kr: "\uC911\uCCA9 {0}"
     en: Stack {0}
+  - key: Minion_LevelUnlocked
+    kr: "\uC0C8 \uBBF8\uB2C8\uC5B8 {0} \uD68D\uB4DD!"
+    en: 'New minion: {0}!'
   - key: DamageText_Weak
     kr: "\uC57D\uC810!"
     en: WEAK!
+  - key: PopText_Success
+    kr: "\uC131\uACF5!"
+    en: Success!
+  - key: PopText_Fail
+    kr: "\uC2E4\uD328.."
+    en: Failed..
+  - key: NextWave_DiceCoinLeft_Title
+    kr: "\uC6E8\uC774\uBE0C \uC2DC\uC791"
+    en: Start Wave
+  - key: NextWave_DiceCoinLeft_Body
+    kr: "\uC8FC\uC0AC\uC704 \uCF54\uC778\uC774 \uB0A8\uC558\uC2B5\uB2C8\uB2E4.\\n\uADF8\uB798\uB3C4
+      \uC6E8\uC774\uBE0C\uB97C \uC2DC\uC791\uD560\uAE4C\uC694?"
+    en: You still have dice coins left.\nStart the wave anyway?
+  - key: BonusElite_NextDiceCoin
+    kr: "\uB2E4\uC74C \uC6E8\uC774\uBE0C +{0}"
+    en: Next wave +{0}

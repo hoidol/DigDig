@@ -73,6 +73,10 @@ public class GameManager : MonoSingleton<GameManager>
         // 권능: 로비에서 해금된 묶음마다 고른 것 전부 (타일·킹 배치 후, 게임 시작 전)
         AuthoritySystem.Begin(UserDataManager.Instance.userAuthorityManager.GetActiveAuthorityKeys());
 
+        // wave 카드 소환 (골드 소환 대신). wave 시작 이벤트보다 먼저 만들어 첫 wave 카드도 받게 함
+        if (GameSetting.USE_WAVE_MINION_OFFER)
+            MinionOfferSystem.Create();
+
         GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
         // 첫 플레이 튜토리얼: 페이드 전에 시작해 킹 위치 지정 같은 준비가 화면이 밝아지기 전에 끝나게 한다
@@ -81,7 +85,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         FadeCanvs.Instance.FadeIn(stageData.Title, () =>
         {
-            PlayInGameBGM(); // InGame 씬에서 바로 시작하면 SoundManager.Start(로비 BGM)가 위 호출보다 늦을 수 있어 한 번 더 (이미 재생 중이면 무시)
+            // PlayInGameBGM(); // InGame 씬에서 바로 시작하면 SoundManager.Start(로비 BGM)가 위 호출보다 늦을 수 있어 한 번 더 (이미 재생 중이면 무시)
             StartGameAfterTutorial().Forget();
         });
     }
@@ -120,9 +124,75 @@ public class GameManager : MonoSingleton<GameManager>
         isPlaying = true;
 
         KingSlime.Instance.AddCoin((int)KingSlime.Instance.statMgr.GetValue(StatType.StartGold));
-        StartWave(waveIdx);
+        if (GameSetting.USE_WAVE_MINION_OFFER)
+            StartBreakTime(0); // 첫 wave 전에도 카드를 받고 배치 → Next
+        else
+            StartWave(waveIdx);
         ProcessWaveTimer().Forget();
     }
+
+    #region wave 사이 브레이크타임 (카드 소환 모드, 2026-11-19)
+    // wave의 적을 모두 소환했고 필드에 적이 없으면(처치 또는 경로 끝) wave 클리어 → 브레이크타임: 카드 3장 + Next 버튼
+    // Next(EndBreakTime)를 눌러야 다음 wave 시작. 시간으로는 넘어가지 않음
+    public bool isBreakTime;
+    public int breakTimeNextWaveIdx; // Next를 누르면 시작할 wave
+
+    void StartBreakTime(int nextWaveIdx)
+    {
+        isBreakTime = true;
+        breakTimeNextWaveIdx = nextWaveIdx;
+        waveIdx = nextWaveIdx;
+        mainWaveTimer = 0;
+        GameEventBus.Publish(new BreakTimeStartEvent(nextWaveIdx));
+    }
+
+    public void EndBreakTime()
+    {
+        if (!isPlaying || !isBreakTime)
+            return;
+        isBreakTime = false;
+        StartWave(breakTimeNextWaveIdx);
+    }
+
+    // 현재 wave를 다 소환했고 살아 있는 적이 없음 (보스 wave는 보스 처치 시 isSpawnEnd)
+    bool IsCurrentWaveCleared()
+    {
+        Wave wave = CurrentWave;
+        return wave != null && wave.isSpawnEnd && EnemyFieldController.Instance.ActiveEnemyCount == 0;
+    }
+
+    // (2026-11-19) wave 시간 초과: 필드에 남은 적 1마리당 킹 피해 1 → 남은 적은 보상 없이 제거, 남은 소환도 취소 → 킹이 살아 있으면 wave 클리어(브레이크타임)
+    // 보스 wave는 시간 제한 없음 (보스 처치까지)
+    void OnWaveTimeOver()
+    {
+        Wave wave = CurrentWave;
+        if (wave == null || wave.waveType == WaveType.Boss)
+            return;
+        int remainCount = EnemyFieldController.Instance.ActiveEnemyCount;
+        wave.isSpawnEnd = true;
+        if (!wave.isEnd)
+            wave.EndWave(); // 남은 소환 취소
+        EnemyFieldController.Instance.ClearAllEnemies();
+        if (remainCount > 0)
+            KingSlime.Instance.TakeDamage(new EnemyDamageData { damage = remainCount * TIME_OVER_DAMAGE_PER_ENEMY });
+    }
+    public const int TIME_OVER_DAMAGE_PER_ENEMY = 1;
+
+    void OnWaveCleared()
+    {
+        Wave wave = CurrentWave;
+        if (!wave.isEnd)
+            wave.EndWave();
+        EndWave(wave.waveIdx); // 이미 종료 처리됐으면 무시됨 (부활 시작 wave 기준)
+        if (IsLastWave(wave.waveIdx))
+        {
+            isCleared = true;
+            EndGame(true);
+            return;
+        }
+        StartBreakTime(wave.waveIdx + 1);
+    }
+    #endregion
     public List<Wave> accWaves = new List<Wave>();//누적 웨이브
     public List<int> clearWaveIdxes = new List<int>();
     // mainWaveTimer를 WAVE_TIME → 0으로 낮춤 (StartWave에서 다시 WAVE_TIME으로 리셋), 0이 되면 다음 wave 시작
@@ -137,6 +207,19 @@ public class GameManager : MonoSingleton<GameManager>
             if (!isPlaying)
                 continue;
 
+            // 카드 소환 모드: 적을 다 처리하면 브레이크타임. WAVE_TIME(90초)이 지나면 남은 적 수만큼 킹 피해 후 정리
+            if (GameSetting.USE_WAVE_MINION_OFFER)
+            {
+                if (mainWaveTimer > 0)
+                {
+                    mainWaveTimer = Mathf.Max(0, mainWaveTimer - Time.deltaTime);
+                    if (mainWaveTimer <= 0 && !isBreakTime)
+                        OnWaveTimeOver();
+                }
+                if (isPlaying && !isBreakTime && IsCurrentWaveCleared())
+                    OnWaveCleared();
+                continue;
+            }
 
             if (mainWaveTimer <= 0)
                 continue;
@@ -235,6 +318,8 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (!isPlaying || CurrentWave == null)
             return false;
+        if (GameSetting.USE_WAVE_MINION_OFFER)
+            return false; // 카드 소환 모드는 wave 클리어 후 Next 버튼
         return CanSkipWave(CurrentWave.waveType, CurrentWave.isSpawnEnd);
     }
 
@@ -319,7 +404,11 @@ public class GameManager : MonoSingleton<GameManager>
         isPlaying = true;
         GameEventBus.Publish(new ResumeEvent());
 
-        StartWave(waveIdx);
+        // 카드 소환 모드: 그 wave의 브레이크타임로 (카드는 이미 받은 wave면 다시 안 줌)
+        if (GameSetting.USE_WAVE_MINION_OFFER)
+            StartBreakTime(waveIdx);
+        else
+            StartWave(waveIdx);
     }
 
     void OnCharacterHpChangedEvent(KingSlimeHpChangedEvent e)
@@ -362,6 +451,13 @@ public class StartGameEvent
 public class StartBossEvent
 {
 
+}
+
+// 카드 소환 모드: wave 클리어(또는 게임 시작·부활) 후 다음 wave 브레이크타임 시작
+public class BreakTimeStartEvent
+{
+    public int nextWaveIdx;
+    public BreakTimeStartEvent(int nextWaveIdx) { this.nextWaveIdx = nextWaveIdx; }
 }
 
 public class WaveStartEvent

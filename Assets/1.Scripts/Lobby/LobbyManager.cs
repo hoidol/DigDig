@@ -94,6 +94,10 @@ namespace Lobby
                     UpdateMyInfoPanels();
                 }
                 await closed.Task;
+
+                // 이 레벨에 새로 받은 미니언 안내
+                foreach (string key in myInfo.lastUnlockedMinionKeys)
+                    ToastCanvas.Toast(string.Format(TranslateManager.GetText("Minion_LevelUnlocked"), TranslateManager.GetText($"Minion.{key}")));
             }
             if (gainExp > 0)
                 foreach (var p in panels)

@@ -23,11 +23,12 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
 
     public FindTargetType FindTargetType => findTargetType;
 
+    // (2026-11-20) 인게임 킹 레벨 (한 판 동안). 레벨업 창은 아직 안 띄움, 상단 경험치바(ExpBar)만
     public int exp;
     public int lv;
-
-    bool levelUped;
-    [SerializeField] int maxExp;
+    public int MaxExp => GetMaxExp(lv);
+    // 보너스 엘리트 처치로 모아 둔 다음 브레이크타임 주사위 코인 (MinionOfferSystem이 받아 감)
+    public int bonusDiceCoinNextBreak;
 
     [SerializeField] Transform hpPoint;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
@@ -163,44 +164,27 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         buffEffectDisplay.Refresh(transform, statMgr.activeBuffs);
     }
 
-    // public void AddExp(int e)
-    // {
-    //     this.exp += e;
-    //     if (exp >= GetMaxExp())
-    //     {
-    //         LevelUp();
-    //         Time.timeScale = 0;
-    //         InGame.LevelUpCanvas.Instance.OpenCanvas(() =>
-    //         {
-    //             Time.timeScale = 1;
-    //             AddExp(0);
-    //         });
-    //     }
-    //     GameEventBus.Publish(new ExpChangedEvent(exp, GetMaxExp()));
-    // }
+    // 필요 경험치 = 25 + 8 × 레벨
+    public static int GetMaxExp(int level) => GameSetting.KING_LEVEL_BASE_EXP + GameSetting.KING_LEVEL_EXP_PER_LEVEL * Mathf.Max(0, level);
+
+    // 경험치 추가 → 넘치면 레벨업(남은 경험치 이월, 여러 번 가능). 레벨업 창(LevelUpCanvas)은 지금은 안 띄움
+    public void AddExp(int e)
+    {
+        if (e <= 0)
+            return;
+        exp += e;
+        while (exp >= MaxExp)
+        {
+            exp -= MaxExp;
+            lv++;
+        }
+        GameEventBus.Publish(new ExpChangedEvent(exp, MaxExp, lv));
+    }
     public void SetFindTargetType(FindTargetType type)
     {
         findTargetType = type;
     }
 
-    // void LevelUp()
-    // {
-    //     int remain = exp - GetMaxExp();
-    //     exp = remain;
-    //     lv++;
-    //     levelUped = true;
-    // }
-
-    // public int GetMaxExp(int l = -1)
-    // {
-    //     if (l == -1) l = lv;
-    //     if (maxExp == 0 || levelUped)
-    //     {
-    //         maxExp = 3 + l * 2;
-    //         levelUped = false;
-    //     }
-    //     return maxExp;
-    // }
 
 
 

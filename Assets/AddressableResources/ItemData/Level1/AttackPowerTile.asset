@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AttackPowerTile
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: AttackPowerTile
-  itemName: "\uACF5\uACA9\uB825 \uD0C0\uC77C"
+  itemName: "\uACF5\uACA9\uB825 \uB8EC"
   desc: "\uACF5\uACA9\uB825 {0}% \uC99D\uAC00"
   level: 1
   maxCount: 3

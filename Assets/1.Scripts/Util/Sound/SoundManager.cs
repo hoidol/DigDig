@@ -48,7 +48,7 @@ public class SoundManager : MonoSingleton<SoundManager>
         bgmSource.loop = true;
         bgmSource.outputAudioMixerGroup = bgmGroup;
 
-        PlayBGM(BGMType.Lobby);
+        // PlayBGM(BGMType.Lobby);
     }
 
     // 저장된 볼륨·음소거 설정을 믹서에 다시 적용 (설정 창에서 바꿨을 때)
