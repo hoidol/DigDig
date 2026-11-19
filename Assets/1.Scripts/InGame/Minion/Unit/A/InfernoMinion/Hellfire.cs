@@ -45,6 +45,17 @@ public class Hellfire : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    // 지옥불이 보이는 동안 루프 소리 (숨김·삭제 시 OnDisable로 끔)
+    void OnEnable()
+    {
+        SoundManager.SetLoop(SFXType.InfernoLoop, this, true);
+    }
+
+    void OnDisable()
+    {
+        SoundManager.SetLoop(SFXType.InfernoLoop, this, false);
+    }
+
     public List<IHittable> GetEnemies(LayerMask layerMask)
     {
         List<IHittable> result = new List<IHittable>();

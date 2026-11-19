@@ -87,6 +87,7 @@ public class JokerMinion : MinionGrowth1
     {
         LastCard = card;
         PlaySkillAnim();
+        SoundManager.Play(SFXType.JokerCardDraw);
         switch (card)
         {
             case Card.Spade:

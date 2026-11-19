@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class ResultCanvas : CanvasUI<ResultCanvas>
 {
+    protected override void PlayOpenSound() { } // 보상 소리(RewardGet)가 따로 남
     public TMP_Text curWaveText;
     // public TMP_Text bestWaveText;
     public GameObject newRecordObj;
@@ -50,7 +51,16 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             newRecordObj.SetActive(GameManager.Instance.waveIdx > userStage.maxWave);
 
 
-        int gold = GameManager.Instance.waveIdx;
+        // 넘긴 wave 수 = waveIdx (진행 중이던 wave는 제외). 클리어면 마지막 wave까지 모두 넘김
+        bool isCleared = GameManager.Instance.isCleared;
+        int passedWaveCount = isCleared ? GameManager.Instance.waveIdx + 1 : GameManager.Instance.waveIdx;
+        if (isCleared)
+        {
+            UserDataManager.Instance.userStageManager.ClearStage(stageKey);
+            AchievementManager.Report(AchievementType.ClearStage);
+        }
+
+        int gold = passedWaveCount;
 
         if (gold > 0)
             UserDataManager.Instance.AddGold(gold);
@@ -61,7 +71,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
 
         // 최대 레벨이면 경험치 보상 없음 (0으로 유지)
         var myInfo = UserDataManager.Instance.userMyInfoManager;
-        rewardExp = UserMyInfoManager.GetGainExp(myInfo.userMyInfoData.lv, GameManager.Instance.waveIdx / 2);
+        rewardExp = UserMyInfoManager.GetGainExp(myInfo.userMyInfoData.lv, passedWaveCount / 2);
         myInfo.AddExp(rewardExp);
         UserMyInfoManager.unshownGainExp += rewardExp; // 로비에서 바가 차오르는 연출
 
@@ -72,8 +82,9 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         rewardGold = gold;
 
         ShowRewards();
+        SoundManager.Play(SFXType.RewardGet);
 
-        UserDataManager.Instance.userStageManager.EndStage(GameManager.Instance.stageData.key, GameManager.Instance.waveIdx); // 무한 웨이브: 마지막으로 넘긴 wave
+        UserDataManager.Instance.userStageManager.EndStage(GameManager.Instance.stageData.key, GameManager.Instance.waveIdx); // 저장값 = waveIdx (클리어면 79 = 표시 80)
     }
 
     // 보상 패널 표시 (2배 받았으면 2배 값으로). animate = 값이 바뀐 걸 보여주는 글씨 확대 이펙트
@@ -145,6 +156,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             UserDataManager.Instance.AddGold(rewardGold);
 
         ShowRewards(true);
+        SoundManager.Play(SFXType.RewardDouble);
     }
 
     public void OnClickedHome()

@@ -20,30 +20,37 @@ public class StageData : ScriptableObject
     public float enemyHp;
     public float addHpRatioPerWave;
     public float multiHpPerWave = 1f;
+    // 20 wave(보스 주기) 구간별 체력 배율. [0] = wave 1~20, [1] = 21~40 … 칸이 모자라면 마지막 값.
+    // StageData.csv CycleHpMuls("1/1.1/1.21/1.33"). 비우면 GameSetting.HP_MUL_PER_BOSS_CYCLE을 구간마다 곱함
+    public float[] cycleHpMuls;
+
+    public float GetCycleHpMul(int waveIdx)
+    {
+        int cycle = Mathf.Max(0, waveIdx) / GameSetting.BOSS_WAVE_INTERVAL;
+        if (cycleHpMuls == null || cycleHpMuls.Length == 0)
+            return Mathf.Pow(GameSetting.HP_MUL_PER_BOSS_CYCLE, cycle);
+        return cycleHpMuls[Mathf.Min(cycle, cycleHpMuls.Length - 1)];
+    }
     public Enemy[] enemyPrefabs; //해당 스테이지의 적들    
     Dictionary<KeyValuePair<EnemyType, DefenceType>, Enemy> enemyPrefabDic = new Dictionary<KeyValuePair<EnemyType, DefenceType>, Enemy>();
     public WaveData[] waveDatas;
     // public EventData[] eventDatas;
     public Boss boss;
 
-    // 다음 난이도 해금 조건: 한 단계 낮은 난이도에서 이 wave(표시 번호)까지 도달
-    public const int UNLOCK_WAVE = 100;
+    // 다음 난이도 해금 조건: 한 단계 낮은 난이도 클리어 = 마지막 wave(표시 번호)까지 깸 (2026-11-19, 이전: wave 100 도달)
+    public const int UNLOCK_WAVE = GameSetting.LAST_WAVE;
 
-    // 난이도마다 스테이지 하나. Normal은 항상 열림, 그 외는 한 단계 낮은 난이도에서 wave UNLOCK_WAVE 이상 도달해야 열림
+    // 난이도마다 스테이지 하나. Normal은 항상 열림, 그 외는 한 단계 낮은 난이도를 클리어해야 열림
     public bool ChekcUnlock()
     {
         if (difficulty == DifficultyType.Normal)
             return true;
 
         UserStage lowDifficultyUserStage = UserDataManager.Instance.userStageManager.GetUserStage(difficulty - 1);
-        return lowDifficultyUserStage != null && IsUnlockWave(lowDifficultyUserStage.maxWave);
+        return IsUnlocked(lowDifficultyUserStage);
     }
 
-    // maxWave = 저장된 waveIdx (0부터). 표시 wave = maxWave + 1
-    public static bool IsUnlockWave(int lowDifficultyMaxWave)
-    {
-        return lowDifficultyMaxWave + 1 >= UNLOCK_WAVE;
-    }
+    public static bool IsUnlocked(UserStage lowDifficultyUserStage) => lowDifficultyUserStage != null && lowDifficultyUserStage.isClear;
     public void Init()
     {
         enemyPrefabDic.Clear();
@@ -139,6 +146,7 @@ public class StageData : ScriptableObject
             if (row.TryGetFloat("EnemyHp", out float eh)) enemyHp = eh;
             if (row.TryGetFloat("AddHpRatioPerWave", out float ahr)) addHpRatioPerWave = ahr;
             if (row.TryGetFloat("MultiHpPerWave", out float mh)) multiHpPerWave = mh;
+            cycleHpMuls = ParseFloatList(row.Get("CycleHpMuls"), "CycleHpMuls");
             bossName = row.Get("BossName");
             break;
         }
@@ -160,6 +168,20 @@ public class StageData : ScriptableObject
         foreach (var s in raw.Split('/'))
         {
             if (System.Enum.TryParse(s.Trim(), out T v)) list.Add(v);
+            else Debug.LogWarning($"[StageData] {key} {column} 파싱 실패: {s}");
+        }
+        return list.ToArray();
+    }
+
+    // "1/1.1/1.2" → float 배열 (파싱 실패한 값은 경고 후 제외)
+    float[] ParseFloatList(string raw, string column)
+    {
+        var list = new List<float>();
+        if (string.IsNullOrEmpty(raw))
+            return list.ToArray();
+        foreach (var s in raw.Split('/'))
+        {
+            if (float.TryParse(s.Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float v)) list.Add(v);
             else Debug.LogWarning($"[StageData] {key} {column} 파싱 실패: {s}");
         }
         return list.ToArray();

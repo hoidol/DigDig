@@ -22,95 +22,105 @@ MonoBehaviour:
     minionStats:
     - statType: 0
       values:
-      - 9
-      - 9
+      - 9.00
+      - 9.00
   - level: 1
     minionStats:
     - statType: 0
       values:
-      - 10
-      - 10
+      - 9.50
+      - 9.50
   - level: 2
     minionStats:
     - statType: 0
       values:
-      - 11
-      - 11
+      - 10.00
+      - 10.00
   - level: 3
     minionStats:
     - statType: 0
       values:
-      - 12
-      - 12
+      - 10.50
+      - 10.50
   - level: 4
     minionStats:
     - statType: 0
       values:
-      - 13
-      - 13
+      - 11.00
+      - 11.00
   - level: 5
     minionStats:
     - statType: 0
       values:
-      - 14
-      - 14
+      - 11.50
+      - 11.50
   - level: 6
     minionStats:
     - statType: 0
       values:
-      - 15
-      - 15
+      - 12.00
+      - 12.00
   - level: 7
     minionStats:
     - statType: 0
       values:
-      - 16
-      - 16
+      - 12.50
+      - 12.50
   - level: 8
     minionStats:
     - statType: 0
       values:
-      - 17
-      - 17
+      - 13.00
+      - 13.00
   - level: 9
     minionStats:
     - statType: 0
       values:
-      - 18
-      - 18
+      - 13.50
+      - 13.50
   - level: 10
     minionStats:
     - statType: 0
       values:
-      - 19
-      - 19
+      - 14.00
+      - 14.00
   - level: 11
     minionStats:
     - statType: 0
       values:
-      - 20
-      - 20
+      - 14.50
+      - 14.50
   - level: 12
     minionStats:
     - statType: 0
       values:
-      - 21
-      - 21
+      - 15.00
+      - 15.00
   - level: 13
     minionStats:
     - statType: 0
       values:
-      - 22
-      - 22
+      - 15.50
+      - 15.50
   - level: 14
     minionStats:
     - statType: 0
       values:
-      - 23
-      - 23
+      - 16.00
+      - 16.00
   attackPowerRandomRatio: 0
   hasSkill: 1
   reinforceAttackPowerPercent: 5
+  attackSfx:
+    name: 
+    sfxType: 0
+    audioClip: {fileID: 0}
+    volume: 1
+    pitch: 1
+    pitchRandom: 0
+    minInterval: 0
+    loop: 0
+    playOnAwake: 0
   prefab: {fileID: 6666491537767946925, guid: c2eccd09d44a2479aa3430aa28659778, type: 3}
   unlockConditions: []
   thum: {fileID: 403208247147482157, guid: 29f59aee2e03646a3bb625392fb400f4, type: 3}

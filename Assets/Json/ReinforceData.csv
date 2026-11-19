@@ -47,8 +47,7 @@ GrowUp	AttackPower	Percent	5	1
 	GrowTime	Add	-0.5	2	7
 Scavenger	AttackPower	Percent	5	1	
 	AttackRange	Add	0.1	3	1
-Darkness	AttackPower	Percent	5	1	
-	DarknessFailChance	Add	-1	3	10
+Joker	AttackPower	Percent	5	1	
+	JokerFailChance	Add	-1	3	10
 Hunter	AttackPower	Percent	7	1	
 	SnipeStunDuration	Add	0.05	3	0.3
-Joker	AttackPower	Percent	5	1	

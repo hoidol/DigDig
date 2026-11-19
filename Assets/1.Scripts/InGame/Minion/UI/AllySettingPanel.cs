@@ -13,8 +13,14 @@ public class AllySettingPanel : MonoBehaviour
     public KingSlimeShortcutInfoPanel characterShortcutInfoPanel;
     public MinionShortcutInfoPanel minionShortcutInfoPanel;
     public AttackTypePanel attackTypePanel;
+    public SellMinionButton sellMinionButton; // 비우면 하위에서 찾음. 미니언만 판매(킹은 숨김)
 
     IAllyUnit targetMinion;
+    void Awake()
+    {
+        if (sellMinionButton == null)
+            sellMinionButton = GetComponentInChildren<SellMinionButton>(true);
+    }
     void Start()
     {
       obj.SetActive(false);  
@@ -54,6 +60,8 @@ public class AllySettingPanel : MonoBehaviour
             setBuffRangeButton.SetMinion(targetMinion);
         if (setRotationDirectionButton != null)
             setRotationDirectionButton.SetMinion(targetMinion);
+        if (sellMinionButton != null)
+            sellMinionButton.SetMinion(targetMinion);
     }
 
     // 공격 타입 변경 타일 위에 있으면 바뀐 타입을 표시

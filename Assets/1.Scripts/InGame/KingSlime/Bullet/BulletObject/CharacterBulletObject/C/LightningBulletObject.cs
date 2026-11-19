@@ -52,7 +52,9 @@ public class LightningBulletObject : AllyBulletObject
 
         for (int i = 0; i < lightningBulletSpec.lightningCount; i++)
         {
-            IHittable next = FindNearestTarget(originPos, radius, hitTargets);
+            // 첫 타겟 = 발사 방향의 적 (다중 타겟 타일이면 탄마다 다른 타겟을 향해 쏘므로 연쇄도 그 적부터 따로 시작)
+            // 이전엔 항상 가장 가까운 적부터라 탄을 여러 발 쏘면 똑같은 연쇄가 겹쳐 나왔음
+            IHittable next = i == 0 ? FindFirstTarget(originPos, radius, direction) : FindNearestTarget(originPos, radius, hitTargets);
             if (next == null)
                 break;
 
@@ -71,6 +73,20 @@ public class LightningBulletObject : AllyBulletObject
         }
 
         return true;
+    }
+
+    // 발사 방향과 각도가 가장 가까운 적 (같으면 가까운 적). 방향이 없으면 가장 가까운 적
+    IHittable FindFirstTarget(Vector2 pos, float radius, Vector2 dir)
+    {
+        if (dir == Vector2.zero)
+            return FindNearestTarget(pos, radius, new List<IHittable>());
+        Collider2D[] cols = Physics2D.OverlapCircleAll(pos, radius, hitLayerMask);
+        return cols
+            .Select(c => c.GetComponent<IHittable>())
+            .Where(h => h != null)
+            .OrderBy(h => Vector2.Angle(dir, (Vector2)h.Transform.position - pos))
+            .ThenBy(h => Vector2.Distance(pos, h.Transform.position))
+            .FirstOrDefault();
     }
 
     IHittable FindNearestTarget(Vector2 pos, float radius, List<IHittable> exclude)

@@ -278,6 +278,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         {
             TileManager.Instance.RemoveTileObject(source);
             tile.SetTileObject(source);
+            SoundManager.Play(SFXType.DragDrop);
         }
         else
         {
@@ -328,6 +329,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         tileB.SetTileObject(a);
         a.EndDrag(tileB);
         b.EndDrag(tileA);
+        SoundManager.Play(SFXType.MinionSwap);
         return true;
     }
 
@@ -348,6 +350,8 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         Tile tile = TileManager.Instance.GetTile(target);
         TileManager.Instance.RemoveTileObject(source);
         TileManager.Instance.RemoveTileObject(target);
+        // 희생 합성(한쪽만 희생)은 전용 소리
+        SoundManager.Play((source is SacrificeMinion) != (target is SacrificeMinion) ? SFXType.SacrificeMerge : SFXType.MinionMerge);
 
         KingSlime.Instance.RemoveMinion(source);
         KingSlime.Instance.RemoveMinion(target);

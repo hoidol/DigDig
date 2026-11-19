@@ -3,6 +3,7 @@ using UnityEngine;
 public class IceBulletSpec : AllyBulletSpec
 {
     public float duration;
+    public float slowRate = IceEffect.DEFAULT_SLOW_RATE; // 이동속도 배율 (IceMinionData.slowRate)
     // public float chance;
 
     public IceBulletSpec()
@@ -14,7 +15,7 @@ public class IceBulletSpec : AllyBulletSpec
     public override void StartBulletSpec()
     {
         base.StartBulletSpec();
-        AddBulletBehaviour(new IceOnHitBehavior(duration, 1));
+        AddBulletBehaviour(new IceOnHitBehavior(duration, 1, slowRate));
     }
 
 

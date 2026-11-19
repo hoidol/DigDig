@@ -35,6 +35,8 @@ public class AuthorityInfoCanvas : CanvasUI<AuthorityInfoCanvas>
         AuthoritySelectResult result = UserDataManager.Instance.userAuthorityManager.Select(authorityData);
         if (result == AuthoritySelectResult.Locked)
             ToastCanvas.Toast(string.Format(TranslateManager.GetText("Authority_Locked"), AuthorityData.GetUnlockLevel(authorityData.tier)));
+        else if (result == AuthoritySelectResult.Success)
+            SoundManager.Play(SFXType.AuthoritySelect);
         LobbyManager.Instance.GetLobbyCanvas(LobbyState.KingSlimeManagement).UpdateCanvas();
         UpdateCanvas();
     }

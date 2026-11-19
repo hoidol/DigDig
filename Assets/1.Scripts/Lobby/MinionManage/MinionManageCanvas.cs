@@ -9,8 +9,7 @@ namespace Lobby
     {
         public MinionEquipedSlotPanel[] equipedSlotPanels;
         public Growth1MinionEntryPanel[] growth1MinionEntryPanels;
-        public Transform ownContainer;
-        public Transform unownContainer;
+        public Transform ownContainer; // 슬라임 칸 전부 (보유·미보유 한 컨테이너, 2026-11-19 unownContainer 삭제)
         public MinionPresetButton[] presetButtons;
         // public Growth2MinionEntryPanel[] growth2MinionEntryPanels;
 
@@ -41,10 +40,9 @@ namespace Lobby
                 equipedSlotPanels[i].idx = i;
             }
 
-            // 등급 높은 순(레전드 → 유니크 → 레어 → 노말). 보유/미보유는 UpdateUI에서 컨테이너로 나누며 이 순서를 유지
-            // → 나중에 새로 얻은 슬라임도 보유 칸에서 등급 순서 자리에 들어감
+            // 칸에 넣는 순서 = 등급 낮은 순 (C → B → A → S). 화면 순서(보유 먼저)는 UpdateCanvas에서 정렬
             MinionData[] minionDatas = MinionManager.Instance.allMinionDatas
-                .OrderByDescending(e => e.grade)
+                .OrderBy(e => e.grade)
                 .ToArray();
 
             EnsureEntryPanels(minionDatas.Length);
@@ -132,16 +130,16 @@ namespace Lobby
                 growth1MinionEntryPanels[i].UpdatePanel();
             }
 
-            // 보유 여부에 따라 컨테이너를 나눔 (패널 순서 = minionDatas 정렬 순서 유지)
-            for (int i = 0; i < growth1MinionEntryPanels.Length; i++)
+            // 화면 순서: 보유(등급 낮은 순) → 미보유(등급 낮은 순). 같은 등급은 데이터 순서 유지 (OrderBy는 안정 정렬)
+            // 새로 얻은 슬라임도 다음 갱신 때 보유 쪽 등급 자리로 옮겨짐
+            var sortedPanels = growth1MinionEntryPanels
+                .Where(p => p.minionData != null)
+                .OrderByDescending(p => p.userMinion != null && p.userMinion.own)
+                .ThenBy(p => p.minionData.grade);
+            foreach (Growth1MinionEntryPanel panel in sortedPanels)
             {
-                Growth1MinionEntryPanel panel = growth1MinionEntryPanels[i];
-                if (panel.minionData == null)
-                    continue;
-
-                Transform container = panel.userMinion.own ? ownContainer : unownContainer;
-                if (panel.transform.parent != container)
-                    panel.transform.SetParent(container, false);
+                if (panel.transform.parent != ownContainer)
+                    panel.transform.SetParent(ownContainer, false);
                 panel.transform.SetAsLastSibling();
             }
 

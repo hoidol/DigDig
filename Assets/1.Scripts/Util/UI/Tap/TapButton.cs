@@ -33,7 +33,7 @@ public class TapButton : ButtonUI
     }
     public override void OnClickedBtn()
     {
-        SoundManager.Instance.PlaySound(SFXType.Click);
+        SoundManager.Play(SFXType.TabChange);
         GetComponentInParent<TapContainer>().Switch(idx);
     }
 }

@@ -31,6 +31,7 @@ BoomItem_Desc	{0}발사마다 폭탄 발사 (최대 2번 튕김)
 New Minion	새로운 슬라임	New Slime
 Not enough exp	경험치가 부족합니다.	Not enough EXP.
 Energe_NotEnough	에너지가 부족합니다. 에너지는 {0}분마다 1씩 충전됩니다.	Not enough energy. Energy recharges by 1 every {0} minutes.
+Energe_OfflineCharged	자리를 비운 동안 에너지 {0} 충전!	Recharged {0} energy while you were away!
 DefenceType.Normal	일반형	Normal
 DefenceType.Armored	갑옷형	Armored
 DefenceType.Ethereal	정령형	Ethereal
@@ -40,39 +41,39 @@ Difficulty.Normal	보통	Normal
 Difficulty.Hard	어려움	Hard
 Difficulty.Hell	지옥	Hell
 Difficulty_Changed	난이도 {0}(으)로 설정되었습니다.	Difficulty set to {0}.
-Difficulty_Locked	이전 난이도 Wave {0} 도달 시 해금	Unlocks after reaching Wave {0} on the previous difficulty
+Difficulty_Locked	이전 난이도 클리어(Wave {0}) 시 해금	Unlocks after clearing the previous difficulty (Wave {0})
 Difficulty_BestWave	최고 기록 Wave {0}	Best Wave {0}
 Difficulty_NoRecord	기록 없음	No record
-Minion.Random	랜덤	Random
-Minion.Bounce	탄성	Bounce
-Minion.Flame	화염	Flame
-Minion.Orbit	궤도	Orbit
-Minion.Ice	얼음	Ice
-Minion.Lightning	라이트닝	Lightning
-Minion.Pierce	관통	Pierce
-Minion.Iron	강철	Iron
-Minion.Thunder	천둥	Thunder
-Minion.Shield	철벽	Shield
-Minion.Dopamine	광란	Frenzy
-Minion.Mine	지뢰	Mine
-Minion.Breeze	산들바람	Breeze
-Minion.Rage	격노	Rage
-Minion.Stigma	낙인	Stigma
-Minion.Mud	진흙	Mud
-Minion.Beam	광선 링크	Beam Link
-Minion.Berserker	버서커	Berserker
-Minion.Mortar	박격포	Mortar
-Minion.Hail	빙석	Hail
-Minion.Inferno	지옥	Inferno
-Minion.Keen	설의	Keen
-Minion.Sacrifice	희생	Sacrifice
-Minion.GrowUp	성장	Grow Up
-Minion.Scavenger	수확	Scavenger
-Minion.Darkness	다크니스	Darkness
-Minion.Joker	조커	Joker
-Minion.Hunter	사냥꾼	Hunter
+Minion.Random	뭉치	Munchi
+Minion.Bounce	콩콩이	Boing
+Minion.Flame	불똥이	Ember
+Minion.Orbit	빙빙이	Whirly
+Minion.Ice	눈송이	Flurry
+Minion.Lightning	찌릿이	Zappy
+Minion.Pierce	뾰족이	Pointy
+Minion.Iron	철컹이	Clank
+Minion.Thunder	둥둥이	Rumble
+Minion.Shield	돌쇠	Rocky
+Minion.Dopamine	깔깔이	Giggles
+Minion.Mine	쾅쾅이	Kaboom
+Minion.Breeze	팔랑이	Flutter
+Minion.Rage	버럭이	Huffy
+Minion.Stigma	누더기	Patches
+Minion.Mud	두껍이	Croaky
+Minion.Beam	똘망이	Blinky
+Minion.Berserker	늑돌이	Fang
+Minion.Mortar	달그락	Rattles
+Minion.Hail	북실이	Fuzzy
+Minion.Inferno	활활이	Blaze
+Minion.Keen	나비	Whiskers
+Minion.Sacrifice	몽실이	Halo
+Minion.GrowUp	알콩이	Eggy
+Minion.Scavenger	줍줍이	Coiny
+Minion.Joker	킥킥이	Tricky
+Minion.Hunter	저승이	Reapy
+Minion.Darkness	까망이	Shady
 Minion.Random.Desc	{0}~{1} 피해를 가진 탄을 발사합니다.	Fires shots that deal {0}~{1} damage.
-Minion.Ice.Desc	빙결탄을 발사합니다. {0}초 동안 빙결 상태를 부여합니다.	Fires frost shots that freeze for {0}s.
+Minion.Ice.Desc	빙결탄을 발사합니다. {0}초 동안 이동속도를 {1}% 낮춥니다.	Fires frost shots that slow enemies by {1}% for {0}s.
 Minion.Flame.Desc	화염탄을 발사합니다. 화염 시 {0}초 동안 초당 {1} 피해를 줍니다.	Fires fire shots. Burns for {0}s, dealing {1} damage per second.
 Minion.Pierce.Desc	{0}만큼 관통하는 탄을 발사합니다	Fires shots that pierce {0} times
 Minion.Lightning.Desc	{0}기 적에게 체인 데미지를 입힙니다.	Deals chain damage to {0} enemies.
@@ -93,15 +94,7 @@ Minion.Inferno.Desc	가장 가까운 적 경로 구간에 지옥불을 피워 �
 Minion.Sacrifice.Desc	같은 별의 아무 슬라임과 합치면 그 슬라임으로 강화됩니다.	Merge with any slime of the same star to upgrade into that slime.
 Minion.GrowUp.Desc	{0:0}초 후 랜덤한 슬라임으로 성장합니다(별 +{1}).	Grows into a random slime after {0:0}s (+{1} star).
 Minion.Scavenger.Desc	사거리 안에서 적이 죽으면 {0}골드를 얻습니다.	Gain {0} gold whenever an enemy dies within range.
-Minion.Darkness.Desc	{0:0}초마다 변신 준비가 됩니다. 선택하면 머리 위 목록에서 원하는 미니언으로 변신합니다(레벨 유지, 성공 확률 {1:0}%, 성공 시 {2:0}% 확률로 레벨 +1).	Ready to transform every {0:0}s. Tap it to pick any equipped minion from the list above its head (level kept, {1:0}% success, {2:0}% chance of +1 level).
-Minion.Joker.Desc	{0:0}초마다 카드를 뽑습니다. 스페이드: 주변 적 전부에게 공격력 {1}% 가시 피해 / 다이아: {2}초간 공격속도 {3}배·공격력 절반 / 클로버: 코인 획득 / 하트: 꽝	Every {0:0}s draws a card. Spade: thorns deal {1}% attack damage to all nearby enemies / Diamond: {3}x attack speed and half attack for {2}s / Clover: gain coins / Heart: miss
-Joker_Card_Spade	스페이드!	Spade!
-Joker_Card_Diamond	다이아!	Diamond!
-Joker_Card_Clover	클로버!	Clover!
-Joker_Card_Heart	꽝!	Miss!
-Darkness_Transform_Success	변환 성공!	Transformed!
-Darkness_Transform_Grow	변환 성공! 성장!	Transformed! Level up!
-Darkness_Transform_Fail	변환 실패...	Transform failed...
+Minion.Joker.Desc	원하는 슬라임으로 변신합니다. {0:0}% 확률로 실패해 별이 1 떨어집니다(별 1이면 사라짐).	Transforms into any slime you choose. {0:0}% chance to fail and lose 1 star (vanishes at 1 star).
 Minion.Hunter.Desc	{0}회 공격마다 저격 관통탄을 발사해 {1}초 스턴 + 치명 피해를 줍니다.	Every {0} attacks, fires a piercing sniper shot that stuns for {1}s and always crits.
 Joker_Fail_Vanish	변신 실패! 조커가 사라졌습니다.	Transform failed! The Joker vanished.
 Joker_Fail_LevelDown	변신 실패! 별이 1 떨어졌습니다.	Transform failed! Lost 1 star.
@@ -133,15 +126,15 @@ BuffRange.Cross	십자	Cross
 BuffRange.Diagonal	대각	Diagonal
 Rotation.Clockwise	시계 방향	Clockwise
 Rotation.CounterClockwise	반시계 방향	Counterclockwise
-TileItem_DrawChance	{0}% 확률로 타일 강화 아이템을 얻습니다.	{0}% chance to get a tile item.
-TileItem_NoTile	적용 가능한 타일이 없습니다.	No tile available.
-TileItem_AlreadyInstalled	이미 아이템이 설치된 타일입니다.	This tile already has an item.
-TileItem_BlockedTile	막힌 타일에는 설치할 수 없습니다.	You cannot install on a blocked tile.
+TileItem_DrawChance	{0}% 확률로 룬을 얻습니다.	{0}% chance to get a rune.
+TileItem_NoTile	룬을 새길 칸이 없습니다.	No tile to place a rune.
+TileItem_AlreadyInstalled	이미 룬이 새겨진 칸입니다.	This tile already has a rune.
+TileItem_BlockedTile	막힌 칸에는 룬을 새길 수 없습니다.	You cannot place a rune on a blocked tile.
 TileItem_SelectBlockedTile	해제할 막힌 타일을 눌러주세요.	Tap a blocked tile to clear it.
 TileItem_RefreshLimit	이번 판 갱신 횟수를 모두 사용했습니다	No refreshes left this game
 TileItem_Level	{0} Lv.{1}	{0} Lv.{1}
 TileItem_Upgrade	강화 {0:0}%	Upgrade {0:0}%
-TileItem_UpgradeSuccess	강화 성공!	Upgrade succeeded!
+TileItem_UpgradeSuccess	강화 성공! Lv.{0}	Upgrade succeeded! Lv.{0}
 TileItem_UpgradeFail	강화 실패	Upgrade failed
 Not enough dice coin	주사위 코인이 부족합니다.	Not enough dice coins.
 Draw_Success	뽑기 성공!	Draw succeeded!
@@ -206,7 +199,7 @@ Authority.KingSeal	왕의 인장	King's Seal
 Authority.BloodlineFlask	혈통의 플라스크	Bloodline Flask
 Authority_GamblerCoinWin	도박꾼의 동전: 한 단계 높은 슬라임!	Gambler's Coin: a higher-level slime!
 Authority_GamblerCoinLose	도박꾼의 동전: 코인을 2배 냈습니다	Gambler's Coin: paid double
-Authority_HunterCharmDraw	사냥꾼의 부적: 타일 아이템 무료 뽑기!	Hunter's Charm: free tile item draw!
+Authority_HunterCharmDraw	사냥꾼의 부적: 룬 무료 뽑기!	Hunter's Charm: free rune draw!
 Authority_MixedCrestSpawn	혼혈의 문장: 약점 속성 슬라임 소환!	Mixed Crest: summoned a slime with the weak type!
 Authority_HourglassFreeze	모래시계: 모든 적이 멈춥니다!	Hourglass: all enemies are frozen!
 Purchase_Package	패키지 구매 완료! 보상이 지급되었습니다.	Package purchased! Rewards have been delivered.
@@ -223,7 +216,7 @@ Achievement.LevelUpMinion	슬라임 강화	Enhance slimes
 Achievement.TryStage	전투 도전	Play battles
 Achievement.DrawMinion	슬라임 뽑기	Draw slimes
 Achievement.KillBonusElite	보너스 엘리트 처치	Defeat bonus elites
-Achievement.DrawItem	타일 아이템 뽑기	Draw tile items
+Achievement.DrawItem	룬 뽑기	Draw runes
 Achievement.UpgradeReinforce	인게임 강화	Reinforce in battle
 Achievement.Watch_Ad	광고 시청	Watch ads
 Achievement.SpawnMinion	슬라임 소환	Summon slimes
@@ -294,3 +287,5 @@ Unlock_CurrentWave	Wave {0}부터 사용할 수 있습니다	Available from Wave
 TileTitle	현재 타일	
 Minion_Stack	중첩 {0}	Stack {0}
 DamageText_Weak	약점!	WEAK!
+PopText_Success	성공!	Success!
+PopText_Fail	실패..	Failed..

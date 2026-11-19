@@ -8,6 +8,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - `Manager` = 씬을 오가며 살아 있음(데이터·유저). `Controller` = 한 씬에 배치된 싱글톤이 그 씬의 한 영역을 맡음(`MinionFieldController`, `EnemyFieldController`, 이전 이름 MinionSpawner/EnemySpawner). `Spawner` = 생성만 하는 부품. `System` = 풀링 또는 static 규칙 묶음(`PoolingSystem`, `AuthoritySystem`).
 
 - (2026-11-13) **소환 유닛의 코드 이름 = `Minion`(이전 `Slime`).** 소환 유닛을 슬라임으로 한정하지 않고 귀여운 악마·귀신·도깨비 등 여러 형태로 낼 예정이라 형태를 가리키지 않는 이름으로 바꿈. 층: `Ally` = 아군 전체(킹 + 소환 유닛), `KingSlime` = 킹(이름 그대로 유지), `Minion` = 소환·합성하는 유닛. 클래스·파일·폴더·씬 오브젝트 이름·데이터 key(`Minion.{Key}`, `DrawMinion_*`, `MaxMinionCount`, 업적 `SpawnMinion` 등)·저장 파일(`UserMinionData`)까지 전부 바꿈. **이 문서의 한글 "슬라임"과 화면에 보이는 글씨(번역 Kr/En)는 아직 그대로**(표시 이름은 따로 정함). 적 몬스터 프리팹 `Slime_Green`/`Slime_Purple`과 Layer Lab 에셋은 대상 아님.
+- (2026-11-19) **미니언 표시 이름 = 캐릭터 이름(애칭)**: 종족·능력에서 따온 부르기 쉬운 이름(Random = 뭉치, Bounce = 콩콩이, Hunter = 저승이). "주사위 그렘린" 같은 설명형 이름은 쓰지 않음. 종족은 `Assets/ImageList.xlsx` 미니언 시트 '추천 종류' 기준이되 **실제 그림이 다르면 그림 기준**(조커 = 카드 광대, 다크니스 = 그림자, 지옥 = 용암 망령, 수확 = 동전 도깨비, 성장 = 알). 화면 이름은 번역 `Minion.{Key}`(Kr/En), MinionData.csv `Name` 열에도 같은 한글 이름(코드에서는 안 읽음).
 
 ## 핵심 루프
 - 적 처치 → 코인 획득 → 슬라임 소환(뽑기) → 칸이 차면 합성 → 빈 칸에 다시 소환
@@ -32,7 +33,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - (2026-11-11) **킹슬라임도 슬라임과 자리 교체**: 킹을 슬라임 위에 놓거나 슬라임을 킹 위에 놓으면 맞바꿈(`MinionFieldController.SwapTileObjects`, `SwapMinions`도 이걸 씀). 테스트 `MergeSwapPlayTest.KingSlime_SwapWithMinion`.
 - mergeLv는 0부터 시작. 최대치는 `MinionData.MAX_MERGE_LEVEL` = 4 (0~4, 5단계).
 - 합성 결과 key: 현재 코드는 장착 5종 중 **랜덤** (`Minion.Merge`). 기획 의도 확인 필요.
-- 슬라임 판매/버리기 기능 없음.
+- (2026-11-18) **미니언 판매**: 미니언을 선택하면 `AllySettingPanel`의 `SellMinionButton`으로 판매 → **5 + 5 × mergeLevel 코인**(mergeLevel 0부터: 0 = 5, 4 = 25, `GameSetting.SELL_MINION_*`). 킹 선택 시엔 숨김. 판매 후 선택 해제. (이전: 판매/버리기 없음)
 - 게임 시작 시 타일 중 **랜덤 5칸은 사용 불가**(`BLOCKED_TILE_COUNT`, 2026-10-18). 소환/드래그/캐릭터 배치 모두 막힌 칸에는 못 놓음. (2026-11-10) 막힌 칸은 숨기지 않고 **깨진 타일 이미지**(`TileManager.breakTile`)로 보여줌, 해제되면 `baseTile`.
 
 ### 의도
@@ -95,7 +96,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 빈 프리셋은 처음 로드할 때 현재 장착 조합으로 채움. 프리셋 key가 미보유·중복이면 현재 장착 → 보유 슬라임으로 대체(`ResolvePresetKeys`, `MinionPresetTest`).
 - 이미 장착된 슬라임을 다른 칸에 장착하면 두 칸을 맞바꾼다(5칸 항상 채움).
 
-- (2026-11-12) 슬라임 관리 화면의 슬라임 칸(`Growth1MinionEntryPanel`)은 **씬에 1개만 두고 슬라임 수만큼 코드가 복사**(`MinionManageCanvas.EnsureEntryPanels`). 경험치 표시(`MinionExpPanel`)는 Slider + 글씨. **카드 틀(Bg(Mask)·InnerBorder·HightLight) 색 = 등급**(`Grade.GetCardColor`, `MinionPanel.bgImage`/`innerBorder`/`hightLightImage`가 연결된 패널만. 등급 라벨 `MinionGradePanel`과 같은 계열 색). (2026-11-13) **칸 어디를 눌러도 정보 창**(`MinionEntryPanel.OnPointerClick`, 이전엔 썸네일 버튼만 반응).
+- (2026-11-12) 슬라임 관리 화면의 슬라임 칸(`Growth1MinionEntryPanel`)은 **씬에 1개만 두고 슬라임 수만큼 코드가 복사**(`MinionManageCanvas.EnsureEntryPanels`). (2026-11-19) **칸은 한 컨테이너(`ownContainer`, unownContainer 삭제), 순서 = 보유(등급 낮은 순 C→S) → 미보유(등급 낮은 순)**. 경험치 표시(`MinionExpPanel`)는 Slider + 글씨. **카드 틀(Bg(Mask)·InnerBorder·HightLight) 색 = 등급**(`Grade.GetCardColor`, `MinionPanel.bgImage`/`innerBorder`/`hightLightImage`가 연결된 패널만. 등급 라벨 `MinionGradePanel`과 같은 계열 색). (2026-11-13) **칸 어디를 눌러도 정보 창**(`MinionEntryPanel.OnPointerClick`, 이전엔 썸네일 버튼만 반응).
 
 - (2026-11-14) **장착 슬롯(`MinionEquipedSlotPanel`) 클릭**: 미니언 관리 화면 = 정보 창(`MinionInfoCanvas`), 장착 창(`MinionEquipCanvas`) 안 = 그 칸에 장착. 버튼은 코드에서 연결(`slotButton`, 비우면 썸네일 Button). 장착 창 슬롯은 `slotPanels`(비우면 하위 전부).
 - (2026-11-14) **미니언 강화 레벨은 등급별 시작 레벨부터**: C 0 · B 2 · A 4 · S 6 · SS 8 · SSS 10(`MinionData.GetStartEnhanceLevel`). 읽을 때는 `UserMinion.EnhanceLevel`(저장값이 더 낮으면 시작 레벨). **경험치는 레벨업 시 소모**: 표시 = 모인 exp / 이번 레벨 필요량(EnhanceLevelInfo.csv), 최대 레벨이면 `MAX`(`EnhanceExpInfo.IsMaxLevel` = 마지막 칸). 레벨업 = `UserMinionManager.LevelUp`(필요량 차감).
@@ -182,11 +183,18 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - **피해량 비례 크기**: 대상 최대 체력 대비 피해 비율로 1 ~ 1.5배(최대 체력 절반 이상이면 1.5, `AllyUnitDamageData.GetDamageTextSize`).
 - 같은 적 피해 합치기(숫자 누적)는 아직 안 함(보류).
 
+## 피해 집계 (2026-11-17)
+- 미니언이 적에게 준 피해를 **종(key)별로 한 판 누적**(`DamageMeterSystem`, static). **킹 피해는 세지 않음.** 초기화 = `GameManager.StartGame`(부활해도 이어서 셈).
+- 집계 = `Enemy.TakeDamage` 한 곳, **실제로 줄어든 체력**(마무리 일격의 넘친 피해 제외). 출처 = `DamageData.Attacker`(`AllyUnitDamageData.allyUnit`, 아니면 `DamageData.source`). **새 피해 경로를 만들 때 출처를 꼭 넣을 것**: 화상(`FlameEffect` 생성자 source)·번개 연쇄(`chainDamageData.source`)는 넣어 둠. 권능 잔불(`EmberFire`)·`InGameUtil.DamageEnemies`(옛 아이템용)는 출처 없음 → 집계 안 됨.
+- UI: InGame `GameCanvas/Panel/DamageMeterSystemButton`(열기/닫기) 바로 아래 `DamageMeterSystemContainer`(기본 꺼짐) → 장착 5종 = `DamageMeterSystemPanel` 5줄(썸네일·1위 대비 바·피해량 `12.3K`·전체 대비 %), **피해 큰 순서로 정렬**, 켜져 있는 동안 0.5초(실제 시간)마다 갱신.
+
 ## 슬로우 / 빙결 (2026-10-31)
+- (2026-11-19) **빙결은 슬로우 중첩과 분리**: 이동속도 × `IceEffect.slowRate`(얼음 미니언 = `IceMinionData.slowRate` 머지 레벨별 0.7/0.6/0.5/0.4/0.3 = 30~70% 감속, 빙석·얼음 구슬 = 기본 0.7). **중첩 없음 — 다시 걸리면 배율은 강한 쪽(작은 값) 유지, 남은 시간보다 새 시간이 길면 새 시간으로**(예: 0.3 3초 → 2초 후 0.7 3초 = 0.3 유지, 남은 3초). 슬로우 중첩·진흙과는 곱함(`StatusEffectHandler.IceSlowRate`). 아래는 이전 기획.
 - 둘은 **이펙트만 다르고 감속은 같다**(`IceEffect : SlowEffect`). 적중마다 이동속도 ×0.5, **둘을 합쳐 최대 3중첩**(최저 12.5%). 효과가 끝나면 그 효과가 쌓은 중첩만 풀린다.
 - (2026-11-06) **넉백(적 밀어내기, `Enemy.Push`/`PushBehavior`)은 삭제.** 적 이동 방해는 슬로우·빙결·스턴·철벽 막기로만. **스턴은 모든 출처 공통으로 엘리트/보스도 걸리고 시간만 절반**(`StatusEffectHandler.Apply`).
 
 ## 타일 아이템 (2026-10-22)
+- (2026-11-18) **화면에 보이는 이름 = "룬"**("타일 아이템"은 개발용 말). 코드 이름(`TileItem` 등)은 그대로, UI 글씨만: 아이템 이름 `○○ 룬`(ItemData.csv Name), 뽑기 버튼 "룬 뽑기", 설치 = "룬을 새길 칸", 번역 `TileItem_*`·`Achievement.DrawItem`·`Authority_HunterCharmDraw`. 새 문구도 룬으로.
 - 아이템 획득(2026-11-01): `DrawItemButton`으로 코인을 내면 `SelectItemCanvas`가 열린다. **Draw**(확률 연출, `drawDuration` 0이면 생략) → **SelectItem**(TileItem 중 겹치지 않는 랜덤 3개, 반드시 하나 선택) → **SelectTile**(눌러서 설치, 이미 아이템이 있는 타일은 불가). **열려 있어도 게임은 멈추지 않는다**(2026-11-07 확인, 이전엔 일시정지). 설치 칸을 직접 고르는 것이 배치 고민 포인트. PioneerTile은 설치 대신 해제할 막힌 칸을 고름. (이전: 랜덤 1개를 랜덤 타일에 바로 설치)
   - 선택지 갱신(2026-11-04): SelectItem 단계에서 `AdRefreshItemButton`으로 광고를 보면 선택지 3개를 다시 뽑는다(가능하면 지금 보이는 것 제외). **한 판에 2번**(`REFRESH_COUNT_PER_GAME`), 광고 제거 구매자는 광고 없이 갱신.
   - (2026-11-14) 뽑기 가격: **주사위 코인(`KingSlime.diceCoin`) 15개 고정**(`GameSetting.DRAW_ITEM_DICE_COIN_PRICE`, 뽑을수록 오르지 않음, 일반 코인은 안 씀). 장인의 망치 환불도 주사위 코인. (이전: 일반 코인 처음 10, 뽑을 때마다 증가)
@@ -197,13 +205,16 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
   - 레벨별 수치 = ItemData.csv **`Values`** 열(`1.3/1.5/1.7`, 시트 범위 A:G) → `ItemData.levelValues`. 아이템마다 대표 수치 하나에 들어감(`TileItem.ApplyLevelValue`): 스탯 타일 = 배율/증가량, 광폭 = 공격력 배율, 연발 = 추가 발수, 치명타·둔화·스턴 = 확률, 거인 사냥 = 배율, 코인 = 처치 코인, 다중 타겟 = 탄 수. Values가 비면 프리팹 값 그대로. 지금 값은 임시. **설명(Desc)의 `{0}` = 현재 레벨 수치**(`TileItem.GetDescription`, 배율형은 % 증가량: 1.5 → 50).
   - **DiceCoin 0(슬라임 수 증가·최대 버프·개척·만능 공격)·진화 타일은 강화 불가**(버튼 숨김). 최대 레벨이어도 숨김. 강화 가능 아이템은 이름 옆에 `Lv.N`.
   - 유닛이 올라가 있으면 효과를 뺐다가 새 수치로 다시 건다(버프 중복 없음). 테스트 `TileItemUpgradePlayTest`.
+  - (2026-11-18) **판 위에서 레벨이 보이게 아이템이 설치된 타일(칸) 색 변경**(2026-11-19, 이전엔 아이템 그림 색. `TileItem.LEVEL_COLORS` → `Tile.SetItemColor`, 아이템이 빠지면 원래 색 `ResetItemColor`, 임시: Lv1 연두 · Lv2 하늘 · Lv3 금색, 강화 가능 아이템만). 결과는 토스트 대신 **타일 위 글씨 이펙트 "성공!" / "실패.."**(`EffectManager.PlayPopText(pos, PopTextType)`).
+  - 아쉬운 점 논의(2026-11-18): 숫자만 오름·최대 레벨에 질적 변화 없음·확률이 고르는 선택이 아님·실패 보정 없음. 최대 레벨 성질 변화 / 안전·도박 강화 선택 / 실패 보정은 검토 중.
 - 타일 아이템(`TileItem`)은 획득하면 고른 타일에 설치되고, 그 타일에 슬라임이나 캐릭터가 올라와 있는 동안만 효과가 적용된다(`OnEnter`/`OnExit`).
 - 아이템 제거(2026-10-28): 아이템 타일을 선택하면 `TileItemInfoPanel`의 `SellTileItemButton`으로 그 타일 아이템 객체 하나만 판매 → **10코인 고정**(`SELL_TILE_ITEM_PRICE`). 같은 key의 다른 타일 객체는 유지. 판매 후에는 타일 선택 해제(TilePointer 숨김, 위에 유닛이 있어도 동일).
 - **타일 하나에 아이템은 하나만** 설치한다. 설치할 때 위에 오브젝트가 있어도 되고, 그러면 바로 적용된다.
 - 수치는 **타일(객체)마다 고정**이다. 같은 아이템을 또 얻으면 count를 올리지 않고 **객체를 하나 더** 만들어 다른 타일에 설치한다.
 - 스탯 버프형(공격력, 공속, 사거리)과 발사 방식형(BurstShot, MultiTarget, CycleRandomShot) 모두 슬라임과 캐릭터에 적용된다.
   - BurstShot: 공격 후 **같은 방향으로 연발**(`COMBO_ATTACK_INTERVAL_MS` 간격). `BurstShotTileItem.OnFired`가 쏜 탄과 같은 탄(스펙·위치·방향·데미지)을 지연 후 다시 생성한다. 다중 타겟 탄도 탄마다 각각 연발. 추가 탄은 OnFired를 안 거쳐 연발이 연발을 만들지 않음.
-  - MultiTarget: **다중 타겟** = `Minion.ShootCount`에 탄 수를 더한다(탄마다 서로 다른 타겟).
+  - MultiTarget: **다중 타겟** = `Minion.ShootCount`에 탄 수를 더한다(탄마다 서로 다른 타겟). (2026-11-17) **타겟이 겹치지 않음: 서로 다른 타겟이 발사 수보다 적으면 남는 탄은 쏘지 않는다**(이전엔 같은 적을 다시 노림). 미니언 공통(`Minion.Fire`, 머지 레벨 탄 수·사냥꾼 스킬 3타겟 포함)·킹(`Weapon`) 모두.
+    - (2026-11-17) **번개(Lightning)도 같은 규칙: 타겟 +1 = 그 적부터 시작하는 연쇄 한 줄 더.** 연쇄 첫 타겟 = 발사 방향의 적(`LightningBulletObject.FindFirstTarget`). 이전엔 항상 가장 가까운 적부터라 탄마다 똑같은 연쇄가 겹쳐 이펙트만 수십 개 생겼음.
   - CycleRandomShot: **3번째 공격마다 랜덤 타겟**.
 - 2026-10-23 목록 (Key = 클래스명에서 `Item` 뺀 것, ItemData.csv에 행 추가):
   AttackPowerTile(공 +50%), AttackSpeedTile(공속 +30%), BurstShotTile, MultiTargetTile, RangeUpTile(사거리 +2),
@@ -228,10 +239,12 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - 효과가 직관적으로 보여야 한다(범위 칸 하이라이트, 버프 받는 슬라임 표시 등. 아직 미구현).
 
 ## 웨이브 (2026-10-17 phase → wave / 2026-10-18 휴식 10초 부활)
+- **(2026-11-19) 마지막 wave = 80**(`GameSetting.LAST_WAVE`, 보스 wave). **80 보스를 처치하면 게임 클리어**(`GameManager.StartNextWave` → `isCleared` + `EndGame(true)` → ResultCanvas). 클리어 보상 = 80 wave를 모두 넘긴 것으로 계산(골드 80, 경험치 40), 저장 `UserStage.isClear` + 업적 `ClearStage`. **다음 난이도 해금 = 이전 난이도 클리어**(`StageData.IsUnlocked`, 이전: wave 100 도달). 아래 "무한 웨이브"는 이전 기획(wave 종류·보스 주기 규칙은 그대로).
 - **2026-10-30: 무한 웨이브.** 끝 wave 없이 계속 진행, 게임은 사망으로만 끝난다. WaveType은 WaveData(CSV)가 아니라 `GameManager.GetWaveType`이 번호로 결정:
   - wave 번호(waveIdx+1)가 **20의 배수 = 보스**(`BOSS_WAVE_INTERVAL`), **5의 배수 = 엘리트**(`ELITE_WAVE_INTERVAL`), 나머지 = 일반 전투(Battle). 보스 우선.
   - (2026-11-07 확정) 보스는 20 wave마다, **보스 wave에는 엘리트가 나오지 않는다**(보스 우선 → 20/40…은 BossWave만).
   - (2026-11-07) **보스는 체력에 따른 페이즈가 없다.** 스킬(EnemyAttackPattern, 보스 자식)은 여러 개 들 수 있고 어떤 스킬을 쓸지는 보스 행동(`StartBehaviour`)이 정한다(`Boss.GetAttackPattern(key)`). BossPhase·BossPhaseChangedEvent 삭제.
+  - (2026-11-19) **일반 적 처치 코인 = 1 + 20 wave마다 +1**(`GameSetting.KILL_GOLD_WAVE_INTERVAL`, `NormalEnemy.GetKillGold`: wave 1~20 = 1, 21~40 = 2, 41~60 = 3, 61~80 = 4. 이전 10 wave마다) + 10% 확률 주사위 1.
   - (2026-11-09) **엘리트 처치 보상** = 주사위 2 + 골드 `(wave 번호 / 5) × 30`(wave 5 = 30, 10 = 60, 15 = 90…, `EliteEnemy.GetEliteRewardGold`). **보너스 엘리트(버튼 소환) = 주사위 5만**(골드 없음). 구분은 프리팹 `Enemy.enemyType`.
   - 엘리트 wave = 일반 전투 + 엘리트 1마리. (2026-11-07) **엘리트·보너스 엘리트·보스는 항상 Normal 방어 타입**(wave 방어 타입은 일반 적에만 적용). 갑옷·정령 엘리트 프리팹·CSV 행 삭제.
   - 보스 wave는 시간으로 안 넘어감(타이머 0에서 대기). **보스 처치 시 바로 다음 wave** (이전엔 스테이지 클리어).
@@ -263,6 +276,8 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ### 난이도 의도
 - **소환량은 고정: 1초마다 1마리.** 소환 수를 늘리는 방식(PeakCountMul 곡선)은 폐기.
 - **난이도는 적 체력으로만 올린다.** (`Enemy.GetHp`: wave별 상승만. wave 안에서 시간에 따른 체력 상승은 2026-10-17 주석 처리)
+- (2026-11-19) 체력 조정: **기본 체력 +10%**(StageData `EnemyHp` 40/50/60 → 44/55/66) + **20 wave(보스 주기) 구간별 체력 배율을 직접 설정**: StageData.csv `CycleHpMuls`(F열, 난이도마다, `1/1.1/1.21/1.33` = wave 1~20 / 21~40 / 41~60 / 61~80, 칸이 모자라면 마지막 값, 누적이 아니라 그 구간의 배율 그대로) → `StageData.cycleHpMuls`·`GetCycleHpMul`. 비우면 `GameSetting.HP_MUL_PER_BOSS_CYCLE`(1.1)을 구간마다 곱함. 보스 wave는 자기 구간. 
+- (2026-11-19) **보스 체력 배율 0.6 → 80**(일반 적보다 약했음. 엘리트 15). EnemyData.csv에 Boss 행이 없어 에셋 값(`BossData/TigerWraith`)이 그대로 쓰이던 것 → **Boss 행 추가**(`Boss/Normal/80`). 보스가 죽거나 부활로 제거되면 `BossCanvas` 닫음(`BossWave.CloseBossCanvas`).
 - 스폰되는 적의 체력/방어 타입은 **자기를 스폰한 wave 기준** (`Enemy.Spawn(pos, waveIdx)`). 스킵 후 이전 wave가 계속 스폰하는 적은 이전 wave 체력으로 나옴.
 - 전투 웨이브의 특수 스폰(BundleWave 등 랜덤 스포너 호출)은 2026-10-16 제거. 일반 스폰만 사용.
 
@@ -284,6 +299,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 스테이지 (2026-10-30)
 - **난이도(Normal/Hard/Hell)마다 스테이지 하나.** 스테이지 순서(order) 개념 없음, key = 난이도 이름(`Normal`/`Hard`/`Hell`).
 - 에셋은 `AddressableResources/StageData/{난이도}.asset`, 파일명으로 StageData.csv 행(Difficulty)을 찾는다. 적 프리팹은 난이도 공용 `3.Prefabs/Stage/0/Enemy`.
+- (2026-11-19) 해금: Normal은 항상, 그 외는 **한 단계 낮은 난이도 클리어(wave 80 보스 처치, `UserStage.isClear`)**. 아래 wave 100 도달은 이전 기획.
 - (2026-11-08) 해금: Normal은 항상, 그 외는 **한 단계 낮은 난이도에서 wave 100(표시 번호) 이상 도달**(`StageData.UNLOCK_WAVE`, 저장값 `maxWave`는 waveIdx라 99 이상). Normal 100 → Hard, Hard 100 → Hell. 잠긴 난이도는 시작 버튼을 눌러도 토스트만.
 - (2026-11-09) 난이도 선택 창(`SelectDifficultyCanvas`): 버튼마다 이름(`Difficulty.{난이도}`) + 설명(잠김 = 해금 조건 / 열림 = 최고 기록 wave, 기록 없으면 "기록 없음"). 잠긴 난이도도 선택은 가능(시작만 막힘). 닫기 버튼은 코드에서 연결.
 - 이전 저장 데이터의 `{난이도}_0` 기록은 새 key로 옮기고, `_1~_4` 기록은 버린다(`UserStageManager.MigrateStageKeys`).
@@ -307,7 +323,9 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 
 ## 에너지 (2026-11-12)
 - **게임 시작(로비 전투 버튼)마다 에너지 5 소모**(`GameSetting.PLAY_COST_ENERGE`, `EnergeManager.TryUsePlayCost`). 모자라면 시작하지 않고 토스트(`Energe_NotEnough`)만.
-- **10분마다 1 충전**(`EnergeManager.CHARGE_INTERVAL_MINUTES`, 꺼져 있던 시간도 계산), 자동 충전은 **최대 30**(`MAX_ENERGE`)까지만. **구매·보상으로 받은 에너지는 30을 넘겨 쌓인다.**
+- **5분마다 1 충전**(2026-11-19, 이전 10분. `EnergeManager.CHARGE_INTERVAL_MINUTES`), 자동 충전은 **최대 30**(`MAX_ENERGE`)까지만. **구매·보상으로 받은 에너지는 30을 넘겨 쌓인다.**
+  - (2026-11-19) **자리 비운 시간도 충전**: 기준 = 마지막 충전 시각(PlayerPrefs `Energe_LastChargeTime`, 실제 기기 시간). 앱을 껐다 켜거나 **백그라운드(포커스 잃음) → 복귀** 시 흐른 시간만큼 한 번에 충전하고 **토스트 "자리를 비운 동안 에너지 N 충전!"**(`Energe_OfflineCharged`, 실제로 오른 경우만). 켜져 있는 동안은 1초마다 실제 시간으로 확인(timeScale·배속 무관, 토스트 없음).
+  - 최대 이상이면 타이머는 계속 "지금"으로 → 에너지를 쓴 시점부터 5분. 기기 시간을 되돌리면 지금부터 다시 셈. 남은 시간 = `EnergeManager.RemainTimeToNextCharge`(표시 UI는 아직 없음).
 - **`BuildSetting.ignoreEnerge`(테스트용)**: 체크하면 에너지를 항상 최대로 취급 — 차감 안 함, 표시도 최대(`EnergeManager.Current`), **저장값은 그대로**라 끄면 원래 값. 자동 테스트는 설정과 상관없이 실제 차감(`EnergeManager.DisableIgnoreForTest`).
 - 테스트 `EnergeRuleTest`, `GameCyclePlayTest`(부족 시 시작 안 함·시작 시 차감).
 
@@ -386,11 +404,15 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 - **미니언 공격 소리 = 종마다 `MinionData.attackSfx`(SFXData, 에셋 인스펙터)**, AudioClip이 비면 공통 `SFXType.MinionAttack`(`SoundManager.PlaySound(SFXData, fallback)`). 재생 시점 = 공격 모션과 같음(`Minion.Update`에서 공격 성공 + `UseFindTarget`일 때 `PlayAttackSound`) → 회전체·경로 순환(Orbit·Mud·Shield)은 공격 소리 없음(적중 소리는 따로).
 - (2026-11-16) SFX 칸 전부 = **Universal Sound FX에서 고른 임시 소리**(복사본 `Assets/7.Sounds/SFX/`, 새 guid). 귀여운 톤 위주(RETRO·CARTOON·PUZZLE), 자주 나는 소리(적중·코인·처치·공격)는 볼륨 낮게 + minInterval + pitchRandom.
 - (2026-11-16) **SFX 종류는 클립이 있는 것만 둔다**: 안 쓰기로 한 PopupClose·DragStart·DrawItemFail·ItemSelectAppear·ItemSelect는 enum에서 삭제(87종). 빈 칸으로 남겨 두지 않음.
+- (2026-11-17) 클립이 비어 있던 31종(Hit*·Status*·EliteDead·King*·IceHit·HailSpawn·Bounce·ShieldBlock·BerserkerStack·Joker 카드 4종·DarknessOpen·BuffReceive·WaveStart·EliteAppear·CardShake/RevealHighGrade·ExpBarFill·TutorialNext) 삭제 → **56종**. 프리팹 칸은 이름 기준으로 다시 맞춤. `7.Sounds`에서 어디에도 참조되지 않는 소리 파일 93개 삭제(지금 쓰는 파일 = `7.Sounds` 루트·`SFX`·`SFX2`). 서드파티 팩(Universal Sound FX, FREE CASUAL PACK)은 그대로.
+- (2026-11-19) **사운드 팩 원본은 git에 올리지 않는다**(`.gitignore`: `Assets/Universal Sound FX/`, `Assets/SoundPackage/`). 쓸 소리는 `Assets/7.Sounds`로 **복사해서** 연결(팩 파일을 직접 참조하면 다른 PC에서 소리가 빠짐).
+- (2026-11-17) **게임 코드에서 재생 = `SoundManager.Play(SFXType.X)`**(static, SoundManager 없으면 무시). **루프 소리(지옥불·레이저) = `SoundManager.SetLoop(type, owner, on)`**: owner가 여럿이어도 첫 owner가 켜면 재생, 마지막 owner가 끄면 정지 → owner는 꺼질 때(OnDisable) 반드시 off.
 - (2026-11-16) **BGM은 로비·인게임 2종뿐**(`BGMType` Lobby/InGame). 엘리트·보스 wave·튜토리얼·실패·결과 BGM은 없음(만들지 않음).
-- 그 외에는 아직 Click만 게임 코드에서 재생(나머지 위치 연결은 소리 파일이 준비된 뒤).
+- (2026-11-17) **56종 모두 게임 코드에 연결.** 창 열기 소리는 `CanvasUI.OpenCanvas`(꺼져 있다 켜질 때만) → `PlayOpenSound()` 기본 = PopupOpen. **팝업이 아니거나 자기 소리가 있는 창은 재정의**(빈 재정의: WaveWarning·WayPointer·Boss·Fail·Result·SelectItem·BlockCanvas / 다른 소리: DrawResultCanvas = ChestOpen, UserLevelUpCanvas = UserLevelUp). 새 창을 만들 때도 확인. 버서커는 공통 공격 소리 대신 `PlayAttackSound` 재정의로 BerserkerHit. 탭 버튼 = TabChange. BGM: 로비 `LobbyManager.Start`, 인게임 `GameManager`(페이드 콜백에서 한 번 더, SoundManager.Start가 늦게 Lobby를 틀 수 있어서). 처치 코인 외 코인(시작·wave 종료·판매·조커·시체수집)과 성장·변신으로 교체된 미니언 등장은 소리 없음.
 
 ## 테스트 (2026-11-07)
 - (2026-11-15) **수동 테스트 창 `Tools/Test/Minion Test`**(`Test/Editor/MinionTestWindow`, 에디터 전용, InGame Play 중): 미니언 key·머지 레벨·진화·칸 지정 소환, 선택한 미니언 스탯·버프·스킬 진행도 + **쿨타임 채우기**(`Minion.FillSkillForTest`, 스킬 미니언마다 재정의: 시간형 = 다 참, 횟수형 = 1회 남김), 킹 무적·코인 무한·속도, wave 이동·적 종류/방어 타입 소환·적 정지(허수아비), 선택 칸 타일 아이템 설치·레벨·제거. 값은 EditorPrefs. 기기용 `TestCanvas`(배속·골드·다음 wave)는 그대로. **새 스킬 미니언을 만들면 `FillSkillForTest`도 재정의.**
+- (2026-11-17) **타일 아이템 수동 테스트 창 `Tools/Test/TileItem Test`**(`Test/Editor/TileItemTestWindow`): 6*6 칸 판에서 칸을 직접 고름(빈 칸·막힌 칸도 가능, 필드 클릭 선택과 무관) → 아이템을 **원하는 레벨로 설치**(설치 후 확정 강화)·교체·레벨 +1·제거·막힘 풀기, 그 칸에 미니언 올려 스탯·탄 수·버프 확인. 개척(막힌 칸 선택)·슬라임 수 증가(칸 없이 획득)는 방식에 맞는 버튼. 보유 목록·빈 칸 전부 설치·전부 제거, 뽑기 확률/후보 수·선택 창/뽑기 창 열기, 무적·코인 무한·속도·적 소환(`MinionTestWindow.SpawnEnemies` 공용)·적 정지.
 - **테스트는 메인 에디터가 아니라 테스트 전용 복사본(`~/KingSlime-Test`, git worktree)에서 돌린다** (2026-11-08). `Tools/run-tests.sh [필터]` = 메인의 커밋 + 작업 중 변경을 복사본에 동기화(`Tools/sync-test-project.sh`) → 복사본 에디터가 열려 있으면 그 에디터에서, 아니면 배치모드로 실행. 백그라운드로 돌리고 끝나면 결과를 알려준다. 메인 씬·저장 파일을 건드리지 않으므로 작업 중에도 가능.
 - EditMode 테스트는 `Assets/Tests/Editor/`(asmdef 없음 → `Assembly-CSharp-Editor`라서 게임 코드를 바로 참조). 게임 스크립트에 asmdef가 없으므로 테스트에도 asmdef를 만들지 않는다.
 - 기획 규칙은 **씬·싱글톤 없이 계산할 수 있는 static 함수**로 빼서 테스트한다(예: `Minion.CanMerge`, `SacrificeMinion.CanSacrificeMerge`, `DrawItemButton.GetDrawChance(int)`). 기획이 바뀌면 `GameRuleTest.cs`의 기대값도 같이 고친다.
@@ -420,6 +442,7 @@ Claude가 기획 의도를 유지하기 위한 문서. 기획이 바뀌거나 �
 ## 데이터 파이프라인
 - (2026-11-16) **`EffectType` 같은 enum은 프리팹·에셋에 번호로 저장되므로 항상 맨 뒤에만 추가**(중간에 넣으면 기존 프리팹 값이 다른 항목을 가리킴. 다크니스 이펙트가 사라졌던 원인).
 - 이펙트 글씨 색은 **회색 금지**: 밝은 회색 타일 위에서 안 보임.
+- (2026-11-18) **튀어나오는 글씨는 공용 `EffectManager.PlayPopText`**: 자유 글씨·색 = `(pos, text, color)`, 자주 쓰는 문구 = `(pos, PopTextType)` 프리셋(글씨 = 번역 `PopText_{종류}`, 색 = `GetPopTextColor`). 새 프리셋은 enum + 번역 key + 색만 추가.
 - (2026-11-08) **번역**: `Json/Translate.csv`(시트 Key / Kr / En) → DataTableImporter(`Tools/Data/Import TranslateData`, Play 시 자동) → `Resources/TranslateData.asset` → `TranslateManager.GetText`가 처음 호출될 때 로드. 한국어 기기 = Kr, 그 외 = En, 칸이 비면 Kr로 대체, key가 없으면 `*key`. 코드에서 보여주는 문구는 한글 리터럴 대신 key로(조합 key: `Difficulty.{난이도}`, `Minion.{Key}`/`Minion.{Key}.Desc`, `{StatType}_title`, `Grade.{등급}`). `TranslateDataTest`가 코드 key가 시트에 다 있는지 검사. (2026-11-12) **로비 씬의 고정 글씨(제목·탭·버튼 이름 등, 코드가 참조하지 않는 TMP_Text)는 `TranslateText`(key, `formatArg` = 번역문 `{0}` 자리)** 로 출력, 언어를 바꾸면 꺼져 있는 창까지 다시 그림. 업적 패널 버튼 글씨는 프리팹(`DailyAchievementPanel`/`CumulativeAchievementPanel`)에 붙임. 새 고정 글씨를 놓으면 TranslateText + 시트 key도 추가(`SettingPlayTest`가 key 존재·언어 변경 반영 검사). BGM·SFX·ON/OFF·DISCORD·BEST·NEW·WAVE·MY·PLAY처럼 두 언어가 같은 글씨와 Layer Lab 샘플 UI(Progression_Pass2, Shop_List, Character_Hero_List)는 제외. InGame 씬은 아직 미적용. 슬라임 설명 중 CSV Desc를 그대로 쓰는 종(Bounce, Orbit 등)과 아이템 이름·설명(ItemData.csv)은 아직 번역 안 됨.
 - **MinionData 배열 필드(bounces, shootCounts 등)는 에셋에 직렬화된 값이 코드 초기값보다 우선.** 코드 기본값만 바꾸면 기존 에셋엔 반영 안 됨 → 에셋도 같이 수정.
 - 기획 데이터는 `Assets/Json/**/*.csv`(엑셀 → TSV). 에디터에서 `LoadData`(DataTableImporter)를 실행해야 에셋(`AddressableResources`)에 반영됨.

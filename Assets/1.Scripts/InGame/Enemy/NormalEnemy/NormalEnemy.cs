@@ -37,6 +37,9 @@ public class NormalEnemy : Enemy
         this.state = state;
     }
 
+    // 처치 코인 = 1 + KILL_GOLD_WAVE_INTERVAL(20) wave마다 +1 (waveIdx 기준: wave 1~20 = 1, 21~40 = 2, 41~60 = 3, 61~80 = 4)
+    public static int GetKillGold(int waveIdx) => 1 + Mathf.Max(0, waveIdx) / GameSetting.KILL_GOLD_WAVE_INTERVAL;
+
     public override void Reward()
     {
         if (Random.Range(0f, 10f) < 1)
@@ -44,8 +47,9 @@ public class NormalEnemy : Enemy
             KingSlime.Instance.AddDiceCoin(1);
             DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{1}");    
         }
-        int gold = 1+ Mathf.RoundToInt(wave/10);
+        int gold = GetKillGold(wave);
         KingSlime.Instance.AddCoin(gold);
+        SoundManager.Play(SFXType.CoinGet);
         CoinText.Instantiate().SetCoinText(transform.position, $"+{gold}");
     }
 

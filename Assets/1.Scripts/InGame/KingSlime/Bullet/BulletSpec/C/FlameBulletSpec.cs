@@ -46,7 +46,7 @@ public class ChanceBurnBehavior : IBulletBehavior
         if (Random.value < chance)
         {
             Debug.Log($"화상 적용! (지속시간: {duration}s, DPS: {dps})");
-            hit.ApplyStatusEffect(new FlameEffect(duration, dps));
+            hit.ApplyStatusEffect(new FlameEffect(duration, dps, (bullet as AllyBulletObject)?.allyUnitDamageData?.allyUnit));
 
         }
 

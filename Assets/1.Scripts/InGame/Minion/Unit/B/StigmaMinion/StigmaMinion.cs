@@ -55,6 +55,7 @@ public class StigmaMinion : MinionGrowth1
         PlaySkillAnim();
         if (EffectManager.Instance != null)
             EffectManager.Instance.Play(EffectType.Stigma, transform.position);
+        SoundManager.Play(SFXType.StigmaSkill);
     }
 
     public override AllyBulletObject GetBullet()

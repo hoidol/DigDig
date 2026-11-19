@@ -4,8 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Flame", menuName = "MinionData/C/Flame")]
 public class FlameMinionData : EnhanceMinionData
 {
-    public float burnDuration = 4;
-    public float[] burnDPSES = {1, 2, 3, 4, 5f};
+    public float burnDuration = 5;
+    public float[] burnDPSES = {2, 3, 4, 5, 6f};
     #if UNITY_EDITOR
     public override void LoadData()
     {

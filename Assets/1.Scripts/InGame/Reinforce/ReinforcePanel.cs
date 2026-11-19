@@ -50,12 +50,14 @@ public class ReinforcePanel : MonoBehaviour
         int price = GetPrice();
         if (KingSlime.Instance.coin < price)
         {
+            SoundManager.Play(SFXType.Fail_NotEnough);
             ToastCanvas.Toast(TranslateManager.GetText("Not enough coin"));
             return;
         }
 
         KingSlime.Instance.AddCoin(-price);
         KingSlime.Instance.statMgr.LevelUpMinion(minionData.key);
+        SoundManager.Play(SFXType.Reinforce);
         AchievementManager.Report(AchievementType.UpgradeReinforce);
         SetMinionData(minionData);
         PlayReinforcedEffects(minionData.key);

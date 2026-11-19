@@ -69,15 +69,46 @@ public class WaveTypeTest
 
 public class StageUnlockTest
 {
-    // 낮은 난이도에서 wave 100(waveIdx 99) 이상 도달해야 다음 난이도 해금
-    [TestCase(0, false)]
-    [TestCase(49, false)]
-    [TestCase(98, false)]  // wave 99
-    [TestCase(99, true)]   // wave 100
-    [TestCase(150, true)]
-    public void IsUnlockWave(int lowDifficultyMaxWave, bool expected)
+    // 낮은 난이도를 클리어(마지막 wave 80 보스 처치)해야 다음 난이도 해금. 도달만으로는 안 열림
+    [Test]
+    public void UnlockNeedsClear()
     {
-        Assert.AreEqual(expected, StageData.IsUnlockWave(lowDifficultyMaxWave));
+        Assert.IsFalse(StageData.IsUnlocked(null));
+        Assert.IsFalse(StageData.IsUnlocked(new UserStage { maxWave = GameSetting.LAST_WAVE - 1 }));
+        Assert.IsTrue(StageData.IsUnlocked(new UserStage { maxWave = GameSetting.LAST_WAVE - 1, isClear = true }));
+    }
+
+    // 일반 적 처치 코인: 20 wave마다 +1 (표시 wave 1~20 = 1, 21 = 2, 80 = 4)
+    [TestCase(0, 1)]
+    [TestCase(19, 1)]
+    [TestCase(20, 2)]
+    [TestCase(39, 2)]
+    [TestCase(40, 3)]
+    [TestCase(79, 4)]
+    public void KillGoldPer20Waves(int waveIdx, int expected)
+    {
+        Assert.AreEqual(expected, NormalEnemy.GetKillGold(waveIdx));
+    }
+
+    // 빙결: 머지 레벨별 배율 0.7~0.3, 다시 걸리면 강한 배율 유지 + 시간은 긴 쪽 (0.3 3초 → 2초 후 0.7 3초 = 0.3, 남은 3초)
+    [Test]
+    public void IceSlow_KeepStrongerAndLonger()
+    {
+        CollectionAssert.AreEqual(new[] { 0.7f, 0.6f, 0.5f, 0.4f, 0.3f }, UnityEngine.ScriptableObject.CreateInstance<IceMinionData>().slowRate);
+        Assert.AreEqual(0.3f, IceEffect.Merge(0.3f, 0.7f));
+        Assert.AreEqual(0.3f, IceEffect.Merge(0.7f, 0.3f));
+        Assert.AreEqual(3f, IceEffect.MergeRemain(1f, 3f));
+        Assert.AreEqual(2.5f, IceEffect.MergeRemain(2.5f, 1f));
+    }
+
+    // 마지막 wave = 80 (waveIdx 79), 보스 wave
+    [Test]
+    public void LastWaveIs80Boss()
+    {
+        Assert.AreEqual(80, GameSetting.LAST_WAVE);
+        Assert.IsFalse(GameManager.IsLastWave(78));
+        Assert.IsTrue(GameManager.IsLastWave(79));
+        Assert.AreEqual(WaveType.Boss, GameManager.GetWaveType(79));
     }
 }
 
@@ -305,13 +336,22 @@ public class EnergeRuleTest
     }
 
     [Test]
-    public void ChargesOnePerTenMinutes()
+    public void ChargesOnePerFiveMinutes()
     {
-        Assert.AreEqual(10, EnergeManager.CHARGE_INTERVAL_MINUTES);
-        Assert.AreEqual(0, EnergeManager.GetChargeCount(9.9));
-        Assert.AreEqual(1, EnergeManager.GetChargeCount(10));
-        Assert.AreEqual(3, EnergeManager.GetChargeCount(35));
+        Assert.AreEqual(5, EnergeManager.CHARGE_INTERVAL_MINUTES);
+        Assert.AreEqual(0, EnergeManager.GetChargeCount(4.9));
+        Assert.AreEqual(1, EnergeManager.GetChargeCount(5));
+        Assert.AreEqual(7, EnergeManager.GetChargeCount(35));
         Assert.AreEqual(0, EnergeManager.GetChargeCount(-20)); // 기기 시간을 되돌린 경우
+    }
+
+    // 자리 비운 동안 충전: 최대(30)까지만, 이미 넘었으면 0
+    [Test]
+    public void OfflineChargeClampsToMax()
+    {
+        Assert.AreEqual(3, EnergeManager.GetAddableCount(10, 3));
+        Assert.AreEqual(2, EnergeManager.GetAddableCount(GameSetting.MAX_ENERGE - 2, 100));
+        Assert.AreEqual(0, EnergeManager.GetAddableCount(GameSetting.MAX_ENERGE + 5, 3));
     }
 
     // 다크니스 변환: 성공 시 10% 확률로 머지 레벨 +1, 최대 레벨이면 그대로

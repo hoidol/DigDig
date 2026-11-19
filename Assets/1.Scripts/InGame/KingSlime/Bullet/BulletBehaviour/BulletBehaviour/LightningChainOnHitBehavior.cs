@@ -49,6 +49,7 @@ public class LightningChainOnHitBehavior
         if (lightningBullet != null && lightningBullet.lineRenderer != null && points.Count > 1)
         {
             bullet.direction = Vector2.zero;
+            SoundManager.Play(SFXType.LightningChain);
             lightningBullet.StartCoroutine(ShowLine(lightningBullet, points, hitTargets));
             return false;
         }
@@ -76,6 +77,7 @@ public class LightningChainOnHitBehavior
         DamageData chainDamageData = new DamageData();
         chainDamageData.damage = damage;
         chainDamageData.attackType = bullet.allyUnitDamageData.attackType;
+        chainDamageData.source = bullet.allyUnitDamageData.allyUnit; // 피해 집계용
 
         for (int i = 1; i < points.Count; i++)
         {

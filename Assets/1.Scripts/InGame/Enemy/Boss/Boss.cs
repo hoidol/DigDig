@@ -29,6 +29,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     {
         EnterBossState(BossState.Intro);
         base.Spawn(pos, wave);
+        SoundManager.Play(SFXType.BossAppear);
         GameEventBus.Publish(new BossSpawnEvent(this));
     }
 

@@ -66,6 +66,7 @@ public class GrowUpMinion : MinionGrowth1
             return;
 
         isGrown = true;
+        SoundManager.Play(SFXType.GrowUp);
         int lv = Mathf.Min(mergeLevel + growLevelUp, MinionData.MAX_MERGE_LEVEL);
         MinionFieldController.Instance.ReplaceMinion(this, growKey, lv);
     }

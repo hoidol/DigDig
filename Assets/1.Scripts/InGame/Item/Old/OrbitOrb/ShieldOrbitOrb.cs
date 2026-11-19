@@ -57,6 +57,7 @@ public class ShieldOrbitOrb : OrbitOrb
         blocked.Add(new Blocked { enemy = enemy, spawnId = enemy.SpawnId });
         enemy.AddBlocker();
         UpdateRotation();
+        SoundManager.Play(SFXType.OrbitHit);
         OnHit(null, enemy); // 막는 순간 1번
     }
 

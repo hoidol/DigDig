@@ -62,6 +62,7 @@ public class DailyAchievementManager : SubAchievementManager
             return;
 
         achievementData.rewardData.Receive();
+        SoundManager.Play(SFXType.AchievementReward);
         userDailyAchievement.getReward = true;
         userDailyAchievementManager.SaveData();
     }

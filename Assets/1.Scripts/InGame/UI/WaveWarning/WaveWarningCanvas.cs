@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class WaveWarningCanvas : CanvasUI<WaveWarningCanvas>
 {
+    protected override void PlayOpenSound() { } // 팝업이 아님
     // public Transform directionTr;
     // public Transform surroundTr;
     public float showTime = 4f; // 경고 표시 시간(초)

@@ -258,6 +258,8 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     public void AddDiceCoin(int count)
     {
         diceCoin += count;
+        if (count > 0)
+            SoundManager.Play(SFXType.DiceCoinGet);
         GameEventBus.Publish(new DiceCoinEvent(diceCoin));
     }
 

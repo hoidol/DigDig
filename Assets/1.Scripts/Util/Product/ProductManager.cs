@@ -56,6 +56,7 @@ public class ProductManager : MonoSingleton<ProductManager>
         if (!UserDataManager.Instance.TryUseCurrency(productData.currencyType, Mathf.RoundToInt(productData.price)))
         {
             ToastCanvas.Toast($"Not enough {productData.currencyType}");
+            SoundManager.Play(SFXType.Fail_NotEnough);
             success?.Invoke(false);
             return;
         }

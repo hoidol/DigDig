@@ -137,9 +137,10 @@ public abstract class Weapon : MonoBehaviour, IGun
         if (count > 1)
         {
             List<Transform> targets = InGameUtil.FindTargets(transform.position, KingSlime.Instance.statMgr.AttackRange + 0.3f, targetLayerMask, KingSlime.Instance.findTargetType, count);
-            for (int i = 1; i < count && targets.Count > 0; i++)
+            // 추가 타겟이 없으면 추가 탄은 쏘지 않음 (같은 적을 다시 노리지 않음)
+            for (int i = 1; i < Mathf.Min(count, targets.Count); i++)
             {
-                Transform target = targets[i % targets.Count];
+                Transform target = targets[i];
                 Vector2 d = ((Vector2)(target.position - transform.position)).normalized;
                 Shoot(bullet, d);
             }

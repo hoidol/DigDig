@@ -38,6 +38,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         Debug.Log($"[Evolve] {key} 진화 (머지 레벨 {mergeLevel})");
         OnEvolve();
         UpdateMinion();
+        SoundManager.Play(SFXType.Evolve);
     }
 
     protected virtual void OnEvolve()
@@ -89,7 +90,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
     public void PlayAttackAnim() => SetAnimTrigger(ANIM_ATTACK);
     // 공격 소리: MinionData.attackSfx, 클립이 없으면 공통 SFXType.MinionAttack
-    public void PlayAttackSound()
+    public virtual void PlayAttackSound()
     {
         SoundManager soundManager = SoundManager.Instance;
         if (soundManager != null)
@@ -102,6 +103,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     public void PlayPowerUpEffect(float duration)
     {
         StopPowerUpEffect();
+        SoundManager.Play(SFXType.PowerUp);
         if (EffectManager.Instance == null)
             return;
         powerUpEffect = EffectManager.Instance.GetEffect(EffectType.PowerUp) as ParticleEffect;
@@ -446,10 +448,10 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         }
         else
         {
-            // 타겟이 발사 수보다 적으면 앞 타겟부터 다시 순환
-            for (int i = 0; i < count; i++)
+            // 탄마다 서로 다른 타겟. 타겟이 발사 수보다 적으면 남는 탄은 쏘지 않음 (같은 적을 다시 노리지 않음)
+            for (int i = 0; i < Mathf.Min(count, targets.Count); i++)
             {
-                Transform target = targets[i % targets.Count];
+                Transform target = targets[i];
                 dirs.Add(((Vector2)(target.position - transform.position)).normalized);
             }
         }

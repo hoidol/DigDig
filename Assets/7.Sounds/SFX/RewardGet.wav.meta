@@ -1,7 +1,14 @@
 fileFormatVersion: 2
-guid: 65c557aff4c34441932587afad0134ca
+guid: ffb159a21c8a04135a5616979c828fab
+labels:
+- Audio
+- Casual
+- Sound
+- SFX
+- Effect
+timeCreated: 1453238771
+licenseType: Store
 AudioImporter:
-  externalObjects: {}
   serializedVersion: 6
   defaultSettings:
     loadType: 0
@@ -15,15 +22,14 @@ AudioImporter:
   normalize: 1
   preloadAudioData: 1
   loadInBackground: 0
-  ambisonic: 0
   3D: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 
 AssetOrigin:
   serializedVersion: 1
-  productId: 17256
-  packageName: Universal Sound FX
-  packageVersion: 1.6
-  assetPath: Assets/Universal Sound FX/MONEY_CASH_CURRENCY/SLOT_MACHINE_Win_Dispense_Coins_03_mono.wav
-  uploadId: 736765
+  productId: 54116
+  packageName: FREE Casual Game SFX Pack
+  packageVersion: 1.1
+  assetPath: Assets/Casual Game Sounds U6/CasualGameSounds/DM-CGS-21.wav
+  uploadId: 688818

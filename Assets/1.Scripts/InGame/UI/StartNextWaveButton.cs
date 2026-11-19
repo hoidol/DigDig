@@ -33,6 +33,7 @@ public class StartNextWaveButton : MonoBehaviour
             return;
 
         childObject.SetActive(false);
+        SoundManager.Play(SFXType.NextWaveButton);
         GameManager.Instance.StartNextWave();
     }
 }

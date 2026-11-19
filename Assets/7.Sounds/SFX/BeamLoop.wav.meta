@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: c98f59f24d644d8fab2b1cc1dc5a813c
+guid: 76f3d64209c0f6e4cb931763b799b79d
 labels:
 - usfx
 - imphenzia
-- electricity
+- weapon
 - energy
-- loop
-- mono
 - beam
-- force
-- force field
-- distortion
+- laster
+- electricity
+- power
+- mono
+- loop
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
@@ -36,5 +36,5 @@ AssetOrigin:
   productId: 17256
   packageName: Universal Sound FX
   packageVersion: 1.6
-  assetPath: Assets/Universal Sound FX/ELECTRICITY/ELECTRICITY_Subtle_loop_mono.wav
+  assetPath: Assets/Universal Sound FX/WEAPONS/SciFi/Energy_Beams/WEAPON_Energy_Beam_05_loop_mono.wav
   uploadId: 736765

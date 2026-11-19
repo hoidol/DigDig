@@ -70,6 +70,9 @@ public class BerserkerMinion : MinionGrowth1
             attackTimer = 0;
     }
 
+    // 공통 공격 소리 대신 근접 타격 소리 (공격 성공 시 Minion.Update가 1번 부름)
+    public override void PlayAttackSound() => SoundManager.Play(SFXType.BerserkerHit);
+
     void MeleeHit(IHittable hittable, Vector2 dir)
     {
         TileItem tileItem = shotModifier.tileItem;

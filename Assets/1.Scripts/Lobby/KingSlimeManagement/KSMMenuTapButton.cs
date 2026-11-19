@@ -6,7 +6,7 @@ public class KSMMenuTapButton : TapButton
     
     public override void OnClickedBtn()
     {
-        SoundManager.Instance.PlaySound(SFXType.Click);
+        SoundManager.Play(SFXType.TabChange);
         GetComponentInParent<KSManagementCanvas>().SelectMenu(menuType);
     }
 }

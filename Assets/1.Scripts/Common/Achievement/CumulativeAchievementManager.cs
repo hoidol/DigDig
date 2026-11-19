@@ -66,6 +66,7 @@ public class CumulativeAchievementManager : SubAchievementManager
             return;
 
         achievementData.rewardData.Receive();
+        SoundManager.Play(SFXType.AchievementReward);
 
         UserCumulativeAchievement userCumulative = achievementData.GetUserAchievement() as UserCumulativeAchievement;
         int goal = achievementData.GetGoal();

@@ -19,13 +19,14 @@ public class BossWave : Wave
         isEnd = true;
     }
 
-    // 보스 처치 → wave 종료 후 바로 다음 wave (무한 웨이브)
+    // 보스 처치 → wave 종료 후 바로 다음 wave (마지막 wave 보스면 StartNextWave가 게임 클리어)
     void OnBossDeadEvent(BossDeadEvent e)
     {
         if (e.boss != boss)
             return;
         boss = null;
         GameEventBus.Unsubscribe<BossDeadEvent>(OnBossDeadEvent);
+        CloseBossCanvas();
 
         if (KingSlime.Instance.CurHp <= 0)
             return;
@@ -40,7 +41,17 @@ public class BossWave : Wave
     {
         GameEventBus.Unsubscribe<BossDeadEvent>(OnBossDeadEvent);
         if (boss != null)
+        {
             Destroy(boss.gameObject);
+            CloseBossCanvas();
+        }
+    }
+
+    // 보스 체력 창 닫기 (보스 처치 / 부활로 보스 제거)
+    static void CloseBossCanvas()
+    {
+        if (BossCanvas.Instance != null && BossCanvas.Instance.gameObject.activeSelf)
+            BossCanvas.Instance.CloseCanvas();
     }
 
 }

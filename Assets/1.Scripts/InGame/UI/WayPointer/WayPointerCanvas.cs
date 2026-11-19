@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WayPointerCanvas : CanvasUI<WayPointerCanvas>
 {
+    protected override void PlayOpenSound() { } // 팝업이 아님
     // [SerializeField] Camera uiCamara;
     // [SerializeField] Transform targetTr;
     // [SerializeField] RectTransform pointerRectTr;

@@ -39,6 +39,7 @@ public class Coin : MonoBehaviour, IPickable
     public void PickedUp()
     {
         KingSlime.Instance.AddCoin(1);
+        SoundManager.Play(SFXType.CoinGet);
         poolingSystem.Return(this);
     }
 

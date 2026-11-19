@@ -18,6 +18,7 @@ public class SellTileItemButton : ButtonUI
 
         KingSlime.Instance.RemoveItem(item);
         KingSlime.Instance.AddCoin(GameSetting.SELL_TILE_ITEM_PRICE);
+        SoundManager.Play(SFXType.ItemSell);
         MinionFieldController.Instance.DeselectTile();
     }
 }

@@ -76,3 +76,7 @@ unity_project/build
 # Universal Sound FX asset store package (not tracked in git)
 [Aa]ssets/Universal Sound FX/
 [Aa]ssets/Universal Sound FX.meta
+
+# 사운드 에셋 팩 (원본 보관용, git 제외). 게임에서 쓰는 소리는 Assets/7.Sounds에 복사해서 사용
+[Aa]ssets/SoundPackage/
+[Aa]ssets/SoundPackage.meta

@@ -43,6 +43,7 @@ public class OrbitOrb : MonoBehaviour
         if (hitCooldowns.Exists(h => h.hittable == hittable)) return;
 
         hitCooldowns.Add(new HitCooldown { hittable = hittable, cooltime = HIT_COOLDOWN });
+        SoundManager.Play(SFXType.OrbitHit); // 닿을 때 1번 (진흙 스플래시 대상마다 X)
         OnHit(other, hittable);
     }
 

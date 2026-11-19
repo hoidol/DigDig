@@ -15,6 +15,7 @@ public class Tile : MonoBehaviour
 
     Image image;
     Sprite defaultSprite; // 씬에 지정된 원래 타일 이미지 (TileManager.baseTile이 없을 때 사용)
+    Color defaultColor = Color.white; // 씬에 지정된 원래 타일 색 (아이템이 빠지면 이 색으로)
 
     Image TileImage
     {
@@ -24,7 +25,10 @@ public class Tile : MonoBehaviour
             {
                 image = GetComponent<Image>();
                 if (image != null)
+                {
                     defaultSprite = image.sprite;
+                    defaultColor = image.color;
+                }
             }
             return image;
         }
@@ -97,7 +101,23 @@ public class Tile : MonoBehaviour
             UnlinkTileItem(tileObject);
         }
         tileItem = null;
+        ResetItemColor(); // 아이템이 빠지면 타일 색 원래대로
         GameEventBus.Publish(new TileItemChangedEvent(this));
+    }
+
+    // 설치된 타일 아이템의 강화 레벨 색 (TileItem.ApplyLevelColor). 타일 이미지 색만 바꾸고 아이템 그림은 그대로
+    public void SetItemColor(Color color)
+    {
+        Image img = TileImage;
+        if (img != null)
+            img.color = color;
+    }
+
+    public void ResetItemColor()
+    {
+        Image img = TileImage; // 먼저 읽어야 defaultColor가 채워짐
+        if (img != null)
+            img.color = defaultColor;
     }
 
     // 유닛이 발사할 때 이 타일 아이템의 OnFired를 부를 수 있도록 연결

@@ -50,7 +50,11 @@ public class KSUpgradePanel : MonoBehaviour
     public void OnClickedUpgradeButton()
     {
         if (!UserDataManager.Instance.userKingSlimeManager.TryUpgrade(upgradeType))
+        {
+            SoundManager.Play(SFXType.Fail_NotEnough);
             return;
+        }
+        SoundManager.Play(SFXType.KingUpgrade);
 
         // 재화가 줄어 다른 패널 버튼 상태도 바뀌고, 능력치 표시도 바뀌므로 캔버스 전체 갱신
         GetComponentInParent<KSManagementCanvas>().UpdateCanvas();

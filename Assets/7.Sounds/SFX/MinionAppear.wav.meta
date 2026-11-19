@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 61894f6f4dcb4810bd7809d6361b24cd
+guid: 4105e70604349d040a8773734f68114b
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
@@ -25,5 +25,5 @@ AssetOrigin:
   productId: 17256
   packageName: Universal Sound FX
   packageVersion: 1.6
-  assetPath: Assets/Universal Sound FX/CARTOON/CARTOON_Plop_01_mono.wav
+  assetPath: Assets/Universal Sound FX/WEAPONS/Bow_Arrow/ARROW_Hit_Wood_Shield_mono.wav
   uploadId: 736765

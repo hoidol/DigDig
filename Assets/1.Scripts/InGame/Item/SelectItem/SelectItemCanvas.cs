@@ -7,6 +7,7 @@ using UnityEngine;
 // 아이템 하나 반드시 선택해야됌. 열려 있어도 게임은 멈추지 않음
 public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 {
+    protected override void PlayOpenSound() { } // 뽑기 소리(DrawItemRoll)가 따로 남
     public const int SELECT_ITEM_COUNT = 3;
 
     public DrawTileItemContainer drawTileItemContainer;
@@ -62,6 +63,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
         SetStep(SelectItemStep.Draw);
         bool isSuccess = UnityEngine.Random.Range(0, 100) < chance;
         drawTileItemContainer.StartDraw();
+        SoundManager.Play(SFXType.DrawItemRoll);
         if (drawDuration > 0f)
         {
             bool canceled = await UniTask.Delay(TimeSpan.FromSeconds(drawDuration), ignoreTimeScale: true, cancellationToken: this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow();
@@ -71,6 +73,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
 
         if (!isSuccess)
         {
+            SoundManager.Play(SFXType.TileItemUpgradeFail); // 확률 실패 (강화 실패와 같은 소리)
             ToastCanvas.Toast(TranslateManager.GetText("Draw_Fail"));
             onFail?.Invoke();
             CloseCanvas();
@@ -78,6 +81,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
         }
         else
         {
+            SoundManager.Play(SFXType.DrawItemSuccess);
             ToastCanvas.Toast(TranslateManager.GetText("Draw_Success"));
         }
 
@@ -142,6 +146,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     void Install(Tile tile)
     {
         KingSlime.Instance.AddItem(selectedItem.key, tile).Forget();
+        SoundManager.Play(SFXType.ItemInstall);
         CloseCanvas();
     }
 }

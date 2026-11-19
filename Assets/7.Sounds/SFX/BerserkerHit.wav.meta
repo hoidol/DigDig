@@ -1,14 +1,25 @@
 fileFormatVersion: 2
-guid: c7a79ed0d62f458bb6b85b44a9de1974
+guid: 872b3b6fe994c734ea32ebdb4087abfe
+labels:
+- usfx
+- imphenzia
+- whoosh
+- swoosch
+- swing
+- wind
+- mono
+- miss
+- jump
+- fall
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
   defaultSettings:
     loadType: 0
     sampleRateSetting: 0
-    sampleRateOverride: 44100
-    compressionFormat: 1
-    quality: 1
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
     conversionMode: 0
   platformSettingOverrides: {}
   forceToMono: 0
@@ -25,5 +36,5 @@ AssetOrigin:
   productId: 17256
   packageName: Universal Sound FX
   packageVersion: 1.6
-  assetPath: Assets/Universal Sound FX/RETRO_LOFI/RETRO_Melee_Attack_Kick_Punch_01_mono.wav
+  assetPath: Assets/Universal Sound FX/WHOOSHES/Classic/WHOOSH_Quick_mono.wav
   uploadId: 736765

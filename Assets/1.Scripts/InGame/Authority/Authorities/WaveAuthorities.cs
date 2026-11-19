@@ -30,6 +30,7 @@ public class HunterCharmAuthority : Authority
             return; // 이미 뽑기 중이면 생략
         if (ItemManager.Instance.GetDrawTileItems(1).Count == 0 || TileManager.Instance.GetRandomTileForItem() == null)
             return;
+        SoundManager.Play(SFXType.AuthorityTrigger);
         ToastCanvas.Toast(TranslateManager.GetText("Authority_HunterCharmDraw"));
         SelectItemCanvas.Instance.OpenDraw(100);
     }
@@ -66,7 +67,10 @@ public class MixedCrestAuthority : Authority
         if (keys.Count == 0)
             return;
         if (AuthoritySystem.SpawnFreeMinion(keys[Random.Range(0, keys.Count)]) != null)
+        {
+            SoundManager.Play(SFXType.AuthorityTrigger);
             ToastCanvas.Toast(TranslateManager.GetText("Authority_MixedCrestSpawn"));
+        }
     }
 }
 
@@ -88,6 +92,7 @@ public class HourglassAuthority : Authority
             return;
         used = true;
         Enemy.FreezeAll(FREEZE_TIME);
+        SoundManager.Play(SFXType.TimeStop);
         ToastCanvas.Toast(TranslateManager.GetText("Authority_HourglassFreeze"));
     }
 }

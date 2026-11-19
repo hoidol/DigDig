@@ -83,11 +83,11 @@ public class PlagueChaliceAuthority : Authority
     {
         switch (e)
         {
-            case IceEffect ice: return new IceEffect(ice.duration);
+            case IceEffect ice: return new IceEffect(ice.duration, ice.slowRate);
             case MudEffect mud: return new MudEffect(mud.duration);
             case SlowEffect slow: return new SlowEffect(slow.duration);
             case StunEffect stun: return new StunEffect(stun.duration);
-            case FlameEffect flame: return new FlameEffect(flame.duration, flame.DamagePerSecond);
+            case FlameEffect flame: return new FlameEffect(flame.duration, flame.DamagePerSecond, flame.Source);
             case PoisonEffect poison: return new PoisonEffect(poison.duration, poison.DamagePerTick);
             case StigmaEffect stigma: return new StigmaEffect(stigma.damageBonus);
             default: return null;

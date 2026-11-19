@@ -1,14 +1,21 @@
 fileFormatVersion: 2
-guid: 128907ed3020492fb5583a2918249b73
+guid: b31afd0e96935714f91b5ab77d4e7d7e
+labels:
+- usfx
+- imphenzia
+- monster
+- gigant
+- growl
+- mono
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
   defaultSettings:
     loadType: 0
     sampleRateSetting: 0
-    sampleRateOverride: 44100
-    compressionFormat: 1
-    quality: 1
+    sampleRateOverride: 0
+    compressionFormat: 0
+    quality: 0
     conversionMode: 0
   platformSettingOverrides: {}
   forceToMono: 0
@@ -25,5 +32,5 @@ AssetOrigin:
   productId: 17256
   packageName: Universal Sound FX
   packageVersion: 1.6
-  assetPath: Assets/Universal Sound FX/EXPLOSIONS/Long/EXPLOSION_Long_Bright_with_Smooth_Tail_mono.wav
+  assetPath: Assets/Universal Sound FX/MONSTERS_CREATURES/MONSTER_Growl_Deep_07_Short_mono.wav
   uploadId: 736765

@@ -16,7 +16,7 @@ MonoBehaviour:
   attackSpeed: 5
   attackRange: 4
   exp: 3
-  hpMultiplier: 0.6
+  hpMultiplier: 80
   attackPowerMultiplier: 1
   gold: 10
   moveSpeed: 0.19

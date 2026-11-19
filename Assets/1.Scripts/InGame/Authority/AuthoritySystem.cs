@@ -55,6 +55,7 @@ public static class AuthoritySystem
             return null;
         Minion minion = KingSlime.Instance.AddMinion(key, lv);
         tile.SetTileObject(minion);
+        SoundManager.Play(SFXType.MinionAppear);
         GameManager.Instance.minionSpawnCount--; // AddMinion → SpawnMinionEvent로 오른 소환 횟수를 되돌림
         return minion;
     }

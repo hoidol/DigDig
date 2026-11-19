@@ -188,7 +188,7 @@ public class InfernoMinion : MinionGrowth1
             hit.TakeDamage(damageData);
 
             if (isEvolved && hit is Enemy enemy && enemy.CurHp > 0)
-                enemy.ApplyStatusEffect(new FlameEffect(infernoMinionData.burnDuration, AttackPower * infernoMinionData.burnDpsRatio));
+                enemy.ApplyStatusEffect(new FlameEffect(infernoMinionData.burnDuration, AttackPower * infernoMinionData.burnDpsRatio, this));
         }
         attackTimer = 0; // 안에 적이 없어도 주기는 그대로 돈다
     }

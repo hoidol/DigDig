@@ -14,7 +14,7 @@ public class FlameOnHitBehavior : IBulletBehavior
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         StatusEffectHandler handler = (hit as Component)?.GetComponent<StatusEffectHandler>();
-        handler?.Apply(new FlameEffect(duration, dps));
+        handler?.Apply(new FlameEffect(duration, dps, (bullet as AllyBulletObject)?.allyUnitDamageData?.allyUnit));
         return true;
     }
 

@@ -22,6 +22,11 @@ namespace Lobby
     public GameObject normalChest;
     public GameObject uniqueChest;
 
+    protected override void PlayOpenSound()
+    {
+        SoundManager.Play(SFXType.ChestOpen);
+    }
+
     public virtual void OpenCanvas(string[] pickedKeys, bool isUniqueChest, Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);

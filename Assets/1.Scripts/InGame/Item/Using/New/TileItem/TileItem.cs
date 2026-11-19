@@ -44,6 +44,27 @@ public abstract class TileItem : Item, ITileItem
         ItemData data = itemData;
         if (data != null && data.HasLevelValues)
             ApplyLevelValue(data.GetLevelValue(upgradeLevel));
+        ApplyLevelColor();
+    }
+
+    // 강화 레벨을 판 위에서 바로 알아보도록 아이템이 설치된 타일(칸) 색을 바꿈. 아이템 그림은 그대로
+    // 강화 불가 아이템은 타일 색도 그대로. 임시 색: Lv1 연두 · Lv2 하늘 · Lv3 금색
+    public static readonly Color[] LEVEL_COLORS =
+    {
+        new Color(0.6f, 1f, 0.6f),
+        new Color(0.55f, 0.85f, 1f),
+        new Color(1f, 0.8f, 0.3f),
+    };
+    public static Color GetLevelColor(int level) => LEVEL_COLORS[Mathf.Clamp(level - 1, 0, LEVEL_COLORS.Length - 1)];
+
+    void ApplyLevelColor()
+    {
+        if (tile == null)
+            return;
+        if (CanUpgrade)
+            tile.SetItemColor(GetLevelColor(upgradeLevel));
+        else
+            tile.ResetItemColor();
     }
 
     // 성공 판정만 (주사위 코인은 호출 측에서 먼저 냄). 올라간 유닛이 있으면 효과를 뺐다가 새 수치로 다시 건다
@@ -72,7 +93,7 @@ public abstract class TileItem : Item, ITileItem
             Debug.LogWarning($"TileItem {key} 설치할 타일 없음");
             return;
         }
-        ApplyLevel(); // 설치(OnEnter) 전에 레벨 수치 반영
+        ApplyLevel(); // 설치(OnEnter) 전에 레벨 수치 반영 + 타일 색
         tile.AddTileItem(this);
         transform.SetParent(tile.transform, false); // 하이어라키에서 설치된 타일 아래에 둠 (타일 위치 기준)
         transform.localScale = Vector3.one;

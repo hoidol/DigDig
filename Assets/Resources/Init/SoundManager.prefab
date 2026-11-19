@@ -74,7 +74,7 @@ MonoBehaviour:
     playOnAwake: 0
   - name: Fail_NotEnough
     sfxType: 3
-    audioClip: {fileID: 8300000, guid: 9de8f2fdcef2d2e4281f64cb8a52056b, type: 3}
+    audioClip: {fileID: 8300000, guid: b43d102aac6b145468dcaa94a5cccae1, type: 3}
     volume: 0.8
     pitch: 1
     pitchRandom: 0
@@ -218,168 +218,42 @@ MonoBehaviour:
     playOnAwake: 0
   - name: MinionAttack
     sfxType: 19
-    audioClip: {fileID: 8300000, guid: 8fa5a70ae4b4406aa92f3ff1ec3ed316, type: 3}
+    audioClip: {fileID: 8300000, guid: 0994c12e202f342459a4212e7287f7e8, type: 3}
     volume: 0.3
     pitch: 1
     pitchRandom: 0.15
     minInterval: 0.05
     loop: 0
     playOnAwake: 0
-  - name: HitPhysic
-    sfxType: 20
-    audioClip: {fileID: 8300000, guid: 53bd370d471e4457afa5d4321b0ece40, type: 3}
-    volume: 0.4
-    pitch: 1
-    pitchRandom: 0.15
-    minInterval: 0.05
-    loop: 0
-    playOnAwake: 0
-  - name: HitMagic
-    sfxType: 21
-    audioClip: {fileID: 8300000, guid: 5dc430386b434ff39f90b127b0db7121, type: 3}
-    volume: 0.4
-    pitch: 1
-    pitchRandom: 0.15
-    minInterval: 0.05
-    loop: 0
-    playOnAwake: 0
-  - name: HitWeak
-    sfxType: 22
-    audioClip: {fileID: 8300000, guid: 81fb4c16afc749a6b662a0586932c698, type: 3}
-    volume: 0.5
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.08
-    loop: 0
-    playOnAwake: 0
-  - name: HitResist
-    sfxType: 23
-    audioClip: {fileID: 8300000, guid: 849b174e541f44edb13d9ed7b81700f0, type: 3}
-    volume: 0.4
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.08
-    loop: 0
-    playOnAwake: 0
-  - name: HitCritical
-    sfxType: 24
-    audioClip: {fileID: 8300000, guid: 51a42f639b2a42bf82673c4c2bd68cd9, type: 3}
-    volume: 0.6
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.08
-    loop: 0
-    playOnAwake: 0
   - name: EnemyDead
-    sfxType: 25
-    audioClip: {fileID: 8300000, guid: c09be45c2bf647a59cc3b01dc6eed2e2, type: 3}
+    sfxType: 20
+    audioClip: {fileID: 8300000, guid: 1004de8c22cc3544b9005e2a267fca16, type: 3}
     volume: 0.5
     pitch: 1
     pitchRandom: 0.15
     minInterval: 0.05
-    loop: 0
-    playOnAwake: 0
-  - name: EliteDead
-    sfxType: 26
-    audioClip: {fileID: 8300000, guid: 18474e873a4a4fc8beedc354bba7084e, type: 3}
-    volume: 0.9
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
     loop: 0
     playOnAwake: 0
   - name: BossDead
-    sfxType: 27
-    audioClip: {fileID: 8300000, guid: 128907ed3020492fb5583a2918249b73, type: 3}
+    sfxType: 21
+    audioClip: {fileID: 8300000, guid: b31afd0e96935714f91b5ab77d4e7d7e, type: 3}
     volume: 1
     pitch: 1
     pitchRandom: 0
     minInterval: 0
     loop: 0
     playOnAwake: 0
-  - name: KingDamaged
-    sfxType: 28
-    audioClip: {fileID: 8300000, guid: 925c6408515d497cbe5f4f5484b73aca, type: 3}
-    volume: 0.7
-    pitch: 1
-    pitchRandom: 0.05
-    minInterval: 0.15
-    loop: 0
-    playOnAwake: 0
-  - name: KingLowHp
-    sfxType: 29
-    audioClip: {fileID: 8300000, guid: 8db9d7eded4f47048c222580883beb2d, type: 3}
-    volume: 0.8
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 1
-    loop: 0
-    playOnAwake: 0
-  - name: StatusSlow
-    sfxType: 30
-    audioClip: {fileID: 8300000, guid: cad2575a26d9460ab5803730470417f0, type: 3}
-    volume: 0.4
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.1
-    loop: 0
-    playOnAwake: 0
-  - name: StatusFreeze
-    sfxType: 31
-    audioClip: {fileID: 8300000, guid: 61c99b528d5f4a9fb75fc9a278cdf786, type: 3}
-    volume: 0.5
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.1
-    loop: 0
-    playOnAwake: 0
-  - name: StatusStun
-    sfxType: 32
-    audioClip: {fileID: 8300000, guid: b7bccfba96dd4056a917df4d9490d644, type: 3}
-    volume: 0.5
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.1
-    loop: 0
-    playOnAwake: 0
-  - name: StatusBurn
-    sfxType: 33
-    audioClip: {fileID: 8300000, guid: feb761bf97e043c7a4164cf8fe9e7779, type: 3}
-    volume: 0.4
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.1
-    loop: 0
-    playOnAwake: 0
-  - name: StatusStigma
-    sfxType: 34
-    audioClip: {fileID: 8300000, guid: fa055a38e46a45dc953debb135c9eb9a, type: 3}
-    volume: 0.5
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.1
-    loop: 0
-    playOnAwake: 0
-  - name: StatusMud
-    sfxType: 35
-    audioClip: {fileID: 8300000, guid: ed03c883dfdc48a0adc0066a7f96e589, type: 3}
-    volume: 0.4
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.1
-    loop: 0
-    playOnAwake: 0
   - name: Thunder
-    sfxType: 36
-    audioClip: {fileID: 8300000, guid: 196181148a3f45f79cd52f7602c0c131, type: 3}
-    volume: 0.6
-    pitch: 1
+    sfxType: 22
+    audioClip: {fileID: 8300000, guid: b9012a35672b458b95085241f13cb6c1, type: 3}
+    volume: 0.3
+    pitch: 1.5
     pitchRandom: 0.1
     minInterval: 0.1
     loop: 0
     playOnAwake: 0
   - name: LightningChain
-    sfxType: 37
+    sfxType: 23
     audioClip: {fileID: 8300000, guid: b9012a35672b458b95085241f13cb6c1, type: 3}
     volume: 0.5
     pitch: 1
@@ -388,7 +262,7 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: FlameSkill
-    sfxType: 38
+    sfxType: 24
     audioClip: {fileID: 8300000, guid: 7c323a201616470baa90ad6d102e7cb8, type: 3}
     volume: 0.8
     pitch: 1
@@ -396,54 +270,18 @@ MonoBehaviour:
     minInterval: 0.1
     loop: 0
     playOnAwake: 0
-  - name: IceHit
-    sfxType: 39
-    audioClip: {fileID: 8300000, guid: 4ee502b411f444b3a006a7b75486a8c0, type: 3}
-    volume: 0.4
-    pitch: 1
-    pitchRandom: 0.15
-    minInterval: 0.05
-    loop: 0
-    playOnAwake: 0
-  - name: HailSpawn
-    sfxType: 40
-    audioClip: {fileID: 8300000, guid: 58cfadbbd1e74519881514c97d7cd74c, type: 3}
-    volume: 0.7
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0.1
-    loop: 0
-    playOnAwake: 0
-  - name: Bounce
-    sfxType: 41
-    audioClip: {fileID: 8300000, guid: 06a9ddf57b9a452fa6d60e44b828d785, type: 3}
-    volume: 0.4
-    pitch: 1
-    pitchRandom: 0.15
-    minInterval: 0.05
-    loop: 0
-    playOnAwake: 0
   - name: OrbitHit
-    sfxType: 42
-    audioClip: {fileID: 8300000, guid: 49e6c4d977ef4dca86bf527c335d4fd3, type: 3}
+    sfxType: 25
+    audioClip: {fileID: 8300000, guid: 6750af2302e06a04283ea472a5321419, type: 3}
     volume: 0.3
-    pitch: 1
+    pitch: 1.2
     pitchRandom: 0.15
     minInterval: 0.05
-    loop: 0
-    playOnAwake: 0
-  - name: ShieldBlock
-    sfxType: 43
-    audioClip: {fileID: 8300000, guid: fde6a27f9b1e4fe1a7aa8dd76dd46f48, type: 3}
-    volume: 0.5
-    pitch: 1
-    pitchRandom: 0.1
-    minInterval: 0.1
     loop: 0
     playOnAwake: 0
   - name: MineInstall
-    sfxType: 44
-    audioClip: {fileID: 8300000, guid: 6fd82029ffe046dd9d154ffb951c12c9, type: 3}
+    sfxType: 26
+    audioClip: {fileID: 8300000, guid: 4105e70604349d040a8773734f68114b, type: 3}
     volume: 0.5
     pitch: 1
     pitchRandom: 0.1
@@ -451,26 +289,26 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: MineExplosion
-    sfxType: 45
+    sfxType: 27
     audioClip: {fileID: 8300000, guid: 0f8256647d2a4209a6a944073cb30a44, type: 3}
-    volume: 0.6
-    pitch: 1
+    volume: 0.4
+    pitch: 1.2
     pitchRandom: 0.1
     minInterval: 0.05
     loop: 0
     playOnAwake: 0
   - name: MortarFire
-    sfxType: 46
+    sfxType: 28
     audioClip: {fileID: 8300000, guid: af783ffbd1b2468babf6d15921253154, type: 3}
-    volume: 0.6
-    pitch: 1
+    volume: 0.4
+    pitch: 1.2
     pitchRandom: 0.1
     minInterval: 0.05
     loop: 0
     playOnAwake: 0
   - name: MortarExplosion
-    sfxType: 47
-    audioClip: {fileID: 8300000, guid: 2ea8ce3762df4affbbdb73316d084793, type: 3}
+    sfxType: 29
+    audioClip: {fileID: 8300000, guid: 0f8256647d2a4209a6a944073cb30a44, type: 3}
     volume: 0.7
     pitch: 1
     pitchRandom: 0.1
@@ -478,53 +316,44 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: InfernoLoop
-    sfxType: 48
+    sfxType: 30
     audioClip: {fileID: 8300000, guid: 2d1714e023664ae382e01d4541b5a389, type: 3}
-    volume: 0.4
+    volume: 0.2
     pitch: 1
     pitchRandom: 0
     minInterval: 0
     loop: 1
     playOnAwake: 0
   - name: BeamLoop
-    sfxType: 49
-    audioClip: {fileID: 8300000, guid: c98f59f24d644d8fab2b1cc1dc5a813c, type: 3}
-    volume: 0.3
+    sfxType: 31
+    audioClip: {fileID: 8300000, guid: 76f3d64209c0f6e4cb931763b799b79d, type: 3}
+    volume: 0.1
     pitch: 1
     pitchRandom: 0
     minInterval: 0
     loop: 1
     playOnAwake: 0
   - name: BerserkerHit
-    sfxType: 50
-    audioClip: {fileID: 8300000, guid: c7a79ed0d62f458bb6b85b44a9de1974, type: 3}
+    sfxType: 32
+    audioClip: {fileID: 8300000, guid: 872b3b6fe994c734ea32ebdb4087abfe, type: 3}
     volume: 0.4
     pitch: 1
     pitchRandom: 0.15
     minInterval: 0.05
     loop: 0
     playOnAwake: 0
-  - name: BerserkerStack
-    sfxType: 51
-    audioClip: {fileID: 8300000, guid: ea779a1d7c794ea399e8b1874709fd1b, type: 3}
-    volume: 0.4
-    pitch: 1
-    pitchRandom: 0.05
-    minInterval: 0.1
-    loop: 0
-    playOnAwake: 0
   - name: HunterSnipe
-    sfxType: 52
-    audioClip: {fileID: 8300000, guid: a6e9d94684904d48a91fdde1be0e36c3, type: 3}
-    volume: 0.7
+    sfxType: 33
+    audioClip: {fileID: 8300000, guid: 872b3b6fe994c734ea32ebdb4087abfe, type: 3}
+    volume: 0.5
     pitch: 1
     pitchRandom: 0.1
     minInterval: 0.05
     loop: 0
     playOnAwake: 0
   - name: StigmaSkill
-    sfxType: 53
-    audioClip: {fileID: 8300000, guid: be3da77212dd45aa922cf4887aba6266, type: 3}
+    sfxType: 34
+    audioClip: {fileID: 8300000, guid: 7c323a201616470baa90ad6d102e7cb8, type: 3}
     volume: 0.7
     pitch: 1
     pitchRandom: 0
@@ -532,71 +361,26 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: PowerUp
-    sfxType: 54
-    audioClip: {fileID: 8300000, guid: ec07200a3d8440af8ce9ee2c209f2c94, type: 3}
-    volume: 0.7
+    sfxType: 35
+    audioClip: {fileID: 8300000, guid: 560b59f7bba57425da9d11fb4794b676, type: 3}
+    volume: 0.5
     pitch: 1
     pitchRandom: 0
     minInterval: 0.1
     loop: 0
     playOnAwake: 0
   - name: JokerCardDraw
-    sfxType: 55
-    audioClip: {fileID: 8300000, guid: 05b81c2cae3b470680bc2ee39513cbb4, type: 3}
-    volume: 0.8
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
-  - name: JokerSpade
-    sfxType: 56
-    audioClip: {fileID: 8300000, guid: bc83093921f84c639c16a60eb180e245, type: 3}
-    volume: 0.7
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
-  - name: JokerDiamond
-    sfxType: 57
-    audioClip: {fileID: 8300000, guid: 56230b73977642e4a870d8a0e8ea6586, type: 3}
-    volume: 0.7
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
-  - name: JokerClover
-    sfxType: 58
-    audioClip: {fileID: 8300000, guid: 161bb5a7f8f0407ba631a8e1ddcbda1c, type: 3}
-    volume: 0.7
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
-  - name: JokerHeart
-    sfxType: 59
-    audioClip: {fileID: 8300000, guid: 863ebbf43439461ab6b7fb1491cfa482, type: 3}
-    volume: 0.8
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
-  - name: DarknessOpen
-    sfxType: 60
-    audioClip: {fileID: 8300000, guid: 85bcbcfea4004521806b52c167935882, type: 3}
-    volume: 0.7
+    sfxType: 36
+    audioClip: {fileID: 8300000, guid: 872b3b6fe994c734ea32ebdb4087abfe, type: 3}
+    volume: 0.5
     pitch: 1
     pitchRandom: 0
     minInterval: 0
     loop: 0
     playOnAwake: 0
   - name: DarknessTransform
-    sfxType: 61
-    audioClip: {fileID: 8300000, guid: 2e13608959ad40ee980fa9d14865967f, type: 3}
+    sfxType: 37
+    audioClip: {fileID: 8300000, guid: 849b174e541f44edb13d9ed7b81700f0, type: 3}
     volume: 0.8
     pitch: 1
     pitchRandom: 0
@@ -604,8 +388,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: GrowUp
-    sfxType: 62
-    audioClip: {fileID: 8300000, guid: 8d0cb422469445249560e4040339c97f, type: 3}
+    sfxType: 38
+    audioClip: {fileID: 8300000, guid: 849b174e541f44edb13d9ed7b81700f0, type: 3}
     volume: 0.8
     pitch: 1
     pitchRandom: 0
@@ -613,35 +397,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: SacrificeMerge
-    sfxType: 63
-    audioClip: {fileID: 8300000, guid: 0605a53b45a24b78b9baba84d374f8ca, type: 3}
-    volume: 0.8
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
-  - name: BuffReceive
-    sfxType: 64
-    audioClip: {fileID: 8300000, guid: ec63c4be62e44efe8e1935613999c65e, type: 3}
-    volume: 0.3
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0.2
-    loop: 0
-    playOnAwake: 0
-  - name: WaveStart
-    sfxType: 65
-    audioClip: {fileID: 8300000, guid: d05f1f85578a4e04a51a0d8042428497, type: 3}
-    volume: 0.6
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
-  - name: EliteAppear
-    sfxType: 66
-    audioClip: {fileID: 8300000, guid: 6bb41f738cb648f69bdbbcae51d0b596, type: 3}
+    sfxType: 39
+    audioClip: {fileID: 8300000, guid: 849b174e541f44edb13d9ed7b81700f0, type: 3}
     volume: 0.8
     pitch: 1
     pitchRandom: 0
@@ -649,8 +406,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: BossAppear
-    sfxType: 67
-    audioClip: {fileID: 8300000, guid: d5cb9821c5ab4e65a9528b89563ae9d0, type: 3}
+    sfxType: 40
+    audioClip: {fileID: 8300000, guid: 6bb41f738cb648f69bdbbcae51d0b596, type: 3}
     volume: 1
     pitch: 1
     pitchRandom: 0
@@ -658,8 +415,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: NextWaveButton
-    sfxType: 68
-    audioClip: {fileID: 8300000, guid: 608cff8793be4509b794ef9c8b204342, type: 3}
+    sfxType: 41
+    audioClip: {fileID: 8300000, guid: a9a23b7455da64b4e9b1143a2a7c0687, type: 3}
     volume: 0.8
     pitch: 1
     pitchRandom: 0
@@ -667,16 +424,16 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: AuthorityTrigger
-    sfxType: 69
+    sfxType: 42
     audioClip: {fileID: 8300000, guid: 3b68ddeb7a9c4d179fd252e2fb876bdf, type: 3}
-    volume: 0.8
+    volume: 0.5
     pitch: 1
     pitchRandom: 0
     minInterval: 0.2
     loop: 0
     playOnAwake: 0
   - name: TimeStop
-    sfxType: 70
+    sfxType: 43
     audioClip: {fileID: 8300000, guid: e3492d4c59b2487e8f17cd05d3f11b6b, type: 3}
     volume: 0.9
     pitch: 1
@@ -685,8 +442,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: Dead
-    sfxType: 71
-    audioClip: {fileID: 8300000, guid: c573bfbc62bf4847adab8b7e3f7e4294, type: 3}
+    sfxType: 44
+    audioClip: {fileID: 8300000, guid: 6bb41f738cb648f69bdbbcae51d0b596, type: 3}
     volume: 1
     pitch: 1
     pitchRandom: 0
@@ -694,7 +451,7 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: Resurrection
-    sfxType: 72
+    sfxType: 45
     audioClip: {fileID: 8300000, guid: 94d7223db9404a258fa2019baab59a8a, type: 3}
     volume: 1
     pitch: 1
@@ -703,8 +460,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: RewardGet
-    sfxType: 73
-    audioClip: {fileID: 8300000, guid: 65c557aff4c34441932587afad0134ca, type: 3}
+    sfxType: 46
+    audioClip: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}
     volume: 0.8
     pitch: 1
     pitchRandom: 0
@@ -712,17 +469,17 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: RewardDouble
-    sfxType: 74
-    audioClip: {fileID: 8300000, guid: 869b8c4c51cd45e98311706cc9e3a019, type: 3}
-    volume: 0.9
+    sfxType: 47
+    audioClip: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}
+    volume: 0.8
     pitch: 1
     pitchRandom: 0
     minInterval: 0
     loop: 0
     playOnAwake: 0
   - name: ChestOpen
-    sfxType: 75
-    audioClip: {fileID: 8300000, guid: fb24fe0eeb7c43549d331802ae443323, type: 3}
+    sfxType: 48
+    audioClip: {fileID: 8300000, guid: 560b59f7bba57425da9d11fb4794b676, type: 3}
     volume: 1
     pitch: 1
     pitchRandom: 0
@@ -730,35 +487,17 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: CardFlip
-    sfxType: 76
+    sfxType: 49
     audioClip: {fileID: 8300000, guid: e2ae50d1258a4f6eb2c04742d53e98cb, type: 3}
-    volume: 0.8
+    volume: 0.5
     pitch: 1
     pitchRandom: 0.1
     minInterval: 0
     loop: 0
     playOnAwake: 0
-  - name: CardShakeHighGrade
-    sfxType: 77
-    audioClip: {fileID: 8300000, guid: 6d4148cf78db4f1488482fb110e270fa, type: 3}
-    volume: 0.8
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
-  - name: CardRevealHighGrade
-    sfxType: 78
-    audioClip: {fileID: 8300000, guid: 300c7a8c9eb34ca589e16ef2dfb83afd, type: 3}
-    volume: 0.9
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
   - name: MinionLevelUp
-    sfxType: 79
-    audioClip: {fileID: 8300000, guid: 178834ccab384accba509967dba23c0a, type: 3}
+    sfxType: 50
+    audioClip: {fileID: 8300000, guid: 560b59f7bba57425da9d11fb4794b676, type: 3}
     volume: 0.9
     pitch: 1
     pitchRandom: 0
@@ -766,8 +505,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: KingUpgrade
-    sfxType: 80
-    audioClip: {fileID: 8300000, guid: 3ba2ca023dae431caf3aa6a898a9dfc0, type: 3}
+    sfxType: 51
+    audioClip: {fileID: 8300000, guid: 806b3206fbe14478a85da553f4920da2, type: 3}
     volume: 0.8
     pitch: 1
     pitchRandom: 0
@@ -775,26 +514,17 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: UserLevelUp
-    sfxType: 81
-    audioClip: {fileID: 8300000, guid: f9651e22397d4cd18e2515e8ef74ba1e, type: 3}
+    sfxType: 52
+    audioClip: {fileID: 8300000, guid: 560b59f7bba57425da9d11fb4794b676, type: 3}
     volume: 1
     pitch: 1
     pitchRandom: 0
     minInterval: 0
     loop: 0
     playOnAwake: 0
-  - name: ExpBarFill
-    sfxType: 82
-    audioClip: {fileID: 8300000, guid: 7f12586463c943f2a5a5a166d15c1a51, type: 3}
-    volume: 0.5
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
   - name: AuthoritySelect
-    sfxType: 83
-    audioClip: {fileID: 8300000, guid: 0b92d09462634572af2daefce58e0c28, type: 3}
+    sfxType: 53
+    audioClip: {fileID: 8300000, guid: 806b3206fbe14478a85da553f4920da2, type: 3}
     volume: 0.8
     pitch: 1
     pitchRandom: 0
@@ -802,8 +532,8 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: AchievementReward
-    sfxType: 84
-    audioClip: {fileID: 8300000, guid: 95e3e6d4119a41ae9a9b94a7219672ad, type: 3}
+    sfxType: 54
+    audioClip: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
     volume: 0.9
     pitch: 1
     pitchRandom: 0
@@ -811,18 +541,9 @@ MonoBehaviour:
     loop: 0
     playOnAwake: 0
   - name: PurchaseComplete
-    sfxType: 85
-    audioClip: {fileID: 8300000, guid: 841ed53145804a37b1e4f3d9fc2c3f01, type: 3}
+    sfxType: 55
+    audioClip: {fileID: 8300000, guid: 808b1c1bb474b2e4e81f482b61c5af1f, type: 3}
     volume: 0.9
-    pitch: 1
-    pitchRandom: 0
-    minInterval: 0
-    loop: 0
-    playOnAwake: 0
-  - name: TutorialNext
-    sfxType: 86
-    audioClip: {fileID: 8300000, guid: 545f9f957102413b839289a2a22a6398, type: 3}
-    volume: 0.8
     pitch: 1
     pitchRandom: 0
     minInterval: 0

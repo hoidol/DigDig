@@ -72,13 +72,14 @@ public class FlameMinion : MinionGrowth1
         PlaySkillAnim();
         if (EffectManager.Instance != null)
             EffectManager.Instance.Play(EffectType.Flame, transform.position);
+        SoundManager.Play(SFXType.FlameSkill);
         var targets = InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, SKILL_MAX_TARGETS);
         if (targets == null)
             return;
         foreach (Transform target in targets)
         {
             if (target != null && target.TryGetComponent(out StatusEffectHandler handler))
-                handler.Apply(new FlameEffect(burnDuration, burnDPS));
+                handler.Apply(new FlameEffect(burnDuration, burnDPS, this));
         }
     }
 
@@ -89,7 +90,7 @@ public class FlameMinion : MinionGrowth1
             if (target == null || !target.TryGetComponent(out IHittable hittable))
                 continue;
             if (target.TryGetComponent(out StatusEffectHandler handler))
-                handler.Apply(new FlameEffect(burnDuration, burnDPS));
+                handler.Apply(new FlameEffect(burnDuration, burnDPS, this));
             skillDamageData.Init(this);
             skillDamageData.damage = AttackPower;
             skillDamageData.attackType = AttackType;

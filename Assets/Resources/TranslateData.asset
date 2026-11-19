@@ -226,9 +226,6 @@ MonoBehaviour:
   - key: Minion.Scavenger
     kr: "\uC218\uD655"
     en: Scavenger
-  - key: Minion.Darkness
-    kr: "\uB2E4\uD06C\uB2C8\uC2A4"
-    en: Darkness
   - key: Minion.Joker
     kr: "\uC870\uCEE4"
     en: Joker
@@ -340,44 +337,12 @@ MonoBehaviour:
     kr: "\uC0AC\uAC70\uB9AC \uC548\uC5D0\uC11C \uC801\uC774 \uC8FD\uC73C\uBA74 {0}\uACE8\uB4DC\uB97C
       \uC5BB\uC2B5\uB2C8\uB2E4."
     en: Gain {0} gold whenever an enemy dies within range.
-  - key: Minion.Darkness.Desc
-    kr: "{0:0}\uCD08\uB9C8\uB2E4 \uBCC0\uC2E0 \uC900\uBE44\uAC00 \uB429\uB2C8\uB2E4.
-      \uC120\uD0DD\uD558\uBA74 \uBA38\uB9AC \uC704 \uBAA9\uB85D\uC5D0\uC11C \uC6D0\uD558\uB294
-      \uBBF8\uB2C8\uC5B8\uC73C\uB85C \uBCC0\uC2E0\uD569\uB2C8\uB2E4(\uB808\uBCA8
-      \uC720\uC9C0, \uC131\uACF5 \uD655\uB960 {1:0}%, \uC131\uACF5 \uC2DC {2:0}%
-      \uD655\uB960\uB85C \uB808\uBCA8 +1)."
-    en: Ready to transform every {0:0}s. Tap it to pick any equipped minion from
-      the list above its head (level kept, {1:0}% success, {2:0}% chance of +1 level).
   - key: Minion.Joker.Desc
-    kr: "{0:0}\uCD08\uB9C8\uB2E4 \uCE74\uB4DC\uB97C \uBF51\uC2B5\uB2C8\uB2E4. \uC2A4\uD398\uC774\uB4DC:
-      \uC8FC\uBCC0 \uC801 \uC804\uBD80\uC5D0\uAC8C \uACF5\uACA9\uB825 {1}% \uAC00\uC2DC
-      \uD53C\uD574 / \uB2E4\uC774\uC544: {2}\uCD08\uAC04 \uACF5\uACA9\uC18D\uB3C4
-      {3}\uBC30\xB7\uACF5\uACA9\uB825 \uC808\uBC18 / \uD074\uB85C\uBC84: \uCF54\uC778
-      \uD68D\uB4DD / \uD558\uD2B8: \uAF5D"
-    en: 'Every {0:0}s draws a card. Spade: thorns deal {1}% attack damage to all
-      nearby enemies / Diamond: {3}x attack speed and half attack for {2}s / Clover:
-      gain coins / Heart: miss'
-  - key: Joker_Card_Spade
-    kr: "\uC2A4\uD398\uC774\uB4DC!"
-    en: Spade!
-  - key: Joker_Card_Diamond
-    kr: "\uB2E4\uC774\uC544!"
-    en: Diamond!
-  - key: Joker_Card_Clover
-    kr: "\uD074\uB85C\uBC84!"
-    en: Clover!
-  - key: Joker_Card_Heart
-    kr: "\uAF5D!"
-    en: Miss!
-  - key: Darkness_Transform_Success
-    kr: "\uBCC0\uD658 \uC131\uACF5!"
-    en: Transformed!
-  - key: Darkness_Transform_Grow
-    kr: "\uBCC0\uD658 \uC131\uACF5! \uC131\uC7A5!"
-    en: Transformed! Level up!
-  - key: Darkness_Transform_Fail
-    kr: "\uBCC0\uD658 \uC2E4\uD328..."
-    en: Transform failed...
+    kr: "\uC6D0\uD558\uB294 \uC2AC\uB77C\uC784\uC73C\uB85C \uBCC0\uC2E0\uD569\uB2C8\uB2E4.
+      {0:0}% \uD655\uB960\uB85C \uC2E4\uD328\uD574 \uBCC4\uC774 1 \uB5A8\uC5B4\uC9D1\uB2C8\uB2E4(\uBCC4
+      1\uC774\uBA74 \uC0AC\uB77C\uC9D0)."
+    en: Transforms into any slime you choose. {0:0}% chance to fail and lose 1 star
+      (vanishes at 1 star).
   - key: Minion.Hunter.Desc
     kr: "{0}\uD68C \uACF5\uACA9\uB9C8\uB2E4 \uC800\uACA9 \uAD00\uD1B5\uD0C4\uC744
       \uBC1C\uC0AC\uD574 {1}\uCD08 \uC2A4\uD134 + \uCE58\uBA85 \uD53C\uD574\uB97C

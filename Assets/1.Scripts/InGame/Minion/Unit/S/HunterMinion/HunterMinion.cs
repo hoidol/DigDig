@@ -92,6 +92,8 @@ public class HunterMinion : MinionGrowth1
         base.Fire(dir);
         if (attackTimer == 0) // 발사에 성공했을 때만 횟수 증가
         {
+            if (isSnipeTurn)
+                SoundManager.Play(SFXType.HunterSnipe);
             if (!buffActive)
                 attackCount++;
             ChargeSkill();

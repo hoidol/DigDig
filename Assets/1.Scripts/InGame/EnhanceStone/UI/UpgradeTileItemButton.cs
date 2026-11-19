@@ -50,13 +50,15 @@ public class UpgradeTileItemButton : ButtonUI
         int cost = item.UpgradeCost;
         if (KingSlime.Instance.diceCoin < cost)
         {
+            SoundManager.Play(SFXType.Fail_NotEnough);
             ToastCanvas.Toast(TranslateManager.GetText("Not enough dice coin"));
             return;
         }
         KingSlime.Instance.AddDiceCoin(-cost);
         bool success = item.TryUpgrade(Random.Range(0f, 100f));
-        // 강화 성공! / 강화 실패 (레벨은 이름 옆 Lv.N으로 보임)
-        ToastCanvas.Toast(TranslateManager.GetText(success ? "TileItem_UpgradeSuccess" : "TileItem_UpgradeFail"));
+        SoundManager.Play(success ? SFXType.TileItemUpgradeSuccess : SFXType.TileItemUpgradeFail);
+        // 타일 위에 "성공!" / "실패.." 글씨 (레벨은 이름 옆 Lv.N, 칸 색으로 보임)
+        EffectManager.PlayPopText(tile.transform.position, success ? PopTextType.Success : PopTextType.Fail);
 
         // 이름(Lv)·버튼 갱신
         TileItemInfoPanel panel = GetComponentInParent<TileItemInfoPanel>(true);

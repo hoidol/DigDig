@@ -34,6 +34,7 @@ public class MinionSpawnButton : ButtonUI
         // }
         if (KingSlime.Instance.coin < GetSpawnPrice())
         {
+            SoundManager.Play(SFXType.Fail_NotEnough);
             ToastCanvas.Toast("Not enough coin");
             return;
         }
@@ -58,10 +59,17 @@ public class MinionSpawnButton : ButtonUI
         {
             (lv, cost) = GamblerCoinAuthority.Roll(Random.value, cost, KingSlime.Instance.coin);
             if (lv > 0)
+            {
+                SoundManager.Play(SFXType.AuthorityTrigger);
                 ToastCanvas.Toast(TranslateManager.GetText("Authority_GamblerCoinWin"));
+            }
             else if (cost > GetSpawnPrice())
+            {
+                SoundManager.Play(SFXType.AuthorityTrigger);
                 ToastCanvas.Toast(TranslateManager.GetText("Authority_GamblerCoinLose"));
+            }
         }
+        SoundManager.Play(SFXType.MinionSpawnButton);
         KingSlime.Instance.AddCoin(-cost);
         string randomMinionKey = !string.IsNullOrEmpty(forcedMinionKey)
             ? forcedMinionKey
@@ -70,6 +78,7 @@ public class MinionSpawnButton : ButtonUI
         forcedTile = null;
         Minion minion = KingSlime.Instance.AddMinion(randomMinionKey, lv);
         tile.SetTileObject(minion);
+        SoundManager.Play(SFXType.MinionAppear);
         AchievementManager.Report(AchievementType.SpawnMinion); // 소환 버튼으로 뽑은 것만 (무료 소환 제외)
 
         KingSlimeManageCanvas.Instance.UpdateCanvas();

@@ -28,6 +28,7 @@ public class MortarBulletObject : AllyBulletObject
         flightTime = Mathf.Max(0.01f, mortarSpec.flightTime);
         arcHeight = mortarSpec.arcHeight;
         timer = 0f;
+        SoundManager.Play(SFXType.MortarFire);
     }
 
     public override void Update()
@@ -45,6 +46,7 @@ public class MortarBulletObject : AllyBulletObject
     void Explode()
     {
         EffectManager.Instance.Play(EffectType.MortarExplosion, targetPos);
+        SoundManager.Play(SFXType.MortarExplosion);
         EmberBrazierAuthority.OnZoneDamage(targetPos, mortarSpec.boomRange, damage * damageMultiplier, mortarSpec.hitLayerMask);
 
         IHittable[] targets = Physics2D.OverlapCircleAll(targetPos, mortarSpec.boomRange, mortarSpec.hitLayerMask)

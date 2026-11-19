@@ -147,7 +147,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         // float hp = stageData.enemyHp + stageData.enemyHp * ((1 + stageData.addHpRatioPerWave) * wave);
         float hp = stageData.enemyHp * (1 + stageData.addHpRatioPerWave * wave);
 
-        return hp * Mathf.Pow(stageData.multiHpPerWave, wave);
+        // 20 wave(보스 주기) 구간 배율 (StageData.cycleHpMuls, 보스 wave는 자기 구간에 포함)
+        return hp * Mathf.Pow(stageData.multiHpPerWave, wave) * stageData.GetCycleHpMul(wave);
     }
 
     // 최종 공격력 = enemyAtk * (1 + addAtkRatioPerWave * wave) * multiAtkPerWave^wave * 에너미 배율
@@ -289,7 +290,10 @@ public abstract class Enemy : MonoBehaviour, IHittable
             multiplier *= statusEffectHandler.StigmaDamageMul;
         // 피해 숫자 연출용: 방어 타입 표 배율(약점·내성, 만능은 1)과 최대 체력(피해량 비례 크기)
         float typeMultiplier = damage.IgnoreDefence ? 1f : DefenceInfo.Get(damage.attackType, defenceType);
+        float prevHp = curHp;
         curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, multiplier, typeMultiplier, maxHp));
+        // 피해 집계: 실제로 줄어든 체력만 (마무리 일격의 넘친 피해 제외)
+        DamageMeterSystem.Record(damage.Attacker, prevHp - curHp);
         // if (curHp > 1)
         //     hpText.text = ((int)curHp).ToString();
         // else if (0 < curHp && curHp <= 1)
@@ -333,6 +337,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         GameEventBus.Publish(new EnemyDeadEvent(this));
         if (curHp <= 0) // 업적은 처치만 (경로 끝 도착 제외)
         {
+            SoundManager.Play(this is Boss ? SFXType.BossDead : SFXType.EnemyDead);
             AchievementManager.Report(AchievementType.KillEnemy);
             if (enemyType == EnemyType.BonusElite)
                 AchievementManager.Report(AchievementType.KillBonusElite);

@@ -77,6 +77,23 @@ public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
         effect.Play(pos);
     }
 
+    // 자주 쓰는 글씨·색 프리셋 ("성공!" / "실패.."). 글씨 = 번역 key PopText_{종류}
+    // 색은 회색 금지(밝은 타일 위에서 안 보임)
+    public static readonly Color POP_TEXT_SUCCESS_COLOR = new Color(1f, 0.85f, 0.2f);
+    public static readonly Color POP_TEXT_FAIL_COLOR = new Color(0.45f, 0.5f, 0.95f);
+
+    public static Color GetPopTextColor(PopTextType type) => type switch
+    {
+        PopTextType.Success => POP_TEXT_SUCCESS_COLOR,
+        PopTextType.Fail => POP_TEXT_FAIL_COLOR,
+        _ => Color.white,
+    };
+
+    public static void PlayPopText(Vector2 pos, PopTextType type)
+    {
+        PlayPopText(pos, TranslateManager.GetText($"PopText_{type}"), GetPopTextColor(type));
+    }
+
     Effect GetEffectPrefab(EffectType effectType)
     {
         for (int i = 0; i < effectPrefabs.Length; i++)
@@ -109,6 +126,12 @@ public enum EffectType
     JokerCard, // Joker 미니언이 뽑은 카드 그림 + 글씨 (Resources/Effect/JokerCardEffect, JokerMinion.ShowCard)
     DarknessReady, // Darkness 미니언 스킬(변신)이 충전된 동안 몸 뒤 검은 연기 (Resources/Effect/DarknessReadyEffect, DarknessMinion)
     PopText, // 글씨만 튀어나오는 공용 이펙트 (Resources/Effect/PopTextEffect, EffectManager.PlayPopText. 다크니스 변환 성공/실패 등)
+}
+// EffectManager.PlayPopText 프리셋. 새 종류는 번역 key PopText_{종류} + GetPopTextColor에 추가
+public enum PopTextType
+{
+    Success, // 성공!
+    Fail,    // 실패..
 }
 public enum Icon
 {

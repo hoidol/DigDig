@@ -69,6 +69,7 @@ public class BattleCanvas : BaseLobbyCanvas
         if (!EnergeManager.TryUsePlayCost())
         {
             ToastCanvas.Toast(string.Format(TranslateManager.GetText("Energe_NotEnough"), EnergeManager.CHARGE_INTERVAL_MINUTES));
+            SoundManager.Play(SFXType.Fail_NotEnough);
             return;
         }
         SceneManager.LoadScene("InGame");

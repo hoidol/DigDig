@@ -46,6 +46,7 @@ public class GameManager : MonoSingleton<GameManager>
             MinionManager.Instance.LoadTask
         );
 
+        PlayInGameBGM();
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
         GameEventBus.Subscribe<KingSlimeHpChangedEvent>(OnCharacterHpChangedEvent);
         GameEventBus.Subscribe<SpawnMinionEvent>(OnSpawnMinieEvent);
@@ -80,8 +81,16 @@ public class GameManager : MonoSingleton<GameManager>
 
         FadeCanvs.Instance.FadeIn(stageData.Title, () =>
         {
+            PlayInGameBGM(); // InGame 씬에서 바로 시작하면 SoundManager.Start(로비 BGM)가 위 호출보다 늦을 수 있어 한 번 더 (이미 재생 중이면 무시)
             StartGameAfterTutorial().Forget();
         });
+    }
+
+    static void PlayInGameBGM()
+    {
+        SoundManager soundManager = SoundManager.Instance;
+        if (soundManager != null)
+            soundManager.PlayBGM(BGMType.InGame);
     }
 
     // 튜토리얼이 진행 중이면 끝나거나 튜토리얼이 wave 시작을 요청할 때(StartWaveTutorialStep)까지 대기
@@ -104,6 +113,7 @@ public class GameManager : MonoSingleton<GameManager>
         if (isGameStarted)
             return;
         isGameStarted = true;
+        DamageMeterSystem.Clear(); // 피해 집계는 한 판 누적
 
         waveIdx = 0;
         gameTimer = 0;
@@ -158,7 +168,7 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Publish(new WaveStartEvent(waveIdx, waveType));
     }
 
-    // 무한 웨이브. wave 번호(waveIdx + 1)가 BOSS_WAVE_INTERVAL 배수면 보스, ELITE_WAVE_INTERVAL 배수면 엘리트, 나머지는 일반 전투
+    // wave 1~LAST_WAVE(80). wave 번호(waveIdx + 1)가 BOSS_WAVE_INTERVAL 배수면 보스, ELITE_WAVE_INTERVAL 배수면 엘리트, 나머지는 일반 전투
     public static WaveType GetWaveType(int waveIdx)
     {
         int waveNum = waveIdx + 1;
@@ -200,13 +210,23 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
 
-    // 다음 wave 시작 (무한). 이전 wave는 끄지 않으므로 남은 적은 다음 wave와 겹쳐서 진행
+    // 다음 wave 시작. 이전 wave는 끄지 않으므로 남은 적은 다음 wave와 겹쳐서 진행
+    // 마지막 wave(LAST_WAVE, 보스)를 넘기면 다음 wave 대신 게임 클리어
     public void StartNextWave()
     {
         if (!isPlaying)
             return;
+        if (IsLastWave(waveIdx))
+        {
+            isCleared = true;
+            EndGame(true);
+            return;
+        }
         StartWave(waveIdx + 1);
     }
+
+    public bool isCleared; // 마지막 wave까지 깬 판 (결과 화면 보상·클리어 기록)
+    public static bool IsLastWave(int waveIdx) => waveIdx + 1 >= GameSetting.LAST_WAVE;
 
 
     // 스킵 가능(다음 wave 바로 시작): 현재 wave의 적이 모두 소환된 뒤 (Wave.isSpawnEnd, 2026-11-15)

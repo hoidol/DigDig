@@ -294,7 +294,7 @@ public class MinionTestWindow : EditorWindow
         using (new EditorGUILayout.HorizontalScope())
         {
             if (GUILayout.Button("적 소환 (현재 wave 체력)"))
-                SpawnEnemies();
+                SpawnEnemies(enemyType, defenceType, enemyCount);
             if (GUILayout.Button("필드 적 전부 제거"))
                 EnemyFieldController.Instance.ClearAllEnemies();
         }
@@ -307,7 +307,8 @@ public class MinionTestWindow : EditorWindow
         }
     }
 
-    void SpawnEnemies()
+    // TileItemTestWindow도 사용
+    public static void SpawnEnemies(EnemyType enemyType, DefenceType defenceType, int enemyCount)
     {
         StageData stage = GameManager.Instance.stageData;
         EnemyFieldController field = EnemyFieldController.Instance;

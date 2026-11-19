@@ -8,6 +8,11 @@ namespace Lobby
     {
         public TMP_Text lvText;
 
+        protected override void PlayOpenSound()
+        {
+            SoundManager.Play(SFXType.UserLevelUp);
+        }
+
 
         public override void OpenCanvas(Action closeCallback = null)
         {

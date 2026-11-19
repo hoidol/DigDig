@@ -1,16 +1,11 @@
 fileFormatVersion: 2
-guid: c09be45c2bf647a59cc3b01dc6eed2e2
+guid: 1004de8c22cc3544b9005e2a267fca16
 labels:
 - usfx
 - imphenzia
-- mono
-- balloon
-- air
-- blow
-- toy
-- party
-- pop
-- burst
+- foley
+- cardboard
+- paper
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
@@ -36,5 +31,5 @@ AssetOrigin:
   productId: 17256
   packageName: Universal Sound FX
   packageVersion: 1.6
-  assetPath: Assets/Universal Sound FX/FOLEY/BALLOONS/BALLOON_Pop_Real_01_mono.wav
+  assetPath: Assets/Universal Sound FX/FOLEY/CARDBOARD/CARDBOARD_Drop_Pieces_mono.wav
   uploadId: 736765

@@ -51,8 +51,10 @@ namespace Lobby
             if (!UserDataManager.Instance.userMinionManager.LevelUp(minionData.key))
             {
                 ToastCanvas.Toast(TranslateManager.GetText("Not enough exp"));
+                SoundManager.Play(SFXType.Fail_NotEnough);
                 return;
             }
+            SoundManager.Play(SFXType.MinionLevelUp);
             minionPanel.SetData(minionData);
             UpdateCanvas();
         }

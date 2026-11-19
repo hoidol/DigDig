@@ -33,6 +33,9 @@ namespace Lobby
                 AuthorityManager.Instance.LoadTask,
                 MinionManager.Instance.LoadTask
             );
+            var sound = SoundManager.Instance;
+            if (sound != null)
+                sound.PlayBGM(BGMType.Lobby);
             var fadeDone = new UniTaskCompletionSource();
             StartLobby(fadeDone.Task);
             FadeCanvs.Instance.FadeIn("", () => fadeDone.TrySetResult());

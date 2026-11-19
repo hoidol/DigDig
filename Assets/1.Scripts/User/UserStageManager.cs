@@ -73,6 +73,16 @@ public class UserStageManager : UserBaseManager
         RequestSave();
     }
 
+    // 마지막 wave(GameSetting.LAST_WAVE)까지 깬 난이도. 다음 난이도 해금 기준
+    public void ClearStage(string key)
+    {
+        UserStage userStage = GetUserStage(key);
+        if (userStage.isClear)
+            return;
+        userStage.isClear = true;
+        RequestSave();
+    }
+
     public void TryStage(string key)
     {
         UserStage userStage = GetUserStage(key);
@@ -120,6 +130,7 @@ public class UserStage
     public string key;
     public int tryCount;
     public int maxWave;
+    public bool isClear; // 마지막 wave까지 깸 (2026-11-19)
     public List<UserStageReward> userStageRewards = new List<UserStageReward>();
     public UserStageReward GetUserStageReward(string id)
     {

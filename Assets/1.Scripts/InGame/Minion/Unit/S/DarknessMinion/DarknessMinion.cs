@@ -15,7 +15,7 @@ public class DarknessMinion : MinionGrowth1
     public const float TRANSFORM_GROW_CHANCE = 0.1f; // 변신 성공 시 머지 레벨 +1(다음 단계로 성장) 확률. 최대 레벨이면 그대로
     static readonly Color SUCCESS_TEXT_COLOR = new Color(0.75f, 0.45f, 1f);
     static readonly Color GROW_TEXT_COLOR = new Color(1f, 0.85f, 0.2f);
-    static readonly Color FAIL_TEXT_COLOR = new Color(0.45f, 0.5f, 0.95f); // 회색은 밝은 타일 위에서 안 보임
+    static readonly Color FAIL_TEXT_COLOR = EffectManager.POP_TEXT_FAIL_COLOR; // 공용 실패 색
 
     // 최대 머지 레벨에서는 쓸 수 있는 각성이 없어 진화하지 않음 (머지 레벨을 올리는 슬라임)
     public override bool CanEvolve => false;
@@ -129,6 +129,7 @@ public class DarknessMinion : MinionGrowth1
         if (!IsSkillReady || TileManager.Instance.GetTile(this) == null)
             return null;
         Vector3 pos = transform.position;
+        SoundManager.Play(SFXType.DarknessTransform); // 성공·실패 공용
         if (!success)
         {
             skillTimer = 0f;

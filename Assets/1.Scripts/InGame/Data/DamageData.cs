@@ -4,6 +4,9 @@ public class DamageData
 {
     public float damage;
     public AttackType attackType;
+    // 피해를 준 아군 (피해 집계 DamageMeterSystem용). AllyUnitDamageData가 아닌 피해(화상·번개 연쇄 등)는 여기에 넣는다
+    public IAllyUnit source;
+    public virtual IAllyUnit Attacker => source;
     // 만능(AllRounder) 공격은 방어 타입 배율 무시 (Enemy.TakeDamage에서 확인)
     public virtual bool IgnoreDefence => attackType == AttackType.AllRounder;
     // typeMultiplier = 방어 타입 표 배율(약점·내성 표시용), targetMaxHp = 맞은 대상 최대 체력(피해 숫자 크기용, 0이면 기본 크기)
@@ -38,6 +41,7 @@ public class EnemyDamageData : DamageData
 public class AllyUnitDamageData : DamageData
 {
     public IAllyUnit allyUnit;
+    public override IAllyUnit Attacker => allyUnit ?? source;
 
     // 발사 시 설정 (캐릭터 탄: 캐릭터 치명타 스탯, 타일 아이템: TileItem.ModifyDamageData)
     public float critChance;    // % 단위, 적중마다 판정

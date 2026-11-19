@@ -1,29 +1,29 @@
 Key	Name	Desc	Grade	AttackType	Growth	AttackSpeed	AttackRange	CritChance	Tags	ReinforceAttackPower	ReinforceAttackSpeed	Evolution	HasSkill	SkillInfo
-Bounce	탄성	1회 튕기는 도탄 발사/2회 튕기는 도탄 발사/4회 튕기는 도탄 발사	C	Physic	1	50	3	0	Shooter	7	0	360 방향으로 7개 탄 발사	TRUE	7초 마다 5 방향으로 도탄 발사
-Flame	화염	화염탄을1개 발사	C	Magic	1	50	3	0	Shooter|Status	5	0	5초마다 주변 적에게 화염	TRUE	8초마다 주변 전체 화염
-Ice	얼음	20% 확률로 빙결되는 얼음을 발사합니다.	C	Magic	1	50	3	0	Shooter|Status|Chance	5	0		FALSE	
-Iron	강철	엘리트, 보스에게 2배 데미지	C	Physic	1	50	3	0	Shooter|Heavy	5	0		FALSE	
-Lightning	라이트닝	몬스터 공격 시 타겟을 포함한 3개의 몬스터에게 각각 100%, 70%, 30% [전기]데미지를 입힌다.	C	Magic	1	40	3	0	Shooter	5	0		FALSE	
-Orbit	궤도	궤도 생성 (3초마다 체력 -1체력)	C	Physic	1	50	3	0	Orbit	5	0	튕길 때마다 피해량 10% 증가 + 화면 튕김	FALSE	
-Pierce	관통	관통탄 발사합니다.	C	Physic	1	50	3	0	Shooter	5	0		FALSE	
-Random	랜덤	{0}~{1} 피해를 가진 탄을 발사합니다.	C	Physic	1	50	3	0	Shooter	10	0		TRUE	9초 마다 2초 동안 공격속도 3배
-Thunder	천둥	번개를 떨어드려 주변 데미지	C	Magic	1	40	3	0	Zone	5	0		FALSE	
-Breeze	산들바람	십자범위 4칸 주사위에게 [공격속도 증가] 버프를 준다.	B	Magic	1	40	3	0	Support	5	0		FALSE	
-Dopamine	광란	주변에서 적 죽으면 한발 더 발사함	B	Physic	1	50	3	0	Shooter|KillTrigger	5	0		FALSE	주변에서 죽으면 쿨타임 증가(30마리) -> 쿨타임 다차면 5초간 공격속도 3배
-Mine	지뢰	가까운 적 이동 경로에 지뢰 설치	B	Physic	1	25	3	0	Zone	5	0		FALSE	
-Rage	격노	십자범위 4칸 주사위에게 [공격력 증가] 버프를 준다.	B	Physic	1	40	3	0	Support	5	0		FALSE	
-Shield	철벽	Orbit 적의 이동을 막는 방패가 회전합니다. 방패 당 적 3기까지 적용	B	Physic	1	50	3	0	Orbit	5	0		FALSE	
-Stigma	낙인	빈틈을 찾아서 흔적 (3회 중첩, 중첩 당 5% 추가 데미지)	B	Physic	1	50	3	0	Shooter|Status|Chance	5	0		TRUE	쿨타임 10초 후 주변 전체 낙인
-Beam	광선 링크	레이저가 연결됨	A	Magic	1	40	3	0	Zone	5	0		FALSE	
-Berserker	버서커	가까이서 적이 죽을때 마다 공속도 상승(최대 중첩 10회)	A	Physic	1	50	3	0	Shooter|KillTrigger	5	0		TRUE	(질문) 이것도 시각적으로 표현하고 싶은데 어떻게 하면 좋을까?
-Hail	빙석	타일그룹을 회전하는 눈 소환	A	Magic	1	30	3	0	Zone|Status|Chance	5	0		TRUE	쿨타임이 다차면 Hail 소환
-Inferno	지옥	타일그룹에 있는 적 화염 데미지	A	Magic	1	30	3	0	Zone	5	0		TRUE	쿨타임(12초)이 다차면  Inferno 소환,그전에 기본 공격 
-Keen	설의	십자범위 4칸 주사위에게 [크리티컬 증가] 버프를 준다.	A	Physic	1	40	3	0	Support	5	0		FALSE	
-Mortar	박격포	깃발 위치에 폭탄 포격	A	Physic	1	15	3	0	Zone|Heavy	5	0		FALSE	
-Mud	진흙	Orbit(닿으면 슬로우)	A	Magic	1	30	3	0	Orbit|Status	5	0		FALSE	
-GrowUp	성장	25초 후 랜덤한 슬라임으로 성장합니다.	S	Physic	1	50	3	0	Special|Transform	5	0		TRUE	특정 시간 후 랜덤한 유닛으로 성장(본인 제외)
-Hunter	사냥꾼	3회 공격마다 저격 관통탄 발사하여 스턴 0.2초 + 치명 피해를 줍니다.	S	Physic	1	60	3	0	Shooter|Heavy	5	0		TRUE	공격할때마다 쿨타임 참 다 차면 4총 동안 매우 빠르고 속도로 3명의 멀티 타켓 공격
-Darkness	다크니스	원하는 슬라임으로 변함	S	Magic	1	50	3	0	Special|Transform	5	0		TRUE	쿨타임 15초 후 선택하면 머리 위 목록에서 원하는 미니언으로 변신(머지 레벨 유지)
-Joker	조커	5초마다 카드를 뽑아 효과 발동	S	Magic	1	50	3	0	Shooter|Chance	5	0		TRUE	5초마다 카드: 스페이드=주변 가시 공격 / 다이아=5초간 공속 5배·공격력 절반 / 클로버=코인 / 하트=꽝
-Sacrifice	희생	합치면 동일한 슬라임으로	S	Magic	1	50	3	0	Special|Transform	5	0		FALSE	
-Scavenger	수확	주변에서 적이 죽으면 1골드 획득	S	Physic	1	50	3	0	Special|KillTrigger	5	0		TRUE	주변에서 죽으면 쿨타임이 참(20마리), 다 차면 10골드 획득 -> 머지마다 2골드씩 증가함
+Bounce	콩콩이	1회 튕기는 도탄 발사/2회 튕기는 도탄 발사/4회 튕기는 도탄 발사	C	Physic	1	50	3	0	Shooter	7	0	360 방향으로 7개 탄 발사	TRUE	7초 마다 5 방향으로 도탄 발사
+Flame	불똥이	화염탄을1개 발사	C	Magic	1	50	3	0	Shooter|Status	5	0	5초마다 주변 적에게 화염	TRUE	8초마다 주변 전체 화염
+Ice	눈송이	20% 확률로 빙결되는 얼음을 발사합니다.	C	Magic	1	50	3	0	Shooter|Status|Chance	5	0		FALSE	
+Iron	철컹이	엘리트, 보스에게 2배 데미지	C	Physic	1	50	3	0	Shooter|Heavy	5	0		FALSE	
+Lightning	찌릿이	몬스터 공격 시 타겟을 포함한 3개의 몬스터에게 각각 100%, 70%, 30% [전기]데미지를 입힌다.	C	Magic	1	40	3	0	Shooter	5	0		FALSE	
+Orbit	빙빙이	궤도 생성 (3초마다 체력 -1체력)	C	Physic	1	50	3	0	Orbit	5	0	튕길 때마다 피해량 10% 증가 + 화면 튕김	FALSE	
+Pierce	뾰족이	관통탄 발사합니다.	C	Physic	1	50	3	0	Shooter	5	0		FALSE	
+Random	뭉치	{0}~{1} 피해를 가진 탄을 발사합니다.	C	Physic	1	50	3	0	Shooter	10	0		TRUE	9초 마다 2초 동안 공격속도 3배
+Thunder	둥둥이	번개를 떨어드려 주변 데미지	C	Magic	1	40	3	0	Zone	5	0		FALSE	
+Breeze	팔랑이	십자범위 4칸 주사위에게 [공격속도 증가] 버프를 준다.	B	Magic	1	40	3	0	Support	5	0		FALSE	
+Dopamine	깔깔이	주변에서 적 죽으면 한발 더 발사함	B	Physic	1	50	3	0	Shooter|KillTrigger	5	0		FALSE	주변에서 죽으면 쿨타임 증가(30마리) -> 쿨타임 다차면 5초간 공격속도 3배
+Mine	쾅쾅이	가까운 적 이동 경로에 지뢰 설치	B	Physic	1	25	3	0	Zone	5	0		FALSE	
+Rage	버럭이	십자범위 4칸 주사위에게 [공격력 증가] 버프를 준다.	B	Physic	1	40	3	0	Support	5	0		FALSE	
+Shield	돌쇠	Orbit 적의 이동을 막는 방패가 회전합니다. 방패 당 적 3기까지 적용	B	Physic	1	50	3	0	Orbit	5	0		FALSE	
+Stigma	누더기	빈틈을 찾아서 흔적 (3회 중첩, 중첩 당 5% 추가 데미지)	B	Physic	1	50	3	0	Shooter|Status|Chance	5	0		TRUE	쿨타임 10초 후 주변 전체 낙인
+Beam	똘망이	레이저가 연결됨	A	Magic	1	40	3	0	Zone	5	0		FALSE	
+Berserker	늑돌이	가까이서 적이 죽을때 마다 공속도 상승(최대 중첩 10회)	A	Physic	1	50	3	0	Shooter|KillTrigger	5	0		TRUE	(질문) 이것도 시각적으로 표현하고 싶은데 어떻게 하면 좋을까?
+Hail	북실이	타일그룹을 회전하는 눈 소환	A	Magic	1	30	3	0	Zone|Status|Chance	5	0		TRUE	쿨타임이 다차면 Hail 소환
+Inferno	활활이	타일그룹에 있는 적 화염 데미지	A	Magic	1	30	3	0	Zone	5	0		TRUE	쿨타임(12초)이 다차면  Inferno 소환,그전에 기본 공격
+Keen	나비	십자범위 4칸 주사위에게 [크리티컬 증가] 버프를 준다.	A	Physic	1	40	3	0	Support	5	0		FALSE	
+Mortar	달그락	깃발 위치에 폭탄 포격	A	Physic	1	15	3	0	Zone|Heavy	5	0		FALSE	
+Mud	두껍이	Orbit(닿으면 슬로우)	A	Magic	1	30	3	0	Orbit|Status	5	0		FALSE	
+GrowUp	알콩이	25초 후 랜덤한 슬라임으로 성장합니다.	S	Physic	1	50	3	0	Special|Transform	5	0		TRUE	특정 시간 후 랜덤한 유닛으로 성장(본인 제외)
+Hunter	저승이	3회 공격마다 저격 관통탄 발사하여 스턴 0.2초 + 치명 피해를 줍니다.	S	Physic	1	60	3	0	Shooter|Heavy	5	0		TRUE	공격할때마다 쿨타임 참 다 차면 4총 동안 매우 빠르고 속도로 3명의 멀티 타켓 공격
+Darkness	까망이	원하는 슬라임으로 변함	S	Magic	1	50	3	0	Special|Transform	5	0		TRUE	쿨타임 15초 후 선택하면 머리 위 목록에서 원하는 미니언으로 변신(머지 레벨 유지)
+Joker	킥킥이	5초마다 카드를 뽑아 효과 발동	S	Magic	1	50	3	0	Shooter|Chance	5	0		TRUE	5초마다 카드: 스페이드=주변 가시 공격 / 다이아=5초간 공속 5배·공격력 절반 / 클로버=코인 / 하트=꽝
+Sacrifice	몽실이	합치면 동일한 슬라임으로	S	Magic	1	50	3	0	Special|Transform	5	0		FALSE	
+Scavenger	줍줍이	주변에서 적이 죽으면 1골드 획득	S	Physic	1	50	3	0	Special|KillTrigger	5	0		TRUE	주변에서 죽으면 쿨타임이 참(20마리), 다 차면 10골드 획득 -> 머지마다 2골드씩 증가함

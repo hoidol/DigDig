@@ -39,6 +39,7 @@ public class DrawItemButton : ButtonUI
     {
         if (KingSlime.Instance.diceCoin < GetDrawPrice())
         {
+            SoundManager.Play(SFXType.Fail_NotEnough);
             ToastCanvas.Toast(TranslateManager.GetText("Not enough dice coin"));
             return;
         }

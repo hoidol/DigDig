@@ -167,11 +167,11 @@ public class DrawShopPlayTest : InGamePlayTestBase
         Assert.AreEqual(shownKeys.Count, shownKeys.Distinct().Count(), "같은 슬라임이 여러 칸");
         CollectionAssert.AreEquivalent(allKeys, shownKeys, "빠진 슬라임");
 
-        // 보유/미보유 컨테이너 분리, 미보유 표시
+        // 한 컨테이너, 미보유 표시
         foreach (var panel in shown)
         {
             bool own = minionManager.GetUserMinion(panel.minionData.key).own;
-            Assert.AreEqual(own ? canvas.ownContainer : canvas.unownContainer, panel.transform.parent, $"{panel.minionData.key} 컨테이너");
+            Assert.AreEqual(canvas.ownContainer, panel.transform.parent, $"{panel.minionData.key} 컨테이너");
             Assert.AreEqual(!own, panel.unownPanel.activeSelf, $"{panel.minionData.key} 미보유 표시");
 
             // 카드 틀 색 = 등급
@@ -187,15 +187,17 @@ public class DrawShopPlayTest : InGamePlayTestBase
         {
         }
 
-        // 각 컨테이너 안에서 화면 순서 = 등급 높은 순 (레전드 → 유니크 → 레어 → 노말). 새로 얻은 슬라임도 등급 자리에
-        foreach (Transform container in new[] { canvas.ownContainer, canvas.unownContainer })
+        // 화면 순서 = 보유(등급 낮은 순) → 미보유(등급 낮은 순). 새로 얻은 슬라임도 보유 쪽 등급 자리에
         {
-            var grades = container.GetComponentsInChildren<Lobby.Growth1MinionEntryPanel>(false)
-                .Where(p => p.transform.parent == container && p.minionData != null)
-                .OrderBy(p => p.transform.GetSiblingIndex())
-                .Select(p => p.minionData.grade).ToList();
-            for (int i = 1; i < grades.Count; i++)
-                Assert.GreaterOrEqual((int)grades[i - 1], (int)grades[i], $"{container.name} {i}번째 칸 등급 순서: {string.Join(",", grades)}");
+            var ordered = shown.OrderBy(p => p.transform.GetSiblingIndex())
+                .Select(p => (own: minionManager.GetUserMinion(p.minionData.key).own, grade: (int)p.minionData.grade)).ToList();
+            string orderStr = string.Join(",", ordered.Select(o => (o.own ? "O" : "X") + o.grade));
+            for (int i = 1; i < ordered.Count; i++)
+            {
+                Assert.IsFalse(!ordered[i - 1].own && ordered[i].own, $"{i}번째 칸: 미보유 뒤에 보유 ({orderStr})");
+                if (ordered[i - 1].own == ordered[i].own)
+                    Assert.LessOrEqual(ordered[i - 1].grade, ordered[i].grade, $"{i}번째 칸 등급 순서 ({orderStr})");
+            }
         }
         if (newlyOwned != null)
             Assert.IsFalse(shown.First(p => p.minionData.key == newlyOwned.key).unownPanel.activeSelf, "새로 얻은 슬라임이 미보유로 보임");

@@ -40,6 +40,7 @@ public class EliteEnemy : NormalEnemy
 
         int gold = GetEliteRewardGold(wave);
         KingSlime.Instance.AddCoin(gold);
+        SoundManager.Play(SFXType.CoinGet);
         CoinText.Instantiate().SetCoinText(transform.position, $"+{gold}");
     }
 }

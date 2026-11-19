@@ -58,7 +58,11 @@ public class Mine : MonoBehaviour
         transform.DOKill();
         transform.DOJump(to, THROW_HEIGHT, 1, THROW_DURATION)
             .SetEase(Ease.Linear)
-            .OnComplete(() => IsArmed = true);
+            .OnComplete(() =>
+            {
+                IsArmed = true;
+                SoundManager.Play(SFXType.MineInstall); // 착지(설치)
+            });
     }
 
     void Update()
@@ -81,6 +85,7 @@ public class Mine : MonoBehaviour
     {
         IsArmed = false;
         EffectManager.Instance.Play(EffectType.SmallExplosion, landPos);
+        SoundManager.Play(SFXType.MineExplosion);
 
         IHittable[] targets = Physics2D.OverlapCircleAll(landPos, explodeRadius, hitLayerMask)
             .Select(c => c.GetComponent<IHittable>())

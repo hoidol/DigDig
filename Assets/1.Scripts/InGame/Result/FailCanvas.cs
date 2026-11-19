@@ -6,6 +6,7 @@ using UnityEngine;
 // 사망 시 열림: 광고 보고 부활(하루 MAX_DAILY_RESURRECTION_COUNT번) 또는 취소 → 결과 화면
 public class FailCanvas : CanvasUI<FailCanvas>
 {
+    protected override void PlayOpenSound() { } // 사망 소리(Dead)가 따로 남
     public const string DAILY_RESURRECTION_COUNT_KEY = "DAILY_RESURRECTION_COUNT"; // 오늘 남은 부활 횟수
     public const string DAILY_RESURRECTION_DATE_KEY = "DAILY_RESURRECTION_DATE";   // 남은 횟수를 기록한 날짜 (날짜가 바뀌면 다시 가득)
     public const int MAX_DAILY_RESURRECTION_COUNT = 5;
@@ -34,6 +35,7 @@ public class FailCanvas : CanvasUI<FailCanvas>
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
+        SoundManager.Play(SFXType.Dead);
         isWatchingAd = false;
         UpdateCanvas();
     }
@@ -68,6 +70,7 @@ public class FailCanvas : CanvasUI<FailCanvas>
         LeftResurrectionCount--;
         CloseCanvas();
         GameManager.Instance.Resume();
+        SoundManager.Play(SFXType.Resurrection);
     }
 
     public void OnClickedCancel()

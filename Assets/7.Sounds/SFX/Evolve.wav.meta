@@ -1,17 +1,15 @@
 fileFormatVersion: 2
-guid: cd43d671822b403d93cda9e3afe6fa8c
+guid: e3492d4c59b2487e8f17cd05d3f11b6b
 labels:
 - usfx
 - imphenzia
+- time
+- slow
+- rewind
+- warp
 - mono
-- magic
-- spell
-- wizard
-- sourcerer
-- cast
-- magician
-- fantasy
-- power
+- clock
+- freeze
 AudioImporter:
   externalObjects: {}
   serializedVersion: 6
@@ -37,5 +35,5 @@ AssetOrigin:
   productId: 17256
   packageName: Universal Sound FX
   packageVersion: 1.6
-  assetPath: Assets/Universal Sound FX/MAGIC_SPELLS/MAGIC_SPELL_Power_mono.wav
+  assetPath: Assets/Universal Sound FX/TIME_WARPS/TIME_WARP_Stop_01_mono.wav
   uploadId: 736765

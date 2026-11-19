@@ -7,6 +7,7 @@ public class IceMinion : MinionGrowth1
     IceBulletSpec iceBulletSpec;
     IceMinionData iceMinionData;
     public float iceDuration;
+    public float iceSlowRate;
 
     public override void Spawn(Vector2 pos, int lv)
     {
@@ -19,6 +20,7 @@ public class IceMinion : MinionGrowth1
         iceBulletSpec = new IceBulletSpec();
 
         iceDuration = iceMinionData.durations.GetByMergeLevel(mergeLevel);
+        iceSlowRate = iceMinionData.slowRate.GetByMergeLevel(mergeLevel);
         base.InitMinion();
     }
 
@@ -26,6 +28,7 @@ public class IceMinion : MinionGrowth1
     {
         iceBulletSpec.damage = AttackPower;
         iceBulletSpec.duration = iceDuration;
+        iceBulletSpec.slowRate = iceSlowRate;
 
         iceBulletSpec.StartBulletSpec();
         if (isEvolved)

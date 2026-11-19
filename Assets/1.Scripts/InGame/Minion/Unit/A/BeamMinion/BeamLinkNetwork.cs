@@ -23,6 +23,8 @@ public static class BeamLinkNetwork
     // 전기 이펙트(BeamMinion.linkEffectPrefab)가 있으면 LineRenderer 대신 사용
     static readonly List<LightningLine> effectPool = new List<LightningLine>();
     static readonly AllyUnitDamageData damageData = new AllyUnitDamageData();
+    // 레이저 루프 소리를 켠 광선 슬라임 (연결된 슬라임마다 owner, 바뀔 때만 SetLoop)
+    static readonly HashSet<BeamMinion> loopOwners = new HashSet<BeamMinion>();
     static int lastTickFrame = -1;
     static float tickTimer;
 
@@ -35,6 +37,8 @@ public static class BeamLinkNetwork
     public static void Unregister(BeamMinion beam)
     {
         beams.Remove(beam);
+        if (loopOwners.Remove(beam))
+            SoundManager.SetLoop(SFXType.BeamLoop, beam, false);
         // 남은 광선 슬라임이 없으면 Tick이 안 불리므로 레이저를 여기서 숨김 (남아 있으면 다음 Tick에 다시 켜짐)
         // 씬 종료 중 싱글톤 접근을 피하려고 다시 계산하지 않고 끄기만 함
         foreach (LineRenderer line in linePool)
@@ -62,6 +66,7 @@ public static class BeamLinkNetwork
 
         beams.RemoveAll(b => b == null);
         RebuildLinks();
+        UpdateLoopSound();
         UpdateLines();
         UpdateDamage();
     }
@@ -88,6 +93,21 @@ public static class BeamLinkNetwork
                 candidates[i].linkCount++;
                 candidates[j].linkCount++;
             }
+        }
+    }
+
+    // 연결이 하나라도 있으면 BeamLoop 재생 (SoundManager가 owner 수를 세서 마지막 owner가 끄면 정지)
+    static void UpdateLoopSound()
+    {
+        loopOwners.RemoveWhere(b => b == null);
+        foreach (BeamMinion beam in beams)
+        {
+            bool on = beam.IsLinked;
+            if (on == loopOwners.Contains(beam))
+                continue;
+            if (on) loopOwners.Add(beam);
+            else loopOwners.Remove(beam);
+            SoundManager.SetLoop(SFXType.BeamLoop, beam, on);
         }
     }
 

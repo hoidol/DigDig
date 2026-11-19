@@ -57,6 +57,39 @@ public class SoundManager : MonoSingleton<SoundManager>
         AudioVolumeUtil.ApplyAllFromPlayerPrefs(audioMixer);
     }
 
+    // 게임 코드에서 부르는 곳: SoundManager.Play(SFXType.X) (SoundManager가 없으면 무시)
+    public static void Play(SFXType type)
+    {
+        SoundManager manager = Instance;
+        if (manager != null)
+            manager.PlaySound(type);
+    }
+
+    // 루프 소리(지옥불·레이저)를 켜는 쪽(owner)이 여럿일 때: 첫 owner가 켜면 재생, 마지막 owner가 끄면 정지
+    // owner는 꺼질 때(OnDisable 등) 반드시 on = false로 다시 부른다
+    readonly Dictionary<SFXType, HashSet<Object>> loopOwners = new Dictionary<SFXType, HashSet<Object>>();
+    public static void SetLoop(SFXType type, Object owner, bool on)
+    {
+        SoundManager manager = Instance;
+        if (manager != null && owner != null)
+            manager.SetLoopSound(type, owner, on);
+    }
+
+    void SetLoopSound(SFXType type, Object owner, bool on)
+    {
+        if (!loopOwners.TryGetValue(type, out HashSet<Object> owners))
+            loopOwners[type] = owners = new HashSet<Object>();
+        owners.RemoveWhere(e => e == null); // 꺼지지 않고 삭제된 owner 정리
+        int prevCount = owners.Count;
+        if (on) owners.Add(owner);
+        else owners.Remove(owner);
+
+        if (prevCount == 0 && owners.Count > 0)
+            PlaySound(type);
+        else if (prevCount > 0 && owners.Count == 0)
+            StopSound(type);
+    }
+
     //사운드 실행하기
     public void PlaySound(SFXType _sType)
     {
@@ -191,6 +224,7 @@ public class SoundManager : MonoSingleton<SoundManager>
 }
 
 // 저장(직렬화)은 번호로 되므로 새 종류는 맨 뒤에만 추가한다.
+// 클립이 있는 종류만 둔다 (2026-11-17 클립 없는 종류 정리)
 public enum SFXType
 {
     Click,
@@ -208,25 +242,21 @@ public enum SFXType
 
     // 전투 공통
     MinionAttack, // 미니언 공통 공격 소리 (MinionData.attackSfx에 클립이 없을 때)
-    HitPhysic, HitMagic, HitWeak, HitResist, HitCritical,
-    EnemyDead, EliteDead, BossDead, KingDamaged, KingLowHp,
-    StatusSlow, StatusFreeze, StatusStun, StatusBurn, StatusStigma, StatusMud,
+    EnemyDead, BossDead,
 
     // 미니언 스킬
-    Thunder, LightningChain, FlameSkill, IceHit, HailSpawn, Bounce, OrbitHit, ShieldBlock,
+    Thunder, LightningChain, FlameSkill, OrbitHit,
     MineInstall, MineExplosion, MortarFire, MortarExplosion, InfernoLoop, BeamLoop,
-    BerserkerHit, BerserkerStack, HunterSnipe, StigmaSkill, PowerUp,
-    JokerCardDraw, JokerSpade, JokerDiamond, JokerClover, JokerHeart,
-    DarknessOpen, DarknessTransform, GrowUp, SacrificeMerge, BuffReceive,
+    BerserkerHit, HunterSnipe, StigmaSkill, PowerUp,
+    JokerCardDraw, DarknessTransform, GrowUp, SacrificeMerge,
 
     // wave / 진행
-    WaveStart, EliteAppear, BossAppear, NextWaveButton, AuthorityTrigger, TimeStop,
+    BossAppear, NextWaveButton, AuthorityTrigger, TimeStop,
     Dead, Resurrection, RewardGet, RewardDouble,
 
     // 로비
-    ChestOpen, CardFlip, CardShakeHighGrade, CardRevealHighGrade,
-    MinionLevelUp, KingUpgrade, UserLevelUp, ExpBarFill, AuthoritySelect, AchievementReward, PurchaseComplete,
-    TutorialNext,
+    ChestOpen, CardFlip,
+    MinionLevelUp, KingUpgrade, UserLevelUp, AuthoritySelect, AchievementReward, PurchaseComplete,
 }
 
 public enum BGMType

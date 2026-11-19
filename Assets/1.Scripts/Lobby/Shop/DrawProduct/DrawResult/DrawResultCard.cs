@@ -36,6 +36,7 @@ namespace Lobby
             sequence.AppendInterval(delay);
             if (shake)
                 sequence.Append(transform.DOShakeRotation(SHAKE_DURATION, new Vector3(0, 0, 15), 25, 90, false));
+            sequence.AppendCallback(() => SoundManager.Play(SFXType.CardFlip));
             sequence.Append(transform.DOScaleX(0f, FLIP_DURATION / 2).SetEase(Ease.InQuad));
             sequence.AppendCallback(ShowFront);
             sequence.Append(transform.DOScaleX(1f, FLIP_DURATION / 2).SetEase(Ease.OutQuad));
