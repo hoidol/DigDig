@@ -64,6 +64,9 @@ namespace Lobby
                 UpdateMyInfoPanels();
             }
 
+            // 보스를 처음 처치하고 돌아왔으면 보스 처치 연출 먼저 (페이드가 끝난 뒤, 끝나면 경험치 바·레벨업 창)
+            await LobbyReturnController.PlayPendingAsync(fadeDone);
+
             // 레벨업 창을 닫아야 다음 레벨업 (여러 레벨이 한 번에 올라도 하나씩 보여줌)
             bool authorityTierUnlocked = false;
             int fromExp = gainExp > 0 ? myInfo.userMyInfoData.exp - gainExp : 0;

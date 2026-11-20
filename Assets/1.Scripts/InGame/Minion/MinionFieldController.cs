@@ -384,7 +384,8 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         if (merged != null)
             merged.PlayMergeHop(); // 떨어지는 등장 대신 제자리에서 살짝 뛰었다 착지
         if (EffectManager.Instance != null && merged != null)
-            EffectManager.Instance.Play(EffectType.Merge, merged.transform.position); // 머지 이펙트 (Resources/Effect/MergedEffect)        mergeCount++;
+            EffectManager.Instance.Play(EffectType.Merge, merged.transform.position); // 머지 이펙트 (Resources/Effect/MergedEffect)
+        mergeCount++;
         AchievementManager.Report(AchievementType.MergeMinion);
         // Character.Instance.AddMergeCoin(1);
         GameEventBus.Publish(new MergedMinionEvent());

@@ -14,7 +14,7 @@ public class PioneerPickAuthority : Authority
     }
 }
 
-// 상인의 장부: 첫 wave 동안 소환 가격 절반 (MinionSpawnButton.GetSpawnPrice)
+// 상인의 장부: 첫 wave 동안 소환 가격 절반. (2026-11-20) 골드 소환 버튼 삭제로 지금은 효과 없음 — 카드 소환 방식에 맞게 다시 기획 필요
 public class MerchantLedgerAuthority : Authority
 {
     public const float DISCOUNT_MUL = 0.5f;
@@ -22,7 +22,7 @@ public class MerchantLedgerAuthority : Authority
     public static int ApplyDiscount(int price, int waveIdx) => waveIdx == 0 ? Mathf.CeilToInt(price * DISCOUNT_MUL) : price;
 }
 
-// 도박꾼의 동전: 소환 시 25% 머지 Lv1로 등장 / 25% 코인 2배 소모 (MinionSpawnButton)
+// 도박꾼의 동전: 소환 시 25% 머지 Lv1로 등장 / 25% 코인 2배 소모. (2026-11-20) 골드 소환 버튼 삭제로 지금은 효과 없음 — 다시 기획 필요
 public class GamblerCoinAuthority : Authority
 {
     public const float LEVEL_UP_CHANCE = 0.25f;
@@ -39,7 +39,7 @@ public class GamblerCoinAuthority : Authority
     }
 }
 
-// 장인의 망치: 타일 아이템 뽑기 최저 확률 30%, 실패하면 낸 코인 절반 환불 (DrawItemButton / SelectItemCanvas)
+// 장인의 망치: 타일 아이템 뽑기 최저 확률 30%, 실패하면 낸 코인 절반 환불. (2026-11-20) 룬 뽑기 버튼 삭제로 지금은 효과 없음 — 다시 기획 필요
 public class ArtisanHammerAuthority : Authority
 {
     public const int MIN_CHANCE = 30;

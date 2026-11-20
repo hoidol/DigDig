@@ -60,21 +60,6 @@ MonoBehaviour:
     gid: 768281207
     range: A:C
   - enabled: 1
-    csvPath: Json/WaveData/Normal.csv
-    sheetId: 
-    gid: 1703370116
-    range: B:D
-  - enabled: 1
-    csvPath: Json/WaveData/Hard.csv
-    sheetId: 
-    gid: 1703370116
-    range: B:D
-  - enabled: 1
-    csvPath: Json/WaveData/Hell.csv
-    sheetId: 
-    gid: 1703370116
-    range: B:D
-  - enabled: 1
     csvPath: Json/MinionEnhance/MinionEnhance_C.csv
     sheetId: 
     gid: 1944598144

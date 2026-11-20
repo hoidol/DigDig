@@ -180,6 +180,7 @@ public abstract class Weapon : MonoBehaviour, IGun
         TileItem tileItem = KingSlime.Instance.shotModifier.tileItem;
         if (tileItem != null)
             tileItem.OnFired(bulletObject);
+        KingSlime.Instance.abilityInventory?.OnKingFired(bulletObject); // 킹 성장 능력 (연속탄·바운드 등)
         sfxPlayer.Play();
         return bulletObject;
     }

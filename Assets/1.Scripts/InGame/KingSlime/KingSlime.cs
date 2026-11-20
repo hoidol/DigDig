@@ -13,6 +13,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     // public Joystick moveJoystick;
     // public Joystick attackJoystick;
     public KingSlimeStatManager statMgr;
+    public KingAbilityInventory abilityInventory; // (2026-11-20) 레벨업 카드로 얻은 킹 성장 능력 (한 판 동안)
     public Animator animator;
     public Transform bodyRootTr;
     public Transform bodyCenterTr;
@@ -83,7 +84,6 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         rg = GetComponentInChildren<Rigidbody2D>();
         itemInventory = GetComponentInChildren<ItemInventory>();
         minionInventory = GetComponentInChildren<MinionInventory>();
-        // abilityInventory = GetComponentInChildren<AbilityInventory>();
         // statInventory = GetComponentInChildren<StatInventory>();
         health = GetComponentInChildren<KingSlimeHealth>();
         // movement = GetComponentInChildren<CharacterMovement>();
@@ -99,6 +99,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     {
         // rangeObj.SetActive(false);
         statMgr = new KingSlimeStatManager(this, kingslimeName);
+        abilityInventory = new KingAbilityInventory(this);
 
         var statusEffectHandler = GetComponentInChildren<StatusEffectHandler>();
         health.Init(this, hpPoint, statusEffectHandler);
@@ -143,6 +144,8 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         {
             AddHp(diffMaxHp, false);
         }
+        else if (diffMaxHp < 0)
+            AddHp(0, false); // 최대 체력이 줄면 현재 체력을 최대 체력 이하로 (KingSlimeHealth.AddHp가 자름)
         // rangeObj.transform.localScale = Vector3.one * statMgr.AttackRange;
         GameEventBus.Publish(new KingSlimeUpdateEvent(this));
     }
@@ -164,10 +167,12 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         buffEffectDisplay.Refresh(transform, statMgr.activeBuffs);
     }
 
-    // 필요 경험치 = 25 + 8 × 레벨
-    public static int GetMaxExp(int level) => GameSetting.KING_LEVEL_BASE_EXP + GameSetting.KING_LEVEL_EXP_PER_LEVEL * Mathf.Max(0, level);
+    // 필요 경험치 = 25 + 8 × 레벨, Lv6(KING_LEVEL_EXP_SLOW_LEVEL)부터는 레벨당 +4 (Lv6 73, Lv7 77 …)
+    public static int GetMaxExp(int level) => GameSetting.KING_LEVEL_BASE_EXP
+        + GameSetting.KING_LEVEL_EXP_PER_LEVEL * Mathf.Clamp(level, 0, GameSetting.KING_LEVEL_EXP_SLOW_LEVEL)
+        + GameSetting.KING_LEVEL_EXP_PER_LEVEL_SLOW * Mathf.Max(0, level - GameSetting.KING_LEVEL_EXP_SLOW_LEVEL);
 
-    // 경험치 추가 → 넘치면 레벨업(남은 경험치 이월, 여러 번 가능). 레벨업 창(LevelUpCanvas)은 지금은 안 띄움
+    // 경험치 추가 → 넘치면 레벨업(남은 경험치 이월, 여러 번 가능). 레벨마다 레벨업 창(LevelUpCanvas) + 시간 정지
     public void AddExp(int e)
     {
         if (e <= 0)
@@ -177,6 +182,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         {
             exp -= MaxExp;
             lv++;
+            InGame.LevelUpCanvas.RequestOpen(); // 레벨마다 한 번씩 (시간 정지)
         }
         GameEventBus.Publish(new ExpChangedEvent(exp, MaxExp, lv));
     }
@@ -318,6 +324,7 @@ public enum StatType
     StartGold, 
     WaveClearGold,
     BurnDPS,
+    EliteBossDamage, // (2026-11-20) 엘리트·보스에게 주는 피해 +% (Add, 기본 0). 드워프 종족 버프 칸 등 → AllyUnitDamageData.eliteBossDamageMul
     
     Count
 }

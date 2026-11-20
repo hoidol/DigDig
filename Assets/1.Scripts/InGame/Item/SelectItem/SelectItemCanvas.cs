@@ -62,7 +62,7 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     {
         SetStep(SelectItemStep.Draw);
         bool isSuccess = UnityEngine.Random.Range(0, 100) < chance;
-        drawTileItemContainer.StartDraw();
+        drawTileItemContainer.StartDraw(chance);
         SoundManager.Play(SFXType.DrawItemRoll);
         if (drawDuration > 0f)
         {

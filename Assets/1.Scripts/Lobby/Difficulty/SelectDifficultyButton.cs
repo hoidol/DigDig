@@ -27,8 +27,14 @@ public class SelectDifficultyButton : ButtonUI
         UpdateButton();
     }
 
+    // 지금 선택한 스테이지(UserDataManager.stageOrder)에 이 난이도가 있는지 (없으면 SelectDifficultyCanvas가 버튼을 숨김)
+    public bool HasStageData => StageManager.Instance != null && StageManager.Instance.GetStageData(UserDataManager.stageOrder, difficultyType) != null;
+
     public void UpdateButton()
     {
+        if (!HasStageData)
+            return;
+
         if (titleText != null)
             titleText.text = DifficultyDisplayButton.GetDifficultyText(difficultyType);
         if (descText != null)
@@ -40,11 +46,11 @@ public class SelectDifficultyButton : ButtonUI
     // 잠김 = 해금 조건, 열림 = 최고 기록 wave (기록 없으면 "기록 없음")
     static string GetDescText(DifficultyType difficultyType)
     {
-        StageData stageData = StageManager.Instance.GetStageData(difficultyType);
+        StageData stageData = StageManager.Instance.GetStageData(UserDataManager.stageOrder, difficultyType);
         if (stageData != null && !stageData.ChekcUnlock())
-            return string.Format(TranslateManager.GetText("Difficulty_Locked"), StageData.UNLOCK_WAVE);
+            return stageData.GetLockedMessage();
 
-        UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(difficultyType);
+        UserStage userStage = UserDataManager.Instance.userStageManager.FindUserStage(UserDataManager.stageOrder, difficultyType);
         if (userStage == null || userStage.tryCount <= 0)
             return TranslateManager.GetText("Difficulty_NoRecord");
         return string.Format(TranslateManager.GetText("Difficulty_BestWave"), userStage.maxWave + 1);

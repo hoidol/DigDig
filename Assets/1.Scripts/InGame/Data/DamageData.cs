@@ -66,7 +66,10 @@ public class AllyUnitDamageData : DamageData
         critChance = allyUnit is Minion minion ? minion.CritChance : 0;
         critPower = allyUnit is Minion ? GameSetting.INIT_CRIT_POWER : 2f; // 슬라임 치명타 배율 (캐릭터 탄은 발사 시 캐릭터 스탯으로 덮어씀)
         ignoreDefence = false;
-        eliteBossDamageMul = 1f;
+        // 엘리트·보스 피해 +% 스탯 (미니언 = 버프, 킹 = 스탯). 거인 사냥 타일은 OnFired에서 여기에 곱함
+        float eliteBossBonus = allyUnit is Minion m ? m.EliteBossDamage
+            : allyUnit is KingSlime k && k.statMgr != null ? k.statMgr.GetValue(StatType.EliteBossDamage) : 0f;
+        eliteBossDamageMul = 1f + eliteBossBonus / 100f;
     }
 
     public override float ApplyDamage(Vector2 pos, float multiplier = 1f, float typeMultiplier = 1f, float targetMaxHp = 0f)

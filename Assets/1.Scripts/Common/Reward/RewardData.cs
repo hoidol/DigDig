@@ -32,8 +32,6 @@ public class RewardData
                 return Resources.Load<Sprite>("Icons/Currency/Energy");
             case RewardType.Exp:
                 return Resources.Load<Sprite>("Icons/Exp");
-            case RewardType.DrawTicket:
-                return CurrencyInfo.GetSprite(CurrencyType.DrawTicket);
         }
         return null;
     }
@@ -57,9 +55,6 @@ public class RewardData
             case RewardType.Exp:
                 UserDataManager.Instance.userMyInfoManager.AddExp(int.Parse(value));
                 break;
-            case RewardType.DrawTicket:
-                UserDataManager.Instance.AddDrawTicket(int.Parse(value));
-                break;
         }
 
     }
@@ -77,5 +72,4 @@ public enum RewardType
     Dia,
     Energe,
     Exp,
-    DrawTicket
 }

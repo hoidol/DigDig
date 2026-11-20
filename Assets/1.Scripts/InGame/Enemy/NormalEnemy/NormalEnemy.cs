@@ -37,7 +37,7 @@ public class NormalEnemy : Enemy
         this.state = state;
     }
 
-    // 처치 코인 = 1 + KILL_GOLD_WAVE_INTERVAL(20) wave마다 +1 (waveIdx 기준: wave 1~20 = 1, 21~40 = 2, 41~60 = 3, 61~80 = 4)
+    // 처치 코인 = 1 + KILL_GOLD_WAVE_INTERVAL(20) wave마다 +1 (waveIdx 기준: wave 1~20 = 1, 21~40 = 2, 41~60 = 3)
     public static int GetKillGold(int waveIdx) => 1 + Mathf.Max(0, waveIdx) / GameSetting.KILL_GOLD_WAVE_INTERVAL;
 
     public override void Reward()

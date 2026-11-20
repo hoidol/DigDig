@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4c2d3a588e214e0990171ddbaa6f13c, type: 3}
+  m_Name: RaceDwarf
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  key: RaceDwarf
+  category: 1
+  title: "\uB4DC\uC6CC\uD504"
+  desc: "\uBC84\uD504 \uCE78 \uBBF8\uB2C8\uC5B8 \uC5D8\uB9AC\uD2B8\xB7\uBCF4\uC2A4
+    \uD53C\uD574 +10%\n\uD0B9 \uCD5C\uB300 \uCCB4\uB825 +20% / \uACF5\uACA9 \uBC94\uC704
+    -0.5"
+  thum: {fileID: 21300000, guid: 4d84e5fb2129c44d6a730765618e34ec, type: 3}
+  maxLevel: 1
+  prefab: {fileID: 3934682891588889353, guid: 4acbb7680eb0f4a639b30aee683f5f1c, type: 3}

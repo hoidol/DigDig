@@ -13,7 +13,6 @@ public class GameCyclePlayTest : InGamePlayTestBase
     const int FIRST_RUN_WAVE = 6;                        // 첫 판 사망 시 waveIdx → 골드 6, 경험치 3
     const int FIRST_RUN_EXP = FIRST_RUN_WAVE / 2;
     const int RESUME_AT_WAVE = 3;                        // 이 wave에서 한 번 죽고 부활
-    const int FIRST_RUN_MERGE = 2;                       // 뽑기권 보상
     const float EPSILON = 0.0001f;
     const float SCENE_TIMEOUT = 60f;
 
@@ -59,7 +58,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         MyInfo.userMyInfoData.exp = MyInfo.GetMaxExp(0) + MyInfo.GetMaxExp(1) - FIRST_RUN_EXP;
         User.userData.energe = GameSetting.MAX_ENERGE;
         KSUser.GetUpgrade(upgradeStat).lv = 0;
-        string stageKey = StageManager.Instance.GetStageData(DifficultyType.Normal).key;
+        string stageKey = StageManager.Instance.GetStageData(StageData.FIRST_STAGE_ORDER, DifficultyType.Normal).key;
         UserStage stage = User.userStageManager.GetUserStage(stageKey);
         stage.maxWave = 0;
         int tryCount = stage.tryCount;
@@ -92,7 +91,6 @@ public class GameCyclePlayTest : InGamePlayTestBase
         Assert.AreEqual(RESUME_AT_WAVE, GameManager.Instance.waveIdx);
         PlayerPrefs.DeleteKey(FailCanvas.DAILY_RESURRECTION_DATE_KEY); // 오늘 처음 → 5회
         int gold = User.userData.gold;
-        int drawTicket = User.userData.drawTicket;
         int exp = MyInfo.userMyInfoData.exp;
 
         KingSlime.Instance.TakeDamage(KILL);
@@ -110,7 +108,6 @@ public class GameCyclePlayTest : InGamePlayTestBase
         while (GameManager.Instance.waveIdx < FIRST_RUN_WAVE)
             yield return SkipWave();
         Assert.AreEqual(FIRST_RUN_WAVE, GameManager.Instance.waveIdx);
-        MinionFieldController.Instance.mergeCount = FIRST_RUN_MERGE;
 
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
@@ -121,14 +118,12 @@ public class GameCyclePlayTest : InGamePlayTestBase
         Assert.IsTrue(ResultCanvas.Instance.newRecordObj.activeSelf, "최고 기록 갱신 표시");
 
         Assert.AreEqual(gold + FIRST_RUN_WAVE, User.userData.gold, "골드 = waveIdx");
-        Assert.AreEqual(drawTicket + FIRST_RUN_MERGE, User.userData.drawTicket, "뽑기권 = 합성 횟수");
         Assert.AreEqual(exp + FIRST_RUN_EXP, MyInfo.userMyInfoData.exp, "경험치 = waveIdx / 2");
         Assert.AreEqual(0, MyInfo.userMyInfoData.lv, "레벨업은 로비에서 (인게임에선 경험치만)");
         Assert.AreEqual(tryCount + 1, stage.tryCount, "부활 포함 한 판 = 도전 1회");
         Assert.AreEqual(FIRST_RUN_WAVE, stage.maxWave, "최고 wave 기록");
 
         Assert.AreEqual(User.userData.gold, SavedUserData.gold, "저장: 골드");
-        Assert.AreEqual(User.userData.drawTicket, SavedUserData.drawTicket, "저장: 뽑기권");
         Assert.AreEqual(User.userData.energe, SavedUserData.energe, "저장: 에너지");
         Assert.AreEqual(MyInfo.userMyInfoData.exp, SavedMyInfo.exp, "저장: 경험치");
         Assert.AreEqual(stage.tryCount, SavedStage(stageKey).tryCount, "저장: 도전 횟수");
@@ -177,7 +172,6 @@ public class GameCyclePlayTest : InGamePlayTestBase
         AssertKingStat(upgradeStat);
 
         gold = User.userData.gold;
-        drawTicket = User.userData.drawTicket;
         MinionFieldController.Instance.mergeCount = 0;
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
@@ -186,7 +180,6 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return WaitSaveFlushed();
         Assert.IsFalse(ResultCanvas.Instance.newRecordObj.activeSelf, "기록보다 낮은데 신기록 표시");
         Assert.AreEqual(gold, User.userData.gold, "wave 0 사망: 골드 0");
-        Assert.AreEqual(drawTicket, User.userData.drawTicket, "합성 0: 뽑기권 0");
         Assert.AreEqual(0, MyInfo.userMyInfoData.exp, "wave 0 사망: 경험치 0");
         Assert.AreEqual(tryCount + 2, stage.tryCount, "2판째 도전 횟수");
         Assert.AreEqual(FIRST_RUN_WAVE, stage.maxWave, "낮은 기록으로 최고 wave가 안 바뀜");

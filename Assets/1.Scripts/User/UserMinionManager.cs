@@ -18,9 +18,6 @@ public class UserMinionManager : UserBaseManager
         userMinionData = SaveManager.LoadData<UserMinionData>(UserDataFileName);
         if (userMinionData == null)
         {
-#if UNITY_EDITOR
-            GameSetting.INIT_MINION_KEYS = new string[] { "Flame", "Ice", "Random", "Orbit", "Lightning" };
-#endif
             userMinionData = new UserMinionData();
             for (int i = 0; i < GameSetting.INIT_MINION_KEYS.Length; i++)
             {
@@ -42,6 +39,9 @@ public class UserMinionManager : UserBaseManager
         }
 
         InitPresets();
+        // (2026-11-20) 게임에서 빠진 미니언이 장착돼 있으면(이전 저장) 다른 보유 미니언으로 바꿈
+        if (GetEquippedKeys().Any(k => !GameSetting.IsUsedMinion(k)))
+            LoadPreset(userMinionData.selectedPresetIdx);
         RequestSave();
     }
 
@@ -104,7 +104,8 @@ public class UserMinionManager : UserBaseManager
         if (presetIdx < 0 || presetIdx >= PRESET_COUNT)
             return;
 
-        string[] ownedKeys = userMinionData.userMinions.Where(e => e.own).Select(e => e.key).ToArray();
+        // 게임에서 빠진 미니언(수확·팔랑이 등)은 보유해도 장착 안 함
+        string[] ownedKeys = userMinionData.userMinions.Where(e => e.own && GameSetting.IsUsedMinion(e.key)).Select(e => e.key).ToArray();
         string[] keys = ResolvePresetKeys(userMinionData.presets[presetIdx].keys, GetEquippedKeys(), ownedKeys);
 
         foreach (UserMinion userMinion in userMinionData.userMinions)
@@ -268,7 +269,7 @@ public class UserMinionManager : UserBaseManager
     public bool CanLevelUp(string key)
     {
         UserMinion userMinion = GetUserMinion(key);
-        EnhanceExpInfo info = MinionManager.Instance.GetEnhanceExpInfo(userMinion.MinionData.grade);
+        EnhanceExpInfo info = MinionManager.Instance.GetEnhanceExpInfo();
         int lv = userMinion.EnhanceLevel;
         return info != null && !info.IsMaxLevel(lv) && userMinion.exp >= info.exps[lv];
     }
@@ -280,7 +281,7 @@ public class UserMinionManager : UserBaseManager
             return false;
         UserMinion userMinion = GetUserMinion(key);
         int lv = userMinion.EnhanceLevel;
-        userMinion.exp -= MinionManager.Instance.GetEnhanceExpInfo(userMinion.MinionData.grade).exps[lv];
+        userMinion.exp -= MinionManager.Instance.GetEnhanceExpInfo().exps[lv];
         userMinion.enhanceLevel = lv + 1;
         GameEventBus.Publish(new LevelUpMinionEvent(key));
         AchievementManager.Report(AchievementType.LevelUpMinion);
@@ -313,12 +314,11 @@ public class UserMinion
     public int equipedIdx = -1;
     public bool Equiping => equipedIdx >= 0;
     public bool own;
-    public int enhanceLevel = 0; // 저장값. 읽을 때는 EnhanceLevel (등급별 시작 레벨 보정)
+    public int enhanceLevel = 0; // 강화 레벨 (0부터, 미니언 등급 없음 → 시작 레벨 보정 없음)
     public int exp; // 지금 모인 경험치. 레벨업하면 그 레벨 필요량만큼 소모
     public MinionData MinionData => MinionManager.Instance.GetMinionData(key);
 
-    // 실제 강화 레벨: 등급별 시작 레벨(MinionData.GetStartEnhanceLevel)보다 낮으면 시작 레벨
-    public int EnhanceLevel => Mathf.Max(enhanceLevel, MinionData.GetStartEnhanceLevel(MinionData.grade));
+    public int EnhanceLevel => enhanceLevel;
 }
 
 [System.Serializable]

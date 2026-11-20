@@ -11,8 +11,8 @@ public class MinionExpPanel : MonoBehaviour
     {
         UserMinion userMinion = UserDataManager.Instance.userMinionManager.GetUserMinion(minionData.key);
         
-        // 모인 경험치 / 이번 레벨 필요량 (레벨업하면 필요량만큼 소모). 레벨은 등급별 시작 레벨 보정(EnhanceLevel)
-        EnhanceExpInfo enhanceExpInfo = MinionManager.Instance.GetEnhanceExpInfo(minionData.grade);
+        // 모인 경험치 / 이번 레벨 필요량 (레벨업하면 필요량만큼 소모)
+        EnhanceExpInfo enhanceExpInfo = MinionManager.Instance.GetEnhanceExpInfo();
         int lv = userMinion.EnhanceLevel;
         if (enhanceExpInfo == null || enhanceExpInfo.IsMaxLevel(lv))
         {

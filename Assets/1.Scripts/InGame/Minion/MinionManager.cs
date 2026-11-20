@@ -5,7 +5,6 @@ using Cysharp.Threading.Tasks;
 public class MinionManager : MonoSingleton<MinionManager>
 {
     public Dictionary<string, MinionData> minionDataDic = new Dictionary<string, MinionData>();
-    public Dictionary<GradeType, List<string>> gradeGroupGrowth1MinionDic = new Dictionary<GradeType, List<string>>();
     public MinionData[] allMinionDatas;
     // public MinionData growth0MinionData;
     // public MinionData[] growth1MinionDatas;
@@ -31,12 +30,6 @@ public class MinionManager : MonoSingleton<MinionManager>
             foreach (MinionData minionData in allMinionDatas)
             {
                 minionDataDic[minionData.key] = minionData;
-                // 뽑기(DrawMinion)용 등급별 목록 (growth 1 슬라임만)
-                if (minionData.growth != 1 || !GameSetting.IsUsedMinion(minionData.key))
-                    continue;
-                if (!gradeGroupGrowth1MinionDic.ContainsKey(minionData.grade))
-                    gradeGroupGrowth1MinionDic.Add(minionData.grade, new List<string>());
-                gradeGroupGrowth1MinionDic[minionData.grade].Add(minionData.key);
             }
 
         });
@@ -73,14 +66,12 @@ public class MinionManager : MonoSingleton<MinionManager>
     {
         return minionMergeDataDic[key];
     }
-    public int GetEnhanceExpInfo(int lv, GradeType grade)
-    {
-        return GetEnhanceExpInfo(grade).exps[lv];
-    }
+    // 미니언 등급 없음 (2026-11-20) → 강화 경험치 표는 모든 미니언 공용 = EnhanceLevelInfo.csv의 C 열 (EnhanceExpInfo 에셋 C)
+    public const GradeType ENHANCE_EXP_GRADE = GradeType.C;
 
-    public EnhanceExpInfo GetEnhanceExpInfo(GradeType grade)
+    public EnhanceExpInfo GetEnhanceExpInfo()
     {
-        return enhanceExpInfoDic.TryGetValue(grade, out EnhanceExpInfo info) ? info : null;
+        return enhanceExpInfoDic.TryGetValue(ENHANCE_EXP_GRADE, out EnhanceExpInfo info) ? info : null;
     }
 
     public List<MinionMergeData> GetMinionMergeDatas(string[] minionKeys)

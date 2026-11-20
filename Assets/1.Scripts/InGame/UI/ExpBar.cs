@@ -45,7 +45,7 @@ public class ExpBar : MonoBehaviour
     }
 
     #region 기본 모양 (씬에 Slider 연결이 없을 때만)
-    void BuildDefaultSlider()
+    public void BuildDefaultSlider()
     {
         if (image != null)
             image.gameObject.SetActive(false);

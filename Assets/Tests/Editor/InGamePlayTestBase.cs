@@ -240,8 +240,14 @@ public abstract class InGamePlayTestBase
     const float WAVE_SKIP_TIMEOUT = 5f; // 실시간(초)
 
     // 현재 wave를 시간 끝까지 돌린 것처럼: 자기 타이머 종료(→ EndWave, 코인) + 메인 타이머 종료(→ 다음 wave)
+    // 카드 소환 모드: 브레이크타임(wave 없음)이면 먼저 Next(EndBreakTime)로 wave를 시작 → 시간 초과 → 클리어 → 다음 wave의 브레이크타임(waveIdx +1)
     protected static IEnumerator SkipWave()
     {
+        if (GameManager.Instance.isBreakTime)
+        {
+            GameManager.Instance.EndBreakTime();
+            yield return WaitRealtime(0f);
+        }
         int idx = GameManager.Instance.waveIdx;
         GameManager.Instance.CurrentWave.waveTimer = 0f;
         GameManager.Instance.mainWaveTimer = 0.01f;

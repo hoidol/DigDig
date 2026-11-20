@@ -19,12 +19,23 @@ public class DefenceTypePlayTest : InGamePlayTestBase
         AssertNoErrors();
     }
 
+    static int FindWaveIdx(DefenceType defenceType)
+    {
+        for (int i = 0; i < GameSetting.LAST_WAVE; i++)
+            if (GameManager.GetWaveDefenceType(i) == defenceType)
+                return i;
+        return -1;
+    }
+
     IEnumerator Body()
     {
-        const int N = GameSetting.DEFENCE_WAVE_INTERVAL;
-        int armoredWaveIdx = N * 2 - 1; // 두 번째 방어 wave = 갑옷
-        Assert.AreEqual(DefenceType.Ethereal, GameManager.GetWaveDefenceType(N - 1), $"wave {N} = 정령");
-        Assert.AreEqual(DefenceType.Armored, GameManager.GetWaveDefenceType(armoredWaveIdx), $"wave {N * 2} = 갑옷");
+        // 방어 타입 순서는 StageData.csv DefenceWaveTypes(데이터) → 거기서 갑옷·정령 wave를 찾음
+        int armoredWaveIdx = FindWaveIdx(DefenceType.Armored);
+        int etherealWaveIdx = FindWaveIdx(DefenceType.Ethereal);
+        Assert.GreaterOrEqual(armoredWaveIdx, 0, "DefenceWaveTypes에 갑옷 wave가 있어야 함");
+        Assert.GreaterOrEqual(etherealWaveIdx, 0, "DefenceWaveTypes에 정령 wave가 있어야 함");
+        Assert.AreEqual(DefenceType.Ethereal, GameManager.GetWaveDefenceType(etherealWaveIdx));
+        Assert.AreEqual(DefenceType.Armored, GameManager.GetWaveDefenceType(armoredWaveIdx));
 
         Minion physic = SpawnMinion("Iron", GetFreeTile());
         Minion magic = SpawnMinion("Ice", GetFreeTile());
@@ -72,8 +83,13 @@ public class DefenceTypePlayTest : InGamePlayTestBase
             }
         }
 
-        // wave 8에 실제로 스폰되는 적이 갑옷형인지
+        // 갑옷 wave에 실제로 스폰되는 적이 갑옷형인지
         current = "armored wave spawn";
+        if (GameManager.Instance.isBreakTime) // 카드 소환 모드는 브레이크타임으로 시작 → wave 1 시작
+        {
+            GameManager.Instance.EndBreakTime();
+            yield return WaitFrames(2);
+        }
         var wave = GameManager.Instance.CurrentWave as BattleWave;
         Assert.IsNotNull(wave, "현재 wave가 BattleWave가 아님");
         int prevIdx = wave.waveIdx;

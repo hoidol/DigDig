@@ -17,7 +17,6 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
     // 이번 결과 화면에서 지급한 기본 보상 (2배 = 같은 양을 한 번 더 지급)
     int rewardGold;
     int rewardExp;
-    int rewardDrawTicket;
     bool isDoubled;
     bool isWatchingAd; // 광고 보는 동안 중복 클릭·홈 이동 방지
 
@@ -42,6 +41,8 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         AchievementManager.Report(AchievementType.TryStage);
 
         UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(stageKey);
+        // 이번 판 기록을 저장하기 전 처치한 보스 수 (로비 보스 처치 연출용, LobbyReturnController)
+        int prevDefeatedBossCount = LobbyReturnController.GetDefeatedBossCount(userStage.maxWave, userStage.isClear);
         // wave 표시 UI가 씬에 없어도 보상은 지급되도록 (없으면 표시만 생략). 제목(최종/최고 웨이브)은 UI에 있으므로 숫자만
         if (curWaveText != null)
             curWaveText.text = (GameManager.Instance.waveIdx + 1).ToString();
@@ -59,6 +60,8 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             UserDataManager.Instance.userStageManager.ClearStage(stageKey);
             AchievementManager.Report(AchievementType.ClearStage);
         }
+        // 보스를 처음 처치했으면 로비로 돌아갈 때 연출
+        LobbyReturnController.RecordGameResult(prevDefeatedBossCount, GameManager.Instance.waveIdx, isCleared);
 
         int gold = passedWaveCount;
 
@@ -75,16 +78,12 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         myInfo.AddExp(rewardExp);
         UserMyInfoManager.unshownGainExp += rewardExp; // 로비에서 바가 차오르는 연출
 
-        rewardDrawTicket = MinionFieldController.Instance.mergeCount;
-        if (rewardDrawTicket > 0)
-            UserDataManager.Instance.AddDrawTicket(rewardDrawTicket);
-
         rewardGold = gold;
 
         ShowRewards();
         SoundManager.Play(SFXType.RewardGet);
 
-        UserDataManager.Instance.userStageManager.EndStage(GameManager.Instance.stageData.key, GameManager.Instance.waveIdx); // 저장값 = waveIdx (클리어면 79 = 표시 80)
+        UserDataManager.Instance.userStageManager.EndStage(GameManager.Instance.stageData.key, GameManager.Instance.waveIdx); // 저장값 = waveIdx (클리어면 59 = 표시 60)
     }
 
     // 보상 패널 표시 (2배 받았으면 2배 값으로). animate = 값이 바뀐 걸 보여주는 글씨 확대 이펙트
@@ -94,8 +93,6 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         List<RewardData> rewardDatas = new List<RewardData>();
         if (rewardExp > 0)
             rewardDatas.Add(new RewardData() { rewardType = RewardType.Exp, value = (rewardExp * mul).ToString() });
-        if (rewardDrawTicket > 0)
-            rewardDatas.Add(new RewardData() { rewardType = RewardType.DrawTicket, value = (rewardDrawTicket * mul).ToString() });
         if (rewardGold > 0)
             rewardDatas.Add(new RewardData() { rewardType = RewardType.Gold, value = (rewardGold * mul).ToString() });
 
@@ -120,12 +117,12 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             adDoubleRewardButton.SetActive(!isDoubled && rewardDatas.Count > 0);
     }
 
-    // 광고 보고 보상 2배 (경험치·뽑기권·골드 모두). 광고 성공 시에만, 광고 제거 구매자는 광고 없이
+    // 광고 보고 보상 2배 (경험치·골드 모두). 광고 성공 시에만, 광고 제거 구매자는 광고 없이
     public void OnClickedDoubleReward()
     {
         if (isDoubled || isWatchingAd)
             return;
-        if (rewardExp <= 0 && rewardDrawTicket <= 0 && rewardGold <= 0)
+        if (rewardExp <= 0 && rewardGold <= 0)
             return;
 
         isWatchingAd = true;
@@ -150,8 +147,6 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             UserDataManager.Instance.userMyInfoManager.AddExp(rewardExp);
             UserMyInfoManager.unshownGainExp += rewardExp;
         }
-        if (rewardDrawTicket > 0)
-            UserDataManager.Instance.AddDrawTicket(rewardDrawTicket);
         if (rewardGold > 0)
             UserDataManager.Instance.AddGold(rewardGold);
 

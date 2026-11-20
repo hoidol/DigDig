@@ -44,6 +44,8 @@ Difficulty_Changed	난이도 {0}(으)로 설정되었습니다.	Difficulty set t
 Difficulty_Locked	이전 난이도 클리어(Wave {0}) 시 해금	Unlocks after clearing the previous difficulty (Wave {0})
 Difficulty_BestWave	최고 기록 Wave {0}	Best Wave {0}
 Difficulty_NoRecord	기록 없음	No record
+Stage_Title	스테이지 {0}	Stage {0}
+Stage_Locked	스테이지 {0} 보통 클리어 시 해금	Unlocks after clearing Stage {0} Normal
 Minion.Random	뭉치	Munchi
 Minion.Bounce	콩콩이	Boing
 Minion.Flame	불똥이	Ember

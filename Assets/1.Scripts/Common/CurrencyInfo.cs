@@ -14,8 +14,6 @@ public static class CurrencyInfo
                 return Resources.Load<Sprite>("Icons/Currency/InApp");
             case CurrencyType.Dia:
                 return Resources.Load<Sprite>("Icons/Currency/Dia");
-            case CurrencyType.DrawTicket:
-                return Resources.Load<Sprite>("Icons/Currency/DrawTicket");
             default:
                 return null;
         }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 선택된 타일에 설치된 아이템 판매: 제거 후 SELL_TILE_ITEM_PRICE 코인 (TileItemInfoPanel 안에 있음, 아이템 타일 선택 시에만 보임)
+// 선택된 타일에 설치된 아이템(룬) 제거: (2026-11-20) 보상 없음 — 골드 개념 삭제 (TileItemInfoPanel 안에 있음, 아이템 타일 선택 시에만 보임)
 public class SellTileItemButton : ButtonUI
 {
     Tile tile;
@@ -17,7 +17,6 @@ public class SellTileItemButton : ButtonUI
             return;
 
         KingSlime.Instance.RemoveItem(item);
-        KingSlime.Instance.AddCoin(GameSetting.SELL_TILE_ITEM_PRICE);
         SoundManager.Play(SFXType.ItemSell);
         MinionFieldController.Instance.DeselectTile();
     }

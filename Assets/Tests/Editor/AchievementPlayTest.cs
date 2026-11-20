@@ -250,16 +250,7 @@ public class AchievementPlayTest : InGamePlayTestBase
         Assert.AreEqual(2, ad.achievementData.GetGoal(), "IncreaseGoal 0 → 목표 그대로");
         Assert.AreEqual("0/2", ad.progressText.text);
 
-        // 5) 로비 행동 집계: 슬라임 뽑기 = 뽑은 장수, 슬라임 강화 = 1
-        var drawPanel = UnityEngine.Object.FindFirstObjectByType<DrawMinionProductPanel>(FindObjectsInactive.Include);
-        Assert.IsNotNull(drawPanel, "로비에 DrawMinionProductPanel 없음");
-        int drawBefore = CumulativeValue(AchievementType.DrawMinion);
-        drawPanel.Purchased(10);
-        yield return WaitFrames(2);
-        Assert.AreEqual(drawBefore + 10, CumulativeValue(AchievementType.DrawMinion), "10회 뽑기 = DrawMinion 10");
-        if (Lobby.DrawMinionResultCanvas.Instance != null)
-            Lobby.DrawMinionResultCanvas.Instance.CloseCanvas();
-
+        // 5) 로비 행동 집계: 미니언 강화 = 1 (미니언 뽑기는 2026-11-20 삭제)
         int levelUpBefore = CumulativeValue(AchievementType.LevelUpMinion);
         UserDataManager.Instance.userMinionManager.LevelUp(UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions[0].key);
         Assert.AreEqual(levelUpBefore + 1, CumulativeValue(AchievementType.LevelUpMinion), "슬라임 강화 = LevelUpMinion 1");
@@ -272,7 +263,7 @@ public class AchievementPlayTest : InGamePlayTestBase
         Assert.IsTrue(savedDaily.userDailyAchievements.First(a => a.type == AchievementType.KillEnemy).getReward, "저장: 일일 수령 여부");
         var savedCumulative = SaveManager.LoadData<UserCumulativeAchievementData>("UserCumulativeAchievement");
         Assert.AreEqual(3, savedCumulative.userCumulativeAchievements.First(a => a.type == AchievementType.KillEnemy).clearCount, "저장: 누적 클리어 횟수");
-        Assert.AreEqual(drawBefore + 10, savedCumulative.userCumulativeAchievements.First(a => a.type == AchievementType.DrawMinion).value, "저장: 누적 값");
+        Assert.AreEqual(levelUpBefore + 1, savedCumulative.userCumulativeAchievements.First(a => a.type == AchievementType.LevelUpMinion).value, "저장: 누적 값");
 
         // 7) 날짜가 바뀜 → 창을 열 때 일일 초기화(진행도·수령 여부), Login +1, 누적은 유지
         canvas.CloseCanvas();
@@ -322,22 +313,10 @@ public class AchievementPlayTest : InGamePlayTestBase
         ResetAchievements(new DateTime(2030, 1, 10, 9, 0, 0));
         Time.timeScale = 0f; // 적이 저절로 죽거나 킹이 맞지 않게 멈추고 행동만 확인
 
-        // 소환 버튼 = SpawnMinion 1 (일일·누적 모두), 코인이 모자라면 집계 없음
-        var spawnButton = UnityEngine.Object.FindFirstObjectByType<MinionSpawnButton>(FindObjectsInactive.Include);
-        Assert.IsNotNull(spawnButton, "MinionSpawnButton 없음");
-        KingSlime.Instance.AddCoin(-KingSlime.Instance.coin);
-        spawnButton.OnClickedBtn();
-        Assert.AreEqual(0, CumulativeValue(AchievementType.SpawnMinion), "코인 부족으로 소환 실패인데 집계됨");
-        KingSlime.Instance.AddCoin(100000);
-        spawnButton.OnClickedBtn();
-        spawnButton.OnClickedBtn();
-        Assert.AreEqual(2, CumulativeValue(AchievementType.SpawnMinion), "소환 버튼 2번");
-        Assert.AreEqual(2, DailyValue(AchievementType.SpawnMinion), "일일도 같이 집계");
-
-        // 버튼이 아닌 소환(무료 소환 등)은 제외
+        // 버튼이 아닌 소환(카드·무료 소환 등)은 SpawnMinion으로 안 셈 (2026-11-20 골드 소환 버튼 삭제)
         Minion a = SpawnMinion("Iron", GetFreeTile(), 0);
         Minion b = SpawnMinion("Iron", GetFreeTile(), 0);
-        Assert.AreEqual(2, CumulativeValue(AchievementType.SpawnMinion), "버튼이 아닌 소환이 집계됨");
+        Assert.AreEqual(0, CumulativeValue(AchievementType.SpawnMinion), "버튼이 아닌 소환이 집계됨");
 
         // 합성 = MergeMinion 1, 합성으로 생긴 슬라임은 소환으로 안 셈
         Assert.IsNotNull(DROP, "MinionFieldController.Merge(source, target, originPos) 없음");
@@ -345,7 +324,7 @@ public class AchievementPlayTest : InGamePlayTestBase
         yield return WaitFrames(3);
         Assert.AreEqual(1, CumulativeValue(AchievementType.MergeMinion), "합성 1번");
         Assert.AreEqual(1, DailyValue(AchievementType.MergeMinion));
-        Assert.AreEqual(2, CumulativeValue(AchievementType.SpawnMinion), "합성 결과가 소환으로 집계됨");
+        Assert.AreEqual(0, CumulativeValue(AchievementType.SpawnMinion), "합성 결과가 소환으로 집계됨");
 
         // 자리 교체(합성 안 됨)는 제외
         Minion c = SpawnMinion("Iron", GetFreeTile(), 0);
@@ -353,29 +332,6 @@ public class AchievementPlayTest : InGamePlayTestBase
         DROP.Invoke(MinionFieldController.Instance, new object[] { c, d, c.transform.position });
         yield return WaitFrames(3);
         Assert.AreEqual(1, CumulativeValue(AchievementType.MergeMinion), "자리 교체가 합성으로 집계됨");
-
-        // 인게임 강화 = UpgradeReinforce 1, 코인 부족이면 제외
-        var reinforcePanel = UnityEngine.Object.FindFirstObjectByType<ReinforcePanel>(FindObjectsInactive.Include);
-        if (reinforcePanel == null)
-            reinforcePanel = new GameObject("ReinforcePanel(Test)", typeof(RectTransform)).AddComponent<ReinforcePanel>();
-        reinforcePanel.SetMinionData(MinionManager.Instance.GetMinionData(UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions[0].key));
-        KingSlime.Instance.AddCoin(-KingSlime.Instance.coin);
-        reinforcePanel.OnClickReinforce();
-        Assert.AreEqual(0, CumulativeValue(AchievementType.UpgradeReinforce), "코인 부족인데 강화 집계");
-        KingSlime.Instance.AddCoin(100000);
-        reinforcePanel.OnClickReinforce();
-        Assert.AreEqual(1, CumulativeValue(AchievementType.UpgradeReinforce), "인게임 강화 1번");
-
-        // 타일 아이템 뽑기 = 시도마다 DrawItem 1 (확률 실패 포함)
-        var drawButton = UnityEngine.Object.FindFirstObjectByType<DrawItemButton>(FindObjectsInactive.Include);
-        Assert.IsNotNull(drawButton, "DrawItemButton 없음");
-        KingSlime.Instance.AddDiceCoin(-KingSlime.Instance.diceCoin); // 뽑기 = 주사위 코인
-        drawButton.OnClickedBtn();
-        Assert.AreEqual(0, CumulativeValue(AchievementType.DrawItem), "코인 부족인데 뽑기 집계");
-        KingSlime.Instance.AddDiceCoin(100000);
-        drawButton.OnClickedBtn();
-        Assert.AreEqual(1, CumulativeValue(AchievementType.DrawItem), "아이템 뽑기 시도 1번");
-        Assert.AreEqual(1, DailyValue(AchievementType.DrawItem));
 
         // 적 처치 = KillEnemy 1 (시간을 다시 흘려 적이 나오면 처치)
         Time.timeScale = 1f;

@@ -281,13 +281,13 @@ public class TileItemTestWindow : EditorWindow
     void DrawMinionPlace(Tile tile)
     {
         string[] keys = MinionManager.Instance != null
-            ? MinionManager.Instance.minionDataDic.Values.OrderBy(d => d.grade).ThenBy(d => d.key).Select(d => d.key).ToArray()
+            ? MinionManager.Instance.minionDataDic.Values.OrderBy(d => GameSetting.GetMinionOrder(d.key)).ThenBy(d => d.key).Select(d => d.key).ToArray()
             : new string[0];
         if (keys.Length == 0)
             return;
         using (new EditorGUILayout.HorizontalScope())
         {
-            string[] labels = keys.Select(k => $"{MinionManager.Instance.minionDataDic[k].grade} / {k}").ToArray();
+            string[] labels = keys.Select(k => $"{k} ({MinionManager.Instance.minionDataDic[k].Title})").ToArray();
             int idx = Mathf.Max(0, System.Array.IndexOf(keys, minionKey));
             idx = EditorGUILayout.Popup(idx, labels);
             minionKey = keys[idx];
@@ -360,13 +360,13 @@ public class TileItemTestWindow : EditorWindow
     void DrawDraw()
     {
         Header("뽑기");
-        EditorGUILayout.LabelField($"현재 뽑기 확률 {DrawItemButton.GetDrawChance()}%   가격 주사위 {DrawItemButton.GetDrawPrice()}   후보 {ItemManager.Instance.GetDrawTileItems(99).Count}종");
+        EditorGUILayout.LabelField($"뽑기 후보 {ItemManager.Instance.GetDrawTileItems(99).Count}종 (룬 뽑기 버튼은 2026-11-20 삭제)");
         using (new EditorGUILayout.HorizontalScope())
         {
             if (GUILayout.Button("선택 창 열기 (확률 없이)"))
                 SelectItemCanvas.Instance.OpenCanvas();
-            if (GUILayout.Button("뽑기 창 열기 (현재 확률)"))
-                SelectItemCanvas.Instance.OpenDraw(DrawItemButton.GetDrawChance());
+            if (GUILayout.Button("뽑기 창 열기 (100%)"))
+                SelectItemCanvas.Instance.OpenDraw(100);
         }
     }
 

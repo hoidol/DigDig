@@ -9,7 +9,7 @@ public class PackageProductPanel : ProductPanel
     [System.Serializable]
     public class Reward
     {
-        public CurrencyType currencyType; // Gold / Dia / Energe / DrawTicket
+        public CurrencyType currencyType; // Gold / Dia / Energe
         public int amount;
     }
 
@@ -62,7 +62,6 @@ public class PackageProductPanel : ProductPanel
             case CurrencyType.Gold: user.AddGold(reward.amount); break;
             case CurrencyType.Dia: user.AddDia(reward.amount); break;
             case CurrencyType.Energe: user.AddEnerge(reward.amount); break;
-            case CurrencyType.DrawTicket: user.AddDrawTicket(reward.amount); break;
             default:
                 Debug.LogError($"[{name}] 패키지로 지급할 수 없는 재화 : {reward.currencyType}");
                 return;

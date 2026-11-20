@@ -25,7 +25,6 @@ public static class MinionDamageBenchmark
         public string difficulty;
         public int wave; // 표시 번호
         public string key;
-        public string grade;
         public int mergeLevel;
         public float attackPower;
         public float attackSpeed;
@@ -259,7 +258,6 @@ public static class MinionDamageBenchmark
             difficulty = gm.stageData != null ? gm.stageData.key : "",
             wave = waveNum,
             key = current.key,
-            grade = data != null ? data.grade.ToString() : "",
             mergeLevel = current.lv,
             attackPower = attackPower,
             attackSpeed = attackSpeed,
@@ -324,13 +322,13 @@ public static class MinionDamageBenchmark
         for (int lv = 0; lv <= maxLv; lv++) widths.Add(14);
         widths.Add(12);
         List<object[]> summary = xlsx.AddSheet("요약", widths.ToArray());
-        var head = new List<object> { "등급", "Key", "이름" };
+        var head = new List<object> { "Key", "이름" };
         for (int lv = 0; lv <= maxLv; lv++) head.Add($"머지 {lv} 피해");
         head.Add($"머지 {maxLv}/0 배율");
         summary.Add(head.ToArray());
-        foreach (var g in results.GroupBy(r => r.key).OrderBy(g => GradeOrder(g.First().grade)).ThenBy(g => g.Key))
+        foreach (var g in results.GroupBy(r => r.key).OrderBy(g => GameSetting.GetMinionOrder(g.Key)).ThenBy(g => g.Key))
         {
-            var row = new List<object> { g.First().grade, g.Key, MinionName(g.Key) };
+            var row = new List<object> { g.Key, MinionName(g.Key) };
             for (int lv = 0; lv <= maxLv; lv++)
             {
                 Result r = g.FirstOrDefault(x => x.mergeLevel == lv);
@@ -344,12 +342,12 @@ public static class MinionDamageBenchmark
 
         // 상세: 측정 한 번에 한 줄
         List<object[]> detail = xlsx.AddSheet("상세", new float[] { 7, 14, 12, 10, 10, 10, 14, 14, 10, 10, 8, 10, 10, 8, 10, 18 });
-        detail.Add(new object[] { "등급", "Key", "이름", "머지 레벨", "공격력", "공속", "피해(이 종)", "피해(전체)", "DPS", "진행 시간", "처치", "경로 끝", "시간 초과", "wave", "난이도", "측정 시각" });
-        foreach (Result r in results.OrderBy(r => GradeOrder(r.grade)).ThenBy(r => r.key).ThenBy(r => r.mergeLevel))
+        detail.Add(new object[] { "Key", "이름", "머지 레벨", "공격력", "공속", "피해(이 종)", "피해(전체)", "DPS", "진행 시간", "처치", "경로 끝", "시간 초과", "wave", "난이도", "측정 시각" });
+        foreach (Result r in results.OrderBy(r => GameSetting.GetMinionOrder(r.key)).ThenBy(r => r.key).ThenBy(r => r.mergeLevel))
         {
             detail.Add(new object[]
             {
-                r.grade, r.key, MinionName(r.key), r.mergeLevel, Math.Round(r.attackPower, 2), Math.Round(r.attackSpeed, 2),
+                r.key, MinionName(r.key), r.mergeLevel, Math.Round(r.attackPower, 2), Math.Round(r.attackSpeed, 2),
                 Math.Round(r.damage), Math.Round(r.totalDamage), r.duration > 0 ? Math.Round(r.damage / r.duration, 1) : 0,
                 Math.Round(r.duration, 1), r.kills, r.leaked, r.timeout ? "O" : "", r.wave, r.difficulty, r.measuredAt,
             });
@@ -367,7 +365,6 @@ public static class MinionDamageBenchmark
         }
     }
 
-    static int GradeOrder(string grade) => Enum.TryParse(grade, out GradeType g) ? (int)g : 999;
 
     static string MinionName(string key)
     {

@@ -45,7 +45,17 @@ public class UnlockCondition
     {
         UserStageManager userStageManager = UserDataManager.Instance.userStageManager;
         if (!string.IsNullOrEmpty(difficulty))
-            return userStageManager.GetUserStage(difficulty).maxWave + 1;
+        {
+            // value = 난이도(모든 스테이지 중 최고) 또는 스테이지 key("Hard_1")
+            if (System.Enum.TryParse(difficulty, out DifficultyType difficultyType))
+                return userStageManager.GetBestWave(difficultyType);
+            if (UserStageManager.TryParseKey(difficulty, out int order, out difficultyType))
+            {
+                UserStage stage = userStageManager.FindUserStage(order, difficultyType);
+                return stage != null && stage.tryCount > 0 ? stage.maxWave + 1 : 0;
+            }
+            return 0;
+        }
 
         int best = 0;
         foreach (UserStage userStage in userStageManager.userStageData.userStages)

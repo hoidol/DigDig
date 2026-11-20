@@ -75,7 +75,6 @@ public static class TutorialEditorMenu
         AddDialogue(steps, "08_대화");
         AddStep<MoveKingTutorialStep>(steps, "09_킹 이동 (칸 입력)", s => s.targetTileIndex = new Vector2Int(3, 2));
         AddDialogue(steps, "10_대화");
-        AddStep<ShowSpawnButtonTutorialStep>(steps, "11_소환 버튼 보이기");
         // 1기씩 블록으로 분리 (사이에 대화를 끼울 수 있음). 1번째와 3번째를 같은 key로 → 합성 블록에서 3번째를 1번째 위로
         AddStep<SpawnMinionTutorialStep>(steps, "12_소환 1 (Ice)", s => { s.minionKey = "Ice"; s.tileIndex = new Vector2Int(1, 1); });
         AddStep<SpawnMinionTutorialStep>(steps, "12_소환 2 (Flame)", s => { s.minionKey = "Flame"; s.tileIndex = new Vector2Int(2, 1); });

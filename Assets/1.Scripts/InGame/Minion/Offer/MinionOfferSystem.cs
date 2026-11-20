@@ -374,13 +374,9 @@ public class MinionOfferSystem : MonoBehaviour
         }
     }
 
-    // 골드 개념 삭제: 골드로 하는 소환·강화와 코인 표시를 숨김 (씬은 그대로, 실행 중에만)
+    // 골드 개념 삭제: 코인 표시를 숨김 (씬은 그대로, 실행 중에만). 골드 소환 버튼·인게임 강화는 2026-11-20 코드 삭제
     static void HideGoldUI()
     {
-        foreach (MinionSpawnButton b in FindObjectsByType<MinionSpawnButton>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            b.gameObject.SetActive(false);
-        foreach (ReinforceContainer c in FindObjectsByType<ReinforceContainer>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            c.gameObject.SetActive(false);
         foreach (CoinPanel p in FindObjectsByType<CoinPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             p.gameObject.SetActive(false);
     }

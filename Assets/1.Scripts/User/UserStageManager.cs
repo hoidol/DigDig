@@ -12,16 +12,46 @@ public class UserStageManager : UserBaseManager
         get; private set;
     }
 
-    // 현재 선택한 난이도의 스테이지 (난이도마다 스테이지 하나)
+    // 현재 선택한 스테이지·난이도 (UserDataManager.stageOrder / difficultyType)
     public UserStage GetCurrentStage()
     {
-        return GetUserStage(UserDataManager.difficultyType);
+        return GetUserStage(UserDataManager.stageOrder, UserDataManager.difficultyType);
     }
 
-    // 난이도마다 스테이지 하나, key = 난이도 이름
-    public UserStage GetUserStage(DifficultyType difficultyType)
+    // 스테이지 번호 × 난이도마다 기록 하나, key = "{난이도}_{order}" (StageData.MakeKey)
+    public UserStage GetUserStage(int order, DifficultyType difficultyType)
     {
-        return GetUserStage(difficultyType.ToString());
+        return GetUserStage(StageData.MakeKey(order, difficultyType));
+    }
+
+    // 없으면 null (GetUserStage는 없으면 만들어서 저장함)
+    public UserStage FindUserStage(int order, DifficultyType difficultyType)
+    {
+        string key = StageData.MakeKey(order, difficultyType);
+        return userStageData.userStages.FirstOrDefault(e => e.key == key);
+    }
+
+    // 그 난이도의 모든 스테이지 중 최고 기록 (표시 번호 = maxWave + 1). 기록 없으면 0
+    public int GetBestWave(DifficultyType difficultyType)
+    {
+        int best = 0;
+        foreach (UserStage userStage in userStageData.userStages)
+        {
+            if (TryParseKey(userStage.key, out _, out DifficultyType d) && d == difficultyType && userStage.tryCount > 0)
+                best = Mathf.Max(best, userStage.maxWave + 1);
+        }
+        return best;
+    }
+
+    // "Hard_1" → (1, Hard)
+    public static bool TryParseKey(string key, out int order, out DifficultyType difficultyType)
+    {
+        order = 0;
+        difficultyType = DifficultyType.Normal;
+        if (string.IsNullOrEmpty(key))
+            return false;
+        string[] split = key.Split('_');
+        return split.Length == 2 && System.Enum.TryParse(split[0], out difficultyType) && int.TryParse(split[1], out order);
     }
 
     public override void LoadData()
@@ -39,21 +69,20 @@ public class UserStageManager : UserBaseManager
         MigrateStageKeys();
     }
 
-    // 이전 저장 데이터: 난이도별 여러 스테이지("Normal_0" ~ "Normal_4") → 난이도당 하나("Normal").
-    // "{난이도}_0" 기록은 새 key로 옮기고 나머지 스테이지 기록은 제거
+    // 이전 저장 데이터: 난이도당 하나("Normal", 2026-10-30~11-20) → 스테이지 key "{난이도}_{order}"의 첫 스테이지("Normal_0")
     void MigrateStageKeys()
     {
         bool changed = false;
         for (int i = userStageData.userStages.Count - 1; i >= 0; i--)
         {
             UserStage userStage = userStageData.userStages[i];
-            if (System.Enum.TryParse(userStage.key, out DifficultyType _))
+            if (TryParseKey(userStage.key, out _, out _))
                 continue;
 
-            string[] split = userStage.key.Split('_');
-            bool isFirst = split.Length == 2 && split[1] == "0" && System.Enum.TryParse(split[0], out DifficultyType _);
-            if (isFirst && !userStageData.userStages.Any(e => e.key == split[0]))
-                userStage.key = split[0];
+            string newKey = System.Enum.TryParse(userStage.key, out DifficultyType difficulty)
+                ? StageData.MakeKey(StageData.FIRST_STAGE_ORDER, difficulty) : null;
+            if (newKey != null && !userStageData.userStages.Any(e => e.key == newKey))
+                userStage.key = newKey;
             else
                 userStageData.userStages.RemoveAt(i);
             changed = true;

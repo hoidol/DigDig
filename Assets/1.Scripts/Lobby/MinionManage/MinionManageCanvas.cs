@@ -40,10 +40,10 @@ namespace Lobby
                 equipedSlotPanels[i].idx = i;
             }
 
-            // 칸에 넣는 순서 = 등급 낮은 순 (C → B → A → S). 화면 순서(보유 먼저)는 UpdateCanvas에서 정렬
+            // 칸에 넣는 순서 = 지급 순서 (GameSetting.GetMinionOrder). 화면 순서(보유 먼저)는 UpdateCanvas에서 정렬
             MinionData[] minionDatas = MinionManager.Instance.allMinionDatas
                 .Where(e => GameSetting.IsUsedMinion(e.key)) // 게임에서 쓰는 미니언만 (초기 지급 + 레벨 지급)
-                .OrderBy(e => e.grade)
+                .OrderBy(e => GameSetting.GetMinionOrder(e.key))
                 .ToArray();
 
             EnsureEntryPanels(minionDatas.Length);
@@ -131,12 +131,11 @@ namespace Lobby
                 growth1MinionEntryPanels[i].UpdatePanel();
             }
 
-            // 화면 순서: 보유(등급 낮은 순) → 미보유(등급 낮은 순). 같은 등급은 데이터 순서 유지 (OrderBy는 안정 정렬)
-            // 새로 얻은 슬라임도 다음 갱신 때 보유 쪽 등급 자리로 옮겨짐
+            // 화면 순서: 보유(지급 순서) → 미보유(지급 순서). 새로 얻은 미니언도 다음 갱신 때 보유 쪽으로 옮겨짐
             var sortedPanels = growth1MinionEntryPanels
                 .Where(p => p.minionData != null)
                 .OrderByDescending(p => p.userMinion != null && p.userMinion.own)
-                .ThenBy(p => p.minionData.grade);
+                .ThenBy(p => GameSetting.GetMinionOrder(p.minionData.key));
             foreach (Growth1MinionEntryPanel panel in sortedPanels)
             {
                 if (panel.transform.parent != ownContainer)

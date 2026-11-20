@@ -34,7 +34,7 @@ public static class DataTableImporter
     {
         new Entry("CharacterData", new[] { "CharacterData.csv" }, () => LoadAll<KingSlimeData>(d => d.LoadData())),
         new Entry("EnemyData", new[] { "EnemyData.csv" }, () => LoadAll<EnemyData>(d => d.LoadData())),
-        new Entry("StageData", new[] { "StageData.csv", "WaveData", "EventData.csv" }, () => LoadAll<StageData>(d => d.LoadData())),
+        new Entry("StageData", new[] { "StageData.csv", "EventData.csv" }, () => LoadAll<StageData>(d => d.LoadData())),
         new Entry("MinionData", new[] { "MinionData.csv", "MinionEnhance" }, () => LoadAll<MinionData>(d => d.LoadData())),
         new Entry("ItemData", new[] { "ItemData.csv" }, () => LoadAll<ItemData>(d => d.LoadData())),
         new Entry("AuthorityData", new[] { "AuthorityData.csv" }, () => LoadAll<AuthorityData>(d => d.Edit())),

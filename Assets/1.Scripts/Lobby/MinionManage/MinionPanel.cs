@@ -11,10 +11,6 @@ namespace Lobby
         public Image thumImge;
         public TMP_Text enhanceLvText;
         public MinionExpPanel mineMeExpPanel;
-        public MinionGradePanel minionGradePanel;
-        public Image bgImage;
-        public Image innerBorder;
-        public Image hightLightImage;
         public virtual void SetData(MinionData uMData)
         {
             UserMinion userMinion = UserDataManager.Instance.userMinionManager.GetUserMinion(uMData.key);
@@ -36,24 +32,10 @@ namespace Lobby
                 }
             }
 
-            if (minionGradePanel != null)
-            {
-                minionGradePanel.SetMinionData(uMData);
-            }
-
-            // 카드 틀 색 = 등급 (연결 안 된 이미지는 건너뜀)
-            GradeCardColor cardColor = Grade.GetCardColor(uMData.grade);
-            if (bgImage != null)
-                bgImage.color = cardColor.bg;
-            if (innerBorder != null)
-                innerBorder.color = cardColor.innerBorder;
-            if (hightLightImage != null)
-                hightLightImage.color = cardColor.highLight;
-
             if (enhanceLvText != null)
             {
                 int enhanceLevel = userMinion.EnhanceLevel;
-                EnhanceExpInfo expInfo = MinionManager.Instance.GetEnhanceExpInfo(uMData.grade);
+                EnhanceExpInfo expInfo = MinionManager.Instance.GetEnhanceExpInfo();
                 if (expInfo != null && expInfo.IsMaxLevel(enhanceLevel))
                 {
                     enhanceLvText.text = "MAX";

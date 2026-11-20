@@ -1,4 +1,10 @@
-Key	Difficulty	EnemyHp	AddHpRatioPerWave	MultiHpPerWave	CycleHpMuls				
-Normal	Normal	44	0.3	1.03	1/1.1/1.21/1.33				
-Hard	Hard	55	0.35	1.03	1/1.1/1.21/1.33				
-Hell	Hell	66	0.4	1.03	1/1.1/1.21/1.33				
+Key	order	Difficulty	EnemyHp	AddHpRatioPerWave	MultiHpPerWave	CycleHpMuls	DefenceWaveTypes
+Normal_0	0	Normal	44	0.3	1.03	1/1.1/1.21/1.33	Normal/Normal/Armored/Normal/Random/Ethereal
+Normal_1	1	Normal	44	0.3	1.03	1/1.1/1.21/1.33	Normal/Normal/Armored/Normal/Random/Ethereal
+Normal_2	2	Normal	44	0.3	1.03	1/1.1/1.21/1.33	Normal/Normal/Armored/Normal/Random/Ethereal
+Hard_0	0	Hard	55	0.35	1.03	1/1.1/1.21/1.33	Normal/Normal/Armored/Normal/Random/Ethereal
+Hard_1	1	Hard	55	0.35	1.03	1/1.1/1.21/1.33	Normal/Normal/Armored/Normal/Random/Ethereal
+Hard_2	2	Hard	55	0.35	1.03	1/1.1/1.21/1.33	Normal/Normal/Armored/Normal/Random/Ethereal
+Hell_0	0	Hell	66	0.4	1.03	1/1.1/1.21/1.33	Normal/Normal/Armored/Normal/Random/Ethereal
+Hell_1	1	Hell	66	0.4	1.03	1/1.1/1.21/1.33	Normal/Normal/Armored/Normal/Random/Ethereal
+Hell_2	2	Hell	66	0.4	1.03	1/1.1/1.21/1.33	Normal/Normal/Armored/Normal/Random/Ethereal

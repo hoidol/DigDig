@@ -53,6 +53,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     public virtual float AttackPower => MinionData.ApplyRandomRatio(statDic[StatType.AttackPower], minionData.attackPowerRandomRatio);
     public float AttackSpeed => statDic[StatType.AttackSpeed];
     public float AttackRange => statDic[StatType.AttackRange];
+    public float EliteBossDamage => statDic.TryGetValue(StatType.EliteBossDamage, out float v) ? v : 0f; // 엘리트·보스 피해 +% (버프로만, 드워프 종족 등)
     public float CritChance => statDic[StatType.CritChance]; // % 단위. 기본값은 MinionData.csv CritChance, 버프(설의 등)로 오름
 
     public Transform rootTr;
@@ -296,7 +297,8 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     {
         InitMinionStat();
         UpdateReinforce();
-        
+        statDic[StatType.EliteBossDamage] = 0; // 버프로만 오르는 스탯 → 매번 0부터 다시 (InitMinionStat이 안 채움)
+
         foreach (var buff in activeBuffs)
         {
             statDic.TryGetValue(buff.statType, out float cur); // 없는 스탯 버프도 예외 없이 (기본 0)

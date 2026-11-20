@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4c2d3a588e214e0990171ddbaa6f13c, type: 3}
+  m_Name: KingAttackRange
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  key: KingAttackRange
+  category: 0
+  title: "\uACF5\uACA9 \uBC94\uC704"
+  desc: "\uD0B9 \uACF5\uACA9 \uBC94\uC704 +{0}"
+  thum: {fileID: 21300000, guid: 732bf0ee471e244d5bb5bac6db679d47, type: 3}
+  maxLevel: 3
+  prefab: {fileID: 2422618301489556063, guid: d9259a1e8f4e5443596e12d4086519a9, type: 3}

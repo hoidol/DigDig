@@ -51,8 +51,16 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Subscribe<KingSlimeHpChangedEvent>(OnCharacterHpChangedEvent);
         GameEventBus.Subscribe<SpawnMinionEvent>(OnSpawnMinieEvent);
 
-        Debug.Log($"UserManager.STAGE_KEY {UserDataManager.difficultyType}");
-        stageData = StageManager.Instance.GetStageData(UserDataManager.difficultyType);
+        Debug.Log($"[GameManager] 스테이지 {UserDataManager.stageOrder} / {UserDataManager.difficultyType}");
+        stageData = StageManager.Instance.GetCurrentStageData();
+        if (stageData == null)
+        {
+            // 선택한 스테이지·난이도 데이터가 없으면 스테이지 1 같은 난이도 → 스테이지 1 Normal
+            Debug.LogWarning($"[GameManager] 스테이지 데이터 없음 ({UserDataManager.stageOrder}_{UserDataManager.difficultyType}) → 스테이지 1로");
+            UserDataManager.stageOrder = StageData.FIRST_STAGE_ORDER;
+            stageData = StageManager.Instance.GetCurrentStageData()
+                ?? StageManager.Instance.GetStageData(StageData.FIRST_STAGE_ORDER, DifficultyType.Normal);
+        }
         stageData.Init();
         enemySpawnerContainer = Instantiate(stageData.enemySpawnerContainerPrefab);
         enemySpawnerContainer.Init();
@@ -251,7 +259,7 @@ public class GameManager : MonoSingleton<GameManager>
         GameEventBus.Publish(new WaveStartEvent(waveIdx, waveType));
     }
 
-    // wave 1~LAST_WAVE(80). wave 번호(waveIdx + 1)가 BOSS_WAVE_INTERVAL 배수면 보스, ELITE_WAVE_INTERVAL 배수면 엘리트, 나머지는 일반 전투
+    // wave 1~LAST_WAVE(60). wave 번호(waveIdx + 1)가 BOSS_WAVE_INTERVAL 배수면 보스, ELITE_WAVE_INTERVAL 배수면 엘리트, 나머지는 일반 전투
     public static WaveType GetWaveType(int waveIdx)
     {
         int waveNum = waveIdx + 1;
@@ -262,16 +270,11 @@ public class GameManager : MonoSingleton<GameManager>
         return WaveType.Battle;
     }
 
-    // 일반 적 방어 타입. wave 번호가 DEFENCE_WAVE_INTERVAL 배수면 Ethereal, Armored 순서로 번갈아, 나머지는 Normal
-    // (WaveData의 DefenceWaveTypes는 사용 안 함)
-    static readonly DefenceType[] WAVE_DEFENCE_ORDER = { DefenceType.Ethereal, DefenceType.Armored };
+    // 일반 적 방어 타입 = 지금 스테이지 StageData.defenceWaveTypes를 wave 1부터 순서대로 반복 (스테이지 데이터가 없으면 기본 순서)
     public static DefenceType GetWaveDefenceType(int waveIdx)
     {
-        int waveNum = waveIdx + 1;
-        if (waveNum % GameSetting.DEFENCE_WAVE_INTERVAL != 0)
-            return DefenceType.Normal;
-        int order = waveNum / GameSetting.DEFENCE_WAVE_INTERVAL - 1;
-        return WAVE_DEFENCE_ORDER[order % WAVE_DEFENCE_ORDER.Length];
+        StageData stageData = Instance != null ? Instance.stageData : null;
+        return StageData.GetDefenceType(stageData != null ? stageData.defenceWaveTypes : null, waveIdx);
     }
 
     // 현재 진행 중인 wave (가장 마지막에 시작한 wave)

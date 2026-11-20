@@ -180,12 +180,6 @@ public class KingSlimeStat
 
 
 [System.Serializable]
-public class CharacterLevelUpStat
-{
-    public LevelUpStatType type;
-    public int lv;
-}
-[System.Serializable]
 public class CharacterItemStat
 {
     public string key;

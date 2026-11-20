@@ -68,10 +68,6 @@ public class TutorialPlayTest : InGamePlayTestBase
                         if (from.tileObject is Minion fromMinion)
                             yield return Drop(fromMinion, TileManager.Instance.GetTile(merge.toTileIndex));
                         break;
-                    case SpawnMinionTutorialStep spawn:
-                        if (MinionSpawnButton.forcedMinionKey == spawn.minionKey)
-                            yield return Spawn(spawn);
-                        break;
                 }
                 yield return WaitRealtime(0.05f);
             }
@@ -82,6 +78,13 @@ public class TutorialPlayTest : InGamePlayTestBase
                 Assert.AreSame(TileManager.Instance.GetTile(set.tileIndex), TileManager.Instance.GetTile(KingSlime.Instance), $"{current}: 킹이 지정 칸에 없음");
             if (step is StartWaveTutorialStep)
                 Assert.IsTrue(GameManager.Instance.isPlaying, $"{current}: wave가 시작되지 않음");
+            if (step is SpawnMinionTutorialStep spawned) // (2026-11-20) 버튼 없이 바로 소환
+            {
+                Minion minion = TileManager.Instance.GetTile(spawned.tileIndex).tileObject as Minion;
+                Assert.IsNotNull(minion, $"{current}: 소환이 {spawned.tileIndex} 칸에 없음");
+                Assert.AreEqual(spawned.minionKey, minion.key, $"{current}: 소환 종");
+                Assert.AreEqual(0, minion.mergeLevel, $"{current}: 소환 레벨");
+            }
             if (step is MergeMinionTutorialStep m)
             {
                 Minion merged = TileManager.Instance.GetTile(m.toTileIndex).tileObject as Minion;
@@ -97,43 +100,6 @@ public class TutorialPlayTest : InGamePlayTestBase
         Assert.IsTrue(tutorialObject == null, "끝난 튜토리얼 오브젝트(Canvas 포함)가 삭제되지 않음");
         Assert.IsTrue(GameManager.Instance.isPlaying, "튜토리얼 뒤 wave 진행 안 됨");
         Assert.IsNull(MinionFieldController.Instance.dragFilter, "드래그 제한이 남음");
-        Assert.IsNull(MinionSpawnButton.forcedMinionKey, "지정 소환이 남음");
-
-        MinionSpawnButton spawnButton = Object.FindFirstObjectByType<MinionSpawnButton>(FindObjectsInactive.Include);
-        Assert.IsTrue(spawnButton.gameObject.activeInHierarchy, "소환 버튼이 안 보임");
-    }
-
-    // 소환 버튼을 눌러 지정 종이 지정 칸에 나오는지
-    IEnumerator Spawn(SpawnMinionTutorialStep spawn)
-    {
-        MinionSpawnButton button = Object.FindFirstObjectByType<MinionSpawnButton>(FindObjectsInactive.Include);
-        Assert.IsTrue(button.gameObject.activeInHierarchy, $"{current}: 소환 버튼이 안 보임");
-        Assert.AreEqual(spawn.minionKey, MinionSpawnButton.forcedMinionKey, $"{current}: 지정 소환 준비 안 됨");
-        Assert.GreaterOrEqual(KingSlime.Instance.coin, MinionSpawnButton.GetSpawnPrice(), $"{current}: 코인을 채워 주지 않음");
-
-        // 포커스: 버튼 위 터치는 버튼이 받고, 버튼 밖 터치는 어두운 화면이 막는다
-        TutorialCanvas canvas = TutorialManager.Instance.CurrentTutorial.canvas;
-        if (spawn.useFocus)
-        {
-            yield return WaitFrames(1);
-            Assert.IsTrue(canvas.IsFocusing, $"{current}: 포커스가 안 나옴");
-            Vector2 buttonPos = TutorialCanvas.GetScreenPos(button.transform);
-            GameObject hit = RaycastTop(buttonPos);
-            Assert.IsTrue(hit != null && hit.transform.IsChildOf(button.transform), $"{current}: 소환 버튼 위 터치가 버튼에 안 닿음 ({(hit != null ? hit.name : "없음")})");
-            Vector2 farPos = new Vector2(buttonPos.x < Screen.width / 2f ? Screen.width - 5 : 5, buttonPos.y < Screen.height / 2f ? Screen.height - 5 : 5);
-            hit = RaycastTop(farPos);
-            Assert.IsTrue(hit != null && hit.GetComponent<TutorialFocusBlocker>() != null, $"{current}: 버튼 밖 터치가 막히지 않음 ({(hit != null ? hit.name : "없음")})");
-        }
-
-        button.button.onClick.Invoke(); // 실제 Button 이벤트로 누름
-        yield return WaitFrames(1);
-        Assert.IsFalse(canvas != null && canvas.IsFocusing, $"{current}: 소환 후에도 포커스가 남음");
-        yield return WaitFrames(3);
-
-        Minion minion = TileManager.Instance.GetTile(spawn.tileIndex).tileObject as Minion;
-        Assert.IsNotNull(minion, $"{current}: 소환이 {spawn.tileIndex} 칸에 없음");
-        Assert.AreEqual(spawn.minionKey, minion.key, $"{current}: 소환 종");
-        Assert.AreEqual(0, minion.mergeLevel, $"{current}: 소환 레벨");
     }
 
     static GameObject RaycastTop(Vector2 screenPos)

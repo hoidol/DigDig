@@ -43,7 +43,7 @@ public class RankingPlayTest : InGamePlayTestBase
 
     static void SetMyRecord(DifficultyType difficulty, int maxWaveIdx, int tryCount)
     {
-        UserStage stage = UserDataManager.Instance.userStageManager.GetUserStage(difficulty.ToString());
+        UserStage stage = UserDataManager.Instance.userStageManager.GetUserStage(StageData.FIRST_STAGE_ORDER, difficulty);
         stage.maxWave = maxWaveIdx;
         stage.tryCount = tryCount;
     }

@@ -34,8 +34,12 @@ public class SelectDifficultyCanvas : CanvasUI<SelectDifficultyCanvas>
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
+        // 지금 스테이지에 있는 난이도만 보임 (스테이지마다 난이도 데이터가 따로)
         foreach (SelectDifficultyButton button in GetComponentsInChildren<SelectDifficultyButton>(true))
+        {
+            button.gameObject.SetActive(button.HasStageData);
             button.UpdateButton();
+        }
     }
 
     public void SelectedDifficulty(DifficultyType difficultyType)

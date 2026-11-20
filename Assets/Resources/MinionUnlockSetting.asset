@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f76a255ade5e94f39957eb236b604adb, type: 3}
+  m_Name: MinionUnlockSetting
+  m_EditorClassIdentifier: Assembly-CSharp::MinionUnlockSetting
+  initMinionKeys:
+  - Flame
+  - Ice
+  - Random
+  - Orbit
+  - Lightning
+  levelUnlocks:
+  - level: 1
+    key: Bounce
+  - level: 2
+    key: Iron
+  - level: 3
+    key: Pierce
+  - level: 4
+    key: Mine
+  - level: 6
+    key: Berserker
+  - level: 7
+    key: Mortar

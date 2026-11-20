@@ -261,6 +261,8 @@ public class EvolutionPlayTest : InGamePlayTestBase
     IEnumerator DamageBody()
     {
         Time.timeScale = TIME_SCALE;
+        if (GameManager.Instance.isBreakTime) // 카드 소환 모드는 브레이크타임으로 시작 → Next(wave 시작)
+            GameManager.Instance.EndBreakTime();
         double end = EditorApplication.timeSinceStartup + SPAWN_TIMEOUT;
         while (FindEnemy() == null && EditorApplication.timeSinceStartup < end)
             yield return WaitRealtime(0f);

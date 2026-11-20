@@ -187,12 +187,13 @@ public static class RankingManager
     // 내 순위가 목록 밖일 때 순위 칸 글씨: 기록이 있으면 "100+", 없으면 "-"
     public static string GetOutOfRankLabel(int myWave) => myWave > 0 ? $"{TOP_COUNT}+" : "-";
 
+    // 랭킹은 지금 스테이지 1 기준 (스테이지가 늘면 랭킹 경로도 스테이지별로 나눌 것)
+    public const int RANKING_STAGE_ORDER = StageData.FIRST_STAGE_ORDER;
+
     // 내 최고 wave (표시용, 1부터). 플레이 기록 없으면 0
     public static int GetMyWave(DifficultyType difficulty)
     {
-        string key = difficulty.ToString();
-        UserStage userStage = UserDataManager.Instance.userStageManager.userStageData.userStages
-            .FirstOrDefault(e => e.key == key); // GetUserStage는 없으면 생성하므로 직접 찾음
+        UserStage userStage = UserDataManager.Instance.userStageManager.FindUserStage(RANKING_STAGE_ORDER, difficulty); // GetUserStage는 없으면 생성하므로 Find
         if (userStage == null || userStage.tryCount <= 0)
             return 0;
         return userStage.maxWave + 1;

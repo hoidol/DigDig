@@ -8,8 +8,6 @@ public class MinionData : ScriptableObject
 {
     public const int MAX_MERGE_LEVEL = 4; // mergeLevel 0 ~ MAX_MERGE_LEVEL (표시 5성 = mergeLevel 4가 최대. 2026-11-19 잠시 3(4성)으로 줄였다가 되돌림)
     public static readonly int MAX_ENHANCE_LEVEL = 15;
-    // 등급별 시작 강화 레벨: C 0, B 2, A 4, S 6, SS 8, SSS 10 (2026-11-14). EnhanceLevelInfo.csv에서 시작 레벨 전 필요 경험치는 0
-    public static int GetStartEnhanceLevel(GradeType grade) => (int)grade * 2;
     public static int[] ABILITY_LEVELS = { 2, 5, 8, 11, 14 };
 
     public string key;
@@ -41,7 +39,7 @@ public class MinionData : ScriptableObject
     [Tooltip("쿨타임 스킬이 있는 미니언 (머리 위 MinionGameStatePanel에 쿨타임 바 표시). 쿨타임 값·동작은 각 미니언 클래스")]
     public bool hasSkill;
 
-    [Tooltip("wave 카드(MinionOfferCard)로 이 미니언을 놓을 때 드는 주사위 코인. 보통 2, 비싼 유닛은 더 높게 (2026-11-19)")]
+    [Tooltip("wave 카드(MinionOfferCard)로 이 미니언을 놓을 때 드는 주사위 코인 (MinionData.csv Coin 열)")]
     public int offerDiceCoinPrice = GameSetting.OFFER_MINION_DICE_COIN_PRICE;
 
     [Tooltip("인게임 직접 강화 1레벨당 공격력 증가(%). 종마다 다름 (MinionData.csv ReinforceAttackPower)")]
@@ -54,7 +52,6 @@ public class MinionData : ScriptableObject
     public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
 
     public Sprite thum;
-    public GradeType grade;
     public MinionEnhanceInfo GetCommonMinionEnhanceInfo(int lv)
     {
         return commonMinionEnhanceInfos.Where(e => e.level == lv).FirstOrDefault();
@@ -140,8 +137,9 @@ public class MinionData : ScriptableObject
             desc = row.Get("Desc");
         if (row.TryGetInt("Growth", out int lv))
             growth = lv;
-        if (row.TryGetEnum("Grade", out GradeType parsedGrade))
-            grade = parsedGrade;
+        // 카드 소환 가격 (주사위 코인)
+        if (row.TryGetInt("Coin", out int coin))
+            offerDiceCoinPrice = coin;
         if (table.HasColumn("AttackType"))
         {
             if (row.TryGetEnum("AttackType", out AttackType parsedAttackType))
@@ -182,19 +180,15 @@ public class MinionData : ScriptableObject
         Debug.Log($"[MinionData] {key} LoadData 완료");
     }
 
-    // 슬라임 프리팹 폴더: 등급별 (3.Prefabs/Minion/{C,B,A,S}/{key}Minion.prefab). grade는 CSV Grade 컬럼
+    // 미니언 프리팹: 3.Prefabs/Minion 하위 어디든 {key}Minion.prefab (등급 없음. 예전 등급 폴더 C/B/A/S도 그대로 찾음). 새 프리팹은 루트에 생성
     const string PREFAB_ROOT = "Assets/3.Prefabs/Minion";
-    string PrefabFolder => $"{PREFAB_ROOT}/{grade}";
+    string PrefabFolder => PREFAB_ROOT;
 
-    // 등급 폴더에서 찾고, 없으면 슬라임 프리팹 전체에서 찾아 등급 폴더와 다르다고 경고 (등급 변경 후 프리팹을 안 옮긴 경우)
     Minion FindPrefab()
     {
         string fileName = $"{key}Minion";
         string expectedPath = $"{PrefabFolder}/{fileName}.prefab";
-        Minion found = UnityEditor.AssetDatabase.LoadAssetAtPath<Minion>(expectedPath);
-        if (found != null)
-            return found;
-
+        Minion found;
         foreach (string guid in UnityEditor.AssetDatabase.FindAssets($"{fileName} t:Prefab", new[] { PREFAB_ROOT }))
         {
             string path = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
@@ -203,10 +197,7 @@ public class MinionData : ScriptableObject
 
             found = UnityEditor.AssetDatabase.LoadAssetAtPath<Minion>(path);
             if (found != null)
-            {
-                Debug.LogWarning($"[MinionData] {key} 프리팹이 등급 폴더에 없음 (등급 {grade}) → {path} 사용. {PrefabFolder}로 옮겨 주세요.");
                 return found;
-            }
         }
 
         Debug.LogWarning($"[MinionData] {key} 프리팹 없음 : {expectedPath}");
@@ -259,18 +250,18 @@ public class MinionData : ScriptableObject
         string prefabRootFolder = PrefabFolder;
         string prefabPath = $"{prefabRootFolder}/{key}Minion.prefab";
 
-        // 이미 해당 경로에 프리팹이 있으면 그대로 연결만 하고 덮어쓰지 않는다.
-        Minion existingPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<Minion>(prefabPath);
+        // 이미 프리팹이 있으면(하위 폴더 포함) 그대로 연결만 하고 덮어쓰지 않는다.
+        Minion existingPrefab = FindPrefab();
         if (existingPrefab != null)
         {
             prefab = existingPrefab;
             prefab.key = key;
             UnityEditor.EditorUtility.SetDirty(this);
-            Debug.Log($"[MinionData] {key} 기존 prefab 연결 완료: {prefabPath}");
+            Debug.Log($"[MinionData] {key} 기존 prefab 연결 완료: {UnityEditor.AssetDatabase.GetAssetPath(existingPrefab)}");
             return;
         }
 
-        // 프리팹 없으면 grade 폴더에 새로 생성
+        // 프리팹 없으면 루트 폴더에 새로 생성
         if (!UnityEditor.AssetDatabase.IsValidFolder(prefabRootFolder))
             System.IO.Directory.CreateDirectory(prefabRootFolder);
 
@@ -311,7 +302,7 @@ public class MinionData : ScriptableObject
 
     string CreateMinionScript(string className)
     {
-        string scriptFolder = $"Assets/1.Scripts/InGame/Minion/Unit/{grade}/{className}";
+        string scriptFolder = $"Assets/1.Scripts/InGame/Minion/Unit/{className}";
         System.IO.Directory.CreateDirectory(scriptFolder);
         string filePath = $"{scriptFolder}/{className}.cs";
 

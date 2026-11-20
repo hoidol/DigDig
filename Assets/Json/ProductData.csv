@@ -3,9 +3,6 @@ RemoveAd	remove_ad	InApp	4.99
 RemoveAdPackage	remove_ad_package	InApp	7.99
 GameSpeedUp	game_speed_up	InApp	2.99
 GameSpeedUpPackage	game_speed_up_package	InApp	5.99
-DrawMinion_Normal_Ad		Ad	1
-DrawMinion_Normal_DrawTicket		DrawTicket	30
-DrawMinion_Unique_Dia		Dia	50
 DrawEquipment_Normal_Ad		Ad	1
 DrawEquipment_Normal_Dia		Dia	25
 DrawEquipment_Unique		Dia	50

@@ -170,7 +170,7 @@ public class MinionTestWindow : EditorWindow
             {
                 var keys = MinionManager.Instance.minionDataDic.Values
                     .Where(d => !benchUsedOnly || GameSetting.IsUsedMinion(d.key))
-                    .OrderBy(d => d.grade).ThenBy(d => d.key).Select(d => d.key).ToList();
+                    .OrderBy(d => GameSetting.GetMinionOrder(d.key)).ThenBy(d => d.key).Select(d => d.key).ToList();
                 if (EditorUtility.DisplayDialog("전체 측정", $"{keys.Count}종 × {MinionData.MAX_MERGE_LEVEL + 1}레벨 = {keys.Count * (MinionData.MAX_MERGE_LEVEL + 1)}회 측정합니다.\n(한 번에 wave 하나, 최대 {GameSetting.WAVE_TIME}초 / 속도 x{benchSpeed:0.#})", "시작", "취소"))
                     MinionDamageBenchmark.Run(keys, benchWave, benchSpeed);
             }
@@ -194,14 +194,14 @@ public class MinionTestWindow : EditorWindow
     {
         Header("미니언 소환");
         string[] keys = MinionManager.Instance != null
-            ? MinionManager.Instance.minionDataDic.Values.OrderBy(d => d.grade).ThenBy(d => d.key).Select(d => d.key).ToArray()
+            ? MinionManager.Instance.minionDataDic.Values.OrderBy(d => GameSetting.GetMinionOrder(d.key)).ThenBy(d => d.key).Select(d => d.key).ToArray()
             : new string[0];
         if (keys.Length == 0)
         {
             EditorGUILayout.HelpBox("미니언 데이터가 아직 없습니다.", MessageType.None);
             return;
         }
-        string[] labels = keys.Select(k => $"{MinionManager.Instance.minionDataDic[k].grade} / {k}").ToArray();
+        string[] labels = keys.Select(k => $"{k} ({MinionManager.Instance.minionDataDic[k].Title})").ToArray();
         int idx = Mathf.Max(0, System.Array.IndexOf(keys, minionKey));
         idx = EditorGUILayout.Popup("Key", idx, labels);
         minionKey = keys[idx];

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4c2d3a588e214e0990171ddbaa6f13c, type: 3}
+  m_Name: RaceUndead
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  key: RaceUndead
+  category: 1
+  title: "\uC5B8\uB370\uB4DC"
+  desc: "\uBC84\uD504 \uCE78 \uBBF8\uB2C8\uC5B8 \uCE58\uBA85\uD0C0 \uD655\uB960 +5%\n\uD0B9
+    \uCE58\uBA85\uD0C0 \uD655\uB960 +10% / \uCD5C\uB300 \uCCB4\uB825 -10%"
+  thum: {fileID: 21300000, guid: 7c2f79db221e24422aad89c2489e9903, type: 3}
+  maxLevel: 1
+  prefab: {fileID: 6003291424735046151, guid: 24f82b303cfa3488b83471b0d2331891, type: 3}

@@ -47,6 +47,11 @@ public class WaveResultPlayTest : InGamePlayTestBase
 
             // 보스 wave: 보스 소환, 시간이 다 돼도 안 넘어감
             current = $"boss wave {bossIdx}";
+            if (GameManager.Instance.isBreakTime) // 카드 소환 모드: 보스 wave 브레이크타임 → Next
+            {
+                GameManager.Instance.EndBreakTime();
+                yield return WaitRealtime(0.2f);
+            }
             Assert.IsInstanceOf<BossWave>(GameManager.Instance.CurrentWave, $"{bossIdx + 1}번째 wave가 보스 wave가 아님");
             Boss boss = FindBoss();
             Assert.IsNotNull(boss, "보스가 소환되지 않음");
@@ -65,6 +70,11 @@ public class WaveResultPlayTest : InGamePlayTestBase
             boss.TakeDamage(KILL);
             yield return WaitRealtime(0.5f);
             Assert.AreEqual(bossIdx + 1, GameManager.Instance.waveIdx, "보스 처치 후 다음 wave로 안 넘어감");
+            if (GameManager.Instance.isBreakTime) // 카드 소환 모드: 보스 처치 → 다음 wave 브레이크타임 → Next
+            {
+                GameManager.Instance.EndBreakTime();
+                yield return WaitRealtime(0.2f);
+            }
             Assert.AreEqual(WaveType.Battle, GameManager.Instance.CurrentWave.waveType);
             Assert.GreaterOrEqual(KingSlime.Instance.coin - coinBeforeBoss, waveClearGold, "보스 처치 시 wave 종료 코인");
             Assert.IsTrue(GameManager.Instance.isPlaying, "보스 처치 후 게임이 끝남 (무한 웨이브)");
@@ -98,7 +108,6 @@ public class WaveResultPlayTest : InGamePlayTestBase
         string stageKey = GameManager.Instance.stageData.key;
         UserStage stage = user.userStageManager.GetUserStage(stageKey);
         int gold = user.userData.gold;
-        int drawTicket = user.userData.drawTicket;
         int exp = user.userMyInfoManager.userMyInfoData.exp;
         int tryCount = stage.tryCount;
         int maxWave = stage.maxWave;
@@ -124,12 +133,11 @@ public class WaveResultPlayTest : InGamePlayTestBase
 
         Assert.AreEqual(gold + waveIdx, user.userData.gold, "골드 보상 (= waveIdx)");
         Assert.AreEqual(exp + waveIdx / 2, user.userMyInfoManager.userMyInfoData.exp, "경험치 보상 (= waveIdx / 2)");
-        Assert.AreEqual(drawTicket + 3, user.userData.drawTicket, "뽑기권 보상 (= 합성 횟수)");
         Assert.AreEqual(Mathf.Max(maxWave, waveIdx), stage.maxWave, "최고 wave 기록");
         Assert.AreEqual(waveIdx > maxWave, result.newRecordObj.activeSelf, "신기록 표시");
 
         int shownRewards = result.rewardPanels.Count(p => p.gameObject.activeSelf);
-        Assert.AreEqual(3, shownRewards, "보상 패널 수 (골드·경험치·뽑기권)");
+        Assert.AreEqual(2, shownRewards, "보상 패널 수 (골드·경험치)");
 
         // 광고 보고 2배: 같은 양을 한 번 더 지급 (한 번만)
         if (result.adDoubleRewardButton != null)
@@ -139,7 +147,6 @@ public class WaveResultPlayTest : InGamePlayTestBase
         Assert.IsTrue(result.IsDoubled, "2배 보상이 적용 안 됨");
         Assert.AreEqual(gold + waveIdx * 2, user.userData.gold, "골드 2배");
         Assert.AreEqual(exp + waveIdx / 2 * 2, user.userMyInfoManager.userMyInfoData.exp, "경험치 2배");
-        Assert.AreEqual(drawTicket + 3 * 2, user.userData.drawTicket, "뽑기권 2배");
         if (result.adDoubleRewardButton != null)
             Assert.IsFalse(result.adDoubleRewardButton.activeSelf, "2배 받은 뒤 버튼 숨김");
         // 글씨 확대 이펙트가 끝나면 2배 값 표시 + 원래 크기

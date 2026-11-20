@@ -154,6 +154,12 @@ MonoBehaviour:
   - key: Difficulty_NoRecord
     kr: "\uAE30\uB85D \uC5C6\uC74C"
     en: No record
+  - key: Stage_Title
+    kr: "\uC2A4\uD14C\uC774\uC9C0 {0}"
+    en: Stage {0}
+  - key: Stage_Locked
+    kr: "\uC2A4\uD14C\uC774\uC9C0 {0} \uBCF4\uD1B5 \uD074\uB9AC\uC5B4 \uC2DC \uD574\uAE08"
+    en: Unlocks after clearing Stage {0} Normal
   - key: Minion.Random
     kr: "\uBB49\uCE58"
     en: Munchi

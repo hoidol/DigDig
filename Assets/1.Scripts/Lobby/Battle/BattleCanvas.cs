@@ -4,65 +4,130 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 public class BattleCanvas : BaseLobbyCanvas
 {
-    // public GameObject nextStageButton;
-    // public GameObject preStageButton;
+    // < 이전 스테이지 / > 다음 스테이지. 그 방향에 스테이지 데이터가 없으면 숨김 (출시 땐 스테이지 1만 → 둘 다 숨김)
+    public Button preStageButton;
+    public Button nextStageButton;
     // public StageRewardContainer stageRewardContainer;
 
     [SerializeField] UserStage curUserStage;
     public StageData stageData;
-    public TMP_Text titleText;
+    [FormerlySerializedAs("titleText")]
+    public TMP_Text stageText;      // "스테이지 N" (Stage_Title). 난이도 이름은 DifficultyDisplayButton이 표시
+
+
     public Image stageThumImage;
     public GameObject stageLockedGO;
+
+    void Awake()
+    {
+        if (preStageButton != null)
+            preStageButton.onClick.AddListener(() => MoveStage(-1));
+        if (nextStageButton != null)
+            nextStageButton.onClick.AddListener(() => MoveStage(1));
+    }
+
     void Start()
     {
         GameEventBus.Subscribe<ChangedDifficultyEvent>(OnChangedDifficultyEvent);
     }
 
+    void OnDestroy()
+    {
+        GameEventBus.Unsubscribe<ChangedDifficultyEvent>(OnChangedDifficultyEvent);
+    }
+
     void OnChangedDifficultyEvent(ChangedDifficultyEvent e)
     {
-        // 난이도마다 스테이지 하나 → 난이도가 바뀌면 그 난이도의 스테이지로
-        UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(UserDataManager.difficultyType);
-        SetUserStage(userStage);
-        UpdateCanvas();
+        RefreshStage();
     }
 
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
+        RefreshStage();
+    }
 
+    // dir = -1 이전 / +1 다음 스테이지. 난이도는 그 스테이지에 있으면 유지, 없으면 Normal
+    public void MoveStage(int dir)
+    {
+        int order = StageManager.Instance.GetNeighborStageOrder(UserDataManager.stageOrder, dir);
+        if (order < 0 || (dir > 0 && !CanShowNextStage(UserDataManager.stageOrder)))
+            return;
+
+        UserDataManager.stageOrder = order;
+        SoundManager.Play(SFXType.TabChange);
+        if (StageManager.Instance.GetStageData(order, UserDataManager.difficultyType) == null)
+        {
+            // 그 스테이지에 지금 난이도가 없으면 Normal → DifficultyDisplayButton도 갱신되게 이벤트로 (구독한 RefreshStage가 화면 갱신)
+            UserDataManager.difficultyType = DifficultyType.Normal;
+            GameEventBus.Publish(new ChangedDifficultyEvent(DifficultyType.Normal));
+            return;
+        }
+        RefreshStage();
+    }
+
+    // 선택한 스테이지·난이도 데이터가 없으면 스테이지 1로 되돌림
+    void RefreshStage()
+    {
+        StageManager stageManager = StageManager.Instance;
+        if (stageManager.GetCurrentStageData() == null)
+        {
+            if (!stageManager.HasStage(UserDataManager.stageOrder))
+                UserDataManager.stageOrder = StageData.FIRST_STAGE_ORDER;
+            if (stageManager.GetCurrentStageData() == null)
+                UserDataManager.difficultyType = DifficultyType.Normal;
+        }
         SetUserStage(UserDataManager.Instance.userStageManager.GetCurrentStage());
-        UpdateCanvas();
     }
 
     public void SetUserStage(UserStage userStage)
     {
         curUserStage = userStage;
-        stageData = StageManager.Instance.GetStageData(Enum.Parse<DifficultyType>(curUserStage.key));
+        UserStageManager.TryParseKey(curUserStage.key, out int order, out DifficultyType difficultyType);
+        stageData = StageManager.Instance.GetStageData(order, difficultyType);
+        // 로비 보스 = 이 스테이지에서 지금 잡을 보스 (연출 중이면 연출을 끝내고 바로 평소 화면)
+        LobbyReturnController controller = LobbyReturnController.Instance;
+        if (controller != null)
+            controller.ShowStage(curUserStage);
         // stageRewardContainer.SetStageData(curUserStage, stageData);
         UpdateCanvas();
-
     }
 
     public override void UpdateCanvas()
     {
+        if (stageData == null)
+            return;
         // stageRewardContainer.UpdateContainer();
-        titleText.text = DifficultyDisplayButton.GetDifficultyText(stageData.difficulty); // key(Normal 등) 대신 번역된 난이도 이름
+        if (stageText != null)
+            stageText.text = string.Format(TranslateManager.GetText("Stage_Title"), stageData.DisplayNumber);
 
-        // 난이도마다 스테이지 하나라 이전/다음 스테이지 이동 없음
-        // nextStageButton.SetActive(false);
-        // preStageButton.SetActive(false);
+        if (preStageButton != null)
+            preStageButton.gameObject.SetActive(StageManager.Instance.GetNeighborStageOrder(stageData.order, -1) >= 0);
+        if (nextStageButton != null)
+            nextStageButton.gameObject.SetActive(CanShowNextStage(stageData.order));
 
         stageLockedGO.SetActive(!stageData.ChekcUnlock());
     }
 
 
+    // > 버튼 = 다음 스테이지가 있고 열려 있을 때만 (다음 스테이지 Normal 해금 = 이 스테이지 Normal 클리어)
+    static bool CanShowNextStage(int order)
+    {
+        int nextOrder = StageManager.Instance.GetNeighborStageOrder(order, 1);
+        if (nextOrder < 0)
+            return false;
+        StageData nextNormal = StageManager.Instance.GetStageData(nextOrder, DifficultyType.Normal);
+        return nextNormal != null && nextNormal.ChekcUnlock();
+    }
+
     public void OnClickedBtn()
     {
         if (!stageData.ChekcUnlock())
         {
-            ToastCanvas.Toast(string.Format(TranslateManager.GetText("Difficulty_Locked"), StageData.UNLOCK_WAVE));
+            ToastCanvas.Toast(stageData.GetLockedMessage());
             return;
         }
         // 게임 시작 = 에너지 PLAY_COST_ENERGE 소모. 모자라면 시작 안 함

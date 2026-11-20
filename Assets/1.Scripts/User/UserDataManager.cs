@@ -10,6 +10,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     public bool isAdRemoved = false;
     public bool IsGameSpeedUp => userPurchaseManager.HasPurchasedAny(InAppProductInfo.GAME_SPEED_UP_KEYS);
     public static DifficultyType difficultyType = DifficultyType.Normal;
+    public static int stageOrder = StageData.FIRST_STAGE_ORDER; // 지금 선택한 스테이지 order (0부터, 화면 표시 = +1, 로비 < > 버튼)
 
     [field: SerializeField]
     public UserData userData
@@ -195,12 +196,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         Save();
     }
 
-    public void AddDrawTicket(int drawTicket)
-    {
-        userData.drawTicket += drawTicket;
-        Save();
-    }
-
     // 잔액이 모자라면 false (차감 안 함). 성공 시 저장 + CurrencyPanel 갱신
     public bool TryUseCurrency(CurrencyType currencyType, int count)
     {
@@ -219,9 +214,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
                 userData.energe -= count;
                 GameEventBus.Publish(new ChangedEnergeEvent(userData.energe, -count));
                 break;
-            case CurrencyType.DrawTicket:
-                userData.drawTicket -= count;
-                break;
         }
         Save();
         CurrencyPanel.UpdatePanels(currencyType);
@@ -238,7 +230,6 @@ public class UserData
     public int gold; //던전 수정 조작 느낌으로
     public int dia; //던전 수정 조작 느낌으로
     public int energe;
-    public int drawTicket;
     // public bool isAdRemoved;
 
     public int GetCurrency(CurrencyType currencyType)
@@ -251,8 +242,6 @@ public class UserData
                 return dia;
             case CurrencyType.Energe:
                 return energe;
-            case CurrencyType.DrawTicket:
-                return drawTicket;
         }
         return 0;
     }
@@ -274,5 +263,5 @@ public class UserCloudData
 
 public enum CurrencyType
 {
-    Gold, Dia, Energe, DrawTicket,Ad, InApp
+    Gold, Dia, Energe, DrawTicket /* 사용 안 함 (2026-11-20 뽑기권 삭제). 번호 유지용 */, Ad, InApp
 }

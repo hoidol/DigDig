@@ -121,9 +121,7 @@ public class ProductPurchaseButton : MonoBehaviour
 
             // 기록이 먼저 (뽑기 패널의 특별 뽑기 판정은 이번 구매까지 센 값)
             UserDataManager.Instance.userPurchaseManager.AddUserPurchase(productData);
-            // 뽑기는 결과 창(상자 열림) 소리가 따로 있어 구매 완료 소리는 그 외 상품만
-            if (GetComponentInParent<DrawProductPanel>(true) == null)
-                SoundManager.Play(SFXType.PurchaseComplete);
+            SoundManager.Play(SFXType.PurchaseComplete);
             onPurchased.Invoke();
             UpdateDailyLimit();
             ProductPanel panel = GetComponentInParent<ProductPanel>(true);

@@ -30,7 +30,7 @@ public class WaveTypeTest
         Assert.AreEqual(expected, GameManager.CanSkipWave(waveType, isSpawnEnd));
     }
 
-    // 3 wave마다 Ethereal → Armored 번갈아, 나머지는 Normal (DEFENCE_WAVE_INTERVAL = 3)
+    // 기본 순서(StageData.DEFAULT_DEFENCE_WAVE_TYPES) = Normal/Normal/Ethereal/Normal/Normal/Armored 반복
     [TestCase(0, DefenceType.Normal)]
     [TestCase(1, DefenceType.Normal)]
     [TestCase(2, DefenceType.Ethereal)]  // 3번째
@@ -41,8 +41,20 @@ public class WaveTypeTest
     [TestCase(19, DefenceType.Normal)]   // 20번째 (보스 wave)
     public void GetWaveDefenceType(int waveIdx, DefenceType expected)
     {
-        Assert.AreEqual(GameSetting.DEFENCE_WAVE_INTERVAL == 3, true, "간격이 바뀌면 이 기대값도 고칠 것");
-        Assert.AreEqual(expected, GameManager.GetWaveDefenceType(waveIdx));
+        Assert.AreEqual(expected, StageData.GetDefenceType(null, waveIdx));
+    }
+
+    // 데이터 순서를 wave 1부터 반복, Random은 같은 wave면 항상 같은 값
+    [Test]
+    public void GetDefenceTypeCycle()
+    {
+        var cycle = new[] { DefenceWaveType.Armored, DefenceWaveType.Normal };
+        Assert.AreEqual(DefenceType.Armored, StageData.GetDefenceType(cycle, 0));
+        Assert.AreEqual(DefenceType.Normal, StageData.GetDefenceType(cycle, 1));
+        Assert.AreEqual(DefenceType.Armored, StageData.GetDefenceType(cycle, 4));
+        var random = new[] { DefenceWaveType.Random };
+        for (int i = 0; i < 10; i++)
+            Assert.AreEqual(StageData.GetDefenceType(random, i), StageData.GetDefenceType(random, i));
     }
 
     // 기본 배율 (Resources/DefenceInfo 에셋이 없을 때. 에셋 값은 DefenceTypePlayTest가 실제 전투로 확인)
@@ -69,7 +81,7 @@ public class WaveTypeTest
 
 public class StageUnlockTest
 {
-    // 낮은 난이도를 클리어(마지막 wave 80 보스 처치)해야 다음 난이도 해금. 도달만으로는 안 열림
+    // 낮은 난이도를 클리어(마지막 wave 60 보스 처치)해야 다음 난이도 해금. 도달만으로는 안 열림
     [Test]
     public void UnlockNeedsClear()
     {
@@ -90,10 +102,14 @@ public class StageUnlockTest
         Assert.AreEqual(expected, NormalEnemy.GetKillGold(waveIdx));
     }
 
-    // 인게임 킹 레벨: 필요 경험치 = 25 + 8 × 레벨
+    // 인게임 킹 레벨: 필요 경험치 = 25 + 8 × 레벨, Lv6부터는 레벨당 +4
     [TestCase(0, 25)]
     [TestCase(1, 33)]
     [TestCase(2, 41)]
+    [TestCase(5, 65)]
+    [TestCase(6, 73)]
+    [TestCase(7, 77)]
+    [TestCase(10, 89)]
     public void KingMaxExp(int lv, int expected)
     {
         Assert.AreEqual(expected, KingSlime.GetMaxExp(lv));
@@ -119,29 +135,14 @@ public class StageUnlockTest
         Assert.AreEqual(2.5f, IceEffect.MergeRemain(2.5f, 1f));
     }
 
-    // 마지막 wave = 80 (waveIdx 79), 보스 wave
+    // 마지막 wave = 60 (waveIdx 59), 보스 wave
     [Test]
-    public void LastWaveIs80Boss()
+    public void LastWaveIs60Boss()
     {
-        Assert.AreEqual(80, GameSetting.LAST_WAVE);
-        Assert.IsFalse(GameManager.IsLastWave(78));
-        Assert.IsTrue(GameManager.IsLastWave(79));
-        Assert.AreEqual(WaveType.Boss, GameManager.GetWaveType(79));
-    }
-}
-
-public class DrawItemChanceTest
-{
-    // 처음 100%, 성공할 때마다 -5%, 최소 10%
-    [TestCase(0, 100)]
-    [TestCase(1, 95)]
-    [TestCase(10, 50)]
-    [TestCase(18, 10)]
-    [TestCase(19, 10)]
-    [TestCase(100, 10)]
-    public void GetDrawChance(int drawCount, int expected)
-    {
-        Assert.AreEqual(expected, DrawItemButton.GetDrawChance(drawCount));
+        Assert.AreEqual(60, GameSetting.LAST_WAVE);
+        Assert.IsFalse(GameManager.IsLastWave(58));
+        Assert.IsTrue(GameManager.IsLastWave(59));
+        Assert.AreEqual(WaveType.Boss, GameManager.GetWaveType(59));
     }
 }
 
