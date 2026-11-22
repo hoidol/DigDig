@@ -40,6 +40,13 @@ public class KingAbilityInventory
         return false;
     }
 
+    // 지금 버프 칸 (종족 칸 등, 직업 추가 칸 후보에서 뺌)
+    public List<Vector2Int> GetBuffTileOffsets()
+    {
+        var area = king != null ? king.GetComponent<KingTileBuffArea>() : null;
+        return area != null ? new List<Vector2Int>(area.Offsets) : new List<Vector2Int>();
+    }
+
     public T Get<T>() where T : KingAbility
     {
         foreach (var a in abilities)
@@ -48,7 +55,8 @@ public class KingAbilityInventory
         return null;
     }
 
-    public void Add(AbilityData data)
+    // setup = 새로 생성한 능력에 OnEquip 전에 값을 넣을 때 (직업의 추가 버프 칸 등)
+    public void Add(AbilityData data, System.Action<KingAbility> setup = null)
     {
         if (data == null || data.prefab == null)
         {
@@ -69,8 +77,27 @@ public class KingAbilityInventory
         ability = Object.Instantiate(data.prefab, king.transform);
         ability.name = data.key;
         ability.Init(king, data);
+        setup?.Invoke(ability);
         abilities.Add(ability);
         ability.OnEquip();
+    }
+
+    // 능력 제거 (효과 해제 + 오브젝트 삭제). 테스트·나중에 교체 기능용
+    public void Remove(AbilityData data)
+    {
+        KingAbility ability = Get(data);
+        if (ability == null)
+            return;
+        abilities.Remove(ability);
+        ability.OnUnequip();
+        Object.Destroy(ability.gameObject);
+    }
+
+    // Weapon 공격 1회마다
+    public void OnKingAttack()
+    {
+        for (int i = 0; i < abilities.Count; i++)
+            abilities[i].OnKingAttack();
     }
 
     // Weapon.Shoot에서 호출

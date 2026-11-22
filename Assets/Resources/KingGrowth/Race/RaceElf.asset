@@ -15,8 +15,7 @@ MonoBehaviour:
   key: RaceElf
   category: 1
   title: "\uC5D8\uD504"
-  desc: "\uBC84\uD504 \uCE78 \uBBF8\uB2C8\uC5B8 \uACF5\uACA9 \uC18D\uB3C4 +8%\n\uD0B9
-    \uACF5\uACA9 \uC18D\uB3C4 +15% / \uCD5C\uB300 \uCCB4\uB825 -10%"
+  desc: "\ubc84\ud504 \uce78 \ubbf8\ub2c8\uc5b8\u00b7\ud0b9: \uacf5\uaca9 \uc18d\ub3c4 +10%"
   thum: {fileID: 21300000, guid: 1d5eebd2b80574b72ac7ae47d6b32516, type: 3}
   maxLevel: 1
   prefab: {fileID: 312134464673892601, guid: 4c3efbb83954a41ad933d75d6c3b8a2b, type: 3}

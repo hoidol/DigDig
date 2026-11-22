@@ -47,9 +47,11 @@ public class RandomMinion : MinionGrowth1
         base.Update();
         if (UpdateSkillBuff())
             return; // 버프 중엔 쿨타임 멈춤
+        if (IsBeingDragged) // 드래그 중엔 스킬 발동 안 함
+            return;
         if (skillTimer < SKILL_COOLTIME)
         {
-            skillTimer += Time.deltaTime;
+            skillTimer += SkillDeltaTime;
             return;
         }
         skillTimer = 0; // 쿨타임이 차면 적이 없어도 바로 발동 (대기 없음)

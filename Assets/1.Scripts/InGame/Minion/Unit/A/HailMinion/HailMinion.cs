@@ -90,7 +90,7 @@ public class HailMinion : MinionGrowth1, IRotationDirectionUnit
     {
         if (skillTimer < SKILL_COOLTIME)
         {
-            skillTimer += Time.deltaTime;
+            skillTimer += SkillDeltaTime;
             return;
         }
         Transform[] path = GetPath();

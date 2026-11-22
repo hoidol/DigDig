@@ -54,7 +54,8 @@ public class GrowUpMinion : MinionGrowth1
         if (TileManager.Instance == null || TileManager.Instance.GetTile(this) == null)
             return;
 
-        growTimer += Time.deltaTime;
+        if (!isDragging) // 드래그 중엔 성장 시간 멈춤
+            growTimer += Time.deltaTime;
         if (growTimer >= growTime && !isDragging)
             Grow();
     }

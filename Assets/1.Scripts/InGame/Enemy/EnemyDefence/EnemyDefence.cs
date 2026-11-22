@@ -19,12 +19,15 @@ public abstract class EnemyDefence : MonoBehaviour
     // 공통 배율: 방어 타입 표 배율(만능 공격은 무시) × 거인 사냥 배율(엘리트/보스)
     protected float GetMultiplier(DamageData damage, DefenceType defenceType)
     {
-        // 만능 공격(AllRounder 속성 / 만능 공격 타일): 방어 타입 배율 무시 (모든 방어 타입에 100%)
+        // 만능 공격 타일: 방어 타입 배율 무시 (모든 방어 타입에 100%). 카오스(Chaos)는 표 값 사용
         float multiplier = damage.IgnoreDefence ? 1f : DefenceInfo.Get(damage.attackType, defenceType);
         // 권능 순혈의 왕관: 아군 공격의 약점 배율만 키움
         PureCrownAuthority pureCrown = AuthoritySystem.Get<PureCrownAuthority>();
         if (pureCrown != null && pureCrown.active && damage is AllyUnitDamageData)
             multiplier = PureCrownAuthority.Apply(multiplier);
+        // 방어 타입별 피해 +% (종족 버프 등)
+        if (damage is AllyUnitDamageData allyDamage)
+            multiplier *= allyDamage.GetDefenceDamageMul(defenceType);
         // 거인 사냥 타일: 엘리트/보스 추가 배율
         if (damage is AllyUnitDamageData ad && (enemy is EliteEnemy || enemy is Boss))
             multiplier *= ad.eliteBossDamageMul;
@@ -37,6 +40,7 @@ public abstract class EnemyDefence : MonoBehaviour
         {
             case DefenceType.Armored: return typeof(ArmoredEnemyDefence);
             case DefenceType.Ethereal: return typeof(EtherealEnemyDefence);
+            case DefenceType.Light: return typeof(LightEnemyDefence);
             default: return typeof(NormalEnemyDefence);
         }
     }

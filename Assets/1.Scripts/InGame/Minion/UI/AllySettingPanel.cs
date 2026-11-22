@@ -14,12 +14,15 @@ public class AllySettingPanel : MonoBehaviour
     public MinionShortcutInfoPanel minionShortcutInfoPanel;
     public AttackTypePanel attackTypePanel;
     public SellMinionButton sellMinionButton; // 비우면 하위에서 찾음. 미니언만 판매(킹은 숨김)
+    public KingClassInfoPanel kingClassInfoPanel; // (2026-11-21) 킹 선택 시 종족·직업 칸 + 설명. 비우면 하위에서 찾음
 
     IAllyUnit targetMinion;
     void Awake()
     {
         if (sellMinionButton == null)
             sellMinionButton = GetComponentInChildren<SellMinionButton>(true);
+        if (kingClassInfoPanel == null)
+            kingClassInfoPanel = GetComponentInChildren<KingClassInfoPanel>(true);
     }
     void Start()
     {
@@ -44,6 +47,8 @@ public class AllySettingPanel : MonoBehaviour
             
             attackTypePanel.SetAttackType(GetAttackType(KingSlime.Instance.weapon.attackType, KingSlime.Instance.shotModifier));
             characterShortcutInfoPanel.SetCharacter(KingSlime.Instance);
+            if (kingClassInfoPanel != null)
+                kingClassInfoPanel.ShowKing(KingSlime.Instance);
         }
         else
         {
@@ -52,6 +57,8 @@ public class AllySettingPanel : MonoBehaviour
             // nameText.text = minion.minionData.Title;
             attackTypePanel.SetAttackType(GetAttackType(minion.minionData.attackType, minion.shotModifier));
             minionShortcutInfoPanel.SetMinion(minion);
+            if (kingClassInfoPanel != null)
+                kingClassInfoPanel.ShowMinion();
         }
         obj.SetActive(true);
         // 유닛이 쓸 수 있는 설정 버튼만 노출 (각 버튼이 IsAvailable로 판단)

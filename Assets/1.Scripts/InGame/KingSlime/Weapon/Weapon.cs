@@ -71,6 +71,7 @@ public abstract class Weapon : MonoBehaviour, IGun
     public void UpdateWeapon()
     {
         if (!GameManager.Instance.isPlaying) return;
+        if (player.IsBeingDragged) return; // 드래그 중엔 공격 멈춤 (타이머도 안 참)
 
 
         // #if UNITY_EDITOR || !UNITY_ANDROID && !UNITY_IOS
@@ -146,6 +147,7 @@ public abstract class Weapon : MonoBehaviour, IGun
             }
         }
         player.shotModifier.CountAttack();
+        KingSlime.Instance.abilityInventory?.OnKingAttack(); // 킹 성장 능력: 공격 횟수 (패시브 일제 사격·대지의 망치 등)
 
 
         // foreach (var e in player.itemInventory.fireds)

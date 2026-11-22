@@ -50,10 +50,12 @@ public class FlameMinion : MinionGrowth1
     public override void Update()
     {
         base.Update();
+        if (IsBeingDragged) // 드래그 중엔 스킬 발동 안 함
+            return;
         UpdateFlameSkill();
         if (!isEvolved)
             return;
-        skillTimer += Time.deltaTime;
+        skillTimer += SkillDeltaTime;
         if (skillTimer < EVOLVE_SKILL_COOLTIME)
             return;
         skillTimer = 0;
@@ -64,7 +66,7 @@ public class FlameMinion : MinionGrowth1
     {
         if (flameSkillTimer < SKILL_COOLTIME)
         {
-            flameSkillTimer += Time.deltaTime;
+            flameSkillTimer += SkillDeltaTime;
             return;
         }
         // 쿨타임이 차면 적이 없어도 바로 발동 (대기 없음)

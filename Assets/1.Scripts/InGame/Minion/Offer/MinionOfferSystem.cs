@@ -16,13 +16,26 @@ public class MinionOfferSystem : MonoBehaviour
 
     public static MinionOfferSystem Instance { get; private set; }
 
-    public readonly List<string> hand = new List<string>(); // 들고 있는 카드(미니언 key). 사용한 칸은 null (카드 자리가 밀리지 않게)
+    // (2026-11-22) 카드 = 미니언 key + 머지 레벨 (놓으면 그 머지 레벨로 소환, 같은 종·같은 머지 레벨 미니언 위면 +1 합성)
+    public class OfferCard
+    {
+        public string key;
+        public int mergeLevel;
+        public OfferCard(string key, int mergeLevel) { this.key = key; this.mergeLevel = mergeLevel; }
+    }
+    // 카드 머지 레벨 확률: OFFER_LEVEL_UP_CHANCE(%)로 머지 레벨 1(표시 2), 나머지 0. 지금은 0% (추후 확률로 등장)
+    public const float OFFER_LEVEL_UP_CHANCE = 0f;
+    public static int RollOfferMergeLevel() => Random.Range(0f, 100f) < OFFER_LEVEL_UP_CHANCE ? 1 : 0;
+
+    public readonly List<OfferCard> hand = new List<OfferCard>(); // 들고 있는 카드. 사용한 칸은 null (카드 자리가 밀리지 않게)
 
     [Header("씬 연결 (비우면 실행 중 생성)")]
     public Canvas canvas;                 // 드래그 그림을 그릴 캔버스 (비우면 상위 캔버스)
     public RectTransform cardContainer;   // 카드가 놓일 곳 (HorizontalLayoutGroup 권장)
     public MinionOfferCard cardTemplate;  // 카드 하나 (꺼 둔 채로 두면 복사해서 씀)
     public Button nextButton;             // 브레이크타임 Next 버튼
+    public MinionOfferCardInfo cardInfo;  // (2026-11-21) 카드를 누르면 위에 미니언 설명 (비우면 하위에서 찾고, 없으면 생성)
+    public KingExpBuyPanel expBuyPanel;   // (2026-11-22) 카드 줄 왼쪽 킹 레벨·경험치 구매 (비우면 하위에서 찾고, 없으면 생성)
     readonly List<MinionOfferCard> cards = new List<MinionOfferCard>();
 
     // GameManager.Start에서 호출: 씬에 있으면 그것, 없으면 새로 만들어 준비
@@ -50,6 +63,20 @@ public class MinionOfferSystem : MonoBehaviour
         if (canvas == null)
             canvas = GetComponentInParent<Canvas>()?.rootCanvas;
         cardTemplate.gameObject.SetActive(false);
+        if (cardInfo == null)
+            cardInfo = GetComponentInChildren<MinionOfferCardInfo>(true);
+        if (cardInfo == null)
+            cardInfo = MinionOfferCardInfo.Build(transform, GetComponentInChildren<TMPro.TMP_Text>(true)?.font);
+        if (expBuyPanel == null)
+            expBuyPanel = GetComponentInChildren<KingExpBuyPanel>(true);
+        if (expBuyPanel == null)
+        {
+            DiceCoinPanel dicePanel = FindFirstObjectByType<DiceCoinPanel>(FindObjectsInactive.Include);
+            Image diceIcon = dicePanel != null ? dicePanel.GetComponentInChildren<Image>(true) : null;
+            expBuyPanel = KingExpBuyPanel.Build(transform as RectTransform ?? (RectTransform)cardContainer.parent, GetComponentInChildren<TMPro.TMP_Text>(true)?.font,
+                nextButton.GetComponent<Image>()?.sprite, diceIcon != null ? diceIcon.sprite : null);
+        }
+        expBuyPanel.Init();
         nextButton.onClick.AddListener(OnClickedNext);
         nextButton.gameObject.SetActive(false);
         HideGoldUI();
@@ -57,13 +84,30 @@ public class MinionOfferSystem : MonoBehaviour
         GameEventBus.Subscribe<BreakTimeStartEvent>(OnBreakTimeStart);
         GameEventBus.Subscribe<WaveStartEvent>(OnWaveStart);
         GameEventBus.Subscribe<DiceCoinEvent>(OnDiceCoin);
+        GameEventBus.Subscribe<DragStartEvent>(OnFieldDragStart);
     }
+
+    // 카드 설명: 카드를 누르면 토글, 드래그(카드·필드 유닛)·wave 시작·카드 사용 시 닫힘
+    public void ToggleCardInfo(int handIdx, MinionData data, RectTransform card)
+    {
+        if (cardInfo != null)
+            cardInfo.Toggle(handIdx, data, card);
+    }
+
+    public void HideCardInfo()
+    {
+        if (cardInfo != null)
+            cardInfo.Hide();
+    }
+
+    void OnFieldDragStart(DragStartEvent e) => HideCardInfo();
 
     void OnDestroy()
     {
         GameEventBus.Unsubscribe<BreakTimeStartEvent>(OnBreakTimeStart);
         GameEventBus.Unsubscribe<WaveStartEvent>(OnWaveStart);
         GameEventBus.Unsubscribe<DiceCoinEvent>(OnDiceCoin);
+        GameEventBus.Unsubscribe<DragStartEvent>(OnFieldDragStart);
         if (Instance == this)
             Instance = null;
     }
@@ -90,6 +134,7 @@ public class MinionOfferSystem : MonoBehaviour
     void OnWaveStart(WaveStartEvent e)
     {
         SetPanelActive(false);
+        HideCardInfo();
         nextButton.gameObject.SetActive(false); // Next 표시는 이 오브젝트의 Update가 하므로 꺼지기 전에 직접 숨김
     }
 
@@ -120,18 +165,22 @@ public class MinionOfferSystem : MonoBehaviour
         if (!inited || nextButton == null || GameManager.Instance == null)
             return;
         bool show = GameManager.Instance.isPlaying && GameManager.Instance.isBreakTime
-            && !IsCardDragging && !MinionFieldController.Instance.IsDragging;
+            && !IsCardDragging && !MinionFieldController.Instance.IsDragging
+            && !InGame.LevelUpCanvas.IsPickingRune; // 레벨업 룬 칸을 고르는 중엔 숨김
         if (nextButton.gameObject.activeSelf != show)
             nextButton.gameObject.SetActive(show);
     }
 
-    // Next: 아직 살 수 있는 카드가 남았으면(주사위 코인으로 살 수 있는 카드) 확인 팝업 → Yes면 wave 시작
+    // Next: 하지 않은 게 있으면 확인 팝업 → Yes면 wave 시작
+    // - (2026-11-21) 레벨업을 하지 않음 (밀린 레벨업: 레벨업 창을 고르지 않음)
+    // - 아직 살 수 있는 카드가 남음 (주사위 코인으로 살 수 있는 카드)
     void OnClickedNext()
     {
         SoundManager.Play(SFXType.NextWaveButton);
-        if (HasAffordableCard() && YesOrNoCanvas.Instance != null)
+        string body = GetNextWaveWarning(KingSlime.Instance != null && KingSlime.Instance.pendingLevelUps > 0, HasAffordableCard());
+        if (body != null && YesOrNoCanvas.Instance != null)
         {
-            YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("NextWave_DiceCoinLeft_Title"), TranslateManager.GetText("NextWave_DiceCoinLeft_Body"), yes =>
+            YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("NextWave_DiceCoinLeft_Title"), body, yes =>
             {
                 if (yes)
                     GameManager.Instance.EndBreakTime();
@@ -141,11 +190,25 @@ public class MinionOfferSystem : MonoBehaviour
         GameManager.Instance.EndBreakTime();
     }
 
+    // 경고 문구 (없으면 null): 해당하는 줄들 + "그래도 웨이브를 시작할까요?"
+    public static string GetNextWaveWarning(bool levelUpLeft, bool diceCoinLeft)
+    {
+        if (!levelUpLeft && !diceCoinLeft)
+            return null;
+        var lines = new List<string>();
+        if (levelUpLeft)
+            lines.Add(TranslateManager.GetText("NextWave_LevelUpLeft"));
+        if (diceCoinLeft)
+            lines.Add(TranslateManager.GetText("NextWave_DiceCoinLeft"));
+        lines.Add(TranslateManager.GetText("NextWave_Confirm"));
+        return string.Join("\n", lines);
+    }
+
     // 손에 남은 카드 중 지금 주사위 코인으로 살 수 있는 카드가 있음 (= 코인을 다 쓰지 않음)
     public bool HasAffordableCard()
     {
-        foreach (string key in hand)
-            if (key != null && CanAffordCard(key))
+        foreach (OfferCard card in hand)
+            if (card != null && CanAffordCard(card.key))
                 return true;
         return false;
     }
@@ -153,6 +216,7 @@ public class MinionOfferSystem : MonoBehaviour
     // 장착 5종 중 랜덤 OFFER_COUNT장 (같은 종이 겹칠 수 있음)
     public void DealOffers()
     {
+        HideCardInfo();
         if (!KEEP_UNUSED_OFFERS)
             hand.Clear();
         else
@@ -171,7 +235,7 @@ public class MinionOfferSystem : MonoBehaviour
                 break;
             string key = candidates[Random.Range(0, candidates.Count)];
             dealt[key] = dealt.TryGetValue(key, out int n) ? n + 1 : 1;
-            hand.Add(key);
+            hand.Add(new OfferCard(key, RollOfferMergeLevel()));
         }
         RefreshCards();
         ArrangeCards();
@@ -204,7 +268,8 @@ public class MinionOfferSystem : MonoBehaviour
     {
         if (handIdx < 0 || handIdx >= hand.Count || hand[handIdx] == null)
             return false;
-        string key = hand[handIdx];
+        string key = hand[handIdx].key;
+        int cardLevel = hand[handIdx].mergeLevel;
         Tile tile = TileManager.Instance.GetNearestTile(worldPos);
         if (tile == null)
             return false;
@@ -223,12 +288,12 @@ public class MinionOfferSystem : MonoBehaviour
                 ToastCanvas.Toast("Max Minion");
                 return false;
             }
-            Minion minion = KingSlime.Instance.AddMinion(key, 0);
+            Minion minion = KingSlime.Instance.AddMinion(key, cardLevel);
             tile.SetTileObject(minion);
             SoundManager.Play(SFXType.MinionAppear);
             AchievementManager.Report(AchievementType.SpawnMinion);
         }
-        else if (tile.tileObject is Minion target && CanMergeCard(key, target))
+        else if (tile.tileObject is Minion target && CanMergeCard(key, cardLevel, target))
         {
             Minion merged = MinionFieldController.Instance.ReplaceMinion(target, key, target.mergeLevel + 1);
             merged.PlayMergeHop();
@@ -250,11 +315,11 @@ public class MinionOfferSystem : MonoBehaviour
         return true;
     }
 
-    // 카드(0레벨)는 같은 종·0레벨 미니언과 합성
-    static bool CanMergeCard(string key, Minion target)
+    // 카드는 같은 종·같은 머지 레벨 미니언과 합성
+    static bool CanMergeCard(string key, int cardLevel, Minion target)
     {
         MinionData data = MinionManager.Instance.GetMinionData(key);
-        return Minion.CanMerge(key, 0, data.growth, target.key, target.mergeLevel, target.MinionData.growth);
+        return Minion.CanMerge(key, cardLevel, data.growth, target.key, target.mergeLevel, target.MinionData.growth);
     }
 
     #region UI 기본 모양 (씬에 연결이 없을 때만 실행 중 생성)
@@ -370,7 +435,7 @@ public class MinionOfferSystem : MonoBehaviour
             bool active = i < hand.Count && hand[i] != null;
             cards[i].gameObject.SetActive(active);
             if (active)
-                cards[i].SetData(this, i, MinionManager.Instance.GetMinionData(hand[i]), GetCardPrice(hand[i]), CanAffordCard(hand[i]));
+                cards[i].SetData(this, i, MinionManager.Instance.GetMinionData(hand[i].key), hand[i].mergeLevel, GetCardPrice(hand[i].key), CanAffordCard(hand[i].key));
         }
     }
 

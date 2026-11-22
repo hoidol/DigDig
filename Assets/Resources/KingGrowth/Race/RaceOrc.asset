@@ -15,8 +15,7 @@ MonoBehaviour:
   key: RaceOrc
   category: 1
   title: "\uC624\uD06C"
-  desc: "\uBC84\uD504 \uCE78 \uBBF8\uB2C8\uC5B8 \uACF5\uACA9\uB825 +8%\n\uD0B9 \uACF5\uACA9\uB825
-    +15% / \uACF5\uACA9 \uC18D\uB3C4 -10%"
+  desc: "\ubc84\ud504 \uce78 \ubbf8\ub2c8\uc5b8\u00b7\ud0b9: \uacf5\uaca9\ub825 +10%"
   thum: {fileID: 21300000, guid: 4d7ff1ca21f6648589858e277be4e3ac, type: 3}
   maxLevel: 1
   prefab: {fileID: 187338623158046423, guid: 5f1154e968cf046d38b596258f6135b5, type: 3}

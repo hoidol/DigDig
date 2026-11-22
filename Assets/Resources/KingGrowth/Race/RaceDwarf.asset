@@ -15,9 +15,7 @@ MonoBehaviour:
   key: RaceDwarf
   category: 1
   title: "\uB4DC\uC6CC\uD504"
-  desc: "\uBC84\uD504 \uCE78 \uBBF8\uB2C8\uC5B8 \uC5D8\uB9AC\uD2B8\xB7\uBCF4\uC2A4
-    \uD53C\uD574 +10%\n\uD0B9 \uCD5C\uB300 \uCCB4\uB825 +20% / \uACF5\uACA9 \uBC94\uC704
-    -0.5"
+  desc: "\ubc84\ud504 \uce78 \ubbf8\ub2c8\uc5b8\u00b7\ud0b9: \uc5d8\ub9ac\ud2b8\u00b7\ubcf4\uc2a4 \ud53c\ud574 +15%"
   thum: {fileID: 21300000, guid: 4d84e5fb2129c44d6a730765618e34ec, type: 3}
   maxLevel: 1
   prefab: {fileID: 3934682891588889353, guid: 4acbb7680eb0f4a639b30aee683f5f1c, type: 3}

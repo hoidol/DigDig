@@ -12,8 +12,9 @@ public class StatusEffectHandler : MonoBehaviour
     [field: SerializeField] public int SlowStack { get; set; } // 슬로우 중첩 (빙결은 2026-11-19부터 별도 IceSlowRate)
     [field: SerializeField] public float IceSlowRate { get; set; } = 1f; // 빙결 이동속도 배율 (IceEffect, 중첩 없이 가장 강한 값)
     [field: SerializeField] public float MudSlow { get; set; } // 진흙 감속 비율 (MudEffect, 0~0.8)
-    // 이동속도 배율 = 슬로우 중첩 × 빙결 × 진흙 감속
-    public float SlowRate => Mathf.Pow(SLOW_RATE_PER_STACK, Mathf.Min(SlowStack, MAX_SLOW_STACK)) * IceSlowRate * (1f - MudSlow);
+    [field: SerializeField] public float VineSlow { get; set; } // 덩굴 감속 비율 (VineEffect, 엘프 패시브)
+    // 이동속도 배율 = 슬로우 중첩 × 빙결 × 진흙 감속 × 덩굴 감속
+    public float SlowRate => Mathf.Pow(SLOW_RATE_PER_STACK, Mathf.Min(SlowStack, MAX_SLOW_STACK)) * IceSlowRate * (1f - MudSlow) * (1f - VineSlow);
     [field: SerializeField] public float StigmaDamageMul { get; set; } = 1f;   // 낙인으로 받는 피해 배율 (Enemy.TakeDamage)
 
     // 방어막 소모 시도. 막으면 true 반환
@@ -75,6 +76,7 @@ public class StatusEffectHandler : MonoBehaviour
         SlowStack = 0;
         IceSlowRate = 1f;
         MudSlow = 0f;
+        VineSlow = 0f;
         StigmaDamageMul = 1f;
     }
 

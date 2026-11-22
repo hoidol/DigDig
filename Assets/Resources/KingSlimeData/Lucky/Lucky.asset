@@ -16,13 +16,13 @@ MonoBehaviour:
   kingslimeStats:
   - statType: 0
     initValue: 0
-    value: 25
+    value: 15
   - statType: 1
     initValue: 0
     value: 20
   - statType: 2
     initValue: 0
-    value: 80
+    value: 65
   - statType: 3
     initValue: 0
     value: 1
@@ -31,7 +31,7 @@ MonoBehaviour:
     value: 1.5
   - statType: 5
     initValue: 0
-    value: 3
+    value: 2.5
   - statType: 6
     initValue: 0
     value: 0
@@ -42,6 +42,24 @@ MonoBehaviour:
     initValue: 0
     value: 0
   - statType: 9
+    initValue: 0
+    value: 0
+  - statType: 10
+    initValue: 0
+    value: 0
+  - statType: 11
+    initValue: 0
+    value: 0
+  - statType: 12
+    initValue: 0
+    value: 0
+  - statType: 13
+    initValue: 0
+    value: 0
+  - statType: 14
+    initValue: 0
+    value: 0
+  - statType: 15
     initValue: 0
     value: 0
   defaultBullets: 

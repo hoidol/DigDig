@@ -13,7 +13,7 @@ public class PureCrownAuthority : Authority
     public static bool IsPure(IEnumerable<AttackType> types)
     {
         var list = types.ToList();
-        return list.Count > 0 && list.All(t => t == list[0]) && list[0] != AttackType.AllRounder;
+        return list.Count > 0 && list.All(t => t == list[0]) && list[0] != AttackType.Chaos;
     }
 
     // 약점(> 1)일 때만 키움. 내성(< 1)·보통은 그대로

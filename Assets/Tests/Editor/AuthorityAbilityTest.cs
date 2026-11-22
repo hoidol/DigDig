@@ -46,7 +46,7 @@ public class AuthorityAbilityTest
     {
         Assert.IsTrue(PureCrownAuthority.IsPure(new[] { AttackType.Magic, AttackType.Magic, AttackType.Magic }));
         Assert.IsFalse(PureCrownAuthority.IsPure(new[] { AttackType.Magic, AttackType.Physic }));
-        Assert.IsFalse(PureCrownAuthority.IsPure(new[] { AttackType.AllRounder, AttackType.AllRounder }), "만능은 제외");
+        Assert.IsFalse(PureCrownAuthority.IsPure(new[] { AttackType.Chaos, AttackType.Chaos }), "만능은 제외");
         Assert.AreEqual(2.5f * 1.5f, PureCrownAuthority.Apply(2.5f), 0.0001f);
         Assert.AreEqual(0.2f, PureCrownAuthority.Apply(0.2f), 0.0001f, "내성은 그대로");
         Assert.AreEqual(1f, PureCrownAuthority.Apply(1f), 0.0001f);
@@ -65,7 +65,7 @@ public class AuthorityAbilityTest
     public void MixedCrest_Mixed()
     {
         Assert.IsTrue(MixedCrestAuthority.IsMixed(new[] { AttackType.Physic, AttackType.Magic, AttackType.Physic }));
-        Assert.IsFalse(MixedCrestAuthority.IsMixed(new[] { AttackType.Physic, AttackType.AllRounder }));
+        Assert.IsFalse(MixedCrestAuthority.IsMixed(new[] { AttackType.Physic, AttackType.Chaos }));
     }
 
     [Test]

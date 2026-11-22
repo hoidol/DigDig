@@ -242,12 +242,17 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
+    // (2026-11-22) 테스트(미니언 피해 측정) 전용: 켜면 엘리트·보스 wave도 일반 전투로 진행. 기본 false
+    public static bool forceBattleWaveForTest;
+
     public void StartWave(int waveIdx)
     {
         this.waveIdx = waveIdx;
         mainWaveTimer = GameSetting.WAVE_TIME;
 
         WaveType waveType = GetWaveType(waveIdx);
+        if (forceBattleWaveForTest)
+            waveType = WaveType.Battle; // 피해 측정: 엘리트·보스 없이
         DefenceType waveDefenceType = GetWaveDefenceType(waveIdx);
 
         // 웨이브 진행/종료는 각 Wave가 담당 (종료 시 Wave.MoveNextWave → EndWave)

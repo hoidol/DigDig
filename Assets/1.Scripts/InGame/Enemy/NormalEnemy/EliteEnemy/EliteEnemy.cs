@@ -7,10 +7,12 @@ public class EliteEnemy : NormalEnemy
     [SerializeField] EnemyAttackPattern enemyAttackPattern;
 
 
+    public const int REACH_END_DAMAGE = 7; // (2026-11-22) 엘리트(보너스 엘리트 포함)가 경로 끝에 도착하면 킹 피해 (이전 10)
+
     protected override void ReachPathEnd()
     {
         rg2d.linearVelocity = Vector2.zero;
-        damageData.damage = 10;
+        damageData.damage = REACH_END_DAMAGE;
         KingSlime.Instance.TakeDamage(damageData);
         Destroy();
     }
@@ -25,13 +27,6 @@ public class EliteEnemy : NormalEnemy
         return step * ELITE_GOLD_PER_STEP;
     }
 
-    // 엘리트 경험치 = 10 + 5 × (엘리트 순번 - 1): wave 5 = 10, 10 = 15, 15 = 20 …
-    public static int GetEliteExp(int waveIdx)
-    {
-        int step = Mathf.Max(1, (waveIdx + 1) / GameSetting.ELITE_WAVE_INTERVAL);
-        return GameSetting.ELITE_EXP_BASE + GameSetting.ELITE_EXP_PER_STEP * (step - 1);
-    }
-
     public override void Reward()
     {
         // 보너스 엘리트 = 주사위 5개만
@@ -39,8 +34,7 @@ public class EliteEnemy : NormalEnemy
         bool giveDiceCoin = !GameSetting.USE_WAVE_MINION_OFFER;
         if (enemyType == EnemyType.BonusElite)
         {
-            // (2026-11-20) 경험치 10 고정 + 다음 브레이크타임 주사위 코인 +1
-            KingSlime.Instance.AddExp(GameSetting.BONUS_ELITE_EXP);
+            // (2026-11-20) 다음 브레이크타임 주사위 코인 +1 (2026-11-22 처치 경험치 삭제)
             if (giveDiceCoin)
             {
                 KingSlime.Instance.AddDiceCoin(BONUS_ELITE_DICE_COIN);
@@ -54,8 +48,6 @@ public class EliteEnemy : NormalEnemy
             }
             return;
         }
-
-        KingSlime.Instance.AddExp(GetEliteExp(wave));
 
         if (giveDiceCoin)
         {

@@ -19,6 +19,7 @@ public class PioneerTileItem : TileItem //타일 위에 설치되는 아이템
 
     // 막힌 칸이 있을 때만 뽑기 후보
     public override bool CanDraw() => TileManager.Instance.HasBlockedTile;
+    public override bool AppliesToTileUnit => false;
 
     // 막힌 칸만 고를 수 있음
     public override bool CanPickTile(Tile tile) => tile.isBlocked;

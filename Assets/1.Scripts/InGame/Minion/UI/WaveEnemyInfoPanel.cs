@@ -14,6 +14,8 @@ public class WaveEnemyInfoPanel : MonoBehaviour
     public GameObject obj;
     public DefenceTypePanel defenceTypePanel;
     public Button closeButton; // X 버튼 (비워도 됨)
+    public Button infoButton;  // (2026-11-22) i 버튼 → 방어·공격 상성표(DefenceTableCanvas), 지금 보고 있는 방어 타입 행 강조
+    DefenceType shownDefence;
     // public TMP_Text waveText;
     // public TMP_Text defenceTypeDesc;
     // public Image thumImage;
@@ -28,6 +30,8 @@ public class WaveEnemyInfoPanel : MonoBehaviour
         obj.SetActive(false);
         if (closeButton != null)
             closeButton.onClick.AddListener(Hide);
+        if (infoButton != null)
+            infoButton.onClick.AddListener(() => DefenceTableCanvas.Instance?.Open(shownDefence));
         GameEventBus.Subscribe<WaveStartEvent>(OnWaveStartEvent);
         GameEventBus.Subscribe<BreakTimeStartEvent>(OnBreakTimeStartEvent);
     }
@@ -102,6 +106,7 @@ public class WaveEnemyInfoPanel : MonoBehaviour
     public void SetWaveInfo(int w)
     {
         // waveText.text = string.Format(TranslateManager.GetText("WaveEnemyInfo"), w+1);
-        defenceTypePanel.SetDefenceType(GameManager.GetWaveDefenceType(w));
+        shownDefence = GameManager.GetWaveDefenceType(w);
+        defenceTypePanel.SetDefenceType(shownDefence);
     }
 }

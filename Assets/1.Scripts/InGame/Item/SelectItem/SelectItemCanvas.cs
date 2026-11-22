@@ -17,6 +17,12 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     public SelectItemPanel selectedPanel;
     public SelectItemStep step;
     public float drawDuration = 1f; // Draw 연출 시간(초). 0이면 연출 없이 바로 판정
+    public TMPro.TMP_Text selectTileGuideText; // 타일 선택 안내 글씨 (비우면 selectTileContainer 바로 아래 글씨)
+
+    // (2026-11-21) 레벨업 룬 카드: 타일 선택만 (OpenRuneTilePick). 같은 룬 칸 = 레벨 +1, 다른 룬 칸 = 팝업
+    Action runePickDone;
+    string defaultGuide;
+    public bool IsRunePicking => runePickDone != null;
 
     ItemData selectedItem;
     List<ItemData> shownItems = new(); // 지금 선택지 (갱신 시 겹치지 않게)
@@ -41,12 +47,114 @@ public class SelectItemCanvas : CanvasUI<SelectItemCanvas>
     {
         base.OpenCanvas(closeCallback);
         selectItemPanels = GetComponentsInChildren<SelectItemPanel>(true);
+        FixSelectedPanelRefs();
+        runePickDone = null;
+        SetGuide(null);
+    }
+
+    // 레벨업 룬 카드 → "룬을 적용할 타일을 선택해주세요." → 칸을 누르면 새김/레벨 +1 → onDone
+    public void OpenRuneTilePick(ItemData data, Action onDone)
+    {
+        Open(null);
+        runePickDone = onDone;
+        selectedItem = data;
+        SetStep(SelectItemStep.SelectTile);
+        selectedPanel.SetItemData(data);
+        SetGuide(TranslateManager.GetText(data.itemPrefab is PioneerTileItem ? "Rune_SelectBlockedTile" : "Rune_SelectTile"));
+        MinionFieldController.Instance.tilePickCallback = OnRuneTilePicked;
+    }
+
+    // (2026-11-22) 씬의 타일 선택 패널(selectedPanel)이 설명 글씨를 안내 문구에, 아이콘을 배경 그림에 연결하고 있어
+    //   설명이 안내 문구에 덮이고 패널엔 "Lv.0"이 남던 문제 → 패널 안의 DescText·아이콘으로 바로잡음
+    void FixSelectedPanelRefs()
+    {
+        if (selectedPanel == null || selectTileContainer == null)
+            return;
+        Transform container = selectTileContainer.transform;
+        if (selectedPanel.descText != null && selectedPanel.descText.transform.parent == container)
+        {
+            if (selectTileGuideText == null)
+                selectTileGuideText = selectedPanel.descText;
+            foreach (var t in container.GetComponentsInChildren<TMPro.TMP_Text>(true))
+                if (t.transform.parent != container) { selectedPanel.descText = t; break; }
+        }
+        if (selectedPanel.thumImage != null && selectedPanel.thumImage.transform.parent == container)
+            foreach (var img in container.GetComponentsInChildren<UnityEngine.UI.Image>(true))
+                if (img.transform.parent != container && img.name.StartsWith("Image")) { selectedPanel.thumImage = img; break; }
+    }
+
+    void SetGuide(string text)
+    {
+        if (selectTileGuideText == null && selectTileContainer != null)
+            foreach (Transform child in selectTileContainer.transform)
+                if (child.TryGetComponent(out TMPro.TMP_Text t)) { selectTileGuideText = t; break; }
+        if (selectTileGuideText == null)
+            return;
+        if (defaultGuide == null)
+            defaultGuide = selectTileGuideText.text;
+        selectTileGuideText.text = text ?? defaultGuide;
+    }
+
+    void OnRuneTilePicked(Tile tile)
+    {
+        if (tile == null || selectedItem == null)
+            return;
+        if (tile.tileItem is TileItem placed)
+        {
+            if (placed.key != selectedItem.key)
+            {
+                ShowPopup(TranslateManager.GetText("Rune_OtherInstalled"));
+                return;
+            }
+            if (!placed.ForceUpgrade())
+            {
+                ShowPopup(TranslateManager.GetText("Rune_MaxLevel"));
+                return;
+            }
+            SoundManager.Play(SFXType.TileItemUpgradeSuccess);
+            ToastCanvas.Toast(TranslateManager.GetText("Rune_Upgraded"));
+            EffectManager.PlayPopText(tile.transform.position, $"Lv.{placed.upgradeLevel}!", new Color(1f, 0.85f, 0.25f));
+            FinishRunePick();
+            return;
+        }
+        TileItem prefab = selectedItem.itemPrefab as TileItem;
+        if (prefab != null && !prefab.CanPickTile(tile))
+        {
+            ToastCanvas.Toast(TranslateManager.GetText(prefab.PickFailMessageKey(tile)));
+            return;
+        }
+        KingSlime.Instance.AddItem(selectedItem.key, tile).Forget();
+        SoundManager.Play(SFXType.ItemInstall);
+        ToastCanvas.Toast(TranslateManager.GetText(prefab is PioneerTileItem ? "Rune_TileRepaired" : "Rune_Applied"));
+        FinishRunePick();
+    }
+
+    static void ShowPopup(string body)
+    {
+        if (YesOrNoCanvas.Instance != null)
+            YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("Rune_PopupTitle"), body, true);
+        else
+            ToastCanvas.Toast(body);
+    }
+
+    void FinishRunePick()
+    {
+        Action done = runePickDone;
+        runePickDone = null;
+        CloseCanvas();
+        done?.Invoke();
     }
 
     public override void CloseCanvas()
     {
         MinionFieldController.Instance.tilePickCallback = null;
         base.CloseCanvas();
+        // 룬 카드 타일 선택을 칸을 고르지 않고 닫음 → 레벨업 카드로 돌아감
+        if (runePickDone != null)
+        {
+            runePickDone = null;
+            InGame.LevelUpCanvas.Instance?.CancelRunePick();
+        }
     }
 
     void SetStep(SelectItemStep step)

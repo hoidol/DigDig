@@ -50,9 +50,11 @@ public enum EnemyType
 //갑옷(바위), 중갑(수정), 정령(진흙)
 public enum DefenceType
 {
-    Normal, //일반형 - 직관적으로 데미지 입음
-    Armored, //갑옷형 - 물리 -50% 마법 +50% (배율은 Resources/DefenceInfo)
-    Ethereal, //정령형 - 물리 +50% 마법 -50%
-    // 3: 중갑형(HeavyArmor) 삭제 (2026-10-30, 진동 공격 삭제로 약점이 없어짐). 기존 직렬화 값 유지를 위해 번호 비워둠
-    // 4: 생체형(Organic) 삭제 (2026-11-07). 기존 직렬화 값 유지를 위해 번호 비워둠
+    // (2026-11-21) 방어 타입 4종 = 경갑·중갑·중장갑·영체. 코드 이름은 그대로 두고 화면 이름만 바꿈 (CSV·시트·프리팹이 이름/번호로 저장돼 있어서)
+    // 배율은 Resources/DefenceInfo 표 한 곳
+    Normal = 0,   // 중갑 (Medium). 엘리트·보스도 이 타입
+    Armored = 1,  // 중장갑 (Heavy)
+    Ethereal = 2, // 영체 (Spirit)
+    // 3: 이전 중갑형(HeavyArmor) 삭제, 4: 생체형(Organic) 삭제 → 기존 직렬화 값 유지를 위해 번호 비워둠
+    Light = 5,    // 경갑 (Light) (2026-11-21 추가)
 }

@@ -21,11 +21,19 @@ public class AllyBulletObject : BulletObject
     public float shootDamage;
     public bool isSplitShard; // 분열의 파편으로 쪼개진 탄 (다시 쪼개지지 않음)
 
+    // 바운드 연쇄 (BounceBehavior): 맞은 적 목록·연쇄 횟수·쫓아가는 다음 적
+    public readonly HashSet<IHittable> chainHitSet = new HashSet<IHittable>();
+    public int chainCount;
+    IHittable chainTarget;
+
     public virtual void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
         this.allyUnit = allyUnit;
         spec = bullet;
         isSplitShard = false; // 풀링 재사용
+        chainHitSet.Clear();
+        chainCount = 0;
+        chainTarget = null;
         AllyBulletSpec allyBulletSpec = bullet as AllyBulletSpec;
         transform.localScale = Vector3.one;
 
@@ -72,6 +80,8 @@ public class AllyBulletObject : BulletObject
 
         if (preTarget == hit)
             return null;
+        if (chainHitSet.Contains(hit)) // 연쇄 중 이미 맞은 적은 지나감
+            return null;
 
         preTarget = hit;
 
@@ -107,6 +117,51 @@ public class AllyBulletObject : BulletObject
         return hit;
     }
 
+
+    public void SetChainTarget(IHittable target)
+    {
+        chainTarget = target;
+        direction = ((Vector2)(target.Transform.position - transform.position)).normalized;
+        transform.right = direction;
+    }
+
+    // 연쇄 대상이 있으면 매 프레임 그 적 쪽으로 방향을 맞춤 (대상이 죽거나 사라지면 그대로 직진)
+    public override void Move()
+    {
+        if (chainTarget != null)
+        {
+            if (chainTarget.CurHp <= 0 || !chainTarget.Transform.gameObject.activeInHierarchy)
+            {
+                chainTarget = null;
+            }
+            else
+            {
+                Vector2 toTarget = chainTarget.Transform.position - transform.position;
+                if (toTarget != Vector2.zero)
+                {
+                    direction = toTarget.normalized;
+                    transform.right = direction;
+                }
+            }
+        }
+        base.Move();
+    }
+
+    // 연쇄 중엔 이미 맞은 적에 가려 다음 적을 못 찾지 않도록, 맞은 적을 건너뛰고 첫 적중 대상
+    public override RaycastHit2D GetRaycastHit2D()
+    {
+        if (chainHitSet.Count == 0)
+            return base.GetRaycastHit2D();
+
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, bulletRadius, direction, moveSpeed * Time.deltaTime, hitLayerMask);
+        foreach (RaycastHit2D h in hits)
+        {
+            IHittable hittable = h.collider.GetComponent<IHittable>();
+            if (hittable != null && !chainHitSet.Contains(hittable))
+                return h;
+        }
+        return default;
+    }
 
     public void AddBehavior(IBulletBehavior b)
     {

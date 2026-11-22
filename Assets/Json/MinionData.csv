@@ -1,16 +1,16 @@
 Key	Name	Desc	Coin	AttackType	Growth	AttackSpeed	AttackRange	CritChance	Tags	ReinforceAttackPower	ReinforceAttackSpeed	Evolution	HasSkill	SkillInfo
-Bounce	콩콩이	1회 튕기는 도탄 발사/2회 튕기는 도탄 발사/4회 튕기는 도탄 발사	2	Physic	1	50	3	0	Shooter	7	0	360 방향으로 7개 탄 발사	TRUE	7초 마다 5 방향으로 도탄 발사
 Flame	불똥이	화염탄을1개 발사	2	Magic	1	50	3	0	Shooter|Status	5	0	5초마다 주변 적에게 화염	TRUE	8초마다 주변 전체 화염
-Ice	눈송이	20% 확률로 빙결되는 얼음을 발사합니다.	2	Magic	1	50	3	0	Shooter|Status|Chance	5	0		FALSE	
-Iron	철컹이	엘리트, 보스에게 2배 데미지	2	Physic	1	50	3	0	Shooter|Heavy	5	0		FALSE	
-Lightning	찌릿이	몬스터 공격 시 타겟을 포함한 3개의 몬스터에게 각각 100%, 70%, 30% [전기]데미지를 입힌다.	2	Magic	1	40	3	0	Shooter	5	0		FALSE	
-Orbit	빙빙이	궤도 생성 (3초마다 체력 -1체력)	2	Physic	1	50	3	0	Orbit	5	0	튕길 때마다 피해량 10% 증가 + 화면 튕김	FALSE	
-Pierce	뾰족이	관통탄 발사합니다.	2	Physic	1	50	3	0	Shooter	5	0		FALSE	
 Random	뭉치	{0}~{1} 피해를 가진 탄을 발사합니다.	2	Physic	1	50	3	0	Shooter	10	0		TRUE	9초 마다 2초 동안 공격속도 3배
+Ice	눈송이	20% 확률로 빙결되는 얼음을 발사합니다.	2	Magic	1	50	3	0	Shooter|Status|Chance	5	0		FALSE	
+Lightning	찌릿이	몬스터 공격 시 타겟을 포함한 3개의 몬스터에게 각각 100%, 70%, 30% [전기]데미지를 입힌다.	2	Magic	1	40	3	0	Shooter	5	0		FALSE	
+Orbit	빙빙이	궤도 생성 (3초마다 체력 -1체력)	2	Vibration	1	50	3	0	Orbit	5	0	튕길 때마다 피해량 10% 증가 + 화면 튕김	FALSE	
+Bounce	콩콩이	1회 튕기는 도탄 발사/2회 튕기는 도탄 발사/4회 튕기는 도탄 발사	2	Physic	1	50	3	0	Shooter	7	0	360 방향으로 7개 탄 발사	TRUE	7초 마다 5 방향으로 도탄 발사
+Iron	철컹이	엘리트, 보스에게 2배 데미지	2	Vibration	1	50	3	0	Shooter|Heavy	5	0		FALSE	
+Pierce	뾰족이	관통탄 발사합니다.	2	Physic	1	50	3	0	Shooter	5	0		FALSE	
 Thunder	둥둥이	번개를 떨어드려 주변 데미지	2	Magic	1	40	3	0	Zone	5	0		FALSE	
-Breeze	팔랑이	십자범위 4칸 주사위에게 [공격속도 증가] 버프를 준다.	2	Magic	1	40	3	0	Support	5	0		FALSE	
+Breeze	팔랑이	십자 또는 대각 범위 4칸 주사위에게 [공격속도 증가] 버프를 준다.	2	Chaos	1	40	3	0	Support	5	0		FALSE	
 Dopamine	깔깔이	주변에서 적 죽으면 한발 더 발사함	2	Physic	1	50	3	0	Shooter|KillTrigger	5	0		FALSE	주변에서 죽으면 쿨타임 증가(30마리) -> 쿨타임 다차면 5초간 공격속도 3배
-Mine	쾅쾅이	가까운 적 이동 경로에 지뢰 설치	2	Physic	1	25	3	0	Zone	5	0		FALSE	
+Mine	쾅쾅이	가까운 적 이동 경로에 지뢰 설치	2	Vibration	1	25	3	0	Zone	5	0		FALSE	
 Rage	버럭이	십자범위 4칸 주사위에게 [공격력 증가] 버프를 준다.	2	Physic	1	40	3	0	Support	5	0		FALSE	
 Shield	돌쇠	Orbit 적의 이동을 막는 방패가 회전합니다. 방패 당 적 3기까지 적용	2	Physic	1	50	3	0	Orbit	5	0		FALSE	
 Stigma	누더기	빈틈을 찾아서 흔적 (3회 중첩, 중첩 당 5% 추가 데미지)	2	Physic	1	50	3	0	Shooter|Status|Chance	5	0		TRUE	쿨타임 10초 후 주변 전체 낙인

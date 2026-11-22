@@ -52,16 +52,9 @@ MonoBehaviour:
   - {x: -1, y: 0}
   - {x: 1, y: 0}
   - {x: 0, y: 1}
-  tileBuffs:
+  buffs:
   - statType: 10
-    value: 10
-    opType: 0
-  kingBuffs:
-  - statType: 1
-    value: 1.2
-    opType: 1
-  - statType: 5
-    value: -0.5
+    value: 15
     opType: 0
   tileColor: {r: 0.9, g: 0.6, b: 0.3, a: 0.35}
   appearanceSprite: {fileID: 0}

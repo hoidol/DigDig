@@ -14,7 +14,18 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     public int mergeLevel;
     // 권능 쌍둥이 반지: 같은 종이 붙어 있으면 1. 데이터 스탯(공격력 등)만 이만큼 높은 머지 레벨 값으로 (합성·표시는 mergeLevel 그대로)
     public int twinBonus;
-    int StatMergeLevel => Mathf.Min(mergeLevel + twinBonus, MinionData.MAX_MERGE_LEVEL);
+    // (2026-11-21) 킹 패시브(인간 훈련 교관 등): 버프 칸에 있는 동안 데이터 스탯만 이만큼 높은 머지 레벨 값으로
+    public int kingMergeBonus;
+    int StatMergeLevel => Mathf.Min(mergeLevel + twinBonus + kingMergeBonus, MinionData.MAX_MERGE_LEVEL);
+
+    public void SetKingMergeBonus(int bonus)
+    {
+        if (kingMergeBonus == bonus)
+            return;
+        kingMergeBonus = bonus;
+        if (minionData != null)
+            UpdateMinion();
+    }
 
     public void SetTwinBonus(int bonus)
     {
@@ -54,6 +65,38 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     public float AttackSpeed => statDic[StatType.AttackSpeed];
     public float AttackRange => statDic[StatType.AttackRange];
     public float EliteBossDamage => statDic.TryGetValue(StatType.EliteBossDamage, out float v) ? v : 0f; // 엘리트·보스 피해 +% (버프로만, 드워프 종족 등)
+    // (2026-11-21) 스킬 쿨타임 충전 속도 +% (버프로만, 직업 마법사 등). 스킬 쿨타임 타이머는 Time.deltaTime 대신 SkillDeltaTime으로 채움
+    public float SkillCooldownSpeed => statDic.TryGetValue(StatType.SkillCooldownSpeed, out float v) ? v : 0f;
+    // 이번 프레임 스킬 쿨타임 충전량 = 시간 × 충전 속도 + 즉시 단축분(AddSkillTime, 언데드 영혼 수확 등)
+    // 즉시 단축분은 충전 중일 때만 쓰임: 다음 프레임까지 안 쓰이면(버프 중·대기 중) 버림
+    public float SkillDeltaTime
+    {
+        get
+        {
+            if (IsBeingDragged) // (2026-11-21) 드래그 중엔 스킬 쿨타임 멈춤
+            {
+                pendingSkillTime = 0f;
+                return 0f;
+            }
+            float dt = Time.deltaTime * (1f + SkillCooldownSpeed / 100f);
+            if (pendingSkillTime > 0f)
+            {
+                if (Time.frameCount - pendingSkillFrame <= 1)
+                    dt += pendingSkillTime;
+                pendingSkillTime = 0f;
+            }
+            return dt;
+        }
+    }
+    float pendingSkillTime;
+    int pendingSkillFrame;
+    public void AddSkillTime(float seconds)
+    {
+        if (seconds <= 0f)
+            return;
+        pendingSkillTime += seconds;
+        pendingSkillFrame = Time.frameCount;
+    }
     public float CritChance => statDic[StatType.CritChance]; // % 단위. 기본값은 MinionData.csv CritChance, 버프(설의 등)로 오름
 
     public Transform rootTr;
@@ -216,7 +259,9 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         transform.position = pos;
         this.mergeLevel = mLv;
         twinBonus = 0; // 풀링 재사용
-        isDraging = false;
+        kingMergeBonus = 0;
+        pendingSkillTime = 0f;
+        IsBeingDragged = false;
         isEvolved = false; // 풀링 재사용 · 합성/교체로 새로 생긴 슬라임은 진화 안 된 상태
 
         statDic.Clear();
@@ -280,7 +325,11 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
     public virtual void InitMinionStat()
     {
-        statDic[StatType.AttackPower] = minionData.GetMinionStat(StatType.AttackPower, userMinion.EnhanceLevel).GetValue<float>(StatMergeLevel);
+        // MinionEnhance csv에 AttackPower가 비어 있으면(GrowUp·Hunter 등 안 쓰는 미니언) 0 + 경고 (예외로 소환이 멈추지 않게)
+        MinionStat attackStat = minionData.GetMinionStat(StatType.AttackPower, userMinion.EnhanceLevel);
+        if (attackStat == null)
+            Debug.LogWarning($"[Minion] {key} 강화 Lv{userMinion.EnhanceLevel} AttackPower 데이터 없음 (MinionEnhance csv) → 0");
+        statDic[StatType.AttackPower] = attackStat != null ? attackStat.GetValue<float>(StatMergeLevel) : 0f;
         statDic[StatType.AttackSpeed] = GetDataStat(StatType.AttackSpeed); // MinionData.csv (강화·머지 레벨 무관)
         statDic[StatType.AttackRange] = GetDataStat(StatType.AttackRange);
         statDic[StatType.CritChance] = GetDataStat(StatType.CritChance); // % 단위. MinionData.csv (기본 0)
@@ -297,7 +346,13 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     {
         InitMinionStat();
         UpdateReinforce();
-        statDic[StatType.EliteBossDamage] = 0; // 버프로만 오르는 스탯 → 매번 0부터 다시 (InitMinionStat이 안 채움)
+        // 버프로만 오르는 스탯 → 매번 0부터 다시 (InitMinionStat이 안 채움)
+        statDic[StatType.EliteBossDamage] = 0;
+        statDic[StatType.DamageToLight] = 0;
+        statDic[StatType.DamageToNormal] = 0;
+        statDic[StatType.DamageToArmored] = 0;
+        statDic[StatType.DamageToEthereal] = 0;
+        statDic[StatType.SkillCooldownSpeed] = 0;
 
         foreach (var buff in activeBuffs)
         {
@@ -370,7 +425,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     public abstract AllyBulletObject GetBullet();
     public virtual void Update()
     {
-        if (AttackSpeed >= 0)//&& !isDraging
+        if (AttackSpeed >= 0 && !IsBeingDragged) // (2026-11-21) 드래그 중엔 공격 멈춤 (타이머도 안 참)
         {
             attackTimer += Time.deltaTime * AttackSpeed / GameSetting.ATTACK_SPEED_PER_SECOND;
             if (attackTimer >= 1)
@@ -530,6 +585,20 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     {
         findTargetType = type;
     }
+
+    // (2026-11-21) 머지·교체로 새 미니언이 같은 칸에 생길 때, 그 칸에 있던 미니언의 설정(타겟 방식·회전 방향·버프 범위)을 이어받음
+    // 새 미니언이 쓸 수 있는 설정만 (종이 달라 그 설정이 없으면 기본값 그대로)
+    public void CopyUnitOptionsFrom(Minion src)
+    {
+        if (src == null || src == this)
+            return;
+        if (src.UseFindTarget && UseFindTarget)
+            SetFindTargetType(src.findTargetType);
+        if (src is IRotationDirectionUnit srcRot && this is IRotationDirectionUnit rot)
+            rot.SetRotationDirection(srcRot.RotationDirection);
+        if (src is IBuffRangeUnit srcBuff && this is IBuffRangeUnit buff)
+            buff.SetBuffRangeShape(srcBuff.BuffRangeShape);
+    }
     public virtual Transform FindTarget()
     {
         if (AuthoritySystem.Has<HunterCharmAuthority>() && HunterCharmAuthority.IsHeavy(MinionData))
@@ -551,14 +620,14 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         UpdateMinion();
         RefreshBuffEffects();
     }
-    bool isDraging;
+    // (2026-11-21) 드래그 중 = 공격·스킬 쿨타임·스킬 발동 멈춤. 스킬 쿨타임은 SkillDeltaTime이 0을 돌려줘서 멈춤
+    public bool IsBeingDragged { get; private set; }
     public virtual void StartDrag()
     {
-        isDraging = true;
+        IsBeingDragged = true;
     }
     public virtual void StartTarget()
     {
-        isDraging = true;
         rangeTr.gameObject.SetActive(true);
     }
 
@@ -569,7 +638,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
     public virtual void EndDrag(Tile t)
     {
-        isDraging = false;
+        IsBeingDragged = false;
         // rangeTr.gameObject.SetActive(false);
     }
 }

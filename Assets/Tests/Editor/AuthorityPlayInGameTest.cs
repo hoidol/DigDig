@@ -71,7 +71,7 @@ public class AuthorityPlayInGameTest : InGamePlayTestBase
         // 모래시계: 킹 체력 30% 아래 → 전체 정지
         current = "모래시계";
         float maxHp = KingSlime.Instance.health.MaxHp;
-        KingSlime.Instance.TakeDamage(new DamageData { damage = maxHp * 0.8f, attackType = AttackType.AllRounder });
+        KingSlime.Instance.TakeDamage(new DamageData { damage = maxHp * 0.8f, attackType = AttackType.Chaos });
         yield return WaitFrames(2);
         Assert.IsTrue(Enemy.IsFrozenAll, "모래시계가 발동하지 않음");
         KingSlime.Instance.AddHp(100000, false);

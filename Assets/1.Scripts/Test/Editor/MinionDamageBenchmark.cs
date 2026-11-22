@@ -11,6 +11,9 @@ using UnityEngine;
 // 결과는 Library/MinionDamageTest.json에 쌓이고(같은 난이도·wave·key·레벨은 덮어씀) 측정마다
 // Assets/MinionDamageTest/MinionDamage_{난이도}_Wave{N}.xlsx 를 다시 만든다 (요약 + 상세 시트)
 // 측정 중: 킹 무적·킹 공격 끔·권능 끔(측정 시작 시 정리, 다시 켜지 않음 → 측정 후엔 Play를 다시 시작 권장)
+// (2026-11-22) 킹 성장 능력(종족·직업·패시브 등)도 측정 시작 시 전부 제거(다시 안 생김) → 킹 패시브 공격·버프 칸 없이 미니언만
+//   속도 = 항상 최대(TIME_SCALE), 엘리트·보스 없이 옵션(noEliteBoss = 엘리트·보스 wave도 일반 전투로, 파일 이름 _NoEliteBoss)
+//   상성 무시 옵션(noDefence = 방어 타입 배율 전부 1, DefenceInfo.ignoreForTest, 파일 이름 _NoDefence)
 public static class MinionDamageBenchmark
 {
     public static readonly Vector2Int TILE_INDEX = new Vector2Int(2, 2);
@@ -18,6 +21,7 @@ public static class MinionDamageBenchmark
     const string STORE_PATH = "Library/MinionDamageTest.json";
     const int RANDOM_SEED = 1234;
     const float EXTRA_TIMEOUT = 30f; // wave 시간 + 이만큼 지나도 안 끝나면 강제 종료 (게임 시간)
+    public const float TIME_SCALE = 10f; // 측정 속도 (항상 최대. 너무 올리면 프레임당 이동이 커져 판정이 부정확해짐)
 
     [Serializable]
     public class Result
@@ -35,6 +39,8 @@ public static class MinionDamageBenchmark
         public int leaked;         // 경로 끝 도착
         public bool timeout;
         public string measuredAt;
+        public bool noEliteBoss;   // 엘리트·보스 없이 측정
+        public bool noDefence;     // 상성(방어 타입 배율) 무시
     }
 
     [Serializable]
@@ -54,19 +60,24 @@ public static class MinionDamageBenchmark
     static int totalCount;
     static bool subscribed;
     static bool warnedFileLocked;
+    static bool noEliteBoss;
+    static bool noDefence;
 
     public static bool IsRunning => state != State.Idle;
     public static string Progress => IsRunning
         ? $"{totalCount - queue.Count}/{totalCount}  {current.key} 머지 {current.lv}  ({(state == State.Running ? $"{GameManager.Instance.gameTimer - startGameTime:0}초" : "준비")})"
         : "";
 
-    public static string GetOutputPath(int wave)
+    public static string GetOutputPath(int wave, bool noEliteBoss, bool noDefence)
     {
         string diff = GameManager.Instance != null && GameManager.Instance.stageData != null ? GameManager.Instance.stageData.key : UserDataManager.difficultyType.ToString();
-        return $"{OUTPUT_FOLDER}/MinionDamage_{diff}_Wave{wave}.xlsx";
+        return MakePath(diff, wave, noEliteBoss, noDefence);
     }
 
-    public static void Run(IEnumerable<string> keys, int wave, float timeScale)
+    static string MakePath(string difficulty, int wave, bool noEliteBoss, bool noDefence)
+        => $"{OUTPUT_FOLDER}/MinionDamage_{difficulty}_Wave{wave}{(noEliteBoss ? "_NoEliteBoss" : "")}{(noDefence ? "_NoDefence" : "")}.xlsx";
+
+    public static void Run(IEnumerable<string> keys, int wave, bool withoutEliteBoss, bool ignoreDefence = false)
     {
         if (IsRunning)
             return;
@@ -85,12 +96,19 @@ public static class MinionDamageBenchmark
             return;
 
         waveNum = Mathf.Clamp(wave, 1, GameSetting.LAST_WAVE);
-        speed = Mathf.Max(0.1f, timeScale);
+        speed = TIME_SCALE;
+        noEliteBoss = withoutEliteBoss;
+        GameManager.forceBattleWaveForTest = noEliteBoss;
+        noDefence = ignoreDefence;
+        DefenceInfo.ignoreForTest = noDefence;
         prevTimeScale = Time.timeScale;
         warnedFileLocked = false;
 
         AuthoritySystem.End(); // 권능 효과 없이 미니언만 측정
         KingSlime.Instance.enabled = false; // 킹 공격(Weapon) 끔
+        // 킹 성장 능력 전부 제거 (패시브 공격·버프 칸 없이 미니언만 측정, 다시 안 생김)
+        foreach (KingAbility a in KingSlime.Instance.abilityInventory.Abilities.ToList())
+            KingSlime.Instance.abilityInventory.Remove(a.data);
         if (!subscribed)
         {
             GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDead);
@@ -127,6 +145,8 @@ public static class MinionDamageBenchmark
             GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDead);
             subscribed = false;
         }
+        GameManager.forceBattleWaveForTest = false;
+        DefenceInfo.ignoreForTest = false;
         if (Application.isPlaying)
         {
             Time.timeScale = prevTimeScale;
@@ -137,7 +157,7 @@ public static class MinionDamageBenchmark
         Debug.Log($"[MinionDamage] {reason} → {GetOutputPathSafe()}");
     }
 
-    static string GetOutputPathSafe() => GameManager.Instance != null ? GetOutputPath(waveNum) : OUTPUT_FOLDER;
+    static string GetOutputPathSafe() => GameManager.Instance != null ? GetOutputPath(waveNum, noEliteBoss, noDefence) : OUTPUT_FOLDER;
 
     static void NextRun()
     {
@@ -156,6 +176,7 @@ public static class MinionDamageBenchmark
             return;
         GameManager gm = GameManager.Instance;
         KingSlime king = KingSlime.Instance;
+        king.enabled = false; // 킹 공격 끔 (다른 곳에서 켜도 측정 중엔 계속 끔)
         if (king.health != null && king.health.curHp < king.MaxHp)
             king.health.curHp = king.MaxHp; // 무적 (시간 초과 피해로 죽지 않게)
         Time.timeScale = speed;
@@ -268,6 +289,8 @@ public static class MinionDamageBenchmark
             leaked = leaked,
             timeout = timeout,
             measuredAt = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
+            noEliteBoss = noEliteBoss,
+            noDefence = noDefence,
         };
         if (timeout)
         {
@@ -279,10 +302,10 @@ public static class MinionDamageBenchmark
         Debug.Log($"[MinionDamage] {result.key} 머지 {result.mergeLevel}: 피해 {result.damage:N0} / {result.duration:0.0}초, 처치 {result.kills}, 경로 끝 {result.leaked}{(timeout ? " (시간 초과)" : "")}");
 
         Store store = LoadStore();
-        store.results.RemoveAll(r => r.difficulty == result.difficulty && r.wave == result.wave && r.key == result.key && r.mergeLevel == result.mergeLevel);
+        store.results.RemoveAll(r => r.difficulty == result.difficulty && r.wave == result.wave && r.key == result.key && r.mergeLevel == result.mergeLevel && r.noEliteBoss == result.noEliteBoss && r.noDefence == result.noDefence);
         store.results.Add(result);
         SaveStore(store);
-        WriteExcel(store, result.difficulty, result.wave);
+        WriteExcel(store, result.difficulty, result.wave, result.noEliteBoss, result.noDefence);
     }
 
     static Store LoadStore()
@@ -302,17 +325,17 @@ public static class MinionDamageBenchmark
     static void SaveStore(Store store) => File.WriteAllText(STORE_PATH, JsonUtility.ToJson(store, true));
 
     // 저장된 결과 중 이 난이도·wave 것으로 엑셀 다시 만들기 (창의 "엑셀 다시 만들기" 버튼도 사용)
-    public static void RewriteExcel(int wave)
+    public static void RewriteExcel(int wave, bool noEliteBoss, bool noDefence)
     {
         string diff = GameManager.Instance != null && GameManager.Instance.stageData != null ? GameManager.Instance.stageData.key : UserDataManager.difficultyType.ToString();
-        WriteExcel(LoadStore(), diff, wave);
+        WriteExcel(LoadStore(), diff, wave, noEliteBoss, noDefence);
         AssetDatabase.Refresh();
     }
 
-    static void WriteExcel(Store store, string difficulty, int wave)
+    static void WriteExcel(Store store, string difficulty, int wave, bool noEliteBoss, bool noDefence)
     {
-        List<Result> results = store.results.Where(r => r.difficulty == difficulty && r.wave == wave).ToList();
-        string path = $"{OUTPUT_FOLDER}/MinionDamage_{difficulty}_Wave{wave}.xlsx";
+        List<Result> results = store.results.Where(r => r.difficulty == difficulty && r.wave == wave && r.noEliteBoss == noEliteBoss && r.noDefence == noDefence).ToList();
+        string path = MakePath(difficulty, wave, noEliteBoss, noDefence);
         int maxLv = MinionData.MAX_MERGE_LEVEL;
 
         var xlsx = new SimpleXlsxWriter();

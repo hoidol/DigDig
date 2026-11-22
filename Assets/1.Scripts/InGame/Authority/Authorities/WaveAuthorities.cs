@@ -48,7 +48,7 @@ public class MixedCrestAuthority : Authority
     // 이 방어 타입에 약점(배율 > 1)인 공격 속성의 장착 슬라임 key
     public static List<string> GetWeakKeys(IEnumerable<MinionData> equipped, DefenceType defenceType)
     {
-        return equipped.Where(d => d.attackType != AttackType.AllRounder && DefenceInfo.Get(d.attackType, defenceType) > 1f)
+        return equipped.Where(d => d.attackType != AttackType.Chaos && DefenceInfo.Get(d.attackType, defenceType) > 1f)
             .Select(d => d.key).ToList();
     }
 

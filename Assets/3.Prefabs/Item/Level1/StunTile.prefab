@@ -122,5 +122,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StunTileItem
   key: StunTile
   tile: {fileID: 0}
-  chance: 2
+  chance: 10
   duration: 0.3

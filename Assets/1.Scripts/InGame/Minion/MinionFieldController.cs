@@ -95,6 +95,8 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         Minion minion = KingSlime.Instance.AddMinion(key, lv);
         if (tile != null)
             tile.SetTileObject(minion);
+        if (minion != null)
+            minion.CopyUnitOptionsFrom(old); // 그 칸에 있던 미니언 설정 유지 (카드 합성·성장·변신)
         if (wasSelected)
             SelectTile(tile);
         KingSlimeManageCanvas.Instance.UpdateCanvas();
@@ -381,6 +383,8 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         Minion merged = KingSlime.Instance.AddMinion(mergeResultKey, lv);
         if (tile != null)
             tile.SetTileObject(merged);
+        if (merged != null)
+            merged.CopyUnitOptionsFrom(target); // 드래그한 쪽이 아니라 놓인 칸(target) 미니언의 설정 유지
         if (merged != null)
             merged.PlayMergeHop(); // 떨어지는 등장 대신 제자리에서 살짝 뛰었다 착지
         if (EffectManager.Instance != null && merged != null)

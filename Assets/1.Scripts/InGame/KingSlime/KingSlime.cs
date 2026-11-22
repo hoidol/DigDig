@@ -64,7 +64,8 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     public string Key => key;
 
     public AllyType AllyType => AllyType.Character;
-    public AttackType AttackType => AttackType.Physic;
+    // (2026-11-21) 킹 공격 타입 = 무기 설정 한 곳 (화면 표시·탄·패시브 폭발 공통). 이전: 물리 고정이라 화면(카오스)과 실제(물리)가 달랐음
+    public AttackType AttackType => weapon != null ? weapon.attackType : AttackType.Chaos;
 
     public float MaxHp => statMgr.MaxHp;
     // public GameObject rangeObj;
@@ -167,12 +168,22 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         buffEffectDisplay.Refresh(transform, statMgr.activeBuffs);
     }
 
-    // 필요 경험치 = 25 + 8 × 레벨, Lv6(KING_LEVEL_EXP_SLOW_LEVEL)부터는 레벨당 +4 (Lv6 73, Lv7 77 …)
-    public static int GetMaxExp(int level) => GameSetting.KING_LEVEL_BASE_EXP
-        + GameSetting.KING_LEVEL_EXP_PER_LEVEL * Mathf.Clamp(level, 0, GameSetting.KING_LEVEL_EXP_SLOW_LEVEL)
-        + GameSetting.KING_LEVEL_EXP_PER_LEVEL_SLOW * Mathf.Max(0, level - GameSetting.KING_LEVEL_EXP_SLOW_LEVEL);
+    // (2026-11-22) 필요 경험치 = 2 + 1 × 레벨 (Lv0 2, Lv1 3, Lv2 4 …)
+    public static int GetMaxExp(int level) => GameSetting.KING_LEVEL_BASE_EXP + GameSetting.KING_LEVEL_EXP_PER_LEVEL * Mathf.Max(0, level);
 
-    // 경험치 추가 → 넘치면 레벨업(남은 경험치 이월, 여러 번 가능). 레벨마다 레벨업 창(LevelUpCanvas) + 시간 정지
+    // (2026-11-22) 경험치 구매: 주사위 코인 BUY_EXP_DICE_COIN_PRICE개 → 경험치 BUY_EXP_AMOUNT. 코인이 모자라면 false
+    public bool TryBuyExp()
+    {
+        if (diceCoin < GameSetting.BUY_EXP_DICE_COIN_PRICE)
+            return false;
+        AddDiceCoin(-GameSetting.BUY_EXP_DICE_COIN_PRICE);
+        AddExp(GameSetting.BUY_EXP_AMOUNT);
+        return true;
+    }
+
+    // 경험치 추가 → 넘치면 레벨업(남은 경험치 이월, 여러 번 가능)
+    // (2026-11-22) 경험치가 다 차면 바로 레벨업 창(LevelUpCanvas.OpenPending). 여러 레벨이면 밀린 수(pendingLevelUps)만큼 연속으로 열림
+    // 경험치는 브레이크타임에 구매로만 얻으므로 창이 열릴 수 있음 (열 수 없으면 밀어 두고 다음 레벨업 때 함께)
     public void AddExp(int e)
     {
         if (e <= 0)
@@ -182,8 +193,24 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         {
             exp -= MaxExp;
             lv++;
-            InGame.LevelUpCanvas.RequestOpen(); // 레벨마다 한 번씩 (시간 정지)
+            pendingLevelUps++;
         }
+        GameEventBus.Publish(new ExpChangedEvent(exp, MaxExp, lv));
+        if (pendingLevelUps > 0)
+            InGame.LevelUpCanvas.OpenPending();
+    }
+
+    // 아직 카드를 고르지 않은 레벨업 수
+    public int pendingLevelUps;
+    // 다음 레벨업 창의 레벨 (밀린 레벨업은 낮은 레벨부터: Lv.4·5가 밀렸으면 Lv.4 창 → Lv.5 창)
+    public int ChoiceLevel => lv - pendingLevelUps + 1;
+
+    // 레벨업 창 하나를 처리함 (카드를 고르거나 고를 카드가 없을 때)
+    public void ConsumeLevelUp()
+    {
+        if (pendingLevelUps <= 0)
+            return;
+        pendingLevelUps--;
         GameEventBus.Publish(new ExpChangedEvent(exp, MaxExp, lv));
     }
     public void SetFindTargetType(FindTargetType type)
@@ -296,14 +323,19 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         rangeIndicatorTr.gameObject.SetActive(false);
     }
 
+    // (2026-11-21) 드래그 중엔 킹 공격 멈춤 (Weapon.UpdateWeapon)
+    public bool IsBeingDragged { get; private set; }
+
     public void StartDrag()
     {
+        IsBeingDragged = true;
         // rangeIndicatorTr.gameObject.SetActive(true);
         // rangeIndicatorTr.localScale = new Vector3(statMgr.AttackRange, statMgr.AttackRange, 1);
     }
 
     public void EndDrag(Tile tile)
     {
+        IsBeingDragged = false;
         // rangeIndicatorTr.gameObject.SetActive(false);
     }
 
@@ -325,6 +357,12 @@ public enum StatType
     WaveClearGold,
     BurnDPS,
     EliteBossDamage, // (2026-11-20) 엘리트·보스에게 주는 피해 +% (Add, 기본 0). 드워프 종족 버프 칸 등 → AllyUnitDamageData.eliteBossDamageMul
+    // (2026-11-21) 방어 타입별 주는 피해 +% (Add, 기본 0, 버프로만). 종족 버프 → AllyUnitDamageData.GetDefenceDamageMul
+    DamageToLight,    // 경갑 상대
+    DamageToNormal,   // 중갑 상대
+    DamageToArmored,  // 중장갑 상대
+    DamageToEthereal, // 영체 상대
+    SkillCooldownSpeed, // (2026-11-21) 미니언 스킬 쿨타임 충전 속도 +% (Add, 버프로만, 직업 마법사) → Minion.SkillDeltaTime
     
     Count
 }

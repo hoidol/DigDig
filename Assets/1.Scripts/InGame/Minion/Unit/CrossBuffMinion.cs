@@ -206,6 +206,12 @@ public abstract class CrossBuffMinion : MinionGrowth1, IBuffRangeUnit
             case StatType.AttackSpeed: return EffectType.AttackSpeedUp;
             case StatType.AttackPower: return EffectType.AttackPowerUp;
             case StatType.CritChance: return EffectType.CritChanceUp;
+            // 방어 타입 상대 피해 (종족 버프 칸) → 공격력 이펙트
+            case StatType.DamageToLight:
+            case StatType.DamageToNormal:
+            case StatType.DamageToArmored:
+            case StatType.DamageToEthereal:
+            case StatType.EliteBossDamage: return EffectType.AttackPowerUp;
             default: return null;
         }
     }

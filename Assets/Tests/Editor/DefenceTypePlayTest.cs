@@ -37,19 +37,23 @@ public class DefenceTypePlayTest : InGamePlayTestBase
         Assert.AreEqual(DefenceType.Ethereal, GameManager.GetWaveDefenceType(etherealWaveIdx));
         Assert.AreEqual(DefenceType.Armored, GameManager.GetWaveDefenceType(armoredWaveIdx));
 
-        Minion physic = SpawnMinion("Iron", GetFreeTile());
+        Minion physic = SpawnMinion("Pierce", GetFreeTile());
         Minion magic = SpawnMinion("Ice", GetFreeTile());
+        Minion vibration = SpawnMinion("Iron", GetFreeTile());
         yield return WaitFrames(2);
-        Assert.AreEqual(AttackType.Physic, physic.AttackType, "Iron 공격 속성");
+        Assert.AreEqual(AttackType.Physic, physic.AttackType, "Pierce 공격 속성");
         Assert.AreEqual(AttackType.Magic, magic.AttackType, "Ice 공격 속성");
+        Assert.AreEqual(AttackType.Vibration, vibration.AttackType, "Iron 공격 속성 (2026-11-21 진동)");
+        // (2026-11-21) 킹 공격 타입 = 무기 설정 (화면 표시와 실제 탄이 같아야 함)
+        Assert.AreEqual(KingSlime.Instance.weapon.attackType, KingSlime.Instance.AttackType, "킹 공격 타입이 무기 설정과 다름");
 
-        foreach (DefenceType defenceType in new[] { DefenceType.Normal, DefenceType.Armored, DefenceType.Ethereal })
+        foreach (DefenceType defenceType in new[] { DefenceType.Light, DefenceType.Normal, DefenceType.Armored, DefenceType.Ethereal })
         {
             current = defenceType.ToString();
             Enemy prefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Normal, defenceType);
             Assert.AreEqual(defenceType, prefab.defenceType, $"{defenceType}: 다른 방어 타입 프리팹이 선택됨 ({prefab.name})");
 
-            foreach (Minion attacker in new[] { physic, magic })
+            foreach (Minion attacker in new[] { physic, magic, vibration })
             {
                 // 풀에서 꺼낸 개체도 같은지 보려고 두 번 생성
                 for (int n = 0; n < 2; n++)

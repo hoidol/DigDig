@@ -38,9 +38,11 @@ public class StigmaMinion : MinionGrowth1
     public override void Update()
     {
         base.Update();
+        if (IsBeingDragged) // 드래그 중엔 스킬 발동 안 함
+            return;
         if (skillTimer < SKILL_COOLTIME)
         {
-            skillTimer += Time.deltaTime;
+            skillTimer += SkillDeltaTime;
             return;
         }
         var targets = InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, SKILL_MAX_TARGETS);

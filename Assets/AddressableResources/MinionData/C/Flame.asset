@@ -110,6 +110,7 @@ MonoBehaviour:
       - 16.00
   attackPowerRandomRatio: 0
   hasSkill: 1
+  offerDiceCoinPrice: 2
   reinforceAttackPowerPercent: 5
   attackSfx:
     name: 
@@ -124,7 +125,6 @@ MonoBehaviour:
   prefab: {fileID: 6666491537767946925, guid: c2eccd09d44a2479aa3430aa28659778, type: 3}
   unlockConditions: []
   thum: {fileID: 403208247147482157, guid: 29f59aee2e03646a3bb625392fb400f4, type: 3}
-  grade: 0
   displayStatTypes: 00000000020000000500000009000000
   baseMinionStats:
   - statType: 2
@@ -139,15 +139,15 @@ MonoBehaviour:
   uniqueMinionStats:
   - statType: 9
     values:
-    - 1
     - 2
     - 3
     - 4
     - 5
+    - 6
   burnDuration: 4
   burnDPSES:
-  - 1
   - 2
   - 3
   - 4
   - 5
+  - 6

@@ -12,7 +12,7 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
     const string ENEMY_PREFAB_FOLDER = "Assets/3.Prefabs/Stage/0/Enemy";
     const float SPAWN_TIMEOUT = 10f; // 실시간(초)
 
-    static readonly DamageData KILL = new DamageData { damage = 1e12f, attackType = AttackType.AllRounder };
+    static readonly DamageData KILL = new DamageData { damage = 1e12f, attackType = AttackType.Chaos };
 
     // 일반·엘리트 적 프리팹: 자식 Animator + Walk/Dead 상태 + root 연결
     [Test]

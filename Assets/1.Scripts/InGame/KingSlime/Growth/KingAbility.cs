@@ -23,9 +23,14 @@ public abstract class KingAbility : Ability
 
     // 설명 {0}에 넣을 수치 (그 레벨 기준)
     public virtual string GetValueText(int level) => "";
+    // 설명 {0}, {1} … 에 넣을 값. 기본 = {0} 하나(GetValueText). 수치가 여러 개인 능력(패시브)은 재정의
+    public virtual object[] GetDescArgs(int level) => new object[] { GetValueText(level) };
 
     // 킹이 탄을 쏠 때마다 (Weapon.Shoot, 메인·다중 타겟 탄. 연발로 더 쏜 탄은 제외)
     public virtual void OnKingFired(AllyBulletObject bullet) { }
+
+    // 킹 공격 1회가 끝날 때마다 (Weapon.Attack, 다중 타겟·연속탄이어도 1회). 공격 횟수를 세는 능력용
+    public virtual void OnKingAttack() { }
 
     protected static string FormatNumber(float v) => v.ToString("0.##");
 }

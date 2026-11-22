@@ -11,7 +11,7 @@ public class DefenceInfo : ScriptableObject
     public class Row
     {
         public DefenceType defenceType;
-        public float[] multipliers; // AttackType 순서 (AllRounder, Physic, Magic). AllRounder는 표와 상관없이 항상 1
+        public float[] multipliers; // AttackType 순서 (카오스 Chaos, 물리 Physic, 마법 Magic, 진동 Vibration). 1 = 100%
     }
 
     public Row[] rows;
@@ -28,8 +28,13 @@ public class DefenceInfo : ScriptableObject
     }
 
     // 에셋이 없으면 기본값 사용
+    // (2026-11-22) 테스트(미니언 피해 측정) 전용: 켜면 모든 상성 배율 = 1. 기본 false
+    public static bool ignoreForTest;
+
     public static float Get(AttackType attackType, DefenceType defenceType)
     {
+        if (ignoreForTest)
+            return 1f;
         DefenceInfo table = Instance;
         if (table == null)
             return GetDefault(attackType, defenceType);
@@ -53,19 +58,37 @@ public class DefenceInfo : ScriptableObject
         return GetDefault(attackType, defenceType);
     }
 
-    // 기획 기본값 (에셋 Reset 시, 에셋이 없을 때 사용)
+    // 기획 기본값 (에셋 Reset 시, 에셋이 없을 때, 새 타입이 추가돼 칸이 생길 때 사용). 실제 값은 Resources/DefenceInfo 에셋에서 수정
+    // (2026-11-21 임시)     카오스  물리  마법  진동
+    //   경갑(Light)          1    1.5   1     0.75
+    //   중갑(Normal)         1    1     0.75  1.5
+    //   중장갑(Armored)      1    0.5   1.5   1
+    //   영체(Ethereal)       1    1.25  0.5   1.25
     public static float GetDefault(AttackType attackType, DefenceType defenceType)
     {
-        if (attackType == AttackType.AllRounder) // 만능: 모든 방어 타입에 100%
-            return 1f;
         switch (defenceType)
         {
-            case DefenceType.Armored: // 갑옷형 - 물리 -50% 마법 +50%
-                return attackType == AttackType.Physic ? 0.5f : attackType == AttackType.Magic ? 1.5f : 1f;
-            case DefenceType.Ethereal: // 정령형 - 물리 +50% 마법 -50%
-                return attackType == AttackType.Physic ? 1.5f : attackType == AttackType.Magic ? 0.5f : 1f;
-            default: // 일반형
+            case DefenceType.Light:
+                return Pick(attackType, 1f, 1.5f, 1f, 0.75f);
+            case DefenceType.Normal:
+                return Pick(attackType, 1f, 1f, 0.75f, 1.5f);
+            case DefenceType.Armored:
+                return Pick(attackType, 1f, 0.5f, 1.5f, 1f);
+            case DefenceType.Ethereal:
+                return Pick(attackType, 1f, 1.25f, 0.5f, 1.25f);
+            default:
                 return 1f;
+        }
+    }
+
+    static float Pick(AttackType attackType, float chaos, float physic, float magic, float vibration)
+    {
+        switch (attackType)
+        {
+            case AttackType.Physic: return physic;
+            case AttackType.Magic: return magic;
+            case AttackType.Vibration: return vibration;
+            default: return chaos;
         }
     }
 
@@ -99,16 +122,8 @@ public class DefenceInfo : ScriptableObject
 
     public static string Title(DefenceType defenceType)
     {
-        switch (defenceType)
-        {
-            case DefenceType.Normal:
-             return TranslateManager.GetText("DefenceType.Normal");
-            case DefenceType.Armored:
-             return TranslateManager.GetText("DefenceType.Armored");
-            case DefenceType.Ethereal:
-             return TranslateManager.GetText("DefenceType.Ethereal");
-        }
-        return TranslateManager.GetText("DefenceType.Normal");
+        // 번역 key = DefenceType.{코드 이름} (Normal = 중갑, Armored = 중장갑, Ethereal = 영체, Light = 경갑)
+        return TranslateManager.GetText($"DefenceType.{defenceType}");
     }
 
     // 배율 표 값으로 생성 → 표를 고치면 설명도 따라감
@@ -119,8 +134,6 @@ public class DefenceInfo : ScriptableObject
         List<string> resist = new List<string>();
         foreach (AttackType attackType in Enum.GetValues(typeof(AttackType)))
         {
-            if (attackType == AttackType.AllRounder)
-                continue;
             float mul = Get(attackType, defenceType);
             if (mul > 1f)
                 weak.Add(AttackInfo.Title(attackType));

@@ -4,17 +4,24 @@ using UnityEngine.UI;
 
 // (2026-11-20) 인게임 킹 경험치바 (화면 상단). KingSlime.AddExp → ExpChangedEvent
 // slider를 씬에서 연결하면 그걸 쓰고, 비어 있으면 실행 중 이 오브젝트 크기에 맞춰 기본 Slider를 만든다
+// (2026-11-21) 밀린 레벨업이 있으면 레벨 글씨 = "LEVEL UP!"(+밀린 수, 노란색). (2026-11-22) 경험치가 다 차면 레벨업 창이 바로 열림
 public class ExpBar : MonoBehaviour
 {
     public Slider slider;
     public TMP_Text levelText; // "Lv.N" (비우면 기본 모양에서 생성)
     public TMP_Text expText;   // "exp/max"
     public Image image;        // 이전 방식(Image fill). slider를 만들면 숨김
+    public Color levelUpColor = new Color(1f, 0.85f, 0.2f);
+
+    string lastLabel;
+    Color normalLevelColor = Color.white;
 
     void Start()
     {
         if (slider == null)
             BuildDefaultSlider();
+        if (levelText != null)
+            normalLevelColor = levelText.color;
         GameEventBus.Subscribe<ExpChangedEvent>(OnExpChanged);
 
         KingSlime king = KingSlime.Instance;
@@ -31,6 +38,21 @@ public class ExpBar : MonoBehaviour
 
     void OnExpChanged(ExpChangedEvent e) => Refresh(e.exp, e.maxExp, e.lv);
 
+    // 레벨 글씨 = 레벨업 상태 (밀린 수는 이벤트 없이도 바뀌므로 매 프레임 확인, 글씨가 바뀔 때만 갱신)
+    void Update()
+    {
+        KingSlime king = KingSlime.Instance;
+        if (king == null || levelText == null)
+            return;
+        int pending = king.pendingLevelUps;
+        string label = pending <= 0 ? $"Lv.{king.lv + 1}" : "LEVEL UP!" + (pending > 1 ? $" x{pending}" : "");
+        if (label == lastLabel)
+            return;
+        lastLabel = label;
+        levelText.text = label;
+        levelText.color = pending > 0 ? levelUpColor : normalLevelColor;
+    }
+
     void Refresh(int exp, int maxExp, int lv)
     {
         float ratio = maxExp > 0 ? (float)exp / maxExp : 0f;
@@ -38,8 +60,6 @@ public class ExpBar : MonoBehaviour
             slider.value = ratio;
         if (image != null && image.gameObject.activeSelf)
             image.fillAmount = ratio;
-        if (levelText != null)
-            levelText.text = $"Lv.{lv + 1}";
         if (expText != null)
             expText.text = $"{exp}/{maxExp}";
     }

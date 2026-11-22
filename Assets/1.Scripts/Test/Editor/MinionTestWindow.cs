@@ -34,7 +34,8 @@ public class MinionTestWindow : EditorWindow
 
     // 피해 측정
     int benchWave = 10;
-    float benchSpeed = 4f;
+    bool benchNoEliteBoss = true;
+    bool benchNoDefence = true;
     bool benchUsedOnly;
 
     Vector2 scroll;
@@ -57,7 +58,8 @@ public class MinionTestWindow : EditorWindow
         enemyCount = EditorPrefs.GetInt(PREFS + "enemyCount", 1);
         itemKey = EditorPrefs.GetString(PREFS + "itemKey", "");
         benchWave = EditorPrefs.GetInt(PREFS + "benchWave", 10);
-        benchSpeed = EditorPrefs.GetFloat(PREFS + "benchSpeed", 4f);
+        benchNoEliteBoss = EditorPrefs.GetBool(PREFS + "benchNoEliteBoss", true);
+        benchNoDefence = EditorPrefs.GetBool(PREFS + "benchNoDefence", true);
         benchUsedOnly = EditorPrefs.GetBool(PREFS + "benchUsedOnly", false);
         EditorApplication.update += OnEditorUpdate;
         EditorApplication.playModeStateChanged += OnPlayModeChanged;
@@ -86,7 +88,8 @@ public class MinionTestWindow : EditorWindow
         EditorPrefs.SetInt(PREFS + "enemyCount", enemyCount);
         EditorPrefs.SetString(PREFS + "itemKey", itemKey ?? "");
         EditorPrefs.SetInt(PREFS + "benchWave", benchWave);
-        EditorPrefs.SetFloat(PREFS + "benchSpeed", benchSpeed);
+        EditorPrefs.SetBool(PREFS + "benchNoEliteBoss", benchNoEliteBoss);
+        EditorPrefs.SetBool(PREFS + "benchNoDefence", benchNoDefence);
         EditorPrefs.SetBool(PREFS + "benchUsedOnly", benchUsedOnly);
     }
 
@@ -158,25 +161,27 @@ public class MinionTestWindow : EditorWindow
             return;
         }
         benchWave = Mathf.Clamp(EditorGUILayout.IntField("wave 번호", benchWave), 1, GameSetting.LAST_WAVE);
-        benchSpeed = EditorGUILayout.Slider("속도", benchSpeed, 1f, 10f);
+        benchNoEliteBoss = EditorGUILayout.Toggle("엘리트·보스 없이", benchNoEliteBoss);
+        benchNoDefence = EditorGUILayout.Toggle("상성 무시 (배율 1)", benchNoDefence);
+        EditorGUILayout.LabelField($"속도 = 최대 x{MinionDamageBenchmark.TIME_SCALE:0}", EditorStyles.miniLabel);
         benchUsedOnly = EditorGUILayout.Toggle("전체 = 게임에서 쓰는 종만", benchUsedOnly);
         bool ready = GameManager.Instance.IsGameStarted && GameManager.Instance.isPlaying && MinionManager.Instance != null;
         GUI.enabled = ready;
         using (new EditorGUILayout.HorizontalScope())
         {
             if (GUILayout.Button($"선택 Key 측정 ({minionKey})"))
-                MinionDamageBenchmark.Run(new[] { minionKey }, benchWave, benchSpeed);
+                MinionDamageBenchmark.Run(new[] { minionKey }, benchWave, benchNoEliteBoss, benchNoDefence);
             if (GUILayout.Button("전체 측정"))
             {
                 var keys = MinionManager.Instance.minionDataDic.Values
                     .Where(d => !benchUsedOnly || GameSetting.IsUsedMinion(d.key))
                     .OrderBy(d => GameSetting.GetMinionOrder(d.key)).ThenBy(d => d.key).Select(d => d.key).ToList();
-                if (EditorUtility.DisplayDialog("전체 측정", $"{keys.Count}종 × {MinionData.MAX_MERGE_LEVEL + 1}레벨 = {keys.Count * (MinionData.MAX_MERGE_LEVEL + 1)}회 측정합니다.\n(한 번에 wave 하나, 최대 {GameSetting.WAVE_TIME}초 / 속도 x{benchSpeed:0.#})", "시작", "취소"))
-                    MinionDamageBenchmark.Run(keys, benchWave, benchSpeed);
+                if (EditorUtility.DisplayDialog("전체 측정", $"{keys.Count}종 × {MinionData.MAX_MERGE_LEVEL + 1}레벨 = {keys.Count * (MinionData.MAX_MERGE_LEVEL + 1)}회 측정합니다.\n(한 번에 wave 하나, 최대 {GameSetting.WAVE_TIME}초 / 속도 x{MinionDamageBenchmark.TIME_SCALE:0})", "시작", "취소"))
+                    MinionDamageBenchmark.Run(keys, benchWave, benchNoEliteBoss, benchNoDefence);
             }
         }
         GUI.enabled = true;
-        string path = MinionDamageBenchmark.GetOutputPath(benchWave);
+        string path = MinionDamageBenchmark.GetOutputPath(benchWave, benchNoEliteBoss, benchNoDefence);
         using (new EditorGUILayout.HorizontalScope())
         {
             GUI.enabled = System.IO.File.Exists(path);
@@ -184,9 +189,9 @@ public class MinionTestWindow : EditorWindow
                 EditorUtility.OpenWithDefaultApp(path);
             GUI.enabled = true;
             if (GUILayout.Button("엑셀 다시 만들기"))
-                MinionDamageBenchmark.RewriteExcel(benchWave);
+                MinionDamageBenchmark.RewriteExcel(benchWave, benchNoEliteBoss, benchNoDefence);
         }
-        EditorGUILayout.HelpBox($"선택 Key = 아래 '미니언 소환'의 Key. 결과: {path}\n측정 중엔 킹 무적·킹 공격 끔·권능 끔(권능은 다시 안 켜짐), 필드 미니언·적은 정리됨. Unity 창이 뒤에 있으면 느려질 수 있음.", MessageType.None);
+        EditorGUILayout.HelpBox($"선택 Key = 아래 '미니언 소환'의 Key. 결과: {path}\n측정 중엔 킹 무적·킹 공격 끔·권능 끔·킹 성장 능력 제거(둘 다 다시 안 생김), 필드 미니언·적은 정리됨. Unity 창이 뒤에 있으면 느려질 수 있음.", MessageType.None);
     }
 
     // ---------------- 소환 ----------------

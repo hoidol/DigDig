@@ -59,7 +59,7 @@ public class EnemyHpUIPlayTest : InGamePlayTestBase
         Assert.Less(Vector2.Distance(ui.transform.position, (Vector2)(enemy.HpPoint.position + ui.offset)), 0.01f, "체력바가 적 머리 위를 따라가지 않음");
 
         enemy.maxHp = enemy.curHp = 100f;
-        enemy.TakeDamage(new DamageData { damage = 40f, attackType = AttackType.AllRounder });
+        enemy.TakeDamage(new DamageData { damage = 40f, attackType = AttackType.Chaos });
         yield return WaitFrames(1);
         Assert.AreEqual(0.6f, ui.thumImage.fillAmount, 0.001f, "피해 후 체력바 비율");
 

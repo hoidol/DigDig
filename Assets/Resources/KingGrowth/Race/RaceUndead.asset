@@ -15,8 +15,7 @@ MonoBehaviour:
   key: RaceUndead
   category: 1
   title: "\uC5B8\uB370\uB4DC"
-  desc: "\uBC84\uD504 \uCE78 \uBBF8\uB2C8\uC5B8 \uCE58\uBA85\uD0C0 \uD655\uB960 +5%\n\uD0B9
-    \uCE58\uBA85\uD0C0 \uD655\uB960 +10% / \uCD5C\uB300 \uCCB4\uB825 -10%"
+  desc: "\ubc84\ud504 \uce78 \ubbf8\ub2c8\uc5b8\u00b7\ud0b9: \uce58\uba85\ud0c0 \ud655\ub960 +5%"
   thum: {fileID: 21300000, guid: 7c2f79db221e24422aad89c2489e9903, type: 3}
   maxLevel: 1
   prefab: {fileID: 6003291424735046151, guid: 24f82b303cfa3488b83471b0d2331891, type: 3}

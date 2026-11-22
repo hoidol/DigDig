@@ -10,12 +10,14 @@ public class AttackInfo : ScriptableObject
     {
         switch (attackType)
         {
-            case AttackType.AllRounder:
-             return TranslateManager.GetText("AttackType.AllRounder");
+            case AttackType.Chaos:
+             return TranslateManager.GetText("AttackType.Chaos");
             case AttackType.Physic:
              return TranslateManager.GetText("AttackType.Physic");
             case AttackType.Magic:
              return TranslateManager.GetText("AttackType.Magic");
+            case AttackType.Vibration:
+             return TranslateManager.GetText("AttackType.Vibration");
         }
         return TranslateManager.GetText("AttackType.Physic");
     }

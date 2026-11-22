@@ -62,4 +62,17 @@ public class ShieldMinion : MinionGrowth1, IRotationDirectionUnit
     {
         return null;
     }
+
+    // (2026-11-21) 드래그 중엔 방패를 숨겨 막기·피해 멈춤 (방패가 꺼지면 막던 적도 풀림, Orbit·Mud와 같음)
+    public override void StartDrag()
+    {
+        base.StartDrag();
+        orbitMachine.gameObject.SetActive(false);
+    }
+
+    public override void EndDrag(Tile t)
+    {
+        base.EndDrag(t);
+        orbitMachine.gameObject.SetActive(true);
+    }
 }

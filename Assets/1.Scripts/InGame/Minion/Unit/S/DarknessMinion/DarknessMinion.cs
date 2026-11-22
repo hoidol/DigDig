@@ -47,7 +47,7 @@ public class DarknessMinion : MinionGrowth1
             return;
         if (TileManager.Instance == null || TileManager.Instance.GetTile(this) == null)
             return;
-        skillTimer += Time.deltaTime;
+        skillTimer += SkillDeltaTime;
         if (IsSkillReady)
             PlaySkillAnim();
     }

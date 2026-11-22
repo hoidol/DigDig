@@ -30,11 +30,11 @@ public class WaveTypeTest
         Assert.AreEqual(expected, GameManager.CanSkipWave(waveType, isSpawnEnd));
     }
 
-    // 기본 순서(StageData.DEFAULT_DEFENCE_WAVE_TYPES) = Normal/Normal/Ethereal/Normal/Normal/Armored 반복
-    [TestCase(0, DefenceType.Normal)]
+    // 기본 순서(StageData.DEFAULT_DEFENCE_WAVE_TYPES) = Light/Normal/Ethereal/Light/Normal/Armored 반복
+    [TestCase(0, DefenceType.Light)]
     [TestCase(1, DefenceType.Normal)]
     [TestCase(2, DefenceType.Ethereal)]  // 3번째
-    [TestCase(3, DefenceType.Normal)]
+    [TestCase(3, DefenceType.Light)]
     [TestCase(5, DefenceType.Armored)]   // 6번째
     [TestCase(8, DefenceType.Ethereal)]  // 9번째
     [TestCase(11, DefenceType.Armored)]  // 12번째
@@ -52,6 +52,7 @@ public class WaveTypeTest
         Assert.AreEqual(DefenceType.Armored, StageData.GetDefenceType(cycle, 0));
         Assert.AreEqual(DefenceType.Normal, StageData.GetDefenceType(cycle, 1));
         Assert.AreEqual(DefenceType.Armored, StageData.GetDefenceType(cycle, 4));
+        Assert.AreEqual(DefenceType.Light, StageData.GetDefenceType(new[] { DefenceWaveType.Light }, 0));
         var random = new[] { DefenceWaveType.Random };
         for (int i = 0; i < 10; i++)
             Assert.AreEqual(StageData.GetDefenceType(random, i), StageData.GetDefenceType(random, i));
@@ -60,9 +61,12 @@ public class WaveTypeTest
     // 기본 배율 (Resources/DefenceInfo 에셋이 없을 때. 에셋 값은 DefenceTypePlayTest가 실제 전투로 확인)
     [TestCase(AttackType.Physic, DefenceType.Armored, 0.5f)]
     [TestCase(AttackType.Magic, DefenceType.Armored, 1.5f)]
-    [TestCase(AttackType.Physic, DefenceType.Ethereal, 1.5f)]
+    [TestCase(AttackType.Physic, DefenceType.Ethereal, 1.25f)]
     [TestCase(AttackType.Magic, DefenceType.Ethereal, 0.5f)]
-    [TestCase(AttackType.AllRounder, DefenceType.Armored, 1f)]
+    [TestCase(AttackType.Physic, DefenceType.Light, 1.5f)]
+    [TestCase(AttackType.Vibration, DefenceType.Light, 0.75f)]
+    [TestCase(AttackType.Vibration, DefenceType.Normal, 1.5f)]
+    [TestCase(AttackType.Chaos, DefenceType.Armored, 1f)]
     public void DefenceDefaultMultiplier(AttackType attack, DefenceType defence, float expected)
     {
         Assert.AreEqual(expected, DefenceInfo.GetDefault(attack, defence), 0.0001f);
@@ -102,27 +106,17 @@ public class StageUnlockTest
         Assert.AreEqual(expected, NormalEnemy.GetKillGold(waveIdx));
     }
 
-    // 인게임 킹 레벨: 필요 경험치 = 25 + 8 × 레벨, Lv6부터는 레벨당 +4
-    [TestCase(0, 25)]
-    [TestCase(1, 33)]
-    [TestCase(2, 41)]
-    [TestCase(5, 65)]
-    [TestCase(6, 73)]
-    [TestCase(7, 77)]
-    [TestCase(10, 89)]
+    // 인게임 킹 레벨
+    // (2026-11-22) 필요 경험치 = 2 + 레벨
+    [TestCase(0, 2)]
+    [TestCase(1, 3)]
+    [TestCase(2, 4)]
+    [TestCase(10, 12)]
     public void KingMaxExp(int lv, int expected)
     {
         Assert.AreEqual(expected, KingSlime.GetMaxExp(lv));
     }
 
-    // 엘리트 경험치: wave 5 = 10, 10 = 15, 15 = 20 (waveIdx = 번호 - 1)
-    [TestCase(4, 10)]
-    [TestCase(9, 15)]
-    [TestCase(14, 20)]
-    public void EliteExp(int waveIdx, int expected)
-    {
-        Assert.AreEqual(expected, EliteEnemy.GetEliteExp(waveIdx));
-    }
 
     // 빙결: 머지 레벨별 배율 0.7~0.3, 다시 걸리면 강한 배율 유지 + 시간은 긴 쪽 (0.3 3초 → 2초 후 0.7 3초 = 0.3, 남은 3초)
     [Test]

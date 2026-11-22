@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 // (2026-11-20) 레벨업 카드 한 장. AbilityData를 받아 분류·아이콘·이름·설명·레벨을 보여주고, 고르면 킹이 그 능력을 얻음
 // 모양은 로비 패널(KSUpgradePanel·AuthoritySlotPanel)과 같은 계열: 어두운 바탕 + 흰 버튼 배경(슬라이스) + 아이콘 + 외곽선 글씨
@@ -27,13 +28,66 @@ public class LevelUpStatPanel : MonoBehaviour
     public Color jobColor = new Color(1f, 0.45f, 0.3f);
     public Color passiveColor = new Color(0.55f, 0.85f, 0.4f);
     public Color skillColor = new Color(0.75f, 0.45f, 1f);
+    public Color expandColor = new Color(0.3f, 0.9f, 0.9f);
+    public Color runeColor = new Color(0.45f, 0.95f, 0.55f);
 
     AbilityData data;
+    Vector2Int? expandTile; // 버프 칸 확장 카드: 고르면 추가될 칸
+
+    // 직업 카드: 버프가 걸릴 지금 버프 칸(종족 칸)을 직업 색으로 표시. 설명 = 직업 버프
+    public void SetJobData(AbilityData data, IList<Vector2Int> currentTiles)
+    {
+        SetData(data, 1);
+        DrawGrid(currentTiles, null, GetColor(data));
+    }
+
+    // 버프 칸 확장 카드: 지금 버프 칸(종족 색, 흐리게) + 추가될 칸(카드 색). 설명 끝에 칸 위치
+    public void SetExpandData(AbilityData data, IList<Vector2Int> currentTiles, Vector2Int extraTile)
+    {
+        SetData(data, 1);
+        expandTile = extraTile;
+        descriptionText.text += $"\n추가 칸: {GetOffsetName(extraTile)}";
+        Color raceCol = raceColor;
+        if (KingSlime.Instance != null)
+        {
+            var race = KingSlime.Instance.abilityInventory.Get<RaceKingAbility>();
+            if (race != null) { raceCol = race.tileColor; raceCol.a = 1f; }
+        }
+        DrawGrid(currentTiles, extraTile, raceCol * new Color(1f, 1f, 1f, 0.6f), GetColor(data));
+    }
+
+    void DrawGrid(IList<Vector2Int> tiles, Vector2Int? extra, Color tileColor, Color extraColor = default)
+    {
+        bool show = shapeGrid != null && shapeCells != null && shapeCells.Length == 9;
+        if (!show)
+            return;
+        shapeGrid.SetActive(true);
+        for (int i = 0; i < 9; i++)
+        {
+            if (i == 4)
+                continue;
+            var offset = new Vector2Int(i % 3 - 1, i / 3 - 1);
+            shapeCells[i].color = extra.HasValue && offset == extra.Value ? extraColor
+                : tiles != null && tiles.Contains(offset) ? tileColor
+                : shapeEmptyColor;
+        }
+        SetDescArea(true);
+    }
+
+    static string GetOffsetName(Vector2Int o)
+    {
+        string v = o.y < 0 ? "위" : o.y > 0 ? "아래" : "";
+        string h = o.x < 0 ? "왼" : o.x > 0 ? "오른" : "";
+        if (h.Length > 0 && v.Length > 0)
+            return $"{h}쪽 {v}";
+        return h.Length > 0 ? $"{h}쪽" : v;
+    }
 
     // nextLevel = 고르면 될 레벨 (1 = 새 능력)
     public void SetData(AbilityData data, int nextLevel)
     {
         this.data = data;
+        expandTile = null;
         string desc = data.GetDescription(nextLevel);
         if (titleText != null)
         {
@@ -60,7 +114,9 @@ public class LevelUpStatPanel : MonoBehaviour
             iconBgImage.color = color;
         if (categoryText != null)
         {
-            categoryText.text = GetCategoryName(data.category);
+            categoryText.text = data.prefab is PassiveKingAbility passive
+                ? $"패시브 · {(passive.kind == PassiveKind.Buff ? "버프형" : "공격형")}"
+                : GetCategoryName(data.category);
             categoryText.color = color;
         }
     }
@@ -81,6 +137,11 @@ public class LevelUpStatPanel : MonoBehaviour
                 shapeCells[i].color = System.Array.IndexOf(race.tileOffsets, offset) >= 0 ? color : shapeEmptyColor;
             }
         }
+        SetDescArea(show);
+    }
+
+    void SetDescArea(bool show)
+    {
         Vector2 area = show ? descWithShape : descNoShape;
         RectTransform rt = descriptionText.rectTransform;
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
@@ -103,6 +164,8 @@ public class LevelUpStatPanel : MonoBehaviour
             case AbilityCategory.Job: return jobColor;
             case AbilityCategory.Passive: return passiveColor;
             case AbilityCategory.ActiveSkill: return skillColor;
+            case AbilityCategory.TileExpand: return expandColor;
+            case AbilityCategory.Rune: return runeColor;
             default: return statColor;
         }
     }
@@ -116,14 +179,28 @@ public class LevelUpStatPanel : MonoBehaviour
             case AbilityCategory.Job: return "직업";
             case AbilityCategory.Passive: return "패시브";
             case AbilityCategory.ActiveSkill: return "스킬";
+            case AbilityCategory.TileExpand: return "종족 강화";
+            case AbilityCategory.Rune: return "룬";
             default: return "능력치";
         }
     }
 
     public void OnClickedSelect()
     {
+        if (data != null && data.IsRune) // 룬 카드: 타일 선택으로 (레벨업은 타일을 고른 뒤 소모)
+        {
+            InGame.LevelUpCanvas.Instance.BeginRunePick(data.runeItem); // data는 남겨 둠 (취소하면 같은 카드로 돌아옴)
+            return;
+        }
         if (data != null && KingSlime.Instance != null)
-            KingSlime.Instance.abilityInventory.Add(data);
+        {
+            Vector2Int? extra = expandTile;
+            KingSlime.Instance.abilityInventory.Add(data, a =>
+            {
+                if (a is BuffTileExpandKingAbility expand && extra.HasValue)
+                    expand.extraOffset = extra.Value;
+            });
+        }
         data = null; // 연타로 두 번 적용 방지
         InGame.LevelUpCanvas.Instance.CloseCanvas();
     }

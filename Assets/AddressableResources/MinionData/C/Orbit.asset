@@ -15,7 +15,7 @@ MonoBehaviour:
   key: Orbit
   desc: "\uADA4\uB3C4 \uC0DD\uC131 (3\uCD08\uB9C8\uB2E4 \uCCB4\uB825 -1\uCCB4\uB825)"
   growth: 1
-  attackType: 1
+  attackType: 3
   tags: 4
   commonMinionEnhanceInfos:
   - level: 0
@@ -110,6 +110,7 @@ MonoBehaviour:
       - 20.00
   attackPowerRandomRatio: 0
   hasSkill: 0
+  offerDiceCoinPrice: 2
   reinforceAttackPowerPercent: 5
   attackSfx:
     name: 
@@ -124,7 +125,6 @@ MonoBehaviour:
   prefab: {fileID: 8645646148639287178, guid: f136497bc07fc477a9a8ed7760ac703f, type: 3}
   unlockConditions: []
   thum: {fileID: -8825436736869169133, guid: bf9c72f226f384b5b9bd9de6a6f09259, type: 3}
-  grade: 0
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 2

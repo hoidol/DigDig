@@ -29,18 +29,6 @@ MonoBehaviour:
     productId: game_speed_up_package
     currencyType: 5
     price: 5.99
-  - key: DrawMinion_Normal_Ad
-    productId: 
-    currencyType: 4
-    price: 1
-  - key: DrawMinion_Normal_DrawTicket
-    productId: 
-    currencyType: 3
-    price: 30
-  - key: DrawMinion_Unique_Dia
-    productId: 
-    currencyType: 1
-    price: 50
   - key: DrawEquipment_Normal_Ad
     productId: 
     currencyType: 4

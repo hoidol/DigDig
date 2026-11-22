@@ -60,7 +60,7 @@ public class InfernoMinion : MinionGrowth1
         }
         if (skillTimer < SKILL_COOLTIME)
         {
-            skillTimer += Time.deltaTime;
+            skillTimer += SkillDeltaTime;
             return;
         }
         // 지옥불을 놓을 수 있을 때 소환 (드래그 중·가운데 칸이면 대기)

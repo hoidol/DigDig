@@ -32,7 +32,7 @@ public static class DataTableImporter
     // 새 데이터 타입은 여기에 한 줄 추가
     static readonly Entry[] entries =
     {
-        new Entry("CharacterData", new[] { "CharacterData.csv" }, () => LoadAll<KingSlimeData>(d => d.LoadData())),
+        new Entry("CharacterData", new[] { "KingSlimeData.csv" }, () => LoadAll<KingSlimeData>(d => d.LoadData())),
         new Entry("EnemyData", new[] { "EnemyData.csv" }, () => LoadAll<EnemyData>(d => d.LoadData())),
         new Entry("StageData", new[] { "StageData.csv", "EventData.csv" }, () => LoadAll<StageData>(d => d.LoadData())),
         new Entry("MinionData", new[] { "MinionData.csv", "MinionEnhance" }, () => LoadAll<MinionData>(d => d.LoadData())),

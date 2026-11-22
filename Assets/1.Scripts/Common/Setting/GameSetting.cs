@@ -39,18 +39,14 @@ public class GameSetting
    // 일반 적 처치 코인이 이 wave 수마다 +1 (NormalEnemy.GetKillGold, 2026-11-19 이전 10)
    public const int KILL_GOLD_WAVE_INTERVAL = 20;
 
-   // (2026-11-20) 인게임 킹 레벨: 처치 경험치로 레벨업. 필요 경험치 = 25 + 8 × 레벨 (Lv0 25, Lv1 33, Lv2 41 …)
-   public const int KING_LEVEL_BASE_EXP = 25;
-   public const int KING_LEVEL_EXP_PER_LEVEL = 8;
-   // 이 레벨부터는 레벨당 증가량이 8 → 4 (Lv6 = 73, Lv7 = 77, Lv8 = 81 …)
-   public const int KING_LEVEL_EXP_SLOW_LEVEL = 6;
-   public const int KING_LEVEL_EXP_PER_LEVEL_SLOW = 4;
-   public const int NORMAL_ENEMY_EXP = 1;
-   // 엘리트 경험치 = 10 + 5 × (엘리트 순번 - 1): wave 5 = 10, 10 = 15, 15 = 20 …
-   public const int ELITE_EXP_BASE = 10;
-   public const int ELITE_EXP_PER_STEP = 5;
-   // 보너스 엘리트: 경험치 10 고정 + 다음 브레이크타임 주사위 코인 +1
-   public const int BONUS_ELITE_EXP = 10;
+   // (2026-11-22) 인게임 킹 레벨: 경험치는 주사위 코인으로 구매만 (처치 경험치 없음, KingExpBuyPanel)
+   // 필요 경험치 = 2 + 1 × 레벨 (Lv0 2, Lv1 3, Lv2 4 …)
+   public const int KING_LEVEL_BASE_EXP = 2;
+   public const int KING_LEVEL_EXP_PER_LEVEL = 1;
+   // 경험치 구매: 주사위 코인 BUY_EXP_DICE_COIN_PRICE개 → 경험치 BUY_EXP_AMOUNT
+   public const int BUY_EXP_DICE_COIN_PRICE = 2;
+   public const int BUY_EXP_AMOUNT = 1;
+   // 보너스 엘리트: 다음 브레이크타임 주사위 코인 +1 (경험치 없음)
    public const int BONUS_ELITE_NEXT_DICE_COIN = 1;
    // 보스 wave(20 wave) 구간 체력 배율의 기본값: StageData.csv CycleHpMuls가 비었을 때만 구간마다 곱함 (StageData.GetCycleHpMul)
    public const float HP_MUL_PER_BOSS_CYCLE = 1.1f;
@@ -74,7 +70,7 @@ public class GameSetting
    public const int BLOCKED_TILE_COUNT = 3; // 게임 시작 시 랜덤으로 막는 타일 수
 
    public const int LEVEL_TO_GROWUP2 = 2;//0,1,2 되어야됌
-   public const int MINION_MIN_EXIST_COUNT = 12;
+   public const int MINION_MIN_EXIST_COUNT = 10;
 
    public static float ATTACK_SPEED_PER_SECOND = 50f; // AttackSpeed가 이 값이면 초당 1회 공격 (Orbit은 이때 orbitRotationSpeed로 회전)
 

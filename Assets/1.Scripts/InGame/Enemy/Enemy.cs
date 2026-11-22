@@ -96,8 +96,12 @@ public abstract class Enemy : MonoBehaviour, IHittable
     // 풀링 재사용 구분용 (Spawn마다 증가). 막는 쪽이 이전 생애의 적을 해제하지 않도록 확인
     public int SpawnId { get; private set; }
 
+    // 마지막으로 피해를 준 아군 (처치 판정용, 스폰마다 초기화)
+    public IAllyUnit LastAttacker { get; private set; }
+
     public virtual void Spawn(Vector2 pos, int wave)
     {
+        LastAttacker = null;
         this.wave = wave;
         killedBy = null;
         IsDying = false;
@@ -296,6 +300,8 @@ public abstract class Enemy : MonoBehaviour, IHittable
         curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, multiplier, typeMultiplier, maxHp));
         // 피해 집계: 실제로 줄어든 체력만 (마무리 일격의 넘친 피해 제외)
         DamageMeterSystem.Record(damage.Attacker, prevHp - curHp);
+        if (damage.Attacker != null)
+            LastAttacker = damage.Attacker; // (2026-11-21) 마지막으로 때린 아군 (경험치 룬: 처치한 유닛 판정)
         // if (curHp > 1)
         //     hpText.text = ((int)curHp).ToString();
         // else if (0 < curHp && curHp <= 1)

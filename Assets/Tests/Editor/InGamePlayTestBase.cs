@@ -236,7 +236,7 @@ public abstract class InGamePlayTestBase
         }
     }
 
-    protected static readonly DamageData KILL = new DamageData { damage = 1e12f, attackType = AttackType.AllRounder };
+    protected static readonly DamageData KILL = new DamageData { damage = 1e12f, attackType = AttackType.Chaos };
     const float WAVE_SKIP_TIMEOUT = 5f; // 실시간(초)
 
     // 현재 wave를 시간 끝까지 돌린 것처럼: 자기 타이머 종료(→ EndWave, 코인) + 메인 타이머 종료(→ 다음 wave)

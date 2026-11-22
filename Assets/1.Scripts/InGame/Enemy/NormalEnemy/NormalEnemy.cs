@@ -48,7 +48,7 @@ public class NormalEnemy : Enemy
             KingSlime.Instance.AddDiceCoin(1);
             DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{1}");    
         }
-        KingSlime.Instance.AddExp(GameSetting.NORMAL_ENEMY_EXP);
+        // (2026-11-22) 처치 경험치 없음 (경험치는 주사위 코인으로 구매)
         int gold = GetKillGold(wave);
         KingSlime.Instance.AddCoin(gold);
         SoundManager.Play(SFXType.CoinGet);

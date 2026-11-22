@@ -70,9 +70,11 @@ public class JokerMinion : MinionGrowth1
         base.Update();
         if (UpdateDiamond())
             return; // 다이아 버프 중엔 쿨타임 멈춤
+        if (IsBeingDragged) // 드래그 중엔 스킬 발동 안 함
+            return;
         if (skillTimer < SKILL_COOLTIME)
         {
-            skillTimer += Time.deltaTime;
+            skillTimer += SkillDeltaTime;
             return;
         }
         // 사거리에 적이 없으면 찬 채로 대기

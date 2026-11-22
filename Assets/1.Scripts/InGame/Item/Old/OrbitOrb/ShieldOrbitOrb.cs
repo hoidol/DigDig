@@ -140,7 +140,7 @@ public class ShieldOrbitOrb : OrbitOrb
             thornDamageData.Init(owner);
             thornDamageData.critChance = 0;
             thornDamageData.ignoreDefence = true;
-            thornDamageData.attackType = orbitMachine != null ? orbitMachine.attackType : AttackType.AllRounder;
+            thornDamageData.attackType = orbitMachine != null ? orbitMachine.attackType : AttackType.Chaos;
             thornDamageData.damage = b.enemy.MaxHp * thornMaxHpRatio;
             owner?.AccumulateDamage(thornDamageData.damage);
             b.enemy.TakeDamage(thornDamageData);

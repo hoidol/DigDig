@@ -21,6 +21,15 @@ public class ItemData : ScriptableObject
     public bool CanUpgradeItem => diceCoin > 0 && levelValues != null && levelValues.Length > 1;
     public bool HasLevelValues => levelValues != null && levelValues.Length > 0;
     public float GetLevelValue(int lv) => levelValues[Mathf.Clamp(lv - 1, 0, levelValues.Length - 1)];
+    // 최대 레벨을 넘는 레벨(드워프 룬 대장장이 보너스 등): 마지막 두 값의 차이만큼 계속 늘림
+    public float GetLevelValueExtended(int lv)
+    {
+        int n = levelValues.Length;
+        if (lv <= n || n < 2)
+            return GetLevelValue(lv);
+        float step = levelValues[n - 1] - levelValues[n - 2];
+        return levelValues[n - 1] + step * (lv - n);
+    }
 
     // public string valueInfo;
     public Item itemPrefab;
@@ -62,7 +71,15 @@ public class ItemData : ScriptableObject
     {
         if (string.IsNullOrWhiteSpace(raw))
             return new float[0];
-        return System.Array.ConvertAll(raw.Split('/'), s => float.Parse(s.Trim(), System.Globalization.CultureInfo.InvariantCulture));
+        string[] parts = raw.Split('/');
+        // (2026-11-21) 시트에 "1/2/3"을 쓰면 엑셀이 날짜(2001/2/3)로 바꿔 버림 → 첫 칸 20xx는 xx로 되돌림 (시트 칸 서식을 '텍스트'로 두면 안 생김)
+        if (parts.Length == 3 && parts[0].Trim().Length == 4 && parts[0].Trim().StartsWith("20")
+            && int.TryParse(parts[0].Trim(), out int year))
+        {
+            Debug.LogWarning($"[ItemData] Values '{raw}'가 날짜로 바뀐 것으로 보여 '{year - 2000}/{parts[1]}/{parts[2]}'로 읽음 (시트 칸 서식을 텍스트로)");
+            parts[0] = (year - 2000).ToString();
+        }
+        return System.Array.ConvertAll(parts, s => float.Parse(s.Trim(), System.Globalization.CultureInfo.InvariantCulture));
     }
 
 #if UNITY_EDITOR

@@ -19,7 +19,7 @@ MonoBehaviour:
   maxCount: 3
   diceCoin: 7
   levelValues:
-  - 2001
+  - 1
   - 2
   - 3
   itemPrefab: {fileID: 9205854458609221091, guid: 60b92870a0cfb47399e57ca9fa8b67b4,

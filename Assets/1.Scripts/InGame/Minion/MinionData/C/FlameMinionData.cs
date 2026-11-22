@@ -4,16 +4,16 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Flame", menuName = "MinionData/C/Flame")]
 public class FlameMinionData : EnhanceMinionData
 {
-    public float burnDuration = 5;
-    public float[] burnDPSES = {2, 3, 4, 5, 6f};
-    #if UNITY_EDITOR
+    public float burnDuration = 4;
+    public float[] burnDPSES = { 2, 3, 4, 5, 6f };
+#if UNITY_EDITOR
     public override void LoadData()
     {
         base.LoadData();
         displayStatTypes.Add(StatType.BurnDPS);
-        SetUniqueStat(StatType.BurnDPS, string.Join("/", burnDPSES));   
+        SetUniqueStat(StatType.BurnDPS, string.Join("/", burnDPSES));
     }
-    #endif
+#endif
 
     public override string GetDescription(int mergeLv = 0)
     {

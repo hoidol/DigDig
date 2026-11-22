@@ -49,4 +49,4 @@ MonoBehaviour:
   level: 0
   statType: 0
   opType: 1
-  valuePerLevel: 0.2
+  valuePerLevel: 0.15

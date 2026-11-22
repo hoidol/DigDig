@@ -119,14 +119,17 @@ MonoBehaviour:
     kr: "\uC790\uB9AC\uB97C \uBE44\uC6B4 \uB3D9\uC548 \uC5D0\uB108\uC9C0 {0} \uCDA9\uC804!"
     en: Recharged {0} energy while you were away!
   - key: DefenceType.Normal
-    kr: "\uC77C\uBC18\uD615"
-    en: Normal
+    kr: "\uC911\uAC11"
+    en: Medium Armor
   - key: DefenceType.Armored
-    kr: "\uAC11\uC637\uD615"
-    en: Armored
+    kr: "\uC911\uC7A5\uAC11"
+    en: Heavy Armor
   - key: DefenceType.Ethereal
-    kr: "\uC815\uB839\uD615"
-    en: Ethereal
+    kr: "\uC601\uCCB4"
+    en: Spirit
+  - key: DefenceType.Light
+    kr: "\uACBD\uAC11"
+    en: Light Armor
   - key: DefenceType.HeavyArmor
     kr: "\uC911\uAC11\uD615"
     en: HeavyArmor
@@ -382,18 +385,39 @@ MonoBehaviour:
   - key: BurnDPS_title
     kr: "\uD654\uC0C1 \uD53C\uD574"
     en: Burn Damage
+  - key: EliteBossDamage_title
+    kr: "\uC5D8\uB9AC\uD2B8\xB7\uBCF4\uC2A4 \uD53C\uD574"
+    en: Elite/Boss Damage
+  - key: DamageToLight_title
+    kr: "\uACBD\uAC11 \uC0C1\uB300 \uD53C\uD574"
+    en: Damage vs Light Armor
+  - key: DamageToNormal_title
+    kr: "\uC911\uAC11 \uC0C1\uB300 \uD53C\uD574"
+    en: Damage vs Medium Armor
+  - key: DamageToArmored_title
+    kr: "\uC911\uC7A5\uAC11 \uC0C1\uB300 \uD53C\uD574"
+    en: Damage vs Heavy Armor
+  - key: DamageToEthereal_title
+    kr: "\uC601\uCCB4 \uC0C1\uB300 \uD53C\uD574"
+    en: Damage vs Spirit
+  - key: SkillCooldownSpeed_title
+    kr: "\uC2A4\uD0AC \uCDA9\uC804 \uC18D\uB3C4"
+    en: Skill Charge Speed
   - key: Stat_AttackSpeedValue
     kr: "10\uCD08\uB2F9 {0:0.#}\uBC1C"
     en: '{0:0.#} shots / 10s'
-  - key: AttackType.AllRounder
-    kr: "\uB9CC\uB2A5\uD615"
-    en: All-Rounder
+  - key: AttackType.Chaos
+    kr: "\uCE74\uC624\uC2A4"
+    en: Chaos
   - key: AttackType.Physic
     kr: "\uBB3C\uB9AC\uD615"
     en: Physical
   - key: AttackType.Magic
     kr: "\uB9C8\uBC95\uD615"
     en: Magic
+  - key: AttackType.Vibration
+    kr: "\uC9C4\uB3D9\uD615"
+    en: Vibration
   - key: DefenceType_Label
     kr: "\uC720\uD615:{0}"
     en: 'Type: {0}'
@@ -959,6 +983,69 @@ MonoBehaviour:
     kr: "\uC8FC\uC0AC\uC704 \uCF54\uC778\uC774 \uB0A8\uC558\uC2B5\uB2C8\uB2E4.\\n\uADF8\uB798\uB3C4
       \uC6E8\uC774\uBE0C\uB97C \uC2DC\uC791\uD560\uAE4C\uC694?"
     en: You still have dice coins left.\nStart the wave anyway?
+  - key: NextWave_LevelUpLeft
+    kr: "<color=#FF6B3D>\uB808\uBCA8\uC5C5\uC744 \uD558\uC9C0 \uC54A\uC558\uC2B5\uB2C8\uB2E4!</color>"
+    en: <color=#FF6B3D>You haven't leveled up yet!</color>
+  - key: NextWave_DiceCoinLeft
+    kr: "\uC8FC\uC0AC\uC704 \uCF54\uC778\uC774 \uB0A8\uC558\uC2B5\uB2C8\uB2E4."
+    en: You still have dice coins left.
+  - key: NextWave_Confirm
+    kr: "\uADF8\uB798\uB3C4 \uC6E8\uC774\uBE0C\uB97C \uC2DC\uC791\uD560\uAE4C\uC694?"
+    en: Start the wave anyway?
+  - key: Rune_SelectTile
+    kr: "\uB8EC\uC744 \uC801\uC6A9\uD560 \uD0C0\uC77C\uC744 \uC120\uD0DD\uD574\uC8FC\uC138\uC694."
+    en: Select a tile to apply the rune.
+  - key: Rune_OtherInstalled
+    kr: "\uC774\uBBF8 \uB2E4\uB978 \uC885\uB958\uC758 \uB8EC\uC774 \uC801\uC6A9\uB418\uC5B4
+      \uC788\uC2B5\uB2C8\uB2E4."
+    en: A different rune is already applied to this tile.
+  - key: Rune_MaxLevel
+    kr: "\uC774\uBBF8 \uCD5C\uB300 \uB808\uBCA8\uC778 \uB8EC\uC785\uB2C8\uB2E4."
+    en: This rune is already at max level.
+  - key: Rune_PopupTitle
+    kr: "\uB8EC"
+    en: Rune
+  - key: Rune_SelectBlockedTile
+    kr: "\uACE0\uCE60 \uBD80\uC11C\uC9C4 \uCE78\uC744 \uC120\uD0DD\uD574\uC8FC\uC138\uC694."
+    en: Select a broken tile to repair.
+  - key: Rune_Applied
+    kr: "\uB8EC \uD6A8\uACFC\uAC00 \uC801\uC6A9\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
+    en: Rune applied.
+  - key: Rune_Upgraded
+    kr: "\uB8EC\uC774 \uAC15\uD654\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
+    en: Rune upgraded.
+  - key: Rune_TileRepaired
+    kr: "\uD0C0\uC77C\uC744 \uACE0\uCCE4\uC2B5\uB2C8\uB2E4."
+    en: Tile repaired.
+  - key: Rune_AppliesToUnit
+    kr: "\uC774 \uCE78\uC5D0 \uC62C\uB77C\uAC04 \uBBF8\uB2C8\uC5B8\uC5D0\uAC8C \uB2A5\uB825\uC774
+      \uBD80\uC5EC\uB429\uB2C8\uB2E4."
+    en: Grants this ability to the minion on this tile.
+  - key: MinionForm.Shooter
+    kr: "\uBC1C\uC0AC\uD615"
+    en: Shooter
+  - key: MinionForm.Zone
+    kr: "\uC7A5\uD310\uD615"
+    en: Zone
+  - key: MinionForm.Orbit
+    kr: "\uD68C\uC804\uD615"
+    en: Orbit
+  - key: MinionForm.Support
+    kr: "\uBC84\uD504\uD615"
+    en: Support
+  - key: MinionForm.Special
+    kr: "\uD2B9\uC218\uD615"
+    en: Special
+  - key: DefenceTable_Title
+    kr: "\uC0C1\uC131\uD45C"
+    en: Matchup Chart
+  - key: DefenceTable_Corner
+    kr: "\uBC29\uC5B4 / \uACF5\uACA9"
+    en: DEF / ATK
+  - key: DefenceTable_Legend
+    kr: "<color=#73FF73>\uCD08\uB85D</color> = \uC57D\uC810 (\uB354 \uD070 \uD53C\uD574)  
+      <color=#FF7366>\uBE68\uAC15</color> = \uB0B4\uC131 (\uB35C \uBC1B\uC74C)"
+    en: <color=#73FF73>Green</color> = Weak   <color=#FF7366>Red</color> = Resist
   - key: BonusElite_NextDiceCoin
     kr: "\uB2E4\uC74C \uC6E8\uC774\uBE0C +{0}"
     en: Next wave +{0}

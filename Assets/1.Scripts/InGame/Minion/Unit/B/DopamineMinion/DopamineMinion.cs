@@ -100,6 +100,8 @@ public class DopamineMinion : MinionGrowth1
 
     void OnEnemyDeadEvent(EnemyDeadEvent e)
     {
+        if (IsBeingDragged) // 드래그 중엔 처치 충전·추가 탄 없음
+            return;
         if (e.enemy != null && e.enemy.CurHp <= 0) // 경로 끝 도착은 스킬 충전 제외
             ChargeSkill(e.position);
         TryExtraShot(e.position);

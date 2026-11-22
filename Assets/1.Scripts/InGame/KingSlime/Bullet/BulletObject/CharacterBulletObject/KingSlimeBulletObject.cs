@@ -26,7 +26,7 @@ public class KingSlimeBulletObject : AllyBulletObject
     {
         base.SetBullet(bullet, allyUnit);
         allyUnitDamageData.damage = (bullet as KingSlimeBulletSpec).damage;
-        allyUnitDamageData.attackType = AttackType.Physic; // 캐릭터 총알은 물리
+        allyUnitDamageData.attackType = allyUnit.AttackType; // (2026-11-21) 킹 공격 타입 = 무기 설정(Weapon.attackType, 지금 카오스). 이전: 물리 고정
 
         damageMultiplier = 1;
         mustCrit = bullet.mustCrit;

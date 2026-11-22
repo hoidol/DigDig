@@ -16,8 +16,8 @@ public class TilePointer : MonoSingleton<TilePointer>
 
     void OnTileSelected(TileSelectedEvent e)
     {
-        // 빈 타일은 표시 안 함 (슬라임·캐릭터가 있거나 아이템이 설치된 타일만)
-        if (e.tile.tileObject == null && e.tile.tileItem == null)
+        // 빈 타일은 표시 안 함 (슬라임·캐릭터가 있거나 아이템이 설치된 타일, 킹 버프 칸만)
+        if (e.tile.tileObject == null && e.tile.tileItem == null && !KingTileBuffArea.IsBuffTile(e.tile))
         {
             Hide();
             return;

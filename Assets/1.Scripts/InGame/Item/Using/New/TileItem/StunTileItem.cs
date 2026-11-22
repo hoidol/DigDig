@@ -1,9 +1,10 @@
 using UnityEngine;
 
-// 스턴: 적중 시 chance% 확률로 duration초 스턴 (보스 제외)
+// 스턴: 적중 시 chance% 확률로 duration초 스턴 (엘리트·보스는 시간 절반)
+// (2026-11-22) 10% 0.3초 (룬 강화 삭제 → 레벨 1 값 = ItemData.csv Values)
 public class StunTileItem : TileItem //타일 위에 설치되는 아이템
 {
-    public float chance = 2f;
+    public float chance = 10f;
     public float duration = 0.3f;
 
     protected override void ApplyLevelValue(float v)

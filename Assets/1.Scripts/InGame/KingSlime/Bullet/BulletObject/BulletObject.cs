@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public abstract class BulletObject : MonoBehaviour
 {
     [Header("총알 이동속도")]
-    [SerializeField] float moveSpeed;
-    [SerializeField] float bulletRadius = 0.1f;
+    [SerializeField] protected float moveSpeed;
+    [SerializeField] protected float bulletRadius = 0.1f;
     public Vector3 direction;
     public float damage
     {

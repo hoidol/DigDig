@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4c2d3a588e214e0990171ddbaa6f13c, type: 3}
+  m_Name: DwarfRuneSmith
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  key: DwarfRuneSmith
+  category: 3
+  title: "\ub8ec \ub300\uc7a5\uc7a5\uc774"
+  desc: "\ubc84\ud504 \uce78\uc5d0 \uc0c8\uae34 \ub8ec \ud6a8\uacfc \ub808\ubca8 +{0}\n(\ucd5c\ub300 \ub808\ubca8\uc744 \ub118\uae38 \uc218 \uc788\uc74c)"
+  thum: {fileID: 21300000, guid: 5537be7b0b40f4e1a92055846b72a86d, type: 3}
+  maxLevel: 3
+  prefab: {fileID: 6369058621717565484, guid: 9708059bfd1f484e991582cfe00f194b, type: 3}

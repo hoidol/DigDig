@@ -36,12 +36,12 @@ public class StageData : ScriptableObject
         return cycleHpMuls[Mathf.Min(cycle, cycleHpMuls.Length - 1)];
     }
     // 일반 적 방어 타입 순서. wave 1부터 한 칸씩, 끝나면 처음부터 반복 (StageData.csv DefenceWaveTypes "Normal/Normal/Ethereal/...")
-    // wave 구간별로 바뀌는 것 없음. 비우면 DEFAULT_DEFENCE_WAVE_TYPES. Random = 그 wave 번호로 정해지는 랜덤(Normal/Armored/Ethereal 중)
+    // wave 구간별로 바뀌는 것 없음. 비우면 DEFAULT_DEFENCE_WAVE_TYPES. Random = 그 wave 번호로 정해지는 랜덤(Light/Normal/Armored/Ethereal 중)
     public DefenceWaveType[] defenceWaveTypes;
     public static readonly DefenceWaveType[] DEFAULT_DEFENCE_WAVE_TYPES =
     {
-        DefenceWaveType.Normal, DefenceWaveType.Normal, DefenceWaveType.Ethereal,
-        DefenceWaveType.Normal, DefenceWaveType.Normal, DefenceWaveType.Armored,
+        DefenceWaveType.Light, DefenceWaveType.Normal, DefenceWaveType.Ethereal,
+        DefenceWaveType.Light, DefenceWaveType.Normal, DefenceWaveType.Armored,
     };
 
     public DefenceType GetWaveDefenceType(int waveIdx) => GetDefenceType(defenceWaveTypes, waveIdx);
@@ -55,7 +55,7 @@ public class StageData : ScriptableObject
         if (waveType == DefenceWaveType.Random)
         {
             // 미리보기(다음 wave 정보)와 실제 wave가 같도록 wave 번호로 고정된 랜덤
-            DefenceType[] candidates = { DefenceType.Normal, DefenceType.Armored, DefenceType.Ethereal };
+            DefenceType[] candidates = { DefenceType.Light, DefenceType.Normal, DefenceType.Armored, DefenceType.Ethereal };
             return candidates[new System.Random(waveIdx * 7919 + 17).Next(candidates.Length)];
         }
         // DefenceWaveType은 Random 다음부터 DefenceType과 같은 이름
@@ -310,9 +310,10 @@ public enum DefenceWaveType
 {
 
     Random,
-    Normal, //일반형 소환
-    Armored, //갑옷형 소환
-    Ethereal, //정령형 소환 
+    Normal, //중갑 소환
+    Armored, //중장갑 소환
+    Ethereal, //영체 소환 
     // 4: 중갑형(HeavyArmor) 삭제. 기존 직렬화 값 유지를 위해 번호 비워둠
     // 5: 생체형(Organic) 삭제 (2026-11-07). 기존 직렬화 값 유지를 위해 번호 비워둠
+    Light = 6, //경갑 소환 (2026-11-21)
 }

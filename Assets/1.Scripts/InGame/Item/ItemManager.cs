@@ -110,6 +110,23 @@ public class ItemManager : MonoSingleton<ItemManager>, ILoadData
             .Take(count).ToList();
     }
 
+    // (2026-11-21) 레벨업 룬 카드 후보 = KingGrowthSetting.runeKeys 중 지금 나올 수 있는 룬 (CanDraw: 타일 고치기는 막힌 칸이 있을 때만)
+    // 보유 수 제한 없음 (같은 룬 칸에 또 고르면 레벨 +1, 최대 Lv.3)
+    public List<ItemData> GetLevelUpRuneItems(IEnumerable<string> keys)
+    {
+        var list = new List<ItemData>();
+        if (keys == null)
+            return list;
+        foreach (string key in keys)
+        {
+            if (string.IsNullOrEmpty(key) || !itemDataDic.TryGetValue(key, out ItemData data))
+                continue;
+            if (data.itemPrefab is TileItem tileItem && tileItem.NeedTile && tileItem.CanDraw() && data.CheckUnlock())
+                list.Add(data);
+        }
+        return list;
+    }
+
     public ItemData GetItemData(string key)
     {
         if (!itemDataDic.ContainsKey(key))

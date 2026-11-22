@@ -15,8 +15,7 @@ MonoBehaviour:
   key: RaceHuman
   category: 1
   title: "\uC778\uAC04"
-  desc: "\uBC84\uD504 \uCE78 \uBBF8\uB2C8\uC5B8 \uACF5\uACA9\uB825 +5%\n\uD0B9 \uACF5\uACA9\uB825\xB7\uACF5\uACA9
-    \uC18D\uB3C4 +5%"
+  desc: "\ubc84\ud504 \uce78 \ubbf8\ub2c8\uc5b8\u00b7\ud0b9: \uacf5\uaca9\ub825 +5%, \uacf5\uaca9 \uc18d\ub3c4 +5%"
   thum: {fileID: 21300000, guid: 132d0059725b04468861ceccf1f4ee95, type: 3}
   maxLevel: 1
   prefab: {fileID: 2420654840450944242, guid: 8b348c4c7cc0c4ca98aeaef1c4f62b47, type: 3}

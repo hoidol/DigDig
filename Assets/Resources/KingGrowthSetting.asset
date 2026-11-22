@@ -20,10 +20,46 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 13c462be01ec4481e816c53e6a610bda, type: 2}
   - {fileID: 11400000, guid: 1e098ed2be0b14beb8af008533c4a23c, type: 2}
   - {fileID: 11400000, guid: 647ae6f765f434ca2bea3826d79d1060, type: 2}
-  - {fileID: 11400000, guid: 870fe265ec3994380b0fe87f935de8d2, type: 2}
   raceAbilities:
   - {fileID: 11400000, guid: 45fb2b9f02276472f9975d0b1f8faaa1, type: 2}
   - {fileID: 11400000, guid: 2e0e4e634c2bf4972b13963c4f543ffd, type: 2}
   - {fileID: 11400000, guid: 129eb40ee502845c494ce9439ca069e0, type: 2}
   - {fileID: 11400000, guid: 69e3bdd504d784806a80781de3ee8ce3, type: 2}
   - {fileID: 11400000, guid: 6b7b2f1052e064c6ca296e31d017d13d, type: 2}
+  jobAbilities:
+  - {fileID: 11400000, guid: 60e38bc4282c47e394e70633ed838949, type: 2}
+  - {fileID: 11400000, guid: 985c4674c4964829a4faaa386c6d7892, type: 2}
+  - {fileID: 11400000, guid: 5049873d5f684591bb61f40618bb3d42, type: 2}
+  - {fileID: 11400000, guid: aabda46e0c1f49eea2969019d56ad11a, type: 2}
+  - {fileID: 11400000, guid: a15cbd0a61e441269ee432c267c17787, type: 2}
+  tileExpandAbility: {fileID: 11400000, guid: 3459fefedf08408ca2777d1d87826b4d, type: 2}
+  runeKeys:
+  - AttackPowerTile
+  - AttackSpeedTile
+  - CritPowerTile
+  - SkillCooldownTile
+  - RangeUpTile
+  - PioneerTile
+  - GiantSlayerTile
+  - BurstShotTile
+  - MultiTargetTile
+  - GrowthTile
+  - ExpTile
+  - SlowTile
+  - StunTile
+  passiveAbilities:
+  - {fileID: 11400000, guid: 1542cef1d1114eafb908ea42cdf7bff8, type: 2}
+  - {fileID: 11400000, guid: ca16d9f9cf8d432d84e2cce750dcd164, type: 2}
+  - {fileID: 11400000, guid: f5c49fd545204940afc8bddcaa13ea86, type: 2}
+  - {fileID: 11400000, guid: bf06906356cf445b929c6b77ec218fff, type: 2}
+  - {fileID: 11400000, guid: 2b3e13110f6849cda3a29e1c40e9f160, type: 2}
+  - {fileID: 11400000, guid: ef76cde62c6d4ac7b9229707d30253cd, type: 2}
+  - {fileID: 11400000, guid: b68578257d144403891750db70c3dcf1, type: 2}
+  - {fileID: 11400000, guid: 5cde44c695b244e2a4e9e8d5f6afd4f0, type: 2}
+  - {fileID: 11400000, guid: cf8b557b6c0f44bfbb0229da532b1a73, type: 2}
+  - {fileID: 11400000, guid: 85ad9a59382f4d99932bb754ab574998, type: 2}
+  - {fileID: 11400000, guid: ef2b8e356c404bdca4989a49e6a854c2, type: 2}
+  - {fileID: 11400000, guid: a0384c6561264eeba6e22c47a5d04419, type: 2}
+  - {fileID: 11400000, guid: d71319b5f87044f98e869e243ca61121, type: 2}
+  - {fileID: 11400000, guid: b445894775e24796a1c2ae01f72bb67b, type: 2}
+  - {fileID: 11400000, guid: c35132940c104d6e9997f937aeb81831, type: 2}

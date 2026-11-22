@@ -10,6 +10,9 @@ public abstract class TileItem : Item, ITileItem
 
     // ---- 강화 (타일 객체마다, 주사위 코인). 레벨 1 시작, 최대 = ItemData.MaxLevel
     public int upgradeLevel = 1;
+    // (2026-11-21) 레벨 보너스 (킹 패시브 드워프 룬 대장장이: 버프 칸 룬 +N, 최대 레벨을 넘김). 강화·타일 색은 upgradeLevel 기준
+    public int bonusLevel;
+    public int EffectiveLevel => upgradeLevel + bonusLevel;
     public static readonly float[] UPGRADE_CHANCES = { 70f, 50f }; // Lv1→2, Lv2→3 (이후는 마지막 값)
     public static int GetUpgradeCost(int baseDiceCoin, int curLevel) => baseDiceCoin * (curLevel + 1);
     public static float GetUpgradeChance(int curLevel) => UPGRADE_CHANCES[Mathf.Clamp(curLevel - 1, 0, UPGRADE_CHANCES.Length - 1)];
@@ -34,16 +37,23 @@ public abstract class TileItem : Item, ITileItem
     {
         if (data == null)
             return "";
-        if (!data.HasLevelValues || !data.desc.Contains("{0}"))
-            return data.desc;
-        return string.Format(data.desc, FormatLevelValue(data.GetLevelValue(upgradeLevel)));
+        string desc = !data.HasLevelValues || !data.desc.Contains("{0}")
+            ? data.desc
+            : string.Format(data.desc, FormatLevelValue(data.GetLevelValueExtended(EffectiveLevel)));
+        // (2026-11-22) 칸에 새겨 위 유닛에게 효과를 주는 룬은 그 점을 설명에 붙임
+        if (AppliesToTileUnit)
+            desc += $"\n<size=80%><color=#8FE39A>{TranslateManager.GetText("Rune_AppliesToUnit")}</color></size>";
+        return desc;
     }
+
+    // 칸 위 유닛(미니언·킹)에게 효과를 주는 룬인지 (설명 안내용). 칸 없이 바로 효과(슬라임 수 증가)·타일 고치기는 false
+    public virtual bool AppliesToTileUnit => NeedTile;
 
     void ApplyLevel()
     {
         ItemData data = itemData;
         if (data != null && data.HasLevelValues)
-            ApplyLevelValue(data.GetLevelValue(upgradeLevel));
+            ApplyLevelValue(data.GetLevelValueExtended(EffectiveLevel));
         ApplyLevelColor();
     }
 
@@ -82,6 +92,28 @@ public abstract class TileItem : Item, ITileItem
         if (obj != null)
             OnEnter(obj);
         return true;
+    }
+
+    // (2026-11-21) 확정 강화 (레벨업 룬 카드: 같은 룬 칸에 또 새김). 최대 레벨이면 false
+    public bool ForceUpgrade()
+    {
+        if (!CanUpgrade || IsMaxLevel)
+            return false;
+        return TryUpgrade(-1f); // 확률 판정 없이 (roll < 확률)
+    }
+
+    // 보너스 레벨 변경: 올라간 유닛이 있으면 효과를 뺐다가 새 수치로 다시 건다 (TryUpgrade와 같은 방식)
+    public void SetBonusLevel(int bonus)
+    {
+        if (bonusLevel == bonus)
+            return;
+        ITileObject obj = tile != null ? tile.tileObject : null;
+        if (obj != null)
+            OnExit(obj);
+        bonusLevel = bonus;
+        ApplyLevel();
+        if (obj != null)
+            OnEnter(obj);
     }
 
     public override void OnEquip()

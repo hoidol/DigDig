@@ -108,6 +108,88 @@ public class MinionData : ScriptableObject
         return desc;
     }
 
+#if UNITY_EDITOR
+    // (2026-11-21) 미니언별 데이터 클래스(FlameMinionData 등)에 코드로 적은 값 = 기준. LoadData 때 에셋 값을 코드 값으로 덮어씀
+    // 대상: MinionData·EnhanceMinionData보다 아래(자식) 클래스에서 선언한 직렬화 필드 중 값 타입·문자열·그 배열/리스트
+    //   (CrossBuffMinionData의 buffOpType·buffValues 포함). 에셋 참조(프리팹·스프라이트 등)와 코드 값이 null인 필드는 건드리지 않음
+    // 공용 필드(key·attackType·hasSkill·attackSfx·offerDiceCoinPrice 등, CSV·인스펙터로 정함)는 그대로
+    // → 미니언 고유 수치는 코드에서만 고침 (인스펙터에서 고쳐도 다음 LoadData 때 코드 값으로 돌아감)
+    public List<string> ApplyCodeDefaults()
+    {
+        var changed = new List<string>();
+        System.Type type = GetType();
+        if (type == typeof(MinionData) || type.IsAbstract)
+            return changed;
+        var fresh = CreateInstance(type);
+        try
+        {
+            for (System.Type t = type; t != null && t != typeof(EnhanceMinionData) && t != typeof(MinionData); t = t.BaseType)
+            {
+                foreach (var f in t.GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public
+                    | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.DeclaredOnly))
+                {
+                    bool serialized = (f.IsPublic && !f.IsNotSerialized) || f.IsDefined(typeof(SerializeField), false);
+                    if (!serialized || !IsPlainDataType(f.FieldType))
+                        continue;
+                    object code = f.GetValue(fresh);
+                    if (code == null)
+                        continue;
+                    object cur = f.GetValue(this);
+                    if (SameValue(cur, code))
+                        continue;
+                    f.SetValue(this, CloneValue(code));
+                    changed.Add($"{f.Name}: {Show(cur)} → {Show(code)}");
+                }
+            }
+        }
+        finally
+        {
+            DestroyImmediate(fresh);
+        }
+        if (changed.Count > 0)
+        {
+            UnityEditor.EditorUtility.SetDirty(this);
+            Debug.Log($"[MinionData] {name} 코드 값 적용\n{string.Join("\n", changed)}");
+        }
+        return changed;
+    }
+
+    static bool IsPlainDataType(System.Type t)
+    {
+        if (t.IsArray)
+            return IsPlainDataType(t.GetElementType());
+        if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(List<>))
+            return IsPlainDataType(t.GetGenericArguments()[0]);
+        return t.IsPrimitive || t.IsEnum || t == typeof(string) || t == typeof(Vector2) || t == typeof(Vector3) || t == typeof(Color);
+    }
+
+    static bool SameValue(object a, object b)
+    {
+        if (a is System.Collections.IList la && b is System.Collections.IList lb)
+        {
+            if (la.Count != lb.Count)
+                return false;
+            for (int i = 0; i < la.Count; i++)
+                if (!Equals(la[i], lb[i]))
+                    return false;
+            return true;
+        }
+        return Equals(a, b);
+    }
+
+    static object CloneValue(object v)
+    {
+        if (v is System.Array arr)
+            return arr.Clone();
+        if (v is System.Collections.IList list)
+            return System.Activator.CreateInstance(v.GetType(), list);
+        return v;
+    }
+
+    static string Show(object v) => v is System.Collections.IList l
+        ? "{" + string.Join(",", System.Linq.Enumerable.Cast<object>(l)) + "}" : v?.ToString() ?? "null";
+#endif
+
     public static MinionData GetMinionData(string key)
     {
         return MinionManager.Instance.GetMinionData(key);
@@ -122,6 +204,7 @@ public class MinionData : ScriptableObject
         // 새로 만든 에셋은 key가 비어 있음 → 파일명(= Key)으로 채운다 (Edit과 같은 규칙)
         if (string.IsNullOrEmpty(key))
             key = name;
+        ApplyCodeDefaults();
 
         TableReader table = TableReader.Load("MinionData.csv");
         if (table == null) return;
@@ -433,7 +516,9 @@ public static class MergeLevelExtensions
 
 public enum AttackType
 {
-    AllRounder, // 만능 모든 공격 타입 100
-    Physic, //빨강
-    Magic, //파랑
+    // (2026-11-21) 공격 타입 4종 = 카오스·물리·마법·진동. 배율은 Resources/DefenceInfo 표 (카오스도 표 값 사용, 기본 전부 100%)
+    Chaos, // 카오스 (정의할 수 없는 무언가). (2026-11-21 AllRounder → Chaos)
+    Physic, //물리
+    Magic, //마법
+    Vibration, //진동 (2026-11-21 추가)
 }

@@ -52,11 +52,7 @@ MonoBehaviour:
   - {x: 1, y: -1}
   - {x: 1, y: 0}
   - {x: 1, y: 1}
-  tileBuffs:
-  - statType: 0
-    value: 1.05
-    opType: 1
-  kingBuffs:
+  buffs:
   - statType: 0
     value: 1.05
     opType: 1
