@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: StunTile
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: StunTile
-  itemName: "\uC2A4\uD134 \uB8EC"
+  itemName: "\uC2A4\uD134 \uD0C0\uC77C"
   desc: "{0}% \uD655\uB960\uB85C 0.3\uCD08\uAC04 \uC2A4\uD134"
   level: 1
   maxCount: 3
   diceCoin: 4
   levelValues:
-  - 10
+  - 2
+  - 3.5
+  - 5
   itemPrefab: {fileID: 1723521112824088429, guid: ede114d75e4904c518d4e13b8db8eaa7,
     type: 3}
   unlockConditions: []

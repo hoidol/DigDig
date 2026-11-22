@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PioneerTile
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: PioneerTile
-  itemName: "\uAC1C\uCC99 \uB8EC"
+  itemName: "\uAC1C\uCC99 \uD0C0\uC77C"
   desc: "\uB9C9\uD78C \uCE78 \uD574\uC81C"
   level: 1
   maxCount: 3

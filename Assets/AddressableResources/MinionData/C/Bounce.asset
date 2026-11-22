@@ -23,92 +23,92 @@ MonoBehaviour:
     minionStats:
     - statType: 0
       values:
-      - 15.00
-      - 15.00
+      - 10
+      - 3
   - level: 1
     minionStats:
     - statType: 0
       values:
-      - 15.50
-      - 15.50
+      - 10.5
+      - 3.2
   - level: 2
     minionStats:
     - statType: 0
       values:
-      - 16.00
-      - 16.00
+      - 11
+      - 3.4
   - level: 3
     minionStats:
     - statType: 0
       values:
-      - 16.50
-      - 16.50
+      - 11.5
+      - 3.6
   - level: 4
     minionStats:
     - statType: 0
       values:
-      - 17.00
-      - 17.00
+      - 12
+      - 3.8
   - level: 5
     minionStats:
     - statType: 0
       values:
-      - 17.50
-      - 17.50
+      - 12.5
+      - 4
   - level: 6
     minionStats:
     - statType: 0
       values:
-      - 18.00
-      - 18.00
+      - 13
+      - 4.2
   - level: 7
     minionStats:
     - statType: 0
       values:
-      - 18.50
-      - 18.50
+      - 13.5
+      - 4.4
   - level: 8
     minionStats:
     - statType: 0
       values:
-      - 19.00
-      - 19.00
+      - 14
+      - 4.6
   - level: 9
     minionStats:
     - statType: 0
       values:
-      - 19.50
-      - 19.50
+      - 14.5
+      - 4.8
   - level: 10
     minionStats:
     - statType: 0
       values:
-      - 20.00
-      - 20.00
+      - 15
+      - 5
   - level: 11
     minionStats:
     - statType: 0
       values:
-      - 20.50
-      - 20.50
+      - 15.5
+      - 5.2
   - level: 12
     minionStats:
     - statType: 0
       values:
-      - 21.00
-      - 21.00
+      - 16
+      - 5.4
   - level: 13
     minionStats:
     - statType: 0
       values:
-      - 21.50
-      - 21.50
+      - 16.5
+      - 5.6
   - level: 14
     minionStats:
     - statType: 0
       values:
-      - 22.00
-      - 22.00
+      - 17
+      - 5.8
   attackPowerRandomRatio: 0
   hasSkill: 1
   offerDiceCoinPrice: 2

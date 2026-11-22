@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RangeUpTile
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: RangeUpTile
-  itemName: "\uC0AC\uAC70\uB9AC \uB8EC"
+  itemName: "\uC0AC\uAC70\uB9AC \uD0C0\uC77C"
   desc: "\uC0AC\uC815\uAC70\uB9AC +{0}"
   level: 1
   maxCount: 3

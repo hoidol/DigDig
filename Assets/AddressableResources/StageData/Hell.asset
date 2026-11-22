@@ -30,7 +30,7 @@ MonoBehaviour:
     id: 
     wave: 0
   enemyHp: 66
-  addHpRatioPerWave: 0.8
+  addHpRatioPerWave: 1.5
   multiHpPerWave: 1.03
   cycleHpMuls:
   - 1
