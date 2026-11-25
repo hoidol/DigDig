@@ -80,3 +80,10 @@ unity_project/build
 # 사운드 에셋 팩 (원본 보관용, git 제외). 게임에서 쓰는 소리는 Assets/7.Sounds에 복사해서 사용
 [Aa]ssets/SoundPackage/
 [Aa]ssets/SoundPackage.meta
+
+# (2026-11-25) 대용량 원본 PSD 패키지 (GitHub 100MB 한도 초과)
+/Assets/Layer Lab/GUI Pro-MinimalGame/Theme_Dark/PSD_Dark/
+/Assets/Layer Lab/GUI Pro-MinimalGame/Theme_Dark/PSD_ReadOnly/
+# 테스트 실행 기록
+/Assets/Resources/PerformanceTestRunInfo.json*
+/Assets/Resources/PerformanceTestRunSettings.json*
