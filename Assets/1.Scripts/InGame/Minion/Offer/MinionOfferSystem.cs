@@ -5,6 +5,7 @@ using UnityEngine.UI;
 // (2026-11-19) wave 카드 소환: 골드 소환 대신 wave가 시작될 때마다 장착 5종 중 랜덤 OFFER_COUNT장(중복 가능)을 하단에 지급.
 // 카드를 원하는 타일로 드래그 → 빈 칸이면 0레벨 소환, 같은 종·0레벨 미니언 위면 바로 합성(같은 종 +1).
 // wave 중에는 새 카드를 받을 수 없음(다음 wave 시작 때 지급). 쓰지 않은 카드는 새 카드를 줄 때 지움(KEEP_UNUSED_OFFERS).
+// (2026-11-23) 브레이크타임 중 카드를 모두 쓰면 바로 새 카드 지급 (TryPlace)
 // 카드를 놓으려면 주사위 코인 OFFER_MINION_DICE_COIN_PRICE(2)개 필요. 브레이크타임마다 WAVE_DICE_COIN(5)개 지급, 남은 코인은 이월.
 // UI = 씬 InGame의 BottomGameCanvas/Panel/Buttons_Hor/MinionOfferPanel (카드 템플릿·Next 버튼을 인스펙터에서 연결).
 // 씬에 없거나 연결이 비면 실행 중에 기본 모양을 만든다(BuildUI)
@@ -21,11 +22,25 @@ public class MinionOfferSystem : MonoBehaviour
     {
         public string key;
         public int mergeLevel;
-        public OfferCard(string key, int mergeLevel) { this.key = key; this.mergeLevel = mergeLevel; }
+        public int discount; // (2026-11-25) 용사 강화 MinionCostDownChance로 깎인 가격 (지급할 때 정함, 카드에 깎인 가격 표시)
+        public OfferCard(string key, int mergeLevel, int discount = 0) { this.key = key; this.mergeLevel = mergeLevel; this.discount = discount; }
+        public int Price => Mathf.Max(0, GetCardPrice(key) - discount);
     }
-    // 카드 머지 레벨 확률: OFFER_LEVEL_UP_CHANCE(%)로 머지 레벨 1(표시 2), 나머지 0. 지금은 0% (추후 확률로 등장)
-    public const float OFFER_LEVEL_UP_CHANCE = 0f;
-    public static int RollOfferMergeLevel() => Random.Range(0f, 100f) < OFFER_LEVEL_UP_CHANCE ? 1 : 0;
+    // 카드 가격 할인: 가격이 2 이상이고 확률에 걸리면 1 (공짜 카드는 안 나오게)
+    public static int RollCardDiscount(string key) =>
+        GetCardPrice(key) > 1 && HeroUpgradeSystem.Roll(HeroUpgradeAbility.MinionCostDownChance) ? 1 : 0;
+    // (2026-11-23) 카드 머지 레벨 확률 = 킹 레벨 × OFFER_LEVEL_UP_CHANCE_PER_KING_LEVEL(%) → 머지 레벨 1(표시 Lv.2), 나머지 0
+    //   킹 Lv.0 = 0%, Lv.1 = 1%, Lv.2 = 2% … (카드 줄 위에 작게 표시, Lv.0이면 숨김)
+    public const float OFFER_LEVEL_UP_CHANCE_PER_KING_LEVEL = 1f;
+    public static float GetOfferLevelUpChance(int kingLevel) => Mathf.Max(0, kingLevel) * OFFER_LEVEL_UP_CHANCE_PER_KING_LEVEL;
+    // 지금 Lv.2 카드 확률 = 킹 레벨 확률 + 용사 강화(OfferLv2Chance, 첫 지급이면 FirstOfferLv2Chance도)
+    public static float GetCurrentLevelUpChance(bool firstDeal) =>
+        GetOfferLevelUpChance(KingSlime.Instance != null ? KingSlime.Instance.lv : 0) + HeroUpgradeSystem.GetOfferLv2Bonus(firstDeal);
+    public static int RollOfferMergeLevel(bool firstDeal = false)
+    {
+        float chance = GetCurrentLevelUpChance(firstDeal);
+        return chance > 0f && Random.Range(0f, 100f) < chance ? 1 : 0;
+    }
 
     public readonly List<OfferCard> hand = new List<OfferCard>(); // 들고 있는 카드. 사용한 칸은 null (카드 자리가 밀리지 않게)
 
@@ -36,6 +51,13 @@ public class MinionOfferSystem : MonoBehaviour
     public Button nextButton;             // 브레이크타임 Next 버튼
     public MinionOfferCardInfo cardInfo;  // (2026-11-21) 카드를 누르면 위에 미니언 설명 (비우면 하위에서 찾고, 없으면 생성)
     public KingExpBuyPanel expBuyPanel;   // (2026-11-22) 카드 줄 왼쪽 킹 레벨·경험치 구매 (비우면 하위에서 찾고, 없으면 생성)
+    public TMPro.TMP_Text levelUpChanceText; // (2026-11-23) 카드 줄 위 "Lv.2 카드 확률 N%" (비우면 실행 중 생성, 킹 Lv.0이면 숨김)
+    [Tooltip("카드 다시 뽑기 버튼. (2026-11-25) 브레이크타임 내내 보임: 용사 강화 보너스 무료 → 한 판 무료 2번 → 광고 3번 (RerollCounter.BreakOffer), 다 쓰면 숨김. 비우면 Next 버튼을 복사해 그 위에 생성")]
+    public Button rerollButton;
+    public int freeRerolls;   // 용사 강화 BreakRerollChance 보너스 무료 다시 뽑기 (최대 1, 쌓이지 않음, 먼저 씀)
+    TMPro.TMP_Text rerollText;
+    string rerollLabel;
+    int dealCount;            // 이번 판 카드 지급 횟수 (첫 지급 = 용사 강화 FirstOfferLv2Chance)
     readonly List<MinionOfferCard> cards = new List<MinionOfferCard>();
 
     // GameManager.Start에서 호출: 씬에 있으면 그것, 없으면 새로 만들어 준비
@@ -77,14 +99,55 @@ public class MinionOfferSystem : MonoBehaviour
                 nextButton.GetComponent<Image>()?.sprite, diceIcon != null ? diceIcon.sprite : null);
         }
         expBuyPanel.Init();
+        if (levelUpChanceText == null)
+            levelUpChanceText = BuildLevelUpChanceText();
+        RefreshLevelUpChance();
         nextButton.onClick.AddListener(OnClickedNext);
         nextButton.gameObject.SetActive(false);
+        if (rerollButton == null)
+            rerollButton = BuildRerollButton();
+        rerollButton.onClick.AddListener(OnClickedReroll);
+        rerollButton.gameObject.SetActive(false);
         HideGoldUI();
         SetPanelActive(GameManager.Instance != null && GameManager.Instance.isBreakTime);
         GameEventBus.Subscribe<BreakTimeStartEvent>(OnBreakTimeStart);
         GameEventBus.Subscribe<WaveStartEvent>(OnWaveStart);
         GameEventBus.Subscribe<DiceCoinEvent>(OnDiceCoin);
         GameEventBus.Subscribe<DragStartEvent>(OnFieldDragStart);
+        GameEventBus.Subscribe<ExpChangedEvent>(OnExpChanged);
+    }
+
+    void OnExpChanged(ExpChangedEvent e) => RefreshLevelUpChance();
+
+    public void RefreshLevelUpChance()
+    {
+        if (levelUpChanceText == null)
+            return;
+        float chance = GetCurrentLevelUpChance(false);
+        levelUpChanceText.gameObject.SetActive(chance > 0f);
+        levelUpChanceText.text = $"Lv.2 카드 확률 {chance:0.#}%";
+    }
+
+    // 카드 줄(cardContainer) 위 가운데 작은 글씨. 카드 줄과 같이 켜지고 꺼짐 (레이아웃은 무시)
+    TMPro.TMP_Text BuildLevelUpChanceText()
+    {
+        var go = new GameObject("LevelUpChanceText", typeof(RectTransform), typeof(TMPro.TextMeshProUGUI), typeof(LayoutElement));
+        go.GetComponent<LayoutElement>().ignoreLayout = true;
+        var rt = (RectTransform)go.transform;
+        rt.SetParent(cardContainer, false);
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.sizeDelta = new Vector2(500f, 44f);
+        rt.anchoredPosition = new Vector2(0f, 6f);
+        var t = go.GetComponent<TMPro.TextMeshProUGUI>();
+        TMPro.TMP_FontAsset font = GetComponentInChildren<TMPro.TMP_Text>(true)?.font;
+        if (font != null)
+            t.font = font;
+        t.fontSize = 30;
+        t.color = new Color(1f, 0.85f, 0.35f);
+        t.alignment = TMPro.TextAlignmentOptions.Center;
+        t.raycastTarget = false;
+        return t;
     }
 
     // 카드 설명: 카드를 누르면 토글, 드래그(카드·필드 유닛)·wave 시작·카드 사용 시 닫힘
@@ -108,16 +171,23 @@ public class MinionOfferSystem : MonoBehaviour
         GameEventBus.Unsubscribe<WaveStartEvent>(OnWaveStart);
         GameEventBus.Unsubscribe<DiceCoinEvent>(OnDiceCoin);
         GameEventBus.Unsubscribe<DragStartEvent>(OnFieldDragStart);
+        GameEventBus.Unsubscribe<ExpChangedEvent>(OnExpChanged);
         if (Instance == this)
             Instance = null;
     }
 
     int lastDealtWaveIdx = -1; // 부활로 같은 wave 브레이크타임가 다시 와도 카드를 또 주지 않음
 
+    // 지금 브레이크타임의 주사위 코인 초기화(WAVE_DICE_COIN + 보너스)가 끝났는지 → 이후 얻은 보상 코인은 즉시 지급 (KingSlime.AddRewardDiceCoin)
+    public static bool IsBreakDiceGranted =>
+        Instance != null && GameManager.Instance != null && GameManager.Instance.isBreakTime
+        && Instance.lastDealtWaveIdx == GameManager.Instance.breakTimeNextWaveIdx;
+
     // wave 클리어(또는 게임 시작) → 다음 wave 브레이크타임: 카드 3장 + 주사위 코인 WAVE_DICE_COIN개
     void OnBreakTimeStart(BreakTimeStartEvent e)
     {
         SetPanelActive(true); // 부활로 같은 wave 브레이크타임가 다시 와도 패널은 켬
+        RuneRewardSystem.TryOpen(); // (2026-11-23) 엘리트·보스 처치 룬 보상
         if (e.nextWaveIdx <= lastDealtWaveIdx)
             return;
         lastDealtWaveIdx = e.nextWaveIdx;
@@ -128,6 +198,64 @@ public class MinionOfferSystem : MonoBehaviour
         king.bonusDiceCoinNextBreak = 0;
         king.AddDiceCoin(GameSetting.WAVE_DICE_COIN + bonus - king.diceCoin);
         DealOffers();
+        // (2026-11-24) 용사 강화 BreakRerollChance: 확률로 카드 다시 뽑기 무료 1회 (남아 있으면 그대로, 쌓이지 않음)
+        if (freeRerolls < 1 && HeroUpgradeSystem.Roll(HeroUpgradeAbility.BreakRerollChance))
+        {
+            freeRerolls = 1;
+            EffectManager.PlayPopText((Vector2)king.transform.position + Vector2.up, TranslateManager.GetText("HeroUpgrade_RerollGained"), new Color(0.6f, 1f, 0.8f));
+        }
+    }
+
+    // 카드 다시 뽑기: 손의 카드를 버리고 새로 OFFER_COUNT장 (보너스 무료 → 한 판 무료 → 광고)
+    public void OnClickedReroll()
+    {
+        if (GameManager.Instance == null || !GameManager.Instance.isBreakTime)
+            return;
+        if (freeRerolls > 0)
+        {
+            freeRerolls--;
+            RerollOffers();
+            return;
+        }
+        RerollCounter.BreakOffer.TryReroll(RerollOffers);
+    }
+
+    void RerollOffers()
+    {
+        if (GameManager.Instance == null || !GameManager.Instance.isBreakTime)
+            return;
+        SoundManager.Play(SFXType.CardFlip);
+        DealOffers();
+    }
+
+    public bool CanReroll => freeRerolls > 0 || RerollCounter.BreakOffer.CanReroll;
+
+    string GetRerollLabel() => freeRerolls > 0
+        ? $"{TranslateManager.GetText("HeroUpgrade_RerollButton")} (무료)"
+        : RerollCounter.BreakOffer.GetLabel("다시 뽑기");
+
+    // Next 버튼을 복사해 그 위에 "다시 뽑기" (씬에 rerollButton을 연결하면 그걸 씀)
+    Button BuildRerollButton()
+    {
+        GameObject go = Instantiate(nextButton.gameObject, nextButton.transform.parent, false);
+        go.name = "RerollButton";
+        foreach (TranslateText t in go.GetComponentsInChildren<TranslateText>(true))
+            Destroy(t);
+        Button button = go.GetComponent<Button>();
+        button.onClick = new Button.ButtonClickedEvent();
+        RectTransform rt = (RectTransform)go.transform;
+        RectTransform nextRt = (RectTransform)nextButton.transform;
+        rt.anchoredPosition = nextRt.anchoredPosition + new Vector2(0f, nextRt.rect.height + 16f);
+        TMPro.TMP_Text text = go.GetComponentInChildren<TMPro.TMP_Text>(true);
+        if (text != null)
+        {
+            text.text = TranslateManager.GetText("HeroUpgrade_RerollButton");
+            text.enableAutoSizing = true;
+        }
+        Image bg = go.GetComponent<Image>();
+        if (bg != null)
+            bg.color = new Color(0.45f, 0.85f, 0.6f);
+        return button;
     }
 
     // (2026-11-19) wave 중엔 카드 패널을 끄고(카드 사용 불가), wave가 끝나 브레이크타임가 되면 다시 켬
@@ -136,6 +264,8 @@ public class MinionOfferSystem : MonoBehaviour
         SetPanelActive(false);
         HideCardInfo();
         nextButton.gameObject.SetActive(false); // Next 표시는 이 오브젝트의 Update가 하므로 꺼지기 전에 직접 숨김
+        if (rerollButton != null)
+            rerollButton.gameObject.SetActive(false);
     }
 
     // 패널 = 이 오브젝트(MinionOfferPanel). 실행 중 기본 모양(BuildUI)이면 Next 버튼이 하위에 있으므로 카드 줄만
@@ -153,6 +283,7 @@ public class MinionOfferSystem : MonoBehaviour
         return data != null ? data.offerDiceCoinPrice : GameSetting.OFFER_MINION_DICE_COIN_PRICE;
     }
     public static bool CanAffordCard(string key) => KingSlime.Instance.diceCoin >= GetCardPrice(key);
+    public static bool CanAffordCard(OfferCard card) => KingSlime.Instance.diceCoin >= card.Price;
 
     // 코인이 바뀌면 카드 표시(가격·흐림) 갱신
     void OnDiceCoin(DiceCoinEvent e) => RefreshCards();
@@ -166,9 +297,24 @@ public class MinionOfferSystem : MonoBehaviour
             return;
         bool show = GameManager.Instance.isPlaying && GameManager.Instance.isBreakTime
             && !IsCardDragging && !MinionFieldController.Instance.IsDragging
-            && !InGame.LevelUpCanvas.IsPickingRune; // 레벨업 룬 칸을 고르는 중엔 숨김
+            && !RuneRewardSystem.IsOpen; // (2026-11-23) 룬 보상을 고르는 중엔 숨김
         if (nextButton.gameObject.activeSelf != show)
             nextButton.gameObject.SetActive(show);
+        bool showReroll = show && CanReroll && rerollButton != null;
+        if (rerollButton != null && rerollButton.gameObject.activeSelf != showReroll)
+            rerollButton.gameObject.SetActive(showReroll);
+        if (showReroll)
+        {
+            rerollButton.interactable = !RerollCounter.BreakOffer.WaitingAd;
+            if (rerollText == null)
+                rerollText = rerollButton.GetComponentInChildren<TMPro.TMP_Text>(true);
+            string label = GetRerollLabel();
+            if (rerollText != null && label != rerollLabel)
+            {
+                rerollLabel = label;
+                rerollText.text = label;
+            }
+        }
     }
 
     // Next: 하지 않은 게 있으면 확인 팝업 → Yes면 wave 시작
@@ -208,7 +354,7 @@ public class MinionOfferSystem : MonoBehaviour
     public bool HasAffordableCard()
     {
         foreach (OfferCard card in hand)
-            if (card != null && CanAffordCard(card.key))
+            if (card != null && CanAffordCard(card))
                 return true;
         return false;
     }
@@ -235,8 +381,9 @@ public class MinionOfferSystem : MonoBehaviour
                 break;
             string key = candidates[Random.Range(0, candidates.Count)];
             dealt[key] = dealt.TryGetValue(key, out int n) ? n + 1 : 1;
-            hand.Add(new OfferCard(key, RollOfferMergeLevel()));
+            hand.Add(new OfferCard(key, RollOfferMergeLevel(dealCount == 0), RollCardDiscount(key)));
         }
+        dealCount++;
         RefreshCards();
         ArrangeCards();
     }
@@ -273,7 +420,7 @@ public class MinionOfferSystem : MonoBehaviour
         Tile tile = TileManager.Instance.GetNearestTile(worldPos);
         if (tile == null)
             return false;
-        int price = GetCardPrice(key);
+        int price = hand[handIdx].Price;
         if (KingSlime.Instance.diceCoin < price)
         {
             ToastCanvas.Toast("Not enough dice coin");
@@ -312,6 +459,9 @@ public class MinionOfferSystem : MonoBehaviour
         hand[handIdx] = null; // 자리 유지 (RemoveAt하면 뒤 카드가 앞으로 당겨짐)
         KingSlime.Instance.AddDiceCoin(-price); // DiceCoinEvent → RefreshCards
         KingSlimeManageCanvas.Instance.UpdateCanvas();
+        // (2026-11-23) 카드를 모두 쓰면 (브레이크타임 중) 새 카드 OFFER_COUNT장
+        if (hand.TrueForAll(c => c == null) && GameManager.Instance.isBreakTime)
+            DealOffers();
         return true;
     }
 
@@ -435,7 +585,7 @@ public class MinionOfferSystem : MonoBehaviour
             bool active = i < hand.Count && hand[i] != null;
             cards[i].gameObject.SetActive(active);
             if (active)
-                cards[i].SetData(this, i, MinionManager.Instance.GetMinionData(hand[i].key), hand[i].mergeLevel, GetCardPrice(hand[i].key), CanAffordCard(hand[i].key));
+                cards[i].SetData(this, i, MinionManager.Instance.GetMinionData(hand[i].key), hand[i].mergeLevel, hand[i].Price, CanAffordCard(hand[i]), hand[i].discount > 0);
         }
     }
 

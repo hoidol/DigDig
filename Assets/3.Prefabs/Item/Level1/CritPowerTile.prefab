@@ -124,5 +124,5 @@ MonoBehaviour:
   tile: {fileID: 0}
   upgradeLevel: 1
   bonusLevel: 0
-  chance: 10
+  chance: 15
   critPower: 2

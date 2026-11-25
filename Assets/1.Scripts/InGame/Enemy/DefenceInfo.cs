@@ -69,13 +69,13 @@ public class DefenceInfo : ScriptableObject
         switch (defenceType)
         {
             case DefenceType.Light:
-                return Pick(attackType, 1f, 1.5f, 1f, 0.75f);
+                return Pick(attackType, 1f, 1.3f, 1f, 0.7f);
             case DefenceType.Normal:
-                return Pick(attackType, 1f, 1f, 0.75f, 1.5f);
+                return Pick(attackType, 1f, 1f, 0.7f, 1.3f);
             case DefenceType.Armored:
-                return Pick(attackType, 1f, 0.5f, 1.5f, 1f);
+                return Pick(attackType, 1f, 0.7f, 1.3f, 1f);
             case DefenceType.Ethereal:
-                return Pick(attackType, 1f, 1.25f, 0.5f, 1.25f);
+                return Pick(attackType, 1f, 1.3f, 0.7f, 1f);
             default:
                 return 1f;
         }

@@ -10,9 +10,7 @@ public abstract class TileItem : Item, ITileItem
 
     // ---- 강화 (타일 객체마다, 주사위 코인). 레벨 1 시작, 최대 = ItemData.MaxLevel
     public int upgradeLevel = 1;
-    // (2026-11-21) 레벨 보너스 (킹 패시브 드워프 룬 대장장이: 버프 칸 룬 +N, 최대 레벨을 넘김). 강화·타일 색은 upgradeLevel 기준
-    public int bonusLevel;
-    public int EffectiveLevel => upgradeLevel + bonusLevel;
+    public int EffectiveLevel => upgradeLevel;
     public static readonly float[] UPGRADE_CHANCES = { 70f, 50f }; // Lv1→2, Lv2→3 (이후는 마지막 값)
     public static int GetUpgradeCost(int baseDiceCoin, int curLevel) => baseDiceCoin * (curLevel + 1);
     public static float GetUpgradeChance(int curLevel) => UPGRADE_CHANCES[Mathf.Clamp(curLevel - 1, 0, UPGRADE_CHANCES.Length - 1)];
@@ -102,20 +100,6 @@ public abstract class TileItem : Item, ITileItem
         return TryUpgrade(-1f); // 확률 판정 없이 (roll < 확률)
     }
 
-    // 보너스 레벨 변경: 올라간 유닛이 있으면 효과를 뺐다가 새 수치로 다시 건다 (TryUpgrade와 같은 방식)
-    public void SetBonusLevel(int bonus)
-    {
-        if (bonusLevel == bonus)
-            return;
-        ITileObject obj = tile != null ? tile.tileObject : null;
-        if (obj != null)
-            OnExit(obj);
-        bonusLevel = bonus;
-        ApplyLevel();
-        if (obj != null)
-            OnEnter(obj);
-    }
-
     public override void OnEquip()
     {
         if (tile == null)
@@ -155,7 +139,7 @@ public abstract class TileItem : Item, ITileItem
     // null = 일반 후보 (랜덤으로 3개 안에 들 수도 있음). 값이 있으면 뽑기마다 그 확률(%)로 선택지에 확정 등장, 실패하면 후보에서 빠짐
     public virtual float? DrawChance => null;
 
-    // 획득할 때 설치할 타일을 골라야 하는지 (SelectItemCanvas)
+    // 획득할 때 설치할 타일을 골라야 하는지 (SelectRuneCanvas)
     public virtual bool NeedTile => true;
 
     // 타일 선택 단계에서 이 타일을 고를 수 있는지 / 못 고를 때 토스트 key

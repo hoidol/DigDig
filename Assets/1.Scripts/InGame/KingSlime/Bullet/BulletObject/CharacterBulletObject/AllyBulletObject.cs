@@ -98,10 +98,6 @@ public class AllyBulletObject : BulletObject
         allyUnitDamageData.damage = finalDamage;
         hit.TakeDamage(allyUnitDamageData);
 
-        // 권능 분열의 파편: 이 탄이 적을 처치했으면 두 갈래로
-        if (AuthoritySystem.Has<SplitShardAuthority>() && hit is Enemy killed && killed.CurHp <= 0)
-            SplitShardAuthority.Split(this, hit.Transform.position, direction);
-
         bool shouldRelease = true;
         foreach (var b in behaviors)
         {

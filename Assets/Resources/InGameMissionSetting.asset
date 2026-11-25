@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f70a1a87d8f254cd9b59327cfc864590, type: 3}
+  m_Name: InGameMissionSetting
+  m_EditorClassIdentifier: Assembly-CSharp::InGameMissionSetting
+  missions:
+  - rid: 7584175545014550614
+  - rid: 7584175545014550615
+  - rid: 7584175545014550616
+  - rid: 7584175545014550617
+  - rid: 7584175545014550618
+  references:
+    version: 2
+    RefIds:
+    - rid: 7584175545014550614
+      type: {class: ClearWaveWithMinionsMission, ns: , asm: Assembly-CSharp}
+      data:
+        rewardDiceCoin: 1
+        customTitle: 
+        waveNumber: 1
+        maxMinionCount: 1
+    - rid: 7584175545014550615
+      type: {class: PlaceMinionsMission, ns: , asm: Assembly-CSharp}
+      data:
+        rewardDiceCoin: 1
+        customTitle: 
+        minLevel: 1
+        exactLevel: 1
+        count: 5
+        distinctKeys: 1
+    - rid: 7584175545014550616
+      type: {class: PlaceMinionsMission, ns: , asm: Assembly-CSharp}
+      data:
+        rewardDiceCoin: 1
+        customTitle: 
+        minLevel: 2
+        exactLevel: 1
+        count: 5
+        distinctKeys: 1
+    - rid: 7584175545014550617
+      type: {class: PlaceMinionsMission, ns: , asm: Assembly-CSharp}
+      data:
+        rewardDiceCoin: 1
+        customTitle: 
+        minLevel: 3
+        exactLevel: 0
+        count: 1
+        distinctKeys: 0
+    - rid: 7584175545014550618
+      type: {class: ClearWaveWithMinionsMission, ns: , asm: Assembly-CSharp}
+      data:
+        rewardDiceCoin: 1
+        customTitle: 
+        waveNumber: 5
+        maxMinionCount: 4

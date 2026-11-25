@@ -61,6 +61,9 @@ public class MinionTestWindow : EditorWindow
         benchNoEliteBoss = EditorPrefs.GetBool(PREFS + "benchNoEliteBoss", true);
         benchNoDefence = EditorPrefs.GetBool(PREFS + "benchNoDefence", true);
         benchUsedOnly = EditorPrefs.GetBool(PREFS + "benchUsedOnly", false);
+        heroIdx = EditorPrefs.GetInt(PREFS + "heroIdx", 0);
+        heroLevel = EditorPrefs.GetInt(PREFS + "heroLevel", GameSetting.KING_MAX_LEVEL);
+        heroEnhance = EditorPrefs.GetBool(PREFS + "heroEnhance", false);
         EditorApplication.update += OnEditorUpdate;
         EditorApplication.playModeStateChanged += OnPlayModeChanged;
     }
@@ -91,6 +94,9 @@ public class MinionTestWindow : EditorWindow
         EditorPrefs.SetBool(PREFS + "benchNoEliteBoss", benchNoEliteBoss);
         EditorPrefs.SetBool(PREFS + "benchNoDefence", benchNoDefence);
         EditorPrefs.SetBool(PREFS + "benchUsedOnly", benchUsedOnly);
+        EditorPrefs.SetInt(PREFS + "heroIdx", heroIdx);
+        EditorPrefs.SetInt(PREFS + "heroLevel", heroLevel);
+        EditorPrefs.SetBool(PREFS + "heroEnhance", heroEnhance);
     }
 
     void OnPlayModeChanged(PlayModeStateChange state)
@@ -138,6 +144,7 @@ public class MinionTestWindow : EditorWindow
         scroll = EditorGUILayout.BeginScrollView(scroll);
         EditorGUI.BeginChangeCheck();
         DrawBenchmark();
+        DrawHero();
         DrawSpawn();
         DrawSelected();
         DrawConvenience();
@@ -193,6 +200,84 @@ public class MinionTestWindow : EditorWindow
         }
         EditorGUILayout.HelpBox($"선택 Key = 아래 '미니언 소환'의 Key. 결과: {path}\n측정 중엔 킹 무적·킹 공격 끔·권능 끔·킹 성장 능력 제거(둘 다 다시 안 생김), 필드 미니언·적은 정리됨. Unity 창이 뒤에 있으면 느려질 수 있음.", MessageType.None);
     }
+
+    // ---------------- (2026-11-25) 용사 테스트 ----------------
+    // 용사 장착(레벨·스킬 해방·스킬 강화) · 에너지 채우기 · 스킬 바로 쓰기 · 피해 측정 (HeroDamageBenchmark)
+    int heroIdx, heroLevel;
+    bool heroEnhance;
+
+    void DrawHero()
+    {
+        Header("용사 테스트");
+        AbilityData[] heroes = KingGrowthSetting.Instance != null ? KingGrowthSetting.Instance.heroAbilities.Where(h => h != null).ToArray() : new AbilityData[0];
+        if (heroes.Length == 0)
+        {
+            EditorGUILayout.HelpBox("KingGrowthSetting.heroAbilities 비어 있음", MessageType.Warning);
+            return;
+        }
+        heroIdx = Mathf.Clamp(EditorGUILayout.Popup("용사", heroIdx, heroes.Select(h => $"{h.title} ({h.key})").ToArray()), 0, heroes.Length - 1);
+        heroLevel = EditorGUILayout.IntSlider("킹 레벨", heroLevel, 1, GameSetting.KING_MAX_LEVEL);
+        heroEnhance = EditorGUILayout.Toggle("1·2단계 스킬 강화", heroEnhance);
+        AbilityData selected = heroes[heroIdx];
+        HeroKingAbility hero = KingSlime.Instance.abilityInventory.Get<HeroKingAbility>();
+
+        if (HeroDamageBenchmark.IsRunning)
+        {
+            EditorGUILayout.HelpBox("측정 중: " + HeroDamageBenchmark.Progress, MessageType.Info);
+            if (GUILayout.Button("중지"))
+                HeroDamageBenchmark.Stop();
+            return;
+        }
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("용사 장착 (지금 레벨까지 스킬 해방)"))
+                HeroDamageBenchmark.EquipHero(selected, heroLevel, heroEnhance);
+            GUI.enabled = hero != null;
+            if (GUILayout.Button("에너지 채우기"))
+                hero.FillChargesForTest();
+            GUI.enabled = true;
+        }
+        if (hero != null)
+        {
+            EditorGUILayout.LabelField($"지금: {hero.data?.title} Lv.{hero.HeroLevel} · 에너지 {hero.Charges}/{hero.MaxCharges} · 킹 공격력 {KingSlime.Instance.statMgr.AttackPower:0.#} · 킹 피해 {DamageMeterSystem.KingTotalDamage:N0}", EditorStyles.miniLabel);
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                for (int i = 0; i < HeroKingAbility.SKILL_COUNT; i++)
+                {
+                    GUI.enabled = hero.IsSkillUnlocked(i);
+                    if (GUILayout.Button($"{i + 1}. {hero.GetSkillName(i)}"))
+                        UseHeroSkill(hero, i);
+                }
+                GUI.enabled = true;
+            }
+        }
+
+        EditorGUILayout.Space(4);
+        EditorGUILayout.LabelField($"피해 측정: 미니언 없이 킹 혼자 칸 {HeroDamageBenchmark.TILE_INDEX}, wave {benchWave} (위 피해 측정의 wave·엘리트·상성 옵션 공용)", EditorStyles.miniLabel);
+        bool ready = GameManager.Instance.IsGameStarted && GameManager.Instance.isPlaying;
+        GUI.enabled = ready;
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button($"선택 용사 측정"))
+                HeroDamageBenchmark.Run(new[] { selected }, benchWave, heroLevel, heroEnhance, benchNoEliteBoss, benchNoDefence);
+            if (GUILayout.Button("전체 용사 측정"))
+                HeroDamageBenchmark.Run(heroes, benchWave, heroLevel, heroEnhance, benchNoEliteBoss, benchNoDefence);
+        }
+        GUI.enabled = true;
+        string path = HeroDamageBenchmark.GetOutputPath(benchWave);
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            GUI.enabled = System.IO.File.Exists(path);
+            if (GUILayout.Button("엑셀 열기"))
+                EditorUtility.OpenWithDefaultApp(path);
+            GUI.enabled = true;
+            if (GUILayout.Button("엑셀 다시 만들기"))
+                HeroDamageBenchmark.RewriteExcel(benchWave);
+        }
+    }
+
+    static void UseHeroSkill(HeroKingAbility hero, int idx) =>
+        Debug.Log($"[용사 테스트] {hero.GetSkillName(idx)} → {GameTestUtil.UseHeroSkill(hero, idx)}");
 
     // ---------------- 소환 ----------------
     void DrawSpawn()
@@ -387,8 +472,9 @@ public class MinionTestWindow : EditorWindow
                 continue;
             if (enemyType == EnemyType.Normal)
             {
-                enemy.Spawn(field.GetNormalSpawnPosition(), wave);
-                enemy.pathIdx = field.NormalStartPathIdx;
+                Transform[] route = field.NextNormalRoute();
+                enemy.Spawn(route[0].position, wave);
+                enemy.SetRoute(route);
             }
             else
                 enemy.Spawn(field.GetSpawnPosition(), wave);

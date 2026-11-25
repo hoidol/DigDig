@@ -1,6 +1,9 @@
 // 적중할 때마다 슬로우 중첩 +1 (효과 하나당 최대 MAX_SLOW_STACK), 재적용 시 시간 갱신. 끝나면 쌓은 중첩을 한 번에 해제
+// (2026-11-25) 발밑 둔화 표시 (EffectKey "Slow" = SlowFeetView)
 public class SlowEffect : StatusEffect
 {
+    public const string EFFECT_KEY = "Slow";
+    public override string EffectKey => EFFECT_KEY;
     int stackCount;
 
     public SlowEffect(float duration)

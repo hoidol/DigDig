@@ -1,7 +1,6 @@
 Type	InitGoal	IncreaseGoal	RewardType	RewardValue
 KillEnemy	80	40	Gold	100
 TryStage	1	2	Gold	100
-LevelUpMinion	2	1	Gold	100
 DrawMinion	3	3	Gold	100
 SpawnMinion	20	10	Gold	100
 MergeMinion	10	5	Gold	100

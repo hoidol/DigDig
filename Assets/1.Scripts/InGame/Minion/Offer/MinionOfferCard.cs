@@ -20,7 +20,9 @@ public class MinionOfferCard : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     bool affordable = true;
     RectTransform ghost; // 드래그 중 따라다니는 그림
 
-    public void SetData(MinionOfferSystem system, int handIdx, MinionData data, int mergeLevel, int price, bool affordable)
+    static readonly Color DiscountPriceColor = new Color(0.45f, 1f, 0.45f); // (2026-11-25) 용사 강화로 가격이 깎인 카드
+
+    public void SetData(MinionOfferSystem system, int handIdx, MinionData data, int mergeLevel, int price, bool affordable, bool discounted = false)
     {
         if (mergeLvText != null)
             mergeLvText.text = MinionGameStatePanel.GetMergeLevelText(mergeLevel);
@@ -34,7 +36,7 @@ public class MinionOfferCard : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (priceText != null)
         {
             priceText.text = price.ToString();
-            priceText.color = affordable ? Color.white : Color.red;
+            priceText.color = !affordable ? Color.red : discounted ? DiscountPriceColor : Color.white;
         }
     }
 

@@ -13,7 +13,6 @@ public class SheetDownloadSetting : ScriptableObject
     [Tooltip("항목의 sheetId가 비어 있으면 사용. 시트 URL의 /d/ 와 /edit 사이 값")]
     public string defaultSheetId;
     //public string gId = "1244868266";
-    // 슬라임 강화 데이터는 등급별 탭 → entries에 Json/MinionEnhance/MinionEnhance_{등급}.csv로 각각 등록
     public Entry[] entries = Array.Empty<Entry>();
 
     // 슬라임 전용 (sheetId는 defaultSheetId 사용, gid를 비우면 건너뜀)

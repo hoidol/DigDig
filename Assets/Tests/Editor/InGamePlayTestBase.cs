@@ -140,6 +140,7 @@ public abstract class InGamePlayTestBase
         MuteAudio(true); // 플레이 시작 직후 나는 소리(BGM)부터 막는다
         SessionState.SetBool(TutorialManager.DISABLE_FOR_TEST_KEY, true); // 튜토리얼(로비 → InGame 이동 포함)은 시작 전에 꺼야 함
         BackupSaves();
+        DataTableImporter.ImportChanged(); // (2026-11-24) 바뀐 CSV를 데이터 에셋에 반영 (테스트의 플레이 진입은 Play 버튼 자동 반영이 안 돌 수 있음)
         EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
     }
 
@@ -154,7 +155,11 @@ public abstract class InGamePlayTestBase
         double timeout = EditorApplication.timeSinceStartup + START_TIMEOUT;
         while (UserDataManager.Instance == null || BlockCanvas.Instance == null || ProductManager.Instance == null
             || MinionManager.Instance == null || !MinionManager.Instance.LoadTask.Status.IsCompleted()
-            || AuthorityManager.Instance == null || !AuthorityManager.Instance.LoadTask.Status.IsCompleted())
+            // LobbyManager.Start가 기다리는 로드 (끝나야 로비 레벨업 처리까지 마침 → 테스트가 바꾼 경험치를 로비가 다시 처리하지 않음)
+            || StageManager.Instance == null || !StageManager.Instance.LoadTask.Status.IsCompleted()
+            || BulletManager.Instance == null || !BulletManager.Instance.LoadTask.Status.IsCompleted()
+            || ItemManager.Instance == null || !ItemManager.Instance.LoadTask.Status.IsCompleted()
+            || EnemyManager.Instance == null || !EnemyManager.Instance.LoadTask.Status.IsCompleted())
         {
             Assert.Less(EditorApplication.timeSinceStartup, timeout, "로비가 시작되지 않음");
             Unpause();
@@ -251,6 +256,15 @@ public abstract class InGamePlayTestBase
         int idx = GameManager.Instance.waveIdx;
         GameManager.Instance.CurrentWave.waveTimer = 0f;
         GameManager.Instance.mainWaveTimer = 0.01f;
+        // 카드 소환 모드: wave 시간 제한이 없으므로 남은 소환 취소 + 필드 적 제거로 클리어 (보스 wave는 보스 처치까지 그대로)
+        Wave wave = GameManager.Instance.CurrentWave;
+        if (GameSetting.USE_WAVE_MINION_OFFER && wave != null && wave.waveType != WaveType.Boss)
+        {
+            wave.isSpawnEnd = true;
+            if (!wave.isEnd)
+                wave.EndWave();
+            EnemyFieldController.Instance.ClearAllEnemies();
+        }
         double end = EditorApplication.timeSinceStartup + WAVE_SKIP_TIMEOUT;
         while (GameManager.Instance.waveIdx == idx && EditorApplication.timeSinceStartup < end)
             yield return WaitRealtime(0f);
@@ -269,6 +283,9 @@ public abstract class InGamePlayTestBase
 
     protected static Minion SpawnMinion(string key, Tile tile, int lv = 0)
     {
+        // (2026-11-24) 게임에서 쓰는 미니언만 데이터를 로드함 (AddressableResources/MinionData/Data) → 옛 미니언 테스트는 건너뜀
+        if (!MinionManager.Instance.minionDataDic.ContainsKey(key))
+            Assert.Ignore($"{key} 미니언 데이터가 로드되지 않음 (게임에서 안 쓰는 미니언)");
         Minion minion = KingSlime.Instance.AddMinion(key, lv);
         tile.SetTileObject(minion);
         return minion;

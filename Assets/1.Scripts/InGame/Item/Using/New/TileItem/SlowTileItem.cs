@@ -4,7 +4,7 @@ using UnityEngine;
 public class SlowTileItem : TileItem //타일 위에 설치되는 아이템
 {
     public float chance = 30f;
-    public float duration = 2f;
+    public float duration = 3f; // (2026-11-25) 2 → 3초
 
     protected override void ApplyLevelValue(float v)
     {

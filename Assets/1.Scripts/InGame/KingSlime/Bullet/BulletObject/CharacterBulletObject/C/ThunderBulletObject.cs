@@ -46,7 +46,6 @@ public class ThunderBulletObject : AllyBulletObject
         transform.position = strikePos;
         EffectManager.Instance.Play(EffectType.Thunder, strikePos);
         SoundManager.Play(SFXType.Thunder);
-        EmberBrazierAuthority.OnZoneDamage(strikePos, thunderBulletSpec.strikeRadius, damage * damageMultiplier, thunderBulletSpec.hitLayerMask);
 
         IHittable[] targets = Physics2D.OverlapCircleAll(strikePos, thunderBulletSpec.strikeRadius, thunderBulletSpec.hitLayerMask)
             .Select(c => c.GetComponent<IHittable>())

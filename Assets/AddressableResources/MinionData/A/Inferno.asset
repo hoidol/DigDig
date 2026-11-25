@@ -17,100 +17,11 @@ MonoBehaviour:
   growth: 1
   attackType: 2
   tags: 2
-  commonMinionEnhanceInfos:
-  - level: 0
-    minionStats:
-    - statType: 0
-      values:
-      - 0
-      - 0
-  - level: 1
-    minionStats:
-    - statType: 0
-      values:
-      - 0
-      - 0
-  - level: 2
-    minionStats:
-    - statType: 0
-      values:
-      - 0
-      - 0
-  - level: 3
-    minionStats:
-    - statType: 0
-      values:
-      - 0
-      - 0
-  - level: 4
-    minionStats:
-    - statType: 0
-      values:
-      - 7.00
-      - 7.00
-  - level: 5
-    minionStats:
-    - statType: 0
-      values:
-      - 8.00
-      - 8.00
-  - level: 6
-    minionStats:
-    - statType: 0
-      values:
-      - 9.00
-      - 9.00
-  - level: 7
-    minionStats:
-    - statType: 0
-      values:
-      - 10.00
-      - 10.00
-  - level: 8
-    minionStats:
-    - statType: 0
-      values:
-      - 11.00
-      - 11.00
-  - level: 9
-    minionStats:
-    - statType: 0
-      values:
-      - 12.00
-      - 12.00
-  - level: 10
-    minionStats:
-    - statType: 0
-      values:
-      - 13.00
-      - 13.00
-  - level: 11
-    minionStats:
-    - statType: 0
-      values:
-      - 14.00
-      - 14.00
-  - level: 12
-    minionStats:
-    - statType: 0
-      values:
-      - 15.00
-      - 15.00
-  - level: 13
-    minionStats:
-    - statType: 0
-      values:
-      - 16.00
-      - 16.00
-  - level: 14
-    minionStats:
-    - statType: 0
-      values:
-      - 17.00
-      - 17.00
   attackPowerRandomRatio: 0
   hasSkill: 1
   offerDiceCoinPrice: 2
+  buyCurrencyType: 0
+  buyPrice: 0
   reinforceAttackPowerPercent: 5
   attackSfx:
     name: 
@@ -125,8 +36,14 @@ MonoBehaviour:
   prefab: {fileID: 1358385290756183109, guid: 17add7f164a343a09c081355752c0be2, type: 3}
   unlockConditions: []
   thum: {fileID: -6182518920641396402, guid: f0c46fdae5ce8483187223142991eb3c, type: 3}
+  evolvedSprite: {fileID: 0}
+  evolutions: []
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
+  - statType: 0
+    values:
+    - 7.00
+    - 7.00
   - statType: 2
     values:
     - 30

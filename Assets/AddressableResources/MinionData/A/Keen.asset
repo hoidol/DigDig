@@ -18,100 +18,11 @@ MonoBehaviour:
   growth: 1
   attackType: 1
   tags: 8
-  commonMinionEnhanceInfos:
-  - level: 0
-    minionStats:
-    - statType: 0
-      values:
-      - 0
-      - 0
-  - level: 1
-    minionStats:
-    - statType: 0
-      values:
-      - 0
-      - 0
-  - level: 2
-    minionStats:
-    - statType: 0
-      values:
-      - 0
-      - 0
-  - level: 3
-    minionStats:
-    - statType: 0
-      values:
-      - 0
-      - 0
-  - level: 4
-    minionStats:
-    - statType: 0
-      values:
-      - 14.00
-      - 14.00
-  - level: 5
-    minionStats:
-    - statType: 0
-      values:
-      - 15.00
-      - 15.00
-  - level: 6
-    minionStats:
-    - statType: 0
-      values:
-      - 16.00
-      - 16.00
-  - level: 7
-    minionStats:
-    - statType: 0
-      values:
-      - 17.00
-      - 17.00
-  - level: 8
-    minionStats:
-    - statType: 0
-      values:
-      - 18.00
-      - 18.00
-  - level: 9
-    minionStats:
-    - statType: 0
-      values:
-      - 19.00
-      - 19.00
-  - level: 10
-    minionStats:
-    - statType: 0
-      values:
-      - 20.00
-      - 20.00
-  - level: 11
-    minionStats:
-    - statType: 0
-      values:
-      - 21.00
-      - 21.00
-  - level: 12
-    minionStats:
-    - statType: 0
-      values:
-      - 22.00
-      - 22.00
-  - level: 13
-    minionStats:
-    - statType: 0
-      values:
-      - 23.00
-      - 23.00
-  - level: 14
-    minionStats:
-    - statType: 0
-      values:
-      - 24.00
-      - 24.00
   attackPowerRandomRatio: 0
   hasSkill: 0
   offerDiceCoinPrice: 2
+  buyCurrencyType: 0
+  buyPrice: 0
   reinforceAttackPowerPercent: 5
   attackSfx:
     name: 
@@ -126,8 +37,14 @@ MonoBehaviour:
   prefab: {fileID: 1358385290756183109, guid: eb450315587a4eec82488f48d58f4ff5, type: 3}
   unlockConditions: []
   thum: {fileID: 3601112591215404106, guid: 8ffafa91187134fec8449e2570573aa6, type: 3}
+  evolvedSprite: {fileID: 0}
+  evolutions: []
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
+  - statType: 0
+    values:
+    - 14.00
+    - 14.00
   - statType: 2
     values:
     - 40

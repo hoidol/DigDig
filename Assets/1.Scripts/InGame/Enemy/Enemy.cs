@@ -52,7 +52,9 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
     public EnemyDamageData damageData = new EnemyDamageData();
     // public TMP_Text hpText;
-    public int pathIdx; // 경로 모드에서 다음에 향할 EnemyFieldController.paths 인덱스
+    public int pathIdx; // 다음에 향할 route 지점 인덱스
+    // (2026-11-24) 이 적이 걷는 경로 (출발 → 도착). Spawn 때 기본 = 주 경로(EnemyFieldController.MainRoute), 일반 적은 SetRoute로 갈래 지정
+    [System.NonSerialized] public Transform[] route;
     Vector2 moveDir; // pathIdx 지점으로 전환할 때 캐싱한 이동 방향 (목표 지점을 지나쳤는지 판정용)
     int moveDirIdx = -1; // moveDir가 어느 pathIdx 기준인지. -1이면 다시 계산
     [SerializeField] private  EnemyDefence enemyDefence;
@@ -99,8 +101,13 @@ public abstract class Enemy : MonoBehaviour, IHittable
     // 마지막으로 피해를 준 아군 (처치 판정용, 스폰마다 초기화)
     public IAllyUnit LastAttacker { get; private set; }
 
+    // (2026-11-24) 소환 순서 (게임 전체 통틀어 증가). 타겟 방식 First = 사거리 안에서 이 값이 가장 작은 적
+    static long spawnOrderCounter;
+    public long SpawnOrder { get; private set; }
+
     public virtual void Spawn(Vector2 pos, int wave)
     {
+        SpawnOrder = ++spawnOrderCounter;
         LastAttacker = null;
         this.wave = wave;
         killedBy = null;
@@ -113,6 +120,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
         rg2d.linearVelocity = Vector2.zero;
         statusEffectHandler?.Reset();
         pathIdx = 0;
+        route = EnemyFieldController.Instance != null ? EnemyFieldController.Instance.MainRoute : null;
         moveDirIdx = -1;
         blockerCount = 0;
         SpawnId++;
@@ -219,12 +227,20 @@ public abstract class Enemy : MonoBehaviour, IHittable
 
     const float PATH_ARRIVE_DISTANCE = 0.1f;
 
-    // paths[pathIdx]를 향해 이동, 도착하면 다음 지점으로. 마지막 지점 도착 시 ReachPathEnd
+    // 경로 지정 (일반 적 = 소환 지점마다 다른 갈래). startIdx = 처음 향할 지점 (보통 0 = 출발 지점, 이미 그 자리에 있으면 바로 다음으로)
+    public void SetRoute(Transform[] newRoute, int startIdx = 0)
+    {
+        route = newRoute;
+        pathIdx = startIdx;
+        moveDirIdx = -1;
+    }
+
+    // route[pathIdx]를 향해 이동, 도착하면 다음 지점으로. 마지막 지점 도착 시 ReachPathEnd
     // 방향은 지점 전환 시 한 번만 계산(moveDir)하고, 남은 거리를 그 방향으로 투영해서
     // 0 이하(= 지나침)거나 이번 프레임 이동량 이하면 지점에 스냅 후 다음 지점으로 → 목표를 넘어가지 않음
     public virtual void UpdateMoving()
     {
-        Transform[] paths = EnemyFieldController.Instance.paths;
+        Transform[] paths = route ?? EnemyFieldController.Instance.MainRoute;
         float speed = enemyData.moveSpeed * (statusEffectHandler != null ? statusEffectHandler.SlowRate : 1f);
         float arriveDist = Mathf.Max(PATH_ARRIVE_DISTANCE, speed * Time.deltaTime);
 
@@ -293,13 +309,13 @@ public abstract class Enemy : MonoBehaviour, IHittable
         float multiplier = enemyDefence.CalculateDamage(damage);
         // 낙인 중첩만큼 받는 피해 증가 (모든 공격)
         if (statusEffectHandler != null)
-            multiplier *= statusEffectHandler.StigmaDamageMul;
+            multiplier *= statusEffectHandler.StigmaDamageMul * statusEffectHandler.CurseDamageMul;
         // 피해 숫자 연출용: 방어 타입 표 배율(약점·내성, 만능은 1)과 최대 체력(피해량 비례 크기)
         float typeMultiplier = damage.IgnoreDefence ? 1f : DefenceInfo.Get(damage.attackType, defenceType);
         float prevHp = curHp;
         curHp = Mathf.Max(0, curHp - damage.ApplyDamage(hpPoint.transform.position, multiplier, typeMultiplier, maxHp));
         // 피해 집계: 실제로 줄어든 체력만 (마무리 일격의 넘친 피해 제외)
-        DamageMeterSystem.Record(damage.Attacker, prevHp - curHp);
+        DamageMeterSystem.Record(damage, prevHp - curHp);
         if (damage.Attacker != null)
             LastAttacker = damage.Attacker; // (2026-11-21) 마지막으로 때린 아군 (경험치 룬: 처치한 유닛 판정)
         // if (curHp > 1)

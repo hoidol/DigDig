@@ -8,19 +8,12 @@ public class DrainItem : Item
 
     void OnEnable()
     {
-        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
     }
 
     void OnDisable()
     {
-        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
-    }
-
-    void OnDestroyedStoneEvent(DestroyedStoneEvent e)
-    {
-        OnKill();
     }
 
     void OnEnemyDeadEvent(EnemyDeadEvent e)

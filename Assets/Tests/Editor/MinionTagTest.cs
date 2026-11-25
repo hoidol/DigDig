@@ -37,16 +37,6 @@ public class MinionTagTest
         Assert.AreEqual(0, MinionTags.CountMatching(equipped, MinionTag.None));
     }
 
-    // 권능 matchTags: 태그 중 하나라도 가진 슬라임 수 (권능 정보 창 "해당 슬라임 N/5")
-    [Test]
-    public void Authority_CountMatchingMinions_AnyTag()
-    {
-        var equipped = new[] { MinionTag.Zone | MinionTag.Heavy, MinionTag.Shooter | MinionTag.Heavy, MinionTag.Zone, MinionTag.Support, MinionTag.Orbit | MinionTag.Status };
-        Assert.AreEqual(4, AuthorityData.CountMatchingMinions(MinionTag.Zone | MinionTag.Heavy | MinionTag.Status, equipped));
-        Assert.AreEqual(2, AuthorityData.CountMatchingMinions(MinionTag.Heavy, equipped));
-        Assert.AreEqual(0, AuthorityData.CountMatchingMinions(MinionTag.None, equipped), "matchTags 없으면 0");
-    }
-
     // 모든 슬라임: 아는 태그만, 형태는 정확히 하나
     [Test]
     public void Csv_EveryMinionHasOneForm()

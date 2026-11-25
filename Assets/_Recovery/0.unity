@@ -4581,7 +4581,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1334774988}
-        m_TargetAssemblyTypeName: SelectItemPanel, Assembly-CSharp
+        m_TargetAssemblyTypeName: SelectRunePanel, Assembly-CSharp
         m_MethodName: OnClickedButton
         m_Mode: 1
         m_Arguments:
@@ -13676,7 +13676,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bde51621221d4a529e583da9b249f3a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectItemPanel
+  m_EditorClassIdentifier: Assembly-CSharp::SelectRunePanel
   itemData: {fileID: 0}
   thumImage: {fileID: 1565341479}
   titleText: {fileID: 603462577}
@@ -43043,7 +43043,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 354585451}
-        m_TargetAssemblyTypeName: SelectItemPanel, Assembly-CSharp
+        m_TargetAssemblyTypeName: SelectRunePanel, Assembly-CSharp
         m_MethodName: OnClickedButton
         m_Mode: 1
         m_Arguments:
@@ -45162,7 +45162,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1406986412}
-        m_TargetAssemblyTypeName: SelectItemPanel, Assembly-CSharp
+        m_TargetAssemblyTypeName: SelectRunePanel, Assembly-CSharp
         m_MethodName: OnClickedButton
         m_Mode: 1
         m_Arguments:
@@ -49336,7 +49336,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bde51621221d4a529e583da9b249f3a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectItemPanel
+  m_EditorClassIdentifier: Assembly-CSharp::SelectRunePanel
   itemData: {fileID: 0}
   thumImage: {fileID: 841121826}
   titleText: {fileID: 946494370}
@@ -51712,7 +51712,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3bde51621221d4a529e583da9b249f3a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SelectItemPanel
+  m_EditorClassIdentifier: Assembly-CSharp::SelectRunePanel
   itemData: {fileID: 0}
   thumImage: {fileID: 276843292}
   titleText: {fileID: 624790338}

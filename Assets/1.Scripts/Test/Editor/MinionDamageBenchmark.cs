@@ -104,7 +104,6 @@ public static class MinionDamageBenchmark
         prevTimeScale = Time.timeScale;
         warnedFileLocked = false;
 
-        AuthoritySystem.End(); // 권능 효과 없이 미니언만 측정
         KingSlime.Instance.enabled = false; // 킹 공격(Weapon) 끔
         // 킹 성장 능력 전부 제거 (패시브 공격·버프 칸 없이 미니언만 측정, 다시 안 생김)
         foreach (KingAbility a in KingSlime.Instance.abilityInventory.Abilities.ToList())

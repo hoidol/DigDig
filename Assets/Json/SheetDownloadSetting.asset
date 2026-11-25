@@ -15,6 +15,11 @@ MonoBehaviour:
   defaultSheetId: 1Y-bovBOgOlQgM5y6pn4SOQdC5OGJN3VEJ9N72nxN-xo
   entries:
   - enabled: 1
+    csvPath: Json/HeroData.csv
+    sheetId: 
+    gid: 754105383
+    range: 
+  - enabled: 1
     csvPath: Json/KingSlimeData.csv
     sheetId: 
     gid: 1244868266
@@ -25,11 +30,6 @@ MonoBehaviour:
     gid: 148161990
     range: A:E
   - enabled: 1
-    csvPath: Json/AuthorityData.csv
-    sheetId: 
-    gid: 383982687
-    range: 
-  - enabled: 1
     csvPath: Json/ItemData.csv
     sheetId: 
     gid: 1944029805
@@ -39,11 +39,6 @@ MonoBehaviour:
     sheetId: 
     gid: 1419668517
     range: A:J
-  - enabled: 1
-    csvPath: Json/EnhanceLevelInfo.csv
-    sheetId: 
-    gid: 741993365
-    range: A:M
   - enabled: 1
     csvPath: Resources/Json/DailyAchievement.csv
     sheetId: 
@@ -60,29 +55,9 @@ MonoBehaviour:
     gid: 768281207
     range: A:C
   - enabled: 1
-    csvPath: Json/MinionEnhance/MinionEnhance_C.csv
-    sheetId: 
-    gid: 1944598144
-    range: A:C
-  - enabled: 1
-    csvPath: Json/MinionEnhance/MinionEnhance_B.csv
-    sheetId: 
-    gid: 1615882530
-    range: A:C
-  - enabled: 1
-    csvPath: Json/MinionEnhance/MinionEnhance_A.csv
-    sheetId: 
-    gid: 1014026992
-    range: A:C
-  - enabled: 1
-    csvPath: Json/MinionEnhance/MinionEnhance_S.csv
-    sheetId: 
-    gid: 547841506
-    range: A:C
-  - enabled: 1
     csvPath: Json/ReinforceData.csv
     sheetId: 
     gid: 556486007
     range: A:F
   minionGid: 1109237000
-  minionRange: A:O
+  minionRange: A:Z

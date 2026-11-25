@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// KS 관리 화면 상단: 킹 능력치 (기본 + 업그레이드)
+// KS 관리 화면 상단: 킹 능력치 (기본 + 레벨 스탯 포인트)
 public class KSStatStateContainer : MonoBehaviour
 {
     public CurrentKSAbilityInfoPanel[] currentKSAbilityInfoPanels;

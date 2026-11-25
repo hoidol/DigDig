@@ -1,28 +1,30 @@
 using System.Collections;
 using System.Reflection;
-using Cysharp.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-// 슬라임을 다른 슬라임 위에 놓았을 때: 머지가 되면 합성, 안 되면 두 슬라임 자리 교체 (MinionFieldController.Merge)
-// 드래그 입력 대신 놓은 뒤 호출되는 Merge(source, target, originPos)를 직접 호출
+// (2026-11-25 갱신) 카드 소환 모드(MinionFieldController.LockMinionPosition): 한 번 놓은 미니언은 자리 고정
+// - 미니언을 머지가 안 되는 미니언 위에 놓음 → 자리 교체 없이 원위치 (이전: 교체)
+// - 같은 종·같은 머지 레벨 → 합성
+// - 미니언을 빈 칸에 놓음 → 원위치 (빈 칸 이동 없음)
+// - 킹 ↔ 미니언 자리 교체 없음 (원위치), 킹은 빈 칸으로 자유롭게 이동
 public class MergeSwapPlayTest : InGamePlayTestBase
 {
     const int MAX = MinionData.MAX_MERGE_LEVEL;
 
     [UnityTest]
-    public IEnumerator DropOnMinion_MergeOrSwap()
+    public IEnumerator DropOnMinion_MergeOrStay()
     {
         if (!Application.isPlaying) { BeforeEnterPlayMode(); yield return new EnterPlayMode(); }
         yield return WaitGameStart();
+        Assert.IsTrue(MinionFieldController.LockMinionPosition, "카드 소환 모드가 아니면 이 테스트 규칙이 다름");
         yield return Body();
         AssertNoErrors();
     }
 
-    // 킹 ↔ 슬라임: 서로 위에 놓으면 자리 교체 (MinionFieldController.DropAt)
     [UnityTest]
-    public IEnumerator KingSlime_SwapWithMinion()
+    public IEnumerator KingSlime_NoSwap_MovesToEmpty()
     {
         if (!Application.isPlaying) { BeforeEnterPlayMode(); yield return new EnterPlayMode(); }
         yield return WaitGameStart();
@@ -50,134 +52,111 @@ public class MergeSwapPlayTest : InGamePlayTestBase
         Tile kingTile = TileManager.Instance.GetTile(king);
         Assert.IsNotNull(kingTile, "킹이 타일 위에 없음");
 
-        // 1) 킹을 슬라임 위에 놓음 → 교체
+        // 1) 킹을 미니언 위에 놓음 → 교체 없이 원위치
         Tile minionTile = GetFreeTile(kingTile);
         Minion minion = SpawnMinion("Iron", minionTile, 0);
         yield return WaitFrames(2);
         yield return DragDrop(king, minionTile);
-        Assert.AreSame(minionTile, TileManager.Instance.GetTile(king), "킹 → 슬라임: 킹이 슬라임 칸으로 안 감");
-        Assert.AreSame(kingTile, TileManager.Instance.GetTile(minion), "킹 → 슬라임: 슬라임이 킹 칸으로 안 옴");
-        Assert.AreEqual((Vector2)minionTile.transform.position, (Vector2)king.transform.position, "킹 위치");
-        Assert.AreEqual((Vector2)kingTile.transform.position, (Vector2)minion.transform.position, "슬라임 위치");
-        Assert.IsTrue(KingSlime.Instance.minionInventory.curMinions.Contains(minion), "교체인데 슬라임이 사라짐");
+        Assert.AreSame(kingTile, TileManager.Instance.GetTile(king), "킹 → 미니언: 킹은 원래 칸");
+        Assert.AreSame(minionTile, TileManager.Instance.GetTile(minion), "킹 → 미니언: 미니언은 그대로");
+        Assert.AreEqual((Vector2)kingTile.transform.position, (Vector2)king.transform.position, "킹 위치 원위치");
 
-        // 2) 슬라임을 킹 위에 놓음 → 다시 교체 (원래 자리로)
-        yield return DragDrop(minion, minionTile);
-        Assert.AreSame(kingTile, TileManager.Instance.GetTile(king), "슬라임 → 킹: 킹이 원래 칸으로 안 감");
-        Assert.AreSame(minionTile, TileManager.Instance.GetTile(minion), "슬라임 → 킹: 슬라임이 킹 칸으로 안 감");
-        Assert.AreEqual((Vector2)kingTile.transform.position, (Vector2)king.transform.position, "킹 위치");
-        Assert.AreEqual((Vector2)minionTile.transform.position, (Vector2)minion.transform.position, "슬라임 위치");
+        // 2) 미니언을 킹 위에 놓음 → 원위치
+        yield return DragDrop(minion, kingTile);
+        Assert.AreSame(kingTile, TileManager.Instance.GetTile(king), "미니언 → 킹: 킹 그대로");
+        Assert.AreSame(minionTile, TileManager.Instance.GetTile(minion), "미니언 → 킹: 미니언 원위치");
+        Assert.AreEqual((Vector2)minionTile.transform.position, (Vector2)minion.transform.position, "미니언 위치 원위치");
 
-        // 3) 킹이 타일 아이템 칸의 슬라임과 교체 → 아이템 효과가 킹에게, 슬라임에선 빠짐
-        Tile itemTile = GetFreeTile(kingTile, minionTile);
-        KingSlime.Instance.AddItem("AttackPowerTile", itemTile).Forget();
-        yield return WaitFrames(2);
-        Assert.IsNotNull(itemTile.tileItem, "공격력 타일 설치 안 됨");
-        Minion onItem = SpawnMinion("Bounce", itemTile, 0);
-        yield return WaitFrames(2);
-        float buffed = onItem.statDic[StatType.AttackPower];
-        yield return DragDrop(king, itemTile);
-        Assert.AreSame(itemTile, TileManager.Instance.GetTile(king), "아이템 칸: 킹이 안 감");
-        Assert.AreSame(kingTile, TileManager.Instance.GetTile(onItem), "아이템 칸: 슬라임이 안 옴");
-        Assert.Less(onItem.statDic[StatType.AttackPower], buffed, "아이템 칸에서 나간 슬라임에 효과가 남음");
-        Assert.AreSame(itemTile.tileItem, king.shotModifier?.tileItem, "킹에 아이템 칸 연결 안 됨");
-
-        // 4) 빈 칸 이동은 그대로
-        Tile empty = GetFreeTile(kingTile, minionTile, itemTile);
+        // 3) 킹은 빈 칸으로 이동
+        Tile empty = GetFreeTile(kingTile, minionTile);
         yield return DragDrop(king, empty);
         Assert.AreSame(empty, TileManager.Instance.GetTile(king), "킹 빈 칸 이동 안 됨");
-        Assert.IsNull(itemTile.tileObject, "킹이 떠난 칸이 비지 않음");
+        Assert.IsTrue(kingTile.IsEmpty, "킹이 떠난 칸이 비지 않음");
 
         MinionFieldController.Instance.RemoveFieldMinion(minion);
-        MinionFieldController.Instance.RemoveFieldMinion(onItem);
         yield return WaitFrames(2);
     }
 
-    static readonly MethodInfo DROP =typeof(MinionFieldController).GetMethod("Merge",
+    static readonly MethodInfo DROP = typeof(MinionFieldController).GetMethod("Merge",
         BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(Minion), typeof(Minion), typeof(Vector3) }, null);
 
-    static IEnumerator Drop(Minion source, Minion target)
+    static IEnumerator Drop(Minion source, Minion target, Vector3 origin)
     {
-        DROP.Invoke(MinionFieldController.Instance, new object[] { source, target, source.transform.position });
+        DROP.Invoke(MinionFieldController.Instance, new object[] { source, target, origin });
         yield return WaitFrames(3);
+    }
+
+    // 머지가 안 되면 둘 다 그대로 + 끌어온 미니언은 원래 위치로
+    IEnumerator AssertStay(Minion source, Minion target, string label)
+    {
+        Tile sa = TileManager.Instance.GetTile(source), tb = TileManager.Instance.GetTile(target);
+        Vector3 origin = source.transform.position;
+        source.transform.position = target.transform.position; // 끌어다 놓은 상태
+        int mergeCount = MinionFieldController.Instance.mergeCount;
+        yield return Drop(source, target, origin);
+        Assert.AreEqual(mergeCount, MinionFieldController.Instance.mergeCount, $"{label}: 합성되면 안 됨");
+        Assert.AreSame(sa, TileManager.Instance.GetTile(source), $"{label}: 끌어온 미니언은 원래 칸");
+        Assert.AreSame(tb, TileManager.Instance.GetTile(target), $"{label}: 놓인 미니언은 그대로");
+        Assert.AreEqual((Vector2)sa.transform.position, (Vector2)source.transform.position, $"{label}: 원위치");
     }
 
     IEnumerator Body()
     {
         Assert.IsNotNull(DROP, "MinionFieldController.Merge(source, target, originPos) 없음");
 
-        // 1) 다른 종 → 자리 교체 + 타일 아이템 효과도 따라 바뀜 (공격력 타일)
-        Tile itemTile = GetFreeTile();
-        KingSlime.Instance.AddItem("AttackPowerTile", itemTile).Forget();
-        yield return WaitFrames(2);
-        Assert.IsNotNull(itemTile.tileItem, "공격력 타일 설치 안 됨");
-        Tile other = GetFreeTile(itemTile);
-
-        Minion onItem = SpawnMinion("Iron", itemTile, 0);
-        Minion source = SpawnMinion("Bounce", other, 0);
-        yield return WaitFrames(2);
-        float ironBuffed = onItem.statDic[StatType.AttackPower];
-        float bounceBase = source.statDic[StatType.AttackPower];
-
-        yield return Drop(source, onItem);
-        Assert.AreSame(itemTile, TileManager.Instance.GetTile(source), "다른 종: 끌어온 슬라임이 상대 칸으로 안 감");
-        Assert.AreSame(other, TileManager.Instance.GetTile(onItem), "다른 종: 상대 슬라임이 원래 칸으로 안 옴");
-        Assert.AreEqual((Vector2)itemTile.transform.position, (Vector2)source.transform.position, "끌어온 슬라임 위치");
-        Assert.AreEqual((Vector2)other.transform.position, (Vector2)onItem.transform.position, "상대 슬라임 위치");
-        Assert.Greater(source.statDic[StatType.AttackPower], bounceBase, "교체 후 아이템 칸 슬라임에 효과가 안 붙음");
-        Assert.Less(onItem.statDic[StatType.AttackPower], ironBuffed, "교체 후 아이템 칸에서 나간 슬라임에 효과가 남음");
-        Assert.IsTrue(KingSlime.Instance.minionInventory.curMinions.Contains(source) && KingSlime.Instance.minionInventory.curMinions.Contains(onItem), "교체인데 슬라임이 사라짐");
-        MinionFieldController.Instance.RemoveFieldMinion(source);
-        MinionFieldController.Instance.RemoveFieldMinion(onItem);
-        yield return WaitFrames(2);
-
-        // 2) 같은 종·다른 머지 레벨 → 교체
+        // 1) 다른 종 → 교체 없이 원위치
         Tile a = GetFreeTile(), b = GetFreeTile(a);
+        Minion iron = SpawnMinion("Iron", a, 0);
+        Minion bounce = SpawnMinion("Bounce", b, 0);
+        yield return WaitFrames(2);
+        yield return AssertStay(bounce, iron, "다른 종");
+        MinionFieldController.Instance.RemoveFieldMinion(iron);
+        MinionFieldController.Instance.RemoveFieldMinion(bounce);
+        yield return WaitFrames(2);
+
+        // 2) 같은 종·다른 머지 레벨 → 원위치
+        a = GetFreeTile(); b = GetFreeTile(a);
         Minion low = SpawnMinion("Iron", a, 0);
         Minion high = SpawnMinion("Iron", b, 1);
-        yield return Drop(low, high);
-        Assert.AreSame(b, TileManager.Instance.GetTile(low), "다른 레벨: 교체 안 됨");
-        Assert.AreSame(a, TileManager.Instance.GetTile(high), "다른 레벨: 교체 안 됨");
+        yield return WaitFrames(2);
+        yield return AssertStay(low, high, "다른 레벨");
         MinionFieldController.Instance.RemoveFieldMinion(low);
         MinionFieldController.Instance.RemoveFieldMinion(high);
         yield return WaitFrames(2);
 
-        // 3) 최대 레벨끼리(같은 종) → 머지 불가 → 교체
+        // 3) 최대 레벨끼리 → 머지 불가 → 원위치
         a = GetFreeTile(); b = GetFreeTile(a);
         Minion max1 = SpawnMinion("Iron", a, MAX);
         Minion max2 = SpawnMinion("Iron", b, MAX);
-        yield return Drop(max1, max2);
-        Assert.AreSame(b, TileManager.Instance.GetTile(max1), "최대 레벨: 교체 안 됨");
-        Assert.AreSame(a, TileManager.Instance.GetTile(max2), "최대 레벨: 교체 안 됨");
+        yield return WaitFrames(2);
+        yield return AssertStay(max1, max2, "최대 레벨");
         MinionFieldController.Instance.RemoveFieldMinion(max1);
         MinionFieldController.Instance.RemoveFieldMinion(max2);
         yield return WaitFrames(2);
 
-        // 4) 같은 종·같은 레벨 → 합성 (교체 아님): 놓인 칸에 레벨 +1 슬라임, 끌어온 칸은 빔
+        // 4) 같은 종·같은 레벨 → 합성: 놓인 칸에 레벨 +1, 끌어온 칸은 빔
         a = GetFreeTile(); b = GetFreeTile(a);
         Minion m1 = SpawnMinion("Iron", a, 0);
         Minion m2 = SpawnMinion("Iron", b, 0);
+        yield return WaitFrames(2);
         int mergeCount = MinionFieldController.Instance.mergeCount;
-        yield return Drop(m1, m2);
+        yield return Drop(m1, m2, m1.transform.position);
         Assert.AreEqual(mergeCount + 1, MinionFieldController.Instance.mergeCount, "같은 종·같은 레벨인데 합성 안 됨");
         Assert.IsTrue(a.IsEmpty, "합성 후 끌어온 칸이 비지 않음");
         Minion merged = b.tileObject as Minion;
-        Assert.IsNotNull(merged, "합성 결과 슬라임 없음");
+        Assert.IsNotNull(merged, "합성 결과 미니언 없음");
         Assert.AreEqual(1, merged.mergeLevel);
         MinionFieldController.Instance.RemoveFieldMinion(merged);
         yield return WaitFrames(2);
 
-        // 5) 희생은 다른 종과도 합성 (교체 아님)
+        // 5) 미니언을 빈 칸에 놓음 → 원위치 (자리 고정)
         a = GetFreeTile(); b = GetFreeTile(a);
-        Minion sac = SpawnMinion("Sacrifice", a, 0);
-        Minion bounce = SpawnMinion("Bounce", b, 0);
-        mergeCount = MinionFieldController.Instance.mergeCount;
-        yield return Drop(sac, bounce);
-        Assert.AreEqual(mergeCount + 1, MinionFieldController.Instance.mergeCount, "희생 합성이 교체로 처리됨");
-        Minion sacResult = b.tileObject as Minion;
-        Assert.IsNotNull(sacResult);
-        Assert.AreEqual("Bounce", sacResult.key);
-        MinionFieldController.Instance.RemoveFieldMinion(sacResult);
+        Minion fixedMinion = SpawnMinion("Iron", a, 0);
+        yield return WaitFrames(2);
+        yield return DragDrop(fixedMinion, b);
+        Assert.AreSame(a, TileManager.Instance.GetTile(fixedMinion), "미니언 빈 칸 이동은 안 됨 (자리 고정)");
+        Assert.IsTrue(b.IsEmpty);
+        MinionFieldController.Instance.RemoveFieldMinion(fixedMinion);
         yield return WaitFrames(2);
     }
 }

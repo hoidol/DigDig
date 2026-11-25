@@ -97,7 +97,9 @@ public class TileItemPlayTest : InGamePlayTestBase
             Minion minion = null;
             try
             {
-                minion = SpawnMinion(installed is ExpandBuffRangeTileItem ? CROSS_BUFF_MINION : HOST_MINION, tile);
+                // (2026-11-25) 십자 버프 미니언(팔랑이)은 게임에서 빠짐 → 로드 안 됐으면 일반 미니언을 올림
+                bool crossBuff = installed is ExpandBuffRangeTileItem && MinionManager.Instance.minionDataDic.ContainsKey(CROSS_BUFF_MINION);
+                minion = SpawnMinion(crossBuff ? CROSS_BUFF_MINION : HOST_MINION, tile);
             }
             catch (System.Exception e)
             {

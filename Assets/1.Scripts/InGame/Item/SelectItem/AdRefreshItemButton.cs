@@ -48,7 +48,7 @@ public class AdRefreshItemButton : ButtonUI
 
     void Refresh()
     {
-        if (SelectItemCanvas.Instance.RefreshItems())
+        if (SelectRuneCanvas.Instance.RefreshItems())
             remainCount--;
         UpdateButton();
     }

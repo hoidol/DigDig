@@ -1,5 +1,6 @@
 //#define TEST_MODE
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
 
 
@@ -24,6 +25,9 @@ public class StartSetting
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
+        if (IsToolScene())
+            return;
+
         string[] singletonTargets =
         {
             "ItemManager",
@@ -31,7 +35,6 @@ public class StartSetting
             "UserManager",
             "StageManager",
             "EnemyManager",
-            "AuthorityManager",
             "KingSlimeManager",
             "MinionManager",
             "SoundManager",
@@ -67,6 +70,8 @@ public class StartSetting
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void InitializeAfterSceneLoad()
     {
+        if (IsToolScene())
+            return;
 
 #if !PLATFORM_STANDALONE_WIN
         // 프리팹 없이 생성 (설정할 인스펙터 값 없음)
@@ -78,6 +83,17 @@ public class StartSetting
 
 
     // Functions
+    // 개발 도구 씬(EffectMaker: 이펙트 고르기)은 게임 매니저·유저 데이터·사운드를 만들지 않음
+    const string EFFECT_MAKER_SCENE_NAME = "EffectMaker";
+    public static bool IsToolScene()
+    {
+#if UNITY_EDITOR
+        return SceneManager.GetActiveScene().name == EFFECT_MAKER_SCENE_NAME;
+#else
+        return false;
+#endif
+    }
+
     private static void createSingleton(string path)
     {
         var pb = Resources.Load<GameObject>(path);

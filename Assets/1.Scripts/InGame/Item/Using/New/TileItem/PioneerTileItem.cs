@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 개척: 타일에 설치하지 않고, 획득할 때 고른 막힌 칸(SelectItemCanvas 타일 선택) 하나를 해제한다
+// 개척: 타일에 설치하지 않고, 획득할 때 고른 막힌 칸(SelectRuneCanvas 타일 선택) 하나를 해제한다
 // 타일을 지정하지 않고 얻으면(테스트 등) 랜덤 막힌 칸
 public class PioneerTileItem : TileItem //타일 위에 설치되는 아이템
 {

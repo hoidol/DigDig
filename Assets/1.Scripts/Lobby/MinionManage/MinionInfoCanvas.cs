@@ -31,6 +31,8 @@ namespace Lobby
         {
             // 보유했고 아직 장착 안 한 슬라임만 장착 버튼 노출
             equiptButton.SetActive(userMinion.own && !userMinion.Equiping);
+            if (levelUpButton != null)
+                levelUpButton.SetActive(false); // (2026-11-24) 미니언 강화 삭제 → 씬의 강화 버튼은 숨김 (씬에서 지워도 됨)
 
             minionMergeInfoPanel.UpdatePanel();
         }
@@ -45,19 +47,6 @@ namespace Lobby
 
         }
 
-        public void OnClickedLevelUp()
-        {
-            // 이번 레벨 필요 경험치를 소모하고 레벨업 (최대 레벨·경험치 부족이면 안내만)
-            if (!UserDataManager.Instance.userMinionManager.LevelUp(minionData.key))
-            {
-                ToastCanvas.Toast(TranslateManager.GetText("Not enough exp"));
-                SoundManager.Play(SFXType.Fail_NotEnough);
-                return;
-            }
-            SoundManager.Play(SFXType.MinionLevelUp);
-            minionPanel.SetData(minionData);
-            UpdateCanvas();
-        }
         public void OnClickedEquipt()
         {
             MinionEquipCanvas.Instance.OpenCanvas(userMinion, () =>

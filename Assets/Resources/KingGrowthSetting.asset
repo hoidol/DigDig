@@ -12,27 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05f72101614c54e6a892ab40de648852, type: 3}
   m_Name: KingGrowthSetting
   m_EditorClassIdentifier: Assembly-CSharp::KingGrowthSetting
-  statAbilities:
-  - {fileID: 11400000, guid: d861343b3f5ba400bbb5cc9f8f796843, type: 2}
-  - {fileID: 11400000, guid: 5c814004f87264bb58dcd9d479698442, type: 2}
-  - {fileID: 11400000, guid: ddad4f68dc96e40e5b7a068ed3ba34e1, type: 2}
-  - {fileID: 11400000, guid: fee4e6baaab404368b9a9bc65dd3fa48, type: 2}
-  - {fileID: 11400000, guid: 13c462be01ec4481e816c53e6a610bda, type: 2}
-  - {fileID: 11400000, guid: 1e098ed2be0b14beb8af008533c4a23c, type: 2}
-  - {fileID: 11400000, guid: 647ae6f765f434ca2bea3826d79d1060, type: 2}
-  raceAbilities:
-  - {fileID: 11400000, guid: 45fb2b9f02276472f9975d0b1f8faaa1, type: 2}
-  - {fileID: 11400000, guid: 2e0e4e634c2bf4972b13963c4f543ffd, type: 2}
-  - {fileID: 11400000, guid: 129eb40ee502845c494ce9439ca069e0, type: 2}
-  - {fileID: 11400000, guid: 69e3bdd504d784806a80781de3ee8ce3, type: 2}
-  - {fileID: 11400000, guid: 6b7b2f1052e064c6ca296e31d017d13d, type: 2}
-  jobAbilities:
-  - {fileID: 11400000, guid: 60e38bc4282c47e394e70633ed838949, type: 2}
-  - {fileID: 11400000, guid: 985c4674c4964829a4faaa386c6d7892, type: 2}
-  - {fileID: 11400000, guid: 5049873d5f684591bb61f40618bb3d42, type: 2}
-  - {fileID: 11400000, guid: aabda46e0c1f49eea2969019d56ad11a, type: 2}
-  - {fileID: 11400000, guid: a15cbd0a61e441269ee432c267c17787, type: 2}
-  tileExpandAbility: {fileID: 11400000, guid: 3459fefedf08408ca2777d1d87826b4d, type: 2}
+  heroAbilities:
+  - {fileID: 11400000, guid: 089d3ff5278543ddb7f118abf2e0637f, type: 2}
+  - {fileID: 11400000, guid: 7d7ebc5acf714b8bad44c0db705c9c55, type: 2}
+  - {fileID: 11400000, guid: 0c7fd01ab1b843d9ba3a42282a2015a9, type: 2}
+  heroBoostAbilities:
+  - {fileID: 11400000, guid: 72cbd67299184d85a853beb9946c6f46, type: 2}
+  - {fileID: 11400000, guid: 3459fefedf08408ca2777d1d87826b4d, type: 2}
+  - {fileID: 11400000, guid: 069fd8032a79413d9964b00887e36ca5, type: 2}
+  - {fileID: 11400000, guid: 8bceb59d7ab64394867f3e8f479d29c2, type: 2}
+  - {fileID: 11400000, guid: 7ba29b5a066847829ebf75545a23d509, type: 2}
   runeKeys:
   - AttackPowerTile
   - AttackSpeedTile
@@ -47,19 +36,3 @@ MonoBehaviour:
   - ExpTile
   - SlowTile
   - StunTile
-  passiveAbilities:
-  - {fileID: 11400000, guid: 1542cef1d1114eafb908ea42cdf7bff8, type: 2}
-  - {fileID: 11400000, guid: ca16d9f9cf8d432d84e2cce750dcd164, type: 2}
-  - {fileID: 11400000, guid: f5c49fd545204940afc8bddcaa13ea86, type: 2}
-  - {fileID: 11400000, guid: bf06906356cf445b929c6b77ec218fff, type: 2}
-  - {fileID: 11400000, guid: 2b3e13110f6849cda3a29e1c40e9f160, type: 2}
-  - {fileID: 11400000, guid: ef76cde62c6d4ac7b9229707d30253cd, type: 2}
-  - {fileID: 11400000, guid: b68578257d144403891750db70c3dcf1, type: 2}
-  - {fileID: 11400000, guid: 5cde44c695b244e2a4e9e8d5f6afd4f0, type: 2}
-  - {fileID: 11400000, guid: cf8b557b6c0f44bfbb0229da532b1a73, type: 2}
-  - {fileID: 11400000, guid: 85ad9a59382f4d99932bb754ab574998, type: 2}
-  - {fileID: 11400000, guid: ef2b8e356c404bdca4989a49e6a854c2, type: 2}
-  - {fileID: 11400000, guid: a0384c6561264eeba6e22c47a5d04419, type: 2}
-  - {fileID: 11400000, guid: d71319b5f87044f98e869e243ca61121, type: 2}
-  - {fileID: 11400000, guid: b445894775e24796a1c2ae01f72bb67b, type: 2}
-  - {fileID: 11400000, guid: c35132940c104d6e9997f937aeb81831, type: 2}

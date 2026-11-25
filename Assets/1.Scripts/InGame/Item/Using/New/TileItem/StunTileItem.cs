@@ -5,7 +5,7 @@ using UnityEngine;
 public class StunTileItem : TileItem //타일 위에 설치되는 아이템
 {
     public float chance = 10f;
-    public float duration = 0.3f;
+    public float duration = 1f; // (2026-11-25) 0.3 → 1초
 
     protected override void ApplyLevelValue(float v)
     {

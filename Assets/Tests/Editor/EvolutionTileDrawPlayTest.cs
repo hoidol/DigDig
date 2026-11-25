@@ -66,7 +66,7 @@ public class EvolutionTileDrawPlayTest : InGamePlayTestBase
     {
         int n = 0;
         for (int i = 0; i < DRAWS; i++)
-            if (ItemManager.Instance.GetDrawTileItems(SelectItemCanvas.SELECT_ITEM_COUNT).Any(d => d.key == KEY))
+            if (ItemManager.Instance.GetDrawTileItems(SelectRuneCanvas.SELECT_ITEM_COUNT).Any(d => d.key == KEY))
                 n++;
         return n;
     }

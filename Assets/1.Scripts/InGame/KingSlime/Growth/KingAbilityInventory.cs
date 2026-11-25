@@ -43,7 +43,7 @@ public class KingAbilityInventory
     // 지금 버프 칸 (종족 칸 등, 직업 추가 칸 후보에서 뺌)
     public List<Vector2Int> GetBuffTileOffsets()
     {
-        var area = king != null ? king.GetComponent<KingTileBuffArea>() : null;
+        var area = king != null ? king.GetComponent<EliteArea>() : null;
         return area != null ? new List<Vector2Int>(area.Offsets) : new List<Vector2Int>();
     }
 
@@ -70,6 +70,7 @@ public class KingAbilityInventory
             if (ability.level >= data.maxLevel)
                 return;
             ability.level++;
+            setup?.Invoke(ability); // (2026-11-23) 버프 칸 확장 두 번째 칸 등
             ability.OnLevelChanged();
             return;
         }

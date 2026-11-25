@@ -27,6 +27,8 @@ public static class InAppProductInfo
     // 패키지 (같은 효과 + 재화 지급, 지급 목록은 PackageProductPanel.rewards)
     public const string REMOVE_AD_PACKAGE_KEY = "RemoveAdPackage";
     public const string GAME_SPEED_UP_PACKAGE_KEY = "GameSpeedUpPackage";
+    // 스테이지 이용권: 한 번 사면 스테이지 2부터 모든 스테이지·난이도 이용 (스테이지 1은 무료, StageData.NeedsStagePass)
+    public const string STAGE_PASS_KEY = "StagePass";
 
     // 이 중 하나라도 샀으면 효과 적용
     public static readonly string[] REMOVE_AD_KEYS = { REMOVE_AD_KEY, REMOVE_AD_PACKAGE_KEY };
@@ -39,6 +41,7 @@ public static class InAppProductInfo
         new Info(GAME_SPEED_UP_KEY, "game_speed_up", ProductType.NonConsumable),
         new Info(REMOVE_AD_PACKAGE_KEY, "remove_ad_package", ProductType.NonConsumable),
         new Info(GAME_SPEED_UP_PACKAGE_KEY, "game_speed_up_package", ProductType.NonConsumable),
+        new Info(STAGE_PASS_KEY, "stage_pass", ProductType.NonConsumable),
 
         // 소모성
         new Info("Dia_20", "dia_20", ProductType.Consumable),

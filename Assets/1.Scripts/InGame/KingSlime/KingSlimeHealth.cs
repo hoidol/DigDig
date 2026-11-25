@@ -40,12 +40,25 @@ public class KingSlimeHealth : MonoBehaviour, IHittable
         //     return;
         // }
 
+        float prevHp = curHp;
         curHp -= damageData.ApplyDamage(hpPoint.position);
+        HeroUpgradeSystem.OnKingDamaged(prevHp - Mathf.Max(0f, curHp)); // (2026-11-24) 용사 강화: 에너지 충전·정예병 분노
         if (curHp <= 0)
         {
-            curHp = 0;
-            character.animator.Play("Dead");
+            // (2026-11-24) 용사 강화 LastStand: 판당 1번 버팀
+            float survive = HeroUpgradeSystem.TryLastStand(MaxHp);
+            if (survive > 0f)
+            {
+                curHp = survive;
+                EffectManager.PlayPopText((Vector2)hpPoint.position + Vector2.up * 0.4f, TranslateManager.GetText("HeroUpgrade_LastStand"), new Color(1f, 0.6f, 0.3f));
+            }
+            else
+            {
+                curHp = 0;
+                character.animator.Play("Dead");
+            }
         }
+        HeroUpgradeSystem.CheckLowHp(curHp, MaxHp); // (2026-11-24) 용사 강화 LowHpFreeze
 
         GameEventBus.Publish(new KingSlimeHpChangedEvent(curHp, character.statMgr.MaxHp));
     }

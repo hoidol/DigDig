@@ -70,9 +70,10 @@ public abstract class BattleWave : Wave
         // Debug.Log($"PhaseEnemySpawnPattern Spawn type {type}, GameManager.Instance.phaseDefenceType {waveDefenceType}");
         Enemy enemy = EnemyFieldController.Instance.Instantiate(enemyPrefab);
         EnemyFieldController field = EnemyFieldController.Instance;
-        enemy.Spawn(field.GetNormalSpawnPosition(), waveIdx); // 일반 적: 소환 위치 번갈아
-        // 소환 지점을 쓰면 paths[0]을 건너뛰고 바로 paths[1]로 → 각 지점에서 paths[1]로 오는 길에 한 줄로 합쳐짐
-        enemy.pathIdx = field.NormalStartPathIdx;
+        // 일반 적: 경로(갈래)를 번갈아 씀 (스테이지마다 출발 위치·길이 다를 수 있음, 도착은 같음)
+        Transform[] route = field.NextNormalRoute();
+        enemy.Spawn(route[0].position, waveIdx);
+        enemy.SetRoute(route);
     }
 
     public virtual void EndSpawnEnemy()

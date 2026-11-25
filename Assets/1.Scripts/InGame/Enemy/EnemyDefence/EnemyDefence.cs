@@ -21,10 +21,9 @@ public abstract class EnemyDefence : MonoBehaviour
     {
         // 만능 공격 타일: 방어 타입 배율 무시 (모든 방어 타입에 100%). 카오스(Chaos)는 표 값 사용
         float multiplier = damage.IgnoreDefence ? 1f : DefenceInfo.Get(damage.attackType, defenceType);
-        // 권능 순혈의 왕관: 아군 공격의 약점 배율만 키움
-        PureCrownAuthority pureCrown = AuthoritySystem.Get<PureCrownAuthority>();
-        if (pureCrown != null && pureCrown.active && damage is AllyUnitDamageData)
-            multiplier = PureCrownAuthority.Apply(multiplier);
+        // (2026-11-24) 용사 강화: 약점(순혈)·내성 완화·공격 타입별 방어 타입 상대 피해 (아군 공격만)
+        if (damage is AllyUnitDamageData)
+            multiplier = HeroUpgradeSystem.ApplyDefenceMultiplier(multiplier, damage.attackType, defenceType);
         // 방어 타입별 피해 +% (종족 버프 등)
         if (damage is AllyUnitDamageData allyDamage)
             multiplier *= allyDamage.GetDefenceDamageMul(defenceType);

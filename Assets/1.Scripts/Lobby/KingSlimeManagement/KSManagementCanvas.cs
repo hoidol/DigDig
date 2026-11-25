@@ -2,36 +2,33 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-// 킹슬라임 관리: 상단 능력치 + 메뉴(강화 / 권능). 오라는 폐기(2026-11-09)
+// 킹슬라임 관리: 상단 능력치 + 레벨 스탯 (2026-11-24 강화·권능 탭 → 레벨 스탯 하나로 통합)
 public class KSManagementCanvas : BaseLobbyCanvas
 {
     public KSStatStateContainer kSStatStateContainer;
-    public KSUpgradeContainer upgradeContainer;
-    [FormerlySerializedAs("kSEquipmentContainer")] public AuthorityContainer authorityContainer;
+    [FormerlySerializedAs("authorityContainer")][FormerlySerializedAs("kSEquipmentContainer")]
+    public LevelStatContainer levelStatContainer;
 
     public override void OpenCanvas(Action closeCallback = null)
     {
         base.OpenCanvas(closeCallback);
 
         kSStatStateContainer.OpenContainer();
-        upgradeContainer.OpenContainer();
-        authorityContainer.OpenContainer();
-
-        SelectMenu(KSMenuType.Upgrade);
+        levelStatContainer.OpenContainer();
+        levelStatContainer.gameObject.SetActive(true);
 
         UpdateCanvas();
     }
 
+    // 메뉴 탭은 이제 하나뿐 (씬의 탭 버튼이 남아 있어도 레벨 스탯만 보임)
     public void SelectMenu(KSMenuType menuType)
     {
-        upgradeContainer.gameObject.SetActive(menuType == KSMenuType.Upgrade);
-        authorityContainer.gameObject.SetActive(menuType == KSMenuType.Authority);
+        levelStatContainer.gameObject.SetActive(true);
     }
 
     public override void UpdateCanvas()
     {
         kSStatStateContainer.UpdatePanel();
-        upgradeContainer.UpdateContainer();
-        authorityContainer.UpdateContainer();
+        levelStatContainer.UpdateContainer();
     }
 }

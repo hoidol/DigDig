@@ -5,9 +5,6 @@
     <type fullname="ArmoredEnemyDefence" preserve="all" />
     <type fullname="AttackPowerTileItem" preserve="all" />
     <type fullname="AttackSpeedTileItem" preserve="all" />
-    <type fullname="AuthorityData" preserve="all" />
-    <type fullname="BeamMinion" preserve="all" />
-    <type fullname="BeamMinionData" preserve="all" />
     <type fullname="BerserkerMinion" preserve="all" />
     <type fullname="BerserkerMinionData" preserve="all" />
     <type fullname="BerserkTileItem" preserve="all" />
@@ -15,56 +12,34 @@
     <type fullname="BounceBulletObject" preserve="all" />
     <type fullname="BounceMinion" preserve="all" />
     <type fullname="BounceMinionData" preserve="all" />
-    <type fullname="BreezeMinion" preserve="all" />
-    <type fullname="BreezeMinionData" preserve="all" />
     <type fullname="BulletData" preserve="all" />
     <type fullname="BulletRandomSprite" preserve="all" />
     <type fullname="BulletSpin" preserve="all" />
     <type fullname="BurstShotTileItem" preserve="all" />
     <type fullname="CriticalTileItem" preserve="all" />
     <type fullname="CritPowerTileItem" preserve="all" />
-    <type fullname="DarknessMinion" preserve="all" />
-    <type fullname="DarknessMinionData" preserve="all" />
-    <type fullname="DopamineMinion" preserve="all" />
-    <type fullname="DopamineMinionData" preserve="all" />
     <type fullname="EliteEnemy" preserve="all" />
     <type fullname="EliteWave" preserve="all" />
     <type fullname="EnemyData" preserve="all" />
     <type fullname="EnemySpawnerContainer" preserve="all" />
-    <type fullname="EnhanceExpInfo" preserve="all" />
     <type fullname="EtherealEnemyDefence" preserve="all" />
     <type fullname="EvolutionTileItem" preserve="all" />
     <type fullname="ExpandBuffRangeTileItem" preserve="all" />
     <type fullname="ExpTileItem" preserve="all" />
-    <type fullname="FixRotation" preserve="all" />
     <type fullname="FlameBulletObject" preserve="all" />
     <type fullname="FlameMinion" preserve="all" />
     <type fullname="FlameMinionData" preserve="all" />
     <type fullname="GiantSlayerTileItem" preserve="all" />
     <type fullname="GoldTileItem" preserve="all" />
     <type fullname="GrowthTileItem" preserve="all" />
-    <type fullname="GrowUpMinion" preserve="all" />
-    <type fullname="GrowUpMinionData" preserve="all" />
-    <type fullname="HailMinion" preserve="all" />
-    <type fullname="HailMinionData" preserve="all" />
-    <type fullname="HailStone" preserve="all" />
     <type fullname="HardWave" preserve="all" />
-    <type fullname="Hellfire" preserve="all" />
-    <type fullname="HunterMinion" preserve="all" />
-    <type fullname="HunterMinionData" preserve="all" />
     <type fullname="IceBulletObject" preserve="all" />
     <type fullname="IceMinion" preserve="all" />
     <type fullname="IceMinionData" preserve="all" />
     <type fullname="IceStatusEffectView" preserve="all" />
-    <type fullname="InfernoMinion" preserve="all" />
-    <type fullname="InfernoMinionData" preserve="all" />
     <type fullname="IronMinion" preserve="all" />
     <type fullname="IronMinionData" preserve="all" />
     <type fullname="ItemData" preserve="all" />
-    <type fullname="JokerMinion" preserve="all" />
-    <type fullname="JokerMinionData" preserve="all" />
-    <type fullname="KeenMinion" preserve="all" />
-    <type fullname="KeenMinionData" preserve="all" />
     <type fullname="KingSlimeBulletObject" preserve="all" />
     <type fullname="LightEnemyDefence" preserve="all" />
     <type fullname="LightningBulletObject" preserve="all" />
@@ -74,14 +49,10 @@
     <type fullname="Mine" preserve="all" />
     <type fullname="MineMinion" preserve="all" />
     <type fullname="MineMinionData" preserve="all" />
-    <type fullname="MinionMergeData" preserve="all" />
     <type fullname="MortarBulletObject" preserve="all" />
     <type fullname="MortarFlag" preserve="all" />
     <type fullname="MortarMinion" preserve="all" />
     <type fullname="MortarMinionData" preserve="all" />
-    <type fullname="MudMinion" preserve="all" />
-    <type fullname="MudMinionData" preserve="all" />
-    <type fullname="MudOrb" preserve="all" />
     <type fullname="MultiTargetTileItem" preserve="all" />
     <type fullname="NormalEnemy" preserve="all" />
     <type fullname="NormalEnemyDefence" preserve="all" />
@@ -95,28 +66,16 @@
     <type fullname="PierceMinion" preserve="all" />
     <type fullname="PierceMinionData" preserve="all" />
     <type fullname="PioneerTileItem" preserve="all" />
-    <type fullname="RageMinion" preserve="all" />
-    <type fullname="RageMinionData" preserve="all" />
     <type fullname="RandomDropPattern" preserve="all" />
     <type fullname="RandomMinion" preserve="all" />
     <type fullname="RandomMinionData" preserve="all" />
     <type fullname="RangeUpTileItem" preserve="all" />
-    <type fullname="SacrificeMinion" preserve="all" />
-    <type fullname="SacrificeMinionData" preserve="all" />
-    <type fullname="ScavengerMinion" preserve="all" />
-    <type fullname="ScavengerMinionData" preserve="all" />
-    <type fullname="SeparateOrbitMachine" preserve="all" />
-    <type fullname="ShieldMinion" preserve="all" />
-    <type fullname="ShieldMinionData" preserve="all" />
-    <type fullname="ShieldOrbitOrb" preserve="all" />
     <type fullname="SkillCooldownTileItem" preserve="all" />
     <type fullname="SlowTileItem" preserve="all" />
     <type fullname="SpriteForStatusEffect" preserve="all" />
     <type fullname="StageData" preserve="all" />
     <type fullname="StatusEffectHandler" preserve="all" />
     <type fullname="StatusEffectView" preserve="all" />
-    <type fullname="StigmaMinion" preserve="all" />
-    <type fullname="StigmaMinionData" preserve="all" />
     <type fullname="StunTileItem" preserve="all" />
     <type fullname="SweepPattern" preserve="all" />
     <type fullname="ThunderBulletObject" preserve="all" />
@@ -130,7 +89,7 @@
     <type fullname="StageRewardData" preserve="nothing" serialized="true" />
     <type fullname="LightningLine/SheetLine" preserve="nothing" serialized="true" />
     <type fullname="LightningBulletSpec" preserve="nothing" serialized="true" />
-    <type fullname="MinionEnhanceInfo" preserve="nothing" serialized="true" />
+    <type fullname="MinionEvolutionData" preserve="nothing" serialized="true" />
     <type fullname="MinionStat" preserve="nothing" serialized="true" />
     <type fullname="SFXData" preserve="nothing" serialized="true" />
     <type fullname="ShotModifier" preserve="nothing" serialized="true" />

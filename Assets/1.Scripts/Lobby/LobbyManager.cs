@@ -30,7 +30,6 @@ namespace Lobby
                 BulletManager.Instance.LoadTask,
                 ItemManager.Instance.LoadTask,
                 EnemyManager.Instance.LoadTask,
-                AuthorityManager.Instance.LoadTask,
                 MinionManager.Instance.LoadTask
             );
             var sound = SoundManager.Instance;
@@ -68,7 +67,7 @@ namespace Lobby
             await LobbyReturnController.PlayPendingAsync(fadeDone);
 
             // 레벨업 창을 닫아야 다음 레벨업 (여러 레벨이 한 번에 올라도 하나씩 보여줌)
-            bool authorityTierUnlocked = false;
+            bool leveledUp = false;
             int fromExp = gainExp > 0 ? myInfo.userMyInfoData.exp - gainExp : 0;
             while (true)
             {
@@ -83,7 +82,7 @@ namespace Lobby
                 if (!myInfo.LevelUp())
                     break;
                 lv = myInfo.userMyInfoData.lv;
-                authorityTierUnlocked |= System.Array.IndexOf(AuthorityData.TIER_UNLOCK_LEVELS, lv) >= 0;
+                leveledUp = true;
                 var closed = new UniTaskCompletionSource();
                 UserLevelUpCanvas.Instance.OpenCanvas(() => closed.TrySetResult());
                 if (gainExp > 0)
@@ -106,17 +105,10 @@ namespace Lobby
                 foreach (var p in panels)
                     p.EndExpAnimation();
 
-            // 레벨업으로 권능 묶음이 새로 열렸고 아직 안 골랐으면 권능 선택으로 안내
-            if (authorityTierUnlocked && UserDataManager.Instance.userAuthorityManager.GetUnselectedUnlockedTiers().Count > 0)
-                OpenAuthoritySelect();
-        }
-
-        public void OpenAuthoritySelect()
-        {
-            OpenCanvas(LobbyState.KingSlimeManagement);
-            if (GetLobbyCanvas(LobbyState.KingSlimeManagement) is KSManagementCanvas ks)
-                ks.SelectMenu(KSMenuType.Authority);
-            ToastCanvas.Toast(TranslateManager.GetText("Authority_TierUnlocked"));
+            // (2026-11-24) 레벨업으로 킹 스탯 포인트가 생겼으면 안내 (레벨 1당 1포인트, 킹 관리 화면에서 찍음)
+            int remainPoints = UserDataManager.Instance.userKingSlimeManager.RemainPoints;
+            if (leveledUp && remainPoints > 0)
+                ToastCanvas.Toast(string.Format(TranslateManager.GetText("KingStat_PointGained"), remainPoints));
         }
 
         void UpdateMyInfoPanels()

@@ -6,8 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-// 게임 한 사이클을 실제 버튼 흐름으로: 로비(KS 업그레이드) → 전투 버튼 → 인게임(부활 성공 / 포기) → 결과 → 로비(레벨업 창)
-// → 다시 업그레이드 → 인게임(바로 사망) → 로비. 단계마다 UserDataManager 메모리 값과 저장 파일(Assets/User*.json)을 함께 확인한다.
+// 게임 한 사이클을 실제 버튼 흐름으로: 로비(킹 레벨 스탯 포인트) → 전투 버튼 → 인게임(부활 성공 / 포기) → 결과 → 로비(레벨업 창)
+// → 다시 포인트 → 인게임(바로 사망) → 로비. 단계마다 UserDataManager 메모리 값과 저장 파일(Assets/User*.json)을 함께 확인한다.
 public class GameCyclePlayTest : InGamePlayTestBase
 {
     const int FIRST_RUN_WAVE = 6;                        // 첫 판 사망 시 waveIdx → 골드 6, 경험치 3
@@ -21,23 +21,31 @@ public class GameCyclePlayTest : InGamePlayTestBase
     static UserKingSlimeManager KSUser => User.userKingSlimeManager;
     static KingSlimeData KSData => KingSlimeManager.Instance.GetKingSlimeData(User.userData.CharacterName);
 
-    // 업그레이드 대상: 체력(인게임에서 바로 확인 가능). 데이터에 없으면 첫 행
-    static KSUpgradeInfo UpgradeInfo =>
-        KSUpgradeData.Instance.upgradeInfos.FirstOrDefault(i => i.statType == StatType.MaxHp) ?? KSUpgradeData.Instance.upgradeInfos[0];
+    // (2026-11-24) 레벨 스탯: 첫 묶음(Lv.5)의 첫 스탯에 포인트. 첫 묶음 해금 레벨부터 시작해 레벨업 2번
+    const int TIER_IDX = 0;
+    const int OPTION_IDX = 0;
+    static KingLevelStatSetting.Tier Tier => KingLevelStatSetting.Tiers[TIER_IDX];
+    static KingLevelStatSetting.StatOption Option => Tier.options[OPTION_IDX];
+    static int StartLv => Tier.unlockLevel;
 
     static float ExpectedStat(StatType statType)
     {
         float baseValue = KSData.GetKingSlimeStat(statType)?.value ?? 0f;
-        KSUpgradeInfo info = KSUpgradeData.Instance.GetUpgradeInfo(statType);
-        float upgradeValue = info == null ? 0f : info.valuePerLv * KSUser.GetUpgrade(statType).lv;
-        return baseValue + upgradeValue;
+        float add = 0f, mul = 0f;
+        int points = KSUser.GetPoints(TIER_IDX, OPTION_IDX);
+        if (Option.statType == statType)
+        {
+            if (Option.multiply) mul = Option.valuePerPoint * points;
+            else add = Option.valuePerPoint * points;
+        }
+        return UserKingSlimeManager.CalcStat(baseValue, add, mul);
     }
 
     static T Saved<T>(string fileName) => SaveManager.LoadData<T>(fileName);
     static UserData SavedUserData => Saved<UserData>(UserDataManager.UserDataFileName);
     static UserMyInfoData SavedMyInfo => Saved<UserMyInfoData>(UserMyInfoManager.UserDataFileName);
     static UserStage SavedStage(string key) => Saved<UserStageData>(UserStageManager.UserDataFileName).userStages.FirstOrDefault(s => s.key == key);
-    static int SavedUpgradeLv(StatType statType) => Saved<UserKSData>(UserKingSlimeManager.UserDataFileName).userKSUpgrades.FirstOrDefault(u => u.statType == statType)?.lv ?? 0;
+    static int SavedPoints() => Saved<UserKSData>(UserKingSlimeManager.UserDataFileName).statPoints.FirstOrDefault(p => p.tierIdx == TIER_IDX && p.optionIdx == OPTION_IDX)?.points ?? 0;
 
     [UnityTest]
     public IEnumerator Lobby_InGame_Result_LevelUp_Cycle()
@@ -50,20 +58,20 @@ public class GameCyclePlayTest : InGamePlayTestBase
     IEnumerator CycleBody()
     {
         UserDataManager.difficultyType = DifficultyType.Normal;
-        StatType upgradeStat = UpgradeInfo.statType;
+        StatType upgradeStat = Option.statType;
 
-        // ── 준비: 레벨 0, 이번 판 경험치(3)로 정확히 2레벨이 오르도록 ──
+        // ── 준비: 첫 묶음 해금 레벨, 이번 판 경험치(3)로 정확히 2레벨이 오르도록 ──
         current = "준비";
-        MyInfo.userMyInfoData.lv = 0;
-        MyInfo.userMyInfoData.exp = MyInfo.GetMaxExp(0) + MyInfo.GetMaxExp(1) - FIRST_RUN_EXP;
+        MyInfo.userMyInfoData.lv = StartLv;
+        MyInfo.userMyInfoData.exp = MyInfo.GetMaxExp(StartLv) + MyInfo.GetMaxExp(StartLv + 1) - FIRST_RUN_EXP;
         User.userData.energe = GameSetting.MAX_ENERGE;
-        KSUser.GetUpgrade(upgradeStat).lv = 0;
+        KSUser.ResetPoints();
         string stageKey = StageManager.Instance.GetStageData(StageData.FIRST_STAGE_ORDER, DifficultyType.Normal).key;
         UserStage stage = User.userStageManager.GetUserStage(stageKey);
         stage.maxWave = 0;
         int tryCount = stage.tryCount;
 
-        // ── 1. 로비 KS 업그레이드 (UI 버튼) ──
+        // ── 1. 로비 킹 레벨 스탯 (칸 클릭) ──
         yield return UpgradeInLobby(upgradeStat, 1);
 
         // ── 2. 전투 버튼 → 인게임: 에너지 차감, 업그레이드 반영 ──
@@ -119,7 +127,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
 
         Assert.AreEqual(gold + FIRST_RUN_WAVE, User.userData.gold, "골드 = waveIdx");
         Assert.AreEqual(exp + FIRST_RUN_EXP, MyInfo.userMyInfoData.exp, "경험치 = waveIdx / 2");
-        Assert.AreEqual(0, MyInfo.userMyInfoData.lv, "레벨업은 로비에서 (인게임에선 경험치만)");
+        Assert.AreEqual(StartLv, MyInfo.userMyInfoData.lv, "레벨업은 로비에서 (인게임에선 경험치만)");
         Assert.AreEqual(tryCount + 1, stage.tryCount, "부활 포함 한 판 = 도전 1회");
         Assert.AreEqual(FIRST_RUN_WAVE, stage.maxWave, "최고 wave 기록");
 
@@ -129,7 +137,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         Assert.AreEqual(stage.tryCount, SavedStage(stageKey).tryCount, "저장: 도전 횟수");
         Assert.AreEqual(FIRST_RUN_WAVE, SavedStage(stageKey).maxWave, "저장: 최고 wave");
 
-        // ── 5. 홈 → 로비: 레벨업 창이 레벨마다 하나씩 (0 → 1 → 2), 남은 경험치 0 ──
+        // ── 5. 홈 → 로비: 레벨업 창이 레벨마다 하나씩 (StartLv → +1 → +2), 남은 경험치 0 ──
         current = "로비 레벨업";
         ResultCanvas.Instance.OnClickedHome();
         yield return WaitScene("Lobby");
@@ -137,7 +145,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return WaitUntil(() => Object.FindObjectsByType<MyInfoPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None).Any(p => p.IsAnimating), "경험치 바 연출이 안 시작됨");
         yield return WaitUntil(() => Lobby.UserLevelUpCanvas.Instance != null && Lobby.UserLevelUpCanvas.Instance.gameObject.activeInHierarchy, "레벨업 창이 안 열림");
 
-        for (int lv = 1; lv <= 2; lv++)
+        for (int lv = StartLv + 1; lv <= StartLv + 2; lv++)
         {
             // 이전 창을 닫으면 남은 경험치만큼 바가 차오른 뒤 다음 레벨업 창
             yield return WaitUntil(() => Lobby.UserLevelUpCanvas.Instance.gameObject.activeInHierarchy, $"Lv.{lv} 레벨업 창이 안 열림");
@@ -155,17 +163,18 @@ public class GameCyclePlayTest : InGamePlayTestBase
             yield return WaitFrames(3);
         }
         Assert.IsFalse(Lobby.UserLevelUpCanvas.Instance.gameObject.activeInHierarchy, "레벨이 2만 올라야 함");
-        Assert.AreEqual(2, MyInfo.userMyInfoData.lv);
+        Assert.AreEqual(StartLv + 2, MyInfo.userMyInfoData.lv);
         Assert.AreEqual(0, MyInfo.userMyInfoData.exp, "레벨업 후 남은 경험치");
         yield return WaitUntil(() => Object.FindObjectsByType<MyInfoPanel>(FindObjectsInactive.Include, FindObjectsSortMode.None).All(p => !p.IsAnimating), "경험치 바 연출이 안 끝남");
         Assert.AreEqual(0, UserMyInfoManager.unshownGainExp, "보여줄 경험치가 남음");
         AssertMyInfoPanels();
         yield return WaitSaveFlushed();
-        Assert.AreEqual(2, SavedMyInfo.lv, "저장: 레벨");
+        Assert.AreEqual(StartLv + 2, SavedMyInfo.lv, "저장: 레벨");
         Assert.AreEqual(0, SavedMyInfo.exp, "저장: 레벨업 후 경험치");
-        Assert.AreEqual(1, KSUser.GetUpgrade(upgradeStat).lv, "로비 복귀 후 업그레이드 유지");
+        Assert.AreEqual(1, KSUser.GetPoints(TIER_IDX, OPTION_IDX), "로비 복귀 후 포인트 유지");
+        Assert.AreEqual(KSUser.TotalPoints - 1, KSUser.RemainPoints, "레벨업으로 포인트 증가");
 
-        // ── 6. 다시 업그레이드 → 2판: 바로 사망(wave 0) → 보상 0, 최고 기록 유지 ──
+        // ── 6. 다시 포인트 → 2판: 바로 사망(wave 0) → 보상 0, 최고 기록 유지 ──
         yield return UpgradeInLobby(upgradeStat, 2);
         current = "2판";
         yield return StartGameFromLobby();
@@ -190,9 +199,9 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return WaitScene("Lobby");
         yield return WaitFrames(30);
         Assert.IsFalse(Lobby.UserLevelUpCanvas.Instance.gameObject.activeInHierarchy, "경험치가 모자란데 레벨업 창");
-        Assert.AreEqual(2, MyInfo.userMyInfoData.lv);
+        Assert.AreEqual(StartLv + 2, MyInfo.userMyInfoData.lv);
         yield return WaitSaveFlushed();
-        Assert.AreEqual(2, SavedUpgradeLv(upgradeStat), "저장: 업그레이드 Lv");
+        Assert.AreEqual(2, SavedPoints(), "저장: 포인트");
         AssertNoErrors();
     }
 
@@ -204,31 +213,26 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return WaitUntil(() => ((System.Collections.IList)field.GetValue(User)).Count == 0, "저장 대기 목록이 비지 않음");
     }
 
-    // KSManagementCanvas에서 업그레이드 버튼 → Lv·재화·저장 확인
-    IEnumerator UpgradeInLobby(StatType statType, int expectedLv)
+    // KSManagementCanvas에서 레벨 스탯 칸 클릭 → 포인트·남은 포인트·저장 확인
+    IEnumerator UpgradeInLobby(StatType statType, int expectedPoints)
     {
-        current = $"업그레이드 → Lv.{expectedLv}";
-        KSUpgradeInfo info = KSUpgradeData.Instance.GetUpgradeInfo(statType);
+        current = $"레벨 스탯 → {expectedPoints}포인트";
         Lobby.LobbyManager.Instance.OpenCanvas(LobbyState.KingSlimeManagement);
         yield return WaitFrames(3);
         var canvas = Object.FindFirstObjectByType<KSManagementCanvas>(FindObjectsInactive.Include);
         Assert.IsTrue(canvas != null && canvas.gameObject.activeInHierarchy, "KSManagementCanvas가 안 열림");
-        KSUpgradePanel panel = canvas.GetComponentsInChildren<KSUpgradePanel>(true).FirstOrDefault(p => p.upgradeType == statType);
-        Assert.IsNotNull(panel, $"{statType} 업그레이드 패널 없음");
+        LevelStatSlotPanel panel = canvas.GetComponentsInChildren<LevelStatSlotPanel>(true)
+            .FirstOrDefault(p => p.tierIdx == TIER_IDX && p.optionIdx == OPTION_IDX && p.gameObject.activeSelf);
+        Assert.IsNotNull(panel, "레벨 스탯 칸 없음");
+        int used = KSUser.UsedPoints; // 남은 포인트는 레벨에 따라 변할 수 있어(로비 레벨업 처리) 찍은 포인트로 확인
 
-        int price = info.GetPrice(expectedLv - 1);
-        if (info.currencyType == CurrencyType.Gold) User.userData.gold += price;
-        else if (info.currencyType == CurrencyType.Dia) User.userData.dia += price;
-        int currency = User.userData.GetCurrency(info.currencyType);
-        canvas.UpdateCanvas();
-
-        panel.OnClickedUpgradeButton();
+        panel.OnClickedSlot();
         yield return WaitFrames(3);
         yield return WaitSaveFlushed();
-        Assert.AreEqual(expectedLv, KSUser.GetUpgrade(statType).lv, $"{statType} Lv");
-        Assert.AreEqual(currency - price, User.userData.GetCurrency(info.currencyType), $"{info.currencyType} {price} 차감");
-        Assert.AreEqual(expectedLv, SavedUpgradeLv(statType), "저장: 업그레이드 Lv");
-        Assert.AreEqual(User.userData.GetCurrency(info.currencyType), SavedUserData.GetCurrency(info.currencyType), "저장: 업그레이드 재화");
+        Assert.AreEqual(expectedPoints, KSUser.GetPoints(TIER_IDX, OPTION_IDX), $"{statType} 포인트");
+        Assert.AreEqual(used + 1, KSUser.UsedPoints, "찍은 포인트 +1");
+        Assert.AreEqual(KSUser.TotalPoints - KSUser.UsedPoints, KSUser.RemainPoints, "남은 포인트 = 레벨 포인트 - 찍은 포인트");
+        Assert.AreEqual(expectedPoints, SavedPoints(), "저장: 포인트");
     }
 
     // 로비 전투 화면의 시작 버튼 → InGame 시작까지
@@ -246,7 +250,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
     void AssertKingStat(StatType statType)
     {
         float expected = ExpectedStat(statType);
-        Assert.AreEqual(expected, KingSlime.Instance.statMgr.GetValue(statType), EPSILON, $"인게임 {statType} (기본 + 업그레이드)");
+        Assert.AreEqual(expected, KingSlime.Instance.statMgr.GetValue(statType), EPSILON, $"인게임 {statType} (기본 + 레벨 스탯)");
         if (statType == StatType.MaxHp)
             Assert.AreEqual(expected, KingSlime.Instance.health.MaxHp, EPSILON, "킹 최대 체력");
     }

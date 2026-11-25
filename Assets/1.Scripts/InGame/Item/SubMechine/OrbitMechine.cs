@@ -95,7 +95,6 @@ public class OrbitMachine : SubMachine
         while (accumulatedAngle >= 360f)
         {
             accumulatedAngle -= 360f;
-            WhirlOrbAuthority.OnRevolution(this);
         }
     }
 }

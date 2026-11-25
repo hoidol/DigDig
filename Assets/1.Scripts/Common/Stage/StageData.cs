@@ -79,6 +79,14 @@ public class StageData : ScriptableObject
         return IsUnlocked(GetUnlockPrevStage(order, difficulty));
     }
 
+    // (2026-11-24) 스테이지 이용권: 스테이지 1(모든 난이도)은 무료, 스테이지 2부터는 이용권(인앱 비소모성, 한 번 사면 이후 스테이지 전부)이 있어야 플레이
+    // 클리어 해금 조건(ChekcUnlock)은 그대로 → 플레이 가능 = 클리어 해금 + (무료 스테이지 또는 이용권)
+    public static bool NeedsStagePass(int order) => order > FIRST_STAGE_ORDER;
+    public static bool HasStagePass(UserPurchaseManager purchaseManager)
+        => purchaseManager != null && purchaseManager.HasPurchased(InAppProductInfo.STAGE_PASS_KEY);
+    public static bool HasStagePass() => HasStagePass(UserDataManager.Instance.userPurchaseManager);
+    public bool IsMissingStagePass => NeedsStagePass(order) && !HasStagePass();
+
     // 해금에 필요한 이전 단계 기록 (스테이지 1 Normal은 null)
     static UserStage GetUnlockPrevStage(int order, DifficultyType difficulty)
     {

@@ -117,7 +117,7 @@ public enum AchievementType
     KillEnemy,        // 적 처치 (경로 끝 도착 제외)
     ClearStage,       // 마지막 wave(LAST_WAVE 60) 클리어 (2026-11-19, 결과 화면)
     Login,            // 접속한 날 수 (하루 1회)
-    LevelUpMinion,     // 로비 슬라임 강화
+    LevelUpMinion,     // 사용 안 함 (2026-11-24 미니언 강화 삭제). 값 순서 때문에 남김
     TryStage,         // 한 판 = 결과 화면
     DrawMinion,        // 로비 슬라임 뽑기 (뽑은 장수)
     KillBonusElite,   // 보너스 엘리트 처치

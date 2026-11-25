@@ -11,7 +11,19 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
     // [field: SerializeField] public int ActiveMinionCount { get; private set; }
 
     public readonly HashSet<Minion> activeminions = new();
-    public int minionMaxCount;
+    // (2026-11-25) 값이 바뀌면 MinionMaxCountChangedEvent → 최대 미니언 수 UI 갱신 (용사 2단계 해방·아이템 등)
+    int _minionMaxCount;
+    public int minionMaxCount
+    {
+        get => _minionMaxCount;
+        set
+        {
+            if (_minionMaxCount == value)
+                return;
+            _minionMaxCount = value;
+            GameEventBus.Publish(new MinionMaxCountChangedEvent());
+        }
+    }
     public int CountedMinionCount => KingSlime.Instance.minionInventory.curMinions.Count; // 최대 수 판정에 쓰는 슬라임 수
     public int mergeCount;
     public int reinforceCount;
@@ -132,10 +144,39 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
     public System.Func<ITileObject, bool> dragFilter;
     public System.Func<ITileObject, Tile, bool> dropFilter;
 
-    public System.Action<Tile> tilePickCallback; // 있으면 타일 선택 모드: 드래그/선택 대신 누른 타일을 전달 (SelectItemCanvas)
+    // (2026-11-25) 있으면 위치 선택 모드: 필드를 누른 월드 위치를 한 번 전달하고 끝남 (용사 위치 지정 스킬, HeroSkillHud). 드래그·선택·카메라 이동 없음
+    System.Action<Vector2> positionPickCallback;
+    public bool IsPickingPosition => positionPickCallback != null;
+    public void BeginPositionPick(System.Action<Vector2> callback)
+    {
+        panCandidate = false;
+        panning = false;
+        positionPickCallback = callback;
+    }
+    public void CancelPositionPick() => positionPickCallback = null;
+
+    public System.Action<Tile> tilePickCallback; // 있으면 타일 선택 모드: 드래그/선택 대신 누른 타일을 전달 (SelectRuneCanvas)
+
+    // 카메라 드래그 (빈 곳 드래그, 맵이 화면보다 클 때만 실제로 움직임: CameraManager)
+    const float PAN_START_PIXELS = 15f; // 이만큼 움직여야 드래그로 봄 (짧은 터치 = 칸 선택)
+    bool panCandidate;
+    bool panning;
+    Vector2 panStartScreen;
+    Vector3 panStartCamera;
+    public bool IsPanning => panning;
 
     void Update()
     {
+        if (positionPickCallback != null)
+        {
+            if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
+            {
+                var cb = positionPickCallback;
+                positionPickCallback = null;
+                cb(GetMouseWorldPos());
+            }
+            return;
+        }
         if (tilePickCallback != null)
         {
             if (Input.GetMouseButtonDown(0) && !IsPointerOverUI())
@@ -156,6 +197,27 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             if (dragFilter == null && TryBeginHandleDrag())
                 return;
             BeginDrag();
+            // (2026-11-24) 유닛·손잡이를 잡지 않았으면 화면 드래그 = 카메라 이동 후보 (튜토리얼 중엔 없음)
+            if (dragObject == null && dragHandle == null && dragFilter == null && CameraManager.Instance != null)
+            {
+                panCandidate = true;
+                panning = false;
+                panStartScreen = Input.mousePosition;
+                panStartCamera = CameraManager.Instance.CameraPosition;
+            }
+        }
+        else if (panCandidate && Input.GetMouseButton(0))
+        {
+            Vector2 delta = (Vector2)Input.mousePosition - panStartScreen;
+            if (!panning && delta.magnitude >= PAN_START_PIXELS)
+                panning = true;
+            if (panning)
+                CameraManager.Instance.PanTo(panStartCamera - (Vector3)(delta * CameraManager.Instance.WorldPerPixel));
+        }
+        else if (panCandidate && Input.GetMouseButtonUp(0))
+        {
+            panCandidate = false;
+            panning = false;
         }
         else if (dragHandle != null && Input.GetMouseButton(0))
         {
@@ -551,3 +613,9 @@ public class TileSelectedEvent
 public class TileDeselectedEvent
 {
 }
+
+// (2026-11-25) 필드 최대 미니언 수가 바뀜 (MinionCountInfoPanel 갱신)
+public class MinionMaxCountChangedEvent { }
+
+// (2026-11-25) 레벨업 창을 모두 닫음 (밀린 레벨업 없음) → 하단 정보 UI 갱신
+public class LevelUpCanvasClosedEvent { }

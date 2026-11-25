@@ -1,3 +1,4 @@
+using System.Linq;
 using NUnit.Framework;
 
 // 기획 규칙 테스트 (CLAUDE.md 기준)
@@ -59,13 +60,15 @@ public class WaveTypeTest
     }
 
     // 기본 배율 (Resources/DefenceInfo 에셋이 없을 때. 에셋 값은 DefenceTypePlayTest가 실제 전투로 확인)
-    [TestCase(AttackType.Physic, DefenceType.Armored, 0.5f)]
-    [TestCase(AttackType.Magic, DefenceType.Armored, 1.5f)]
-    [TestCase(AttackType.Physic, DefenceType.Ethereal, 1.25f)]
-    [TestCase(AttackType.Magic, DefenceType.Ethereal, 0.5f)]
-    [TestCase(AttackType.Physic, DefenceType.Light, 1.5f)]
-    [TestCase(AttackType.Vibration, DefenceType.Light, 0.75f)]
-    [TestCase(AttackType.Vibration, DefenceType.Normal, 1.5f)]
+    // (2026-11-25 사용자 변경) 약점 1.3 / 내성 0.7
+    [TestCase(AttackType.Physic, DefenceType.Armored, 0.7f)]
+    [TestCase(AttackType.Magic, DefenceType.Armored, 1.3f)]
+    [TestCase(AttackType.Physic, DefenceType.Ethereal, 1.3f)]
+    [TestCase(AttackType.Magic, DefenceType.Ethereal, 0.7f)]
+    [TestCase(AttackType.Physic, DefenceType.Light, 1.3f)]
+    [TestCase(AttackType.Vibration, DefenceType.Light, 0.7f)]
+    [TestCase(AttackType.Magic, DefenceType.Normal, 0.7f)]
+    [TestCase(AttackType.Vibration, DefenceType.Normal, 1.3f)]
     [TestCase(AttackType.Chaos, DefenceType.Armored, 1f)]
     public void DefenceDefaultMultiplier(AttackType attack, DefenceType defence, float expected)
     {
@@ -109,12 +112,25 @@ public class StageUnlockTest
     // 인게임 킹 레벨
     // (2026-11-22) 필요 경험치 = 2 + 레벨
     [TestCase(0, 2)]
-    [TestCase(1, 3)]
-    [TestCase(2, 4)]
-    [TestCase(10, 12)]
+    // (2026-11-23) 2,2,2,3,3,3,4,4,4 (최대 Lv.9, 그 이상은 마지막 값)
+    [TestCase(1, 2)]
+    [TestCase(3, 3)]
+    [TestCase(6, 4)]
+    [TestCase(8, 4)]
+    [TestCase(10, 4)]
     public void KingMaxExp(int lv, int expected)
     {
         Assert.AreEqual(expected, KingSlime.GetMaxExp(lv));
+    }
+
+    // (2026-11-23) wave 카드 Lv.2 확률 = 킹 레벨 × 1%
+    [TestCase(0, 0f)]
+    [TestCase(1, 1f)]
+    [TestCase(2, 2f)]
+    [TestCase(9, 9f)]
+    public void OfferLevelUpChance_ByKingLevel(int kingLv, float expected)
+    {
+        Assert.AreEqual(expected, MinionOfferSystem.GetOfferLevelUpChance(kingLv), 0.0001f);
     }
 
 
@@ -122,7 +138,8 @@ public class StageUnlockTest
     [Test]
     public void IceSlow_KeepStrongerAndLonger()
     {
-        CollectionAssert.AreEqual(new[] { 0.7f, 0.6f, 0.5f, 0.4f, 0.3f }, UnityEngine.ScriptableObject.CreateInstance<IceMinionData>().slowRate);
+        // (2026-11-25 사용자 변경) 머지 레벨별 이동속도 배율 0.6~0.2 = 40~80% 감속
+        CollectionAssert.AreEqual(new[] { 0.6f, 0.5f, 0.4f, 0.3f, 0.2f }, UnityEngine.ScriptableObject.CreateInstance<IceMinionData>().slowRate);
         Assert.AreEqual(0.3f, IceEffect.Merge(0.3f, 0.7f));
         Assert.AreEqual(0.3f, IceEffect.Merge(0.7f, 0.3f));
         Assert.AreEqual(3f, IceEffect.MergeRemain(1f, 3f));
@@ -137,57 +154,6 @@ public class StageUnlockTest
         Assert.IsFalse(GameManager.IsLastWave(58));
         Assert.IsTrue(GameManager.IsLastWave(59));
         Assert.AreEqual(WaveType.Boss, GameManager.GetWaveType(59));
-    }
-}
-
-public class KSUpgradePriceTest
-{
-    // 가격(lv → lv+1) = (BasePrice + PriceAddPerLv × lv) × PriceMulPerLv^lv (반올림)
-    [Test]
-    public void Linear()
-    {
-        var info = new KSUpgradeInfo { basePrice = 100, priceAddPerLv = 50, priceMulPerLv = 1f };
-        Assert.AreEqual(100, info.GetPrice(0));
-        Assert.AreEqual(150, info.GetPrice(1));
-        Assert.AreEqual(600, info.GetPrice(10));
-    }
-
-    [Test]
-    public void Exponential()
-    {
-        var info = new KSUpgradeInfo { basePrice = 100, priceAddPerLv = 0, priceMulPerLv = 1.5f };
-        Assert.AreEqual(100, info.GetPrice(0));
-        Assert.AreEqual(150, info.GetPrice(1));
-        Assert.AreEqual(225, info.GetPrice(2));
-        Assert.AreEqual(338, info.GetPrice(3)); // 337.5 → 반올림
-    }
-
-    [Test]
-    public void LinearAndExponential()
-    {
-        var info = new KSUpgradeInfo { basePrice = 100, priceAddPerLv = 10, priceMulPerLv = 2f };
-        Assert.AreEqual(100, info.GetPrice(0));
-        Assert.AreEqual(220, info.GetPrice(1)); // 110 × 2
-        Assert.AreEqual(480, info.GetPrice(2)); // 120 × 4
-    }
-
-    [Test]
-    public void MaxLv()
-    {
-        var unlimited = new KSUpgradeInfo { maxLv = 0 };
-        Assert.IsFalse(unlimited.IsMaxLv(9999));
-
-        var limited = new KSUpgradeInfo { maxLv = 5 };
-        Assert.IsFalse(limited.IsMaxLv(4));
-        Assert.IsTrue(limited.IsMaxLv(5));
-    }
-
-    [Test]
-    public void Value_IsAdditive()
-    {
-        var info = new KSUpgradeInfo { valuePerLv = 2.5f };
-        Assert.AreEqual(0f, info.GetValue(0));
-        Assert.AreEqual(25f, info.GetValue(10));
     }
 }
 
@@ -376,5 +342,200 @@ public class EnergeRuleTest
         Assert.AreEqual(MinionData.MAX_MERGE_LEVEL, DarknessMinion.GetTransformMergeLevel(MinionData.MAX_MERGE_LEVEL, true));
         Assert.AreEqual(0.7f, DarknessMinion.TRANSFORM_SUCCESS_CHANCE, 0.0001f);
         Assert.AreEqual(0.1f, DarknessMinion.TRANSFORM_GROW_CHANCE, 0.0001f);
+    }
+}
+
+// (2026-11-23) 미니언 판매 = 표시 머지 레벨만큼 주사위 코인 (다음 브레이크타임)
+public class SellMinionRefundTest
+{
+    [Test]
+    public void Refund_IsDisplayMergeLevel()
+    {
+        Assert.AreEqual(1, SellMinionButton.GetRefundDiceCoin(0));
+        Assert.AreEqual(2, SellMinionButton.GetRefundDiceCoin(1));
+        Assert.AreEqual(3, SellMinionButton.GetRefundDiceCoin(2));
+        Assert.AreEqual(5, SellMinionButton.GetRefundDiceCoin(MinionData.MAX_MERGE_LEVEL));
+    }
+}
+
+// (2026-11-24) 스테이지 이용권: 스테이지 1(order 0)은 모든 난이도 무료, 2부터 이용권 필요. 이용권 = 인앱 비소모성(구매 복원 대상)
+public class StagePassRuleTest
+{
+    [TestCase(0, false)]
+    [TestCase(1, true)]
+    [TestCase(2, true)]
+    public void NeedsStagePass(int order, bool expected)
+    {
+        Assert.AreEqual(expected, StageData.NeedsStagePass(order));
+    }
+
+    [Test]
+    public void StagePass_IsNonConsumableInApp()
+    {
+        var info = InAppProductInfo.GetByKey(InAppProductInfo.STAGE_PASS_KEY);
+        Assert.IsNotNull(info);
+        Assert.AreEqual(UnityEngine.Purchasing.ProductType.NonConsumable, info.productType);
+    }
+
+    [Test]
+    public void HasStagePass_ByPurchaseRecord()
+    {
+        var manager = new UserPurchaseManager();
+        typeof(UserPurchaseManager).GetProperty("userPurchaseData").SetValue(manager, new UserPurchaseData());
+        Assert.IsFalse(StageData.HasStagePass(manager));
+        manager.userPurchaseData.userPurchases.Add(new UserPurchase { key = InAppProductInfo.STAGE_PASS_KEY });
+        Assert.IsTrue(StageData.HasStagePass(manager));
+    }
+}
+
+// (2026-11-24) 브레이크타임 경로 표시: 출발 위치가 가깝고 다음 지점부터 같은 길이면 한 줄
+public class EnemyPathPreviewRuleTest
+{
+    static System.Collections.Generic.List<UnityEngine.Vector2> Route(float startX, float startY)
+        => new() { new(startX, startY), new(-6.25f, 0f), new(0f, 0f) };
+
+    [Test]
+    public void NearStarts_MergeIntoOne()
+    {
+        var routes = new System.Collections.Generic.List<System.Collections.Generic.List<UnityEngine.Vector2>> { Route(-6.1f, 6.25f), Route(-6.45f, 6.25f) };
+        var merged = EnemyPathPreview.MergeNearStarts(routes, 1f);
+        Assert.AreEqual(1, merged.Count);
+        Assert.AreEqual(-6.275f, merged[0][0].x, 0.001f);
+    }
+
+    [Test]
+    public void FarStarts_StaySeparate()
+    {
+        var routes = new System.Collections.Generic.List<System.Collections.Generic.List<UnityEngine.Vector2>> { Route(-6.1f, 6.25f), Route(3f, 6.25f) };
+        Assert.AreEqual(2, EnemyPathPreview.MergeNearStarts(routes, 1f).Count);
+    }
+}
+
+// (2026-11-24) 화면 드래그 카메라 이동: 맵이 화면 안에 들어오면 안 움직임, 크면 화면이 맵 밖으로 안 나가게
+public class CameraPanRuleTest
+{
+    [Test]
+    public void MapFitsScreen_DoesNotMove()
+    {
+        // 화면 반폭 7.32, 맵 -7 ~ 7 → 어디로 끌어도 처음 위치(0)
+        Assert.AreEqual(0f, CameraManager.ClampAxis(5f, 0f, 7.32f, -7f, 7f), 0.0001f);
+        Assert.AreEqual(0f, CameraManager.ClampAxis(-5f, 0f, 7.32f, -7f, 7f), 0.0001f);
+    }
+
+    [Test]
+    public void MapWiderThanScreen_ClampsToEdges()
+    {
+        // 맵 -12 ~ 12, 화면 반폭 7.32 → 카메라 x는 -4.68 ~ 4.68
+        Assert.AreEqual(3f, CameraManager.ClampAxis(3f, 0f, 7.32f, -12f, 12f), 0.0001f);
+        Assert.AreEqual(4.68f, CameraManager.ClampAxis(10f, 0f, 7.32f, -12f, 12f), 0.0001f);
+        Assert.AreEqual(-4.68f, CameraManager.ClampAxis(-10f, 0f, 7.32f, -12f, 12f), 0.0001f);
+    }
+}
+
+// (2026-11-25) 용사 에너지 최대 = 2 + 에너지 보유 증가 카드 (킹 레벨 자동 증가 삭제 → HeroEnergyMaxRuleTest 삭제)
+
+// (2026-11-25) 레벨업 미니언 강화 카드 (종 × 스탯)
+public class MinionEnhanceRuleTest
+{
+    [TearDown] public void TearDown() => MinionEnhanceSystem.Clear();
+
+    [Test]
+    public void PickChoices_DistinctAndSkipMax()
+    {
+        MinionEnhanceSystem.Clear();
+        var keys = new[] { "Bounce", "Iron" };
+        for (int seed = 0; seed < 30; seed++)
+        {
+            var picks = MinionEnhanceSystem.PickChoices(keys, null, 3, new System.Random(seed));
+            Assert.AreEqual(3, picks.Count);
+            Assert.AreEqual(3, picks.Distinct().Count(), "같은 조합이 겹침");
+            Assert.IsTrue(picks.All(p => keys.Contains(p.key)));
+        }
+        // Bounce 스탯 모두 최대 → Iron만 나옴, 후보 = 스탯 수
+        foreach (var s in MinionEnhanceSystem.STATS)
+            MinionEnhanceSystem.SetLevel("Bounce", s.statType, MinionEnhanceSystem.MAX_LEVEL);
+        var only = MinionEnhanceSystem.PickChoices(keys, null, 10, new System.Random(1));
+        Assert.AreEqual(MinionEnhanceSystem.STATS.Length, only.Count);
+        Assert.IsTrue(only.All(p => p.key == "Iron"));
+    }
+
+    [Test]
+    public void Apply_ByKeyAndStat()
+    {
+        MinionEnhanceSystem.Clear();
+        MinionEnhanceSystem.SetLevel("Bounce", StatType.AttackPower, 2);
+        MinionEnhanceSystem.SetLevel("Bounce", StatType.AttackRange, 1);
+        MinionEnhanceSystem.SetLevel("Bounce", StatType.CritChance, 3);
+        MinionEnhanceSystem.SetLevel("Bounce", StatType.EliteBossDamage, 2);
+        var dic = new System.Collections.Generic.Dictionary<StatType, float>
+        {
+            [StatType.AttackPower] = 100f, [StatType.AttackSpeed] = 50f, [StatType.AttackRange] = 2f, [StatType.CritChance] = 0f, [StatType.EliteBossDamage] = 0f,
+        };
+        MinionEnhanceSystem.Apply("Bounce", dic);
+        Assert.AreEqual(130f, dic[StatType.AttackPower], 0.01f, "공격력 +15% × 2");
+        Assert.AreEqual(50f, dic[StatType.AttackSpeed], 0.01f);
+        Assert.AreEqual(2.3f, dic[StatType.AttackRange], 0.01f);
+        Assert.AreEqual(15f, dic[StatType.CritChance], 0.01f);
+        Assert.AreEqual(30f, dic[StatType.EliteBossDamage], 0.01f, "강적 피해 +15% × 2");
+        var other = new System.Collections.Generic.Dictionary<StatType, float> { [StatType.AttackPower] = 100f };
+        MinionEnhanceSystem.Apply("Iron", other);
+        Assert.AreEqual(100f, other[StatType.AttackPower], 0.01f, "다른 종은 그대로");
+        StringAssert.Contains("+30%", MinionEnhanceSystem.GetDescription(StatType.AttackPower, 2));
+    }
+
+    // (2026-11-25) 행운 카드: 10% 확률로 한 번에 2레벨, 최대 레벨을 넘으면 보통 카드
+    [Test]
+    public void LuckyCard_DoubleLevel()
+    {
+        MinionEnhanceSystem.Clear();
+        Assert.AreEqual(3, MinionEnhanceSystem.RollAmount("Bounce", StatType.AttackPower, 0.5f), "1% 안 = 대박 3레벨");
+        Assert.AreEqual(2, MinionEnhanceSystem.RollAmount("Bounce", StatType.AttackPower, 5f), "그다음 10% = 행운");
+        MinionEnhanceSystem.SetLevel("Bounce", StatType.AttackPower, MinionEnhanceSystem.MAX_LEVEL - 2);
+        Assert.AreEqual(2, MinionEnhanceSystem.RollAmount("Bounce", StatType.AttackPower, 0.5f), "3레벨이 안 남으면 대박 → 2레벨");
+        MinionEnhanceSystem.SetLevel("Bounce", StatType.AttackPower, 0);
+        Assert.AreEqual(1, MinionEnhanceSystem.RollAmount("Bounce", StatType.AttackPower, 50f), "10% 밖 = 보통");
+        MinionEnhanceSystem.SetLevel("Bounce", StatType.AttackPower, MinionEnhanceSystem.MAX_LEVEL - 1);
+        Assert.AreEqual(1, MinionEnhanceSystem.RollAmount("Bounce", StatType.AttackPower, 5f), "2레벨이 안 남으면 보통");
+        MinionEnhanceSystem.SetLevel("Bounce", StatType.AttackPower, 1);
+        MinionEnhanceSystem.Add("Bounce", StatType.AttackPower, 2);
+        Assert.AreEqual(3, MinionEnhanceSystem.GetLevel("Bounce", StatType.AttackPower));
+        // 설명: Lv.1 → Lv.3 = +15% → +45%
+        string desc = MinionEnhanceSystem.GetDescription(StatType.AttackPower, 3, 2);
+        StringAssert.Contains("+15%", desc);
+        StringAssert.Contains("+45%", desc);
+        StringAssert.Contains("+30%", MinionEnhanceSystem.GetDescription(StatType.AttackPower, 2, 2), "처음 고르는 행운 카드 = +30%");
+    }
+}
+
+// (2026-11-25) 룬 수치 (ItemData 에셋 = CSV 반영 결과) + 둔화 3초·스턴 1초
+public class RuneValueRuleTest
+{
+    static float[] Values(string key)
+    {
+        DataTableImporter.ImportChanged();
+        var data = UnityEditor.AssetDatabase.LoadAssetAtPath<ItemData>($"Assets/AddressableResources/ItemData/Level1/{key}.asset");
+        Assert.IsNotNull(data, key);
+        return data.levelValues.ToArray();
+    }
+
+    [TestCase("AttackPowerTile", 1.5f, 2f, 2.5f)]
+    [TestCase("AttackSpeedTile", 1.4f, 1.8f, 2.2f)]
+    [TestCase("CritPowerTile", 15f, 30f, 45f)]
+    [TestCase("RangeUpTile", 1.5f, 3f, 4.5f)]
+    [TestCase("GiantSlayerTile", 2f, 3f, 4f)]
+    [TestCase("SlowTile", 25f, 40f, 70f)]
+    [TestCase("StunTile", 5f, 10f, 25f)]
+    public void RuneLevelValues(string key, float lv1, float lv2, float lv3)
+    {
+        CollectionAssert.AreEqual(new[] { lv1, lv2, lv3 }, Values(key), key);
+    }
+
+    [Test]
+    public void SlowStunDuration()
+    {
+        var slow = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>("Assets/3.Prefabs/Item/Level1/SlowTile.prefab").GetComponentInChildren<SlowTileItem>(true);
+        var stun = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>("Assets/3.Prefabs/Item/Level1/StunTile.prefab").GetComponentInChildren<StunTileItem>(true);
+        Assert.AreEqual(3f, slow.duration, 0.001f);
+        Assert.AreEqual(1f, stun.duration, 0.001f);
     }
 }

@@ -10,7 +10,6 @@ public class MinionManager : MonoSingleton<MinionManager>
     // public MinionData[] growth1MinionDatas;
     // public MinionData[] growth2MinionDatas;
 
-    public Dictionary<GradeType, EnhanceExpInfo> enhanceExpInfoDic = new Dictionary<GradeType, EnhanceExpInfo>();
     public MinionMergeData[] minionMergeDatas;
 
     public Dictionary<string, MinionMergeData> minionMergeDataDic = new Dictionary<string, MinionMergeData>();
@@ -47,14 +46,6 @@ public class MinionManager : MonoSingleton<MinionManager>
 
         });
 
-
-        await AddressableMgr.LoadAllByLabel<EnhanceExpInfo>("EnhanceExpInfo", (dates) =>
-        {
-            foreach (EnhanceExpInfo info in dates)
-            {
-                enhanceExpInfoDic[info.grade] = info;
-            }
-        });
     }
 
     public MinionData GetMinionData(string key)
@@ -65,13 +56,6 @@ public class MinionManager : MonoSingleton<MinionManager>
     public MinionMergeData GetMinionMergeData(string key)
     {
         return minionMergeDataDic[key];
-    }
-    // 미니언 등급 없음 (2026-11-20) → 강화 경험치 표는 모든 미니언 공용 = EnhanceLevelInfo.csv의 C 열 (EnhanceExpInfo 에셋 C)
-    public const GradeType ENHANCE_EXP_GRADE = GradeType.C;
-
-    public EnhanceExpInfo GetEnhanceExpInfo()
-    {
-        return enhanceExpInfoDic.TryGetValue(ENHANCE_EXP_GRADE, out EnhanceExpInfo info) ? info : null;
     }
 
     public List<MinionMergeData> GetMinionMergeDatas(string[] minionKeys)

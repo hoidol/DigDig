@@ -115,7 +115,7 @@ public class AchievementPlayTest : InGamePlayTestBase
     {
         Assert.IsNotNull(Mgr, "AchievementManager 없음");
         Assert.AreEqual(5, Daily.dailyAchievementDatas.Length, "DailyAchievement.csv 행 수");
-        Assert.AreEqual(11, Cumulative.cumulativeAchievementDatas.Length, "CumulativeAchievement.csv 행 수");
+        Assert.AreEqual(10, Cumulative.cumulativeAchievementDatas.Length, "CumulativeAchievement.csv 행 수 (2026-11-24 미니언 강화 행 삭제)");
 
         DateTime day1 = new DateTime(2030, 1, 10, 9, 0, 0);
         ResetAchievements(day1);
@@ -250,10 +250,7 @@ public class AchievementPlayTest : InGamePlayTestBase
         Assert.AreEqual(2, ad.achievementData.GetGoal(), "IncreaseGoal 0 → 목표 그대로");
         Assert.AreEqual("0/2", ad.progressText.text);
 
-        // 5) 로비 행동 집계: 미니언 강화 = 1 (미니언 뽑기는 2026-11-20 삭제)
-        int levelUpBefore = CumulativeValue(AchievementType.LevelUpMinion);
-        UserDataManager.Instance.userMinionManager.LevelUp(UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions[0].key);
-        Assert.AreEqual(levelUpBefore + 1, CumulativeValue(AchievementType.LevelUpMinion), "슬라임 강화 = LevelUpMinion 1");
+        // 5) (2026-11-24 미니언 강화 삭제 → 로비 행동 집계 확인 없음, 미니언 뽑기는 2026-11-20 삭제)
         yield return WaitFrames(2);
         AssertAllPanels("로비 행동 후");
 
@@ -263,7 +260,6 @@ public class AchievementPlayTest : InGamePlayTestBase
         Assert.IsTrue(savedDaily.userDailyAchievements.First(a => a.type == AchievementType.KillEnemy).getReward, "저장: 일일 수령 여부");
         var savedCumulative = SaveManager.LoadData<UserCumulativeAchievementData>("UserCumulativeAchievement");
         Assert.AreEqual(3, savedCumulative.userCumulativeAchievements.First(a => a.type == AchievementType.KillEnemy).clearCount, "저장: 누적 클리어 횟수");
-        Assert.AreEqual(levelUpBefore + 1, savedCumulative.userCumulativeAchievements.First(a => a.type == AchievementType.LevelUpMinion).value, "저장: 누적 값");
 
         // 7) 날짜가 바뀜 → 창을 열 때 일일 초기화(진행도·수령 여부), Login +1, 누적은 유지
         canvas.CloseCanvas();
@@ -335,6 +331,8 @@ public class AchievementPlayTest : InGamePlayTestBase
 
         // 적 처치 = KillEnemy 1 (시간을 다시 흘려 적이 나오면 처치)
         Time.timeScale = 1f;
+        if (GameManager.Instance.isBreakTime)
+            GameManager.Instance.EndBreakTime(); // 카드 소환 모드: 게임은 브레이크타임으로 시작 → Next처럼 wave 시작
         double timeout = UnityEditor.EditorApplication.timeSinceStartup + 20;
         while (EnemyFieldController.Instance.activeEnemies.Count == 0)
         {
@@ -364,7 +362,7 @@ public class AchievementPlayTest : InGamePlayTestBase
         // 저장 파일 (프레임 끝에 한 번 저장)
         yield return WaitFrames(3);
         var saved = SaveManager.LoadData<UserCumulativeAchievementData>("UserCumulativeAchievement");
-        Assert.AreEqual(2, saved.userCumulativeAchievements.First(x => x.type == AchievementType.SpawnMinion).value, "저장: SpawnMinion");
+        Assert.AreEqual(CumulativeValue(AchievementType.MergeMinion), saved.userCumulativeAchievements.First(x => x.type == AchievementType.MergeMinion).value, "저장: MergeMinion"); // 소환 버튼은 2026-11-20 삭제 → SpawnMinion 집계 없음
         Assert.AreEqual(1, saved.userCumulativeAchievements.First(x => x.type == AchievementType.MergeMinion).value, "저장: MergeMinion");
         Assert.AreEqual(1, saved.userCumulativeAchievements.First(x => x.type == AchievementType.KillBonusElite).value, "저장: KillBonusElite");
         Time.timeScale = 1f;

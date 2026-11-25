@@ -17,8 +17,9 @@ public class GameManager : MonoSingleton<GameManager>
 
     void OnDestroy()
     {
-        AuthoritySystem.End();
+        HeroUpgradeSystem.End();
     }
+
 
     [field: SerializeField]
     public float gameTimer
@@ -32,7 +33,6 @@ public class GameManager : MonoSingleton<GameManager>
     public int waveIdx;
     // public DefenceType waveDefenceType; // 이번 wave에 소환될 적의 방어 타입 (wave 시작 시 DefenceWaveTypes로 결정)
     public int minionSpawnCount;
-    public int drawItemCount;
     public MinionChancePity minionChancePity = new MinionChancePity(); // 슬라임 확률 연속 실패 보정 (한 판 동안 유지)
 
     async void Start()
@@ -42,7 +42,6 @@ public class GameManager : MonoSingleton<GameManager>
             BulletManager.Instance.LoadTask,
             ItemManager.Instance.LoadTask,
             EnemyManager.Instance.LoadTask,
-            AuthorityManager.Instance.LoadTask,
             MinionManager.Instance.LoadTask
         );
 
@@ -78,12 +77,16 @@ public class GameManager : MonoSingleton<GameManager>
 
         MinionFieldController.Instance.minionMaxCount += (int)KingSlime.Instance.statMgr.GetValue(StatType.MaxMinionCount);
 
-        // 권능: 로비에서 해금된 묶음마다 고른 것 전부 (타일·킹 배치 후, 게임 시작 전)
-        AuthoritySystem.Begin(UserDataManager.Instance.userAuthorityManager.GetActiveAuthorityKeys());
+        // (2026-11-24) 용사 강화 능력 (타일·킹 배치 후, 첫 브레이크타임 전): 시작 주사위 코인·막힌 칸 해제·시작 룬 등
+        HeroUpgradeSystem.Begin();
 
         // wave 카드 소환 (골드 소환 대신). wave 시작 이벤트보다 먼저 만들어 첫 wave 카드도 받게 함
         if (GameSetting.USE_WAVE_MINION_OFFER)
+        {
             MinionOfferSystem.Create();
+            // 인게임 미션 (보상 = 브레이크타임 주사위 코인이라 카드 소환 모드에서만)
+            InGameMissionSystem.Begin();
+        }
 
         GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
@@ -126,6 +129,7 @@ public class GameManager : MonoSingleton<GameManager>
             return;
         isGameStarted = true;
         DamageMeterSystem.Clear(); // 피해 집계는 한 판 누적
+        MinionEnhanceSystem.Clear(); // (2026-11-25) 레벨업 미니언 강화는 한 판
 
         waveIdx = 0;
         gameTimer = 0;
@@ -169,22 +173,7 @@ public class GameManager : MonoSingleton<GameManager>
         return wave != null && wave.isSpawnEnd && EnemyFieldController.Instance.ActiveEnemyCount == 0;
     }
 
-    // (2026-11-19) wave 시간 초과: 필드에 남은 적 1마리당 킹 피해 1 → 남은 적은 보상 없이 제거, 남은 소환도 취소 → 킹이 살아 있으면 wave 클리어(브레이크타임)
-    // 보스 wave는 시간 제한 없음 (보스 처치까지)
-    void OnWaveTimeOver()
-    {
-        Wave wave = CurrentWave;
-        if (wave == null || wave.waveType == WaveType.Boss)
-            return;
-        int remainCount = EnemyFieldController.Instance.ActiveEnemyCount;
-        wave.isSpawnEnd = true;
-        if (!wave.isEnd)
-            wave.EndWave(); // 남은 소환 취소
-        EnemyFieldController.Instance.ClearAllEnemies();
-        if (remainCount > 0)
-            KingSlime.Instance.TakeDamage(new EnemyDamageData { damage = remainCount * TIME_OVER_DAMAGE_PER_ENEMY });
-    }
-    public const int TIME_OVER_DAMAGE_PER_ENEMY = 1;
+    // (2026-11-24) wave 시간 제한(90초 지나면 남은 적 제거 + 킹 피해) 삭제 → 적을 모두 처리해야 wave 클리어
 
     void OnWaveCleared()
     {
@@ -215,15 +204,9 @@ public class GameManager : MonoSingleton<GameManager>
             if (!isPlaying)
                 continue;
 
-            // 카드 소환 모드: 적을 다 처리하면 브레이크타임. WAVE_TIME(90초)이 지나면 남은 적 수만큼 킹 피해 후 정리
+            // 카드 소환 모드: 적을 다 처리하면 브레이크타임 (시간 제한 없음, 2026-11-24)
             if (GameSetting.USE_WAVE_MINION_OFFER)
             {
-                if (mainWaveTimer > 0)
-                {
-                    mainWaveTimer = Mathf.Max(0, mainWaveTimer - Time.deltaTime);
-                    if (mainWaveTimer <= 0 && !isBreakTime)
-                        OnWaveTimeOver();
-                }
                 if (isPlaying && !isBreakTime && IsCurrentWaveCleared())
                     OnWaveCleared();
                 continue;

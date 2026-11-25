@@ -3,91 +3,172 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // (2026-11-20) 레벨업 카드 구성 규칙 (씬 없이 계산 → 테스트 가능)
-// (2026-11-21) 단계 = Lv.1 종족 선택 → Lv.5 종족 강화(버프 칸 확장) → Lv.10 직업 선택 → Lv.15 패시브 → (Lv.20 발동 스킬, 아직 없음)
+// (2026-11-24) 최대 Lv.8. 레벨업 한 번 = ① 킹 능력치 카드(LevelUpCanvas, 매 레벨 유지) → ② 이 규칙의 단계 카드
+//   Lv.1 용사 선택(정예병 칸 랜덤 2칸) → Lv.2 1단계 스킬 해방 → Lv.3·4 용사 강화 → Lv.5 2단계 스킬 해방(+최대 미니언 수 +1)
+//   → Lv.6·7 용사 강화 → Lv.8 3단계 스킬 해방 (공용 "용사가 될거야!")
+// - (2026-11-25) 용사 강화 = 정예 칸 추가(EliteAreaExpandKingAbility, 카드마다 다른 랜덤 칸, 최대 3) · 충전 가속(-10%/Lv, 최대 3)
+//   · 에너지 보유 증가(2 → 3 → 4 → 5, 최대 3) · 1단계 스킬 강화(1단계 해방 후) · 2단계 스킬 강화(2단계 해방 후) (각 최대 1)
+//   카드 3장 = 정예 칸 추가가 아닌 카드 1장씩 + 남은 자리는 정예 칸 추가(서로 다른 칸)로 채움 (GetChoices HeroBoost)
+//   정예병 버프 강화(용사 카드 레벨 +1)는 삭제 → 정예병 칸 버프·킹 스탯은 레벨업마다 자동 상승 (HeroKingAbility.HeroLevel)
 // - 앞 단계를 아직 안 했으면 그 단계가 먼저 (레벨을 건너뛰어도 순서대로)
-// - 그 외 = 킹 능력치 카드 (최대 레벨 제외, 서로 다른 카드 count장). 고른 패시브가 최대 레벨이 아니면 강화 카드로 같이 섞임
 // - level = 그 레벨업 창의 레벨 (밀린 레벨업은 하나씩: KingSlime.ChoiceLevel)
 public static class LevelUpChoiceRule
 {
     public const int CHOICE_COUNT = 3;
-    public const int RACE_LEVEL = 1;
-    public const int TILE_EXPAND_LEVEL = 5;  // 종족 강화
-    public const int JOB_LEVEL = 10;
-    public const int PASSIVE_LEVEL = 15;
-    public const int ACTIVE_SKILL_LEVEL = 20; // 아직 없음
+    public const int MAX_LEVEL = 8;
+    public const int HERO_LEVEL = 1;
+    public const int HERO_TILE_COUNT = 2; // 용사 정예병 칸 수
+
+    // 레벨마다 단계 (순서 = 진행 순서). 같은 종류가 여러 번이면 그 횟수만큼 해야 다음으로
+    public static readonly (int level, AbilityCategory stage)[] MILESTONES =
+    {
+        (1, AbilityCategory.Hero),
+        (2, AbilityCategory.HeroSkill),
+        (3, AbilityCategory.HeroBoost),
+        (4, AbilityCategory.HeroBoost),
+        (5, AbilityCategory.HeroSkill),
+        (6, AbilityCategory.HeroBoost),
+        (7, AbilityCategory.HeroBoost),
+        (8, AbilityCategory.HeroSkill),
+    };
+
+    // 스킬 해방 레벨 (index = 스킬 단계 0·1·2). 화면 표시용
+    public static int GetSkillUnlockLevel(int skillIdx)
+    {
+        int n = 0;
+        foreach (var (lv, stage) in MILESTONES)
+            if (stage == AbilityCategory.HeroSkill && n++ == skillIdx)
+                return lv;
+        return MAX_LEVEL;
+    }
 
     // 레벨업 창 한 번의 카드 구성에 필요한 값
     public class Input
     {
         public int level;
-        public bool hasRace, hasJob, hasTileExpand, hasPassive;
-        public IList<AbilityData> racePool, jobPool, passivePool, statPool;
-        public AbilityData tileExpand;
-        public AbilityData ownedPassive; // 고른 패시브 (최대 레벨 전까지 능력치 카드에 강화 카드로 섞임)
+        public AbilityData ownedHero;   // 고른 용사 (없으면 null)
+        public int heroLevel;           // 0 = 없음, 1 = 고름
+        public int heroSkillCount;      // 해방한 스킬 수 (0~3)
+        public int boostCount;          // 용사 강화 단계에서 고른 수 (boostPool 카드 레벨 합)
+        public IList<AbilityData> heroPool;
+        public IList<AbilityData> boostPool; // 정예 칸 추가 · 충전 가속
         public Func<AbilityData, int> getLevel;
     }
 
-    // 이번 레벨업 창의 단계 (Stat = 능력치 카드)
+    // 이번 레벨업 창의 단계 (Stat = 단계 카드 없음 → 능력치 카드만)
     public static AbilityCategory GetStage(Input input)
     {
-        if (!input.hasRace)
-            return AbilityCategory.Race;
-        if (!input.hasTileExpand && input.level >= TILE_EXPAND_LEVEL && input.tileExpand != null)
-            return AbilityCategory.TileExpand;
-        if (input.hasTileExpand && !input.hasJob && input.level >= JOB_LEVEL && HasAny(input.jobPool))
-            return AbilityCategory.Job;
-        if (input.hasJob && !input.hasPassive && input.level >= PASSIVE_LEVEL && HasAny(input.passivePool))
-            return AbilityCategory.Passive;
+        int skillNeed = 0, boostNeed = 0;
+        foreach (var (lv, stage) in MILESTONES)
+        {
+            if (input.level < lv)
+                break;
+            switch (stage)
+            {
+                case AbilityCategory.Hero:
+                    if (input.heroLevel < 1 && HasAny(input.heroPool)) return stage;
+                    break;
+                case AbilityCategory.HeroSkill:
+                    skillNeed++;
+                    if (input.heroLevel >= 1 && input.heroSkillCount < skillNeed) return stage;
+                    break;
+                case AbilityCategory.HeroBoost:
+                    boostNeed++;
+                    if (input.heroLevel >= 1 && input.boostCount < boostNeed && GetBoostCandidates(input).Count > 0) return stage;
+                    break;
+            }
+        }
         return AbilityCategory.Stat;
     }
 
     static bool HasAny(IList<AbilityData> pool) => pool != null && pool.Count > 0;
 
-    // 레벨업 버튼 글씨 (단계 이름, 번역 전 임시)
+    // 용사 강화 후보 = boostPool (최대 레벨 제외)
+    public static List<AbilityData> GetBoostCandidates(Input input)
+    {
+        Func<AbilityData, int> getLevel = input.getLevel ?? (_ => 0);
+        var list = new List<AbilityData>();
+        if (input.boostPool != null)
+            foreach (var d in input.boostPool)
+                if (d != null && !list.Contains(d) && getLevel(d) < d.maxLevel && IsBoostUnlocked(d, input.heroSkillCount))
+                    list.Add(d);
+        return list;
+    }
+
+    // 스킬 강화 카드는 그 단계 스킬을 해방한 뒤부터 (1단계 = Lv.2, 2단계 = Lv.5)
+    public static bool IsBoostUnlocked(AbilityData d, int heroSkillCount) =>
+        !(d.prefab is HeroSkillEnhanceKingAbility s) || heroSkillCount > s.skillIndex;
+
+    // 레벨업 창 안내·버튼 글씨 (단계 이름, 번역 전 임시)
     public static string GetStageName(AbilityCategory stage)
     {
         switch (stage)
         {
-            case AbilityCategory.Race: return "종족 선택";
-            case AbilityCategory.TileExpand: return "종족 강화";
-            case AbilityCategory.Job: return "직업 선택";
-            case AbilityCategory.Passive: return "패시브 선택";
-            case AbilityCategory.ActiveSkill: return "스킬 선택";
+            case AbilityCategory.Hero: return "용사 선택";
+            case AbilityCategory.HeroSkill: return "스킬 해방";
+            case AbilityCategory.HeroBoost:
+            case AbilityCategory.HeroUpgrade: return "용사 강화";
+            case AbilityCategory.TileExpand: return "버프 칸 확장";
             default: return "레벨 업";
         }
     }
 
+    // 단계 카드. 단계가 없으면 빈 목록 → 능력치 카드만 고르고 끝
+    // 스킬 해방 = 고른 용사 한 장 (LevelUpCanvas가 다음 스킬 카드로 보여줌, 고르면 HeroKingAbility.UnlockNextSkill)
     public static List<AbilityData> GetChoices(Input input, System.Random rng, int count = CHOICE_COUNT)
     {
         Func<AbilityData, int> getLevel = input.getLevel ?? (_ => 0);
         switch (GetStage(input))
         {
-            case AbilityCategory.Race:
-            {
-                List<AbilityData> races = PickStatChoices(input.racePool, getLevel, rng, count);
-                if (races.Count > 0)
-                    return races;
-                break;
-            }
-            case AbilityCategory.TileExpand:
-            {
-                var expands = new List<AbilityData>();
-                for (int i = 0; i < count; i++)
-                    expands.Add(input.tileExpand);
-                return expands;
-            }
-            case AbilityCategory.Job:
-                return PickStatChoices(input.jobPool, getLevel, rng, count);
-            case AbilityCategory.Passive:
-                return PickStatChoices(input.passivePool, getLevel, rng, count);
+            case AbilityCategory.Hero:
+                return PickStatChoices(input.heroPool, getLevel, rng, count);
+            case AbilityCategory.HeroSkill:
+                return new List<AbilityData> { input.ownedHero };
+            case AbilityCategory.HeroBoost:
+                return PickHeroBoostChoices(GetBoostCandidates(input), rng, count);
         }
+        return new List<AbilityData>();
+    }
 
-        var pool = new List<AbilityData>();
-        if (input.statPool != null)
-            pool.AddRange(input.statPool);
-        if (input.ownedPassive != null)
-            pool.Add(input.ownedPassive); // 최대 레벨이면 PickStatChoices가 뺌
-        return PickStatChoices(pool, getLevel, rng, count);
+    // (2026-11-25) 용사 강화 카드: 정예 칸 추가(TileExpand)가 아닌 후보는 1장씩, 남은 자리 = 정예 칸 추가 (같은 카드 여러 장 → LevelUpCanvas가 장마다 다른 칸)
+    public static List<AbilityData> PickHeroBoostChoices(IList<AbilityData> candidates, System.Random rng, int count = CHOICE_COUNT)
+    {
+        var result = new List<AbilityData>();
+        AbilityData expand = null;
+        var others = new List<AbilityData>();
+        foreach (var d in candidates)
+        {
+            if (d == null)
+                continue;
+            if (d.category == AbilityCategory.TileExpand)
+                expand = expand ?? d;
+            else if (!others.Contains(d))
+                others.Add(d);
+        }
+        while (others.Count > 0 && result.Count < count - (expand != null ? 1 : 0))
+        {
+            int idx = rng.Next(others.Count);
+            result.Add(others[idx]);
+            others.RemoveAt(idx);
+        }
+        if (expand != null)
+            while (result.Count < count)
+                result.Insert(rng.Next(result.Count + 1), expand);
+        return result;
+    }
+
+    // 용사 카드마다 정예병 칸: 킹 주변 8칸 중 서로 다른 랜덤 count칸
+    public static Vector2Int[] PickHeroTiles(System.Random rng, int count = HERO_TILE_COUNT)
+    {
+        var pool = new List<Vector2Int>(AROUND_OFFSETS);
+        var result = new List<Vector2Int>();
+        while (result.Count < count && pool.Count > 0)
+        {
+            int idx = rng.Next(pool.Count);
+            result.Add(pool[idx]);
+            pool.RemoveAt(idx);
+        }
+        return result.ToArray();
     }
 
     // 킹 주변 8칸 (Tile.index 단위, y 아래 +)

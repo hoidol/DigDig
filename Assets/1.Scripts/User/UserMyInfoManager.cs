@@ -94,8 +94,8 @@ public class UserMyInfoManager : UserBaseManager
             userMyInfoData.lv++;
             // 최대 레벨에 도달하면 남은 경험치는 버림
             userMyInfoData.exp = IsMaxLv ? 0 : remainExp;
-            // 이 레벨에 지급되는 미니언 (로비 레벨업 창 뒤에 토스트)
-            lastUnlockedMinionKeys = UserDataManager.Instance.userMinionManager.GrantLevelUnlockMinions(userMyInfoData.lv);
+            // 이 레벨에 구매할 수 있게 된 미니언 (로비 레벨업 창 뒤에 토스트, 2026-11-24 자동 지급 → 구매)
+            lastUnlockedMinionKeys = new List<string>(UserMinionManager.GetLevelUnlockKeysAt(userMyInfoData.lv));
             RequestSave();
             GameEventBus.Publish(new ChangedUserExpEvent());
             return true;

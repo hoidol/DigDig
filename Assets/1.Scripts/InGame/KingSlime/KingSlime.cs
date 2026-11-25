@@ -20,9 +20,12 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     public CameraShake cameraShake;
     public float coinChance = 0.5f;
 
-    public FindTargetType findTargetType = FindTargetType.Closest;
+    public FindTargetType findTargetType = FindTargetType.First; // (2026-11-24) 기본 = 가장 먼저 나온 적 (Start에서 씬 값도 덮어씀)
 
     public FindTargetType FindTargetType => findTargetType;
+    // (2026-11-25) 실제로 쓰는 타겟 방식 (용사 스킬이 잠깐 바꿀 수 있음, 궁수 매의 눈)
+    public FindTargetType EffectiveFindTargetType => findTargetType != FindTargetType.Random && HeroKingAbility.ForcedAllyFindTarget.HasValue
+        ? HeroKingAbility.ForcedAllyFindTarget.Value : findTargetType;
 
     // (2026-11-20) 인게임 킹 레벨 (한 판 동안). 레벨업 창은 아직 안 띄움, 상단 경험치바(ExpBar)만
     public int exp;
@@ -30,6 +33,8 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     public int MaxExp => GetMaxExp(lv);
     // 보너스 엘리트 처치로 모아 둔 다음 브레이크타임 주사위 코인 (MinionOfferSystem이 받아 감)
     public int bonusDiceCoinNextBreak;
+    // (2026-11-23) 엘리트·보스 처치로 모아 둔 룬 보상 수 → 다음 브레이크타임에 룬 선택 창 (RuneRewardSystem)
+    public int pendingRuneRewards;
 
     [SerializeField] Transform hpPoint;
     public ItemInventory itemInventory; //패시브 스킬로 제공!
@@ -98,6 +103,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
 
     void Start()
     {
+        findTargetType = FindTargetType.First; // (2026-11-24) 기본 타겟 = 가장 먼저 나온 적 (씬에 저장된 값보다 우선)
         // rangeObj.SetActive(false);
         statMgr = new KingSlimeStatManager(this, kingslimeName);
         abilityInventory = new KingAbilityInventory(this);
@@ -134,6 +140,14 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     {
         pickable.PickedUp();
     }
+    // (2026-11-24) 용사를 고르면 킹 기본 스탯 = HeroData.csv의 그 용사 (null = KingSlimeData로 되돌림)
+    // (2026-11-25) heroLevel = 용사 레벨 (레벨업마다 HeroData의 Add* 만큼 오름)
+    public void ApplyHeroBaseStats(HeroDataTable.HeroData hero, int heroLevel = 1)
+    {
+        statMgr.SetHeroBase(hero, heroLevel);
+        UpdateCharacter();
+    }
+
     public void UpdateCharacter()
     {
 
@@ -168,16 +182,26 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         buffEffectDisplay.Refresh(transform, statMgr.activeBuffs);
     }
 
-    // (2026-11-22) 필요 경험치 = 2 + 1 × 레벨 (Lv0 2, Lv1 3, Lv2 4 …)
-    public static int GetMaxExp(int level) => GameSetting.KING_LEVEL_BASE_EXP + GameSetting.KING_LEVEL_EXP_PER_LEVEL * Mathf.Max(0, level);
+    // (2026-11-23) 필요 경험치 = GameSetting.KING_LEVEL_EXPS[레벨] (2,2,2,3,3,3,4,4,4). 최대 레벨 이상이면 마지막 값(표시용)
+    public static int GetMaxExp(int level)
+    {
+        int[] table = GameSetting.KING_LEVEL_EXPS;
+        return table[Mathf.Clamp(level, 0, table.Length - 1)];
+    }
+    public static bool IsMaxLevel(int level) => level >= GameSetting.KING_MAX_LEVEL;
+    public bool IsMaxLv => IsMaxLevel(lv);
 
     // (2026-11-22) 경험치 구매: 주사위 코인 BUY_EXP_DICE_COIN_PRICE개 → 경험치 BUY_EXP_AMOUNT. 코인이 모자라면 false
     public bool TryBuyExp()
     {
-        if (diceCoin < GameSetting.BUY_EXP_DICE_COIN_PRICE)
+        if (IsMaxLv || diceCoin < GameSetting.BUY_EXP_DICE_COIN_PRICE)
             return false;
         AddDiceCoin(-GameSetting.BUY_EXP_DICE_COIN_PRICE);
-        AddExp(GameSetting.BUY_EXP_AMOUNT);
+        // (2026-11-24) 용사 강화 ExpBuyBonusChance: 확률로 경험치 +1 더
+        int bonus = HeroUpgradeSystem.RollExpBuyBonus();
+        if (bonus > 0)
+            EffectManager.PlayPopText((Vector2)transform.position + Vector2.up, $"EXP +{GameSetting.BUY_EXP_AMOUNT + bonus}!", new Color(0.6f, 1f, 0.6f));
+        AddExp(GameSetting.BUY_EXP_AMOUNT + bonus);
         return true;
     }
 
@@ -186,16 +210,23 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     // 경험치는 브레이크타임에 구매로만 얻으므로 창이 열릴 수 있음 (열 수 없으면 밀어 두고 다음 레벨업 때 함께)
     public void AddExp(int e)
     {
-        if (e <= 0)
+        if (e <= 0 || IsMaxLv)
             return;
         exp += e;
-        while (exp >= MaxExp)
+        int levelUps = 0;
+        while (!IsMaxLv && exp >= MaxExp)
         {
             exp -= MaxExp;
             lv++;
             pendingLevelUps++;
+            levelUps++;
         }
+        if (IsMaxLv)
+            exp = 0; // 최대 레벨: 남은 경험치는 버림 (MAX 표시)
         GameEventBus.Publish(new ExpChangedEvent(exp, MaxExp, lv));
+        // (2026-11-23) 레벨업 보상: 레벨마다 주사위 코인 LEVEL_UP_DICE_COIN (레벨업 창 아래 "레벨업 보상 +1")
+        if (levelUps > 0)
+            AddDiceCoin(GameSetting.LEVEL_UP_DICE_COIN * levelUps);
         if (pendingLevelUps > 0)
             InGame.LevelUpCanvas.OpenPending();
     }
@@ -211,6 +242,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         if (pendingLevelUps <= 0)
             return;
         pendingLevelUps--;
+        abilityInventory?.Get<HeroKingAbility>()?.RefreshHeroLevel(); // (2026-11-25) 용사 스탯·정예병 칸 버프 상승
         GameEventBus.Publish(new ExpChangedEvent(exp, MaxExp, lv));
     }
     public void SetFindTargetType(FindTargetType type)
@@ -278,6 +310,21 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         if (count > 0)
             SoundManager.Play(SFXType.DiceCoinGet);
         GameEventBus.Publish(new DiceCoinEvent(diceCoin));
+    }
+
+    // (2026-11-25) 보상 주사위 코인(판매 환불·미션·보너스 엘리트 등): 이번 브레이크타임 지급이 끝난 뒤면 즉시, 아니면 다음 브레이크타임에
+    // 반환 = 즉시 받았는지 (글씨 "+N" / "다음 웨이브 +N" 구분용)
+    public bool AddRewardDiceCoin(int count)
+    {
+        if (count <= 0)
+            return false;
+        if (MinionOfferSystem.IsBreakDiceGranted)
+        {
+            AddDiceCoin(count);
+            return true;
+        }
+        bonusDiceCoinNextBreak += count;
+        return false;
     }
 
     public void TakeDamage(DamageData d) => health.TakeDamage(d);
@@ -363,6 +410,7 @@ public enum StatType
     DamageToArmored,  // 중장갑 상대
     DamageToEthereal, // 영체 상대
     SkillCooldownSpeed, // (2026-11-21) 미니언 스킬 쿨타임 충전 속도 +% (Add, 버프로만, 직업 마법사) → Minion.SkillDeltaTime
+    DoubleShotChance, // (2026-11-23) 탄을 쏠 때 같은 탄을 한 발 더 쏠 확률 % (Add, 버프로만, 엘프 종족) → Minion.FireBullet
     
     Count
 }

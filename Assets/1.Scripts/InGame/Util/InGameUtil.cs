@@ -102,45 +102,23 @@ public static class InGameUtil
             case FindTargetType.Random:
                 return cols[Random.Range(0, cols.Count)].transform;
 
-            case FindTargetType.Farthest:
+            case FindTargetType.First:
                 {
-                    Collider2D farthest = null;
-                    float farthestSqrDist = float.MinValue;
+                    // 사거리 안에서 가장 먼저 소환된 적 (적이 아니면 가까운 적)
+                    Collider2D first = null;
+                    long firstOrder = long.MaxValue;
                     for (int i = 0; i < cols.Count; i++)
                     {
-                        float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
-                        if (sqrDist > farthestSqrDist)
-                        {
-                            farthest = cols[i];
-                            farthestSqrDist = sqrDist;
-                        }
-                    }
-                    return farthest.transform;
-                }
-
-            case FindTargetType.LowHp:
-                {
-                    //체력이 같으면 가까운 적 우선
-                    Collider2D lowest = null;
-                    float lowestHp = float.MaxValue;
-                    float lowestSqrDist = float.MaxValue;
-                    for (int i = 0; i < cols.Count; i++)
-                    {
-                        if (!cols[i].TryGetComponent(out IHittable h))
+                        if (!cols[i].TryGetComponent(out Enemy e))
                             continue;
-
-                        float sqrDist = ((Vector2)cols[i].transform.position - pos).sqrMagnitude;
-                        if (h.CurHp < lowestHp || (h.CurHp == lowestHp && sqrDist < lowestSqrDist))
+                        if (e.SpawnOrder < firstOrder)
                         {
-                            lowest = cols[i];
-                            lowestHp = h.CurHp;
-                            lowestSqrDist = sqrDist;
+                            first = cols[i];
+                            firstOrder = e.SpawnOrder;
                         }
                     }
-                    //체력 정보가 없으면 가까운 적
-                    return lowest != null ? lowest.transform : SelectTarget(cols, pos, FindTargetType.Closest);
+                    return first != null ? first.transform : SelectTarget(cols, pos, FindTargetType.Closest);
                 }
-
 
             case FindTargetType.HighHp:
                 {
@@ -194,27 +172,16 @@ public static class InGameUtil
 
         return endOutLength;
     }
-
-
-    public static Vector2 GetSpawnTopPosition(float howFar = -1)
-    {
-        if (howFar < 0)
-        {              
-            howFar = GetEndOutLength();
-        }
-
-        Vector2 direction = Quaternion.Euler(0, 0, UnityEngine.Random.Range(60f, 120f)) * Vector2.right;
-        return MapManager.SnappedPosition(Vector2.zero + direction * howFar);
-    }
 }
 public enum FindTargetType
 {
+    // (2026-11-23) 버튼으로 고르는 방식 = Count 앞 (Farthest·LowHp 삭제). 번호로 저장되므로 뒤에만 추가
     Closest, //가까운
-    Farthest, //먼
-    Random, //랜덤 
-    LowHp,
-    HighHp,
-    //높은 체력
+    HighHp, //높은 체력
+    First,   // (2026-11-24) 가장 먼저 나온 적 (사거리 안에서 소환 순서가 가장 빠른 적, Enemy.SpawnOrder). 기본값
 
-    Count
+    Count,
+
+    // 버튼으로 고르지 않음: 랜덤 타겟 룬(3번째 공격마다)이 그 공격에만 잠깐 씀
+    Random = 100,
 }

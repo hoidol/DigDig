@@ -65,3 +65,7 @@ MonoBehaviour:
     productId: 
     currencyType: 1
     price: 270
+  - key: StagePass
+    productId: stage_pass
+    currencyType: 5
+    price: 2.99

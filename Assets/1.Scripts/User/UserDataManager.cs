@@ -19,7 +19,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     }
 
     public UserStageManager userStageManager;
-    public UserAuthorityManager userAuthorityManager;
     public UserMinionManager userMinionManager;
     public UserPurchaseManager userPurchaseManager;
     public UserMyInfoManager userMyInfoManager;
@@ -56,7 +55,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         Debug.Log("UserManager Awake()");
 
         userStageManager = new UserStageManager();
-        userAuthorityManager = new UserAuthorityManager();
         userPurchaseManager = new UserPurchaseManager();
         userMinionManager = new UserMinionManager();
         userMyInfoManager = new UserMyInfoManager();
@@ -76,13 +74,11 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         }
 
         userStageManager.LoadData();
-        userAuthorityManager.LoadData();
         userPurchaseManager.LoadData();
         userMinionManager.LoadData();
         userMyInfoManager.LoadData();
         userKingSlimeManager.LoadData();
-        // 레벨 지급 미니언: 미니언 로드가 레벨 로드보다 먼저라 여기서 (이미 지난 레벨분도 채움)
-        userMinionManager.GrantLevelUnlockMinions(userMyInfoManager.userMyInfoData.lv);
+        // (2026-11-24) 레벨 해금 미니언은 자동 지급하지 않음 → 로비에서 구매 (UserMinionManager.BuyMinion)
         isAdRemoved = userPurchaseManager.HasPurchasedAny(InAppProductInfo.REMOVE_AD_KEYS);
     }
 
@@ -95,7 +91,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         {
             userData = userData,
             userStageData = userStageManager.userStageData,
-            userAuthorityData = userAuthorityManager.userAuthorityData,
             userPurchaseData = userPurchaseManager.userPurchaseData,
             userMinionData = userMinionManager.userMinionData,
             userMyInfoData = userMyInfoManager.userMyInfoData,
@@ -111,7 +106,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
 
         SaveIfNotNull(UserDataFileName, data.userData);
         SaveIfNotNull(UserStageManager.UserDataFileName, data.userStageData);
-        SaveIfNotNull(UserAuthorityManager.UserDataFileName, data.userAuthorityData);
         SaveIfNotNull(UserPurchaseManager.UserDataFileName, data.userPurchaseData);
         SaveIfNotNull(UserMinionManager.UserDataFileName, data.userMinionData);
         SaveIfNotNull(UserMyInfoManager.UserDataFileName, data.userMyInfoData);
@@ -128,7 +122,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         {
             { UserDataFileName, JsonUtility.ToJson(data.userData) },
             { UserStageManager.UserDataFileName, JsonUtility.ToJson(data.userStageData) },
-            { UserAuthorityManager.UserDataFileName, JsonUtility.ToJson(data.userAuthorityData) },
             { UserPurchaseManager.UserDataFileName, JsonUtility.ToJson(data.userPurchaseData) },
             { UserMinionManager.UserDataFileName, JsonUtility.ToJson(data.userMinionData) },
             { UserMyInfoManager.UserDataFileName, JsonUtility.ToJson(data.userMyInfoData) },
@@ -143,7 +136,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         {
             userData = FromSection<UserData>(sections, UserDataFileName),
             userStageData = FromSection<UserStageData>(sections, UserStageManager.UserDataFileName),
-            userAuthorityData = FromSection<UserAuthorityData>(sections, UserAuthorityManager.UserDataFileName),
             userPurchaseData = FromSection<UserPurchaseData>(sections, UserPurchaseManager.UserDataFileName),
             userMinionData = FromSection<UserMinionData>(sections, UserMinionManager.UserDataFileName),
             userMyInfoData = FromSection<UserMyInfoData>(sections, UserMyInfoManager.UserDataFileName),
@@ -254,7 +246,6 @@ public class UserCloudData
 {
     public UserData userData;
     public UserStageData userStageData;
-    public UserAuthorityData userAuthorityData;
     public UserPurchaseData userPurchaseData;
     public UserMinionData userMinionData;
     public UserMyInfoData userMyInfoData;

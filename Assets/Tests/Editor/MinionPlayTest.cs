@@ -77,9 +77,9 @@ public class MinionPlayTest : InGamePlayTestBase
         var csvKeys = System.IO.File.ReadAllLines("Assets/Json/MinionData.csv")
             .Skip(1)
             .Select(l => l.Split('\t')[0].Trim())
-            .Where(k => k.Length > 0)
+            .Where(k => k.Length > 0 && GameSetting.IsUsedMinion(k)) // (2026-11-24) 게임에서 쓰는 미니언만 로드 (AddressableResources/MinionData/Data)
             .ToList();
         var missing = csvKeys.Where(k => !MinionManager.Instance.minionDataDic.ContainsKey(k)).ToList();
-        Assert.IsEmpty(missing, "CSV에는 있는데 MinionData 에셋이 없는 슬라임");
+        Assert.IsEmpty(missing, "게임에서 쓰는데 MinionData 에셋이 로드되지 않은 미니언 (MinionData/Data 폴더에 있어야 함)");
     }
 }

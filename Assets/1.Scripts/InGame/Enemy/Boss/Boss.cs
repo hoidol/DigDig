@@ -29,6 +29,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     {
         EnterBossState(BossState.Intro);
         base.Spawn(pos, wave);
+        EnemyFieldController.Instance?.RegisterBoss(this); // (2026-11-25) 용사 스킬 등 대상 목록에 포함
         SoundManager.Play(SFXType.BossAppear);
         GameEventBus.Publish(new BossSpawnEvent(this));
     }
@@ -63,8 +64,15 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     }
 
 
+    // (2026-11-23) 보스 처치 = 다음 브레이크타임 룬 선택
+    public override void Reward()
+    {
+        RuneRewardSystem.AddReward(transform.position);
+    }
+
     public override void Destroy()
     {
+        EnemyFieldController.Instance?.UnregisterBoss(this);
         base.Destroy();
         GameEventBus.Publish(new BossDeadEvent(this));
     }

@@ -45,7 +45,8 @@ public class ExpBar : MonoBehaviour
         if (king == null || levelText == null)
             return;
         int pending = king.pendingLevelUps;
-        string label = pending <= 0 ? $"Lv.{king.lv + 1}" : "LEVEL UP!" + (pending > 1 ? $" x{pending}" : "");
+        // (2026-11-23) 표시 레벨 = king.lv (Lv.0 시작, 최대 Lv.9)
+        string label = pending <= 0 ? $"Lv.{king.lv}" : "LEVEL UP!" + (pending > 1 ? $" x{pending}" : "");
         if (label == lastLabel)
             return;
         lastLabel = label;
@@ -55,13 +56,14 @@ public class ExpBar : MonoBehaviour
 
     void Refresh(int exp, int maxExp, int lv)
     {
-        float ratio = maxExp > 0 ? (float)exp / maxExp : 0f;
+        bool isMax = KingSlime.IsMaxLevel(lv);
+        float ratio = isMax ? 1f : maxExp > 0 ? (float)exp / maxExp : 0f;
         if (slider != null)
             slider.value = ratio;
         if (image != null && image.gameObject.activeSelf)
             image.fillAmount = ratio;
         if (expText != null)
-            expText.text = $"{exp}/{maxExp}";
+            expText.text = isMax ? "MAX" : $"{exp}/{maxExp}";
     }
 
     #region 기본 모양 (씬에 Slider 연결이 없을 때만)

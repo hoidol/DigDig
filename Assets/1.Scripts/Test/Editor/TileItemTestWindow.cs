@@ -361,13 +361,8 @@ public class TileItemTestWindow : EditorWindow
     {
         Header("뽑기");
         EditorGUILayout.LabelField($"뽑기 후보 {ItemManager.Instance.GetDrawTileItems(99).Count}종 (룬 뽑기 버튼은 2026-11-20 삭제)");
-        using (new EditorGUILayout.HorizontalScope())
-        {
-            if (GUILayout.Button("선택 창 열기 (확률 없이)"))
-                SelectItemCanvas.Instance.OpenCanvas();
-            if (GUILayout.Button("뽑기 창 열기 (100%)"))
-                SelectItemCanvas.Instance.OpenDraw(100);
-        }
+        if (GUILayout.Button("룬 선택 창 열기"))
+            SelectRuneCanvas.Instance.OpenCanvas();
     }
 
     // ---------------- 편의 ----------------

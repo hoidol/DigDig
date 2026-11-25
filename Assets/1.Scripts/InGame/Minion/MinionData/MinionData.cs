@@ -7,8 +7,6 @@ using UnityEngine;
 public class MinionData : ScriptableObject
 {
     public const int MAX_MERGE_LEVEL = 4; // mergeLevel 0 ~ MAX_MERGE_LEVEL (표시 5성 = mergeLevel 4가 최대. 2026-11-19 잠시 3(4성)으로 줄였다가 되돌림)
-    public static readonly int MAX_ENHANCE_LEVEL = 15;
-    public static int[] ABILITY_LEVELS = { 2, 5, 8, 11, 14 };
 
     public string key;
     public string Title => TranslateManager.GetText($"Minion.{key}"); // 이름은 Translate.csv (Minion.{Key})
@@ -17,7 +15,6 @@ public class MinionData : ScriptableObject
     public AttackType attackType;
     [Tooltip("슬라임 유형 (MinionData.csv Tags). 형태 하나 + 특성. 장비가 장착 슬라임 구성에 반응하는 기준")]
     public MinionTag tags;
-    public MinionEnhanceInfo[] commonMinionEnhanceInfos;
 
     [Tooltip("공격력 랜덤 폭. 0이면 고정, 0.67이면 중간값 ±67% (9 → 3~15). 데이터에는 중간값만 입력")]
     [Range(0f, 1f)] public float attackPowerRandomRatio;
@@ -42,6 +39,12 @@ public class MinionData : ScriptableObject
     [Tooltip("wave 카드(MinionOfferCard)로 이 미니언을 놓을 때 드는 주사위 코인 (MinionData.csv Coin 열)")]
     public int offerDiceCoinPrice = GameSetting.OFFER_MINION_DICE_COIN_PRICE;
 
+    // (2026-11-24) 로비 구매: 유저 레벨로 해금되면 이 재화·가격으로 구매 (MinionData.csv BuyCurrency·BuyPrice 열). 초기 지급 미니언은 안 씀
+    [Tooltip("로비에서 이 미니언을 살 때 쓰는 재화 (MinionData.csv BuyCurrency 열)")]
+    public CurrencyType buyCurrencyType = CurrencyType.Gold;
+    [Tooltip("로비 구매 가격 (MinionData.csv BuyPrice 열)")]
+    public int buyPrice;
+
     [Tooltip("인게임 직접 강화 1레벨당 공격력 증가(%). 종마다 다름 (MinionData.csv ReinforceAttackPower)")]
     public float reinforceAttackPowerPercent = 10f;
 
@@ -52,40 +55,41 @@ public class MinionData : ScriptableObject
     public ConditionData[] unlockConditions; // 추가 효과 해금 조건 (모두 충족해야 효과 활성화)
 
     public Sprite thum;
-    public MinionEnhanceInfo GetCommonMinionEnhanceInfo(int lv)
-    {
-        return commonMinionEnhanceInfos.Where(e => e.level == lv).FirstOrDefault();
-    }
 
+    [Header("5성 진화 (2026-11-24)")]
+    [Tooltip("진화한 몸 그림 (LoadData가 2.Sprites/Minion/Growth2/{Key}에서 찾음, 없으면 원래 그림)")]
+    public Sprite evolvedSprite;
+    [Tooltip("진화 갈래 (보통 2개 → 5성이 되면 하나 선택, 1개면 바로 진화). 비우면 공용 임시 갈래 MinionEvolutionData.DefaultBranches")]
+    public List<MinionEvolutionData> evolutions = new List<MinionEvolutionData>();
+    public List<MinionEvolutionData> GetEvolutions() =>
+        evolutions != null && evolutions.Count > 0 ? evolutions : MinionEvolutionData.DefaultBranches;
 
     // UI에 노출할 스탯 종류와 순서. 에셋별 인스펙터에서 설정한다. (예: Flame은 FlameDuration은 빼고 FlameDPS까지만)
     public List<StatType> displayStatTypes;
 
-    public virtual List<MinionStat> GetDisplayMinionStats(int enhanceLv)
+    public virtual List<MinionStat> GetDisplayMinionStats()
     {
         var result = new List<MinionStat>();
         foreach (StatType statType in displayStatTypes)
         {
-            MinionStat stat = GetMinionStat(statType, enhanceLv);
+            MinionStat stat = GetMinionStat(statType);
             if (stat != null)
                 result.Add(stat);
         }
         return result;
     }
 
-    // 강화 레벨과 상관없는 기본 스탯 (MinionData.csv의 AttackSpeed, AttackRange, CritChance 열. 값 하나 = 머지 레벨 무관 고정)
+    // 기본 스탯 (MinionData.csv의 AttackPower, AttackSpeed, AttackRange, CritChance 열, mergeLv별 값)
+    // (2026-11-24) 미니언 강화(MinionEnhance csv·강화 레벨) 삭제 → 공격력도 MinionData.csv AttackPower 열
     public List<MinionStat> baseMinionStats = new List<MinionStat>();
     public MinionStat GetBaseStat(StatType statType) => baseMinionStats?.FirstOrDefault(e => e.statType == statType);
 
-    // 기본 스탯(MinionData.csv) → 강화 레벨별 스탯(MinionEnhance csv) 순서로 찾음
-    public virtual MinionStat GetMinionStat(StatType statType, int enhanceLv)
-    {
-        MinionStat baseStat = GetBaseStat(statType);
-        if (baseStat != null)
-            return baseStat;
-        MinionEnhanceInfo minionEnhanceInfo = GetCommonMinionEnhanceInfo(enhanceLv);
-        return minionEnhanceInfo?.GetMinionStat(statType);
-    }
+    // 미니언 고유 스탯 (mergeLv별 값). CSV가 아니라 각 미니언 데이터 클래스의 LoadData 재정의에서 SetUniqueStat으로 입력
+    public List<MinionStat> uniqueMinionStats = new List<MinionStat>();
+    public MinionStat GetUniqueStat(StatType statType) => uniqueMinionStats?.FirstOrDefault(e => e.statType == statType);
+
+    // 기본 스탯(MinionData.csv) → 고유 스탯 순서로 찾음
+    public virtual MinionStat GetMinionStat(StatType statType) => GetBaseStat(statType) ?? GetUniqueStat(statType);
 
     public bool CheckUnlock()
     {
@@ -110,7 +114,7 @@ public class MinionData : ScriptableObject
 
 #if UNITY_EDITOR
     // (2026-11-21) 미니언별 데이터 클래스(FlameMinionData 등)에 코드로 적은 값 = 기준. LoadData 때 에셋 값을 코드 값으로 덮어씀
-    // 대상: MinionData·EnhanceMinionData보다 아래(자식) 클래스에서 선언한 직렬화 필드 중 값 타입·문자열·그 배열/리스트
+    // 대상: MinionData보다 아래(자식) 클래스에서 선언한 직렬화 필드 중 값 타입·문자열·그 배열/리스트
     //   (CrossBuffMinionData의 buffOpType·buffValues 포함). 에셋 참조(프리팹·스프라이트 등)와 코드 값이 null인 필드는 건드리지 않음
     // 공용 필드(key·attackType·hasSkill·attackSfx·offerDiceCoinPrice 등, CSV·인스펙터로 정함)는 그대로
     // → 미니언 고유 수치는 코드에서만 고침 (인스펙터에서 고쳐도 다음 LoadData 때 코드 값으로 돌아감)
@@ -123,7 +127,7 @@ public class MinionData : ScriptableObject
         var fresh = CreateInstance(type);
         try
         {
-            for (System.Type t = type; t != null && t != typeof(EnhanceMinionData) && t != typeof(MinionData); t = t.BaseType)
+            for (System.Type t = type; t != null && t != typeof(MinionData); t = t.BaseType)
             {
                 foreach (var f in t.GetFields(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public
                     | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.DeclaredOnly))
@@ -223,6 +227,9 @@ public class MinionData : ScriptableObject
         // 카드 소환 가격 (주사위 코인)
         if (row.TryGetInt("Coin", out int coin))
             offerDiceCoinPrice = coin;
+        // 로비 구매 재화·가격 (비면 골드 0)
+        buyCurrencyType = row.TryGetEnum("BuyCurrency", out CurrencyType buyCurrency) ? buyCurrency : CurrencyType.Gold;
+        buyPrice = row.TryGetInt("BuyPrice", out int price) ? price : 0;
         if (table.HasColumn("AttackType"))
         {
             if (row.TryGetEnum("AttackType", out AttackType parsedAttackType))
@@ -242,13 +249,21 @@ public class MinionData : ScriptableObject
         if (row.TryGetFloat("ReinforceAttackPower", out float reinforcePercent))
             reinforceAttackPowerPercent = reinforcePercent;
 
-        // 강화 레벨과 상관없는 기본 스탯 (2026-11-06 MinionEnhance에서 이동). 값 하나 = 머지 레벨과 상관없이 고정
+        // 기본 스탯 (MinionData.csv). AttackSpeed·AttackRange·CritChance는 값 하나 = 머지 레벨과 상관없이 고정
+        // AttackPower는 값 하나면 머지 레벨에 비례 (표시 머지 Lv.1 = 값, Lv.2 = 2배 …, ToMergeLinear), "/"로 여러 값이면 mergeLv별
+        uniqueMinionStats = new List<MinionStat>(); // 자식 LoadData에서 다시 채움
         baseMinionStats = new List<MinionStat>();
-        foreach (StatType statType in new[] { StatType.AttackSpeed, StatType.AttackRange, StatType.CritChance })
+        foreach (StatType statType in new[] { StatType.AttackPower, StatType.AttackSpeed, StatType.AttackRange, StatType.CritChance })
         {
             string raw = table.HasColumn(statType.ToString()) ? row.Get(statType.ToString()) : null;
             if (string.IsNullOrWhiteSpace(raw))
+            {
+                if (statType == StatType.AttackPower)
+                    Debug.LogWarning($"[MinionData] {key} MinionData.csv AttackPower 없음 → 공격력 0");
                 continue;
+            }
+            if (statType == StatType.AttackPower)
+                raw = ToMergeLinear(raw);
             baseMinionStats.Add(new MinionStat
             {
                 statType = statType,
@@ -258,9 +273,29 @@ public class MinionData : ScriptableObject
 
         prefab = FindPrefab();
         thum = FindAssetByName<Sprite>($"Assets/2.Sprites/Minion/Growth{growth}", key);
+        evolvedSprite = FindAssetByName<Sprite>(EVOLVED_SPRITE_FOLDER, key, warn: false); // 아직 그림이 없는 종은 null
 
         UnityEditor.EditorUtility.SetDirty(this);
         Debug.Log($"[MinionData] {key} LoadData 완료");
+    }
+
+    // 값 하나면 머지 레벨에 비례: "기본/증가량" 선형 형식(값/값)으로. "/"·"~"가 있으면 그대로
+    public static string ToMergeLinear(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw) || raw.Contains("/") || raw.Contains("~"))
+            return raw;
+        string v = raw.Trim();
+        return $"{v}/{v}";
+    }
+
+    // 미니언 고유 스탯을 uniqueMinionStats에 설정 (같은 type이면 덮어씀). raw = "1/2/3" (mergeLv별 값, 2개면 기본/증가량)
+    protected void SetUniqueStat(StatType type, string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return;
+        MinionStat stat = new MinionStat { statType = type, values = raw.Split('/') };
+        int index = uniqueMinionStats.FindIndex(s => s.statType == type);
+        if (index >= 0) uniqueMinionStats[index] = stat;
+        else uniqueMinionStats.Add(stat);
     }
 
     // 미니언 프리팹: 3.Prefabs/Minion 하위 어디든 {key}Minion.prefab (등급 없음. 예전 등급 폴더 C/B/A/S도 그대로 찾음). 새 프리팹은 루트에 생성
@@ -288,11 +323,14 @@ public class MinionData : ScriptableObject
     }
 
     // folder 안에서 파일명이 fileName과 일치하는 T 타입 에셋을 찾는다.
-    T FindAssetByName<T>(string folder, string fileName) where T : UnityEngine.Object
+    const string EVOLVED_SPRITE_FOLDER = "Assets/2.Sprites/Minion/Growth2";
+
+    T FindAssetByName<T>(string folder, string fileName, bool warn = true) where T : UnityEngine.Object
     {
         if (!UnityEditor.AssetDatabase.IsValidFolder(folder))
         {
-            Debug.LogWarning($"[MinionData] 폴더 없음: {folder}");
+            if (warn)
+                Debug.LogWarning($"[MinionData] 폴더 없음: {folder}");
             return null;
         }
 
@@ -320,7 +358,8 @@ public class MinionData : ScriptableObject
             if (asset != null) return asset;
         }
 
-        Debug.LogWarning($"[MinionData] {folder} 에서 '{fileName}' 를 찾지 못함");
+        if (warn)
+            Debug.LogWarning($"[MinionData] {folder} 에서 '{fileName}' 를 찾지 못함");
         return null;
     }
 
@@ -404,17 +443,6 @@ public class {className} : Minion
         return filePath;
     }
 #endif
-}
-
-[System.Serializable]
-public class MinionEnhanceInfo
-{
-    public int level;
-    public MinionStat[] minionStats;
-    public MinionStat GetMinionStat(StatType minionStatType)
-    {
-        return minionStats.Where(e => e.statType == minionStatType).FirstOrDefault();
-    }
 }
 
 [System.Serializable]

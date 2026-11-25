@@ -12,10 +12,12 @@
   <Project Path="spine-unity.csproj" />
   <Project Path="LayerLab.ArtMakerUnity.csproj" />
   <Project Path="AppleAuth.csproj" />
+  <Project Path="KingSlime.EffectMaker.csproj" />
   <Project Path="Google.Play.Review.csproj" />
   <Project Path="spine-unity-examples-editor.csproj" />
   <Project Path="AppleAuth.Editor.csproj" />
   <Project Path="Google.Play.Core.csproj" />
   <Project Path="LayerLab.ArtMakerUnity.Editor.csproj" />
   <Project Path="Firebase.App.Internal.csproj" />
+  <Project Path="KingSlime.EffectMaker.Editor.csproj" />
 </Solution>

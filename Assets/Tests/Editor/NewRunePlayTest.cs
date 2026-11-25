@@ -39,11 +39,13 @@ public class NewRunePlayTest : InGamePlayTestBase
         var data = new AllyUnitDamageData();
         data.Init(crit);
         critRune.ModifyDamageData(data);
-        Assert.AreEqual(10f, data.critChance, 0.01f);
+        // (2026-11-25) 레벨 값 = 치명타 확률 15/30/45%, 치명타 피해 ×2 고정
+        Assert.AreEqual(15f, data.critChance, 0.01f);
         Assert.AreEqual(2f, data.critPower, 0.01f);
         Assert.IsTrue(critRune.ForceUpgrade() && critRune.ForceUpgrade(), "Lv.3까지");
         Assert.IsFalse(critRune.ForceUpgrade(), "Lv.3이 최대");
-        Assert.AreEqual(3f, critRune.critPower, 0.01f);
+        Assert.AreEqual(45f, critRune.chance, 0.01f);
+        Assert.AreEqual(2f, critRune.critPower, 0.01f);
 
         // 스킬 쿨타임: 위 미니언 SkillCooldownSpeed +20
         Tile cdTile = Free();
@@ -82,6 +84,6 @@ public class NewRunePlayTest : InGamePlayTestBase
         kill.damage = 1e9f;
         enemy.TakeDamage(kill);
         yield return WaitFrames(2);
-        Assert.AreEqual(2, KingSlime.Instance.exp, "처치 경험치 1 + 경험치 룬 1");
+        Assert.AreEqual(1, KingSlime.Instance.exp, "경험치 룬 1 (처치 경험치는 2026-11-22부터 없음)");
     }
 }

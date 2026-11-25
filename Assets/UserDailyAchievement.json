@@ -1,24 +1,9 @@
 {
-    "date": "20261122",
+    "date": "20261124",
     "userDailyAchievements": [
         {
             "type": 2,
             "value": 1,
-            "getReward": false
-        },
-        {
-            "type": 10,
-            "value": 40,
-            "getReward": false
-        },
-        {
-            "type": 0,
-            "value": 1538,
-            "getReward": false
-        },
-        {
-            "type": 11,
-            "value": 22,
             "getReward": false
         }
     ]

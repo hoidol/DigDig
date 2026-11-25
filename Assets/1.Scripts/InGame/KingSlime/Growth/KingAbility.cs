@@ -32,5 +32,5 @@ public abstract class KingAbility : Ability
     // 킹 공격 1회가 끝날 때마다 (Weapon.Attack, 다중 타겟·연속탄이어도 1회). 공격 횟수를 세는 능력용
     public virtual void OnKingAttack() { }
 
-    protected static string FormatNumber(float v) => v.ToString("0.##");
+    public static string FormatNumber(float v) => v.ToString("0.##");
 }

@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4042fc903109479abd63593e070248c, type: 3}
+  m_Name: Bounce
+  m_EditorClassIdentifier: Assembly-CSharp::BounceMinionData
+  key: Bounce
+  desc: "1\uD68C \uD295\uAE30\uB294 \uB3C4\uD0C4 \uBC1C\uC0AC/2\uD68C \uD295\uAE30\uB294
+    \uB3C4\uD0C4 \uBC1C\uC0AC/4\uD68C \uD295\uAE30\uB294 \uB3C4\uD0C4 \uBC1C\uC0AC"
+  growth: 1
+  attackType: 1
+  tags: 1
+  attackPowerRandomRatio: 0
+  hasSkill: 1
+  offerDiceCoinPrice: 2
+  buyCurrencyType: 0
+  buyPrice: 200
+  reinforceAttackPowerPercent: 7
+  attackSfx:
+    name: 
+    sfxType: 0
+    audioClip: {fileID: 0}
+    volume: 1
+    pitch: 1
+    pitchRandom: 0
+    minInterval: 0
+    loop: 0
+    playOnAwake: 0
+  prefab: {fileID: 3525381018257742225, guid: 2f000a40b38ba435a8af18a9489199b3, type: 3}
+  unlockConditions: []
+  thum: {fileID: 21300000, guid: 0784b1bb9eaa645e9a4b897134afd627, type: 3}
+  evolvedSprite: {fileID: 0}
+  evolutions: []
+  displayStatTypes: 000000000200000005000000
+  baseMinionStats:
+  - statType: 0
+    values:
+    - 10
+    - 3
+  - statType: 2
+    values:
+    - 50
+  - statType: 5
+    values:
+    - 3
+  - statType: 3
+    values:
+    - 0
+  uniqueMinionStats: []
+  bounces: 0200000003000000040000000500000006000000

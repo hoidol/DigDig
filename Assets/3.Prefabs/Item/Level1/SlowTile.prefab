@@ -123,4 +123,4 @@ MonoBehaviour:
   key: SlowTile
   tile: {fileID: 0}
   chance: 30
-  duration: 2
+  duration: 3

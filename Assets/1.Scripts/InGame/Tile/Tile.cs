@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
+    // 전체 격자 좌표 (x 왼→오, y 위→아래). 씬에 저장: Stage 컴포넌트 버튼으로 자동 설정하거나 직접 입력
     public Vector2Int index;
     public TileGroup tileGroup; // 속한 3*3 그룹 (TileManager에서 지정)
 

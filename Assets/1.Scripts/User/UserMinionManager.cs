@@ -196,23 +196,64 @@ public class UserMinionManager : UserBaseManager
         return userMinion;
     }
 
-    // 유저 레벨 lv까지 지급되는 미니언 key (GameSetting.MINION_LEVEL_UNLOCKS, 씬 없이 계산)
+    #region 레벨 해금 → 구매 (2026-11-24)
+    // 유저 레벨이 되면 자동 지급이 아니라 "구매할 수 있게" 됨. 재화·가격 = MinionData.buyCurrencyType/buyPrice (MinionData.csv)
+    // 초기 지급 미니언은 처음부터 보유. 예전 자동 지급으로 이미 보유한 미니언은 그대로 보유
+
+    // 유저 레벨 lv까지 해금된(구매 가능해진) 미니언 key (GameSetting.MINION_LEVEL_UNLOCKS, 씬 없이 계산)
     public static string[] GetLevelUnlockKeys(int lv) =>
         GameSetting.MINION_LEVEL_UNLOCKS.Where(e => lv >= e.lv).Select(e => e.key).ToArray();
 
-    // 레벨 지급 미니언 중 아직 없는 것을 보유 처리. 새로 받은 key 반환 (로드 후·레벨업 시 호출)
-    public List<string> GrantLevelUnlockMinions(int lv)
+    // 정확히 이 레벨에서 새로 해금되는 미니언 key (레벨업 안내 토스트)
+    public static string[] GetLevelUnlockKeysAt(int lv) =>
+        GameSetting.MINION_LEVEL_UNLOCKS.Where(e => e.lv == lv).Select(e => e.key).ToArray();
+
+    // 해금 레벨 (초기 지급 = 0, 레벨 지급 목록에 없으면 -1)
+    public static int GetUnlockLevel(string key)
     {
-        List<string> granted = new List<string>();
-        foreach (string key in GetLevelUnlockKeys(lv))
-        {
-            if (GetUserMinion(key).own)
-                continue;
-            AddUserMinion(key);
-            granted.Add(key);
-        }
-        return granted;
+        if (System.Array.IndexOf(GameSetting.INIT_MINION_KEYS, key) >= 0)
+            return 0;
+        int idx = System.Array.FindIndex(GameSetting.MINION_LEVEL_UNLOCKS, e => e.key == key);
+        return idx >= 0 ? GameSetting.MINION_LEVEL_UNLOCKS[idx].lv : -1;
     }
+
+    // 보유 / 구매 가능(레벨 도달) / 잠김(레벨 미달) 판정 (씬 없이 계산)
+    public static MinionBuyState GetBuyState(bool own, int unlockLevel, int userLv)
+    {
+        if (own)
+            return MinionBuyState.Owned;
+        if (unlockLevel < 0 || userLv < unlockLevel)
+            return MinionBuyState.Locked;
+        return MinionBuyState.Buyable;
+    }
+
+    public MinionBuyState GetBuyState(string key) =>
+        GetBuyState(GetUserMinion(key).own, GetUnlockLevel(key), UserDataManager.Instance.userMyInfoManager.userMyInfoData.lv);
+
+    // 구매 가능한 미니언이 하나라도 있는지 (빨간 점 등)
+    public bool HasBuyableMinion() =>
+        GameSetting.MINION_LEVEL_UNLOCKS.Any(e => GetBuyState(e.key) == MinionBuyState.Buyable);
+
+    // 구매: 구매 가능 상태 + 재화가 충분하면 차감 후 보유. 결과로 실패 이유를 돌려줌
+    public MinionBuyResult BuyMinion(string key)
+    {
+        MinionBuyState state = GetBuyState(key);
+        if (state == MinionBuyState.Owned)
+            return MinionBuyResult.AlreadyOwned;
+        if (state == MinionBuyState.Locked)
+            return MinionBuyResult.Locked;
+
+        MinionData data = MinionManager.Instance.GetMinionData(key);
+        if (data == null)
+            return MinionBuyResult.Locked;
+        if (!UserDataManager.Instance.TryUseCurrency(data.buyCurrencyType, data.buyPrice))
+            return MinionBuyResult.NotEnoughCurrency;
+
+        AddUserMinion(key);
+        GameEventBus.Publish(new BoughtMinionEvent(key));
+        return MinionBuyResult.Success;
+    }
+    #endregion
 
     public UserMinion EquiptUserMinion(UserMinion userMinion, int idx)
     {
@@ -259,35 +300,6 @@ public class UserMinionManager : UserBaseManager
         SaveManager.SaveData(UserDataFileName, userMinionData);
     }
 
-    public void AddExp(string key, int exp)
-    {
-        GetUserMinion(key).exp += exp;
-        RequestSave();
-    }
-
-    // 레벨업 가능: 최대 레벨이 아니고 모인 경험치 >= 이번 레벨 필요량
-    public bool CanLevelUp(string key)
-    {
-        UserMinion userMinion = GetUserMinion(key);
-        EnhanceExpInfo info = MinionManager.Instance.GetEnhanceExpInfo();
-        int lv = userMinion.EnhanceLevel;
-        return info != null && !info.IsMaxLevel(lv) && userMinion.exp >= info.exps[lv];
-    }
-
-    // 이번 레벨 필요 경험치를 소모하고 레벨 +1 (조건은 CanLevelUp)
-    public bool LevelUp(string key)
-    {
-        if (!CanLevelUp(key))
-            return false;
-        UserMinion userMinion = GetUserMinion(key);
-        int lv = userMinion.EnhanceLevel;
-        userMinion.exp -= MinionManager.Instance.GetEnhanceExpInfo().exps[lv];
-        userMinion.enhanceLevel = lv + 1;
-        GameEventBus.Publish(new LevelUpMinionEvent(key));
-        AchievementManager.Report(AchievementType.LevelUpMinion);
-        RequestSave();
-        return true;
-    }
 }
 
 
@@ -314,19 +326,28 @@ public class UserMinion
     public int equipedIdx = -1;
     public bool Equiping => equipedIdx >= 0;
     public bool own;
-    public int enhanceLevel = 0; // 강화 레벨 (0부터, 미니언 등급 없음 → 시작 레벨 보정 없음)
-    public int exp; // 지금 모인 경험치. 레벨업하면 그 레벨 필요량만큼 소모
     public MinionData MinionData => MinionManager.Instance.GetMinionData(key);
-
-    public int EnhanceLevel => enhanceLevel;
+    // (2026-11-24) 미니언 강화(강화 레벨·경험치) 삭제. 이전 저장의 enhanceLevel·exp 값은 읽지 않고 버림
+}
+// (2026-11-24) 로비 미니언 구매 상태: 보유 / 구매 가능(유저 레벨 도달) / 잠김(레벨 미달)
+public enum MinionBuyState
+{
+    Owned,
+    Buyable,
+    Locked,
 }
 
-[System.Serializable]
-public class LevelUpMinionEvent
+public enum MinionBuyResult
+{
+    Success,
+    AlreadyOwned,
+    Locked,
+    NotEnoughCurrency,
+}
+
+// 로비에서 미니언을 샀을 때 (미니언 관리 화면·빨간 점 갱신)
+public struct BoughtMinionEvent
 {
     public string key;
-    public LevelUpMinionEvent(string key)
-    {
-        this.key = key;
-    }
+    public BoughtMinionEvent(string key) { this.key = key; }
 }

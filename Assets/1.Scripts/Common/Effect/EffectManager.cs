@@ -81,11 +81,13 @@ public class EffectManager : MonoSingleton<EffectManager>//, ILuckyMineListener
     // 색은 회색 금지(밝은 타일 위에서 안 보임)
     public static readonly Color POP_TEXT_SUCCESS_COLOR = new Color(1f, 0.85f, 0.2f);
     public static readonly Color POP_TEXT_FAIL_COLOR = new Color(0.45f, 0.5f, 0.95f);
+    public static readonly Color POP_TEXT_EVOLVE_COLOR = new Color(1f, 0.6f, 0.95f);
 
     public static Color GetPopTextColor(PopTextType type) => type switch
     {
         PopTextType.Success => POP_TEXT_SUCCESS_COLOR,
         PopTextType.Fail => POP_TEXT_FAIL_COLOR,
+        PopTextType.Evolve => POP_TEXT_EVOLVE_COLOR,
         _ => Color.white,
     };
 
@@ -132,6 +134,7 @@ public enum PopTextType
 {
     Success, // 성공!
     Fail,    // 실패..
+    Evolve,  // 진화! (5성 진화, 2026-11-24)
 }
 public enum Icon
 {

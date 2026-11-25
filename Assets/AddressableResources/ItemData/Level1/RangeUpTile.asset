@@ -19,9 +19,9 @@ MonoBehaviour:
   maxCount: 3
   diceCoin: 3
   levelValues:
-  - 2
-  - 2.5
+  - 1.5
   - 3
+  - 4.5
   itemPrefab: {fileID: 6669746329265871750, guid: 84a8588149cc1428d841c2d1a596fdb4,
     type: 3}
   unlockConditions: []

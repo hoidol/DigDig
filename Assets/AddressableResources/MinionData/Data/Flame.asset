@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62463ba7ea8a94a3da2cbb995737403d, type: 3}
+  m_Name: Flame
+  m_EditorClassIdentifier: Assembly-CSharp::FlameMinionData
+  key: Flame
+  desc: "\uD654\uC5FC\uD0C4\uC7441\uAC1C \uBC1C\uC0AC"
+  growth: 1
+  attackType: 2
+  tags: 257
+  attackPowerRandomRatio: 0
+  hasSkill: 1
+  offerDiceCoinPrice: 2
+  buyCurrencyType: 0
+  buyPrice: 0
+  reinforceAttackPowerPercent: 5
+  attackSfx:
+    name: 
+    sfxType: 0
+    audioClip: {fileID: 0}
+    volume: 1
+    pitch: 1
+    pitchRandom: 0
+    minInterval: 0
+    loop: 0
+    playOnAwake: 0
+  prefab: {fileID: 6666491537767946925, guid: c2eccd09d44a2479aa3430aa28659778, type: 3}
+  unlockConditions: []
+  thum: {fileID: 403208247147482157, guid: 29f59aee2e03646a3bb625392fb400f4, type: 3}
+  evolvedSprite: {fileID: 0}
+  evolutions: []
+  displayStatTypes: 00000000020000000500000009000000
+  baseMinionStats:
+  - statType: 0
+    values:
+    - 6.00
+    - 6.00
+  - statType: 2
+    values:
+    - 50
+  - statType: 5
+    values:
+    - 3
+  - statType: 3
+    values:
+    - 0
+  uniqueMinionStats:
+  - statType: 9
+    values:
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+  burnDuration: 4
+  burnDPSES:
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6

@@ -9,13 +9,10 @@ public class RedEyeItem : Item
     float coolTimer = 0;
     void OnEnable()
     {
-        GameEventBus.Subscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
     }
     void OnDisable()
     {
-
-        GameEventBus.Unsubscribe<DestroyedStoneEvent>(OnDestroyedStoneEvent);
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
     }
     CancellationTokenSource cts;
@@ -34,13 +31,6 @@ public class RedEyeItem : Item
         cts?.Dispose();
     }
 
-    void OnDestroyedStoneEvent(DestroyedStoneEvent e)
-    {
-        if (coolTimer > 0)
-            return;
-
-        Shoot().Forget();
-    }
     void OnEnemyDeadEvent(EnemyDeadEvent e)
     {
         if (coolTimer > 0)

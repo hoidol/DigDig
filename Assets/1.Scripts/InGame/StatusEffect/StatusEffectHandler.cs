@@ -12,10 +12,11 @@ public class StatusEffectHandler : MonoBehaviour
     [field: SerializeField] public int SlowStack { get; set; } // 슬로우 중첩 (빙결은 2026-11-19부터 별도 IceSlowRate)
     [field: SerializeField] public float IceSlowRate { get; set; } = 1f; // 빙결 이동속도 배율 (IceEffect, 중첩 없이 가장 강한 값)
     [field: SerializeField] public float MudSlow { get; set; } // 진흙 감속 비율 (MudEffect, 0~0.8)
-    [field: SerializeField] public float VineSlow { get; set; } // 덩굴 감속 비율 (VineEffect, 엘프 패시브)
-    // 이동속도 배율 = 슬로우 중첩 × 빙결 × 진흙 감속 × 덩굴 감속
-    public float SlowRate => Mathf.Pow(SLOW_RATE_PER_STACK, Mathf.Min(SlowStack, MAX_SLOW_STACK)) * IceSlowRate * (1f - MudSlow) * (1f - VineSlow);
+    [field: SerializeField] public float FixedSlowRate { get; set; } = 1f; // (2026-11-25) 고정 비율 둔화 (FixedSlowEffect, 기사 칼날 회오리 등). 중첩 없이 가장 강한 값
+    // 이동속도 배율 = 슬로우 중첩 × 빙결 × 진흙 감속 × 고정 둔화
+    public float SlowRate => Mathf.Pow(SLOW_RATE_PER_STACK, Mathf.Min(SlowStack, MAX_SLOW_STACK)) * IceSlowRate * (1f - MudSlow) * FixedSlowRate;
     [field: SerializeField] public float StigmaDamageMul { get; set; } = 1f;   // 낙인으로 받는 피해 배율 (Enemy.TakeDamage)
+    [field: SerializeField] public float CurseDamageMul { get; set; } = 1f;    // (2026-11-25) 저주(사령술사 스킬)로 받는 피해 배율, 낙인과 곱함
 
     // 방어막 소모 시도. 막으면 true 반환
     public bool TryBlock()
@@ -57,6 +58,9 @@ public class StatusEffectHandler : MonoBehaviour
                 activeEffects[view.effectKey].Add(view);
                 view.gameObject.SetActive(false);
             }
+            // (2026-11-25) 둔화 발밑 표시: 프리팹에 없으면 기본 모양을 붙임
+            if (!activeEffects.ContainsKey(SlowEffect.EFFECT_KEY))
+                activeEffects[SlowEffect.EFFECT_KEY] = new List<StatusEffectView> { SlowFeetView.Create(transform) };
         }
         Reset();
     }
@@ -76,8 +80,9 @@ public class StatusEffectHandler : MonoBehaviour
         SlowStack = 0;
         IceSlowRate = 1f;
         MudSlow = 0f;
-        VineSlow = 0f;
+        FixedSlowRate = 1f;
         StigmaDamageMul = 1f;
+        CurseDamageMul = 1f;
     }
 
     // 엘리트/보스는 스턴 시간 절반 (모든 스턴 공통)
@@ -85,7 +90,7 @@ public class StatusEffectHandler : MonoBehaviour
 
     public void Apply(StatusEffect effect)
     {
-        if (effect is StunEffect && TryGetComponent(out Enemy enemy) && enemy.IsEliteOrBoss)
+        if (effect is StunEffect stun && !stun.fullOnBigEnemy && TryGetComponent(out Enemy enemy) && enemy.IsEliteOrBoss)
         {
             effect.duration *= BIG_ENEMY_STUN_DURATION_MUL;
             effect.remainingTimer = effect.duration;
@@ -136,6 +141,10 @@ public class StatusEffectHandler : MonoBehaviour
     public void StopEffect(StatusEffect effect)
     {
         if (effect.EffectKey == null) return;
+        // 같은 표시를 쓰는 다른 효과가 아직 남아 있으면 끄지 않음 (슬로우 중첩 + 고정 둔화)
+        for (int i = 0; i < effects.Count; i++)
+            if (effects[i] != effect && effects[i].EffectKey == effect.EffectKey)
+                return;
         if (!activeEffects.TryGetValue(effect.EffectKey, out var views)) return;
 
         foreach (var view in views) view.Stop();

@@ -14,15 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   key: CritPowerTile
   itemName: "\uD06C\uB9AC\uD2F0\uCEEC \uB8EC"
-  desc: "10% \uD655\uB960\uB85C \uCE58\uBA85\uD0C0, \uCE58\uBA85\uD0C0 \uD53C\uD574
-    \xD7{0}"
+  desc: "치명타 확률 +{0}% (치명타 피해 ×2)"
   level: 1
   maxCount: 3
   diceCoin: 3
   levelValues:
-  - 2
-  - 2.5
-  - 3
+  - 15
+  - 30
+  - 45
   itemPrefab: {fileID: 7876456041902805455, guid: 8b3729583f8bf4466bbe4fc176b19597,
     type: 3}
   unlockConditions: []

@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 
 public class EliteSpecialEnemySpawner : SpecialEnemySpawner
 {
-    List<UnbreakableStone> unbreakableStones;
     EliteEnemy eliteEnemy;
     void Start()
     {
@@ -47,10 +46,6 @@ public class EliteSpecialEnemySpawner : SpecialEnemySpawner
 
     public override void EndSpawn()
     {
-        for (int i = 0; i < unbreakableStones.Count; i++)
-        {
-            unbreakableStones[i].Destroy();
-        }
     }
 }
 

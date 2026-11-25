@@ -9,8 +9,6 @@ namespace Lobby
         public TMP_Text titleText;
         public TMP_Text descText;
         public Image thumImge;
-        public TMP_Text enhanceLvText;
-        public MinionExpPanel mineMeExpPanel;
         public virtual void SetData(MinionData uMData)
         {
             UserMinion userMinion = UserDataManager.Instance.userMinionManager.GetUserMinion(uMData.key);
@@ -22,34 +20,9 @@ namespace Lobby
             if (thumImge != null)
             {
                 thumImge.SetThum(uMData.thum); // SetNativeSize 후 칸 크기에 맞춤 (MinionEquipedSlotPanel.thumImage와 같은 방식)
-                if (userMinion.own)
-                {
-                    thumImge.color = Color.white;
-                }
-                else
-                {
-                    thumImge.color = Color.black;
-                }
-            }
-
-            if (enhanceLvText != null)
-            {
-                int enhanceLevel = userMinion.EnhanceLevel;
-                EnhanceExpInfo expInfo = MinionManager.Instance.GetEnhanceExpInfo();
-                if (expInfo != null && expInfo.IsMaxLevel(enhanceLevel))
-                {
-                    enhanceLvText.text = "MAX";
-                }
-                else
-                {
-                    enhanceLvText.text = enhanceLevel.ToString();
-                }
-
-            }
-
-            if (mineMeExpPanel != null)
-            {
-                mineMeExpPanel.SetMinion(uMData);
+                // (2026-11-24) 잠김(유저 레벨 미달)만 검은 실루엣. 구매 가능은 그림이 보임
+                thumImge.color = UserDataManager.Instance.userMinionManager.GetBuyState(uMData.key) == MinionBuyState.Locked
+                    ? Color.black : Color.white;
             }
 
         }

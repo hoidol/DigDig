@@ -123,4 +123,4 @@ MonoBehaviour:
   key: StunTile
   tile: {fileID: 0}
   chance: 10
-  duration: 0.3
+  duration: 1

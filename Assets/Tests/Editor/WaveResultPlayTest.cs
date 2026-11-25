@@ -128,7 +128,8 @@ public class WaveResultPlayTest : InGamePlayTestBase
         Assert.IsNotNull(result.curWaveText, "최종 웨이브 텍스트 연결 안 됨");
         // Assert.IsNotNull(result.bestWaveText, "최고 웨이브 텍스트 연결 안 됨");
         Assert.IsNotNull(result.newRecordObj, "신기록 오브젝트 연결 안 됨");
-        Assert.AreEqual((waveIdx + 1).ToString(), result.curWaveText.text, "최종 웨이브 (wave 번호)");
+        Assert.AreEqual($"WAVE {waveIdx + 1}", result.curWaveText.text, "최종 웨이브 (wave 번호)");
+        Assert.AreEqual(GameManager.Instance.isCleared ? "STAGE CLEAR!" : "GAME OVER", result.resultTitleText?.text, "결과 제목");
         // Assert.AreEqual((Mathf.Max(maxWave, waveIdx) + 1).ToString(), result.bestWaveText.text, "최고 웨이브 (이번 판 포함)");
 
         Assert.AreEqual(gold + waveIdx, user.userData.gold, "골드 보상 (= waveIdx)");

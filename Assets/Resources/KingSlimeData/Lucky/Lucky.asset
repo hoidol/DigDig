@@ -62,5 +62,8 @@ MonoBehaviour:
   - statType: 15
     initValue: 0
     value: 0
+  - statType: 16
+    initValue: 0
+    value: 0
   defaultBullets: 
   thum: {fileID: 0}

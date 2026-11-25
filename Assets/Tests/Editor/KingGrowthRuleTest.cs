@@ -42,56 +42,179 @@ public class KingGrowthRuleTest
         CollectionAssert.AreEqual(new[] { b }, choices);
     }
 
-    // (2026-11-21) 단계 = Lv.1 종족 → Lv.5 종족 강화(버프 칸 확장) → Lv.10 직업 → Lv.15 패시브, 앞 단계가 먼저
-    static AbilityData[] races, jobs, passives, stats;
-    static AbilityData expand;
-    static AbilityData[] Races => races ??= new[] { Make("R1", 1), Make("R2", 1), Make("R3", 1), Make("R4", 1), Make("R5", 1) };
-    static AbilityData[] Jobs => jobs ??= new[] { Make("J1", 1), Make("J2", 1), Make("J3", 1), Make("J4", 1), Make("J5", 1) };
-    static AbilityData[] Passives => passives ??= new[] { Make("P1", 3), Make("P2", 3), Make("P3", 3) };
-    static AbilityData[] Stats => stats ??= new[] { Make("S1", 5), Make("S2", 5), Make("S3", 5) };
-    static AbilityData Expand => expand != null ? expand : (expand = Make("E", 1));
+    // (2026-11-24) 단계 = Lv.1 용사 → 2 스킬 → 3·4 용사 강화 → 5 스킬 → 6·7 용사 강화 → 8 스킬. 앞 단계가 먼저
+    static AbilityData[] heroes;
+    static AbilityData[] boosts;
+    static AbilityData[] Heroes => heroes ??= new[] { Make("H1", 5), Make("H2", 5), Make("H3", 5) };
+    static AbilityData[] Boosts => boosts ??= new[] { Make("B1", 3), Make("B2", 3), Make("B3", 3) };
 
-    static LevelUpChoiceRule.Input In(int lv, bool race, bool expand, bool job, bool passive) => new LevelUpChoiceRule.Input
+    static LevelUpChoiceRule.Input In(int lv, int heroLv, int skills, int boostCount = 0) => new LevelUpChoiceRule.Input
     {
-        level = lv, hasRace = race, hasTileExpand = expand, hasJob = job, hasPassive = passive,
-        racePool = Races, jobPool = Jobs, passivePool = Passives, statPool = Stats, tileExpand = Expand, getLevel = x => 0,
+        level = lv, heroLevel = heroLv, heroSkillCount = skills, boostCount = boostCount,
+        ownedHero = heroLv > 0 ? Heroes[0] : null,
+        heroPool = Heroes, boostPool = Boosts, getLevel = x => 0,
     };
 
-    [TestCase(1, false, false, false, false, AbilityCategory.Race)]
-    [TestCase(4, false, false, false, false, AbilityCategory.Race)]       // 여러 레벨이 밀려도 종족이 먼저
-    [TestCase(2, true, false, false, false, AbilityCategory.Stat)]
-    [TestCase(4, true, false, false, false, AbilityCategory.Stat)]
-    [TestCase(5, true, false, false, false, AbilityCategory.TileExpand)]  // 종족 강화
-    [TestCase(8, true, false, false, false, AbilityCategory.TileExpand)]
-    [TestCase(9, true, true, false, false, AbilityCategory.Stat)]
-    [TestCase(10, true, true, false, false, AbilityCategory.Job)]
-    [TestCase(12, true, false, false, false, AbilityCategory.TileExpand)] // 강화가 직업보다 먼저
-    [TestCase(14, true, true, true, false, AbilityCategory.Stat)]
-    [TestCase(15, true, true, true, false, AbilityCategory.Passive)]
-    [TestCase(15, true, true, false, false, AbilityCategory.Job)]         // 직업이 패시브보다 먼저
-    [TestCase(16, true, true, true, true, AbilityCategory.Stat)]
-    public void Stage_ByLevel(int lv, bool race, bool expand, bool job, bool passive, AbilityCategory expected)
+    [TestCase(1, 0, 0, 0, AbilityCategory.Hero)]
+    [TestCase(4, 0, 0, 0, AbilityCategory.Hero)]          // 여러 레벨이 밀려도 용사가 먼저
+    [TestCase(1, 1, 0, 0, AbilityCategory.Stat)]
+    [TestCase(2, 1, 0, 0, AbilityCategory.HeroSkill)]
+    [TestCase(3, 1, 0, 0, AbilityCategory.HeroSkill)]     // 스킬 해방이 강화보다 먼저
+    [TestCase(3, 1, 1, 0, AbilityCategory.HeroBoost)]
+    [TestCase(4, 1, 1, 1, AbilityCategory.HeroBoost)]
+    [TestCase(4, 2, 1, 2, AbilityCategory.Stat)]
+    [TestCase(5, 2, 1, 2, AbilityCategory.HeroSkill)]
+    [TestCase(6, 2, 2, 2, AbilityCategory.HeroBoost)]
+    [TestCase(7, 2, 2, 3, AbilityCategory.HeroBoost)]
+    [TestCase(7, 2, 2, 4, AbilityCategory.Stat)]
+    [TestCase(8, 2, 2, 4, AbilityCategory.HeroSkill)]
+    [TestCase(8, 2, 3, 4, AbilityCategory.Stat)]
+    public void Stage_ByLevel(int lv, int heroLv, int skills, int boostCount, AbilityCategory expected)
     {
-        Assert.AreEqual(expected, LevelUpChoiceRule.GetStage(In(lv, race, expand, job, passive)));
+        Assert.AreEqual(expected, LevelUpChoiceRule.GetStage(In(lv, heroLv, skills, boostCount)));
     }
 
     [Test]
     public void Choices_MatchStage()
     {
         var rng = new System.Random(3);
-        var race = LevelUpChoiceRule.GetChoices(In(1, false, false, false, false), rng);
-        Assert.AreEqual(3, race.Count);
-        Assert.AreEqual(3, race.Distinct().Count());
-        Assert.IsTrue(race.All(Races.Contains));
-        var expand = LevelUpChoiceRule.GetChoices(In(5, true, false, false, false), rng);
-        Assert.AreEqual(3, expand.Count);
-        Assert.IsTrue(expand.All(x => x == Expand), "종족 강화 = 같은 카드 3장");
-        Assert.IsTrue(LevelUpChoiceRule.GetChoices(In(10, true, true, false, false), rng).All(Jobs.Contains));
-        Assert.IsTrue(LevelUpChoiceRule.GetChoices(In(3, true, false, false, false), rng).All(Stats.Contains));
-        Assert.AreEqual("종족 선택", LevelUpChoiceRule.GetStageName(AbilityCategory.Race));
-        Assert.AreEqual("종족 강화", LevelUpChoiceRule.GetStageName(AbilityCategory.TileExpand));
-        Assert.AreEqual("직업 선택", LevelUpChoiceRule.GetStageName(AbilityCategory.Job));
+        var hero = LevelUpChoiceRule.GetChoices(In(1, 0, 0), rng);
+        Assert.AreEqual(3, hero.Count);
+        Assert.AreEqual(3, hero.Distinct().Count());
+        CollectionAssert.AreEqual(new[] { Heroes[0] }, LevelUpChoiceRule.GetChoices(In(2, 1, 0), rng), "스킬 해방 = 고른 용사 한 장");
+        var boost = LevelUpChoiceRule.GetChoices(In(3, 1, 1), rng);
+        Assert.AreEqual(3, boost.Count);
+        Assert.AreEqual(3, boost.Distinct().Count());
+        Assert.IsTrue(boost.All(x => Boosts.Contains(x)), "용사 강화 = 강화 카드만 (용사 카드 X)");
+        Assert.IsEmpty(LevelUpChoiceRule.GetChoices(In(4, 2, 1, 2), rng), "단계 카드 없음");
+        Assert.AreEqual("용사 선택", LevelUpChoiceRule.GetStageName(AbilityCategory.Hero));
+        Assert.AreEqual("스킬 해방", LevelUpChoiceRule.GetStageName(AbilityCategory.HeroSkill));
+        Assert.AreEqual("용사 강화", LevelUpChoiceRule.GetStageName(AbilityCategory.HeroBoost));
+        Assert.AreEqual(2, LevelUpChoiceRule.GetSkillUnlockLevel(0));
+        Assert.AreEqual(5, LevelUpChoiceRule.GetSkillUnlockLevel(1));
+        Assert.AreEqual(8, LevelUpChoiceRule.GetSkillUnlockLevel(2));
     }
+
+    // 용사 강화 후보: 최대 레벨인 카드는 빠짐 (용사 카드는 heroLevel 기준)
+    [Test]
+    public void Boost_ExcludesMax()
+    {
+        var input = In(3, 5, 1);
+        input.getLevel = d => d == Boosts[0] ? 3 : 0;
+        var cands = LevelUpChoiceRule.GetBoostCandidates(input);
+        CollectionAssert.AreEquivalent(new[] { Boosts[1], Boosts[2] }, cands);
+    }
+
+    [Test]
+    public void HeroSkill_ParseValues()
+    {
+        var s = HeroDataTable.HeroSkill.Parse("{0}초 {1}%", "5/7, 3 ,0.5/1");
+        CollectionAssert.AreEqual(new[] { 5f, 3f, 0.5f }, s.values);
+        CollectionAssert.AreEqual(new[] { 7f, 3f, 1f }, s.enhancedValues, "/가 없으면 강화해도 같음");
+    }
+
+    // (2026-11-25) 용사 강화 3장 = 정예 칸 추가가 아닌 카드 1장씩 + 남은 자리 정예 칸 추가
+    [Test]
+    public void HeroBoost_FillWithExpand()
+    {
+        var charge = Make("Charge", 3);
+        charge.category = AbilityCategory.HeroBoost;
+        var expand = Make("Expand", 3);
+        expand.category = AbilityCategory.TileExpand;
+        var rng = new System.Random(7);
+        for (int i = 0; i < 20; i++)
+        {
+            var both = LevelUpChoiceRule.PickHeroBoostChoices(new[] { charge, expand }, rng);
+            Assert.AreEqual(3, both.Count);
+            Assert.AreEqual(1, both.Count(x => x == charge));
+            Assert.AreEqual(2, both.Count(x => x == expand));
+        }
+        CollectionAssert.AreEqual(new[] { expand, expand, expand }, LevelUpChoiceRule.PickHeroBoostChoices(new[] { expand }, rng), "충전 가속 최대 → 정예 칸 3장");
+        CollectionAssert.AreEqual(new[] { charge }, LevelUpChoiceRule.PickHeroBoostChoices(new[] { charge }, rng), "정예 칸 최대 → 충전 가속만");
+    }
+
+    // (2026-11-25) HeroData.csv: 용사 레벨 L 스탯 = 기본 + Add × (L-1), 정예병 칸 버프 = Init + Add × (L-1)
+    [Test]
+    public void HeroData_LevelStats()
+    {
+        DataTableImporter.ImportChanged(); // CSV → Resources/HeroData
+        foreach (string key in new[] { "Knight", "Archer", "Necromancer" })
+        {
+            var data = HeroDataTable.Get(key);
+            Assert.IsNotNull(data, key);
+            Assert.IsTrue(data.TryGetStat(StatType.AttackPower, out float atk1), key);
+            Assert.IsTrue(data.TryGetStat(StatType.AttackPower, 3, out float atk3), key);
+            Assert.AreEqual(atk1 + data.GetAdd(StatType.AttackPower) * 2, atk3, 0.001f, key);
+            Assert.IsTrue(data.HasEliteBuff, $"{key} 정예병 칸 버프 값");
+            Assert.AreEqual(data.eliteBuffInit + data.eliteBuffAdd * 4, data.GetEliteBuffValue(5), 0.001f, key);
+            StringAssert.Contains("{0}", data.eliteBuffDesc, $"{key} EliteBuffDesc");
+            // (2026-11-25) 스킬 1~3 설명·값 ("기본/강화")
+            Assert.AreEqual(3, data.skills.Count, key);
+            for (int i = 0; i < 3; i++)
+            {
+                Assert.IsNotEmpty(data.skills[i].desc, $"{key} Skill{i + 1}");
+                Assert.IsNotEmpty(data.skills[i].values, $"{key} Skill{i + 1}Value");
+                Assert.AreEqual(data.skills[i].values.Count, data.skills[i].enhancedValues.Count);
+            }
+            Assert.Greater(data.skills[0].enhancedValues[0], data.skills[0].values[0], $"{key} 1단계 강화 값");
+        }
+    }
+
+    // 용사 카드 정예병 칸 = 킹 주변 8칸 중 서로 다른 2칸
+    [Test]
+    public void HeroTiles_TwoDistinctAround()
+    {
+        var rng = new System.Random(5);
+        for (int i = 0; i < 50; i++)
+        {
+            var tiles = LevelUpChoiceRule.PickHeroTiles(rng);
+            Assert.AreEqual(2, tiles.Distinct().Count());
+            Assert.IsTrue(tiles.All(t => LevelUpChoiceRule.AROUND_OFFSETS.Contains(t)));
+        }
+    }
+
+    // 용사 3명 + 용사 강화 카드 5장, 설명 빈칸 없음
+    [Test]
+    public void Setting_Heroes_Three()
+    {
+        var setting = Resources.Load<KingGrowthSetting>(KingGrowthSetting.RESOURCE_PATH);
+        Assert.AreEqual(3, setting.heroAbilities.Length);
+        var types = new HashSet<KingHeroType>();
+        foreach (var data in setting.heroAbilities)
+        {
+            Assert.AreEqual(AbilityCategory.Hero, data.category, data.key);
+            var hero = data.prefab as HeroKingAbility;
+            Assert.IsNotNull(hero, data.key);
+            Assert.IsTrue(types.Add(hero.heroType), $"용사 중복 {hero.heroType}");
+            Assert.AreEqual(1, data.maxLevel, data.key); // (2026-11-25) 용사 카드는 한 번만 (강화는 레벨업 자동)
+            Assert.AreEqual(2, hero.skills.Length, data.key);
+            Assert.IsFalse(string.IsNullOrEmpty(hero.energyName), data.key);
+            for (int s = 0; s < HeroKingAbility.SKILL_COUNT; s++)
+                Assert.IsFalse(string.IsNullOrEmpty(hero.GetSkillName(s)), $"{data.key} 스킬 {s}");
+            Assert.IsFalse(data.GetDescription(1).Contains("{"), data.key);
+        }
+        CollectionAssert.AreEquivalent(new[] { KingHeroType.HumanKnight, KingHeroType.ElfArcher, KingHeroType.UndeadNecromancer }, types);
+        var necro = setting.heroAbilities.Select(d => d.prefab).OfType<NecromancerHero>().First();
+        Assert.AreEqual(AttackType.Chaos, necro.kingAttackType);
+
+        // (2026-11-25) 용사 강화 = 정예 칸 추가 · 충전 가속 · 에너지 보유 증가 (최대 3) · 1·2단계 스킬 강화 (최대 1)
+        Assert.AreEqual(5, setting.heroBoostAbilities.Length);
+        foreach (var t in new[] { HeroEnergyBoostType.ChargeTime, HeroEnergyBoostType.MaxCharges })
+            Assert.AreEqual(3, setting.heroBoostAbilities.Single(d => d.prefab is HeroEnergyKingAbility e && e.boostType == t).maxLevel, t.ToString());
+        for (int idx = 0; idx < 2; idx++)
+        {
+            var sk = setting.heroBoostAbilities.Single(d => d.prefab is HeroSkillEnhanceKingAbility s && s.skillIndex == idx);
+            Assert.AreEqual(1, sk.maxLevel, sk.key);
+            Assert.IsFalse(LevelUpChoiceRule.IsBoostUnlocked(sk, idx), $"{sk.key}: 스킬 해방 전엔 안 나옴");
+            Assert.IsTrue(LevelUpChoiceRule.IsBoostUnlocked(sk, idx + 1), $"{sk.key}: 스킬 해방 후 나옴");
+        }
+        var expandCard = setting.heroBoostAbilities.Single(d => d.prefab is EliteAreaExpandKingAbility);
+        Assert.AreEqual(AbilityCategory.TileExpand, expandCard.category);
+        Assert.AreEqual(3, expandCard.maxLevel);
+        foreach (var data in setting.heroBoostAbilities)
+            Assert.IsFalse(data.GetDescription(1).Contains("{"), data.key);
+    }
+
 
     // 버프 칸 확장 추가 칸 = 지금 버프 칸을 뺀 나머지, 카드끼리 다름
     [Test]
@@ -112,116 +235,8 @@ public class KingGrowthRuleTest
         }
     }
 
-    [Test]
-    public void Setting_Jobs_FiveDistinct()
-    {
-        var setting = Resources.Load<KingGrowthSetting>(KingGrowthSetting.RESOURCE_PATH);
-        Assert.AreEqual(5, setting.jobAbilities.Length);
-        var types = new HashSet<KingJobType>();
-        foreach (var data in setting.jobAbilities)
-        {
-            Assert.AreEqual(AbilityCategory.Job, data.category, data.key);
-            var job = data.prefab as JobKingAbility;
-            Assert.IsNotNull(job, data.key);
-            Assert.IsTrue(types.Add(job.jobType), $"직업 중복 {job.jobType}");
-            Assert.IsNotEmpty(job.tileBuffs, data.key);
-        }
-        Assert.IsNotNull(setting.tileExpandAbility, "버프 칸 확장 카드 없음");
-        Assert.AreEqual(AbilityCategory.TileExpand, setting.tileExpandAbility.category);
-        Assert.IsInstanceOf<BuffTileExpandKingAbility>(setting.tileExpandAbility.prefab);
-    }
 
-    // Lv.15 = 내 종족 패시브, 고른 뒤엔 능력치 카드에 강화 카드로 섞임 (최대 레벨이면 빠짐)
-    [Test]
-    public void Level15_OffersRacePassive_ThenUpgradeMixed()
-    {
-        var passives = new[] { Make("P1", 3), Make("P2", 3), Make("P3", 3) };
-        var stats = new[] { Make("S1", 5), Make("S2", 5), Make("S3", 5) };
-        var rng = new System.Random(7);
-        LevelUpChoiceRule.Input Input(int lv, bool hasPassive, AbilityData owned, System.Func<AbilityData, int> getLevel) => new LevelUpChoiceRule.Input
-        {
-            level = lv, hasRace = true, hasJob = true, hasTileExpand = true, hasPassive = hasPassive,
-            passivePool = passives, statPool = stats, ownedPassive = owned, getLevel = getLevel,
-        };
 
-        Assert.IsTrue(LevelUpChoiceRule.GetChoices(Input(14, false, null, x => 0), rng).All(stats.Contains), "Lv.14는 능력치");
-        var p = LevelUpChoiceRule.GetChoices(Input(15, false, null, x => 0), rng);
-        CollectionAssert.AreEquivalent(passives, p, "Lv.15 = 종족 패시브 3개");
 
-        // 고른 패시브(P1 Lv.1)가 능력치 카드 후보에 들어감 → 여러 번 뽑으면 한 번은 나옴
-        bool seen = false;
-        for (int i = 0; i < 50; i++)
-        {
-            var c = LevelUpChoiceRule.GetChoices(Input(16, true, passives[0], x => x == passives[0] ? 1 : 0), rng);
-            Assert.IsFalse(c.Contains(passives[1]) || c.Contains(passives[2]), "고르지 않은 패시브는 안 나옴");
-            seen |= c.Contains(passives[0]);
-        }
-        Assert.IsTrue(seen, "패시브 강화 카드가 섞여 나와야 함");
-        for (int i = 0; i < 30; i++)
-            Assert.IsFalse(LevelUpChoiceRule.GetChoices(Input(17, true, passives[0], x => x == passives[0] ? 3 : 0), rng).Contains(passives[0]), "최대 레벨이면 안 나옴");
-    }
 
-    [Test]
-    public void Setting_Passives_ThreePerRace_DescFilled()
-    {
-        var setting = Resources.Load<KingGrowthSetting>(KingGrowthSetting.RESOURCE_PATH);
-        Assert.AreEqual(15, setting.passiveAbilities.Length);
-        foreach (KingRaceType race in System.Enum.GetValues(typeof(KingRaceType)))
-        {
-            var list = setting.GetRacePassives(race);
-            Assert.AreEqual(3, list.Count, $"{race} 패시브 수");
-            Assert.IsTrue(list.Any(d => ((PassiveKingAbility)d.prefab).kind == PassiveKind.Buff), $"{race} 버프형 없음");
-            Assert.IsTrue(list.Any(d => ((PassiveKingAbility)d.prefab).kind == PassiveKind.Attack), $"{race} 공격형 없음");
-        }
-        foreach (var d in setting.passiveAbilities)
-        {
-            Assert.AreEqual(AbilityCategory.Passive, d.category, d.key);
-            Assert.AreEqual(3, d.maxLevel, d.key);
-            for (int lv = 1; lv <= 3; lv++)
-            {
-                string desc = d.GetDescription(lv);
-                Assert.IsFalse(desc.Contains("{"), $"{d.key} Lv.{lv} 설명 빈칸: {desc}");
-            }
-        }
-    }
-
-    [Test]
-    public void RaceShapeText_Orc()
-    {
-        var offs = new[] { new Vector2Int(0, -1), new Vector2Int(-1, 1), new Vector2Int(1, 1) };
-        Assert.AreEqual("□■□\n□K□\n■□■", RaceKingAbility.GetShapeText(offs));
-    }
-
-    [Test]
-    public void Setting_Races_FiveDistinct_ThreeTiles()
-    {
-        var setting = Resources.Load<KingGrowthSetting>(KingGrowthSetting.RESOURCE_PATH);
-        Assert.AreEqual(5, setting.raceAbilities.Length);
-        var types = new HashSet<KingRaceType>();
-        foreach (var data in setting.raceAbilities)
-        {
-            Assert.AreEqual(AbilityCategory.Race, data.category, data.key);
-            var race = data.prefab as RaceKingAbility;
-            Assert.IsNotNull(race, data.key);
-            Assert.IsTrue(types.Add(race.raceType), $"종족 중복 {race.raceType}");
-            Assert.AreEqual(3, race.tileOffsets.Distinct().Count(), data.key);
-            foreach (var o in race.tileOffsets)
-                Assert.IsTrue(Mathf.Abs(o.x) <= 1 && Mathf.Abs(o.y) <= 1 && o != Vector2Int.zero, $"{data.key} {o}");
-        }
-    }
-
-    [Test]
-    public void Setting_StatAbilities_HavePrefab()
-    {
-        var setting = Resources.Load<KingGrowthSetting>(KingGrowthSetting.RESOURCE_PATH);
-        Assert.IsNotNull(setting, "Resources/KingGrowthSetting 없음");
-        Assert.IsNotEmpty(setting.statAbilities);
-        foreach (var data in setting.statAbilities)
-        {
-            Assert.IsNotNull(data);
-            Assert.IsNotNull(data.prefab, $"{data.key} prefab 없음");
-            Assert.AreEqual(AbilityCategory.Stat, data.category, data.key);
-            Assert.IsFalse(data.GetDescription(1).Contains("{0}"), data.key);
-        }
-    }
 }

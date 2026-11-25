@@ -67,6 +67,26 @@ public class KingSlimeStatManager
         Reset();
     }
 
+    // (2026-11-24) 킹 기본 스탯 교체: 용사를 고르면 HeroData.csv의 그 용사 행, null이면 KingSlimeData (용사 강화 포인트는 그대로 위에 적용)
+    // HeroData에 없는 스탯은 KingSlimeData 값. 적용은 KingSlime.ApplyHeroBaseStats → UpdateCharacter
+    // (2026-11-25) heroLevel = 용사 레벨(킹 레벨, 1부터) → 기본 + Add × (heroLevel - 1)
+    public HeroDataTable.HeroData heroData;
+    public int heroLevel = 1;
+    public void SetHeroBase(HeroDataTable.HeroData hero, int heroLevel = 1)
+    {
+        heroData = hero;
+        this.heroLevel = Mathf.Max(1, heroLevel);
+        foreach (StatType statType in usingStatTypes)
+            statDic[statType].initValue = GetHeroStat(hero, statType, this.heroLevel);
+    }
+
+    // 용사 레벨 lv일 때 킹 기본 스탯 (용사 강화 포인트 포함, 버프 제외). 레벨업 창 "공격력 15 → 23" 표시에도 사용
+    public float GetHeroStat(HeroDataTable.HeroData hero, StatType statType, int lv)
+    {
+        float baseValue = hero != null && hero.TryGetStat(statType, lv, out float v) ? v : kingslimeData.GetKingSlimeStat(statType)?.value ?? 0f;
+        return KingSlimeManager.Instance.GetTotalStatValue(baseValue, statType);
+    }
+
     void Reset()
     {
         for (int i = 0; i < usingStatTypes.Length; i++)

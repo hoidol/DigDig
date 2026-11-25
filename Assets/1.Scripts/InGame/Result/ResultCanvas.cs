@@ -8,7 +8,8 @@ using UnityEngine.SceneManagement;
 public class ResultCanvas : CanvasUI<ResultCanvas>
 {
     protected override void PlayOpenSound() { } // 보상 소리(RewardGet)가 따로 남
-    public TMP_Text curWaveText;
+    public TMP_Text resultTitleText; // 클리어 = "STAGE CLEAR!" / 아니면 "GAME OVER" (비우면 하위 ResultTitleText)
+    public TMP_Text curWaveText;     // "WAVE N"
     // public TMP_Text bestWaveText;
     public GameObject newRecordObj;
     public RewardPanel[] rewardPanels;
@@ -43,9 +44,14 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         UserStage userStage = UserDataManager.Instance.userStageManager.GetUserStage(stageKey);
         // 이번 판 기록을 저장하기 전 처치한 보스 수 (로비 보스 처치 연출용, LobbyReturnController)
         int prevDefeatedBossCount = LobbyReturnController.GetDefeatedBossCount(userStage.maxWave, userStage.isClear);
-        // wave 표시 UI가 씬에 없어도 보상은 지급되도록 (없으면 표시만 생략). 제목(최종/최고 웨이브)은 UI에 있으므로 숫자만
+        // (2026-11-24) 제목: 스테이지 클리어(마지막 wave 보스 처치) = STAGE CLEAR!, 아니면 GAME OVER
+        if (resultTitleText == null)
+            resultTitleText = FindChildText("ResultTitleText");
+        if (resultTitleText != null)
+            resultTitleText.text = GameManager.Instance.isCleared ? "STAGE CLEAR!" : "GAME OVER";
+        // wave 표시 UI가 씬에 없어도 보상은 지급되도록 (없으면 표시만 생략)
         if (curWaveText != null)
-            curWaveText.text = (GameManager.Instance.waveIdx + 1).ToString();
+            curWaveText.text = $"WAVE {GameManager.Instance.waveIdx + 1}";
         // if (bestWaveText != null)
         //     bestWaveText.text = (Mathf.Max(userStage.maxWave, GameManager.Instance.waveIdx) + 1).ToString();
         if (newRecordObj != null)
@@ -84,6 +90,14 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         SoundManager.Play(SFXType.RewardGet);
 
         UserDataManager.Instance.userStageManager.EndStage(GameManager.Instance.stageData.key, GameManager.Instance.waveIdx); // 저장값 = waveIdx (클리어면 59 = 표시 60)
+    }
+
+    TMP_Text FindChildText(string name)
+    {
+        foreach (var t in GetComponentsInChildren<TMP_Text>(true))
+            if (t.name == name)
+                return t;
+        return null;
     }
 
     // 보상 패널 표시 (2배 받았으면 2배 값으로). animate = 값이 바뀐 걸 보여주는 글씨 확대 이펙트

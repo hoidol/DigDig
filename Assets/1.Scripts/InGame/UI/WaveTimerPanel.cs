@@ -18,6 +18,9 @@ public class WaveTimerPanel : MonoBehaviour
 
     void OnWaveStartEvent(WaveStartEvent e)
     {
+        // (2026-11-24) 카드 소환 모드는 wave 시간 제한이 없어 남은 시간을 보여 주지 않음
+        if (GameSetting.USE_WAVE_MINION_OFFER)
+            return;
         timeText.gameObject.SetActive(true);
     }
 

@@ -12,21 +12,112 @@ public class TileManager : MonoSingleton<TileManager>
 
     void Awake()
     {
-        tileGroups = GetComponentsInChildren<TileGroup>();
-        tiles = GetComponentsInChildren<Tile>();
+        // 스테이지 맵 하나만 켜고 그 맵의 타일만 씀 (Stage가 없으면 하위 전부)
+        Transform mapRoot = ActiveStage != null ? ActiveStage.transform : transform;
+        tileGroups = mapRoot.GetComponentsInChildren<TileGroup>();
+        tiles = mapRoot.GetComponentsInChildren<Tile>();
         usingTiles.AddRange(tiles);
         tileLayer = LayerMask.GetMask("Tile");
         AssignTileIndices();
         BlockRandomTiles(GameSetting.BLOCKED_TILE_COUNT);
     }
 
+    #region 스테이지 맵 (2026-11-24)
+    // 맵 = 프리팹 Resources/StageMap/Stage{mapIndex} (Stage 컴포넌트). 게임 시작 때 지금 스테이지(UserDataManager.stageOrder) 맵을 불러와 이 아래에 생성
+    // 프리팹이 없으면 0번. 씬에 Stage를 직접 놓아 두면(디자인 확인용) 불러오지 않고 그걸 씀
+    public const string STAGE_MAP_PATH = "StageMap/Stage";
+    [Tooltip("테스트용: 0 이상이면 실행 때 이 맵으로 (스테이지 order와 무관)")]
+    public int testMapIndex = -1;
+    public const string FORCE_MAP_INDEX_TEST_KEY = "TileManager.ForceMapIndex"; // 자동 테스트용 에디터 SessionState (플레이 진입 전에 설정)
+    Stage activeStage;
+
+    public Stage ActiveStage
+    {
+        get
+        {
+            if (activeStage == null && Application.isPlaying)
+                LoadStage();
+            return activeStage;
+        }
+    }
+
+    public static int GetWantedMapIndex(int testMapIndex)
+    {
+        int forced = -1;
+#if UNITY_EDITOR
+        forced = UnityEditor.SessionState.GetInt(FORCE_MAP_INDEX_TEST_KEY, -1);
+#endif
+        return forced >= 0 ? forced : testMapIndex >= 0 ? testMapIndex : UserDataManager.stageOrder;
+    }
+
+    public static Stage LoadStagePrefab(int mapIndex)
+    {
+        return Resources.Load<Stage>(STAGE_MAP_PATH + mapIndex) ?? Resources.Load<Stage>(STAGE_MAP_PATH + 0);
+    }
+
+    void LoadStage()
+    {
+        Stage inScene = GetComponentInChildren<Stage>(false);
+        if (inScene != null)
+            activeStage = inScene;
+        else
+        {
+            Stage prefab = LoadStagePrefab(GetWantedMapIndex(testMapIndex));
+            if (prefab == null)
+            {
+                Debug.LogError($"TileManager: 스테이지 맵 프리팹 없음 (Resources/{STAGE_MAP_PATH}N)");
+                return;
+            }
+            activeStage = Instantiate(prefab, transform);
+            activeStage.name = prefab.name;
+        }
+        if (EnemyFieldController.Instance != null)
+            EnemyFieldController.Instance.ResetRoutes();
+    }
+
+    // 편집 모드용: 씬에 켜져 있는 Stage (없으면 null)
+    public static Stage FindShownStage()
+    {
+        TileManager manager = FindFirstObjectByType<TileManager>(FindObjectsInactive.Include);
+        return manager != null ? manager.GetComponentInChildren<Stage>(false) : null;
+    }
+    #endregion
+
     // 전체 타일 격자 좌표 (TileGroup 3*3이 2*2로 놓여 전체 6*6)
     readonly Dictionary<Vector2Int, Tile> tileByIndex = new();
 
+    // (2026-11-24) Tile.index = 씬에 저장된 값(Stage 컴포넌트 버튼으로 위치 기준 자동 설정 또는 인스펙터에서 직접 입력)
+    // 저장된 값이 겹치면(설정 전 = 전부 (0,0) 등) 경고 후 위치로 계산 (AssignIndicesByPosition)
+    // Awake·GameManager(레이아웃 강제 계산 후) 두 번 호출됨
+    public void AssignTileIndices()
+    {
+        if (HasDuplicateIndex(tiles))
+        {
+            Debug.LogWarning("TileManager: Tile.index가 겹침 → 위치로 계산. Stage 컴포넌트의 'Tile Index 자동 설정' 버튼으로 저장해 두세요");
+            AssignIndicesByPosition(tiles);
+        }
+
+        tileByIndex.Clear();
+        foreach (Tile tile in tiles)
+        {
+            tile.tileGroup = tile.GetComponentInParent<TileGroup>();
+            if (!tileByIndex.TryAdd(tile.index, tile))
+                Debug.LogWarning($"TileManager 같은 index 타일 중복 {tile.index} {tile.name}");
+        }
+    }
+
+    public static bool HasDuplicateIndex(IList<Tile> tiles)
+    {
+        var set = new HashSet<Vector2Int>();
+        foreach (Tile tile in tiles)
+            if (tile != null && !set.Add(tile.index))
+                return true;
+        return false;
+    }
+
     // 위치로 Tile.index 지정: 왼쪽→오른쪽 x 0부터, 맨 윗줄 y 0부터 아래로 증가
     // TileGroup 사이 간격이 달라도 열/행 순서로만 매기므로 그룹 경계를 넘어 이어짐 (2,0) 옆은 (3,0)
-    // Awake 시점엔 GridLayoutGroup 레이아웃 계산 전일 수 있어(그룹끼리 index 중복) GameManager가 레이아웃 강제 계산 후 다시 호출
-    public void AssignTileIndices()
+    public static void AssignIndicesByPosition(IList<Tile> tiles)
     {
         List<float> xs = new List<float>();
         List<float> ys = new List<float>();
@@ -38,14 +129,8 @@ public class TileManager : MonoSingleton<TileManager>
         xs.Sort();
         ys.Sort((a, b) => b.CompareTo(a)); // 위쪽(y 큰 값)이 0
 
-        tileByIndex.Clear();
         foreach (Tile tile in tiles)
-        {
             tile.index = new Vector2Int(FindIndex(xs, tile.transform.position.x), FindIndex(ys, tile.transform.position.y));
-            tile.tileGroup = tile.GetComponentInParent<TileGroup>();
-            if (!tileByIndex.TryAdd(tile.index, tile))
-                Debug.LogWarning($"TileManager 같은 index 타일 중복 {tile.index} {tile.name}");
-        }
     }
 
     const float INDEX_EPSILON = 0.05f; // 같은 열/행으로 볼 위치 오차

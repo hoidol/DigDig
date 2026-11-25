@@ -14,18 +14,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     public int mergeLevel;
     // 권능 쌍둥이 반지: 같은 종이 붙어 있으면 1. 데이터 스탯(공격력 등)만 이만큼 높은 머지 레벨 값으로 (합성·표시는 mergeLevel 그대로)
     public int twinBonus;
-    // (2026-11-21) 킹 패시브(인간 훈련 교관 등): 버프 칸에 있는 동안 데이터 스탯만 이만큼 높은 머지 레벨 값으로
-    public int kingMergeBonus;
-    int StatMergeLevel => Mathf.Min(mergeLevel + twinBonus + kingMergeBonus, MinionData.MAX_MERGE_LEVEL);
-
-    public void SetKingMergeBonus(int bonus)
-    {
-        if (kingMergeBonus == bonus)
-            return;
-        kingMergeBonus = bonus;
-        if (minionData != null)
-            UpdateMinion();
-    }
+    int StatMergeLevel => Mathf.Min(mergeLevel + twinBonus, MinionData.MAX_MERGE_LEVEL);
 
     public void SetTwinBonus(int bonus)
     {
@@ -36,20 +25,69 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
             UpdateMinion();
     }
 
-    // 진화 (EvolutionTileItem: 최대 머지 레벨 슬라임이 올라가면 진화) = 슬라임 고유 [각성] 능력 발현
-    // 각성 효과는 슬라임마다 isEvolved일 때만 동작. 진화 순간에 바꿔야 하는 값(개수 등)은 OnEvolve에서 적용
-    // 합성·교체로 새로 생긴 슬라임은 진화 안 된 상태 (Spawn에서 초기화)
+    // (2026-11-24) 5성 진화: 5성(MAX_MERGE_LEVEL)이 되면(Spawn) 진화 갈래 선택 창(MinionEvolutionCanvas) → 고른 갈래로 Evolve
+    // 진화해도 클래스·key는 그대로: 갈래(MinionEvolutionData) 스탯 배율 + 그림 교체(MinionData.evolvedSprite) + 갈래 특수 동작(MinionEvolution 부품)
+    // 종별 [각성] 효과(isEvolved일 때만 동작, OnEvolve)도 같이 켜짐. 합성·교체로 새로 생긴 미니언은 진화 안 된 상태 (Spawn에서 초기화)
     public bool isEvolved;
+    public MinionEvolutionData evolution; // 고른 진화 갈래 (null = 미진화)
+    MinionEvolution evolutionAbility;     // 갈래 특수 동작 (갈래에 prefab이 있을 때만)
     public virtual bool CanEvolve => mergeLevel >= MinionData.MAX_MERGE_LEVEL && !isEvolved;
+
+    // 갈래를 고르지 않고 진화 (진화 타일·테스트 창): 첫 갈래
     public void Evolve()
+    {
+        MinionData data = minionData != null ? minionData : MinionData;
+        var branches = data.GetEvolutions();
+        Evolve(branches.Count > 0 ? branches[0] : null);
+    }
+
+    public void Evolve(MinionEvolutionData branch)
     {
         if (!CanEvolve)
             return;
         isEvolved = true;
-        Debug.Log($"[Evolve] {key} 진화 (머지 레벨 {mergeLevel})");
+        evolution = branch;
+        Debug.Log($"[Evolve] {key} 진화 (머지 레벨 {mergeLevel}, 갈래 {branch?.key})");
+        ApplyEvolvedLook(true);
+        if (branch != null && branch.prefab != null)
+        {
+            evolutionAbility = Instantiate(branch.prefab, transform);
+            evolutionAbility.OnEquip(this);
+        }
         OnEvolve();
         UpdateMinion();
         SoundManager.Play(SFXType.Evolve);
+        EffectManager.PlayPopText(StatePointPosition + Vector3.up * 0.4f, PopTextType.Evolve);
+    }
+
+    void ClearEvolution()
+    {
+        if (evolutionAbility != null)
+        {
+            evolutionAbility.OnUnequip();
+            Destroy(evolutionAbility.gameObject);
+        }
+        evolutionAbility = null;
+        evolution = null;
+        isEvolved = false;
+        ApplyEvolvedLook(false);
+    }
+
+    // 진화 모습: 몸 그림 = MinionData.evolvedSprite(2.Sprites/Minion/Growth2/{Key}, 없으면 그대로) + 몸 크기 EVOLVED_BODY_SCALE배
+    public const float EVOLVED_BODY_SCALE = 1.15f;
+    SpriteRenderer bodyRenderer;
+    Sprite baseBodySprite;
+    Vector3 bodyRootOriginScale = Vector3.one;
+
+    void ApplyEvolvedLook(bool evolved)
+    {
+        StopSpawnDrop(); // 등장·머지 연출이 끝 크기를 예전 값으로 되돌리지 않게
+        Sprite evolvedSprite = minionData != null ? minionData.evolvedSprite : null;
+        if (bodyRenderer != null)
+            bodyRenderer.sprite = evolved && evolvedSprite != null ? evolvedSprite : baseBodySprite;
+        bodyRootBaseScale = bodyRootOriginScale * (evolved ? EVOLVED_BODY_SCALE : 1f);
+        if (bodyAnimator != null)
+            bodyAnimator.transform.localScale = bodyRootBaseScale;
     }
 
     protected virtual void OnEvolve()
@@ -105,9 +143,14 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
     public float attackTimer;
     //적 찾는 방식 설정
-    public FindTargetType findTargetType = FindTargetType.Closest;
+    public FindTargetType findTargetType = FindTargetType.First;
+    // (2026-11-24) 소환할 때 타겟 방식 기본값 = 가장 먼저 나온 적. 미니언마다 다르게 하려면 재정의 (얼음 = 가까운 적)
+    public virtual FindTargetType DefaultFindTargetType => FindTargetType.First;
 
     public FindTargetType FindTargetType => findTargetType;
+    // (2026-11-25) 실제로 쓰는 타겟 방식 (용사 스킬이 잠깐 바꿀 수 있음, 궁수 매의 눈. 랜덤 타겟 룬 차례는 그대로)
+    public FindTargetType EffectiveFindTargetType => findTargetType != FindTargetType.Random && HeroKingAbility.ForcedAllyFindTarget.HasValue
+        ? HeroKingAbility.ForcedAllyFindTarget.Value : findTargetType;
     // 타겟 방식 설정이 의미 있는지 (회전체·경로 순환처럼 타겟을 노리지 않는 슬라임은 false → 설정 버튼 숨김)
     public virtual bool UseFindTarget => true;
 
@@ -184,6 +227,14 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         }
         if (bodyAnimator != null)
             bodyRootBaseScale = bodyAnimator.transform.localScale;
+        bodyRootOriginScale = bodyRootBaseScale;
+        if (rootTr != null)
+        {
+            Transform body = rootTr.Find("BodyRoot/Body");
+            bodyRenderer = body != null ? body.GetComponent<SpriteRenderer>() : rootTr.GetComponentInChildren<SpriteRenderer>(true);
+        }
+        if (bodyRenderer != null)
+            baseBodySprite = bodyRenderer.sprite;
     }
 
     // ---- 등장 연출 (2026-11-16): 살짝 위에서 떨어져 착지하며 찌그러졌다 돌아옴 ----
@@ -248,21 +299,19 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
             bodyAnimator.transform.localScale = bodyRootBaseScale;
     }
     public UserMinion userMinion;
-    public MinionEnhanceInfo minionEnhanceInfo;
     public Transform rangeTr;
     public virtual void Spawn(Vector2 pos, int mLv)
     {
         userMinion = UserDataManager.Instance.userMinionManager.GetUserMinion(key);
 
         minionData = MinionManager.Instance.GetMinionData(key);
-        minionEnhanceInfo = minionData.GetCommonMinionEnhanceInfo(userMinion.EnhanceLevel);
         transform.position = pos;
         this.mergeLevel = mLv;
         twinBonus = 0; // 풀링 재사용
-        kingMergeBonus = 0;
         pendingSkillTime = 0f;
         IsBeingDragged = false;
-        isEvolved = false; // 풀링 재사용 · 합성/교체로 새로 생긴 슬라임은 진화 안 된 상태
+        findTargetType = DefaultFindTargetType; // 합성·교체 결과는 이후 CopyUnitOptionsFrom이 그 칸 미니언 설정으로 덮어씀
+        ClearEvolution(); // 풀링 재사용 · 합성/교체로 새로 생긴 슬라임은 진화 안 된 상태
 
         statDic.Clear();
         statDic.Add(StatType.AttackPower, 0);
@@ -279,6 +328,10 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         if (worldCanvas != null)
             worldCanvas.AttachMinionState(this);
         PlaySpawnDrop();
+
+        // (2026-11-24) 5성이 되면 진화 갈래 선택 (합성·카드 합성 모두 여기로 옴)
+        if (CanEvolve)
+            MinionEvolutionCanvas.Request(this).Forget();
     }
 
     // 머리 위 상태 표시(MinionGameStatePanel) 위치. 프리팹에서 지정, 비워 두면 미니언 위치 + DEFAULT_STATE_POINT_OFFSET
@@ -325,12 +378,12 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
     public virtual void InitMinionStat()
     {
-        // MinionEnhance csv에 AttackPower가 비어 있으면(GrowUp·Hunter 등 안 쓰는 미니언) 0 + 경고 (예외로 소환이 멈추지 않게)
-        MinionStat attackStat = minionData.GetMinionStat(StatType.AttackPower, userMinion.EnhanceLevel);
+        // MinionData.csv에 AttackPower가 비어 있으면 0 + 경고 (예외로 소환이 멈추지 않게)
+        MinionStat attackStat = minionData.GetMinionStat(StatType.AttackPower);
         if (attackStat == null)
-            Debug.LogWarning($"[Minion] {key} 강화 Lv{userMinion.EnhanceLevel} AttackPower 데이터 없음 (MinionEnhance csv) → 0");
+            Debug.LogWarning($"[Minion] {key} AttackPower 데이터 없음 (MinionData.csv AttackPower 열) → 0");
         statDic[StatType.AttackPower] = attackStat != null ? attackStat.GetValue<float>(StatMergeLevel) : 0f;
-        statDic[StatType.AttackSpeed] = GetDataStat(StatType.AttackSpeed); // MinionData.csv (강화·머지 레벨 무관)
+        statDic[StatType.AttackSpeed] = GetDataStat(StatType.AttackSpeed); // MinionData.csv (머지 레벨 무관)
         statDic[StatType.AttackRange] = GetDataStat(StatType.AttackRange);
         statDic[StatType.CritChance] = GetDataStat(StatType.CritChance); // % 단위. MinionData.csv (기본 0)
     }
@@ -338,7 +391,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     // 데이터 스탯 값 (없으면 0)
     float GetDataStat(StatType statType)
     {
-        MinionStat stat = minionData.GetMinionStat(statType, userMinion.EnhanceLevel);
+        MinionStat stat = minionData.GetMinionStat(statType);
         return stat != null ? stat.GetValue<float>(StatMergeLevel) : 0f;
     }
 
@@ -346,6 +399,16 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     {
         InitMinionStat();
         UpdateReinforce();
+        // (2026-11-24) 5성 진화 갈래 스탯 (버프 적용 전)
+        if (evolution != null)
+        {
+            statDic[StatType.AttackPower] *= evolution.attackPowerMul;
+            statDic[StatType.AttackSpeed] *= evolution.attackSpeedMul;
+            statDic[StatType.AttackRange] += evolution.attackRangeAdd;
+        }
+        // (2026-11-24) 용사 강화: 같은 종 이웃·진화 공격력, 장착 형태가 모두 다르면 공속
+        statDic[StatType.AttackPower] *= HeroUpgradeSystem.GetMinionAttackMul(this);
+        statDic[StatType.AttackSpeed] *= HeroUpgradeSystem.GetMinionAttackSpeedMul(this);
         // 버프로만 오르는 스탯 → 매번 0부터 다시 (InitMinionStat이 안 채움)
         statDic[StatType.EliteBossDamage] = 0;
         statDic[StatType.DamageToLight] = 0;
@@ -353,17 +416,15 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         statDic[StatType.DamageToArmored] = 0;
         statDic[StatType.DamageToEthereal] = 0;
         statDic[StatType.SkillCooldownSpeed] = 0;
+        statDic[StatType.DoubleShotChance] = 0;
+        statDic[StatType.SkillCooldownSpeed] += HeroUpgradeSystem.GetMinionSkillCooldownAdd(this); // (2026-11-24) 용사 강화 정예병 스킬 쿨타임
+        MinionEnhanceSystem.Apply(this, statDic); // (2026-11-25) 레벨업 미니언 강화 카드 (종 × 스탯, 강적 피해 포함 → 0으로 초기화한 뒤에)
 
         foreach (var buff in activeBuffs)
         {
             statDic.TryGetValue(buff.statType, out float cur); // 없는 스탯 버프도 예외 없이 (기본 0)
             statDic[buff.statType] = buff.Apply(cur);
         }
-
-        // 권능 왕의 인장: 조건 충족 시 모든 슬라임 공속
-        KingSealAuthority kingSeal = AuthoritySystem.Get<KingSealAuthority>();
-        if (kingSeal != null && kingSeal.active)
-            statDic[StatType.AttackSpeed] *= KingSealAuthority.ATTACK_SPEED_MUL;
 
         // 사거리 버프까지 반영된 값으로 표시
         rangeTr.localScale = Vector3.one * statDic[StatType.AttackRange];
@@ -373,15 +434,25 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     {
         GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
         GameEventBus.Subscribe<MinionLevelUpReinforceEvent>(OnMinionLevelUpReinforceEvent);
+        GameEventBus.Subscribe<TileObjectChangedEvent>(OnTileObjectChanged);
+    }
+
+    // (2026-11-24) 용사 강화 TwinAttack: 칸 배치가 바뀌면 같은 종 이웃 여부가 바뀔 수 있음
+    void OnTileObjectChanged(TileObjectChangedEvent e)
+    {
+        if (minionData != null && HeroUpgradeSystem.Get(HeroUpgradeAbility.TwinAttack) > 0f)
+            UpdateMinion();
     }
 
     public virtual void OnDisable()
     {
         GameEventBus.Unsubscribe<EnemyDeadEvent>(OnEnemyDeadEvent);
         GameEventBus.Unsubscribe<MinionLevelUpReinforceEvent>(OnMinionLevelUpReinforceEvent);
+        GameEventBus.Unsubscribe<TileObjectChangedEvent>(OnTileObjectChanged);
         StopPowerUpEffect();
         ClearBuffEffects();
         StopSpawnDrop(); // 풀 반납 시 몸 위치·크기 원래대로
+        ClearEvolution(); // 진화 부품·그림 정리
 
         GameWorldCanvas worldCanvas = GameWorldCanvas.Instance;
         if (worldCanvas != null)
@@ -479,16 +550,16 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     }
 
 
+    // (2026-11-24) 근접 공격 미니언 (용사 강화 '근거리' 판정. 회전형은 형태로 따로 판정)
+    public virtual bool IsMelee => false;
+
     // 한 번 공격에 발사하는 탄 수 (2 이상이면 서로 다른 타겟을 노림)
     public virtual int ShootCount => 1;
 
     // 서로 다른 타겟 count개 (우선순위 순). 기본은 findTargetType 기준
     public virtual List<Transform> FindTargets(int count)
     {
-        // 권능 사냥꾼의 부적: 강타 슬라임은 엘리트·보스 먼저
-        if (AuthoritySystem.Has<HunterCharmAuthority>() && HunterCharmAuthority.IsHeavy(MinionData))
-            return HunterCharmAuthority.PreferEliteBoss(InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, HunterCharmAuthority.MAX_CANDIDATES), count);
-        return InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, count);
+        return InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, EffectiveFindTargetType, count);
     }
 
     public virtual void Fire(Vector2 dir)
@@ -532,7 +603,30 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         baseBullet.Shoot(dir, AttackPower);
         if (shotModifier.tileItem != null)
             shotModifier.tileItem.OnFired(baseBullet);
+        TryDoubleShot(baseBullet);
         return true;
+    }
+
+    // (2026-11-23) 엘프 종족 버프 칸: 확률(DoubleShotChance %)로 같은 탄을 한 발 더 (연발 룬과 같은 간격, 추가 탄은 OnFired·다시 판정 없음)
+    public float DoubleShotChance => statDic.TryGetValue(StatType.DoubleShotChance, out float v) ? v : 0f;
+
+    void TryDoubleShot(AllyBulletObject bullet)
+    {
+        float chance = DoubleShotChance;
+        if (chance <= 0f || Random.Range(0f, 100f) >= chance)
+            return;
+        DoubleShot(bullet.spec, bullet.allyUnit, bullet.shootPos, bullet.shootDir, bullet.shootDamage).Forget();
+    }
+
+    async UniTaskVoid DoubleShot(BulletSpec spec, IAllyUnit allyUnit, Vector2 pos, Vector2 dir, float damage)
+    {
+        if (await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow())
+            return;
+        if (!gameObject.activeInHierarchy)
+            return;
+        AllyBulletObject extra = spec.Instantiate(allyUnit);
+        extra.transform.position = pos;
+        extra.Shoot(dir, damage);
     }
 
     // 일반 합성 조건: 같은 key + 같은 mergeLv, 최대 머지 레벨 미만
@@ -568,8 +662,6 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
             {
                 UserMinion userMinion = UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions[Random.Range(0, UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions.Length)];
                 pickedMinionKey = userMinion.key;
-                if (AuthoritySystem.Has<BloodlineFlaskAuthority>())
-                    pickedMinionKey = BloodlineFlaskAuthority.PickResultKey(key, pickedMinionKey, Random.value);
             }
             lv = mergeLevel + 1;
         }
@@ -601,9 +693,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     }
     public virtual Transform FindTarget()
     {
-        if (AuthoritySystem.Has<HunterCharmAuthority>() && HunterCharmAuthority.IsHeavy(MinionData))
-            return FindTargets(1).FirstOrDefault();
-        return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, findTargetType);
+        return InGameUtil.FindTarget(transform.position, AttackRange, targetLayerMask, EffectiveFindTargetType);
     }
 
 

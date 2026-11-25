@@ -29,8 +29,8 @@ MonoBehaviour:
     value: Heal
     id: 
     wave: 0
-  enemyHp: 66
-  addHpRatioPerWave: 1.5
+  enemyHp: 60
+  addHpRatioPerWave: 1.3
   multiHpPerWave: 1.03
   cycleHpMuls:
   - 1

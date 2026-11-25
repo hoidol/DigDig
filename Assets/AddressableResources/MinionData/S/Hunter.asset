@@ -18,76 +18,11 @@ MonoBehaviour:
   growth: 1
   attackType: 1
   tags: 2049
-  commonMinionEnhanceInfos:
-  - level: 0
-    minionStats: []
-  - level: 1
-    minionStats: []
-  - level: 2
-    minionStats: []
-  - level: 3
-    minionStats: []
-  - level: 4
-    minionStats: []
-  - level: 5
-    minionStats: []
-  - level: 6
-    minionStats:
-    - statType: 0
-      values:
-      - 12.00
-      - 12.00
-  - level: 7
-    minionStats:
-    - statType: 0
-      values:
-      - 14.00
-      - 14.00
-  - level: 8
-    minionStats:
-    - statType: 0
-      values:
-      - 16.00
-      - 16.00
-  - level: 9
-    minionStats:
-    - statType: 0
-      values:
-      - 18.00
-      - 18.00
-  - level: 10
-    minionStats:
-    - statType: 0
-      values:
-      - 20.00
-      - 20.00
-  - level: 11
-    minionStats:
-    - statType: 0
-      values:
-      - 22.00
-      - 22.00
-  - level: 12
-    minionStats:
-    - statType: 0
-      values:
-      - 24.00
-      - 24.00
-  - level: 13
-    minionStats:
-    - statType: 0
-      values:
-      - 26.00
-      - 26.00
-  - level: 14
-    minionStats:
-    - statType: 0
-      values:
-      - 28.00
-      - 28.00
   attackPowerRandomRatio: 0
   hasSkill: 1
   offerDiceCoinPrice: 2
+  buyCurrencyType: 0
+  buyPrice: 0
   reinforceAttackPowerPercent: 5
   attackSfx:
     name: 
@@ -102,8 +37,14 @@ MonoBehaviour:
   prefab: {fileID: 1741231732451388378, guid: 19c63a52f99954c8caccc61881579627, type: 3}
   unlockConditions: []
   thum: {fileID: -3085747607584028519, guid: 84406be27f2a14bbdbb6cbb9d75c35f8, type: 3}
+  evolvedSprite: {fileID: 0}
+  evolutions: []
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
+  - statType: 0
+    values:
+    - 12.00
+    - 12.00
   - statType: 2
     values:
     - 60

@@ -31,3 +31,5 @@ MonoBehaviour:
     key: Berserker
   - level: 7
     key: Mortar
+  - level: 8
+    key: Thunder

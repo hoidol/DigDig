@@ -17,7 +17,7 @@ namespace InGame
                 thumImage.sprite = StatData.GetThum(type);
 
             float randomRatio = minion.minionData.GetRandomRatio(type);
-            MinionStat minionStat = minion.minionData.GetMinionStat(type, minion.userMinion.EnhanceLevel);
+            MinionStat minionStat = minion.minionData.GetMinionStat(type);
             if (minionStat == null)
             {
                 // 데이터에 없는 스탯 (displayStatTypes 설정 실수 등) → 패널 숨김

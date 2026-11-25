@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 킹 능력치 한 줄 (기본 + 로비 업그레이드)
+// 킹 능력치 한 줄 (기본 + 레벨 스탯 포인트)
 public class CurrentKSAbilityInfoPanel : MonoBehaviour
 {
     [Header("보여줄 스탯 미리 설정하기")]

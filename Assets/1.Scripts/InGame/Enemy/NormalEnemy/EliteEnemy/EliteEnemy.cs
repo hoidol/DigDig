@@ -42,8 +42,8 @@ public class EliteEnemy : NormalEnemy
             }
             else
             {
-                KingSlime.Instance.bonusDiceCoinNextBreak += GameSetting.BONUS_ELITE_NEXT_DICE_COIN;
-                DiceCoinText.Instantiate().SetDiceCoinText(transform.position,
+                bool now = KingSlime.Instance.AddRewardDiceCoin(GameSetting.BONUS_ELITE_NEXT_DICE_COIN);
+                DiceCoinText.Instantiate().SetDiceCoinText(transform.position, now ? $"+{GameSetting.BONUS_ELITE_NEXT_DICE_COIN}" :
                     string.Format(TranslateManager.GetText("BonusElite_NextDiceCoin"), GameSetting.BONUS_ELITE_NEXT_DICE_COIN));
             }
             return;
@@ -55,9 +55,8 @@ public class EliteEnemy : NormalEnemy
             DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{ELITE_DICE_COIN}");
         }
 
-        int gold = GetEliteRewardGold(wave);
-        KingSlime.Instance.AddCoin(gold);
-        SoundManager.Play(SFXType.CoinGet);
-        CoinText.Instantiate().SetCoinText(transform.position, $"+{gold}");
+        // (2026-11-23) 엘리트 처치 골드 없음 (골드 개념 삭제). 이전: GetEliteRewardGold(wave)만큼 코인
+        // (2026-11-23) 엘리트 처치 = 다음 브레이크타임 룬 선택 (보너스 엘리트는 위에서 return → 대상 아님)
+        RuneRewardSystem.AddReward(transform.position);
     }
 }

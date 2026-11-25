@@ -22,19 +22,32 @@ public class KingClassInfoPanel : MonoBehaviour
     public ScrollRect descScroll; // 설명 스크롤
     public float disabledAlpha = 0.35f;
 
+    // (2026-11-23) 종족·직업 → 용사 하나: 첫 칸(raceBadge) = 용사, 직업 칸은 숨김. 설명 = 용사 설명 + 에너지
     public void ShowKing(KingSlime king)
     {
         KingAbilityInventory inv = king != null ? king.abilityInventory : null;
-        RaceKingAbility race = inv?.Get<RaceKingAbility>();
-        JobKingAbility job = inv?.Get<JobKingAbility>();
+        HeroKingAbility hero = inv?.Get<HeroKingAbility>();
 
-        SetBadge(raceBadge, raceIcon, raceText, race, "종족");
-        SetBadge(jobBadge, jobIcon, jobText, job, "직업");
+        SetBadge(raceBadge, raceIcon, raceText, hero, "용사");
+        if (jobBadge != null)
+            jobBadge.gameObject.SetActive(false);
         if (nameText != null)
             nameText.gameObject.SetActive(false);
 
         if (descText != null)
-            descText.text = $"{GetLine(race, "종족", $"Lv.{LevelUpChoiceRule.RACE_LEVEL}에 선택")}\n{GetLine(job, "직업", $"Lv.{LevelUpChoiceRule.JOB_LEVEL}에 선택")}";
+        {
+            string line = GetLine(hero, "용사", $"Lv.{LevelUpChoiceRule.HERO_LEVEL}에 선택");
+            if (hero != null) // (2026-11-24) 에너지 개수 + 스킬 해방 상황
+            {
+                string col = ColorUtility.ToHtmlStringRGB(hero.energyColor);
+                line += $"\n<color=#{col}>{hero.energyName} {hero.Charges}/{hero.MaxCharges}</color>";
+                for (int s = 0; s < HeroKingAbility.SKILL_COUNT; s++)
+                    line += hero.IsSkillUnlocked(s)
+                        ? $"\n<b>{hero.GetSkillName(s)}</b> : {hero.GetSkillDesc(s)}"
+                        : $"\n<color=#9AA0A6>{hero.GetSkillName(s)} : Lv.{LevelUpChoiceRule.GetSkillUnlockLevel(s)}에 해방</color>";
+            }
+            descText.text = line;
+        }
         ResetScroll();
     }
 
@@ -71,7 +84,7 @@ public class KingClassInfoPanel : MonoBehaviour
     {
         if (ability == null || ability.data == null)
             return $"<color=#9AA0A6>{emptyName} : {emptyDesc}</color>";
-        string desc = ability.data.GetDescription(ability.level).Replace("\n", " ");
+        string desc = ability.data.GetDescription(ability.level);
         return $"<b>{ability.data.title}</b> : {desc}";
     }
 

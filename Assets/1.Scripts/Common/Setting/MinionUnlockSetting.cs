@@ -3,7 +3,7 @@ using UnityEngine;
 
 // (2026-11-20) 게임에서 쓰는 미니언과 지급 시점. Resources/MinionUnlockSetting 에셋 인스펙터에서 직접 수정
 // - initMinionKeys: 처음부터 보유·장착 (장착 칸 수 = GameSetting.MINION_SLOT_COUNT만큼 필요)
-// - levelUnlocks: 유저 레벨(표시 LV.N)이 되면 보유 처리 (UserMinionManager.GrantLevelUnlockMinions)
+// - levelUnlocks: 유저 레벨(표시 LV.N)이 되면 로비에서 구매 가능 (UserMinionManager.BuyMinion, 2026-11-24 자동 지급 → 구매)
 // 두 목록에 없는 미니언은 게임에서 안 씀 (뽑기·미니언 관리 화면에서 제외, GameSetting.IsUsedMinion)
 // 에셋이 없으면 코드 기본값(DEFAULT_*)
 [CreateAssetMenu(fileName = "MinionUnlockSetting", menuName = "KingSlime/MinionUnlockSetting")]
@@ -35,6 +35,7 @@ public class MinionUnlockSetting : ScriptableObject
         new LevelUnlock(4, "Mine"),
         new LevelUnlock(6, "Berserker"),
         new LevelUnlock(7, "Mortar"),
+        new LevelUnlock(8, "Thunder"),
     };
 
     static MinionUnlockSetting instance;

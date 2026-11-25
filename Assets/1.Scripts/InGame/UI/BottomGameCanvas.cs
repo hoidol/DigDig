@@ -8,6 +8,10 @@ public class BottomGameCanvas : MonoBehaviour
     public AllySettingPanel allySettingPanel;
     public TileItemInfoPanel tileItemInfoPanel;
     public GameObject hideGameObject; // allySettingPanel이 보이는 동안 숨김. 비우면 하위의 "HideGame"을 찾음
+    // (2026-11-24) wave 중 하단 UI (킹 체력·용사 에너지·스킬 버튼). 비우면 실행 중 OfferButtons 자리에 생성
+    public HeroSkillHud heroSkillHud;
+    bool waveActive;
+
     void Start()
     {
         if (hideGameObject == null)
@@ -21,6 +25,8 @@ public class BottomGameCanvas : MonoBehaviour
         if (UseOfferButtons)
         {
             buttonObject.SetActive(false);
+            if (heroSkillHud == null)
+                heroSkillHud = HeroSkillHud.Create(offerButtonObject.transform as RectTransform);
             GameEventBus.Subscribe<BreakTimeStartEvent>(OnBreakTimeStartEvent);
             GameEventBus.Subscribe<WaveStartEvent>(OnWaveStartEvent);
         }
@@ -46,12 +52,14 @@ public class BottomGameCanvas : MonoBehaviour
     void OnWaveStartEvent(WaveStartEvent e)
     {
         offerReady = false;
+        waveActive = true;
         UpdateButtonObject();
     }
 
     void OnBreakTimeStartEvent(BreakTimeStartEvent e)
     {
         offerReady = true;
+        waveActive = false;
         UpdateButtonObject();
     }
 
@@ -59,6 +67,9 @@ public class BottomGameCanvas : MonoBehaviour
     void UpdateButtonObject()
     {
         ToggleButtonObject.SetActive(offerReady && !tileSelected);
+        // wave 중 하단 = 킹 체력·에너지·스킬 (타일 선택 중엔 유닛 정보에 자리를 내줌)
+        if (heroSkillHud != null)
+            heroSkillHud.gameObject.SetActive(waveActive && !tileSelected);
     }
 
     GameObject FindChild(string childName)
@@ -81,7 +92,7 @@ public class BottomGameCanvas : MonoBehaviour
     // 타일 선택 시 위 유닛 정보 + 타일(아이템) 정보. 빈 타일(유닛·아이템 없음)은 반응 없음 (킹 버프 칸이면 버프 칸 정보)
     void OnTileSelectedEvent(TileSelectedEvent e)
     {
-        if (e.tile.tileObject == null && e.tile.tileItem == null && !KingTileBuffArea.IsBuffTile(e.tile))
+        if (e.tile.tileObject == null && e.tile.tileItem == null && !EliteArea.IsEliteTile(e.tile))
         {
             OnTileDeselectedEvent(null);
             return;

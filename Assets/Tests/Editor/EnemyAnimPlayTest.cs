@@ -53,6 +53,9 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
 
     static IEnumerator WaitForEnemy()
     {
+        // (2026-11-25) 카드 소환 모드: 게임 시작 = 브레이크타임 → Next와 같은 경로로 wave 시작
+        if (GameManager.Instance.isBreakTime)
+            GameManager.Instance.EndBreakTime();
         double end = EditorApplication.timeSinceStartup + SPAWN_TIMEOUT;
         while (WaitActiveEnemy() == null && EditorApplication.timeSinceStartup < end)
             yield return WaitRealtime(0f);
@@ -144,7 +147,7 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
 
         // 소환 위치에서 멀리 떨어진 곳에서 죽고 바로 풀로
         Vector2 spawnPos = EnemyFieldController.Instance.GetSpawnPosition();
-        Transform[] paths = EnemyFieldController.Instance.paths;
+        Transform[] paths = enemy.route ?? EnemyFieldController.Instance.MainRoute; // (2026-11-24) 맵 프리팹 경로 (적마다 route)
         Vector2 farPos = paths.Select(p => (Vector2)p.position).OrderByDescending(p => Vector2.Distance(p, spawnPos)).First();
         enemy.transform.position = farPos;
         enemy.Rigidbody2D.position = farPos; // transform만 바꾸면 rigidbody는 그대로 (Kinematic)
@@ -193,8 +196,8 @@ public class EnemyAnimPlayTest : InGamePlayTestBase
         Enemy enemy = WaitActiveEnemy();
         Assert.IsNotNull(enemy, "적이 소환되지 않음");
 
-        // 마지막 지점에 바로 도착시킴
-        Transform[] paths = EnemyFieldController.Instance.paths;
+        // 마지막 지점에 바로 도착시킴 (2026-11-24 맵 프리팹: 적마다 route)
+        Transform[] paths = enemy.route ?? EnemyFieldController.Instance.MainRoute;
         enemy.pathIdx = paths.Length - 1;
         enemy.transform.position = paths[paths.Length - 1].position;
         double end = EditorApplication.timeSinceStartup + 2f;

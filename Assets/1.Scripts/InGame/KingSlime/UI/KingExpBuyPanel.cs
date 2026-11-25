@@ -52,6 +52,11 @@ public class KingExpBuyPanel : MonoBehaviour
         KingSlime king = KingSlime.Instance;
         if (king == null)
             return;
+        if (king.IsMaxLv)
+        {
+            ToastCanvas.Toast("최대 레벨입니다");
+            return;
+        }
         if (!king.TryBuyExp())
         {
             SoundManager.Play(SFXType.Fail_NotEnough);
@@ -67,16 +72,21 @@ public class KingExpBuyPanel : MonoBehaviour
         if (king == null)
             return;
         if (levelText != null)
-            levelText.text = $"Lv.{king.lv + 1}";
+            levelText.text = $"Lv.{king.lv}"; // (2026-11-23) Lv.0 시작, 최대 Lv.9
         // if (expText != null)
         //     expText.text = $"{king.exp}/{king.MaxExp}";
         if (expSlider != null)
-            expSlider.value = king.MaxExp > 0 ? (float)king.exp / king.MaxExp : 0f;
+            expSlider.value = king.IsMaxLv ? 1f : king.MaxExp > 0 ? (float)king.exp / king.MaxExp : 0f;
         if (buyText != null)
-            buyText.text = $"EXP +{GameSetting.BUY_EXP_AMOUNT}";
+            buyText.text = king.IsMaxLv ? "MAX" : $"EXP +{GameSetting.BUY_EXP_AMOUNT}";
+        if (buyButton != null)
+            buyButton.interactable = !king.IsMaxLv;
         bool affordable = king.diceCoin >= GameSetting.BUY_EXP_DICE_COIN_PRICE;
         if (priceText != null)
         {
+            // 최대 레벨이면 가격 숨김 (가격 묶음(아이콘 + 숫자)이 따로 있으면 묶음째)
+            Transform priceGroup = buyButton != null && priceText.transform.parent != buyButton.transform ? priceText.transform.parent : priceText.transform;
+            priceGroup.gameObject.SetActive(!king.IsMaxLv);
             priceText.text = GameSetting.BUY_EXP_DICE_COIN_PRICE.ToString();
             priceText.color = affordable ? Color.white : Color.red;
         }

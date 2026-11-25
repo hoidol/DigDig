@@ -34,13 +34,11 @@ public static class DataTableImporter
     {
         new Entry("CharacterData", new[] { "KingSlimeData.csv" }, () => LoadAll<KingSlimeData>(d => d.LoadData())),
         new Entry("EnemyData", new[] { "EnemyData.csv" }, () => LoadAll<EnemyData>(d => d.LoadData())),
-        new Entry("StageData", new[] { "StageData.csv", "EventData.csv" }, () => LoadAll<StageData>(d => d.LoadData())),
-        new Entry("MinionData", new[] { "MinionData.csv", "MinionEnhance" }, () => LoadAll<MinionData>(d => d.LoadData())),
+        new Entry("StageData", new[] { "StageData.csv" }, () => LoadAll<StageData>(d => d.LoadData())),
+        new Entry("MinionData", new[] { "MinionData.csv" }, () => LoadAll<MinionData>(d => d.LoadData())),
         new Entry("ItemData", new[] { "ItemData.csv" }, () => LoadAll<ItemData>(d => d.LoadData())),
-        new Entry("AuthorityData", new[] { "AuthorityData.csv" }, () => LoadAll<AuthorityData>(d => d.Edit())),
-        new Entry("EnhanceExpInfo", new[] { "EnhanceLevelInfo.csv" }, () => LoadAll<EnhanceExpInfo>(d => d.LoadData())),
-        new Entry("KSUpgradeData", new[] { "KSUpgradeData.csv" }, KSUpgradeData.ImportAsset),
         new Entry("ProductData", new[] { "ProductData.csv" }, ProductDataTable.ImportAsset),
+        new Entry("HeroData", new[] { HeroDataTable.CSV_PATH }, HeroDataTable.ImportAsset),
         new Entry("TranslateData", new[] { "Translate.csv" }, TranslateDataTable.ImportAsset),
     };
 
@@ -87,6 +85,8 @@ public static class DataTableImporter
     [MenuItem(MENU_ROOT + "Import ItemData", priority = 43)]
     static void ImportItemData() => ImportByName("ItemData");
 
+    [MenuItem(MENU_ROOT + "Import HeroData", priority = 46)]
+    static void ImportHeroData() => ImportByName("HeroData");
     [MenuItem(MENU_ROOT + "Import ProductData", priority = 44)]
     static void ImportProductData() => ImportByName("ProductData");
 

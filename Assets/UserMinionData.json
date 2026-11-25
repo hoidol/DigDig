@@ -3,235 +3,169 @@
         {
             "key": "Flame",
             "equipedIdx": 0,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Ice",
             "equipedIdx": 1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Random",
             "equipedIdx": 2,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Orbit",
             "equipedIdx": 3,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Lightning",
             "equipedIdx": 4,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         }
     ],
     "userMinions": [
         {
             "key": "Flame",
             "equipedIdx": 0,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Ice",
             "equipedIdx": 1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Random",
             "equipedIdx": 2,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Orbit",
             "equipedIdx": 3,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Lightning",
             "equipedIdx": 4,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "GrowUp",
             "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": false
         },
         {
             "key": "Hunter",
             "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": false
         },
         {
             "key": "Joker",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Sacrifice",
             "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": false
         },
         {
             "key": "Scavenger",
             "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": false
         },
         {
             "key": "Beam",
             "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": false
         },
         {
             "key": "Berserker",
             "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": false
         },
         {
             "key": "Hail",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Inferno",
             "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": false
         },
         {
             "key": "Keen",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Mortar",
             "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": false
         },
         {
             "key": "Mud",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Breeze",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Dopamine",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Mine",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Rage",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Shield",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Stigma",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Bounce",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Iron",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Pierce",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Thunder",
             "equipedIdx": -1,
-            "own": true,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": true
         },
         {
             "key": "Darkness",
             "equipedIdx": -1,
-            "own": false,
-            "enhanceLevel": 0,
-            "exp": 0
+            "own": false
         }
     ],
     "selectedPresetIdx": 0,

@@ -35,7 +35,6 @@ public class MinionUnlockSettingTest
         foreach (var e in setting.levelUnlocks)
         {
             Assert.Greater(e.level, 0, e.key);
-            CollectionAssert.DoesNotContain(AuthorityData.TIER_UNLOCK_LEVELS, e.level, $"{e.key}: 권능 해금 레벨과 겹침");
         }
     }
 
@@ -44,7 +43,7 @@ public class MinionUnlockSettingTest
     {
         Assert.IsFalse(GameSetting.IsUsedMinion("Scavenger"));
         Assert.IsFalse(GameSetting.IsUsedMinion("Breeze"));
-        Assert.AreEqual(11, GameSetting.INIT_MINION_KEYS.Length + GameSetting.MINION_LEVEL_UNLOCKS.Length);
+        Assert.AreEqual(12, GameSetting.INIT_MINION_KEYS.Length + GameSetting.MINION_LEVEL_UNLOCKS.Length);
     }
 
     [Test]
@@ -52,5 +51,18 @@ public class MinionUnlockSettingTest
     {
         CollectionAssert.AreEqual(new[] { "Bounce", "Iron", "Pierce" }, UserMinionManager.GetLevelUnlockKeys(3));
         CollectionAssert.IsEmpty(UserMinionManager.GetLevelUnlockKeys(0));
+    }
+
+    // (2026-11-24) 레벨 해금 = 구매 가능 (자동 지급 아님)
+    [Test]
+    public void BuyState_ByLevel()
+    {
+        Assert.AreEqual(MinionBuyState.Owned, UserMinionManager.GetBuyState(true, 3, 0), "보유면 레벨과 상관없이 보유");
+        Assert.AreEqual(MinionBuyState.Locked, UserMinionManager.GetBuyState(false, 3, 2), "레벨 미달 = 잠김");
+        Assert.AreEqual(MinionBuyState.Buyable, UserMinionManager.GetBuyState(false, 3, 3), "레벨 도달 = 구매 가능");
+        Assert.AreEqual(MinionBuyState.Locked, UserMinionManager.GetBuyState(false, -1, 30), "목록에 없는 미니언 = 잠김");
+        Assert.AreEqual(1, UserMinionManager.GetUnlockLevel("Bounce"));
+        Assert.AreEqual(0, UserMinionManager.GetUnlockLevel(GameSetting.INIT_MINION_KEYS[0]));
+        CollectionAssert.AreEqual(new[] { "Iron" }, UserMinionManager.GetLevelUnlockKeysAt(2));
     }
 }

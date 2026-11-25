@@ -6,7 +6,7 @@ using UnityEngine;
 // 범위는 내 타일의 TileGroup 안에서만 (바로 옆 칸이라도 그룹이 다르면 영향 없음)
 // 타일 위 오브젝트가 바뀔 때마다(소환/이동/머지) 대상을 다시 계산 → 들어온 슬라임은 버프, 나간 슬라임은 해제
 // 여러 버프 슬라임이 같은 슬라임을 감싸면 버프는 각각 적용 (Multiply는 곱, Add는 합)
-public abstract class CrossBuffMinion : MinionGrowth1, IBuffRangeUnit
+public abstract class CrossBuffMinion : Minion, IBuffRangeUnit
 {
     static readonly Vector2Int[] CROSS_OFFSETS =
     {
@@ -81,7 +81,7 @@ public abstract class CrossBuffMinion : MinionGrowth1, IBuffRangeUnit
         Vector2Int[] offsets = ShapeOffsets;
         foreach (Tile tile in TileManager.Instance.GetTilesAround(center, offsets))
         {
-            if ((tile.tileGroup != center.tileGroup && !CommandFlagAuthority.IgnoreGroupBorder) || tile.tileObject is not Minion)
+            if (tile.tileGroup != center.tileGroup || tile.tileObject is not Minion)
                 return false;
             count++;
         }
@@ -149,7 +149,7 @@ public abstract class CrossBuffMinion : MinionGrowth1, IBuffRangeUnit
 
         foreach (Tile tile in TileManager.Instance.GetTilesAround(center, IsRangeExpanded ? EIGHT_OFFSETS : ShapeOffsets))
         {
-            if (tile.tileGroup != center.tileGroup && !CommandFlagAuthority.IgnoreGroupBorder) // 지휘의 깃발: 경계 무시
+            if (tile.tileGroup != center.tileGroup)
                 continue;
             if (tile.tileObject is IBuffable target && CanBuff(target))
                 targets.Add(target);

@@ -28,13 +28,13 @@ PierceItem_Desc	{0}번 공격마다 관통탄 발사\n관통력 +{1}
 RushItem_Desc	처치 시 추가탄 발사, 쿨타임 {0}초	
 WackyItem_Desc	{0}% 확률로 랜덤 방향으로 추가탄 발사	
 BoomItem_Desc	{0}발사마다 폭탄 발사 (최대 2번 튕김)	
-New Minion	새로운 슬라임	New Slime
+New Minion	새로운 미니언	New Minion
 Not enough exp	경험치가 부족합니다.	Not enough EXP.
 Energe_NotEnough	에너지가 부족합니다. 에너지는 {0}분마다 1씩 충전됩니다.	Not enough energy. Energy recharges by 1 every {0} minutes.
 Energe_OfflineCharged	자리를 비운 동안 에너지 {0} 충전!	Recharged {0} energy while you were away!
-DefenceType.Normal	일반형	Normal
-DefenceType.Armored	갑옷형	Armored
-DefenceType.Ethereal	정령형	Ethereal
+DefenceType.Normal	중갑	Medium Armor
+DefenceType.Armored	중장갑	Heavy Armor
+DefenceType.Ethereal	영체	Ethereal
 DefenceType.HeavyArmor	중갑형	HeavyArmor
 DefenceType.Organic	생체형	Organic
 Difficulty.Normal	보통	Normal
@@ -81,32 +81,32 @@ Minion.Iron.Desc	엘리트, 보스에게 {0}배 데미지를 줍니다.	Deals {0
 Minion.Thunder.Desc	번개를 떨어뜨려 주변 적에게 피해를 줍니다. (범위 {0}, 최대 {1}기)	Strikes lightning that damages nearby enemies. (Range {0}, up to {1} enemies)
 Minion.Mine.Desc	적 이동 경로에 지뢰를 설치합니다. 밟으면 폭발해 주변 적에게 피해를 줍니다. (최대 {0}개, 범위 {1}, 최대 {2}기)	Plants mines on the enemy path that explode when stepped on, damaging nearby enemies. (Up to {0} mines, range {1}, up to {2} enemies)
 Minion.Stigma.Desc	적중 시 {0:0}% 확률로 낙인을 새깁니다. 낙인 중첩당 받는 피해 {1:0}% 증가 (최대 {2}중첩)	{0:0}% chance on hit to brand the enemy. Each brand stack increases damage taken by {1:0}% (max {2} stacks)
-Minion.Rage.Desc	십자범위 4칸 슬라임의 공격력 {0}% 증가	Increases attack power of slimes in the 4 cross tiles by {0}%
-Minion.Breeze.Desc	십자범위 4칸 슬라임의 공격속도 {0}% 증가	Increases attack speed of slimes in the 4 cross tiles by {0}%
+Minion.Rage.Desc	십자범위 4칸 미니언의 공격력 {0}% 증가	Increases attack power of minions in the 4 cross tiles by {0}%
+Minion.Breeze.Desc	십자범위 4칸 미니언의 공격속도 {0}% 증가	Increases attack speed of minions in the 4 cross tiles by {0}%
 Minion.Dopamine.Desc	주변(범위 {0})에서 적이 죽으면 공격력 {1}%의 탄을 {2}발 더 발사합니다.	When an enemy dies nearby (range {0}), fires {2} extra shots dealing {1}% attack power.
-Minion.Keen.Desc	십자범위 4칸 슬라임의 크리티컬 확률 {0}% 증가	Increases crit chance of slimes in the 4 cross tiles by {0}%
+Minion.Keen.Desc	십자범위 4칸 미니언의 크리티컬 확률 {0}% 증가	Increases crit chance of minions in the 4 cross tiles by {0}%
 Minion.Mud.Desc	진흙 구슬(최대 {0}개)이 주변을 돌다 적에 닿으면 터져 주변에 진흙을 묻힙니다. 진흙 중첩당 이동속도 {1:0}% 감소 (최대 {2:0}%, 엘리트·보스 {3:0}%)	Mud orbs (up to {0}) circle around and burst on enemies, splashing mud. Each mud stack slows by {1:0}% (max {2:0}%, Elite/Boss {3:0}%)
-Minion.Beam.Desc	다른 광선 슬라임과 레이저로 연결됩니다. 레이저에 닿은 적에게 {0}초마다 피해 (혼자면 기본 공격)	Links to other Beam slimes with lasers. Damages enemies touching a laser every {0}s (basic attack when alone)
+Minion.Beam.Desc	다른 광선 미니언과 레이저로 연결됩니다. 레이저에 닿은 적에게 {0}초마다 피해 (혼자면 기본 공격)	Links to other Beam minions with lasers. Damages enemies touching a laser every {0}s (basic attack when alone)
 Minion.Berserker.Desc	주변(범위 {0})에서 적이 죽을 때마다 공격속도 {1}% 증가 (최대 {2}중첩, {3}초 동안 처치가 없으면 초기화)	Each enemy death nearby (range {0}) increases attack speed by {1}% (max {2} stacks, resets after {3}s without a kill)
 Minion.Mortar.Desc	깃발 위치에 폭탄을 떨어뜨립니다(최대 {0}기). 맞은 적은 {1:0}% 확률로 느려집니다.	Drops bombs on the flag (up to {0} enemies). Hit enemies have a {1:0}% chance to be slowed.
 Minion.Hail.Desc	타일그룹 주위 적 경로를 도는 눈을 소환합니다. 닿은 적에게 피해를 주고 {0}% 확률로 얼립니다.	Summons hail that circles the enemy path around its tile group. Damages enemies it touches with a {0}% chance to freeze.
 Minion.Inferno.Desc	가장 가까운 적 경로 구간에 지옥불을 피워 안에 있는 적에게 피해를 줍니다. (타일그룹 가운데 칸에서는 발동 안 함)	Ignites hellfire on the nearest enemy path segment, damaging enemies inside. (Inactive on the center tile of a tile group)
-Minion.Sacrifice.Desc	같은 별의 아무 슬라임과 합치면 그 슬라임으로 강화됩니다.	Merge with any slime of the same star to upgrade into that slime.
-Minion.GrowUp.Desc	{0:0}초 후 랜덤한 슬라임으로 성장합니다(별 +{1}).	Grows into a random slime after {0:0}s (+{1} star).
+Minion.Sacrifice.Desc	같은 별의 아무 미니언과 합치면 그 미니언으로 강화됩니다.	Merge with any minion of the same star to upgrade into that minion.
+Minion.GrowUp.Desc	{0:0}초 후 랜덤한 미니언으로 성장합니다(별 +{1}).	Grows into a random minion after {0:0}s (+{1} star).
 Minion.Scavenger.Desc	사거리 안에서 적이 죽으면 {0}골드를 얻습니다.	Gain {0} gold whenever an enemy dies within range.
-Minion.Joker.Desc	원하는 슬라임으로 변신합니다. {0:0}% 확률로 실패해 별이 1 떨어집니다(별 1이면 사라짐).	Transforms into any slime you choose. {0:0}% chance to fail and lose 1 star (vanishes at 1 star).
+Minion.Joker.Desc	원하는 미니언으로 변신합니다. {0:0}% 확률로 실패해 별이 1 떨어집니다(별 1이면 사라짐).	Transforms into any minion you choose. {0:0}% chance to fail and lose 1 star (vanishes at 1 star).
 Minion.Hunter.Desc	{0}회 공격마다 저격 관통탄을 발사해 {1}초 스턴 + 치명 피해를 줍니다.	Every {0} attacks, fires a piercing sniper shot that stuns for {1}s and always crits.
 Joker_Fail_Vanish	변신 실패! 조커가 사라졌습니다.	Transform failed! The Joker vanished.
 Joker_Fail_LevelDown	변신 실패! 별이 1 떨어졌습니다.	Transform failed! Lost 1 star.
 AttackRange_title	사거리	Range
-MaxMinionCount_title	최대 슬라임 수	Max Slimes
+MaxMinionCount_title	최대 미니언 수	Max Minions
 StartGold_title	시작 코인	Starting Coins
 WaveClearGold_title	웨이브 종료 코인	Wave Clear Coins
 BurnDPS_title	화상 피해	Burn Damage
 Stat_AttackSpeedValue	10초당 {0:0.#}발	{0:0.#} shots / 10s
 AttackType.AllRounder	만능형	All-Rounder
-AttackType.Physic	물리형	Physical
-AttackType.Magic	마법형	Magic
+AttackType.Physic	물리	Physical
+AttackType.Magic	마법	Magic
 DefenceType_Label	유형:{0}	Type: {0}
 Defence_None	약점/내성 없음	No weakness/resistance
 Defence_Weak	약점:<color=#00FF00>{0}</color>	Weak: <color=#00FF00>{0}</color>
@@ -119,9 +119,8 @@ Grade.S	레전드	Legend
 Grade.SS	신화	Mythic
 Grade.SSS	초월	Transcendent
 FindTarget.Closest	가까운 적	Closest
-FindTarget.Farthest	먼 적	Farthest
-FindTarget.Random	랜덤	Random
-FindTarget.LowHp	낮은 체력	Lowest HP
+FindTarget.HighHp	높은 체력	Highest HP
+FindTarget.First	먼저 온 적	First
 BuffRange.Cross	십자	Cross
 BuffRange.Diagonal	대각	Diagonal
 Rotation.Clockwise	시계 방향	Clockwise
@@ -143,8 +142,8 @@ Resurrection_Daily	일일 부활 {0}	Daily revives {0}
 Currency.Gold	골드	Gold
 Currency.Dia	다이아	Diamond
 Currency_Get	{0} {1:N0} 획득!	Got {0} {1:N0}!
-Draw_Minion_Get	슬라임 {0}마리 획득!	Got {0} slimes!
-Draw_SpecialMinion	{0} 이상 슬라임 등장까지 [{1}/{2}]	{0}+ slime guaranteed in [{1}/{2}]
+Draw_Minion_Get	미니언 {0}마리 획득!	Got {0} minions!
+Draw_SpecialMinion	{0} 이상 미니언 등장까지 [{1}/{2}]	{0}+ minion guaranteed in [{1}/{2}]
 Ad	광고	AD
 Ad_Watching	광고 시청중...	Watching ad...
 Purchasing	구매중...	Purchasing...
@@ -176,32 +175,6 @@ hour_0	{0}시간	{0}h
 min_0	{0}분	{0}m
 sec_0	{0}초	{0}s
 changedLanguage	언어가 변경되었습니다.	Language changed.
-Authority_MatchMinion	해당 슬라임 {0}/{1}	Matching slimes {0}/{1}
-Authority_Locked	Lv.{0}에 해금됩니다	Unlocks at Lv.{0}
-Authority_TierUnlocked	새 권능 묶음이 해금되었습니다! 하나를 골라 주세요	A new set of authorities is unlocked! Choose one
-Authority.PioneerPick	개척자의 곡괭이	Pioneer's Pick
-Authority.MerchantLedger	상인의 장부	Merchant's Ledger
-Authority.GamblerCoin	도박꾼의 동전	Gambler's Coin
-Authority.SplitShard	분열의 파편	Split Shard
-Authority.EmberBrazier	잔불의 화로	Ember Brazier
-Authority.WhirlOrb	회오리 구슬	Whirl Orb
-Authority.PlagueChalice	전염의 성배	Plague Chalice
-Authority.RelayCrystal	중계의 수정	Relay Crystal
-Authority.CommandFlag	지휘의 깃발	Command Flag
-Authority.SurveyCompass	측량사의 나침반	Surveyor's Compass
-Authority.TwinRing	쌍둥이 반지	Twin Ring
-Authority.ArtisanHammer	장인의 망치	Artisan's Hammer
-Authority.HunterCharm	사냥꾼의 부적	Hunter's Charm
-Authority.MixedCrest	혼혈의 문장	Mixed Crest
-Authority.Hourglass	모래시계	Hourglass
-Authority.PureCrown	순혈의 왕관	Pure Crown
-Authority.KingSeal	왕의 인장	King's Seal
-Authority.BloodlineFlask	혈통의 플라스크	Bloodline Flask
-Authority_GamblerCoinWin	도박꾼의 동전: 한 단계 높은 슬라임!	Gambler's Coin: a higher-level slime!
-Authority_GamblerCoinLose	도박꾼의 동전: 코인을 2배 냈습니다	Gambler's Coin: paid double
-Authority_HunterCharmDraw	사냥꾼의 부적: 룬 무료 뽑기!	Hunter's Charm: free rune draw!
-Authority_MixedCrestSpawn	혼혈의 문장: 약점 속성 슬라임 소환!	Mixed Crest: summoned a slime with the weak type!
-Authority_HourglassFreeze	모래시계: 모든 적이 멈춥니다!	Hourglass: all enemies are frozen!
 Purchase_Package	패키지 구매 완료! 보상이 지급되었습니다.	Package purchased! Rewards have been delivered.
 Purchase_RemoveAd	광고가 제거되었습니다. 이제 광고 없이 보상을 받습니다.	Ads removed. You now get rewards without watching ads.
 Purchase_GameSpeedUp	게임 속도 증가 구매 완료! 이제 5배속까지 쓸 수 있습니다.	Game speed boost purchased! You can now play at up to 5x speed.
@@ -212,23 +185,22 @@ Product.GameSpeedUpPackage.Desc	게임 속도 5배 + 추가 보상	5x game speed
 Achievement.KillEnemy	적 처치	Defeat enemies
 Achievement.ClearStage	스테이지 클리어	Clear stages
 Achievement.Login	접속	Log in
-Achievement.LevelUpMinion	슬라임 강화	Enhance slimes
 Achievement.TryStage	전투 도전	Play battles
-Achievement.DrawMinion	슬라임 뽑기	Draw slimes
+Achievement.DrawMinion	미니언 뽑기	Draw minions
 Achievement.KillBonusElite	보너스 엘리트 처치	Defeat bonus elites
 Achievement.DrawItem	룬 뽑기	Draw runes
 Achievement.UpgradeReinforce	인게임 강화	Reinforce in battle
 Achievement.Watch_Ad	광고 시청	Watch ads
-Achievement.SpawnMinion	슬라임 소환	Summon slimes
-Achievement.MergeMinion	슬라임 합성	Merge slimes
+Achievement.SpawnMinion	미니언 소환	Summon minions
+Achievement.MergeMinion	미니언 합성	Merge minions
 Setting_UidCopied	Player ID를 복사했습니다.	Player ID copied.
 Setting_ComingSoon	준비 중입니다.	Coming soon.
 Lobby_Battle	배틀	Battle
 Lobby_My	마이	My
 Lobby_Shop	상점	Shop
-Lobby_Minion	슬라임	Slimes
+Lobby_Minion	미니언	Minions
 Lobby_Town	타운	Town
-Lobby_Authority	권능	Authority
+Lobby_Authority	용사 강화	Hero Upgrade
 Common_Desc	설명	Description
 Common_Selected	선택됨	Selected
 Common_Select	선택하기	Select
@@ -244,7 +216,7 @@ Achievement_Claim	받기	Claim
 Achievement_Processing	진행 중	In Progress
 Achievement_Complete	완료	Completed
 Draw_Result	결과	RESULT
-Authority_TierTitle	Lv {0} 권능	Lv {0} Authority
+Authority_TierTitle	Lv {0} 용사 강화	Lv {0} Hero Upgrade
 KS_Stats	능력치	Stats
 KS_Category_Attack	공격	Attack
 KS_Category_Support	보조	Support
@@ -265,21 +237,21 @@ Setting_Save	저장	SAVE
 Setting_Load	불러오기	LOAD
 Setting_Privacy	개인정보 처리방침	Privacy
 Setting_Terms	이용약관	Terms of Service
-Shop_Title_Draw	슬라임 뽑기	DRAW SLIME
+Shop_Title_Draw	미니언 뽑기	DRAW MINION
 Shop_Title_Single	낱개 구매	Single Items
 Shop_Title_Package	스페셜 패키지	SPECIAL PACKAGE
-Shop_NormalChest	일반 슬라임 상자	Slime Chest
-Shop_UniqueChest	고급 슬라임 상자	Premium Slime Chest
+Shop_NormalChest	일반 미니언 상자	Minion Chest
+Shop_UniqueChest	고급 미니언 상자	Premium Minion Chest
 Shop_NoAd	광고 제거	No Ads
 Product.RemoveAd	광고 제거	Remove Ads
 Product.GameSpeedUp	게임 배속	Game Speed Up
 Product.RemoveAdPackage	광고 제거 패키지	Ad Remove Package
 Product.GameSpeedUpPackage	게임 배속 패키지	Game Speed Up Package
-Minion_SelectToSwap	교체할 슬라임을 선택해주세요.	Select a slime to replace.
+Minion_SelectToSwap	교체할 미니언을 선택해주세요.	Select a minion to replace.
 Minion_MergeLevel	머지 레벨	Merge Level
 Minion_Unowned	미보유	Not Owned
-Minion_Current	현재 슬라임	Equipped Slimes
-Minion_List	슬라임 리스트	Slime List
+Minion_Current	현재 미니언	Equipped Minions
+Minion_List	미니언 리스트	Minion List
 Unlock_UserLevel	Lv.{0}에 해금됩니다	Unlocks at Lv.{0}
 Unlock_BestWave	Wave {0} 도달 시 해금됩니다	Unlocks after reaching Wave {0}
 Unlock_BestWaveDifficulty	{0} 난이도 Wave {1} 도달 시 해금됩니다	Unlocks after reaching Wave {1} on {0}
@@ -289,3 +261,121 @@ Minion_Stack	중첩 {0}	Stack {0}
 DamageText_Weak	약점!	WEAK!
 PopText_Success	성공!	Success!
 PopText_Fail	실패..	Failed..
+Mission_ClearWaveWithMinions	미니언 {0}기로 Wave {1} 클리어하기	Clear Wave {1} with {0} minion(s)
+Mission_PlaceDistinctMinions	서로 다른 미니언 Lv.{0} {1}기 배치하기	Place {1} different Lv.{0} minions
+Mission_PlaceMinions	미니언 Lv.{0} {1}기 배치하기	Place {1} Lv.{0} minions
+Mission_Complete	미션 완료! {0} (주사위 코인 +{1})	Mission complete! {0} (Dice coin +{1})
+Mission_Done	(완료)	(Done)
+Mission_Failed	(실패)	(Failed)
+Mission_Title	미션	Missions
+RuneReward_ChestTitle	엘리트·보스 처치 보상 상자!	Elite & Boss Reward Chest!
+PopText_Evolve	진화!	Evolved!
+Evolution_Title	진화!	Evolution!
+Evolution_Select	{0}의 진화 방향을 선택하세요	Choose how {0} evolves
+Evolution.Power	힘의 진화	Evolution of Power
+Evolution.Power.Desc	공격력이 크게 오릅니다.\n(공격력 +{0}%)	Attack rises greatly.\n(Attack +{0}%)
+Evolution.Swift	신속의 진화	Evolution of Speed
+Evolution.Swift.Desc	공격 속도가 크게 오릅니다.\n(공격 속도 +{1}%)	Attack speed rises greatly.\n(Attack speed +{1}%)
+Minion_LevelUnlocked	{0}을(를) 구매할 수 있습니다!	{0} is now available to buy!
+Minion_UnlockLevel	Lv.{0}	Lv.{0}
+Minion_Bought	{0} 구매 완료!	{0} purchased!
+Currency_NotEnough	{0}이(가) 부족합니다.	Not enough {0}.
+Minion_BuyConfirm_Title	미니언 구매	Buy Minion
+Minion_BuyConfirm_Body	{0}을(를) {1} {2:N0}에 구매할까요?	Buy {0} for {2:N0} {1}?
+KingStat_RemainPoint	남은 포인트 {0}	Points left: {0}
+KingStat_Locked	Lv.{0}부터 찍을 수 있습니다.	Unlocks at Lv.{0}.
+KingStat_TierFull	이 묶음은 최대 {0}포인트까지 찍을 수 있습니다.	This row allows up to {0} points.
+KingStat_NoPoint	남은 포인트가 없습니다.	No points left.
+KingStat_ResetTitle	포인트 초기화	Reset Points
+KingStat_ResetBody	찍은 포인트를 모두 돌려받습니다. (무료)	Refund all spent points. (Free)
+KingStat_ResetDone	포인트를 초기화했습니다.	Points reset.
+KingStat_PointGained	킹 스탯 포인트를 찍을 수 있습니다! (남은 포인트 {0})	You have king stat points to spend! ({0} left)
+Stage_Title	스테이지 {0}	Stage {0}
+Stage_Locked	스테이지 {0} 보통을 클리어해야 합니다.	Clear Stage {0} Normal first.
+StagePass_Buy	스테이지 이용권 구매\n{0}	Buy Stage Pass\n{0}
+StagePass_Purchased	스테이지 이용권을 구매했습니다! 이제 모든 스테이지를 이용할 수 있습니다.	Stage Pass purchased! All stages are now available.
+HeroUpgrade_DiceNextBreak	다음 웨이브 주사위 +1	Next wave dice +1
+HeroUpgrade_Freeze	적 정지!	Enemies frozen!
+HeroUpgrade_LastStand	버텼다!	Hold on!
+HeroUpgrade_RerollGained	카드 다시 뽑기 +1	Free reroll +1
+HeroUpgrade_RerollButton	다시 뽑기	Reroll
+HeroUpgrade.StartDiceCoin	시작 주사위	Starting Dice
+HeroUpgrade.StartDiceCoin.Desc	첫 브레이크타임 주사위 코인 +{0}	+{0} dice coins on the first break
+HeroUpgrade.OfferLv2Chance	Lv.2 카드	Lv.2 Cards
+HeroUpgrade.OfferLv2Chance.Desc	Lv.2 카드 확률 +{0}%	Lv.2 card chance +{0}%
+HeroUpgrade.FirstOfferLv2Chance	첫 Lv.2 카드	First Lv.2 Cards
+HeroUpgrade.FirstOfferLv2Chance.Desc	첫 카드 3장의 Lv.2 확률 +{0}%	Lv.2 chance of the first 3 cards +{0}%
+HeroUpgrade.EliteBossDiceChance	강적 전리품	Strong Foe Loot
+HeroUpgrade.EliteBossDiceChance.Desc	엘리트·보스 처치 시 {0}% 확률로 다음 웨이브 주사위 코인 +1	{0}% chance of +1 dice coin next wave when an elite or boss dies
+HeroUpgrade.ExpBuyBonusChance	알뜰한 수련	Thrifty Training
+HeroUpgrade.ExpBuyBonusChance.Desc	경험치 구매 시 {0}% 확률로 경험치 +1 더	{0}% chance of +1 extra EXP when buying EXP
+HeroUpgrade.BreakRerollChance	다시 뽑기	Reroll
+HeroUpgrade.BreakRerollChance.Desc	브레이크타임마다 {0}% 확률로 카드 다시 뽑기 무료 1회	{0}% chance each break to get 1 free card reroll
+HeroUpgrade.StartUnblockTile	개척	Pioneer
+HeroUpgrade.StartUnblockTile.Desc	시작 시 부서진 칸 {0}칸 수리	Repair {0} broken tile(s) at start
+HeroUpgrade.TwinAttack	쌍둥이	Twins
+HeroUpgrade.TwinAttack.Desc	상하좌우에 같은 미니언이 있으면 공격력 +{0}%	+{0}% attack when the same minion is adjacent
+HeroUpgrade.StartRuneChance	행운의 룬	Lucky Rune
+HeroUpgrade.StartRuneChance.Desc	시작 시 {0}% 확률로 룬 선택 1회	{0}% chance to pick a rune at start
+HeroUpgrade.LowHpFreeze	모래시계	Hourglass
+HeroUpgrade.LowHpFreeze.Desc	체력이 처음 30% 아래가 되면 모든 적 {0}초 정지	Freeze all enemies for {0}s when HP first drops below 30%
+HeroUpgrade.LastStand	불굴	Last Stand
+HeroUpgrade.LastStand.Desc	한 판에 한 번, 쓰러질 때 체력 {0}%로 버팀	Once per run, survive a fatal hit with {0}% HP
+HeroUpgrade.FormVarietyAttackSpeed	다양한 군단	Diverse Legion
+HeroUpgrade.FormVarietyAttackSpeed.Desc	장착 5종의 공격 형태가 모두 다르면 미니언 공속 +{0}%	+{0}% minion attack speed if all 5 equipped forms differ
+HeroUpgrade.PureTypeWeakness	순수한 힘	Pure Power
+HeroUpgrade.PureTypeWeakness.Desc	장착 5종의 공격 타입이 모두 같으면 약점 피해 +{0}%	+{0}% weakness damage if all 5 equipped attack types match
+HeroUpgrade.EvolvedAttack	진화의 힘	Power of Evolution
+HeroUpgrade.EvolvedAttack.Desc	5성 진화한 미니언 공격력 +{0}%	+{0}% attack for evolved 5★ minions
+HeroUpgrade.EliteMinionAttack	정예병 공격력	Elite Attack
+HeroUpgrade.EliteMinionAttack.Desc	정예병 칸 미니언 공격력 +{0}%	+{0}% attack for minions on elite tiles
+HeroUpgrade.EliteMinionAttackSpeed	정예병 공속	Elite Attack Speed
+HeroUpgrade.EliteMinionAttackSpeed.Desc	정예병 칸 미니언 공격 속도 +{0}%	+{0}% attack speed for minions on elite tiles
+HeroUpgrade.EliteMinionSkillCooldown	정예병 스킬	Elite Skills
+HeroUpgrade.EliteMinionSkillCooldown.Desc	정예병 칸 미니언 스킬 쿨타임 충전 +{0}%	+{0}% skill cooldown speed for minions on elite tiles
+HeroUpgrade.RuneRewardLv2Chance	빛나는 룬	Shining Rune
+HeroUpgrade.RuneRewardLv2Chance.Desc	엘리트·보스 룬 보상이 {0}% 확률로 한 단계 높게	{0}% chance for elite/boss rune rewards to be one level higher
+HeroUpgrade.RangedAttackSpeed	원거리 병과	Ranged Corps
+HeroUpgrade.RangedAttackSpeed.Desc	원거리(발사형) 미니언 공격 속도 +{0}%	+{0}% attack speed for ranged (shooter) minions
+HeroUpgrade.MeleeAttack	근거리 병과	Melee Corps
+HeroUpgrade.MeleeAttack.Desc	근거리(근접·회전형) 미니언 공격력 +{0}%	+{0}% attack for melee/orbit minions
+HeroUpgrade.MagicAttack	마법 병과	Magic Corps
+HeroUpgrade.MagicAttack.Desc	마법 미니언 공격력 +{0}%	+{0}% attack for magic minions
+HeroUpgrade.KingHitEnergyCharge	투혼	Fighting Spirit
+HeroUpgrade.KingHitEnergyCharge.Desc	킹이 피해를 받으면 피해 1당 용사 에너지 충전 {0}초	Each 1 damage the king takes charges hero energy by {0}s
+HeroUpgrade.KingHitEliteRage	복수심	Vengeance
+HeroUpgrade.KingHitEliteRage.Desc	킹이 피해를 받으면 정예병 칸 미니언 3초간 공격력 +{0}%	When the king is hit, elite-tile minions gain +{0}% attack for 3s
+HeroUpgrade.ResistEase	꿰뚫는 공격	Piercing Strikes
+HeroUpgrade.ResistEase.Desc	내성 상대로 받는 피해 감소 {0}%p 완화	Resistance penalty eased by {0}%p
+HeroUpgrade.AttackVsDefence	{0} → {1}	{0} → {1}
+HeroUpgrade.AttackVsDefence.Desc	{1} 공격의 {2} 상대 피해 +{0}%	+{0}% {1} damage against {2}
+HeroUpgrade.MinionCostDownChance	카드 할인	Card Discount
+HeroUpgrade.MinionCostDownChance.Desc	카드마다 {0}% 확률로 주사위 코인 가격 -1	{0}% chance per card to cost 1 less dice coin
+AttackType.Chaos	카오스	Chaos
+AttackType.Vibration	진동	Vibration
+DefenceType.Light	경갑	Light Armor
+Achievement.LevelUpMinion	미니언 강화 (사용 안 함)	Enhance minions (unused)
+BonusElite_NextDiceCoin	다음 웨이브 +{0}	Next wave +{0}
+Darkness_Transform_Fail	변환 실패...	Transform failed...
+DefenceTable_Corner	방어＼공격	Def＼Atk
+Minion.Darkness.Desc	{0}초마다 원하는 미니언으로 변신 ({1}% 성공, 성공 시 {2}% 확률로 레벨 +1)	Every {0}s, transform into a chosen minion ({1}% success, {2}% chance to level up)
+NextWave_Confirm	그래도 웨이브를 시작할까요?	Start the wave anyway?
+NextWave_DiceCoinLeft	주사위 코인이 남았습니다.	You still have dice coins.
+NextWave_DiceCoinLeft_Title	웨이브 시작	Start Wave
+NextWave_LevelUpLeft	<color=#FFA040>레벨업을 하지 않았습니다!</color>	<color=#FFA040>You haven't leveled up!</color>
+Rune_MaxLevel	이미 최대 레벨인 룬입니다.	This rune is already at max level.
+Rune_OtherInstalled	이미 다른 종류의 룬이 적용되어 있습니다.	A different rune is already applied.
+Rune_PopupTitle	룬	Rune
+Rune_Upgraded	룬이 강화되었습니다.	Rune upgraded.
+EliteBossDamage_title	강적 피해	Elite/Boss Damage
+DamageToLight_title	경갑 상대 피해	Damage vs Light
+DamageToNormal_title	중갑 상대 피해	Damage vs Medium
+DamageToArmored_title	중장갑 상대 피해	Damage vs Heavy
+DamageToEthereal_title	영체 상대 피해	Damage vs Ethereal
+SkillCooldownSpeed_title	스킬 충전 속도	Skill Charge Speed
+DoubleShotChance_title	2발 공격 확률	Double Shot Chance
+MinionForm.Shooter	발사형	Shooter
+MinionForm.Zone	장판형	Zone
+MinionForm.Orbit	회전형	Orbit
+MinionForm.Support	버프형	Support
+MinionForm.Special	특수형	Special
