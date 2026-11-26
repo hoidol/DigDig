@@ -1,9 +1,8 @@
 using UnityEngine;
 
-// [각성] (진화) 감전: 맞은 적 EVOLVE_SLOW_DURATION초 감속
+// (2026-11-26) 진화 = MinionEvolutionSetting + EvolutionMinion/Behaviours (예전 [각성] 효과 삭제)
 public class LightningMinion : Minion
 {
-    public const float EVOLVE_SLOW_DURATION = 1f;
     public LightningMinionData lightningMinionData;
     [SerializeField] LightningBulletSpec lightningBulletSpec;
     public float searchRadius = 2f;
@@ -35,8 +34,6 @@ public class LightningMinion : Minion
         lightningBulletSpec.lightningCount = lightningCount;
         lightningBulletSpec.damage = AttackPower;
         lightningBulletSpec.StartBulletSpec();
-        if (isEvolved)
-            lightningBulletSpec.AddBulletBehaviour(new SlowOnHitBehavior(1, EVOLVE_SLOW_DURATION));
 
         return lightningBulletSpec.Instantiate(this);
     }

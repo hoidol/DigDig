@@ -7,10 +7,9 @@ using UnityEngine;
 // - 깃발 기준 폭발 범위(boomRange) 안에 적이 있을 때만 발사 → 폭탄은 적이 아니라 깃발 자리에 떨어짐
 // - 깃발을 어디 꽂느냐(경로 꺾이는 곳, 철벽이 막는 곳 등)가 배치 포인트
 // 프리팹: flagPrefab에 MortarFlag 프리팹 연결
-// [각성] (진화) 슬로우 확률 EVOLVE_SLOW_CHANCE
+// (2026-11-26) 진화 = MinionEvolutionSetting + EvolutionMinion/Behaviours (예전 [각성] 효과 삭제)
 public class MortarMinion : Minion
 {
-    public const float EVOLVE_SLOW_CHANCE = 0.5f; // 0~1
     public MortarFlag flagPrefab;
 
     MortarBulletSpec mortarBulletSpec;
@@ -32,12 +31,6 @@ public class MortarMinion : Minion
         mortarMinionData = MinionManager.Instance.GetMinionData(key) as MortarMinionData;
         needsFlagPlacement = true;
         base.Spawn(pos, lv);
-    }
-
-    protected override void OnEvolve()
-    {
-        slowChance = Mathf.Max(slowChance, EVOLVE_SLOW_CHANCE);
-        slowBehavior = new SlowOnHitBehavior(slowChance, mortarMinionData.slowDuration);
     }
 
     public override void InitMinion()
@@ -123,12 +116,30 @@ public class MortarMinion : Minion
         return InGameUtil.FindTargets(FlagPos, boomRange, targetLayerMask, findTargetType, count);
     }
 
-    public override AllyBulletObject GetBullet()
+    public override AllyBulletObject GetBullet() => BuildBullet(FlagPos);
+
+    // (2026-11-26) 진화(MortarEvolution): pos 자리에 폭탄 1발 (깃발 범위·타일 룬 효과는 일반 발사와 같음, extra = 추가 적중 효과)
+    public bool FireBombAt(Vector2 pos, IBulletBehavior extra = null)
+    {
+        AllyBulletObject bullet = BuildBullet(pos);
+        if (bullet == null)
+            return false;
+        if (extra != null)
+            bullet.AddBehavior(extra);
+        bullet.transform.position = transform.position;
+        Vector2 dir = pos - (Vector2)transform.position;
+        bullet.Shoot(dir.sqrMagnitude > 0.0001f ? dir.normalized : Vector2.up, AttackPower);
+        if (shotModifier.tileRune != null)
+            shotModifier.tileRune.OnFired(bullet);
+        return true;
+    }
+
+    AllyBulletObject BuildBullet(Vector2 targetPos)
     {
         mortarBulletSpec.boomRange = boomRange;
         mortarBulletSpec.damage = AttackPower;
         mortarBulletSpec.maxHitCount = maxHitCount;
-        mortarBulletSpec.targetPos = FlagPos;
+        mortarBulletSpec.targetPos = targetPos;
         mortarBulletSpec.flightTime = mortarMinionData.flightTime;
         mortarBulletSpec.arcHeight = mortarMinionData.arcHeight;
         mortarBulletSpec.hitLayerMask = targetLayerMask;

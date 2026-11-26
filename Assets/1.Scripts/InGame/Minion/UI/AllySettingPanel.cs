@@ -74,6 +74,6 @@ public class AllySettingPanel : MonoBehaviour
     // 공격 타입 변경 타일 위에 있으면 바뀐 타입을 표시
     AttackType GetAttackType(AttackType baseType, ShotModifier shotModifier)
     {
-        return shotModifier.tileItem is AttackTypeTileItem attackTypeTileItem ? attackTypeTileItem.AttackType : baseType;
+        return shotModifier.tileRune is AttackTypeTileRune attackTypeTileRune ? attackTypeTileRune.AttackType : baseType;
     }
 }

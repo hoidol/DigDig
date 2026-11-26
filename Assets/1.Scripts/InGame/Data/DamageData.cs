@@ -45,7 +45,7 @@ public class AllyUnitDamageData : DamageData
     // (2026-11-25) 킹 피해 집계 구분 (HeroKingAbility.TAG_*, null = 기본 공격). DamageMeterSystem.Record
     public string meterTag;
 
-    // 발사 시 설정 (캐릭터 탄: 캐릭터 치명타 스탯, 타일 아이템: TileItem.ModifyDamageData)
+    // 발사 시 설정 (캐릭터 탄: 캐릭터 치명타 스탯, 타일 아이템: TileRune.ModifyDamageData)
     public float critChance;    // % 단위, 적중마다 판정
     public float critPower = 2f;
     public bool lastHitCrit; // 마지막 적중이 치명타였는지 (ApplyDamage에서 설정, 적중 후 효과용: 엘프 정밀 사격 등)

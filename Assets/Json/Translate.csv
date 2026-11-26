@@ -77,7 +77,7 @@ Minion.Ice.Desc	빙결탄을 발사합니다. {0}초 동안 이동속도를 {1}%
 Minion.Flame.Desc	화염탄을 발사합니다. 화염 시 {0}초 동안 초당 {1} 피해를 줍니다.	Fires fire shots. Burns for {0}s, dealing {1} damage per second.
 Minion.Pierce.Desc	{0}만큼 관통하는 탄을 발사합니다	Fires shots that pierce {0} times
 Minion.Lightning.Desc	{0}기 적에게 체인 데미지를 입힙니다.	Deals chain damage to {0} enemies.
-Minion.Iron.Desc	엘리트, 보스에게 {0}배 데미지를 줍니다.	Deals {0}x damage to Elites and Bosses.
+Minion.Iron.Desc	엘리트, 보스에게 {0}배 데미지를 줍니다. 일반 적은 {1}% 확률로 {2}초 스턴.	Deals {0}x damage to Elites and Bosses. {1}% chance to stun normal enemies for {2}s.
 Minion.Thunder.Desc	번개를 떨어뜨려 주변 적에게 피해를 줍니다. (범위 {0}, 최대 {1}기)	Strikes lightning that damages nearby enemies. (Range {0}, up to {1} enemies)
 Minion.Mine.Desc	적 이동 경로에 지뢰를 설치합니다. 밟으면 폭발해 주변 적에게 피해를 줍니다. (최대 {0}개, 범위 {1}, 최대 {2}기)	Plants mines on the enemy path that explode when stepped on, damaging nearby enemies. (Up to {0} mines, range {1}, up to {2} enemies)
 Minion.Stigma.Desc	적중 시 {0:0}% 확률로 낙인을 새깁니다. 낙인 중첩당 받는 피해 {1:0}% 증가 (최대 {2}중첩)	{0:0}% chance on hit to brand the enemy. Each brand stack increases damage taken by {1:0}% (max {2} stacks)
@@ -276,6 +276,8 @@ Evolution.Power	힘의 진화	Evolution of Power
 Evolution.Power.Desc	공격력이 크게 오릅니다.\n(공격력 +{0}%)	Attack rises greatly.\n(Attack +{0}%)
 Evolution.Swift	신속의 진화	Evolution of Speed
 Evolution.Swift.Desc	공격 속도가 크게 오릅니다.\n(공격 속도 +{1}%)	Attack speed rises greatly.\n(Attack speed +{1}%)
+Evolution_DefaultName	진화한 {0}	Evolved {0}
+Evolution_NoTarget	스킬을 쓸 대상이 없습니다	No target for the skill
 Minion_LevelUnlocked	{0}을(를) 구매할 수 있습니다!	{0} is now available to buy!
 Minion_UnlockLevel	Lv.{0}	Lv.{0}
 Minion_Bought	{0} 구매 완료!	{0} purchased!
@@ -379,3 +381,18 @@ MinionForm.Zone	장판형	Zone
 MinionForm.Orbit	회전형	Orbit
 MinionForm.Support	버프형	Support
 MinionForm.Special	특수형	Special
+KSM_Tab_Hero	용사	Hero
+KSM_Tab_Training	수련	Training
+Shop_Hero	용사	Heroes
+Shop_Minion	미니언	Minions
+Shop_Owned	보유	Owned
+Shop_Free	무료	Free
+Shop_UnlockLevel	Lv.{0}에 구매할 수 있습니다.	Available at Lv.{0}.
+Hero_BuyConfirm_Title	용사 구매	Buy Hero
+ClearTip_Empty	아직 남겨진 클리어 팁이 없어요	No clear tips yet
+ClearTip_Placeholder	클리어 팁 남기기 (최대 {0}자)	Leave a clear tip (max {0})
+ClearTip_Submit	등록	Post
+ClearTip_Done	등록됨	Posted
+ClearTip_Uploaded	클리어 팁을 남겼어요!	Tip posted!
+ClearTip_UploadFail	팁을 올리지 못했어요. 다시 시도해 주세요.	Could not post the tip. Try again.
+ClearTip_EmptyInput	팁을 입력해 주세요.	Please enter a tip.

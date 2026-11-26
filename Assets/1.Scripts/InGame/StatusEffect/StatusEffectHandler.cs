@@ -16,7 +16,7 @@ public class StatusEffectHandler : MonoBehaviour
     // 이동속도 배율 = 슬로우 중첩 × 빙결 × 진흙 감속 × 고정 둔화
     public float SlowRate => Mathf.Pow(SLOW_RATE_PER_STACK, Mathf.Min(SlowStack, MAX_SLOW_STACK)) * IceSlowRate * (1f - MudSlow) * FixedSlowRate;
     [field: SerializeField] public float StigmaDamageMul { get; set; } = 1f;   // 낙인으로 받는 피해 배율 (Enemy.TakeDamage)
-    [field: SerializeField] public float CurseDamageMul { get; set; } = 1f;    // (2026-11-25) 저주(사령술사 스킬)로 받는 피해 배율, 낙인과 곱함
+    [field: SerializeField] public float CurseDamageMul { get; set; } = 1f;    // (2026-11-25) 저주(네크로멘서 스킬)로 받는 피해 배율, 낙인과 곱함
 
     // 방어막 소모 시도. 막으면 true 반환
     public bool TryBlock()

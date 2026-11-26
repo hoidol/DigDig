@@ -1,0 +1,13 @@
+Key	Name	Desc	MaxCount	Values
+AttackPowerTile	공격력 타일	공격력 {0}% 증가	3	1.5/2/2.5
+AttackSpeedTile	공격속도 타일	공격속도 {0}% 증가	3	1.4/1.8/2.2
+BurstShotTile	연발 타일	같은 방향으로 {0}발 연속 추가 발사	3	1/2/3
+CriticalTile	치명타 타일	치명타 확률 +{0}% 증가 데미지 2배	3	25/40/60
+GiantSlayerTile	거인 사냥 타일	엘리트 또는 보스에게 데미지 {0}배	3	2/3/4
+GoldTile	코인 타일	적 처치 시 코인 +{0}	3	1/2/3
+AddMinionSpawnCount	미니언 수 증가	최대 미니언 수 +1	3	
+MultiTargetTile	다중 타겟 타일	공격 대상 +{0} 추가됩니다.	3	1/2/3
+PioneerTile	개척 타일	막힌 칸 해제	3	
+RangeUpTile	사거리 타일	사정거리 +{0}	3	1/2/3
+SlowTile	둔화 타일	{0}% 확률로 3초간 슬로우	3	25/40/70
+StunTile	스턴 타일	{0}% 확률로 1초간 스턴	3	10/20/30

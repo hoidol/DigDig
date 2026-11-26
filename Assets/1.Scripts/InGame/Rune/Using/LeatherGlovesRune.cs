@@ -1,0 +1,28 @@
+// 가죽 장갑: 공격속도 +10 증가
+public class LeatherGlovesRune : Rune
+{
+    float attackSpeed = 10;
+    Buff attackSpeedBuff;
+    public override void UpdateRune()
+    {
+        base.UpdateRune();
+        Release();
+        float addAttackSpeed =  attackSpeed;
+        //공격속도
+        attackSpeedBuff = new Buff(StatType.AttackSpeed, addAttackSpeed, StatOpType.Add);
+        KingSlime.Instance.AddBuff(attackSpeedBuff);
+
+    }
+    void Release()
+    {
+        if (attackSpeedBuff != null)
+            KingSlime.Instance.RemoveBuff(attackSpeedBuff);
+    }
+
+
+    public override string GetDescription()
+    {
+        return $"공격속도 +{attackSpeed}";
+        //return string.Format(TranslateManager.GetText("{key}_Desc"),attackSpeed);
+    }
+}

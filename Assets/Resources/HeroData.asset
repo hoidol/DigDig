@@ -98,7 +98,7 @@ MonoBehaviour:
       enhancedValues:
       - 15
       - 2.5
-    key: Archer
+    key: Ranger
     stats:
     - statType: 0
       value: 12

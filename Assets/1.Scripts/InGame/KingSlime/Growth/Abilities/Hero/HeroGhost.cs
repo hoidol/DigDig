@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// (2026-11-23) 사령술사 발동 스킬의 망령: 적 주 경로(EnemyFieldController.MainRoute)를 끝 → 처음으로 거꾸로 따라가고, 처음에 닿으면 다시 끝에서
+// (2026-11-23) 네크로멘서 발동 스킬의 망령: 적 주 경로(EnemyFieldController.MainRoute)를 끝 → 처음으로 거꾸로 따라가고, 처음에 닿으면 다시 끝에서
 // 닿은 적(radius 안)에게 같은 적은 hitInterval초마다 피해. duration초 뒤 사라짐
 // 그림 = 킹 몸 스프라이트를 반투명 보라색으로 (프리팹 없이 실행 중 생성)
 public class HeroGhost : MonoBehaviour

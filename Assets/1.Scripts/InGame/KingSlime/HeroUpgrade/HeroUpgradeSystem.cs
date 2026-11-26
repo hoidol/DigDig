@@ -290,12 +290,12 @@ public static class HeroUpgradeSystem
 
     // ---- 룬 보상 ----
     // 룬 보상(엘리트·보스)으로 새기거나 올린 룬: 확률로 1레벨 더 (최대 레벨이면 그대로)
-    public static void OnRuneRewardPlaced(TileItem item, Vector3 pos)
+    public static void OnRuneRewardPlaced(TileRune rune, Vector3 pos)
     {
-        if (item == null || !Roll(HeroUpgradeAbility.RuneRewardLv2Chance))
+        if (rune == null || !Roll(HeroUpgradeAbility.RuneRewardLv2Chance))
             return;
-        if (item.ForceUpgrade())
-            EffectManager.PlayPopText((Vector2)pos + Vector2.up * 0.5f, $"Lv.{item.upgradeLevel}!", new Color(1f, 0.85f, 0.25f));
+        if (rune.ForceUpgrade())
+            EffectManager.PlayPopText((Vector2)pos + Vector2.up * 0.5f, $"Lv.{rune.upgradeLevel}!", new Color(1f, 0.85f, 0.25f));
     }
 
     // 약점 배율 (>1)에만 곱함 (장착 공격 타입이 모두 같음)

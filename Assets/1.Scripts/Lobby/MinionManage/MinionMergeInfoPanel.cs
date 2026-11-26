@@ -1,15 +1,16 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
+// 미니언 정보 창의 머지 레벨별 스탯 보기 (▲▼ 버튼으로 머지 레벨 바꿈)
+// (2026-11-26) 머지 레벨 표시 = 별 이미지 대신 MergeLvText 글씨 (미니언 머리 위와 같은 숫자 = 머지 레벨 + 1, MinionGameStatePanel.GetMergeLevelText)
 public class MinionMergeInfoPanel : MonoBehaviour
 {
     public Lobby.MinionStatPanel[] statPanels;
     public GameObject mergeUpButton;
     public GameObject mergeDownButton;
     
-    public GameObject starsObject;
-    public GameObject[] stars;
-    public GameObject maxStarObject;
+    public TMP_Text mergeLvText; // 씬의 MergeLvText
     public int mergeLevel;
     UserMinion userMinion;
     MinionData minionData;
@@ -25,32 +26,10 @@ public class MinionMergeInfoPanel : MonoBehaviour
         UpdatePanel();
     }
 
-    void UpdateStar()
+    void UpdateMergeLevelText()
     {
-        starsObject.SetActive(false);
-        maxStarObject.SetActive(false);
-        if (minionData.growth != 1)
-        {
-            return;
-        }
-        for (int i = 0; i < stars.Length; i++)
-        {
-            stars[i].SetActive(false);
-        }
-
-        if(mergeLevel <= 3)
-        {
-            starsObject.SetActive(true);
-            for (int i = 0; i < stars.Length; i++)
-            {
-                if(i <= mergeLevel)
-                    stars[i].SetActive(true);
-            }
-        }
-        else
-        {
-            maxStarObject.SetActive(true);
-        }
+        if (mergeLvText != null)
+            mergeLvText.text = MinionGameStatePanel.GetMergeLevelText(mergeLevel);
     }
 
     public void UpdatePanel()
@@ -65,7 +44,7 @@ public class MinionMergeInfoPanel : MonoBehaviour
             if (mergeLevel > 0)
                 mergeDownButton.SetActive(true);
 
-            UpdateStar();
+            UpdateMergeLevelText();
         }
         List<MinionStat> minionStats = minionData.GetDisplayMinionStats();
 

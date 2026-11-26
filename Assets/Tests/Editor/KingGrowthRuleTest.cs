@@ -42,7 +42,7 @@ public class KingGrowthRuleTest
         CollectionAssert.AreEqual(new[] { b }, choices);
     }
 
-    // (2026-11-24) 단계 = Lv.1 용사 → 2 스킬 → 3·4 용사 강화 → 5 스킬 → 6·7 용사 강화 → 8 스킬. 앞 단계가 먼저
+    // (2026-11-26) 단계 = Lv.1 용사 → 2 스킬 → 3·4·5 용사 강화 → 6 스킬 → 7·8·9 용사 강화 → 10 스킬 → 11·12 용사 강화. 앞 단계가 먼저
     static AbilityData[] heroes;
     static AbilityData[] boosts;
     static AbilityData[] Heroes => heroes ??= new[] { Make("H1", 5), Make("H2", 5), Make("H3", 5) };
@@ -63,12 +63,16 @@ public class KingGrowthRuleTest
     [TestCase(3, 1, 1, 0, AbilityCategory.HeroBoost)]
     [TestCase(4, 1, 1, 1, AbilityCategory.HeroBoost)]
     [TestCase(4, 2, 1, 2, AbilityCategory.Stat)]
-    [TestCase(5, 2, 1, 2, AbilityCategory.HeroSkill)]
-    [TestCase(6, 2, 2, 2, AbilityCategory.HeroBoost)]
-    [TestCase(7, 2, 2, 3, AbilityCategory.HeroBoost)]
-    [TestCase(7, 2, 2, 4, AbilityCategory.Stat)]
-    [TestCase(8, 2, 2, 4, AbilityCategory.HeroSkill)]
-    [TestCase(8, 2, 3, 4, AbilityCategory.Stat)]
+    [TestCase(5, 1, 1, 2, AbilityCategory.HeroBoost)]
+    [TestCase(5, 1, 1, 3, AbilityCategory.Stat)]
+    [TestCase(6, 1, 1, 3, AbilityCategory.HeroSkill)]
+    [TestCase(7, 1, 2, 3, AbilityCategory.HeroBoost)]
+    [TestCase(9, 1, 2, 5, AbilityCategory.HeroBoost)]
+    [TestCase(9, 1, 2, 6, AbilityCategory.Stat)]
+    [TestCase(10, 1, 2, 6, AbilityCategory.HeroSkill)]
+    [TestCase(11, 1, 3, 6, AbilityCategory.HeroBoost)]
+    [TestCase(12, 1, 3, 7, AbilityCategory.HeroBoost)]
+    [TestCase(12, 1, 3, 8, AbilityCategory.Stat)]
     public void Stage_ByLevel(int lv, int heroLv, int skills, int boostCount, AbilityCategory expected)
     {
         Assert.AreEqual(expected, LevelUpChoiceRule.GetStage(In(lv, heroLv, skills, boostCount)));
@@ -91,8 +95,18 @@ public class KingGrowthRuleTest
         Assert.AreEqual("스킬 해방", LevelUpChoiceRule.GetStageName(AbilityCategory.HeroSkill));
         Assert.AreEqual("용사 강화", LevelUpChoiceRule.GetStageName(AbilityCategory.HeroBoost));
         Assert.AreEqual(2, LevelUpChoiceRule.GetSkillUnlockLevel(0));
-        Assert.AreEqual(5, LevelUpChoiceRule.GetSkillUnlockLevel(1));
-        Assert.AreEqual(8, LevelUpChoiceRule.GetSkillUnlockLevel(2));
+        Assert.AreEqual(6, LevelUpChoiceRule.GetSkillUnlockLevel(1));
+        Assert.AreEqual(10, LevelUpChoiceRule.GetSkillUnlockLevel(2));
+    }
+
+    // (2026-11-26) 필드 최대 미니언 수 +1 = Lv.7에만
+    [TestCase(1, 0)]
+    [TestCase(6, 0)]
+    [TestCase(7, 1)]
+    [TestCase(12, 1)]
+    public void MinionCountAdd_ByLevel(int heroLevel, int expected)
+    {
+        Assert.AreEqual(expected, LevelUpChoiceRule.GetMinionCountAdd(heroLevel));
     }
 
     // 용사 강화 후보: 최대 레벨인 카드는 빠짐 (용사 카드는 heroLevel 기준)
@@ -138,7 +152,7 @@ public class KingGrowthRuleTest
     public void HeroData_LevelStats()
     {
         DataTableImporter.ImportChanged(); // CSV → Resources/HeroData
-        foreach (string key in new[] { "Knight", "Archer", "Necromancer" })
+        foreach (string key in new[] { "Knight", "Ranger", "Necromancer" })
         {
             var data = HeroDataTable.Get(key);
             Assert.IsNotNull(data, key);
@@ -193,14 +207,19 @@ public class KingGrowthRuleTest
                 Assert.IsFalse(string.IsNullOrEmpty(hero.GetSkillName(s)), $"{data.key} 스킬 {s}");
             Assert.IsFalse(data.GetDescription(1).Contains("{"), data.key);
         }
-        CollectionAssert.AreEquivalent(new[] { KingHeroType.HumanKnight, KingHeroType.ElfArcher, KingHeroType.UndeadNecromancer }, types);
+        CollectionAssert.AreEquivalent(new[] { KingHeroType.Knight, KingHeroType.Ranger, KingHeroType.Necromancer }, types);
         var necro = setting.heroAbilities.Select(d => d.prefab).OfType<NecromancerHero>().First();
         Assert.AreEqual(AttackType.Chaos, necro.kingAttackType);
 
-        // (2026-11-25) 용사 강화 = 정예 칸 추가 · 충전 가속 · 에너지 보유 증가 (최대 3) · 1·2단계 스킬 강화 (최대 1)
+        // (2026-11-26) 용사 강화 = 정예 칸 추가 (최대 5) · 충전 가속 (×0.8, 최대 5) · 에너지 보유 증가 (+1, 최대 3) · 1·2단계 스킬 강화 (최대 1)
         Assert.AreEqual(5, setting.heroBoostAbilities.Length);
-        foreach (var t in new[] { HeroEnergyBoostType.ChargeTime, HeroEnergyBoostType.MaxCharges })
-            Assert.AreEqual(3, setting.heroBoostAbilities.Single(d => d.prefab is HeroEnergyKingAbility e && e.boostType == t).maxLevel, t.ToString());
+        var chargeCard = setting.heroBoostAbilities.Single(d => d.prefab is HeroEnergyKingAbility e && e.boostType == HeroEnergyBoostType.ChargeTime);
+        Assert.AreEqual(5, chargeCard.maxLevel);
+        var chargeAbility = (HeroEnergyKingAbility)chargeCard.prefab;
+        Assert.AreEqual(0.8f, chargeAbility.GetChargeTimeMul(1), 0.001f, "충전 가속 1레벨 = ×0.8");
+        Assert.AreEqual(0.32768f, chargeAbility.GetChargeTimeMul(5), 0.001f, "충전 가속 5레벨 = ×0.8^5");
+        Assert.GreaterOrEqual(GameSetting.HERO_ENERGY_CHARGE_TIME * chargeAbility.GetChargeTimeMul(5), GameSetting.HERO_MIN_CHARGE_TIME, "5레벨까지 최소 충전 시간에 안 막힘");
+        Assert.AreEqual(3, setting.heroBoostAbilities.Single(d => d.prefab is HeroEnergyKingAbility e && e.boostType == HeroEnergyBoostType.MaxCharges).maxLevel);
         for (int idx = 0; idx < 2; idx++)
         {
             var sk = setting.heroBoostAbilities.Single(d => d.prefab is HeroSkillEnhanceKingAbility s && s.skillIndex == idx);
@@ -210,7 +229,7 @@ public class KingGrowthRuleTest
         }
         var expandCard = setting.heroBoostAbilities.Single(d => d.prefab is EliteAreaExpandKingAbility);
         Assert.AreEqual(AbilityCategory.TileExpand, expandCard.category);
-        Assert.AreEqual(3, expandCard.maxLevel);
+        Assert.AreEqual(5, expandCard.maxLevel);
         foreach (var data in setting.heroBoostAbilities)
             Assert.IsFalse(data.GetDescription(1).Contains("{"), data.key);
     }

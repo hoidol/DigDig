@@ -1,3 +1,4 @@
+using UnityEngine.Serialization;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -23,7 +24,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     public FindTargetType findTargetType = FindTargetType.First; // (2026-11-24) 기본 = 가장 먼저 나온 적 (Start에서 씬 값도 덮어씀)
 
     public FindTargetType FindTargetType => findTargetType;
-    // (2026-11-25) 실제로 쓰는 타겟 방식 (용사 스킬이 잠깐 바꿀 수 있음, 궁수 매의 눈)
+    // (2026-11-25) 실제로 쓰는 타겟 방식 (용사 스킬이 잠깐 바꿀 수 있음, 레인저 매의 눈)
     public FindTargetType EffectiveFindTargetType => findTargetType != FindTargetType.Random && HeroKingAbility.ForcedAllyFindTarget.HasValue
         ? HeroKingAbility.ForcedAllyFindTarget.Value : findTargetType;
 
@@ -37,7 +38,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
     public int pendingRuneRewards;
 
     [SerializeField] Transform hpPoint;
-    public ItemInventory itemInventory; //패시브 스킬로 제공!
+    [FormerlySerializedAs("itemInventory")] public RuneInventory runeInventory; //패시브 스킬로 제공!
     public MinionInventory minionInventory;
     // public OreInventory oreInventory; //패시브 스킬로 제공!
     public TileChecker[] tileCheckers;
@@ -88,7 +89,7 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
         // attackJoystick = GameObject.Find("AttackJoystick").GetComponent<Joystick>();
 
         rg = GetComponentInChildren<Rigidbody2D>();
-        itemInventory = GetComponentInChildren<ItemInventory>();
+        runeInventory = GetComponentInChildren<RuneInventory>();
         minionInventory = GetComponentInChildren<MinionInventory>();
         // statInventory = GetComponentInChildren<StatInventory>();
         health = GetComponentInChildren<KingSlimeHealth>();
@@ -254,21 +255,21 @@ public class KingSlime : MonoSingleton<KingSlime>, IPicker, IAllyUnit, IHittable
 
 
     // 인벤토리가 가득 찼으면 교체 UI를 띄우고 결과를 기다림 (교체 시 ChangeItemCanvas에서 아이템 추가까지 처리)
-    public async UniTask<bool> AddItem(string key, Tile tile = null)
+    public async UniTask<bool> AddRune(string key, Tile tile = null)
     {
-        statMgr.AddItem(key, 1);
-        itemInventory.AddItem(key, tile);
-        itemInventory.UpdateInventory();
+        statMgr.AddRune(key, 1);
+        runeInventory.AddRune(key, tile);
+        runeInventory.UpdateInventory();
         UpdateCharacter();
         return true;
     }
 
     // 타일 아이템 객체 하나 제거 (같은 key의 다른 타일 객체는 유지)
-    public void RemoveItem(TileItem tileItem)
+    public void RemoveRune(TileRune tileRune)
     {
-        itemInventory.RemoveItem(tileItem); // curItems에서 먼저 빼야 UpdateInventory가 다른 객체를 건드리지 않음
-        statMgr.AddItem(tileItem.key, -1);
-        itemInventory.UpdateInventory();
+        runeInventory.RemoveRune(tileRune); // curItems에서 먼저 빼야 UpdateInventory가 다른 객체를 건드리지 않음
+        statMgr.AddRune(tileRune.key, -1);
+        runeInventory.UpdateInventory();
         UpdateCharacter();
     }
 

@@ -11,7 +11,7 @@ public class KingSlimeStatManager
     public Dictionary<string, InGameUserMinionData> minionDic = new Dictionary<string, InGameUserMinionData>();
 
     // public Dictionary<LevelUpStatType, CharacterLevelUpStat> levelUpStatDic = new Dictionary<LevelUpStatType, CharacterLevelUpStat>();
-    public Dictionary<string, CharacterItemStat> itemStatDic = new Dictionary<string, CharacterItemStat>();
+    public Dictionary<string, CharacterRuneStat> runeStatDic = new Dictionary<string, CharacterRuneStat>();
     public List<Buff> activeBuffs = new List<Buff>();
 
     public float MaxHp => statDic[StatType.MaxHp].value;
@@ -120,22 +120,22 @@ public class KingSlimeStatManager
     //     }
     //     levelUpStatDic[type].lv += lv;
     // }
-    public void AddItem(string key, int count=1)
+    public void AddRune(string key, int count=1)
     {
-        if (!itemStatDic.ContainsKey(key))
+        if (!runeStatDic.ContainsKey(key))
         {
-            itemStatDic.Add(key, new CharacterItemStat()
+            runeStatDic.Add(key, new CharacterRuneStat()
             {
                 key = key,
                 count = 0
             });
         }
-        itemStatDic[key].count += count;
+        runeStatDic[key].count += count;
         // itemStatDic[key].sum += count;
-        if (itemStatDic[key].count <= 0)
+        if (runeStatDic[key].count <= 0)
         {
             //아이템 제거하기
-            itemStatDic.Remove(key);
+            runeStatDic.Remove(key);
         }
     }
 
@@ -174,9 +174,9 @@ public class KingSlimeStatManager
             minionDic[key].count = Mathf.Max(0, minionDic[key].count - 1);
     }
     
-    public CharacterItemStat GetCharacterItemStat(string key)
+    public CharacterRuneStat GetCharacterRuneStat(string key)
     {
-        return itemStatDic[key];
+        return runeStatDic[key];
     }
 }
 
@@ -200,7 +200,7 @@ public class KingSlimeStat
 
 
 [System.Serializable]
-public class CharacterItemStat
+public class CharacterRuneStat
 {
     public string key;
     public int count; //현재 총 누적 개수

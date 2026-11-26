@@ -15,8 +15,8 @@ public class AbilityData : ScriptableObject
     [Min(1)] public int maxLevel = 5;
     public KingAbility prefab;
     // (2026-11-21) 룬 카드: 고르면 타일을 골라 그 룬을 새김(같은 룬이면 레벨 +1). 실행 중 ItemData로 만듦(CreateRuneCard), 에셋 없음
-    [System.NonSerialized] public ItemData runeItem;
-    public bool IsRune => runeItem != null;
+    [System.NonSerialized] public RuneData runeTile;
+    public bool IsRune => runeTile != null;
     // (2026-11-25) 미니언 강화 카드: 장착 미니언 한 종 × 스탯 하나 (MinionEnhanceSystem). 실행 중 만듦(CreateMinionEnhanceCard), 에셋 없음
     [System.NonSerialized] public string minionKey;
     [System.NonSerialized] public StatType minionStat;
@@ -48,21 +48,21 @@ public class AbilityData : ScriptableObject
     // 미니언 강화 카드의 다음 레벨 (킹 능력 인벤토리가 아니라 MinionEnhanceSystem 기준)
     public int GetMinionEnhanceLevel() => IsMinionEnhance ? MinionEnhanceSystem.GetLevel(minionKey, minionStat) : 0;
 
-    static readonly System.Collections.Generic.Dictionary<ItemData, AbilityData> runeCards = new System.Collections.Generic.Dictionary<ItemData, AbilityData>();
-    public static AbilityData CreateRuneCard(ItemData item)
+    static readonly System.Collections.Generic.Dictionary<RuneData, AbilityData> runeCards = new System.Collections.Generic.Dictionary<RuneData, AbilityData>();
+    public static AbilityData CreateRuneCard(RuneData rune)
     {
-        if (item == null)
+        if (rune == null)
             return null;
-        if (runeCards.TryGetValue(item, out AbilityData card) && card != null)
+        if (runeCards.TryGetValue(rune, out AbilityData card) && card != null)
             return card;
         card = CreateInstance<AbilityData>();
-        card.name = card.key = item.key;
+        card.name = card.key = rune.key;
         card.category = AbilityCategory.Rune;
-        card.title = item.Title;
-        card.thum = item.thum;
+        card.title = rune.Title;
+        card.thum = rune.thum;
         card.maxLevel = int.MaxValue; // 몇 번이든 나옴
-        card.runeItem = item;
-        runeCards[item] = card;
+        card.runeTile = rune;
+        runeCards[rune] = card;
         return card;
     }
 
@@ -71,8 +71,8 @@ public class AbilityData : ScriptableObject
     {
         if (IsMinionEnhance)
             return MinionEnhanceSystem.GetDescription(minionStat, level, minionAmount);
-        if (runeItem != null) // 룬 카드 = 그 룬 Lv.1 설명
-            return runeItem.itemPrefab is TileItem tileItem ? tileItem.GetDescription(runeItem) : runeItem.desc;
+        if (runeTile != null) // 룬 카드 = 그 룬 Lv.1 설명
+            return runeTile.runePrefab is TileRune tileRune ? tileRune.GetDescription(runeTile) : runeTile.desc;
         if (string.IsNullOrEmpty(desc) || prefab == null || !desc.Contains("{0}"))
             return desc;
         return string.Format(desc, prefab.GetDescArgs(level));

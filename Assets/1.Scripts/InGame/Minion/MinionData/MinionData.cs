@@ -61,8 +61,18 @@ public class MinionData : ScriptableObject
     public Sprite evolvedSprite;
     [Tooltip("진화 갈래 (보통 2개 → 5성이 되면 하나 선택, 1개면 바로 진화). 비우면 공용 임시 갈래 MinionEvolutionData.DefaultBranches")]
     public List<MinionEvolutionData> evolutions = new List<MinionEvolutionData>();
-    public List<MinionEvolutionData> GetEvolutions() =>
-        evolutions != null && evolutions.Count > 0 ? evolutions : MinionEvolutionData.DefaultBranches;
+    [Tooltip("(2026-11-26) 진화 이름·설명 (MinionData.csv EvolutionName / EvolutionDesc, 설명 {0}… = MinionEvolutionSetting 수치)")]
+    public string evolutionName;
+    [TextArea] public string evolutionDesc;
+
+    // (2026-11-26) 진화 갈래: MinionEvolutionSetting에 이 종 칸이 있으면 그 하나, 없으면 에셋 evolutions(예전 방식), 둘 다 없으면 진화 없음
+    public List<MinionEvolutionData> GetEvolutions()
+    {
+        EvolutionConfig config = MinionEvolutionSetting.Instance.Get(key);
+        if (config != null)
+            return new List<MinionEvolutionData> { MinionEvolutionData.FromConfig(this, config) };
+        return evolutions != null ? evolutions : new List<MinionEvolutionData>();
+    }
 
     // UI에 노출할 스탯 종류와 순서. 에셋별 인스펙터에서 설정한다. (예: Flame은 FlameDuration은 빼고 FlameDPS까지만)
     public List<StatType> displayStatTypes;
@@ -222,6 +232,8 @@ public class MinionData : ScriptableObject
         displayStatTypes = new List<StatType> { StatType.AttackPower, StatType.AttackSpeed, StatType.AttackRange };
         if (table.HasColumn("Desc"))
             desc = row.Get("Desc");
+        evolutionName = table.HasColumn("EvolutionName") ? row.Get("EvolutionName")?.Trim() : null;
+        evolutionDesc = table.HasColumn("EvolutionDesc") ? row.Get("EvolutionDesc")?.Trim() : null;
         if (row.TryGetInt("Growth", out int lv))
             growth = lv;
         // 카드 소환 가격 (주사위 코인)

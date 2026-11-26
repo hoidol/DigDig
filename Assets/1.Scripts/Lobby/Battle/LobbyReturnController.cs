@@ -6,12 +6,12 @@ using UnityEngine;
 // 게임을 하고 로비로 돌아왔을 때의 연출 (2026-11-20)
 // 씬 구성: BossMover(bossMoverTr) 하위에 Boss · NextBoss · BossTr · NextBossTr · WaveText · NextWaveText (글씨는 보스 하위가 아님). 킹은 따로.
 // → 보스 쪽은 BossMover 하나만 움직여서 "킹이 올라가는 것처럼" 보이게 함 (킹은 제자리에서 콩콩)
-// 스테이지에서 보스(wave 20·40·60)를 처음 처치하고 돌아오면:
+// 스테이지에서 보스(wave 25·50, 2026-11-26)를 처음 처치하고 돌아오면:
 //  1. 킹은 제자리에서 콩콩, BossMover가 내려와 처치한 보스가 킹 앞(stopDistance)까지
 //  2. 킹이 뒤로 살짝(힘 모음) → 몸통 박치기 → 보스가 돌며 날아감
 //  3. BossMover가 계속 내려옴(킹은 콩콩) → revealDistance(3)만큼 더 내려오면 NextBoss가 보임 → NextBoss가 보스 자리에 도착
 //  4. 끝 = 평소 화면 (BossMover 원위치, Boss = 다음 보스)
-// 평소 화면 = 지금 잡아야 할 보스만 (NextBoss 숨김). 마지막 보스까지 다 잡았으면 최종 보스(wave 60)
+// 평소 화면 = 지금 잡아야 할 보스만 (NextBoss 숨김). 마지막 보스까지 다 잡았으면 최종 보스(wave 50)
 // BattleCanvas를 다시 열면(다른 로비 화면에 갔다 오면) 연출 중이어도 바로 평소 화면
 public class LobbyReturnController : MonoSingleton<LobbyReturnController>
 {
@@ -313,7 +313,7 @@ public class LobbyReturnController : MonoSingleton<LobbyReturnController>
     // 테스트: 로비 Play 중 인스펙터에서 컴포넌트 ⋮ 메뉴 → "연출 테스트" (wave 20 보스를 처음 잡고 돌아온 것처럼)
     [ContextMenu("연출 테스트 (wave 20 보스)")]
     void TestPlayWave20() => TestPlay(20);
-    [ContextMenu("연출 테스트 (wave 60 최종 보스, Clear)")]
+    [ContextMenu("연출 테스트 (wave 50 최종 보스, Clear)")]
     void TestPlayWave60() => TestPlay(GameSetting.LAST_WAVE);
 
     void TestPlay(int bossWave)

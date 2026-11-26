@@ -30,7 +30,7 @@ MonoBehaviour:
     gid: 148161990
     range: A:E
   - enabled: 1
-    csvPath: Json/ItemData.csv
+    csvPath: Json/RuneData.csv
     sheetId: 
     gid: 1944029805
     range: A:G

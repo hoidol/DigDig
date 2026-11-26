@@ -158,7 +158,7 @@ public abstract class InGamePlayTestBase
             // LobbyManager.Start가 기다리는 로드 (끝나야 로비 레벨업 처리까지 마침 → 테스트가 바꾼 경험치를 로비가 다시 처리하지 않음)
             || StageManager.Instance == null || !StageManager.Instance.LoadTask.Status.IsCompleted()
             || BulletManager.Instance == null || !BulletManager.Instance.LoadTask.Status.IsCompleted()
-            || ItemManager.Instance == null || !ItemManager.Instance.LoadTask.Status.IsCompleted()
+            || RuneManager.Instance == null || !RuneManager.Instance.LoadTask.Status.IsCompleted()
             || EnemyManager.Instance == null || !EnemyManager.Instance.LoadTask.Status.IsCompleted())
         {
             Assert.Less(EditorApplication.timeSinceStartup, timeout, "로비가 시작되지 않음");
@@ -278,7 +278,7 @@ public abstract class InGamePlayTestBase
     // 비어 있고 아이템도 없는 타일 (except 제외)
     protected static Tile GetFreeTile(params Tile[] except)
     {
-        return TileManager.Instance.tiles.FirstOrDefault(t => t.IsEmpty && t.CanAddTileItem && !except.Contains(t));
+        return TileManager.Instance.tiles.FirstOrDefault(t => t.IsEmpty && t.CanAddTileRune && !except.Contains(t));
     }
 
     protected static Minion SpawnMinion(string key, Tile tile, int lv = 0)

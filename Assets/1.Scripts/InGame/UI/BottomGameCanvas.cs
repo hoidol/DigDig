@@ -1,3 +1,4 @@
+using UnityEngine.Serialization;
 using UnityEngine;
 using TMPro;
 
@@ -6,7 +7,7 @@ public class BottomGameCanvas : MonoBehaviour
     public GameObject buttonObject; // 기존 버튼 줄(Buttons_Hor). 카드 소환 모드에선 항상 숨김
     public GameObject offerButtonObject; // 카드 소환 모드 버튼 줄(OfferButtons: 카드·Next·주사위 코인·경험치 구매). 타일 선택 중·wave 중 숨김
     public AllySettingPanel allySettingPanel;
-    public TileItemInfoPanel tileItemInfoPanel;
+    [FormerlySerializedAs("tileItemInfoPanel")] public TileRuneInfoPanel tileRuneInfoPanel;
     public GameObject hideGameObject; // allySettingPanel이 보이는 동안 숨김. 비우면 하위의 "HideGame"을 찾음
     // (2026-11-24) wave 중 하단 UI (킹 체력·용사 에너지·스킬 버튼). 비우면 실행 중 OfferButtons 자리에 생성
     public HeroSkillHud heroSkillHud;
@@ -92,7 +93,7 @@ public class BottomGameCanvas : MonoBehaviour
     // 타일 선택 시 위 유닛 정보 + 타일(아이템) 정보. 빈 타일(유닛·아이템 없음)은 반응 없음 (킹 버프 칸이면 버프 칸 정보)
     void OnTileSelectedEvent(TileSelectedEvent e)
     {
-        if (e.tile.tileObject == null && e.tile.tileItem == null && !EliteArea.IsEliteTile(e.tile))
+        if (e.tile.tileObject == null && e.tile.tileRune == null && !EliteArea.IsEliteTile(e.tile))
         {
             OnTileDeselectedEvent(null);
             return;
@@ -101,7 +102,7 @@ public class BottomGameCanvas : MonoBehaviour
         tileSelected = true;
         UpdateButtonObject();
         allySettingPanel.SetMinion(e.tile.tileObject as IAllyUnit);
-        tileItemInfoPanel.SetTile(e.tile);
+        tileRuneInfoPanel.SetTile(e.tile);
         UpdateHideGame();
     }
 
@@ -110,7 +111,7 @@ public class BottomGameCanvas : MonoBehaviour
         tileSelected = false;
         UpdateButtonObject();
         allySettingPanel.SetMinion(null);
-        tileItemInfoPanel.SetTile(null);
+        tileRuneInfoPanel.SetTile(null);
         UpdateHideGame();
     }
 

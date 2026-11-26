@@ -41,7 +41,7 @@ public class TranslateDataTest
         foreach (string file in Directory.GetFiles(Path.Combine(Application.dataPath, "1.Scripts"), "*.cs", SearchOption.AllDirectories))
         {
             string path = file.Replace('\\', '/');
-            if (path.Contains("/Item/Old/") || path.Contains("/Item/Using/") || path.Contains("/LevelUpData/"))
+            if (path.Contains("/Rune/Old/") || path.Contains("/Rune/Using/") || path.Contains("/LevelUpData/"))
                 continue;
             foreach (string line in File.ReadAllLines(file))
             {

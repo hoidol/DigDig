@@ -3,14 +3,12 @@ using UnityEngine;
 // 공격력 랜덤 폭: 데이터에는 중간값만 (MinionData.attackPowerRandomRatio)
 // 스킬(쿨타임, MinionData.hasSkill, 2026-11-15): SKILL_COOLTIME초마다 SKILL_DURATION초 동안 공속 × SKILL_ATTACK_SPEED_MUL
 //   쿨타임이 차면 적이 없어도 바로 발동. 버프가 끝나면 쿨타임 다시 참 (이전: 10초마다 5방향 원형 발사)
-// [각성] (진화) EVOLVE_SKILL_INTERVAL번째 공격마다 EVOLVE_SKILL_BULLET_COUNT방향으로 원형 발사
+// (2026-11-26) 진화 = MinionEvolutionSetting + EvolutionMinion/Behaviours (예전 [각성] 효과 삭제)
 public class RandomMinion : Minion
 {
     public const float SKILL_COOLTIME = 9f;
     public const float SKILL_DURATION = 3f;
     public const float SKILL_ATTACK_SPEED_MUL = 3f;
-    public const int EVOLVE_SKILL_INTERVAL = 6;
-    public const int EVOLVE_SKILL_BULLET_COUNT = 4;
 
     public RandomMinionData randomMinionData;
     AllyBulletSpec allyBulletSpec;
@@ -19,7 +17,7 @@ public class RandomMinion : Minion
     // 스킬 공속 버프 (AddBuff로 걸고 skillBuffTimer가 끝나면 RemoveBuff)
     Buff skillBuff;
     float skillBuffTimer;
-    bool IsSkillBuffActive => skillBuffTimer > 0f;
+    public bool IsSkillBuffActive => skillBuffTimer > 0f; // 진화(RandomEvolution)가 스킬 중 부채꼴 발사에 씀
 
     public override float SkillProgress => IsSkillBuffActive ? 0f : Mathf.Clamp01(skillTimer / SKILL_COOLTIME);
     public override void FillSkillForTest() { skillTimer = SKILL_COOLTIME; }
@@ -81,17 +79,9 @@ public class RandomMinion : Minion
     {
         if (dir == Vector2.zero)
             return;
-        if (!isEvolved || (attackCount + 1) % EVOLVE_SKILL_INTERVAL != 0)
-        {
-            base.Fire(dir);
-            if (attackTimer == 0) // 발사에 성공했을 때만 횟수 증가
-                attackCount++;
-            return;
-        }
-
-        FireCircle(Random.Range(0f, 360f), EVOLVE_SKILL_BULLET_COUNT);
-        attackTimer = 0;
-        attackCount++;
+        base.Fire(dir);
+        if (attackTimer == 0) // 발사에 성공했을 때만 횟수 증가
+            attackCount++;
     }
 
     public override AllyBulletObject GetBullet()

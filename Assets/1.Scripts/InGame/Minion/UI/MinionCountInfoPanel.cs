@@ -9,7 +9,7 @@ public class MinionCountInfoPanel : MonoBehaviour
         GameEventBus.Subscribe<SpawnMinionEvent>(OnSpawnMinionEvent);
         GameEventBus.Subscribe<RemoveMinionEvent>(OnRemoveMinionEvent);
         GameEventBus.Subscribe<StartGameEvent>(OnStartGame); // 시작 시 상한 확정
-        GameEventBus.Subscribe<AddedItemEvent>(OnAddedItem); // 슬라임 수 증가 아이템으로 상한이 바뀜
+        GameEventBus.Subscribe<AddedRuneEvent>(OnAddedRune); // 슬라임 수 증가 아이템으로 상한이 바뀜
         GameEventBus.Subscribe<MinionMaxCountChangedEvent>(OnMaxCountChanged); // (2026-11-25) 용사 2단계 해방 등 상한 변경
         GameEventBus.Subscribe<LevelUpCanvasClosedEvent>(OnLevelUpClosed); // (2026-11-25) 레벨업 창을 닫으면 갱신
         UpdatePanel();
@@ -19,7 +19,7 @@ public class MinionCountInfoPanel : MonoBehaviour
         GameEventBus.Unsubscribe<SpawnMinionEvent>(OnSpawnMinionEvent);
         GameEventBus.Unsubscribe<RemoveMinionEvent>(OnRemoveMinionEvent);
         GameEventBus.Unsubscribe<StartGameEvent>(OnStartGame);
-        GameEventBus.Unsubscribe<AddedItemEvent>(OnAddedItem);
+        GameEventBus.Unsubscribe<AddedRuneEvent>(OnAddedRune);
         GameEventBus.Unsubscribe<MinionMaxCountChangedEvent>(OnMaxCountChanged);
         GameEventBus.Unsubscribe<LevelUpCanvasClosedEvent>(OnLevelUpClosed);
     }
@@ -33,7 +33,7 @@ public class MinionCountInfoPanel : MonoBehaviour
     void OnSpawnMinionEvent(SpawnMinionEvent e) => UpdatePanel();
     void OnRemoveMinionEvent(RemoveMinionEvent e) => UpdatePanel();
     void OnStartGame(StartGameEvent e) => UpdatePanel();
-    void OnAddedItem(AddedItemEvent e) => UpdatePanel();
+    void OnAddedRune(AddedRuneEvent e) => UpdatePanel();
     void OnMaxCountChanged(MinionMaxCountChangedEvent e) => UpdatePanel();
     void OnLevelUpClosed(LevelUpCanvasClosedEvent e) => UpdatePanel();
 

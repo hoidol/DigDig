@@ -82,7 +82,7 @@ public class EliteArea : MonoBehaviour
         Refresh();
     }
 
-    // ---- (2026-11-21) 버프 칸 정보 (빈 버프 칸·버프 칸 미니언을 누르면 룬 정보 자리에 표시, TileItemInfoPanel)
+    // ---- (2026-11-21) 버프 칸 정보 (빈 버프 칸·버프 칸 미니언을 누르면 룬 정보 자리에 표시, TileRuneInfoPanel)
     public static EliteArea Current => KingSlime.Instance != null ? KingSlime.Instance.GetComponent<EliteArea>() : null;
 
     // 지금 킹 버프 칸인지 (버프가 하나라도 걸려 있을 때만)

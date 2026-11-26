@@ -23,6 +23,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     public UserPurchaseManager userPurchaseManager;
     public UserMyInfoManager userMyInfoManager;
     public UserKingSlimeManager userKingSlimeManager;
+    public UserHeroManager userHeroManager; // (2026-11-26) 용사 보유
 
     private readonly List<UserBaseManager> dirtySaveManagers = new List<UserBaseManager>();
 
@@ -59,6 +60,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userMinionManager = new UserMinionManager();
         userMyInfoManager = new UserMyInfoManager();
         userKingSlimeManager = new UserKingSlimeManager();
+        userHeroManager = new UserHeroManager();
 
         LoadAll();
     }
@@ -78,6 +80,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userMinionManager.LoadData();
         userMyInfoManager.LoadData();
         userKingSlimeManager.LoadData();
+        userHeroManager.LoadData();
         // (2026-11-24) 레벨 해금 미니언은 자동 지급하지 않음 → 로비에서 구매 (UserMinionManager.BuyMinion)
         isAdRemoved = userPurchaseManager.HasPurchasedAny(InAppProductInfo.REMOVE_AD_KEYS);
     }
@@ -95,6 +98,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             userMinionData = userMinionManager.userMinionData,
             userMyInfoData = userMyInfoManager.userMyInfoData,
             userKSData = userKingSlimeManager.userKSData,
+            userHeroData = userHeroManager.userHeroData,
         };
     }
 
@@ -110,6 +114,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         SaveIfNotNull(UserMinionManager.UserDataFileName, data.userMinionData);
         SaveIfNotNull(UserMyInfoManager.UserDataFileName, data.userMyInfoData);
         SaveIfNotNull(UserKingSlimeManager.UserDataFileName, data.userKSData);
+        SaveIfNotNull(UserHeroManager.UserDataFileName, data.userHeroData);
 
         LoadAll();
     }
@@ -126,6 +131,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             { UserMinionManager.UserDataFileName, JsonUtility.ToJson(data.userMinionData) },
             { UserMyInfoManager.UserDataFileName, JsonUtility.ToJson(data.userMyInfoData) },
             { UserKingSlimeManager.UserDataFileName, JsonUtility.ToJson(data.userKSData) },
+            { UserHeroManager.UserDataFileName, JsonUtility.ToJson(data.userHeroData) },
         };
     }
 
@@ -140,6 +146,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             userMinionData = FromSection<UserMinionData>(sections, UserMinionManager.UserDataFileName),
             userMyInfoData = FromSection<UserMyInfoData>(sections, UserMyInfoManager.UserDataFileName),
             userKSData = FromSection<UserKSData>(sections, UserKingSlimeManager.UserDataFileName),
+            userHeroData = FromSection<UserHeroData>(sections, UserHeroManager.UserDataFileName),
         });
     }
 
@@ -250,6 +257,7 @@ public class UserCloudData
     public UserMinionData userMinionData;
     public UserMyInfoData userMyInfoData;
     public UserKSData userKSData;
+    public UserHeroData userHeroData; // (2026-11-26)
 }
 
 public enum CurrencyType

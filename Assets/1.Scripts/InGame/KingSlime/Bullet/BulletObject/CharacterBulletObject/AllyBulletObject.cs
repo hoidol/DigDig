@@ -26,6 +26,10 @@ public class AllyBulletObject : BulletObject
     public int chainCount;
     IHittable chainTarget;
 
+    // (2026-11-26) 화면 끝 반사 (뾰족이 진화 PierceEvolution): 남은 횟수만큼 화면 끝에서 튕김, 관통 횟수 소모 옵션
+    public int screenBounceLeft;
+    public bool screenBounceConsumesPierce;
+
     public virtual void SetBullet(BulletSpec bullet, IAllyUnit allyUnit)
     {
         this.allyUnit = allyUnit;
@@ -34,6 +38,8 @@ public class AllyBulletObject : BulletObject
         chainHitSet.Clear();
         chainCount = 0;
         chainTarget = null;
+        screenBounceLeft = 0;
+        screenBounceConsumesPierce = false;
         AllyBulletSpec allyBulletSpec = bullet as AllyBulletSpec;
         transform.localScale = Vector3.one;
 
@@ -141,6 +147,42 @@ public class AllyBulletObject : BulletObject
             }
         }
         base.Move();
+        if (screenBounceLeft > 0)
+            TryScreenBounce();
+    }
+
+    // 화면 밖으로 나가려 하면 방향을 뒤집어 화면 안으로 (관통탄이면 관통 횟수 1 소모 → 다 쓰면 사라짐)
+    void TryScreenBounce()
+    {
+        Camera cam = Camera.main;
+        if (cam == null || !cam.orthographic)
+            return;
+        Vector3 c = cam.transform.position;
+        float halfH = cam.orthographicSize, halfW = halfH * cam.aspect;
+        Vector3 p = transform.position;
+        bool bounced = false;
+        if ((p.x < c.x - halfW && direction.x < 0f) || (p.x > c.x + halfW && direction.x > 0f))
+        {
+            direction.x = -direction.x;
+            bounced = true;
+        }
+        if ((p.y < c.y - halfH && direction.y < 0f) || (p.y > c.y + halfH && direction.y > 0f))
+        {
+            direction.y = -direction.y;
+            bounced = true;
+        }
+        if (!bounced)
+            return;
+        screenBounceLeft--;
+        transform.right = direction;
+        preTarget = null; // 돌아오면서 같은 적도 다시 맞을 수 있게
+        if (screenBounceConsumesPierce)
+            foreach (var b in behaviors)
+                if (b is PierceBehavior pierce && pierce.ConsumeOne())
+                {
+                    Release();
+                    return;
+                }
     }
 
     // 연쇄 중엔 이미 맞은 적에 가려 다음 적을 못 찾지 않도록, 맞은 적을 건너뛰고 첫 적중 대상

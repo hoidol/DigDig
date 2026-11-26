@@ -64,7 +64,10 @@ public abstract class BattleWave : Wave
     // 한 wave의 소환이 끝나는 시점(초): 첫 마리 즉시 + (총 수 - 1) × 간격
     public static float SpawnDuration => (GameSetting.WAVE_ENEMY_COUNT - 1) * GameSetting.ENEMY_SPAWN_INTERVAL;
 
-    public void Spawn(EnemyType type)
+    public void Spawn(EnemyType type) => SpawnEnemy(type, waveIdx, waveDefenceType);
+
+    // 경로를 번갈아 쓰는 일반 적 소환 (BossWave 마지막 보스 wave에서도 사용)
+    public static void SpawnEnemy(EnemyType type, int waveIdx, DefenceType waveDefenceType)
     {
         Enemy enemyPrefab = GameManager.Instance.stageData.GetEnemyPrefab(type, waveDefenceType);
         // Debug.Log($"PhaseEnemySpawnPattern Spawn type {type}, GameManager.Instance.phaseDefenceType {waveDefenceType}");

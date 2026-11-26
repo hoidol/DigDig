@@ -42,37 +42,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce4d5813bdf9441fb205ac18a3c38827, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KnightHero
   key: HeroKnight
   data: {fileID: 0}
   level: 0
   heroType: 0
-  tileOffsets:
+  heroDataKey: 
+  eliteOffsets:
   - {x: -1, y: 0}
   - {x: 1, y: 0}
-  tileBuffs:
+  eliteBuffs:
   - statType: 0
     value: 1.1
     opType: 1
-  levelMuls:
-  - 1
-  - 1.5
-  - 2
-  - 2.5
-  - 3
   tileColor: {r: 1, g: 0.85, b: 0.3, a: 0.35}
   kingAttackType: 1
-  energyName: "\ud22c\uc9c0"
+  energyName: "\uD22C\uC9C0"
   energyIcon: {fileID: 0}
   energyColor: {r: 1, g: 0.6, b: 0.2, a: 1}
   skills:
-  - name: "\uce7c\ub0a0 \ud68c\uc624\ub9ac"
+  - name: "\uC2EC\uD310\uC758 \uB300\uAC80"
     icon: {fileID: 0}
-    cost: 1
-  - name: "\uc2ec\ud310\uc758 \ub300\uac80"
+  - name: "\uCE7C\uB0A0 \uD68C\uC624\uB9AC"
     icon: {fileID: 0}
-    cost: 1
   commonSkillIcon: {fileID: 0}
   commonSkillCost: 1
   commonDuration: 10
@@ -82,13 +75,17 @@ MonoBehaviour:
   swingDamageMul: 1
   swingColor: {r: 1, g: 0.95, b: 0.75, a: 0.9}
   spinDuration: 5
-  spinRadius: 1.6
+  spinRadius: 2
   spinDamageMul: 1
   spinHitInterval: 0.5
   spinSlowTime: 1
+  spinSlowRate: 0.5
   spinRotateSpeed: 900
   swordSprite: {fileID: 21300000, guid: de4d06e07c51a7f42adf1e7484db6329, type: 3}
   greatswordRadius: 1.5
   greatswordDamageMul: 20
   greatswordStun: 5
   greatswordFallTime: 0.3
+  greatswordLinger: 4
+  greatswordSlowRate: 0.5
+  greatswordSlowTime: 0.5

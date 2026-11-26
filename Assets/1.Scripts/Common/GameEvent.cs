@@ -1,3 +1,4 @@
+using UnityEngine.Serialization;
 using UnityEngine;
 
 public class EnemyDeadEvent
@@ -77,12 +78,12 @@ public class KingSlimeHpChangedEvent
     }
 }
 
-public class TryAddItemEvent
+public class TryAddRuneEvent
 {
-    public ItemData itemData;
-    public TryAddItemEvent(ItemData itemData)
+    [FormerlySerializedAs("itemData")] public RuneData runeData;
+    public TryAddRuneEvent(RuneData runeData)
     {
-        this.itemData = itemData;
+        this.runeData = runeData;
     }
 }
 // 벙커 소환 가능 상태 알림

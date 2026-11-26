@@ -1,0 +1,58 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+//2회마다 연속 발사
+public class ChainRune : Rune, IFired, IComboFire
+{
+    int triggerCount =  2;
+    int triggerCounter;
+    bool active;
+
+    CancellationTokenSource cts;
+    BulletSpec bullet;
+
+    public override void OnEquip()
+    {
+        base.OnEquip();
+        cts = new CancellationTokenSource();
+    }
+
+    public override void OnUnequip()
+    {
+        cts?.Cancel();
+        cts?.Dispose();
+        active = false;
+        triggerCounter = 0;
+    }
+
+    public override string GetDescription()
+    {
+        return $"{triggerCount}회 발사마다 연속 발사";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),triggerCount);
+    }
+
+    public async UniTask OnComboFire(Vector2 dir)
+    {
+        if (!active)
+            return;
+
+        active = false;
+        await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+        KingSlime.Instance.Shoot(bullet, dir);
+
+        // Character.Instance.AddHp(-itemData.consumeHp);
+        triggerCounter = 0;
+
+
+    }
+
+    public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)
+    {
+
+        triggerCounter++;
+        active = triggerCounter >= triggerCount;
+        this.bullet = bullet;
+
+    }
+
+}

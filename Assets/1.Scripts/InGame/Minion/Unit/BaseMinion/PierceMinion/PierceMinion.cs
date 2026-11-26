@@ -1,9 +1,8 @@
 using UnityEngine;
 
-// [각성] (진화) 탄 피해 +EVOLVE_DAMAGE_BONUS
+// (2026-11-26) 진화 = MinionEvolutionSetting + EvolutionMinion/Behaviours (예전 [각성] 효과 삭제)
 public class PierceMinion : Minion
 {
-    public const float EVOLVE_DAMAGE_BONUS = 0.2f;
     public PierceMinionData pierceMinionData;
     PierceBulletSpec pierceBulletSpec;
     public int pierceCount;
@@ -29,8 +28,6 @@ public class PierceMinion : Minion
         pierceBulletSpec.damage = AttackPower;
         pierceBulletSpec.multi = 0.8f;
         pierceBulletSpec.StartBulletSpec();
-        if (isEvolved)
-            pierceBulletSpec.AddBulletForce(new DamageBoostForce(EVOLVE_DAMAGE_BONUS));
 
         AllyBulletObject bulletObj = pierceBulletSpec.Instantiate(this);
         bulletObj.transform.localScale = Vector3.one;

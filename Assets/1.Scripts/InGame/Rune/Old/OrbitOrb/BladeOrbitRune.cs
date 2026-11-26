@@ -1,0 +1,28 @@
+// using UnityEngine;
+
+// // [칼날 궤도]
+// // OrbitRuneBase. 칼날 2개가 플레이어 주변을 회전하며 닿는 적/광석에 피해.
+// // 데미지는 마력의 50%.
+// public class BladeOrbitRune : OrbitRuneBase
+// {
+//     const float DAMAGE_RATE = 0.5f;
+
+//     protected override int OrbCount => 2;
+
+//     public override void OnActivate() { }
+//     public override void OnDeactivate() { }
+
+//     public override void UpdateRune()
+//     {
+//         base.UpdateRune();
+//         ApplyDamage();
+//     }
+
+//     void ApplyDamage()
+//     {
+//         float damage = Character.Instance.statMgr.AttackPower * DAMAGE_RATE;
+//         foreach (var orb in orbs)
+//             orb.damage = damage;
+//     }
+
+// }

@@ -5,10 +5,9 @@ using UnityEngine;
 // 사거리(AttackRange) 안에서 적이 죽을 때마다 공속 중첩 (최대 maxStack). 처치 감지 범위 = 공격 사거리 (따로 없음)
 // 공속 = 기본(버프 포함) × (1 + stack × attackSpeedPerStack). 마지막 처치 후 stackDuration 지나면 중첩 초기화
 // 타일 아이템: 적중형(치명타·둔화·스턴 등)은 타격마다 직접 적용(회전체 OrbitOrb와 같음), 발사형(연발 등)은 탄이 없어 적용 안 됨
-// [각성] (진화) 최대 중첩일 때 공격력 ×EVOLVE_MAX_STACK_ATTACK_POWER_MUL
+// (2026-11-26) 진화 = MinionEvolutionSetting + EvolutionMinion/Behaviours (예전 [각성] 효과 삭제)
 public class BerserkerMinion : Minion
 {
-    public const float EVOLVE_MAX_STACK_ATTACK_POWER_MUL = 1.2f;
     BerserkerMinionData berserkerMinionData;
 
     public float attackSpeedPerStack;
@@ -44,8 +43,6 @@ public class BerserkerMinion : Minion
     {
         base.UpdateMinion();
         statDic[StatType.AttackSpeed] *= 1f + stack * attackSpeedPerStack;
-        if (isEvolved && stack >= maxStack)
-            statDic[StatType.AttackPower] *= EVOLVE_MAX_STACK_ATTACK_POWER_MUL;
     }
 
     public override AllyBulletObject GetBullet() => null; // 근접 공격 (Fire 재정의)
@@ -73,20 +70,22 @@ public class BerserkerMinion : Minion
     // 공통 공격 소리 대신 근접 타격 소리 (공격 성공 시 Minion.Update가 1번 부름)
     public override void PlayAttackSound() => SoundManager.Play(SFXType.BerserkerHit);
 
+    static readonly Color CLAW_COLOR = new Color(1f, 0.92f, 0.85f, 1f); // 할퀴기 색 (흰빛)
+
     void MeleeHit(IHittable hittable, Vector2 dir)
     {
-        TileItem tileItem = shotModifier.tileItem;
+        TileRune tileRune = shotModifier.tileRune;
         AllyUnitDamageData damageData = new AllyUnitDamageData();
         damageData.Init(this); // 치명타 확률(설의 버프 등) 반영
         damageData.damage = AttackPower;
         damageData.attackType = AttackType;
-        if (tileItem != null)
-            tileItem.ModifyDamageData(damageData);
+        if (tileRune != null)
+            tileRune.ModifyDamageData(damageData);
         AccumulateDamage(damageData.damage);
         hittable.TakeDamage(damageData);
-        if (EffectManager.Instance != null)
-            EffectManager.Instance.Play(EffectType.Hit, hittable.Transform.position);
-        IBulletBehavior hitBehavior = tileItem != null ? tileItem.HitBehavior : null; // 확률형은 읽을 때 판정하므로 한 번만 읽음
+        // (2026-11-26) 타격 이펙트 = 킹(기사) 휘두르기를 얇게 만든 손톱 할퀴기 3줄 (이전: 공용 Hit 이펙트)
+        HeroSkillVisual.PlayClaw(hittable.Transform.position, dir, CLAW_COLOR);
+        IBulletBehavior hitBehavior = tileRune != null ? tileRune.HitBehavior : null; // 확률형은 읽을 때 판정하므로 한 번만 읽음
         if (hitBehavior != null)
             hitBehavior.OnHit(null, hittable, new RaycastHit2D(), dir);
     }

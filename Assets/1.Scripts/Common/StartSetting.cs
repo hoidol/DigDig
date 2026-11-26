@@ -30,7 +30,7 @@ public class StartSetting
 
         string[] singletonTargets =
         {
-            "ItemManager",
+            "RuneManager",
             "BulletManager",
             "UserManager",
             "StageManager",

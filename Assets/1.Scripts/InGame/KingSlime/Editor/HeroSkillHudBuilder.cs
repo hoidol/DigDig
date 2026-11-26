@@ -7,7 +7,7 @@ using UnityEngine;
 // 씬은 저장하지 않고 dirty만 표시 → 확인 후 직접 저장. 이후 모양·위치·글씨 크기는 씬에서 마음대로 고치면 됨
 public static class HeroSkillHudBuilder
 {
-    const string LOCK_SPRITE_PATH = "Assets/2.Sprites/Item/preparation/UI_Common_Lock_01_Silver.png";
+    const string LOCK_SPRITE_PATH = "Assets/2.Sprites/Rune/preparation/UI_Common_Lock_01_Silver.png";
     static Sprite Plain => AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
     static Sprite CostSprite => AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Knob.psd"); // 동그라미 (용사 energyIcon이 있으면 그 그림)
 

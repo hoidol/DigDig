@@ -20,6 +20,9 @@ public class MinionGameStatePanel : MonoBehaviour
 
     public Vector3 offset; // Minion.StatePointPosition 기준 추가 위치 (월드 단위)
 
+    // (2026-11-26) 진화 발동 스킬 버튼 (진화한 미니언에 발동 스킬이 있을 때만 보임). 템플릿에 만들어 둠: Tools/InGame/Add Evolution Skill Button To State Panel
+    public EvolutionSkillButton skillButton;
+
     public Minion Target { get; private set; }
     RectTransform rect;
     Canvas canvas;
@@ -51,9 +54,26 @@ public class MinionGameStatePanel : MonoBehaviour
             mergeLv.SetActive(!hasSkill);
         if (mergeLvForCooltime != null)
             mergeLvForCooltime.SetActive(hasSkill);
+        if (skillButton != null)
+            skillButton.Bind(minion);
         Refresh();
         FollowTarget();
     }
+
+#if UNITY_EDITOR
+    // 에디터 빌더용: 머리 위 상태 오른쪽 살짝 위. 크기 = 머지 레벨 표시 높이 기준
+    public EvolutionSkillButton CreateSkillButtonForEditor()
+    {
+        RectTransform self = (RectTransform)transform;
+        RectTransform refRect = (mergeLvForCooltime != null ? mergeLvForCooltime.transform : mergeLv != null ? mergeLv.transform : transform) as RectTransform;
+        float size = refRect != null && refRect.rect.height > 0f ? refRect.rect.height * 1.3f : 40f;
+        float width = self.rect.width;
+        EvolutionSkillButton btn = EvolutionSkillButton.Create(self, size);
+        ((RectTransform)btn.transform).anchoredPosition = new Vector2(width * 0.5f + size * 0.6f, size * 0.35f);
+        btn.gameObject.SetActive(false);
+        return btn;
+    }
+#endif
 
     public void Unbind()
     {
@@ -75,6 +95,10 @@ public class MinionGameStatePanel : MonoBehaviour
         }
         if (cooltimeSlider != null && mergeLvForCooltime != null && mergeLvForCooltime.activeSelf)
             cooltimeSlider.SetValueWithoutNotify(Target.SkillProgress);
+
+        // 진화 발동 스킬 버튼 (씬 템플릿에 있는 것만 씀)
+        if (skillButton != null)
+            skillButton.Refresh();
 
         // 추가 상태 글씨: 바뀔 때만 갱신
         if (stateText != null)

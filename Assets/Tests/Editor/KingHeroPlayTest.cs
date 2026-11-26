@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 
 // (2026-11-24) 용사: 정예병 칸 미니언만 칸 버프(킹 X) · 에너지(wave 중 충전, 처치 충전 없음) · 스킬 해방 3단계 · 하단 버튼으로 사용
-// (2026-11-25) 공격 형태·스킬 개편: 기사 휘두르기·칼날 회오리·심판의 대검(위치) / 궁수 다중 2·화살비(위치)·매의 눈 / 사령술사 슬래쉬·망령·저주
+// (2026-11-25) 공격 형태·스킬 개편: 기사 휘두르기·칼날 회오리·심판의 대검(위치) / 레인저 다중 2·화살비(위치)·매의 눈 / 네크로멘서 슬래쉬·망령·저주
 public class KingHeroPlayTest : InGamePlayTestBase
 {
     [UnityTest]
@@ -24,7 +24,7 @@ public class KingHeroPlayTest : InGamePlayTestBase
         var setting = KingGrowthSetting.Instance;
         var inv = king.abilityInventory;
         AbilityData knightData = setting.heroAbilities.First(d => d.prefab is KnightHero);
-        AbilityData archerData = setting.heroAbilities.First(d => d.prefab is ArcherHero);
+        AbilityData archerData = setting.heroAbilities.First(d => d.prefab is RangerHero);
         AbilityData necroData = setting.heroAbilities.First(d => d.prefab is NecromancerHero);
 
         // 킹을 (1,1), 기사 칸 = 왼(0,1)·오른(2,1), 칸 밖 = 위(1,0)
@@ -98,9 +98,9 @@ public class KingHeroPlayTest : InGamePlayTestBase
         float swingDamage = hp - e1.CurHp;
 
         // (2026-11-25) 킹 칸 연발 룬 = 휘두르기 반복 (탄이 아니어도 룬 적용)
-        KingSlime.Instance.AddItem("BurstShotTile", center).Forget();
+        KingSlime.Instance.AddRune("BurstShotTile", center).Forget();
         yield return WaitFrames(2);
-        Assert.IsTrue(king.shotModifier.tileItem is BurstShotTileItem, "킹 칸 연발 룬");
+        Assert.IsTrue(king.shotModifier.tileRune is BurstShotTileRune, "킹 칸 연발 룬");
         hp = e1.CurHp;
         Assert.IsTrue(knight.TryKingAttack(Vector2.right));
         for (double end = UnityEditor.EditorApplication.timeSinceStartup + 1; UnityEditor.EditorApplication.timeSinceStartup < end;)
@@ -110,9 +110,46 @@ public class KingHeroPlayTest : InGamePlayTestBase
         }
         Assert.GreaterOrEqual(hp - e1.CurHp, swingDamage * 1.99f, "연발 룬 = 휘두르기 2번");
 
-        // 1단계 칼날 회오리 = 킹 주변 적 피해 + 둔화, 에너지 1개
-        Assert.AreEqual(HeroKingAbility.UseResult.Used, knight.TryUseSkill(0));
+        // (2026-11-26) 1단계 심판의 대검 = 위치 지정 (버튼만 누르면 에너지 그대로) → 누른 곳 범위 피해 + 스턴, 에너지 1개
+        Assert.AreEqual(1, knight.GetSkillCost(0), "1단계 = 에너지 1개");
+        Assert.AreEqual(HeroKingAbility.UseResult.NeedPosition, knight.TryUseSkill(0));
+        Assert.AreEqual(2, knight.Charges, "위치를 고르기 전엔 에너지 그대로");
+        Vector2 far = kingPos + Vector2.up * 3f;
+        Enemy e2 = PlaceEnemy(far);
+        hp = e2.CurHp;
+        Assert.AreEqual(HeroKingAbility.UseResult.Used, knight.TryUseSkillAt(0, far));
         Assert.AreEqual(1, knight.Charges);
+        for (double end = UnityEditor.EditorApplication.timeSinceStartup + 2; UnityEditor.EditorApplication.timeSinceStartup < end && Mathf.Approximately(e2.CurHp, hp);)
+        {
+            e2.transform.position = far;
+            yield return WaitFrames(1);
+        }
+        Assert.Less(e2.CurHp, hp, "심판의 대검 피해 없음");
+        Assert.IsTrue(e2.statusEffectHandler.IsStunned, "심판의 대검 스턴 없음");
+        for (double end = UnityEditor.EditorApplication.timeSinceStartup + 1; UnityEditor.EditorApplication.timeSinceStartup < end && e2.statusEffectHandler.FixedSlowRate >= 1f;)
+        {
+            e2.transform.position = far;
+            yield return WaitFrames(1);
+        }
+        Assert.AreEqual(knight.greatswordSlowRate, e2.statusEffectHandler.FixedSlowRate, 0.001f, $"남은 대검 근처 둔화 (대검 {Object.FindObjectsOfType<HeroGreatSwordDrop>().Length}개, 적 체력 {e2.CurHp})");
+
+        // 2단계 칼날 회오리 = 킹 주변 적 피해 + 둔화, 에너지 2개 (모든 용사 공통)
+        // (2026-11-26) 최대 미니언 수 +1 = 2단계 해방이 아니라 용사 Lv.7 도달
+        int maxMinion = MinionFieldController.Instance.minionMaxCount;
+        king.lv = 6;
+        knight.UnlockNextSkill();
+        knight.RefreshHeroLevel();
+        Assert.AreEqual(maxMinion, MinionFieldController.Instance.minionMaxCount, "2단계 해방(Lv.6)으로는 최대 미니언 수 그대로");
+        king.lv = 7;
+        knight.RefreshHeroLevel();
+        Assert.AreEqual(maxMinion + 1, MinionFieldController.Instance.minionMaxCount, "용사 Lv.7 = 최대 미니언 수 +1");
+        Assert.AreEqual(2, knight.MaxCharges, "킹 레벨로 에너지 최대가 늘지 않음");
+        Assert.AreEqual(2, knight.GetSkillCost(1), "2단계 = 에너지 2개");
+        Assert.AreEqual(1, knight.Charges);
+        Assert.AreEqual(HeroKingAbility.UseResult.NoEnergy, knight.TryUseSkill(1), "에너지 1개로는 2단계 못 씀");
+        knight.FillChargesForTest();
+        Assert.AreEqual(HeroKingAbility.UseResult.Used, knight.TryUseSkill(1));
+        Assert.AreEqual(0, knight.Charges);
         Assert.IsTrue(knight.IsSpinActive);
         hp = e1.CurHp;
         for (double end = UnityEditor.EditorApplication.timeSinceStartup + 1.5; UnityEditor.EditorApplication.timeSinceStartup < end && Mathf.Approximately(e1.CurHp, hp);)
@@ -126,30 +163,8 @@ public class KingHeroPlayTest : InGamePlayTestBase
         Assert.IsTrue(e1.statusEffectHandler.HasEffect(SlowEffect.EFFECT_KEY), "발밑 둔화 표시");
         Assert.IsFalse(e1.statusEffectHandler.HasEffect("Ice"), "얼음 표시 없음");
 
-        // 2단계 심판의 대검 = 위치 지정 (버튼만 누르면 에너지 그대로) → 누른 곳 범위 피해 + 스턴, 최대 미니언 수 +1
-        int maxMinion = MinionFieldController.Instance.minionMaxCount;
-        king.lv = 5;
-        knight.UnlockNextSkill();
-        Assert.AreEqual(maxMinion + 1, MinionFieldController.Instance.minionMaxCount, "2단계 해방 = 최대 미니언 수 +1");
-        Assert.AreEqual(2, knight.MaxCharges, "킹 레벨로 에너지 최대가 늘지 않음");
-        knight.FillChargesForTest();
-        Assert.AreEqual(HeroKingAbility.UseResult.NeedPosition, knight.TryUseSkill(1));
-        Assert.AreEqual(2, knight.Charges, "위치를 고르기 전엔 에너지 그대로");
-        Vector2 far = kingPos + Vector2.up * 3f;
-        Enemy e2 = PlaceEnemy(far);
-        hp = e2.CurHp;
-        Assert.AreEqual(HeroKingAbility.UseResult.Used, knight.TryUseSkillAt(1, far));
-        Assert.AreEqual(1, knight.Charges);
-        for (double end = UnityEditor.EditorApplication.timeSinceStartup + 2; UnityEditor.EditorApplication.timeSinceStartup < end && Mathf.Approximately(e2.CurHp, hp);)
-        {
-            e2.transform.position = far;
-            yield return WaitFrames(1);
-        }
-        Assert.Less(e2.CurHp, hp, "심판의 대검 피해 없음");
-        Assert.IsTrue(e2.statusEffectHandler.IsStunned, "심판의 대검 스턴 없음");
-
         // 3단계 용사가 될거야! = 칸 밖 미니언도 공격력 ×1.5
-        king.lv = 8;
+        king.lv = 10;
         knight.UnlockNextSkill();
         Assert.AreEqual(2, knight.MaxCharges);
         knight.FillChargesForTest();
@@ -164,11 +179,11 @@ public class KingHeroPlayTest : InGamePlayTestBase
         Assert.AreEqual(plainAtk, plain.statDic[StatType.AttackPower], 0.01f, "용사를 빼면 공용 스킬 버프 해제");
         Assert.AreEqual(maxMinion, MinionFieldController.Instance.minionMaxCount);
 
-        // 3) 궁수: 다중 타겟 2, 화살비(위치 지정)·매의 눈
+        // 3) 레인저: 다중 타겟 2, 화살비(위치 지정)·매의 눈
         int shootBefore = king.shotModifier.bonusShootCount;
         inv.Add(archerData);
-        var archer = inv.Get<ArcherHero>();
-        Assert.AreEqual(shootBefore + 1, king.shotModifier.bonusShootCount, "궁수 = 다중 타겟 2");
+        var archer = inv.Get<RangerHero>();
+        Assert.AreEqual(shootBefore + 1, king.shotModifier.bonusShootCount, "레인저 = 다중 타겟 2");
         archer.UnlockNextSkill();
         archer.UnlockNextSkill();
         archer.FillChargesForTest();
@@ -180,6 +195,7 @@ public class KingHeroPlayTest : InGamePlayTestBase
 
         float rangeBefore = plain.statDic[StatType.AttackRange];
         float spdBefore = plain.statDic[StatType.AttackSpeed];
+        archer.FillChargesForTest(); // 2단계 = 에너지 2개
         Assert.AreEqual(HeroKingAbility.UseResult.Used, archer.TryUseSkill(1));
         yield return WaitFrames(2);
         Assert.IsTrue(archer.IsEyeActive);
@@ -189,11 +205,11 @@ public class KingHeroPlayTest : InGamePlayTestBase
         Assert.AreEqual(FindTargetType.HighHp, king.EffectiveFindTargetType);
         inv.Remove(archerData);
         yield return WaitFrames(2);
-        Assert.AreEqual(rangeBefore, plain.statDic[StatType.AttackRange], 0.01f, "궁수를 빼면 매의 눈 해제");
+        Assert.AreEqual(rangeBefore, plain.statDic[StatType.AttackRange], 0.01f, "레인저를 빼면 매의 눈 해제");
         Assert.IsNull(HeroKingAbility.ForcedAllyFindTarget);
         Assert.AreEqual(shootBefore, king.shotModifier.bonusShootCount);
 
-        // 4) 사령술사: 카오스 폭발탄(스플래쉬), 망령 소환·저주
+        // 4) 네크로멘서: 카오스 폭발탄(스플래쉬), 망령 소환·저주
         inv.Add(necroData);
         var necro = inv.Get<NecromancerHero>();
         Assert.AreEqual(AttackType.Chaos, king.AttackType);
@@ -223,6 +239,7 @@ public class KingHeroPlayTest : InGamePlayTestBase
         Assert.AreEqual(HeroKingAbility.UseResult.Used, necro.TryUseSkill(0));
         yield return WaitFrames(2);
         Assert.AreEqual(ghosts + 1, HeroGhost.ActiveCount, "망령 소환 안 됨");
+        necro.FillChargesForTest(); // 2단계 = 에너지 2개
         Assert.AreEqual(HeroKingAbility.UseResult.Used, necro.TryUseSkill(1));
         Assert.AreEqual(1.5f, e4.statusEffectHandler.CurseDamageMul, 0.001f, "저주 = 받는 피해 +50%");
         Assert.IsTrue(e4.statusEffectHandler.IsStunned, "저주 스턴 없음");

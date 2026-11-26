@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// (2026-11-25) 사령술사 기본 공격 "카오스 폭발탄": 타겟 쪽으로 날아가 적에게 닿거나 목표 지점에 도착하면 폭발
+// (2026-11-25) 네크로멘서 기본 공격 "카오스 폭발탄": 타겟 쪽으로 날아가 적에게 닿거나 목표 지점에 도착하면 폭발
 //   → 반경 radius 안 적 전부 피해 (NecromancerHero.SplashHit, 킹 칸 룬 적중 효과 포함). 그림 = 보라 구슬 + 폭발 고리 (임시)
 // (이전 원거리 슬래쉬 HeroSlashProjectile 대체, 같은 파일 guid)
 public class HeroSplashProjectile : MonoBehaviour

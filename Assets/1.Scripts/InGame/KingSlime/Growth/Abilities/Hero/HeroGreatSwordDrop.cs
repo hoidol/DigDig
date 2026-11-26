@@ -1,21 +1,24 @@
 using UnityEngine;
 
-// (2026-11-25) 기사 2단계 "심판의 대검": 누른 곳에 경고 원 → 대검이 위에서 떨어져 꽂힘 → 착탄(KnightHero.GreatswordImpact) → 잠깐 남았다 사라짐
+// (2026-11-25) 기사 "심판의 대검": 누른 곳에 경고 원 → 대검이 위에서 떨어져 꽂힘 → 착탄(KnightHero.GreatswordImpact) → 잠깐 남았다 사라짐
+// (2026-11-26) 착탄 후 linger초 동안 꽂혀 남아 범위 안 적 둔화(KnightHero.GreatswordSlowTick, SLOW_TICK초마다) → 마지막 STAY_TIME초 동안 흐려지며 사라짐
 public class HeroGreatSwordDrop : MonoBehaviour
 {
     const float FALL_HEIGHT = 4f;
     const float STAY_TIME = 0.5f;
+    const float SLOW_TICK = 0.2f;
+    static readonly Color AREA_COLOR = new Color(0.55f, 0.8f, 1f, 0.6f);
     static readonly Color WARN_COLOR = new Color(1f, 0.35f, 0.25f, 0.8f);
 
     KnightHero owner;
     Vector2 target;
-    float radius, fallTime, t;
+    float radius, fallTime, linger, t, slowTimer;
     bool impacted;
     Transform sword;
     SpriteRenderer swordSprite;
     LineRenderer warn;
 
-    public static HeroGreatSwordDrop Spawn(KnightHero owner, Vector2 pos, float radius, float fallTime, Sprite sprite)
+    public static HeroGreatSwordDrop Spawn(KnightHero owner, Vector2 pos, float radius, float fallTime, float linger, Sprite sprite)
     {
         var go = new GameObject("HeroGreatSword");
         go.transform.position = pos;
@@ -24,6 +27,7 @@ public class HeroGreatSwordDrop : MonoBehaviour
         d.target = pos;
         d.radius = radius;
         d.fallTime = Mathf.Max(0.05f, fallTime);
+        d.linger = Mathf.Max(STAY_TIME, linger);
 
         d.warn = HeroSkillVisual.CreateLine("Warn", WARN_COLOR, 0.07f, true, go.transform);
         HeroSkillVisual.SetCircle(d.warn, pos, radius);
@@ -67,18 +71,26 @@ public class HeroGreatSwordDrop : MonoBehaviour
                 if (owner != null)
                     owner.GreatswordImpact(target);
                 HeroSkillVisual.PlayRing(target, radius, new Color(1f, 0.9f, 0.6f, 0.9f), 0.4f, 0.12f);
+                warn.startColor = warn.endColor = AREA_COLOR; // 남아 있는 동안 = 둔화 범위 표시
             }
             return;
         }
-        float fade = 1f - Mathf.Clamp01(t / STAY_TIME);
-        HeroSkillVisual.SetAlpha(warn, WARN_COLOR, fade);
+        slowTimer -= Time.deltaTime;
+        if (slowTimer <= 0f && t < linger)
+        {
+            slowTimer = SLOW_TICK;
+            if (owner != null)
+                owner.GreatswordSlowTick(target);
+        }
+        float fade = 1f - Mathf.Clamp01((t - (linger - STAY_TIME)) / STAY_TIME);
+        HeroSkillVisual.SetAlpha(warn, AREA_COLOR, fade * (0.75f + 0.25f * Mathf.PingPong(t * 2f, 1f)));
         if (swordSprite != null)
         {
             Color c = swordSprite.color;
             c.a = fade;
             swordSprite.color = c;
         }
-        if (t >= STAY_TIME)
+        if (t >= linger)
             Destroy(gameObject);
     }
 }

@@ -22,18 +22,18 @@ public class LevelUpRunePlayTest : InGamePlayTestBase
     {
         KingSlime king = KingSlime.Instance;
         var select = SelectRuneCanvas.Instance;
-        var atk = ItemManager.Instance.GetItemData("AttackPowerTile");
-        var spd = ItemManager.Instance.GetItemData("AttackSpeedTile");
-        Tile tile = TileManager.Instance.tiles.First(t => t.IsEmpty && t.CanAddTileItem && t.tileObject == null);
-        Tile other = TileManager.Instance.tiles.First(t => t != tile && t.IsEmpty && t.CanAddTileItem && t.tileObject == null);
+        var atk = RuneManager.Instance.GetRuneData("AttackPowerTile");
+        var spd = RuneManager.Instance.GetRuneData("AttackSpeedTile");
+        Tile tile = TileManager.Instance.tiles.First(t => t.IsEmpty && t.CanAddTileRune && t.tileObject == null);
+        Tile other = TileManager.Instance.tiles.First(t => t != tile && t.IsEmpty && t.CanAddTileRune && t.tileObject == null);
         int done = 0;
-        System.Collections.Generic.List<ItemData> items = new System.Collections.Generic.List<ItemData> { atk, spd };
+        System.Collections.Generic.List<RuneData> runes = new System.Collections.Generic.List<RuneData> { atk, spd };
 
         // 1) 레벨업 카드엔 룬이 없음 (용사를 고른 뒤 Lv.8 = 단계 카드 없음)
         Assert.IsEmpty(LevelUpChoiceRule.GetChoices(new LevelUpChoiceRule.Input { level = 8, heroLevel = 3, heroSkillCount = 3, boostCount = 4 }, new System.Random(1)));
 
         // 2) 공격력 룬 → 빈 칸 = Lv.1, 시간은 안 멈춤, 안내 문구
-        select.OpenRuneReward(items, () => done++);
+        select.OpenRuneReward(runes, () => done++);
         select.Selected(atk);
         yield return WaitFrames(1);
         Assert.AreNotEqual(0f, Time.timeScale, "룬 선택 중 시간은 안 멈춤");
@@ -41,14 +41,14 @@ public class LevelUpRunePlayTest : InGamePlayTestBase
         Assert.AreEqual(TranslateManager.GetText("Rune_SelectTile"), select.selectTileGuideText.text);
         MinionFieldController.Instance.tilePickCallback(tile);
         yield return WaitFrames(3);
-        var placed = tile.tileItem as TileItem;
+        var placed = tile.tileRune as TileRune;
         Assert.IsNotNull(placed, "룬이 새겨지지 않음");
         Assert.AreEqual("AttackPowerTile", placed.key);
         Assert.AreEqual(1, placed.upgradeLevel);
         Assert.AreEqual(1, done);
 
-        // 3) 같은 룬을 같은 칸 → Lv.2 (수치는 ItemData.csv Values, 배율형 → % 증가량)
-        select.OpenRuneReward(items, () => done++);
+        // 3) 같은 룬을 같은 칸 → Lv.2 (수치는 RuneData.csv Values, 배율형 → % 증가량)
+        select.OpenRuneReward(runes, () => done++);
         select.Selected(atk);
         MinionFieldController.Instance.tilePickCallback(tile);
         yield return WaitFrames(2);
@@ -57,7 +57,7 @@ public class LevelUpRunePlayTest : InGamePlayTestBase
         StringAssert.Contains(lv2Percent, placed.GetDescription());
 
         // 4) 다른 룬을 그 칸 → 팝업, 계속 고르는 중 → 빈 칸에 새김
-        select.OpenRuneReward(items, () => done++);
+        select.OpenRuneReward(runes, () => done++);
         select.Selected(spd);
         MinionFieldController.Instance.tilePickCallback(tile);
         yield return WaitFrames(2);
@@ -68,7 +68,7 @@ public class LevelUpRunePlayTest : InGamePlayTestBase
         YesOrNoCanvas.Instance.CloseCanvas();
         MinionFieldController.Instance.tilePickCallback(other);
         yield return WaitFrames(3);
-        Assert.AreEqual("AttackSpeedTile", (other.tileItem as TileItem)?.key);
+        Assert.AreEqual("AttackSpeedTile", (other.tileRune as TileRune)?.key);
         Assert.AreEqual(3, done);
     }
 

@@ -30,7 +30,7 @@ public class MinionTestWindow : EditorWindow
     bool freezeEnemies;
 
     // 타일 아이템
-    string itemKey;
+    string runeKey;
 
     // 피해 측정
     int benchWave = 10;
@@ -56,7 +56,7 @@ public class MinionTestWindow : EditorWindow
         enemyType = (EnemyType)EditorPrefs.GetInt(PREFS + "enemyType", 0);
         defenceType = (DefenceType)EditorPrefs.GetInt(PREFS + "defenceType", 0);
         enemyCount = EditorPrefs.GetInt(PREFS + "enemyCount", 1);
-        itemKey = EditorPrefs.GetString(PREFS + "itemKey", "");
+        runeKey = EditorPrefs.GetString(PREFS + "itemKey", "");
         benchWave = EditorPrefs.GetInt(PREFS + "benchWave", 10);
         benchNoEliteBoss = EditorPrefs.GetBool(PREFS + "benchNoEliteBoss", true);
         benchNoDefence = EditorPrefs.GetBool(PREFS + "benchNoDefence", true);
@@ -89,7 +89,7 @@ public class MinionTestWindow : EditorWindow
         EditorPrefs.SetInt(PREFS + "enemyType", (int)enemyType);
         EditorPrefs.SetInt(PREFS + "defenceType", (int)defenceType);
         EditorPrefs.SetInt(PREFS + "enemyCount", enemyCount);
-        EditorPrefs.SetString(PREFS + "itemKey", itemKey ?? "");
+        EditorPrefs.SetString(PREFS + "itemKey", runeKey ?? "");
         EditorPrefs.SetInt(PREFS + "benchWave", benchWave);
         EditorPrefs.SetBool(PREFS + "benchNoEliteBoss", benchNoEliteBoss);
         EditorPrefs.SetBool(PREFS + "benchNoDefence", benchNoDefence);
@@ -149,7 +149,7 @@ public class MinionTestWindow : EditorWindow
         DrawSelected();
         DrawConvenience();
         DrawEnemy();
-        DrawTileItem();
+        DrawTileRune();
         if (EditorGUI.EndChangeCheck())
             Save();
         EditorGUILayout.EndScrollView();
@@ -482,34 +482,34 @@ public class MinionTestWindow : EditorWindow
     }
 
     // ---------------- 타일 아이템 ----------------
-    void DrawTileItem()
+    void DrawTileRune()
     {
         Header("타일 아이템 (선택한 칸에 설치)");
-        if (ItemManager.Instance == null)
+        if (RuneManager.Instance == null)
             return;
-        string[] keys = ItemManager.Instance.itemDataDic.Keys.OrderBy(k => k).ToArray();
+        string[] keys = RuneManager.Instance.runeDataDic.Keys.OrderBy(k => k).ToArray();
         if (keys.Length == 0)
             return;
-        int idx = Mathf.Max(0, System.Array.IndexOf(keys, itemKey));
+        int idx = Mathf.Max(0, System.Array.IndexOf(keys, runeKey));
         idx = EditorGUILayout.Popup("Key", idx, keys);
-        itemKey = keys[idx];
+        runeKey = keys[idx];
 
         Tile tile = MinionFieldController.Instance.SelectedTile;
-        TileItem cur = tile != null ? tile.tileItem as TileItem : null;
+        TileRune cur = tile != null ? tile.tileRune as TileRune : null;
         EditorGUILayout.LabelField(tile == null ? "선택한 칸 없음 (빈 칸은 선택이 안 되므로 유닛이 있는 칸을 클릭)"
             : cur == null ? $"칸 {tile.index}: 아이템 없음" : $"칸 {tile.index}: {cur.key} Lv.{cur.upgradeLevel}");
 
         using (new EditorGUILayout.HorizontalScope())
         {
-            GUI.enabled = tile != null && tile.CanAddTileItem;
+            GUI.enabled = tile != null && tile.CanAddTileRune;
             if (GUILayout.Button("설치"))
-                KingSlime.Instance.AddItem(itemKey, tile).Forget();
+                KingSlime.Instance.AddRune(runeKey, tile).Forget();
             GUI.enabled = cur != null && cur.CanUpgrade && !cur.IsMaxLevel;
             if (GUILayout.Button("레벨 +1 (확정)"))
                 cur.TryUpgrade(0f);
             GUI.enabled = cur != null;
             if (GUILayout.Button("제거"))
-                KingSlime.Instance.RemoveItem(cur);
+                KingSlime.Instance.RemoveRune(cur);
             GUI.enabled = true;
         }
     }

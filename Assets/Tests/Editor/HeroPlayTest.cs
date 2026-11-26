@@ -76,7 +76,7 @@ public class HeroPlayTest : InGamePlayTestBase
                 if (DamageMeterSystem.GetKingDamage(HeroKingAbility.TAG_BASIC) <= 0)
                     errors.Add($"[{current}] 기본 공격 피해 없음");
                 // 킹 주변·지정 위치에 바로 피해를 주는 스킬 (망령은 적 경로를 돌아서 제외, 매의 눈·저주는 피해 없는 스킬)
-                if (hero is KnightHero || hero is ArcherHero)
+                if (hero is KnightHero || hero is RangerHero)
                 {
                     if (DamageMeterSystem.GetKingDamage(HeroKingAbility.TAG_SKILL1) <= 0)
                         errors.Add($"[{current}] {hero.GetSkillName(0)} 피해 없음");

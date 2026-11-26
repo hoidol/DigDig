@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // 스킬(2026-11-15): SKILL_COOLTIME초마다 공격 사거리 안 적 전부에게 화상 (쿨타임이 차면 적이 없어도 바로 발동)
-// [각성] (진화) EVOLVE_SKILL_COOLTIME초마다 공격 사거리 안 적 최대 EVOLVE_SKILL_MAX_HIT기에 공격력 피해 + 화상
+// (2026-11-26) 진화 = MinionEvolutionSetting + EvolutionMinion/Behaviours (예전 [각성] 효과 삭제)
 public class FlameMinion : Minion
 {
     public const float SKILL_COOLTIME = 8f;
@@ -9,15 +9,11 @@ public class FlameMinion : Minion
     float flameSkillTimer;
     public override float SkillProgress => Mathf.Clamp01(flameSkillTimer / SKILL_COOLTIME);
     public override void FillSkillForTest() { flameSkillTimer = SKILL_COOLTIME; }
-    public const float EVOLVE_SKILL_COOLTIME = 5f;
-    public const int EVOLVE_SKILL_MAX_HIT = 7;
 
     FlameBulletSpec flameBulletSpec;
     public FlameMinionData flameMinionData;
     public float burnDuration;
     public float burnDPS;
-    float skillTimer;
-    readonly AllyUnitDamageData skillDamageData = new AllyUnitDamageData();
 
     public override void Spawn(Vector2 pos, int lv)
     {
@@ -31,7 +27,6 @@ public class FlameMinion : Minion
     {
         burnDuration = flameMinionData.burnDuration;
         burnDPS = flameMinionData.burnDPSES[mergeLevel];
-        skillTimer = 0;
         flameSkillTimer = 0;
 
         base.InitMinion();
@@ -53,13 +48,6 @@ public class FlameMinion : Minion
         if (IsBeingDragged) // 드래그 중엔 스킬 발동 안 함
             return;
         UpdateFlameSkill();
-        if (!isEvolved)
-            return;
-        skillTimer += SkillDeltaTime;
-        if (skillTimer < EVOLVE_SKILL_COOLTIME)
-            return;
-        skillTimer = 0;
-        ExecuteEvolveSkill();
     }
 
     void UpdateFlameSkill()
@@ -82,22 +70,6 @@ public class FlameMinion : Minion
         {
             if (target != null && target.TryGetComponent(out StatusEffectHandler handler))
                 handler.Apply(new FlameEffect(burnDuration, burnDPS, this));
-        }
-    }
-
-    void ExecuteEvolveSkill()
-    {
-        foreach (Transform target in InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, findTargetType, EVOLVE_SKILL_MAX_HIT))
-        {
-            if (target == null || !target.TryGetComponent(out IHittable hittable))
-                continue;
-            if (target.TryGetComponent(out StatusEffectHandler handler))
-                handler.Apply(new FlameEffect(burnDuration, burnDPS, this));
-            skillDamageData.Init(this);
-            skillDamageData.damage = AttackPower;
-            skillDamageData.attackType = AttackType;
-            AccumulateDamage(skillDamageData.damage);
-            hittable.TakeDamage(skillDamageData);
         }
     }
 }

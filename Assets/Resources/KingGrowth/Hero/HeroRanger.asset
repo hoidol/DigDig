@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4c2d3a588e214e0990171ddbaa6f13c, type: 3}
+  m_Name: HeroRanger
+  m_EditorClassIdentifier: Assembly-CSharp::AbilityData
+  key: HeroRanger
+  category: 9
+  title: "\ub808\uc778\uc800"
+  desc: "{0}"
+  thum: {fileID: 21300000, guid: 1d5eebd2b80574b72ac7ae47d6b32516, type: 3}
+  maxLevel: 1
+  prefab: {fileID: 773065365760772363, guid: 78446cdd51de4c679dcf3bc2bd6d1a45, type: 3}

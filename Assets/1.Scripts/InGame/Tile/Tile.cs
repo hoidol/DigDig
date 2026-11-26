@@ -1,3 +1,4 @@
+using UnityEngine.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,11 +9,11 @@ public class Tile : MonoBehaviour
     public TileGroup tileGroup; // 속한 3*3 그룹 (TileManager에서 지정)
 
     public ITileObject tileObject;
-    public ITileItem tileItem; // 타일 하나에 아이템 하나만 설치
+    [FormerlySerializedAs("tileItem")] public ITileRune tileRune; // 타일 하나에 아이템 하나만 설치
     public bool isBlocked; // 사용 불가 타일 (게임 시작 시 TileManager에서 랜덤 지정)
 
     public bool IsEmpty => !isBlocked && tileObject == null;
-    public bool CanAddTileItem => !isBlocked && tileItem == null;
+    public bool CanAddTileRune => !isBlocked && tileRune == null;
 
     Image image;
     Sprite defaultSprite; // 씬에 지정된 원래 타일 이미지 (TileManager.baseTile이 없을 때 사용)
@@ -36,7 +37,7 @@ public class Tile : MonoBehaviour
     }
 
     // 막힌 타일은 깨진 타일 이미지로 보여줌. 콜라이더는 켜 둬서 개척 타일로 눌러 해제할 수 있음
-    // 드롭·소환·아이템 설치는 isBlocked(IsEmpty/CanAddTileItem)로 막힘
+    // 드롭·소환·아이템 설치는 isBlocked(IsEmpty/CanAddTileRune)로 막힘
     public void Block()
     {
         isBlocked = true;
@@ -62,59 +63,59 @@ public class Tile : MonoBehaviour
         ITileObject prev = tileObject;
         if (tileObject != null)
         {
-            tileItem?.OnExit(tileObject);                       // 이전 오브젝트에서 효과 제거
-            UnlinkTileItem(tileObject);
+            tileRune?.OnExit(tileObject);                       // 이전 오브젝트에서 효과 제거
+            UnlinkTileRune(tileObject);
         }
         tileObject = obj;
         if (obj != null)
         {
             obj.Transform.position = transform.position;
-            tileItem?.OnEnter(obj);                             // 새 오브젝트에 효과 적용
-            LinkTileItem(obj);
+            tileRune?.OnEnter(obj);                             // 새 오브젝트에 효과 적용
+            LinkTileRune(obj);
         }
-        // 주변 배치에 따라 효과가 바뀌는 아이템(GrantItem)이 다시 계산하도록 알림
+        // 주변 배치에 따라 효과가 바뀌는 아이템(GrantRune)이 다시 계산하도록 알림
         GameEventBus.Publish(new TileObjectChangedEvent(this, prev, obj));
     }
     public void Clear() => SetTileObject(null);                 // Clear도 반드시 Exit를 타게 한다
 
-    public bool AddTileItem(ITileItem item)
+    public bool AddTileRune(ITileRune rune)
     {
-        if (item == null || !CanAddTileItem)
+        if (rune == null || !CanAddTileRune)
             return false;
 
-        tileItem = item;
+        tileRune = rune;
         if (tileObject != null)
         {
-            item.OnEnter(tileObject);  // 이미 누가 올라가 있으면 바로 적용
-            LinkTileItem(tileObject);
+            rune.OnEnter(tileObject);  // 이미 누가 올라가 있으면 바로 적용
+            LinkTileRune(tileObject);
         }
-        GameEventBus.Publish(new TileItemChangedEvent(this));
+        GameEventBus.Publish(new TileRuneChangedEvent(this));
         return true;
     }
 
-    public void RemoveTileItem(ITileItem item)
+    public void RemoveTileRune(ITileRune rune)
     {
-        if (item == null || tileItem != item)
+        if (rune == null || tileRune != rune)
             return;
         if (tileObject != null)
         {
-            item.OnExit(tileObject);
-            UnlinkTileItem(tileObject);
+            rune.OnExit(tileObject);
+            UnlinkTileRune(tileObject);
         }
-        tileItem = null;
-        ResetItemColor(); // 아이템이 빠지면 타일 색 원래대로
-        GameEventBus.Publish(new TileItemChangedEvent(this));
+        tileRune = null;
+        ResetRuneColor(); // 아이템이 빠지면 타일 색 원래대로
+        GameEventBus.Publish(new TileRuneChangedEvent(this));
     }
 
-    // 설치된 타일 아이템의 강화 레벨 색 (TileItem.ApplyLevelColor). 타일 이미지 색만 바꾸고 아이템 그림은 그대로
-    public void SetItemColor(Color color)
+    // 설치된 타일 아이템의 강화 레벨 색 (TileRune.ApplyLevelColor). 타일 이미지 색만 바꾸고 아이템 그림은 그대로
+    public void SetRuneColor(Color color)
     {
         Image img = TileImage;
         if (img != null)
             img.color = color;
     }
 
-    public void ResetItemColor()
+    public void ResetRuneColor()
     {
         Image img = TileImage; // 먼저 읽어야 defaultColor가 채워짐
         if (img != null)
@@ -122,17 +123,17 @@ public class Tile : MonoBehaviour
     }
 
     // 유닛이 발사할 때 이 타일 아이템의 OnFired를 부를 수 있도록 연결
-    void LinkTileItem(ITileObject obj)
+    void LinkTileRune(ITileObject obj)
     {
         if (obj is IShotModifiable m)
-            m.ShotModifier.tileItem = tileItem as TileItem;
+            m.ShotModifier.tileRune = tileRune as TileRune;
     }
 
     // 다른 타일로 먼저 옮겨져 연결이 바뀐 경우는 건드리지 않음
-    void UnlinkTileItem(ITileObject obj)
+    void UnlinkTileRune(ITileObject obj)
     {
-        if (obj is IShotModifiable m && m.ShotModifier.tileItem == tileItem as TileItem)
-            m.ShotModifier.tileItem = null;
+        if (obj is IShotModifiable m && m.ShotModifier.tileRune == tileRune as TileRune)
+            m.ShotModifier.tileRune = null;
     }
 }
 
@@ -150,8 +151,8 @@ public class TileObjectChangedEvent
 }
 
 // 타일 아이템 설치/제거됨
-public class TileItemChangedEvent
+public class TileRuneChangedEvent
 {
     public Tile tile;
-    public TileItemChangedEvent(Tile tile) { this.tile = tile; }
+    public TileRuneChangedEvent(Tile tile) { this.tile = tile; }
 }

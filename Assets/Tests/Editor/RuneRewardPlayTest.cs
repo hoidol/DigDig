@@ -38,8 +38,8 @@ public class RuneRewardPlayTest : InGamePlayTestBase
         Assert.IsTrue(select.rewardChestRoot != null && select.rewardChestRoot.gameObject.activeInHierarchy, "창에 보상 상자 표시");
         Assert.AreEqual(select.rewardChestSprite, select.rewardChestImage.sprite);
         Assert.IsNotNull(select.rewardChestSprite, "씬에 상자 그림 연결");
-        Assert.AreEqual(SelectItemStep.SelectItem, select.step);
-        var shown = select.selectItemPanels.Where(p => p.gameObject.activeSelf).ToList();
+        Assert.AreEqual(SelectRuneStep.SelectRune, select.step);
+        var shown = select.selectRunePanels.Where(p => p.gameObject.activeSelf).ToList();
         Assert.AreEqual(RuneRewardSystem.CHOICE_COUNT, shown.Count, "룬 3장");
         var nextButton = Object.FindFirstObjectByType<MinionOfferSystem>().nextButton;
         Assert.IsFalse(nextButton.gameObject.activeSelf, "룬을 고르는 동안 Next 숨김");
@@ -55,23 +55,23 @@ public class RuneRewardPlayTest : InGamePlayTestBase
         Assert.IsTrue(select.gameObject.activeSelf && RuneRewardSystem.IsOpen, "룬 보상은 닫히지 않아야 함");
 
         // 5) 룬 고름 → 칸 선택 → 새김 → 두 번째 보상 창이 바로 열림
-        ItemData rune = select.shownItemsForTest.First(d => !(d.itemPrefab is PioneerTileItem));
+        RuneData rune = select.shownRunesForTest.First(d => !(d.runePrefab is PioneerTileRune));
         select.Selected(rune);
-        Assert.AreEqual(SelectItemStep.SelectTile, select.step);
+        Assert.AreEqual(SelectRuneStep.SelectTile, select.step);
         select.CloseCanvas(); // 칸 선택 취소 → 룬 3장으로
-        Assert.AreEqual(SelectItemStep.SelectItem, select.step, "칸 선택 취소 → 룬 선택으로");
+        Assert.AreEqual(SelectRuneStep.SelectRune, select.step, "칸 선택 취소 → 룬 선택으로");
         select.Selected(rune);
-        Tile tile = TileManager.Instance.tiles.First(t => t.IsEmpty && t.CanAddTileItem && t.tileObject == null);
+        Tile tile = TileManager.Instance.tiles.First(t => t.IsEmpty && t.CanAddTileRune && t.tileObject == null);
         MinionFieldController.Instance.tilePickCallback(tile);
         yield return WaitFrames(3);
-        Assert.AreEqual(rune.key, (tile.tileItem as TileItem)?.key, "룬이 새겨지지 않음");
+        Assert.AreEqual(rune.key, (tile.tileRune as TileRune)?.key, "룬이 새겨지지 않음");
         Assert.AreEqual(1, king.pendingRuneRewards);
         Assert.IsTrue(RuneRewardSystem.IsOpen, "보상이 남았으면 연속으로 열림");
 
         // 6) 두 번째 보상 → 끝나면 밀린 레벨업 창
-        ItemData rune2 = select.shownItemsForTest.First(d => !(d.itemPrefab is PioneerTileItem));
+        RuneData rune2 = select.shownRunesForTest.First(d => !(d.runePrefab is PioneerTileRune));
         select.Selected(rune2);
-        Tile tile2 = TileManager.Instance.tiles.First(t => t != tile && t.IsEmpty && t.CanAddTileItem && t.tileObject == null);
+        Tile tile2 = TileManager.Instance.tiles.First(t => t != tile && t.IsEmpty && t.CanAddTileRune && t.tileObject == null);
         MinionFieldController.Instance.tilePickCallback(tile2);
         yield return WaitFrames(3);
         Assert.AreEqual(0, king.pendingRuneRewards);

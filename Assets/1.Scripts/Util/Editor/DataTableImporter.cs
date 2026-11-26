@@ -36,7 +36,7 @@ public static class DataTableImporter
         new Entry("EnemyData", new[] { "EnemyData.csv" }, () => LoadAll<EnemyData>(d => d.LoadData())),
         new Entry("StageData", new[] { "StageData.csv" }, () => LoadAll<StageData>(d => d.LoadData())),
         new Entry("MinionData", new[] { "MinionData.csv" }, () => LoadAll<MinionData>(d => d.LoadData())),
-        new Entry("ItemData", new[] { "ItemData.csv" }, () => LoadAll<ItemData>(d => d.LoadData())),
+        new Entry("RuneData", new[] { "RuneData.csv" }, () => LoadAll<RuneData>(d => d.LoadData())),
         new Entry("ProductData", new[] { "ProductData.csv" }, ProductDataTable.ImportAsset),
         new Entry("HeroData", new[] { HeroDataTable.CSV_PATH }, HeroDataTable.ImportAsset),
         new Entry("TranslateData", new[] { "Translate.csv" }, TranslateDataTable.ImportAsset),
@@ -82,8 +82,8 @@ public static class DataTableImporter
     [MenuItem(MENU_ROOT + "Import MinionData", priority = 42)]
     static void ImportMinionData() => ImportByName("MinionData");
 
-    [MenuItem(MENU_ROOT + "Import ItemData", priority = 43)]
-    static void ImportItemData() => ImportByName("ItemData");
+    [MenuItem(MENU_ROOT + "Import RuneData", priority = 43)]
+    static void ImportRuneData() => ImportByName("RuneData");
 
     [MenuItem(MENU_ROOT + "Import HeroData", priority = 46)]
     static void ImportHeroData() => ImportByName("HeroData");
@@ -93,7 +93,7 @@ public static class DataTableImporter
     [MenuItem(MENU_ROOT + "Import TranslateData", priority = 45)]
     static void ImportTranslateData() => ImportByName("TranslateData");
 
-    static void ImportByName(string name) => Import(entries.Where(e => e.name == name), true);
+    public static void ImportByName(string name) => Import(entries.Where(e => e.name == name), true); // 테스트에서도 씀 (바뀐 CSV를 확실히 반영)
 
     static void Import(IEnumerable<Entry> targets, bool force)
     {

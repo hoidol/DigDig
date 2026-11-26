@@ -10,8 +10,12 @@ namespace InGame
     public LevelUpStatPanel[] levelUpStatPanels;
     public TMPro.TMP_Text headerText; // 비워도 됨. "레벨 업!"
     public TMPro.TMP_Text subText;    // 비워도 됨. 무엇을 고르는지 (종족을 선택하세요 …)
-    // (2026-11-25) 이번 레벨업으로 오르는 용사 능력치 (작게 "공격력 : 15 → 23"). 레벨업 첫 화면(보통 단계 카드)에만. 비우면 실행 중 subText 아래에 생성
+    // (2026-11-25) 이전 작은 능력치 변화 글씨. (2026-11-26) 스탯 변화 화면(statScreen*)으로 옮겨서 항상 숨김 (씬 연결 유지용)
     public TMPro.TMP_Text statChangeText;
+    // (2026-11-26) 용사 스탯 변화 화면: 카드 대신 이번 레벨업 변화(킹 스탯·정예병 칸·미니언 수·스킬 해방) + 확인 버튼. 비우면 실행 중 생성
+    public RectTransform statScreenRoot;
+    public TMPro.TMP_Text statScreenText;
+    public UnityEngine.UI.Button statScreenConfirmButton;
     // (2026-11-25) 미니언 강화 카드 새로고침 (한 판 무료 2번 → 광고 3번, RerollCounter). 비우면 실행 중 카드 아래에 생성 (카드의 선택 버튼 모양 복사)
     public UnityEngine.UI.Button rerollButton;
     public TMPro.TMP_Text rerollText;
@@ -25,12 +29,14 @@ namespace InGame
     float prevTimeScale = 1f;
     bool isPausing;
 
-    // (2026-11-25) 레벨업 한 번 = ① 단계 카드(용사·스킬 해방·용사 강화, LevelUpChoiceRule. 그 레벨에 없으면 건너뜀) → ② 미니언 강화 카드(장착 미니언 × 스탯, MinionEnhanceSystem)
-    // 단계 카드를 고르면 레벨업을 소모하지 않고 같은 레벨의 미니언 강화 카드로 다시 열림. 미니언 강화까지 고르면 소모
-    // (이전 2026-11-23: ① 킹 능력치 카드 → ② 단계 카드)
-    bool stageStepDone;
-    bool stageSkipped; // 이번 레벨에 단계 카드가 없어 바로 미니언 강화 → 능력치 변화는 그 화면에
-    public bool IsStatStep { get; private set; } // 지금 창 = 미니언 강화 카드 단계 (이름은 이전 능력치 카드 단계 그대로)
+    // (2026-11-26) 레벨업 한 번 = ① 용사 선택(Lv.1, 아직 안 골랐을 때만) → ② 용사 스탯 변화 화면(스킬 해방은 여기서 자동, 보여줄 게 없으면 건너뜀)
+    //   → ③ 용사 강화 카드(그 레벨에 있을 때) → ④ 미니언 강화 카드. 한 단계를 마치면(CloseCanvas) 같은 레벨의 다음 단계로 다시 열림, ④까지 고르면 레벨업 소모
+    // (이전 2026-11-25: ① 단계 카드(용사·스킬 해방 카드·용사 강화) → ② 미니언 강화)
+    public enum Step { Hero, StatChange, HeroBoost, MinionEnhance }
+    public Step CurrentStep { get; private set; } = Step.Hero;
+    public bool IsStatStep => CurrentStep == Step.MinionEnhance; // 지금 창 = 미니언 강화 카드 단계 (이름은 이전 능력치 카드 단계 그대로)
+    public bool IsStatChangeScreen => CurrentStep == Step.StatChange && statScreenRoot != null && statScreenRoot.gameObject.activeSelf;
+    string statChangeScreenText; // 이번 레벨의 스탯 변화 화면 글씨 (스킬 해방은 한 번만 일어나서 저장해 둠)
 
     public static bool CanOpen => !RuneRewardSystem.IsOpen && Instance != null && KingSlime.Instance != null && KingSlime.Instance.pendingLevelUps > 0
         && GameManager.Instance != null && GameManager.Instance.isBreakTime;
@@ -51,15 +57,14 @@ namespace InGame
     public override void CloseCanvas()
     {
         base.CloseCanvas();
-        if (!IsStatStep) // 단계 카드를 골랐음 → 같은 레벨의 미니언 강화 카드
+        if (CurrentStep != Step.MinionEnhance) // 같은 레벨의 다음 단계
         {
-            stageStepDone = true;
+            CurrentStep++;
             OpenCanvas();
             return;
         }
-        IsStatStep = false;
-        stageStepDone = false;
-        stageSkipped = false;
+        CurrentStep = Step.Hero;
+        statChangeScreenText = null;
         KingSlime.Instance?.ConsumeLevelUp();
         if (KingSlime.Instance != null && KingSlime.Instance.pendingLevelUps > 0)
         {
@@ -81,23 +86,47 @@ namespace InGame
         // (2026-11-22) 시간은 멈추지 않음 (브레이크타임에만 열려서 멈출 필요 없음, 룬 타일 선택도 마찬가지)
         base.OpenCanvas(closeCallback);
 
-        // 카드 구성 = ① LevelUpChoiceRule 단계 카드 (그 레벨에 없으면 건너뜀) → ② 미니언 강화 카드 (최대 레벨 제외, 고를 게 없으면 닫음)
         KingSlime king = KingSlime.Instance;
         KingGrowthSetting setting = KingGrowthSetting.Instance;
         List<AbilityData> choices = new List<AbilityData>();
-        IsStatStep = false;
-        if (king != null && setting != null && !stageStepDone)
+        AbilityCategory stage = AbilityCategory.Stat;
+        // 이번 단계에 보여줄 게 없으면 다음 단계로 (용사 → 스탯 변화 → 용사 강화 → 미니언 강화)
+        while (true)
         {
-            choices = LevelUpChoiceRule.GetChoices(MakeChoiceInput(king, setting), rng);
-            stageSkipped = choices.Count == 0;
-            if (choices.Count == 0)
-                stageStepDone = true;
-        }
-        if (stageStepDone)
-        {
-            IsStatStep = true;
+            if (CurrentStep == Step.Hero || CurrentStep == Step.HeroBoost)
+            {
+                stage = king != null && setting != null ? LevelUpChoiceRule.GetStage(MakeChoiceInput(king, setting)) : AbilityCategory.Stat;
+                AbilityCategory want = CurrentStep == Step.Hero ? AbilityCategory.Hero : AbilityCategory.HeroBoost;
+                if (stage == want)
+                {
+                    choices = LevelUpChoiceRule.GetChoices(MakeChoiceInput(king, setting), rng);
+                    if (choices.Count > 0)
+                        break;
+                }
+                stage = AbilityCategory.Stat;
+                CurrentStep++;
+                continue;
+            }
+            if (CurrentStep == Step.StatChange)
+            {
+                if (statChangeScreenText == null)
+                    statChangeScreenText = PrepareStatChange(king, setting); // 스킬 해방도 여기서
+                if (!string.IsNullOrEmpty(statChangeScreenText))
+                    break;
+                CurrentStep++;
+                continue;
+            }
             choices = PickMinionEnhanceChoices();
+            break;
         }
+
+        if (CurrentStep == Step.StatChange)
+        {
+            ShowStatScreen(king, statChangeScreenText);
+            return;
+        }
+        if (statScreenRoot != null)
+            statScreenRoot.gameObject.SetActive(false);
 
         // 버프 칸 확장 카드: 카드마다 추가 칸 (지금 버프 칸을 뺀 나머지 중 랜덤, 카드끼리 다르게)
         List<Vector2Int> currentTiles = king != null ? king.abilityInventory.GetBuffTileOffsets() : new List<Vector2Int>();
@@ -105,10 +134,9 @@ namespace InGame
 
         EnsurePanels(choices.Count);
         ShowReward();
-        ShowStatChange(king, !IsStatStep || stageSkipped);
+        HideOldStatChangeText();
         if (headerText != null)
             headerText.text = king != null ? $"레벨 업! Lv.{king.ChoiceLevel}" : "레벨 업!";
-        AbilityCategory stage = !IsStatStep && king != null && setting != null ? LevelUpChoiceRule.GetStage(MakeChoiceInput(king, setting)) : AbilityCategory.Stat;
         HeroKingAbility ownedHero = king != null ? king.abilityInventory.Get<HeroKingAbility>() : null;
         if (subText != null)
         {
@@ -154,14 +182,18 @@ namespace InGame
 
     #region 미니언 강화 카드 새로고침
     static RerollCounter Reroll => RerollCounter.MinionEnhance;
+    bool rerollHooked;
 
     void UpdateRerollButton(bool show)
     {
         show &= Reroll.CanReroll;
-        if (rerollButton == null && show)
-            BuildRerollButton();
         if (rerollButton == null)
-            return;
+            return; // 씬에 연결 (Tools/InGame/Add LevelUp Screens To LevelUpCanvas)
+        if (!rerollHooked)
+        {
+            rerollHooked = true;
+            rerollButton.onClick.AddListener(OnClickedReroll);
+        }
         rerollButton.gameObject.SetActive(show);
         rerollButton.interactable = !Reroll.WaitingAd;
         if (rerollText != null)
@@ -189,7 +221,8 @@ namespace InGame
     }
 
     // 기본 모양: 첫 카드의 선택 버튼을 복사해 카드 줄 아래 가운데에
-    void BuildRerollButton()
+    // 에디터 빌더(LevelUpScreensBuilder)가 씬에 만들 때 씀
+    public void BuildRerollButton()
     {
         LevelUpStatPanel first = levelUpStatPanels != null ? levelUpStatPanels.FirstOrDefault(p => p != null) : null;
         UnityEngine.UI.Button template = first != null ? first.GetComponentsInChildren<UnityEngine.UI.Button>(true).LastOrDefault() : null;
@@ -200,7 +233,6 @@ namespace InGame
         UnityEngine.UI.Button btn = Instantiate(template, transform);
         btn.name = "MinionEnhanceRerollButton";
         btn.onClick = new UnityEngine.UI.Button.ButtonClickedEvent(); // 복사된 카드 선택 연결 제거
-        btn.onClick.AddListener(OnClickedReroll);
         RectTransform rt = (RectTransform)btn.transform;
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
         rt.pivot = new Vector2(0.5f, 1f);
@@ -254,10 +286,22 @@ namespace InGame
             heroLevel = hero != null ? hero.level : 0,
             heroSkillCount = hero != null ? hero.UnlockedSkillCount : 0,
             boostCount = boostCount,
-            heroPool = setting.heroAbilities,
+            heroPool = GetOwnedHeroPool(setting), // (2026-11-26) 보유한 용사만
             boostPool = setting.heroBoostAbilities,
             getLevel = inv.GetLevel,
         };
+    }
+
+    // (2026-11-26) 용사 선택 카드 후보 = 보유한 용사 (UserHeroManager). 보유 정보가 없거나 하나도 없으면 전체
+    public static IList<AbilityData> GetOwnedHeroPool(KingGrowthSetting setting)
+    {
+        if (setting == null || setting.heroAbilities == null)
+            return new List<AbilityData>();
+        UserHeroManager heroes = UserDataManager.Instance != null ? UserDataManager.Instance.userHeroManager : null;
+        if (heroes == null)
+            return setting.heroAbilities;
+        List<AbilityData> owned = setting.heroAbilities.Where(d => d != null && d.prefab is HeroKingAbility h && heroes.IsOwned(h.HeroDataKey)).ToList();
+        return owned.Count > 0 ? owned : (IList<AbilityData>)setting.heroAbilities;
     }
 
     #region 레벨업 능력치 변화
@@ -265,24 +309,33 @@ namespace InGame
     static readonly StatType[] HERO_STAT_DISPLAY = { StatType.AttackPower, StatType.AttackSpeed, StatType.CritChance, StatType.AttackRange, StatType.MaxHp };
 
     // 용사 레벨 toLevel-1 → toLevel 변화 ("공격력 : 15 → 23" 줄들). 용사가 없거나 바뀌는 게 없으면 ""
+    // (2026-11-26) Lv.1(용사를 막 고름) = 킹 기본(KingSlimeData) → 용사 Lv.1 스탯 + 정예병 칸 버프
     public static string GetHeroLevelUpText(KingSlime king, int toLevel)
     {
         HeroKingAbility hero = king != null && king.abilityInventory != null ? king.abilityInventory.Get<HeroKingAbility>() : null;
-        if (hero == null || toLevel <= 1 || king.statMgr == null)
+        if (hero == null || toLevel < 1 || king.statMgr == null)
             return "";
         HeroDataTable.HeroData data = hero.HeroData;
+        bool first = toLevel <= 1;
         var lines = new List<string>();
         if (data != null)
             foreach (StatType stat in HERO_STAT_DISPLAY)
             {
-                float from = king.statMgr.GetHeroStat(data, stat, toLevel - 1);
+                float from = first ? king.statMgr.GetHeroStat(null, stat, 1) : king.statMgr.GetHeroStat(data, stat, toLevel - 1);
                 float to = king.statMgr.GetHeroStat(data, stat, toLevel);
                 if (Mathf.Approximately(from, to))
                     continue;
                 string unit = stat == StatType.CritChance ? "%" : "";
                 lines.Add($"{GetStatName(stat)} : {KingAbility.FormatNumber(from)}{unit} → <color=#7CFF6B>{KingAbility.FormatNumber(to)}{unit}</color>");
             }
-        string eliteFrom = hero.GetEliteBuffText(toLevel - 1), eliteTo = hero.GetEliteBuffText(toLevel);
+        string eliteTo = hero.GetEliteBuffText(toLevel);
+        if (first)
+        {
+            if (!string.IsNullOrEmpty(eliteTo))
+                lines.Add($"정예병 칸 : <color=#7CFF6B>{eliteTo}</color>");
+            return string.Join("\n", lines);
+        }
+        string eliteFrom = hero.GetEliteBuffText(toLevel - 1);
         if (eliteFrom != eliteTo)
             lines.Add($"정예병 칸 : {eliteFrom} → <color=#7CFF6B>{eliteTo}</color>");
         return string.Join("\n", lines);
@@ -304,52 +357,177 @@ namespace InGame
         }
     }
 
-    void ShowStatChange(KingSlime king, bool show)
+    void HideOldStatChangeText()
     {
-        string text = show && king != null ? GetHeroLevelUpText(king, king.ChoiceLevel) : "";
-        if (statChangeText == null && string.IsNullOrEmpty(text))
-            return;
-        if (statChangeText == null)
-            BuildStatChangeText();
-        if (statChangeText == null)
-            return;
-        statChangeText.gameObject.SetActive(!string.IsNullOrEmpty(text));
-        statChangeText.text = text;
+        if (statChangeText != null)
+            statChangeText.gameObject.SetActive(false);
     }
 
-    // 기본 모양: 안내 글씨(subText, 없으면 제목) 바로 아래 가운데, 작은 글씨
-    void BuildStatChangeText()
+    // (2026-11-26) 스탯 변화 화면 글씨. 밀린 스킬 해방(Lv.2·6·10)을 여기서 해방하고 같이 적음. 보여줄 게 없으면 ""
+    string PrepareStatChange(KingSlime king, KingGrowthSetting setting)
     {
-        TMPro.TMP_Text anchor = subText != null ? subText : headerText;
-        if (anchor == null)
+        if (king == null)
+            return "";
+        HeroKingAbility hero = king.abilityInventory.Get<HeroKingAbility>();
+        var lines = new List<string>();
+        string stats = GetHeroLevelUpText(king, king.ChoiceLevel);
+        if (!string.IsNullOrEmpty(stats))
+            lines.Add(stats);
+        // 필드 최대 미니언 수 (Lv.7 +1, 적용은 레벨업을 마칠 때 HeroKingAbility.RefreshHeroLevel)
+        int minionAdd = LevelUpChoiceRule.GetMinionCountAdd(king.ChoiceLevel) - LevelUpChoiceRule.GetMinionCountAdd(king.ChoiceLevel - 1);
+        if (hero != null && minionAdd > 0 && MinionFieldController.Instance != null)
+        {
+            int cur = MinionFieldController.Instance.minionMaxCount;
+            lines.Add($"필드 최대 미니언 수 : {cur} → <color=#7CFF6B>{cur + minionAdd}</color>");
+        }
+        // 스킬 해방
+        if (hero != null && setting != null)
+        {
+            int guard = 0;
+            while (guard++ < HeroKingAbility.SKILL_COUNT && LevelUpChoiceRule.GetStage(MakeChoiceInput(king, setting)) == AbilityCategory.HeroSkill)
+            {
+                int idx = hero.NextSkillIndex;
+                if (idx < 0)
+                    break;
+                hero.UnlockNextSkill();
+                string stageName = idx == HeroKingAbility.COMMON_SKILL_INDEX ? "3단계 공용 스킬" : $"{idx + 1}단계 스킬";
+                string skill = $"\n<color=#FFD54A><size=115%><b>{stageName} 해방! {hero.GetSkillName(idx)}</b></size></color>\n<size=85%>{hero.GetSkillDesc(idx)}</size>";
+                if (idx == 0) // 에너지는 1단계 해방 때 최대 2개
+                    skill += $"\n<size=85%><color=#{ColorUtility.ToHtmlStringRGB(hero.energyColor)}>{hero.energyName}</color> 최대 {GameSetting.HERO_ENERGY_BASE_MAX}개 (하단 스킬 버튼으로 사용)</size>";
+                lines.Add(skill);
+            }
+        }
+        return string.Join("\n", lines).Trim('\n');
+    }
+
+    void ShowStatScreen(KingSlime king, string text)
+    {
+        foreach (var panel in levelUpStatPanels ?? new LevelUpStatPanel[0])
+            if (panel != null)
+                panel.gameObject.SetActive(false);
+        UpdateRerollButton(false);
+        HideOldStatChangeText();
+        ShowReward();
+        if (headerText != null)
+            headerText.text = king != null ? $"레벨 업! Lv.{king.ChoiceLevel}" : "레벨 업!";
+        if (subText != null)
+            subText.text = king != null && king.ChoiceLevel <= LevelUpChoiceRule.HERO_LEVEL ? "용사의 능력치" : "용사가 강해졌어요!";
+        if (statScreenRoot == null) // 씬에 연결 안 됨 → 건너뜀 (Tools/InGame/Add LevelUp Screens To LevelUpCanvas)
+        {
+            Debug.LogWarning("[LevelUpCanvas] 스탯 변화 화면(statScreenRoot) 연결 없음 → 메뉴 Tools/InGame/Add LevelUp Screens To LevelUpCanvas");
+            CloseCanvas();
             return;
-        RectTransform at = anchor.rectTransform;
-        var go = new GameObject("StatChangeText", typeof(RectTransform), typeof(TMPro.TextMeshProUGUI));
-        var rt = (RectTransform)go.transform;
-        rt.SetParent(at.parent, false);
-        rt.anchorMin = at.anchorMin;
-        rt.anchorMax = at.anchorMax;
-        rt.pivot = new Vector2(0.5f, 1f);
-        rt.sizeDelta = new Vector2(Mathf.Max(at.rect.width, 700f), 160f);
-        rt.anchoredPosition = at.anchoredPosition + new Vector2(0f, -at.rect.height * (1f - at.pivot.y) - 4f);
-        var t = go.GetComponent<TMPro.TextMeshProUGUI>();
-        t.font = anchor.font;
-        t.fontSharedMaterial = anchor.fontSharedMaterial;
-        t.fontSize = Mathf.Max(22f, anchor.fontSize * 0.6f);
-        t.color = new Color(1f, 1f, 1f, 0.9f);
-        t.alignment = TMPro.TextAlignmentOptions.Top;
+        }
+        statScreenRoot.gameObject.SetActive(true);
+        if (statScreenConfirmButton != null && !confirmHooked) // 씬에서 연결한 버튼도 코드에서 연결
+        {
+            confirmHooked = true;
+            statScreenConfirmButton.onClick.RemoveListener(OnClickedStatScreenConfirm);
+            statScreenConfirmButton.onClick.AddListener(OnClickedStatScreenConfirm);
+        }
+        if (statScreenText != null)
+            statScreenText.text = text;
+        statScreenRoot.DOKill();
+        statScreenRoot.localScale = Vector3.one * 0.8f;
+        statScreenRoot.DOScale(1f, 0.25f).SetEase(Ease.OutBack).SetUpdate(true);
+    }
+
+    bool confirmHooked;
+
+    // 확인 → 같은 레벨의 다음 단계 (용사 강화 / 미니언 강화)
+    public void OnClickedStatScreenConfirm()
+    {
+        if (CurrentStep != Step.StatChange || !gameObject.activeSelf)
+            return;
+        statScreenRoot.gameObject.SetActive(false);
+        CloseCanvas();
+    }
+
+    // 기본 모양: 카드 영역 가운데 어두운 판 + 큰 글씨 + 아래 확인 버튼(카드 선택 버튼 복사)
+    // 에디터 빌더(LevelUpScreensBuilder)가 씬에 만들 때 씀
+    public void BuildStatScreen()
+    {
+        LevelUpStatPanel first = levelUpStatPanels != null ? levelUpStatPanels.FirstOrDefault(p => p != null) : null;
+        RectTransform container = first != null ? first.transform.parent as RectTransform : null;
+        RectTransform parent = container != null ? container.parent as RectTransform : transform as RectTransform;
+        if (parent == null)
+            return;
+        var go = new GameObject("StatChangeScreen", typeof(RectTransform), typeof(UnityEngine.UI.Image));
+        statScreenRoot = (RectTransform)go.transform;
+        statScreenRoot.SetParent(parent, false);
+        if (container != null)
+        {
+            statScreenRoot.anchorMin = container.anchorMin;
+            statScreenRoot.anchorMax = container.anchorMax;
+            statScreenRoot.pivot = container.pivot;
+            statScreenRoot.anchoredPosition = container.anchoredPosition;
+            statScreenRoot.SetSiblingIndex(container.GetSiblingIndex() + 1);
+        }
+        else
+            statScreenRoot.anchorMin = statScreenRoot.anchorMax = statScreenRoot.pivot = new Vector2(0.5f, 0.5f);
+        statScreenRoot.sizeDelta = new Vector2(900f, 760f);
+        var bg = go.GetComponent<UnityEngine.UI.Image>();
+        UnityEngine.UI.Image cardBg = first != null ? first.GetComponent<UnityEngine.UI.Image>() : null;
+        if (cardBg != null && cardBg.sprite != null)
+        {
+            bg.sprite = cardBg.sprite;
+            bg.type = cardBg.type;
+        }
+        bg.color = new Color(0.08f, 0.08f, 0.14f, 0.92f);
+
+        TMPro.TMP_Text fontSrc = headerText != null ? headerText : GetComponentInChildren<TMPro.TMP_Text>(true);
+        var textGo = new GameObject("StatChangeText", typeof(RectTransform), typeof(TMPro.TextMeshProUGUI));
+        var trt = (RectTransform)textGo.transform;
+        trt.SetParent(statScreenRoot, false);
+        trt.anchorMin = Vector2.zero;
+        trt.anchorMax = Vector2.one;
+        trt.offsetMin = new Vector2(50f, 150f);
+        trt.offsetMax = new Vector2(-50f, -50f);
+        var t = textGo.GetComponent<TMPro.TextMeshProUGUI>();
+        if (fontSrc != null)
+        {
+            t.font = fontSrc.font;
+            t.fontSharedMaterial = fontSrc.fontSharedMaterial;
+        }
+        t.fontSize = 42f;
+        t.enableAutoSizing = true;
+        t.fontSizeMin = 22f;
+        t.fontSizeMax = 46f;
+        t.color = Color.white;
+        t.alignment = TMPro.TextAlignmentOptions.Center;
         t.raycastTarget = false;
-        t.enableWordWrapping = false;
-        statChangeText = t;
+        statScreenText = t;
+
+        UnityEngine.UI.Button template = first != null ? first.GetComponentsInChildren<UnityEngine.UI.Button>(true).LastOrDefault() : null;
+        if (template != null)
+        {
+            UnityEngine.UI.Button btn = Instantiate(template, statScreenRoot);
+            btn.name = "StatChangeConfirmButton";
+            btn.onClick = new UnityEngine.UI.Button.ButtonClickedEvent();
+            btn.gameObject.SetActive(true);
+            RectTransform rt = (RectTransform)btn.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+            rt.pivot = new Vector2(0.5f, 0f);
+            rt.sizeDelta = new Vector2(Mathf.Max(rt.sizeDelta.x, 320f), Mathf.Max(rt.sizeDelta.y, 90f));
+            rt.anchoredPosition = new Vector2(0f, 40f);
+            var label = btn.GetComponentInChildren<TMPro.TMP_Text>(true);
+            if (label != null)
+            {
+                foreach (var tt in label.GetComponents<TranslateText>())
+                    DestroyImmediate(tt);
+                label.text = "확인";
+            }
+            statScreenConfirmButton = btn;
+        }
+        else
+            Debug.LogWarning("[LevelUpCanvas] 스탯 변화 화면 확인 버튼을 만들 카드 버튼이 없음");
     }
     #endregion
 
     void ShowReward()
     {
         if (rewardPanel == null)
-            BuildRewardPanel();
-        if (rewardPanel == null)
-            return;
+            return; // 씬에 연결 (Tools/InGame/Add LevelUp Screens To LevelUpCanvas)
         rewardPanel.gameObject.SetActive(GameSetting.LEVEL_UP_DICE_COIN > 0);
         if (rewardValueText != null)
             rewardValueText.text = $"+{GameSetting.LEVEL_UP_DICE_COIN}";
@@ -361,7 +539,8 @@ namespace InGame
     #region 레벨업 보상 기본 모양 (씬에 없을 때)
     // (2026-11-23) "레벨 업!" 제목 바로 위 가운데에 한 줄: "레벨업 보상 [주사위 코인 아이콘] +1"
     //   (이전: 카드 영역 아래 → 화면 아래쪽이라 눈에 안 띔)
-    void BuildRewardPanel()
+    // 에디터 빌더(LevelUpScreensBuilder)가 씬에 만들 때 씀
+    public void BuildRewardPanel()
     {
         RectTransform parent = headerText != null ? headerText.rectTransform
             : levelUpStatPanels != null && levelUpStatPanels.Length > 0 && levelUpStatPanels[0] != null

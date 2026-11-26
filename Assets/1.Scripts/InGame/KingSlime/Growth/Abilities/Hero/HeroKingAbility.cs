@@ -7,12 +7,12 @@ using UnityEngine;
 //   칸 버프(eliteBuffs)는 정예병 칸 미니언만 받음 (킹 X)
 // - (2026-11-25) 용사 레벨 = 킹 레벨(레벨업 창을 다 처리한 레벨, HeroLevel). 레벨업마다 킹 스탯(HeroData Add*)·정예병 칸 버프(InitBuffValue + AddBuffValue × (Lv-1)) 자동 상승
 //   용사 카드는 다시 고르지 않음(maxLevel 1). 용사 강화 단계 카드 = 정예 칸 추가 · 충전 가속 (KingGrowthSetting.heroBoostAbilities)
-// - 스킬 3단계: Lv.2 = skills[0], Lv.5 = skills[1], Lv.8 = 공용 "용사가 될거야!" (모든 필드 미니언 버프). 해방 = UnlockNextSkill
+// - 스킬 3단계 (2026-11-26 해방 레벨 Lv.2·6·10, 스탯 변화 화면에서 자동): Lv.2 = skills[0], Lv.6 = skills[1], Lv.10 = 공용 "용사가 될거야!" (모든 필드 미니언 버프). 해방 = UnlockNextSkill
 // - 에너지: wave 중 충전 시간(30초)마다 1개, 최대 = 1단계 해방 때 2개 + 에너지 보유 증가 카드 (자동 증가 없음)
-//   (2026-11-25 삭제: 정예병 칸 미니언·킹 처치로 충전 시간 감소) 충전 가속 카드(HeroEnergyKingAbility) = 충전 시간 -10%/Lv
-//   하단 스킬 패널(HeroSkillHud)을 누르면 에너지 1개를 쓰고 발동. 대상이 없으면 발동 안 함(에너지 그대로)
-// - 에너지 컨셉(이름·아이콘·색)은 용사마다 (기사 = 투지, 궁수 = 집중, 사령술사 = 어둠)
-// - (2026-11-25) 기본 공격을 탄 대신 바꿀 수 있음 (TryKingAttack: 기사 = 근거리 휘두르기, 사령술사 = 원거리 슬래쉬)
+//   (2026-11-25 삭제: 정예병 칸 미니언·킹 처치로 충전 시간 감소) 충전 가속 카드(HeroEnergyKingAbility) = 충전 시간 ×0.8/Lv (2026-11-26 곱하기)
+//   하단 스킬 패널(HeroSkillHud)을 누르면 에너지를 쓰고 발동 (1단계 1개·2단계 2개, GetSkillCost). 대상이 없으면 발동 안 함(에너지 그대로)
+// - 에너지 컨셉(이름·아이콘·색)은 용사마다 (기사 = 투지, 레인저 = 집중, 네크로멘서 = 어둠)
+// - (2026-11-25) 기본 공격을 탄 대신 바꿀 수 있음 (TryKingAttack: 기사 = 근거리 휘두르기, 네크로멘서 = 원거리 슬래쉬)
 //   위치 지정 스킬 (NeedsTargetPosition): 버튼 → "원하는 위치를 누르세요" → 필드를 누른 곳에 발동 (TryUseSkillAt)
 //   용사가 될거야! = 10초 모든 미니언·킹 공격력·공속 ×1.5
 // 새 용사 = 하위 클래스 하나(CastSkill·GetSkillText) + 프리팹 + AbilityData(category Hero) → KingGrowthSetting.heroAbilities에 추가
@@ -150,7 +150,7 @@ public abstract class HeroKingAbility : KingAbility
     readonly UnitBuffGroup commonBuff = new UnitBuffGroup();
     public bool IsCommonSkillActive => commonBuff.IsActive;
 
-    // (2026-11-25) 아군 전체(미니언·킹)의 타겟 방식을 잠깐 바꿈 (궁수 매의 눈 = 높은 체력). null = 각자 설정
+    // (2026-11-25) 아군 전체(미니언·킹)의 타겟 방식을 잠깐 바꿈 (레인저 매의 눈 = 높은 체력). null = 각자 설정
     public static FindTargetType? ForcedAllyFindTarget { get; protected set; }
 
     // ---- (2026-11-25) 용사 레벨 = 킹 레벨 (레벨업 창까지 다 처리한 레벨, 최소 1)
@@ -186,6 +186,7 @@ public abstract class HeroKingAbility : KingAbility
         if (heroData != null)
             king.ApplyHeroBaseStats(heroData, lv);
         ApplyTileBuffs();
+        RefreshMinionCountBonus();
         OnHeroLevelChanged();
     }
 
@@ -249,9 +250,19 @@ public abstract class HeroKingAbility : KingAbility
     protected virtual void OnHeroUnequip() { }
 
     #region 에너지
-    // (2026-11-25) 충전 시간 = 30초 × (1 - 충전 가속 카드 %) (최소 HERO_MIN_CHARGE_TIME). 이전: -N초
-    public float ChargeTime => Mathf.Max(GameSetting.HERO_MIN_CHARGE_TIME,
-        GameSetting.HERO_ENERGY_CHARGE_TIME * (1f - SumEnergyBonus(HeroEnergyBoostType.ChargeTime) / 100f));
+    // (2026-11-26) 충전 시간 = 30초 × 충전 가속 카드 배율 (×0.8^레벨, 곱하기, 최소 HERO_MIN_CHARGE_TIME). 이전: 30초 × (1 - %합)
+    public float ChargeTime
+    {
+        get
+        {
+            float mul = 1f;
+            if (king != null && king.abilityInventory != null)
+                foreach (var a in king.abilityInventory.Abilities)
+                    if (a is HeroEnergyKingAbility e && e.boostType == HeroEnergyBoostType.ChargeTime)
+                        mul *= e.GetChargeTimeMul(e.level);
+            return Mathf.Max(GameSetting.HERO_MIN_CHARGE_TIME, GameSetting.HERO_ENERGY_CHARGE_TIME * mul);
+        }
+    }
 
     float SumEnergyBonus(HeroEnergyBoostType type)
     {
@@ -299,21 +310,25 @@ public abstract class HeroKingAbility : KingAbility
     #endregion
 
     #region 스킬
-    // 2단계 스킬(Lv.5)을 해방하면 필드 최대 미니언 수 +1
-    public const int SKILL2_MINION_COUNT_ADD = 1;
+    // (2026-11-26) 필드 최대 미니언 수 +1 = 용사 레벨 7 도달 (LevelUpChoiceRule.MINION_COUNT_UP_LEVELS, 이전: 2단계 스킬 해방 때)
+    //   용사 레벨이 바뀔 때마다(RefreshHeroLevel) 그 레벨까지 받을 수만큼 맞춤 → 테스트 도구로 레벨을 바로 올려도 맞음
     int addedMinionCount;
 
-    // 다음 단계 스킬 해방 (Lv.2·5·8). 에너지 최대 개수 +1 (지금 충전 중인 시간은 이어서)
+    void RefreshMinionCountBonus()
+    {
+        int want = LevelUpChoiceRule.GetMinionCountAdd(HeroLevel);
+        if (want == addedMinionCount || MinionFieldController.Instance == null)
+            return;
+        MinionFieldController.Instance.minionMaxCount += want - addedMinionCount;
+        addedMinionCount = want;
+    }
+
+    // 다음 단계 스킬 해방 (Lv.2·6·10, 2026-11-26부터 레벨업 스탯 변화 화면에서 자동). 1단계 해방 = 에너지 최대 2개
     public void UnlockNextSkill()
     {
         if (UnlockedSkillCount >= SKILL_COUNT)
             return;
         UnlockedSkillCount++;
-        if (UnlockedSkillCount == 2 && MinionFieldController.Instance != null)
-        {
-            MinionFieldController.Instance.minionMaxCount += SKILL2_MINION_COUNT_ADD;
-            addedMinionCount += SKILL2_MINION_COUNT_ADD;
-        }
     }
 
     // 다음에 해방할 스킬 (없으면 -1)
@@ -343,11 +358,13 @@ public abstract class HeroKingAbility : KingAbility
     public bool IsSkillUnlocked(int idx) => idx >= 0 && idx < UnlockedSkillCount;
 
     // (2026-11-24) 스킬마다 소모 에너지 (하단 스킬 버튼에 아이콘 개수로 표시). 최대 개수보다 크면 못 씀
+    // (2026-11-26) 1·2단계 소모량은 모든 용사 공통 = GameSetting.HERO_SKILL_COSTS (1단계 1, 2단계 2). 3단계는 commonSkillCost
     public int GetSkillCost(int idx)
     {
         if (idx == COMMON_SKILL_INDEX)
             return Mathf.Max(1, commonSkillCost);
-        return skills != null && idx >= 0 && idx < skills.Length ? Mathf.Max(1, skills[idx].cost) : 1;
+        int[] costs = GameSetting.HERO_SKILL_COSTS;
+        return idx >= 0 && idx < costs.Length ? Mathf.Max(1, costs[idx]) : 1;
     }
 
     public enum UseResult { Used, Locked, NoEnergy, NotNow, NoTarget, NeedPosition }
@@ -518,7 +535,7 @@ public abstract class HeroKingAbility : KingAbility
             data.critChance = king.statMgr.CritChance;
             data.critPower = king.statMgr.CritPower;
         }
-        TileItem rune = applyRune ? KingRune : null;
+        TileRune rune = applyRune ? KingRune : null;
         if (rune != null)
             rune.ModifyDamageData(data);
         e.TakeDamage(data);
@@ -529,12 +546,12 @@ public abstract class HeroKingAbility : KingAbility
         }
     }
 
-    // ---- (2026-11-25) 킹 칸 룬을 탄 없는 기본 공격에 (기사 휘두르기·사령술사 슬래쉬)
-    protected TileItem KingRune => king != null && king.shotModifier != null ? king.shotModifier.tileItem : null;
+    // ---- (2026-11-25) 킹 칸 룬을 탄 없는 기본 공격에 (기사 휘두르기·네크로멘서 슬래쉬)
+    protected TileRune KingRune => king != null && king.shotModifier != null ? king.shotModifier.tileRune : null;
     // 연발 룬: 같은 공격을 burstCount번 더 (간격 COMBO_ATTACK_INTERVAL_MS)
     protected void RunRuneBurst(System.Action attack)
     {
-        if (KingRune is BurstShotTileItem burst && burst.burstCount > 0 && attack != null)
+        if (KingRune is BurstShotTileRune burst && burst.burstCount > 0 && attack != null)
             StartCoroutine(BurstRoutine(attack, burst.burstCount));
     }
 
@@ -573,7 +590,7 @@ public abstract class HeroKingAbility : KingAbility
             EffectManager.Instance.Play(type, pos);
     }
 
-    // 다중 타겟 룬·궁수 등 bonusShootCount: 첫 방향 + 서로 다른 추가 타겟 방향
+    // 다중 타겟 룬·레인저 등 bonusShootCount: 첫 방향 + 서로 다른 추가 타겟 방향
     protected List<Vector2> GetMultiTargetDirs(Vector2 firstDir)
     {
         var dirs = new List<Vector2> { firstDir };
@@ -615,16 +632,14 @@ public class HeroSkillInfo
 {
     public string name;
     public Sprite icon;
-    [Tooltip("소모 에너지")]
-    [Min(1)] public int cost = 1;
 }
 
 // 용사 (에셋·저장에 번호로 → 뒤에만 추가)
 public enum KingHeroType
 {
-    HumanKnight,
-    ElfArcher,
-    UndeadNecromancer,
+    Knight,
+    Ranger,
+    Necromancer,
 }
 
 // (2026-11-25) 필드의 모든 미니언 + 킹에게 일정 시간 버프 (용사가 될거야!·매의 눈). 끝나면 붙인 버프만 뗌, 다시 쓰면 시간만 처음부터

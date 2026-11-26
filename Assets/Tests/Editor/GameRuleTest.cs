@@ -10,11 +10,11 @@ public class WaveTypeTest
     [TestCase(4, WaveType.Elite)]   // 5번째
     [TestCase(9, WaveType.Elite)]   // 10번째
     [TestCase(14, WaveType.Elite)]  // 15번째
-    [TestCase(19, WaveType.Boss)]   // 20번째: 5의 배수지만 보스 우선
-    [TestCase(20, WaveType.Battle)]
-    [TestCase(24, WaveType.Elite)]
-    [TestCase(39, WaveType.Boss)]
-    [TestCase(99, WaveType.Boss)]
+    [TestCase(19, WaveType.Elite)]  // 20번째 (2026-11-26 보스 25마다)
+    [TestCase(24, WaveType.Boss)]   // 25번째: 5의 배수지만 보스 우선
+    [TestCase(25, WaveType.Battle)]
+    [TestCase(29, WaveType.Elite)]
+    [TestCase(49, WaveType.Boss)]   // 50번째 = 마지막 보스
     public void GetWaveType(int waveIdx, WaveType expected)
     {
         Assert.AreEqual(expected, GameManager.GetWaveType(waveIdx));
@@ -146,14 +146,15 @@ public class StageUnlockTest
         Assert.AreEqual(2.5f, IceEffect.MergeRemain(2.5f, 1f));
     }
 
-    // 마지막 wave = 60 (waveIdx 59), 보스 wave
+    // (2026-11-26) 마지막 wave = 50 (waveIdx 49), 보스 wave (보스 = 25·50)
     [Test]
-    public void LastWaveIs60Boss()
+    public void LastWaveIs50Boss()
     {
-        Assert.AreEqual(60, GameSetting.LAST_WAVE);
-        Assert.IsFalse(GameManager.IsLastWave(58));
-        Assert.IsTrue(GameManager.IsLastWave(59));
-        Assert.AreEqual(WaveType.Boss, GameManager.GetWaveType(59));
+        Assert.AreEqual(50, GameSetting.LAST_WAVE);
+        Assert.IsFalse(GameManager.IsLastWave(48));
+        Assert.IsTrue(GameManager.IsLastWave(49));
+        Assert.AreEqual(WaveType.Boss, GameManager.GetWaveType(49));
+        Assert.AreEqual(100, GameSetting.FINAL_BOSS_WAVE_NORMAL_COUNT);
     }
 }
 
@@ -507,13 +508,13 @@ public class MinionEnhanceRuleTest
     }
 }
 
-// (2026-11-25) 룬 수치 (ItemData 에셋 = CSV 반영 결과) + 둔화 3초·스턴 1초
+// (2026-11-25) 룬 수치 (RuneData 에셋 = CSV 반영 결과) + 둔화 3초·스턴 1초
 public class RuneValueRuleTest
 {
     static float[] Values(string key)
     {
         DataTableImporter.ImportChanged();
-        var data = UnityEditor.AssetDatabase.LoadAssetAtPath<ItemData>($"Assets/AddressableResources/ItemData/Level1/{key}.asset");
+        var data = UnityEditor.AssetDatabase.LoadAssetAtPath<RuneData>($"Assets/AddressableResources/RuneData/Level1/{key}.asset");
         Assert.IsNotNull(data, key);
         return data.levelValues.ToArray();
     }
@@ -521,10 +522,10 @@ public class RuneValueRuleTest
     [TestCase("AttackPowerTile", 1.5f, 2f, 2.5f)]
     [TestCase("AttackSpeedTile", 1.4f, 1.8f, 2.2f)]
     [TestCase("CritPowerTile", 15f, 30f, 45f)]
-    [TestCase("RangeUpTile", 1.5f, 3f, 4.5f)]
+    [TestCase("RangeUpTile", 1f, 2f, 3f)]      // 2026-11-26 RuneData.csv
     [TestCase("GiantSlayerTile", 2f, 3f, 4f)]
     [TestCase("SlowTile", 25f, 40f, 70f)]
-    [TestCase("StunTile", 5f, 10f, 25f)]
+    [TestCase("StunTile", 10f, 20f, 30f)]     // 2026-11-26 RuneData.csv
     public void RuneLevelValues(string key, float lv1, float lv2, float lv3)
     {
         CollectionAssert.AreEqual(new[] { lv1, lv2, lv3 }, Values(key), key);
@@ -533,8 +534,8 @@ public class RuneValueRuleTest
     [Test]
     public void SlowStunDuration()
     {
-        var slow = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>("Assets/3.Prefabs/Item/Level1/SlowTile.prefab").GetComponentInChildren<SlowTileItem>(true);
-        var stun = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>("Assets/3.Prefabs/Item/Level1/StunTile.prefab").GetComponentInChildren<StunTileItem>(true);
+        var slow = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>("Assets/3.Prefabs/Rune/Level1/SlowTile.prefab").GetComponentInChildren<SlowTileRune>(true);
+        var stun = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>("Assets/3.Prefabs/Rune/Level1/StunTile.prefab").GetComponentInChildren<StunTileRune>(true);
         Assert.AreEqual(3f, slow.duration, 0.001f);
         Assert.AreEqual(1f, stun.duration, 0.001f);
     }

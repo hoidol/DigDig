@@ -137,7 +137,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             characterLayer = LayerMask.GetMask("Character");
 
         GameEventBus.Subscribe<TileObjectChangedEvent>(e => RefreshSelectedTile(e.tile));
-        GameEventBus.Subscribe<TileItemChangedEvent>(e => RefreshSelectedTile(e.tile));
+        GameEventBus.Subscribe<TileRuneChangedEvent>(e => RefreshSelectedTile(e.tile));
     }
 
     // 튜토리얼: 있으면 조건을 통과한 유닛만 드래그할 수 있고(그 외 터치는 선택도 안 함), 조건을 통과한 칸에만 놓을 수 있다

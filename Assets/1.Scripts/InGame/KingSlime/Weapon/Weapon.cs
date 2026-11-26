@@ -126,7 +126,7 @@ public abstract class Weapon : MonoBehaviour, IGun
         BulletSpec bullet = new KingSlimeBulletSpec();
         KingSlime.Instance.bodyRootTr.localScale = new Vector3(AttackDir.x >= 0 ? 1 : -1, 1, 1);
 
-        // (2026-11-25) 용사가 기본 공격을 직접 처리 (기사 = 근거리 휘두르기, 사령술사 = 원거리 슬래쉬) → 탄 없음
+        // (2026-11-25) 용사가 기본 공격을 직접 처리 (기사 = 근거리 휘두르기, 네크로멘서 = 원거리 슬래쉬) → 탄 없음
         HeroKingAbility hero = player.abilityInventory?.Get<HeroKingAbility>();
         if (hero != null && hero.TryKingAttack(dir))
         {
@@ -191,9 +191,9 @@ public abstract class Weapon : MonoBehaviour, IGun
         bulletObject.transform.position = attackPoint.position;
 
         bulletObject.Shoot(dir, KingSlime.Instance.statMgr.AttackPower);
-        TileItem tileItem = KingSlime.Instance.shotModifier.tileItem;
-        if (tileItem != null)
-            tileItem.OnFired(bulletObject);
+        TileRune tileRune = KingSlime.Instance.shotModifier.tileRune;
+        if (tileRune != null)
+            tileRune.OnFired(bulletObject);
         KingSlime.Instance.abilityInventory?.OnKingFired(bulletObject); // 킹 성장 능력 (연속탄·바운드 등)
         sfxPlayer.Play();
         return bulletObject;

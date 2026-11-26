@@ -386,6 +386,8 @@ public class MinionOfferSystem : MonoBehaviour
         dealCount++;
         RefreshCards();
         ArrangeCards();
+        foreach (MinionOfferCard card in cards)
+            card.PlayDealPop(); // 높은 머지 레벨 카드만 튀어오름
     }
 
     // 카드 배치: 지급할 때만 HorizontalLayoutGroup으로 자리를 잡고 바로 끔 → 카드를 쓰거나 드래그해도 나머지 카드는 제자리

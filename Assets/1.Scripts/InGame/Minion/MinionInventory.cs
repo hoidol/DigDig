@@ -1,3 +1,4 @@
+using UnityEngine.Serialization;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -52,16 +53,16 @@ public class MinionInventory : MonoBehaviour
 
         // foreach (var data in Character.Instance.statMgr.itemStatDic)
         // {
-        //     Item item = GetItem(data.Value.key);
+        //     Rune item = GetRune(data.Value.key);
         //     if (item == null && data.Value.count > 0)
         //     {
-        //         ItemData itemData = ItemData.GetItemData(data.Value.key);
+        //         RuneData itemData = RuneData.GetRuneData(data.Value.key);
         //         item = Instantiate(itemData.itemPrefab, transform);
         //         item.key = itemData.key;
         //         curItems.Add(item);
 
         //         item.OnEquip();
-        //         GameEventBus.Publish(new AddedItemEvent(itemData));
+        //         GameEventBus.Publish(new AddedRuneEvent(itemData));
         //     }
         //     else if (item != null && data.Value.count == 0)
         //     {
@@ -71,19 +72,19 @@ public class MinionInventory : MonoBehaviour
         //     }
 
         //     if (item != null)
-        //         item.UpdateItem();
+        //         item.UpdateRune();
         // }
 
     }
 
 }
 
-public class UpdaterMergeRecommendItemEvent
+public class UpdaterMergeRecommendRuneEvent
 {
-    public List<MergeItemData> recommendMergeItems;
-    public UpdaterMergeRecommendItemEvent(List<MergeItemData> list)
+    public List<MergeRuneData> recommendMergeRunes;
+    public UpdaterMergeRecommendRuneEvent(List<MergeRuneData> list)
     {
-        recommendMergeItems = list;
+        recommendMergeRunes = list;
     }
 }
 
@@ -97,9 +98,9 @@ public class InGameUserMinionData
 
 public class AddedMinionEvent
 {
-    public ItemData itemData;
-    public AddedMinionEvent(ItemData itemData)
+    [FormerlySerializedAs("itemData")] public RuneData runeData;
+    public AddedMinionEvent(RuneData runeData)
     {
-        this.itemData = itemData;
+        this.runeData = runeData;
     }
 }

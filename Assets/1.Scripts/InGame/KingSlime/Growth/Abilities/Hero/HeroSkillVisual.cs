@@ -93,6 +93,40 @@ public static class HeroSkillVisual
         });
     }
 
+    // (2026-11-26) 손톱 할퀴기: 휘두르기(PlaySwing)를 얇게 3줄 → 맞은 자리에 대각선으로 빠르게 그어지고 사라짐 (버서커 공격)
+    // dir = 공격 방향, 줄은 dir을 CLAW_TILT도 기울인 방향, 가운데 줄이 조금 길고 줄마다 살짝 늦게 그어짐
+    const float CLAW_TILT = 55f;
+    public static void PlayClaw(Vector2 center, Vector2 dir, Color color, float length = 0.75f, float width = 0.07f, float time = 0.2f)
+    {
+        if (dir.sqrMagnitude < 0.0001f)
+            dir = Vector2.right;
+        Vector2 along = (Vector2)(Quaternion.Euler(0f, 0f, -CLAW_TILT) * dir.normalized);
+        Vector2 side = new Vector2(-along.y, along.x);
+        const float GAP = 0.15f;
+        for (int k = -1; k <= 1; k++)
+        {
+            float len = length * (k == 0 ? 1f : 0.82f);
+            Vector2 c = center + side * (GAP * k);
+            Vector2 from = c - along * (len * 0.5f), to = c + along * (len * 0.5f);
+            Vector2 bow = side * (len * 0.08f); // 살짝 휘게
+            float delay = (k + 1) * 0.12f;      // 0 → 1 시간 중 줄마다 늦게 시작
+            var lr = CreateLine("Claw", color, width);
+            lr.numCapVertices = 0;
+            lr.widthCurve = new AnimationCurve(new Keyframe(0f, 0.05f), new Keyframe(0.35f, 1f), new Keyframe(1f, 0f));
+            lr.positionCount = 6;
+            Run(lr.gameObject, time, t =>
+            {
+                float draw = Mathf.Clamp01((t - delay) / 0.4f);
+                for (int i = 0; i < 6; i++)
+                {
+                    float u = draw * i / 5f;
+                    lr.SetPosition(i, Vector2.Lerp(from, to, u) + bow * Mathf.Sin(u * Mathf.PI));
+                }
+                SetAlpha(lr, color, draw <= 0f ? 0f : 1f - Mathf.Clamp01((t - 0.6f) / 0.4f));
+            });
+        }
+    }
+
     // 착탄 경고 원 → 사라짐
     public static void PlayRing(Vector2 center, float radius, Color color, float time = 0.35f, float width = 0.08f)
     {

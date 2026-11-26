@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   key: HeroKnight
   category: 9
-  title: "\uc778\uac04 \uae30\uc0ac"
+  title: "\uae30\uc0ac"
   desc: "{0}"
   thum: {fileID: 21300000, guid: 132d0059725b04468861ceccf1f4ee95, type: 3}
   maxLevel: 1

@@ -51,7 +51,7 @@ public class LevelUpStatPanel : MonoBehaviour
         descriptionText.text += $"\n정예병 칸: {string.Join(", ", names)}";
     }
 
-    // (2026-11-24) 스킬 해방 카드 (Lv.2·5·8): 그 단계 스킬 이름·설명. Lv.5는 최대 미니언 수 +1도
+    // (2026-11-24) 스킬 해방 카드: 그 단계 스킬 이름·설명. (2026-11-26) 스킬 해방은 카드 없이 스탯 변화 화면에서 자동 → 지금은 안 씀
     public void SetHeroSkillData(HeroKingAbility hero, int skillIdx)
     {
         SetData(hero.data, hero.level);
@@ -60,8 +60,6 @@ public class LevelUpStatPanel : MonoBehaviour
         string desc = hero.GetSkillDesc(skillIdx);
         if (skillIdx == 0) // (2026-11-25) 에너지는 1단계 해방 때 최대 2개, 이후는 용사 강화 카드로만
             desc += $"\n\n<color=#{ColorUtility.ToHtmlStringRGB(hero.energyColor)}>{hero.energyName}</color> 최대 {GameSetting.HERO_ENERGY_BASE_MAX}개 (하단 스킬 버튼으로 사용)";
-        if (skillIdx == 1 && HeroKingAbility.SKILL2_MINION_COUNT_ADD > 0)
-            desc += $"\n필드 최대 미니언 수 +{HeroKingAbility.SKILL2_MINION_COUNT_ADD}";
         if (titleText != null)
         {
             titleText.text = title;

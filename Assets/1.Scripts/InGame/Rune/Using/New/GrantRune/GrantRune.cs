@@ -1,0 +1,99 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+// 캐릭터 주변 칸(AreaOffsets 모양)에 있는 슬라임에 버프가 적용
+// 캐릭터나 주변 슬라임의 배치가 바뀔 때마다 대상을 다시 계산 → 범위에 들어온 슬라임은 버프, 나간 슬라임은 해제
+public abstract class GrantRune : Rune
+{
+    public GrantAreaType grantAreaType;
+
+    public StatType statType = StatType.AttackPower;
+    public StatOpType opType = StatOpType.Multiply;
+    public float value = 1.2f;
+
+    // 캐릭터 칸 기준 범위 (칸 단위, x=가로 y=세로)
+    protected abstract Vector2Int[] AreaOffsets { get; }
+
+    // 버프를 준 슬라임 → 걸어준 Buff (RemoveBuff는 참조로 지우므로 인스턴스를 들고 있음)
+    readonly Dictionary<Minion, Buff> appliedBuffs = new Dictionary<Minion, Buff>();
+
+    public override void OnEquip()
+    {
+        base.OnEquip();
+        GameEventBus.Subscribe<TileObjectChangedEvent>(OnTileObjectChanged);
+        Refresh();
+    }
+
+    public override void OnUnequip()
+    {
+        GameEventBus.Unsubscribe<TileObjectChangedEvent>(OnTileObjectChanged);
+        ClearAll();
+    }
+
+    void OnTileObjectChanged(TileObjectChangedEvent e)
+    {
+        Refresh();
+    }
+
+    // 현재 캐릭터 위치 기준 범위 안의 슬라임 목록 (캐릭터와 같은 TileGroup 안에서만)
+    public List<Minion> GetTargets()
+    {
+        List<Minion> targets = new List<Minion>();
+        Tile center = TileManager.Instance.GetTile(KingSlime.Instance);
+        foreach (Tile tile in TileManager.Instance.GetTilesAround(center, AreaOffsets))
+        {
+            if (tile.tileGroup != center.tileGroup) // 바로 옆 칸이라도 그룹이 다르면 영향 없음
+                continue;
+            if (tile.tileObject is Minion minion)
+                targets.Add(minion);
+        }
+        return targets;
+    }
+
+    void Refresh()
+    {
+        List<Minion> targets = GetTargets();
+
+        // 범위에서 빠진 슬라임 버프 해제
+        List<Minion> removed = new List<Minion>();
+        foreach (var pair in appliedBuffs)
+        {
+            if (!targets.Contains(pair.Key))
+                removed.Add(pair.Key);
+        }
+        foreach (Minion minion in removed)
+        {
+            if (minion != null) // 이미 Destroy된 슬라임은 해제 생략
+                minion.RemoveBuff(appliedBuffs[minion]);
+            appliedBuffs.Remove(minion);
+        }
+
+        // 새로 들어온 슬라임 버프 적용
+        foreach (Minion minion in targets)
+        {
+            if (appliedBuffs.ContainsKey(minion))
+                continue;
+            Buff buff = new Buff(statType, value, opType);
+            appliedBuffs.Add(minion, buff);
+            minion.AddBuff(buff);
+        }
+    }
+
+    void ClearAll()
+    {
+        foreach (var pair in appliedBuffs)
+        {
+            if (pair.Key != null)
+                pair.Key.RemoveBuff(pair.Value);
+        }
+        appliedBuffs.Clear();
+    }
+}
+
+public enum GrantAreaType
+{
+    AroundFour,
+    AroundFight,
+    Diagonal,
+    TileGrant
+}

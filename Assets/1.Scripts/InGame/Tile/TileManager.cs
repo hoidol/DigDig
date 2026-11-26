@@ -257,12 +257,12 @@ public class TileManager : MonoSingleton<TileManager>
 
     // 아이템이 없는 타일 중 랜덤 하나 반환, 없으면 null
     // 위에 슬라임/캐릭터가 있어도 설치 가능 (설치 즉시 효과 적용)
-    public Tile GetRandomTileForItem()
+    public Tile GetRandomTileForRune()
     {
         emptyTiles.Clear();
         foreach (Tile tile in usingTiles)
         {
-            if (tile.CanAddTileItem)
+            if (tile.CanAddTileRune)
                 emptyTiles.Add(tile);
         }
 

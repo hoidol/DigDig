@@ -31,28 +31,34 @@ public class GameSetting
    public static int PLAY_COST_ENERGE = 5;
    public static int MAX_ENERGE = 30;
 
-   // 마지막 wave(표시 번호, 2026-11-19 무한 → 80, 2026-11-20 → 60). 이 wave(보스)를 처치하면 게임 클리어
-   public const int LAST_WAVE = 60;
+   // 마지막 wave(표시 번호, 2026-11-19 무한 → 80, 2026-11-20 → 60, 2026-11-26 → 50). 이 wave(보스)를 처치하면 게임 클리어
+   public const int LAST_WAVE = 50;
+   // (2026-11-26) 마지막 보스 wave에는 보스와 함께 일반 적도 이만큼 (ENEMY_SPAWN_INTERVAL 간격, BossWave). 다른 보스 wave는 보스만
+   public const int FINAL_BOSS_WAVE_NORMAL_COUNT = 100;
    // N번째 wave(1부터)가 BOSS_WAVE_INTERVAL의 배수면 보스, ELITE_WAVE_INTERVAL의 배수면 엘리트 (보스 우선)
    public const int ELITE_WAVE_INTERVAL = 5;
-   public const int BOSS_WAVE_INTERVAL = 20;
+   public const int BOSS_WAVE_INTERVAL = 25; // (2026-11-26) 20 → 25: 보스 = wave 25·50
    // 일반 적 처치 코인이 이 wave 수마다 +1 (NormalEnemy.GetKillGold, 2026-11-19 이전 10)
    public const int KILL_GOLD_WAVE_INTERVAL = 20;
 
    // (2026-11-22) 인게임 킹 레벨: 경험치는 주사위 코인으로 구매만 (처치 경험치 없음, KingExpBuyPanel)
    // (2026-11-23) 최대 Lv.9, 필요 경험치 = 레벨마다 표 (Lv.0→1 ~ Lv.8→9). 최대 레벨이면 경험치 MAX (더 못 삼)
    // (2026-11-24) 최대 Lv.8 (Lv.8 = 3단계 스킬 "용사가 될거야!"). 표는 Lv.0→1 ~ Lv.7→8
-   public const int KING_MAX_LEVEL = 8;
-   public static readonly int[] KING_LEVEL_EXPS = { 2, 2, 2, 3, 3, 3, 4, 4 };
+   public const int KING_MAX_LEVEL = 12;
+   public static readonly int[] KING_LEVEL_EXPS = { 2, 2, 3, 3, 4, 4, 5, 5,6,6,7,7 };
+   // (2026-11-26) 용사 1·2단계 스킬 소모 에너지 (모든 용사 공통). 3단계(용사가 될거야!)는 프리팹 commonSkillCost
+   public static readonly int[] HERO_SKILL_COSTS = { 1, 2 };
    // (2026-11-24) 용사 에너지: wave 중 HERO_ENERGY_CHARGE_TIME초마다 1개 충전
    //   (2026-11-25 삭제: 정예병 칸 미니언 처치로 충전 시간 감소)
    // (2026-11-25) 충전 60 → 30초, 최대 개수 = 킹 레벨 기준 (Lv.2 = 2개, Lv.4 = 3, Lv.6 = 4, Lv.8 = 5. 이전: 해방한 스킬 수)
    public const float HERO_ENERGY_CHARGE_TIME = 30f;
    // (2026-11-25) 에너지 최대 = 1단계 스킬 해방 때 2개, 이후 자동 증가 없음 → 용사 강화 카드 "에너지 보유 증가"(+1/Lv, 최대 3)로만 (이전: 킹 레벨 기준 2→3→4→5)
    public const int HERO_ENERGY_BASE_MAX = 2;
-   public const float HERO_MIN_CHARGE_TIME = 15f; // 충전 가속 카드를 다 골라도 이 아래로는 안 줄어듦
+   public const float HERO_MIN_CHARGE_TIME = 5f; // 충전 가속 카드를 다 골라도 이 아래로는 안 줄어듦 (2026-11-26 15 → 5: ×0.8 5레벨 = 9.8초까지 내려가게)
    // 경험치 구매: 주사위 코인 BUY_EXP_DICE_COIN_PRICE개 → 경험치 BUY_EXP_AMOUNT
    public const int BUY_EXP_DICE_COIN_PRICE = 2;
+   // (2026-11-26) 브레이크타임 룬 강화: 룬 칸을 누르면 주사위 코인 이만큼 내고 레벨 +1 (확정, TileRuneInfoPanel)
+   public const int RUNE_UPGRADE_DICE_COIN = 3;
    public const int BUY_EXP_AMOUNT = 1;
    // (2026-11-23) 킹 레벨업 보상: 레벨이 오를 때마다 주사위 코인 +1 (KingSlime.AddExp, 레벨업 창 아래에 표시)
    public const int LEVEL_UP_DICE_COIN = 1;

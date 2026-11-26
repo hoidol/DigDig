@@ -10,6 +10,9 @@ public class PierceBehavior : IBulletBehavior
 
     public int ApplyOrder => 5;
 
+    // (2026-11-26) 화면 끝 반사로 관통 1 소모 (뾰족이 진화). 다 썼으면 true
+    public bool ConsumeOne() => --remaining <= 0;
+
     public bool OnHit(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
     {
         bullet.damageMultiplier *= multi;

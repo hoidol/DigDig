@@ -1,0 +1,48 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "rankings": {
+      "$difficulty": {
+        ".read": "auth != null",
+        ".indexOn": ["wave"],
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChild('nickname')",
+          "nickname": { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "wave": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000" },
+          "updatedAt": { ".validate": "newData.val() === now" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+
+    "shardMap": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid && !data.exists()",
+        ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() < 10"
+      }
+    },
+
+    "clearTips": {
+      "$stageKey": {
+        ".read": "auth != null",
+        ".indexOn": ["updatedAt", "pinned"],
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['nickname', 'text', 'updatedAt'])",
+          "nickname": { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "text": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 40" },
+          "updatedAt": { ".validate": "newData.val() === now" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+
+    "clearTipConfig": {
+      ".read": "auth != null"
+    }
+  }
+}

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // (2026-11-20) 레벨업 카드 구성 규칙 (씬 없이 계산 → 테스트 가능)
-// (2026-11-24) 최대 Lv.8. 레벨업 한 번 = ① 킹 능력치 카드(LevelUpCanvas, 매 레벨 유지) → ② 이 규칙의 단계 카드
+// (2026-11-26 최신) 최대 Lv.12. 레벨업 한 번 = [Lv.1만 용사 선택] → 스탯 변화 화면(스킬 해방 Lv.2·6·10은 여기서 자동, Lv.7 미니언 수 +1)
+//   → [용사 강화 Lv.3·4·5·7·8·9·11·12] → 미니언 강화 (LevelUpCanvas). 정예 칸 추가·충전 가속 최대 5, 에너지 보유 최대 3
+// (이전 2026-11-24) 최대 Lv.8. 레벨업 한 번 = ① 킹 능력치 카드(LevelUpCanvas, 매 레벨 유지) → ② 이 규칙의 단계 카드
 //   Lv.1 용사 선택(정예병 칸 랜덤 2칸) → Lv.2 1단계 스킬 해방 → Lv.3·4 용사 강화 → Lv.5 2단계 스킬 해방(+최대 미니언 수 +1)
 //   → Lv.6·7 용사 강화 → Lv.8 3단계 스킬 해방 (공용 "용사가 될거야!")
 // - (2026-11-25) 용사 강화 = 정예 칸 추가(EliteAreaExpandKingAbility, 카드마다 다른 랜덤 칸, 최대 3) · 충전 가속(-10%/Lv, 최대 3)
@@ -15,7 +17,7 @@ using UnityEngine;
 public static class LevelUpChoiceRule
 {
     public const int CHOICE_COUNT = 3;
-    public const int MAX_LEVEL = 8;
+    public const int MAX_LEVEL = 12;
     public const int HERO_LEVEL = 1;
     public const int HERO_TILE_COUNT = 2; // 용사 정예병 칸 수
 
@@ -26,11 +28,28 @@ public static class LevelUpChoiceRule
         (2, AbilityCategory.HeroSkill),
         (3, AbilityCategory.HeroBoost),
         (4, AbilityCategory.HeroBoost),
-        (5, AbilityCategory.HeroSkill),
-        (6, AbilityCategory.HeroBoost),
+        (5, AbilityCategory.HeroBoost),
+        (6, AbilityCategory.HeroSkill),
         (7, AbilityCategory.HeroBoost),
-        (8, AbilityCategory.HeroSkill),
+        (8, AbilityCategory.HeroBoost),
+        (9, AbilityCategory.HeroBoost),
+        (10, AbilityCategory.HeroSkill),
+        (11, AbilityCategory.HeroBoost),
+        (12, AbilityCategory.HeroBoost),
     };
+
+    // (2026-11-26) 필드 최대 미니언 수 +1 받는 레벨 (용사 레벨 기준, HeroKingAbility.RefreshMinionCountBonus · 스탯 변화 화면 표시)
+    public static readonly int[] MINION_COUNT_UP_LEVELS = { 7 };
+    public const int MINION_COUNT_UP_AMOUNT = 1;
+
+    public static int GetMinionCountAdd(int heroLevel)
+    {
+        int n = 0;
+        foreach (int lv in MINION_COUNT_UP_LEVELS)
+            if (heroLevel >= lv)
+                n += MINION_COUNT_UP_AMOUNT;
+        return n;
+    }
 
     // 스킬 해방 레벨 (index = 스킬 단계 0·1·2). 화면 표시용
     public static int GetSkillUnlockLevel(int skillIdx)

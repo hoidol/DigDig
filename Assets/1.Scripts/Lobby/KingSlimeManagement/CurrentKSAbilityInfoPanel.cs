@@ -21,7 +21,8 @@ public class CurrentKSAbilityInfoPanel : MonoBehaviour
             valueText = transform.Find("ValueText").GetComponent<TMP_Text>();
     }
 
-    public void UpdatePanel(string characterName)
+    // hero가 있으면 그 용사 Lv.1 스탯(HeroData.csv, 없는 스탯은 킹 기본) + 수련 포인트 (2026-11-26 용사 탭)
+    public void UpdatePanel(string characterName, HeroDataTable.HeroData hero = null)
     {
         Init();
         titleText.text = StatData.GetTitle(statType);
@@ -29,7 +30,9 @@ public class CurrentKSAbilityInfoPanel : MonoBehaviour
         KingSlimeData playerData = KingSlimeManager.Instance.GetKingSlimeData(System.Enum.Parse<KingSlimeName>(characterName));
         thumImage.sprite = StatData.GetThum(statType);
         float preValue = value;
-        value = KingSlimeManager.Instance.GetTotalStatValue(playerData, statType);
+        value = hero != null && hero.TryGetStat(statType, 1, out float heroBase)
+            ? KingSlimeManager.Instance.GetTotalStatValue(heroBase, statType)
+            : KingSlimeManager.Instance.GetTotalStatValue(playerData, statType);
 
         if (preValue != value)
         {

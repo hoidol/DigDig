@@ -1,9 +1,8 @@
 using UnityEngine;
 
-// [각성] (진화) 얼음 탄이 EVOLVE_BOUNCE_COUNT회 튕김
+// (2026-11-26) 진화 = MinionEvolutionSetting + EvolutionMinion/Behaviours (예전 [각성] 효과 삭제)
 public class IceMinion : Minion
 {
-    public const int EVOLVE_BOUNCE_COUNT = 1;
     IceBulletSpec iceBulletSpec;
     IceMinionData iceMinionData;
     public float iceDuration;
@@ -34,8 +33,6 @@ public class IceMinion : Minion
         iceBulletSpec.slowRate = iceSlowRate;
 
         iceBulletSpec.StartBulletSpec();
-        if (isEvolved)
-            iceBulletSpec.AddBulletBehaviour(new BounceBehavior(EVOLVE_BOUNCE_COUNT, 1));
         return iceBulletSpec.Instantiate(this);
     }
 }

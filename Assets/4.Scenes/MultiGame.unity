@@ -20683,7 +20683,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c0642eab612a403783971718efebc89, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AdRefreshItemButton
+  m_EditorClassIdentifier: Assembly-CSharp::AdRefreshRuneButton
   button: {fileID: 0}
   remainText: {fileID: 598775979}
 --- !u!1 &503888032
@@ -49772,7 +49772,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8e837fed4c674974baa65f0ab87b5f0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemPanel
+  m_EditorClassIdentifier: Assembly-CSharp::RunePanel
   itemData: {fileID: 0}
   thumImage: {fileID: 828766502}
   titleText: {fileID: 1657881094}
@@ -59447,7 +59447,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 19512784302a14c098fc514592662821, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TileItemInfoPanel
+  m_EditorClassIdentifier: Assembly-CSharp::TileRuneInfoPanel
   obj: {fileID: 650919127}
   lvText: {fileID: 0}
   descText: {fileID: 1471710982}
@@ -76278,7 +76278,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8e837fed4c674974baa65f0ab87b5f0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemPanel
+  m_EditorClassIdentifier: Assembly-CSharp::RunePanel
   itemData: {fileID: 0}
   thumImage: {fileID: 1293417644}
   titleText: {fileID: 1529192925}
@@ -77133,7 +77133,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a8e837fed4c674974baa65f0ab87b5f0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemPanel
+  m_EditorClassIdentifier: Assembly-CSharp::RunePanel
   itemData: {fileID: 0}
   thumImage: {fileID: 1692015450}
   titleText: {fileID: 1725347675}

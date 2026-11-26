@@ -17,5 +17,5 @@ MonoBehaviour:
   title: "정예 칸 추가"
   desc: "정예병 칸 +1 (정예병 버프 적용){0}"
   thum: {fileID: -7282886668606283007, guid: cf1f1761b179348a8acfb5a924b1db6a, type: 3}
-  maxLevel: 3
+  maxLevel: 5
   prefab: {fileID: 2826165163074014201, guid: a2a6aa1b3e0c498ebafd6b860e1f7d1b, type: 3}

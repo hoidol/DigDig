@@ -1,0 +1,17 @@
+using UnityEngine;
+
+// 거인 사냥: 엘리트/보스에게 데미지 ×damageMul (Enemy.TakeDamage에서 적용)
+public class GiantSlayerTileRune : TileRune //타일 위에 설치되는 아이템
+{
+    public float damageMul = 2f;
+
+    protected override void ApplyLevelValue(float v)
+    {
+        damageMul = v;
+    }
+
+    public override void ModifyDamageData(AllyUnitDamageData data)
+    {
+        data.eliteBossDamageMul *= damageMul; // 강철 슬라임(BigEnemyDamageForce, 탄 피해량 자체를 키움)과 곱연산
+    }
+}

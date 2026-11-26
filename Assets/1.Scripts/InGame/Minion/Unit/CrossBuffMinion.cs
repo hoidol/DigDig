@@ -42,7 +42,7 @@ public abstract class CrossBuffMinion : Minion, IBuffRangeUnit
     // 지금 모양의 기본 4칸 (포위 진형 판정 기준)
     Vector2Int[] ShapeOffsets => buffRangeShape == BuffRangeShape.Diagonal ? DIAGONAL_OFFSETS : CROSS_OFFSETS;
 
-    // 버프 범위 확장 타일(ExpandBuffRangeTileItem) 위에 있으면 십자/대각 4칸 → 8방향. 타일이 OnEnter/OnExit로 올리고 내림
+    // 버프 범위 확장 타일(ExpandBuffRangeTileRune) 위에 있으면 십자/대각 4칸 → 8방향. 타일이 OnEnter/OnExit로 올리고 내림
     // InitMinion에서 초기화하지 않음 (타일 상태)
     int rangeExpandCount;
     public bool IsRangeExpanded => rangeExpandCount > 0;

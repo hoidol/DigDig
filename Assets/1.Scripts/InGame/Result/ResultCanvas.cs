@@ -23,6 +23,10 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
 
     public bool IsDoubled => isDoubled;
 
+    // (2026-11-26) 클리어 팁 입력 (씬에 만들어 연결: Tools/InGame/Add ClearTip Input To ResultCanvas)
+    public ClearTipInputPanel clearTipInput;
+    public ClearTipInputPanel ClearTipInput => clearTipInput != null ? clearTipInput : (clearTipInput = GetComponent<ClearTipInputPanel>());
+
     public override void OpenCanvas(Action closeCallback = null)
     {
 
@@ -68,6 +72,15 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         }
         // 보스를 처음 처치했으면 로비로 돌아갈 때 연출
         LobbyReturnController.RecordGameResult(prevDefeatedBossCount, GameManager.Instance.waveIdx, isCleared);
+        // (2026-11-26) 클리어면 "클리어 팁 남기기" 입력칸 (로비 전투 화면 하단 띠지에 흐름)
+        ClearTipInputPanel tipPanel = ClearTipInput;
+        if (tipPanel != null)
+        {
+            if (isCleared && ClearTipManager.CanWrite(stageKey))
+                tipPanel.Show(stageKey);
+            else
+                tipPanel.Hide();
+        }
 
         int gold = passedWaveCount;
 

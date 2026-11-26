@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// (2026-11-25) 궁수 1단계 "화살비": 누른 곳 원 안에 duration초 동안 화살이 쏟아지고, tickInterval초마다 범위 피해 (발동 즉시 1번)
+// (2026-11-25) 레인저 1단계 "화살비": 누른 곳 원 안에 duration초 동안 화살이 쏟아지고, tickInterval초마다 범위 피해 (발동 즉시 1번)
 // 그림 = 바닥 원 + 비스듬히 떨어지는 짧은 선 (임시)
 public class HeroArrowRain : MonoBehaviour
 {
@@ -9,13 +9,13 @@ public class HeroArrowRain : MonoBehaviour
     const float ARROW_SPAWN_INTERVAL = 0.05f;
     const float ARROW_FALL_TIME = 0.18f;
 
-    ArcherHero owner;
+    RangerHero owner;
     Vector2 center;
     float radius, timer, duration, tickInterval, tickTimer, arrowTimer;
     int ticksLeft;
     LineRenderer ring;
 
-    public static HeroArrowRain Spawn(ArcherHero owner, Vector2 pos, float radius, float duration, float tickInterval)
+    public static HeroArrowRain Spawn(RangerHero owner, Vector2 pos, float radius, float duration, float tickInterval)
     {
         var go = new GameObject("HeroArrowRain");
         go.transform.position = pos;

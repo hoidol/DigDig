@@ -4,9 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// (2026-11-24) 5성 진화 갈래 선택 창. 미니언이 5성(MAX_MERGE_LEVEL)이 되면(Minion.Spawn → Request) 갈래 2장 중 하나를 고름 → Minion.Evolve
+// (2026-11-24) 5성 진화 갈래 선택 창. 미니언이 5성(MAX_MERGE_LEVEL)이 되면(Minion.Spawn → Request) 갈래 중 하나를 고름 → Minion.Evolve
+// (2026-11-26) 지금은 종마다 갈래 1개 → 1장을 가운데에 보여주고 눌러서 진화
 // 반드시 골라야 함(닫기 없음), 게임은 멈추지 않음. 여러 마리가 한꺼번에 5성이 되면 차례로 열림. 고르기 전에 미니언이 사라지면 건너뜀
-// 씬에 없으면 실행 중 기본 모양을 만듦 (모양을 바꾸려면 씬에 이 컴포넌트 + 연결 칸을 채운 UI를 두면 그걸 씀)
+// (2026-11-26) 씬에 있음: InGame 씬 루트 MinionEvolutionCanvas (메뉴 Tools/InGame/Add MinionEvolutionCanvas To Scene). 실행 중 생성 없음 → 씬에서 직접 수정
 public class MinionEvolutionCanvas : MonoBehaviour
 {
     public GameObject panel;              // 켜고 끄는 부분
@@ -17,6 +18,7 @@ public class MinionEvolutionCanvas : MonoBehaviour
 
     static MinionEvolutionCanvas instance;
     readonly Queue<Minion> queue = new Queue<Minion>();
+    readonly Dictionary<RectTransform, Vector2> optionBasePos = new Dictionary<RectTransform, Vector2>();
     Minion current;
 
     public static MinionEvolutionCanvas Instance
@@ -26,7 +28,7 @@ public class MinionEvolutionCanvas : MonoBehaviour
             if (instance == null)
                 instance = FindFirstObjectByType<MinionEvolutionCanvas>(FindObjectsInactive.Include);
             if (instance == null)
-                instance = new GameObject(nameof(MinionEvolutionCanvas)).AddComponent<MinionEvolutionCanvas>();
+                Debug.LogWarning("[MinionEvolutionCanvas] 씬에 없음 → 메뉴 Tools/InGame/Add MinionEvolutionCanvas To Scene");
             return instance;
         }
     }
@@ -38,12 +40,10 @@ public class MinionEvolutionCanvas : MonoBehaviour
             return;
         if (!IsWaiting(minion))
             return;
+        // (2026-11-26) 갈래가 1개여도 선택 창을 띄워 눌러서 진화. 갈래가 없는 종(진화 미정)은 5성 그대로
         List<MinionEvolutionData> branches = minion.minionData.GetEvolutions();
-        if (branches.Count <= 1) // 갈래가 하나면 고르지 않고 바로
-        {
-            minion.Evolve(branches.Count == 1 ? branches[0] : null);
+        if (branches.Count == 0 || Instance == null)
             return;
-        }
         Instance.Enqueue(minion);
     }
 
@@ -55,7 +55,10 @@ public class MinionEvolutionCanvas : MonoBehaviour
         if (instance == null)
             instance = this;
         if (panel == null || options == null || options.Length == 0)
-            BuildUI();
+        {
+            Debug.LogWarning("[MinionEvolutionCanvas] panel·options 연결 없음 → 메뉴 Tools/InGame/Add MinionEvolutionCanvas To Scene");
+            return;
+        }
         panel.SetActive(false);
     }
 
@@ -119,6 +122,17 @@ public class MinionEvolutionCanvas : MonoBehaviour
             if (active)
                 options[i].Set(this, branches[i]);
         }
+        // 갈래가 1개면 가운데로 (2개일 때 자리는 처음 위치 기억)
+        for (int i = 0; i < options.Length; i++)
+        {
+            RectTransform rt = options[i].transform as RectTransform;
+            if (rt == null)
+                continue;
+            if (!optionBasePos.ContainsKey(rt))
+                optionBasePos[rt] = rt.anchoredPosition;
+            Vector2 basePos = optionBasePos[rt];
+            rt.anchoredPosition = branches.Count == 1 && i == 0 ? new Vector2(0f, basePos.y) : basePos;
+        }
         panel.SetActive(true);
         SoundManager.Play(SFXType.PopupOpen);
     }
@@ -137,7 +151,8 @@ public class MinionEvolutionCanvas : MonoBehaviour
     static readonly Color OPTION_COLOR = new Color(0.32f, 0.25f, 0.5f, 1f);
     static readonly Color TITLE_COLOR = new Color(1f, 0.85f, 0.3f);
 
-    void BuildUI()
+    // 에디터 빌더가 씬에 만들 때 씀
+    public void BuildUI()
     {
         Canvas canvas = gameObject.GetComponent<Canvas>();
         if (canvas == null)

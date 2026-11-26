@@ -1,0 +1,20 @@
+// // [얼음 궤도]
+// // OrbitRuneBase. IceOrb(count개)가 플레이어 주변을 회전하며 적에게 피해 및 빙결 상태이상 적용.
+// // orbPrefab에 IceOrb 컴포넌트 달린 프리팹 연결.
+// public class IceOrbitRune : OrbitRuneBase
+// {
+//     public override void OnActivate()
+//     {
+
+//     }
+
+//     public override void OnDeactivate()
+//     {
+
+//     }
+
+//     public override string GetDescription(int lv = 1,bool detail = false)
+//     {
+//         return $"얼음구 {count}개가 주변을 회전하며 적에게 피해 및 빙결 적용";
+//     }
+// }

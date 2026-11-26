@@ -1,0 +1,55 @@
+using UnityEngine;
+//체력 +25, 공격력 +8 
+//힘, 자연
+public class MountainRune : Rune
+{
+    //공격력 +8
+    float maxHp = 20;
+    float attackPower = 8;
+    // float recoveryHp = 0.3f;
+    Buff maxHpBuff;
+    Buff attackPowerBuff;
+    Buff recoveryHpBuff;
+    public override void OnUnequip()
+    {
+        base.OnUnequip();
+        Release();
+
+    }
+    void Release()
+    {
+        if (maxHpBuff != null)
+            KingSlime.Instance.RemoveBuff(maxHpBuff);
+
+        if (attackPowerBuff != null)
+            KingSlime.Instance.RemoveBuff(attackPowerBuff);
+
+        if (attackPowerBuff != null)
+            KingSlime.Instance.RemoveBuff(attackPowerBuff);
+
+    }
+    public override void UpdateRune()
+    {
+        base.UpdateRune();
+        Release();
+        //최대 체력
+        maxHpBuff = new Buff(StatType.MaxHp, maxHp, StatOpType.Add);
+        KingSlime.Instance.AddBuff(maxHpBuff);
+
+        //공격 효율
+        attackPowerBuff = new Buff(StatType.AttackPower, attackPower, StatOpType.Add);
+        KingSlime.Instance.AddBuff(attackPowerBuff);
+
+        //초당 회복력
+        // recoveryHpBuff = new Buff(StatType.RecoveryHp, recoveryHp*count, StatOpType.Add);
+        // Character.Instance.AddBuff(recoveryHpBuff);
+  
+    }
+
+
+    public override string GetDescription()
+    {
+        return $"체력 +{maxHp} 공격력 +{attackPower}";
+        //return string.Format(TranslateManager.GetText($"{key}_Desc"),maxHp,attackPower);
+    }
+}

@@ -30,7 +30,8 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     // 종별 [각성] 효과(isEvolved일 때만 동작, OnEvolve)도 같이 켜짐. 합성·교체로 새로 생긴 미니언은 진화 안 된 상태 (Spawn에서 초기화)
     public bool isEvolved;
     public MinionEvolutionData evolution; // 고른 진화 갈래 (null = 미진화)
-    MinionEvolution evolutionAbility;     // 갈래 특수 동작 (갈래에 prefab이 있을 때만)
+    MinionEvolution evolutionAbility;     // 갈래 특수 동작 (Setting Config의 동작 클래스 또는 갈래 prefab)
+    public MinionEvolution EvolutionAbility => evolutionAbility;
     public virtual bool CanEvolve => mergeLevel >= MinionData.MAX_MERGE_LEVEL && !isEvolved;
 
     // 갈래를 고르지 않고 진화 (진화 타일·테스트 창): 첫 갈래
@@ -49,7 +50,15 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         evolution = branch;
         Debug.Log($"[Evolve] {key} 진화 (머지 레벨 {mergeLevel}, 갈래 {branch?.key})");
         ApplyEvolvedLook(true);
-        if (branch != null && branch.prefab != null)
+        if (branch != null && branch.config != null && branch.config.BehaviourType != null) // (2026-11-26) Setting 수치 + 동작 클래스
+        {
+            var go = new GameObject($"Evolution_{key}");
+            go.transform.SetParent(transform, false);
+            evolutionAbility = (MinionEvolution)go.AddComponent(branch.config.BehaviourType);
+            evolutionAbility.config = branch.config;
+            evolutionAbility.OnEquip(this);
+        }
+        else if (branch != null && branch.prefab != null)
         {
             evolutionAbility = Instantiate(branch.prefab, transform);
             evolutionAbility.OnEquip(this);
@@ -148,7 +157,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     public virtual FindTargetType DefaultFindTargetType => FindTargetType.First;
 
     public FindTargetType FindTargetType => findTargetType;
-    // (2026-11-25) 실제로 쓰는 타겟 방식 (용사 스킬이 잠깐 바꿀 수 있음, 궁수 매의 눈. 랜덤 타겟 룬 차례는 그대로)
+    // (2026-11-25) 실제로 쓰는 타겟 방식 (용사 스킬이 잠깐 바꿀 수 있음, 레인저 매의 눈. 랜덤 타겟 룬 차례는 그대로)
     public FindTargetType EffectiveFindTargetType => findTargetType != FindTargetType.Random && HeroKingAbility.ForcedAllyFindTarget.HasValue
         ? HeroKingAbility.ForcedAllyFindTarget.Value : findTargetType;
     // 타겟 방식 설정이 의미 있는지 (회전체·경로 순환처럼 타겟을 노리지 않는 슬라임은 false → 설정 버튼 숨김)
@@ -350,14 +359,14 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
     // ---- 스킬 공용 도우미 (2026-11-15) ----
     // 사거리 안 가장 가까운 적 (없으면 null)
-    protected Transform FindClosestTargetInRange()
+    public Transform FindClosestTargetInRange()
     {
         var targets = InGameUtil.FindTargets(transform.position, AttackRange, targetLayerMask, FindTargetType.Closest, 1);
         return targets != null && targets.Count > 0 ? targets[0] : null;
     }
 
     // baseAngle(도)부터 count방향 같은 간격으로 1발씩 (멀티 타겟 X)
-    protected void FireCircle(float baseAngle, int count)
+    public void FireCircle(float baseAngle, int count)
     {
         float angleStep = 360f / count;
         for (int i = 0; i < count; i++)
@@ -368,7 +377,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     }
 
     // 첫 방향 = target 쪽
-    protected void FireCircleAt(Transform target, int count)
+    public void FireCircleAt(Transform target, int count)
         => FireCircle(Vector2.SignedAngle(Vector2.right, target.position - transform.position), count);
 
     public virtual void InitMinion()
@@ -402,8 +411,9 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
         // (2026-11-24) 5성 진화 갈래 스탯 (버프 적용 전)
         if (evolution != null)
         {
-            statDic[StatType.AttackPower] *= evolution.attackPowerMul;
-            statDic[StatType.AttackSpeed] *= evolution.attackSpeedMul;
+            // Setting Config면 에셋 값을 바로 (실행 중 수정 반영)
+            statDic[StatType.AttackPower] *= evolution.config != null ? evolution.config.attackPowerMul : evolution.attackPowerMul;
+            statDic[StatType.AttackSpeed] *= evolution.config != null ? evolution.config.attackSpeedMul : evolution.attackSpeedMul;
             statDic[StatType.AttackRange] += evolution.attackRangeAdd;
         }
         // (2026-11-24) 용사 강화: 같은 종 이웃·진화 공격력, 장착 형태가 모두 다르면 공속
@@ -601,8 +611,10 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
         baseBullet.transform.position = transform.position;
         baseBullet.Shoot(dir, AttackPower);
-        if (shotModifier.tileItem != null)
-            shotModifier.tileItem.OnFired(baseBullet);
+        if (shotModifier.tileRune != null)
+            shotModifier.tileRune.OnFired(baseBullet);
+        if (evolutionAbility != null) // (2026-11-26) 진화 동작 (마그마 스플래시·부채꼴 등)
+            evolutionAbility.OnBulletFired(baseBullet);
         TryDoubleShot(baseBullet);
         return true;
     }

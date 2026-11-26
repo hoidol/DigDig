@@ -28,7 +28,7 @@ namespace Lobby
             await UniTask.WhenAll(
                 StageManager.Instance.LoadTask,
                 BulletManager.Instance.LoadTask,
-                ItemManager.Instance.LoadTask,
+                RuneManager.Instance.LoadTask,
                 EnemyManager.Instance.LoadTask,
                 MinionManager.Instance.LoadTask
             );

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// (2026-11-23) 언데드 사령술사: 정예병 칸 미니언 치명타 +5%. 에너지 = 어둠
+// (2026-11-23) 네크로멘서: 정예병 칸 미니언 치명타 +5%. 에너지 = 어둠
 // (2026-11-25) 개편
 //   기본 공격 = 카오스 폭발탄 (HeroSplashProjectile): 타겟에게 날아가 폭발, 반경 splashRadius 안 적 전부 킹 공격력 × splashDamageMul (치명타·룬 적용)
 //   1단계 "망령 소환" = ghostDuration초 동안 적 경로를 거꾸로 도는 망령(HeroGhost), 닿은 적에게 킹 공격력 × ghostDamageMul (같은 적 hitInterval초마다)
@@ -10,7 +10,7 @@ public class NecromancerHero : HeroKingAbility
 {
     [Header("기본 공격: 카오스 폭발탄 (스플래쉬)")]
     public float splashDamageMul = 1f;
-    public float splashRadius = 1f;
+    public float splashRadius = 1.5f;
     public float splashSpeed = 8f;
     [Tooltip("최대 날아가는 거리 = 킹 공격 범위 + 이 값")]
     public float splashExtraDistance = 1f;

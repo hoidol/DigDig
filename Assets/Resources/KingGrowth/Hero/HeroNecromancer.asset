@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AbilityData
   key: HeroNecromancer
   category: 9
-  title: "\uc5b8\ub370\ub4dc \uc0ac\ub839\uc220\uc0ac"
+  title: "\ub124\ud06c\ub85c\uba58\uc11c"
   desc: "{0}"
   thum: {fileID: 21300000, guid: 7c2f79db221e24422aad89c2489e9903, type: 3}
   maxLevel: 1

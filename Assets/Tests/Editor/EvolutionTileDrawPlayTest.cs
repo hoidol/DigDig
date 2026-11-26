@@ -15,11 +15,11 @@ public class EvolutionTileDrawPlayTest : InGamePlayTestBase
     [Test]
     public void Rule_CountLimit()
     {
-        Assert.IsTrue(EvolutionTileItem.CanDrawFor(5, 4), "5마리 / 4개 → 등장 가능");
-        Assert.IsFalse(EvolutionTileItem.CanDrawFor(5, 5), "5마리 / 5개 → 안 나옴");
-        Assert.IsFalse(EvolutionTileItem.CanDrawFor(5, 6), "5마리 / 6개 → 안 나옴");
-        Assert.IsFalse(EvolutionTileItem.CanDrawFor(0, 0), "최대 레벨 슬라임 없음");
-        Assert.AreEqual(40f, EvolutionTileItem.DRAW_CHANCE);
+        Assert.IsTrue(EvolutionTileRune.CanDrawFor(5, 4), "5마리 / 4개 → 등장 가능");
+        Assert.IsFalse(EvolutionTileRune.CanDrawFor(5, 5), "5마리 / 5개 → 안 나옴");
+        Assert.IsFalse(EvolutionTileRune.CanDrawFor(5, 6), "5마리 / 6개 → 안 나옴");
+        Assert.IsFalse(EvolutionTileRune.CanDrawFor(0, 0), "최대 레벨 슬라임 없음");
+        Assert.AreEqual(40f, EvolutionTileRune.DRAW_CHANCE);
     }
 
     [UnityTest]
@@ -32,7 +32,7 @@ public class EvolutionTileDrawPlayTest : InGamePlayTestBase
 
     IEnumerator Draw_ChanceAndLimitBody()
     {
-        Assert.IsNotNull(ItemManager.Instance.GetItemData(KEY), "진화 타일 ItemData 없음");
+        Assert.IsNotNull(RuneManager.Instance.GetRuneData(KEY), "진화 타일 ItemData 없음");
         MinionFieldController.Instance.minionMaxCount = 99;
 
         // 최대 레벨 슬라임 0 → 안 나옴
@@ -42,20 +42,20 @@ public class EvolutionTileDrawPlayTest : InGamePlayTestBase
         SpawnMinion("Ice", GetFreeTile(), MinionData.MAX_MERGE_LEVEL);
         SpawnMinion("Ice", GetFreeTile(), MinionData.MAX_MERGE_LEVEL);
         yield return WaitFrames(2);
-        Assert.AreEqual(2, EvolutionTileItem.EvolvableMinionCount);
+        Assert.AreEqual(2, EvolutionTileRune.EvolvableMinionCount);
         int appear = CountAppear();
         Assert.That(appear, Is.InRange(DRAWS * 0.3f, DRAWS * 0.5f), $"등장 {appear}/{DRAWS} (기대 약 40%)");
 
         // 진화 타일 1개 (빈 칸에 설치, 슬라임 2마리 > 1개) → 여전히 등장
-        KingSlime.Instance.AddItem(KEY, GetFreeTile()).Forget();
+        KingSlime.Instance.AddRune(KEY, GetFreeTile()).Forget();
         yield return WaitFrames(2);
-        Assert.AreEqual(1, EvolutionTileItem.InstalledCount);
+        Assert.AreEqual(1, EvolutionTileRune.InstalledCount);
         Assert.Greater(CountAppear(), 0, "슬라임 2 > 타일 1인데 안 나옴 (보유 상한에 막힘?)");
 
         // 진화 타일 2개 = 슬라임 2마리 → 안 나옴
-        KingSlime.Instance.AddItem(KEY, GetFreeTile()).Forget();
+        KingSlime.Instance.AddRune(KEY, GetFreeTile()).Forget();
         yield return WaitFrames(2);
-        Assert.AreEqual(2, EvolutionTileItem.InstalledCount);
+        Assert.AreEqual(2, EvolutionTileRune.InstalledCount);
         Assert.AreEqual(0, CountAppear(), "슬라임 수 = 타일 수인데 등장");
 
         AssertNoErrors();
@@ -66,7 +66,7 @@ public class EvolutionTileDrawPlayTest : InGamePlayTestBase
     {
         int n = 0;
         for (int i = 0; i < DRAWS; i++)
-            if (ItemManager.Instance.GetDrawTileItems(SelectRuneCanvas.SELECT_ITEM_COUNT).Any(d => d.key == KEY))
+            if (RuneManager.Instance.GetDrawTileRunes(SelectRuneCanvas.SELECT_ITEM_COUNT).Any(d => d.key == KEY))
                 n++;
         return n;
     }

@@ -48,4 +48,4 @@ MonoBehaviour:
   data: {fileID: 0}
   level: 0
   boostType: 0
-  valuePerLevel: 10
+  valuePerLevel: 20

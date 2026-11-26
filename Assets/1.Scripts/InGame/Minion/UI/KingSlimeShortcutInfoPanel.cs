@@ -14,7 +14,7 @@ public class KingSlimeShortcutInfoPanel : MonoBehaviour
 
         // for(int i = 0; i < Character.Instance.itemInventory.ownItemKeys.Count; i++)
         // {
-        //     ownItemPanels[i].SetItemData(ItemData.GetItemData(Character.Instance.itemInventory.ownItemKeys[i]));
+        //     ownItemPanels[i].SetRuneData(RuneData.GetRuneData(Character.Instance.itemInventory.ownItemKeys[i]));
         // }
         //공격력
         //공격 속도

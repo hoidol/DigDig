@@ -1,3 +1,4 @@
+using UnityEngine.Serialization;
 // 발사 방식을 바꿀 수 있는 유닛 (Minion, Character). 타일 아이템이 OnEnter/OnExit에서 값을 더하고 뺀다
 public interface IShotModifiable
 {
@@ -9,7 +10,7 @@ public class ShotModifier
 {
     public int bonusShootCount;    // 다중 타겟: 한 번 공격에 추가로 쏘는 탄 수 (서로 다른 타겟)
     public int randomShotInterval; // N번째 공격마다 랜덤 타겟 (0이면 꺼짐)
-    public TileItem tileItem;      // 올라가 있는 타일의 아이템 (발사 시 OnFired 호출). Tile이 연결/해제
+    [FormerlySerializedAs("tileItem")] public TileRune tileRune;      // 올라가 있는 타일의 아이템 (발사 시 OnFired 호출). Tile이 연결/해제
 
     int attackCount;
 

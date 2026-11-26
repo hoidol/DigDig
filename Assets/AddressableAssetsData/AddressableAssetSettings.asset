@@ -107,13 +107,13 @@ MonoBehaviour:
     - default
     - BulletData
     - MergeBulletData
-    - ItemData
+    - RuneData
     - StageData
     - StatData
     - EnemyData
     - CharacterBulletObject
-    - Level1ItemData
-    - Level2ItemData
+    - Level1RuneData
+    - Level2RuneData
     - MinionData
     - MinionMergeData
   m_SchemaTemplates: []

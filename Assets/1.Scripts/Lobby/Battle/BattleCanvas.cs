@@ -29,8 +29,13 @@ public class BattleCanvas : BaseLobbyCanvas
     public TMP_Text stagePassText; // 구매 버튼 글씨 (StagePass_Buy, {0} = 가격). 비우면 구매 버튼의 첫 글씨
     bool isPurchasingStagePass;
 
+    // (2026-11-26) 하단 클리어 팁 띠지 (지금 스테이지·난이도). 씬에 만들어 연결 (Tools/Lobby/Add ClearTip Band To Lobby Scene)
+    public ClearTipTicker clearTipTicker;
+
     void Awake()
     {
+        if (clearTipTicker == null)
+            clearTipTicker = GetComponent<ClearTipTicker>();
         // 씬의 스테이지 이동 버튼에 Play(OnClickedBtn)가 같이 연결돼 있으면 끔 (> 를 누르면 게임이 시작되던 문제)
         DisablePersistentCalls(preStageButton);
         DisablePersistentCalls(nextStageButton);
@@ -134,6 +139,8 @@ public class BattleCanvas : BaseLobbyCanvas
 
         stageLockedGO.SetActive(!stageData.ChekcUnlock());
         UpdateStagePassButton();
+        if (clearTipTicker != null && clearTipTicker.isActiveAndEnabled)
+            clearTipTicker.Refresh(); // 스테이지·난이도가 바뀌면 그 팁으로
     }
 
     // 클리어 해금은 됐는데 이용권이 없으면 Play 대신 이용권 구매 버튼

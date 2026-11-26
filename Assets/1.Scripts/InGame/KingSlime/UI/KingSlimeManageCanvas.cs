@@ -10,13 +10,13 @@ public class KingSlimeManageCanvas : CanvasUI<KingSlimeManageCanvas>
     void OnEnable()
     {
         Time.timeScale = 0;
-        GameEventBus.Subscribe<AddedItemEvent>(OnAddedItemEvent);
+        GameEventBus.Subscribe<AddedRuneEvent>(OnAddedRuneEvent);
     }
 
     void OnDisable()
     {
         Time.timeScale = 1;
-        GameEventBus.Unsubscribe<AddedItemEvent>(OnAddedItemEvent);
+        GameEventBus.Unsubscribe<AddedRuneEvent>(OnAddedRuneEvent);
     }
     public override void Init()
     {
@@ -33,7 +33,7 @@ public class KingSlimeManageCanvas : CanvasUI<KingSlimeManageCanvas>
 
     }
 
-    void OnAddedItemEvent(AddedItemEvent e)
+    void OnAddedRuneEvent(AddedRuneEvent e)
     {
         UpdateCanvas();
     }
@@ -72,7 +72,7 @@ public class KingSlimeManageCanvas : CanvasUI<KingSlimeManageCanvas>
 
         // for (int i = 0; i < ownItemPanels.Length; i++)
         // {
-        //     ownItemPanels[i].SetItem(Character.Instance.itemInventory.GetItem(Character.Instance.itemInventory.ownItemKeys[i]), i);
+        //     ownItemPanels[i].SetRune(Character.Instance.itemInventory.GetRune(Character.Instance.itemInventory.ownItemKeys[i]), i);
         // }
     }
 }

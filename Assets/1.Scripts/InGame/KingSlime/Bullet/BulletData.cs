@@ -1,3 +1,4 @@
+using UnityEngine.Serialization;
 using UnityEngine;
 #if UNITY_EDITOR
 using System.Globalization;
@@ -11,8 +12,8 @@ public class BulletData : ScriptableObject
     public static readonly int MAX_LEVEL = 3;
     public string key;
     public int order;
-    public string Title => itemName;
-    public string itemName;
+    public string Title => runeName;
+    [FormerlySerializedAs("itemName")] public string runeName;
     public int consumeHp;
 
     // public bool specialBullet;// 일반을 제외하고 모두 특수 
@@ -63,7 +64,7 @@ public class BulletData : ScriptableObject
 
             if (Col(cols, iKey) != key) continue;
 
-            itemName = Col(cols, iName);
+            runeName = Col(cols, iName);
             desc = Col(cols, iDesc);
             // specialBullet = Col(cols, iSpecial).ToUpper() == "TRUE";
 

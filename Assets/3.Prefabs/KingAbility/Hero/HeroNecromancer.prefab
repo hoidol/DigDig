@@ -69,10 +69,8 @@ MonoBehaviour:
   skills:
   - name: "\ub9dd\ub839 \uc18c\ud658"
     icon: {fileID: 0}
-    cost: 1
   - name: "\uc800\uc8fc"
     icon: {fileID: 0}
-    cost: 1
   commonSkillIcon: {fileID: 0}
   commonSkillCost: 1
   commonDuration: 10

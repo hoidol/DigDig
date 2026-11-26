@@ -152,7 +152,7 @@ public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
         HashSet<string> ownedIds = storeController.GetPurchases()
             .Where(order => order is ConfirmedOrder or PendingOrder)
             .SelectMany(order => order.CartOrdered.Items())
-            .Select(item => item.Product.definition.id)
+            .Select(rune => rune.Product.definition.id)
             .ToHashSet();
 
         UserPurchaseManager userPurchaseManager = UserDataManager.Instance.userPurchaseManager;
