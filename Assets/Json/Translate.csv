@@ -45,24 +45,24 @@ Difficulty_Locked	이전 난이도 클리어(Wave {0}) 시 해금	Unlocks after 
 Difficulty_BestWave	최고 기록 Wave {0}	Best Wave {0}
 Difficulty_NoRecord	기록 없음	No record
 Minion.Random	뭉치	Munchi
-Minion.Bounce	콩콩이	Boing
+Minion.Bounce	기니	Boing
 Minion.Flame	불똥이	Ember
-Minion.Orbit	빙빙이	Whirly
-Minion.Ice	눈송이	Flurry
-Minion.Lightning	찌릿이	Zappy
-Minion.Pierce	뾰족이	Pointy
-Minion.Iron	철컹이	Clank
-Minion.Thunder	둥둥이	Rumble
+Minion.Orbit	도나	Whirly
+Minion.Ice	송송	Flurry
+Minion.Lightning	전디	Zappy
+Minion.Pierce	깨모	Pointy
+Minion.Iron	처럴	Clank
+Minion.Thunder	묵천	Rumble
 Minion.Shield	돌쇠	Rocky
 Minion.Dopamine	깔깔이	Giggles
-Minion.Mine	쾅쾅이	Kaboom
+Minion.Mine	발비	Kaboom
 Minion.Breeze	팔랑이	Flutter
 Minion.Rage	버럭이	Huffy
 Minion.Stigma	누더기	Patches
 Minion.Mud	두껍이	Croaky
 Minion.Beam	똘망이	Blinky
-Minion.Berserker	늑돌이	Fang
-Minion.Mortar	달그락	Rattles
+Minion.Berserker	할키	Fang
+Minion.Mortar	쏘나	Rattles
 Minion.Hail	북실이	Fuzzy
 Minion.Inferno	활활이	Blaze
 Minion.Keen	나비	Whiskers
@@ -396,3 +396,26 @@ ClearTip_Done	등록됨	Posted
 ClearTip_Uploaded	클리어 팁을 남겼어요!	Tip posted!
 ClearTip_UploadFail	팁을 올리지 못했어요. 다시 시도해 주세요.	Could not post the tip. Try again.
 ClearTip_EmptyInput	팁을 입력해 주세요.	Please enter a tip.
+Minion.Flame.Evolution	마그미	Magmy
+Minion.Flame.EvolutionDesc	마그마를 던져 맞은 자리 주변에 화염 폭발 (공격력 {1}% 범위 피해 + 화상), {2}% 확률로 {3}초 스턴	Hurls magma that explodes where it lands ({1}% attack splash + burn), {2}% chance to stun for {3}s
+Minion.Random.Evolution	털뭉치	Fuzzmunch
+Minion.Random.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] {1}초 동안 {2}방향으로 빠르게 속사 (탄 피해 {3}%)	[Button skill · {0}s cooldown] Rapid-fires in {2} directions for {1}s ({3}% shot damage)
+Minion.Ice.Evolution	빙빙	Frostbite
+Minion.Ice.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] 큰 눈덩이가 {1}초 동안 주변 길을 돌며 맞은 적을 {2}% 확률로 얼림, {3}% 확률로 {4}초 스턴	[Button skill · {0}s cooldown] A giant snowball rolls along the nearby path for {1}s, freezing enemies it hits ({2}% chance), {3}% chance to stun for {4}s
+Minion.Lightning.Evolution	전도니	Voltie
+Minion.Lightning.EvolutionDesc	필드의 다른 전디와 번개 선으로 연결, 선에 닿은 적에게 {1}초마다 공격력 {0}% 피해 + {2}초 감속	Links to every other Zappy on the field with lightning; enemies touching a line take {0}% attack every {1}s and are slowed for {2}s
+Minion.Orbit.Evolution	돌다다	Spinnado
+Minion.Orbit.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] {1}초 동안 회전체가 닿은 곳에 범위 피해 (공격력 {2}%) + 감속	[Button skill · {0}s cooldown] For {1}s, orbs deal splash damage where they hit ({2}% attack) and slow
+Minion.Bounce.Evolution	티기니	Boingo
+Minion.Bounce.EvolutionDesc	맞은 적 {0}% 확률로 스턴 / [버튼 스킬 · 쿨타임 {1}초] {2}초 동안 공격 속도 {3}배	{0}% chance to stun on hit / [Button skill · {1}s cooldown] Attack speed x{3} for {2}s
+Minion.Iron.Evolution	처령	Ironclad
+Minion.Iron.EvolutionDesc	엘리트·보스에게 {0}배 피해, 보스를 때리면 주변 적에게도 보스 피해의 {1}%	Deals {0}x damage to Elites and Bosses; hitting a Boss also splashes {1}% of that damage to nearby enemies
+Minion.Pierce.Evolution	깨두	Spikedo
+Minion.Pierce.EvolutionDesc	탄이 화면 끝에 닿으면 튕겨 돌아옴 (튕길 때마다 관통 횟수 1 감소) / [버튼 스킬 · 쿨타임 {0}초] {1}방향으로 관통탄 발사	Shots bounce off the screen edges (each bounce uses 1 pierce) / [Button skill · {0}s cooldown] Fires piercing shots in {1} directions
+Minion.Thunder.Evolution	묵묵천천	Stormcloud
+Minion.Thunder.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] {1}초 동안 구름 {2}개가 몸 주변을 돌며 {3}초마다 번개 (공격력 {4}% + {5}초 스턴)	[Button skill · {0}s cooldown] For {1}s, {2} clouds circle around and strike lightning every {3}s ({4}% attack + {5}s stun)
+Minion.Mine.Evolution	발비마	Kaboomer
+Minion.Berserker.Evolution	할키니	Fangy
+Minion.Berserker.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] {1}초 동안 {2}초마다 공격 범위 안 모든 적을 할큄 (공격력 {3}%) + 감속	[Button skill · {0}s cooldown] For {1}s, claws every enemy in range every {2}s ({3}% attack) and slows
+Minion.Mortar.Evolution	쏘다	Blaster
+Minion.Mortar.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] 깃발에서 적이 오는 쪽으로 폭탄 {1}발, 맞은 적 {2}% 확률로 스턴	[Button skill · {0}s cooldown] Drops {1} bombs from the flag toward incoming enemies, {2}% chance to stun

@@ -18,10 +18,17 @@ public class MinionEvolutionData
     [NonSerialized] public EvolutionConfig config;   // (2026-11-26) Setting의 종별 수치·동작
     [NonSerialized] public MinionData minionData;    // 이름·설명을 읽을 미니언 데이터
 
+    // (2026-11-26) 진화 이름·설명 번역 key (Translate.csv): Minion.{Key}.Evolution / Minion.{Key}.EvolutionDesc
+    //   번역이 있으면 번역, 없으면 MinionData.csv EvolutionMinionName / EvolutionMinionDesc (한글 원본)
+    public static string NameKey(string minionKey) => $"Minion.{minionKey}.Evolution";
+    public static string DescKey(string minionKey) => $"Minion.{minionKey}.EvolutionDesc";
+
     public string Title
     {
         get
         {
+            if (config != null && TranslateManager.HasKey(NameKey(key)))
+                return TranslateManager.GetText(NameKey(key));
             if (minionData != null && !string.IsNullOrEmpty(minionData.evolutionName))
                 return minionData.evolutionName;
             if (config != null && minionData != null)
@@ -36,7 +43,8 @@ public class MinionEvolutionData
         {
             if (config != null)
             {
-                string raw = minionData != null ? minionData.evolutionDesc : null;
+                string raw = TranslateManager.HasKey(DescKey(key)) ? TranslateManager.GetText(DescKey(key))
+                    : minionData != null ? minionData.evolutionDesc : null;
                 if (string.IsNullOrEmpty(raw))
                     return "";
                 try { return string.Format(raw, config.GetDescArgs()); }

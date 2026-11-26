@@ -213,6 +213,19 @@ public class MinionData : ScriptableObject
 
 
 #if UNITY_EDITOR
+
+    static string ReadFirst(TableReader table, TableReader.Row row, params string[] columns)
+    {
+        foreach (string c in columns)
+            if (table.HasColumn(c))
+            {
+                string v = row.Get(c)?.Trim();
+                if (!string.IsNullOrEmpty(v))
+                    return v;
+            }
+        return null;
+    }
+
     public virtual void LoadData()
     {
         // 새로 만든 에셋은 key가 비어 있음 → 파일명(= Key)으로 채운다 (Edit과 같은 규칙)
@@ -232,8 +245,9 @@ public class MinionData : ScriptableObject
         displayStatTypes = new List<StatType> { StatType.AttackPower, StatType.AttackSpeed, StatType.AttackRange };
         if (table.HasColumn("Desc"))
             desc = row.Get("Desc");
-        evolutionName = table.HasColumn("EvolutionName") ? row.Get("EvolutionName")?.Trim() : null;
-        evolutionDesc = table.HasColumn("EvolutionDesc") ? row.Get("EvolutionDesc")?.Trim() : null;
+        // (2026-11-26) 시트 열 이름 = EvolutionMinionName / EvolutionMinionDesc (예전 EvolutionName / EvolutionDesc도 읽음)
+        evolutionName = ReadFirst(table, row, "EvolutionMinionName", "EvolutionName");
+        evolutionDesc = ReadFirst(table, row, "EvolutionMinionDesc", "EvolutionDesc");
         if (row.TryGetInt("Growth", out int lv))
             growth = lv;
         // 카드 소환 가격 (주사위 코인)

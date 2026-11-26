@@ -155,3 +155,23 @@ public class MortarEvolutionConfig : EvolutionConfig
     public override Type BehaviourType => typeof(MortarEvolution);
     public override object[] GetDescArgs() => new[] { Num(cooldown), (object)bombCount, Pct(stunChance) };
 }
+
+// 둥둥이 (2026-11-26): 발동 스킬(머리 위 버튼) — duration초 동안 구름 cloudCount개가 몸 주변을 돌며 strikeInterval초마다 구름 아래로 번개
+// 번개 = 구름 자리 반경 strikeRadius 안 적 전부 공격력 × damageMul + stunDuration초 스턴. 구름 모양 = cloudPrefab (에디터에서 그림 교체)
+[Serializable]
+public class ThunderEvolutionConfig : EvolutionConfig
+{
+    [Tooltip("쿨타임(초)")] public float cooldown = 10f;
+    [Tooltip("발동 시간(초)")] public float duration = 5f;
+    [Tooltip("구름 수")] public int cloudCount = 3;
+    [Tooltip("구름이 도는 반경 (미니언 중심)")] public float orbitRadius = 1.3f;
+    [Tooltip("구름 회전 속도 (도/초)")] public float orbitSpeed = 120f;
+    [Tooltip("구름마다 번개 간격(초)")] public float strikeInterval = 1f;
+    [Tooltip("번개 피해 (공격력 배율)")] public float damageMul = 2f;
+    [Tooltip("번개 범위 (구름 자리 반경)")] public float strikeRadius = 0.7f;
+    [Tooltip("스턴 시간(초)")] public float stunDuration = 1f;
+    [Tooltip("구름이 땅(번개 떨어지는 자리)보다 위로 떠 있는 높이")] public float cloudHeight = 0.45f;
+    [Tooltip("구름 프리팹 (3.Prefabs/Minion/Evolution/ThunderCloud)")] public UnityEngine.GameObject cloudPrefab;
+    public override Type BehaviourType => typeof(ThunderEvolution);
+    public override object[] GetDescArgs() => new[] { Num(cooldown), Num(duration), (object)cloudCount, Num(strikeInterval), Pct(damageMul), Num(stunDuration) };
+}

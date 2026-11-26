@@ -12,5 +12,106 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4ca5b81a2a740de9a24405b64210cc3, type: 3}
   m_Name: MinionEvolutionSetting
   m_EditorClassIdentifier: 
+  flame:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    splashRadius: 1.1
+    splashDamageMul: 0.6
+    splashBurn: 1
+    stunChance: 0.05
+    stunDuration: 2
+  random:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    cooldown: 10
+    duration: 3
+    skillAttackSpeedMul: 2
+    fanCount: 5
+    fanAngle: 14
+    fanDamageMul: 0.5
   ice:
-    hailPrefab: {fileID: 6006126632846969385, guid: 79bcc71b39d994f62986ed5307226c24, type: 3}
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    cooldown: 10
+    hailDuration: 8
+    hailCount: 1
+    hailDamageMul: 1.5
+    hailSpeed: 3
+    hitCooldown: 0.5
+    iceChance: 1
+    iceDuration: 1.5
+    stunChance: 0.05
+    stunDuration: 2
+    hailPrefab: {fileID: 6006126632846969385, guid: 79bcc71b39d994f62986ed5307226c24,
+      type: 3}
+  lightning:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    tickInterval: 0.25
+    lineDamageMul: 0.4
+    lineWidth: 0.35
+    slowDuration: 1
+    lineColor: {r: 1, g: 0.95, b: 0.35, a: 0.9}
+  orbit:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    cooldown: 10
+    duration: 5
+    splashRadius: 0.9
+    splashDamageMul: 0.6
+    slowDuration: 1
+  bounce:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    stunChance: 0.05
+    stunDuration: 1
+    buffCooldown: 7
+    buffDuration: 4
+    buffAttackSpeedMul: 2
+  iron:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    eliteBossDamageMul: 4
+    bossSplashRatio: 0.3
+    bossSplashRadius: 1.5
+    splashOnElite: 0
+  pierce:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    maxScreenBounce: 3
+    bounceConsumesPierce: 1
+    skillCooldown: 10
+    skillBulletCount: 5
+  berserker:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    cooldown: 10
+    duration: 4
+    interval: 0.5
+    damageMul: 2
+    slowDuration: 1
+    clawColor: {r: 1, g: 0.55, b: 0.45, a: 1}
+  mortar:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    cooldown: 15
+    bombCount: 3
+    spacingMul: 1.2
+    dropInterval: 0.2
+    stunChance: 0.5
+    stunDuration: 1
+  thunder:
+    attackPowerMul: 1
+    attackSpeedMul: 1
+    cooldown: 10
+    duration: 5
+    cloudCount: 3
+    orbitRadius: 1.3
+    orbitSpeed: 120
+    strikeInterval: 1
+    damageMul: 2
+    strikeRadius: 0.7
+    stunDuration: 1
+    cloudHeight: 0.45
+    cloudPrefab: {fileID: 7250857602881858209, guid: 4334815d8b1104482800d70cff8a5f4d,
+      type: 3}
