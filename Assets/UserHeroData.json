@@ -1,0 +1,16 @@
+{
+    "userHeroes": [
+        {
+            "key": "Knight",
+            "own": true
+        },
+        {
+            "key": "Ranger",
+            "own": true
+        },
+        {
+            "key": "Necromancer",
+            "own": true
+        }
+    ]
+}

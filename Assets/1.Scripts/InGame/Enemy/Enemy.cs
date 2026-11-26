@@ -152,13 +152,15 @@ public abstract class Enemy : MonoBehaviour, IHittable
     }
 
     // 페이즈 시작 체력 = enemyHp * (1 + addHpRatioPerWave * wave) * multiHpPerWave^wave
-    float GetWaveHp(int wave)
+    float GetWaveHp(int wave) => CalcWaveHp(GameManager.Instance.stageData, wave);
+
+    // (2026-11-26) 계산만 따로 (테스트 패널 체력 표시도 같이 씀). wave = waveIdx(0부터)
+    public static float CalcWaveHp(StageData stageData, int wave)
     {
-
-        StageData stageData = GameManager.Instance.stageData;
-
         // float hp = stageData.enemyHp + (stageData.enemyHp * (1f + stageData.addHpRatioPerWave) * (float)wave);
         // float hp = stageData.enemyHp + stageData.enemyHp * ((1 + stageData.addHpRatioPerWave) * wave);
+        if (stageData == null)
+            return 0f;
         float hp = stageData.enemyHp * (1 + stageData.addHpRatioPerWave * wave);
 
         // 20 wave(보스 주기) 구간 배율 (StageData.cycleHpMuls, 보스 wave는 자기 구간에 포함)

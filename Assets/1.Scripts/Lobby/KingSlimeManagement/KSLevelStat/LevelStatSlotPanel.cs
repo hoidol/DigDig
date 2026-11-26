@@ -87,8 +87,10 @@ public class LevelStatSlotPanel : MonoBehaviour
                 ToastCanvas.Toast(string.Format(TranslateManager.GetText("KingStat_TierFull"), tier.maxPoints));
                 break;
             case KingStatPointResult.NoPoint:
+                // (2026-11-26) 이 묶음 구간에서 받은 포인트를 다 씀 → 다음 포인트를 받는 레벨 안내
                 SoundManager.Play(SFXType.Fail_NotEnough);
-                ToastCanvas.Toast(TranslateManager.GetText("KingStat_NoPoint"));
+                int nextLv = UserDataManager.Instance.userKingSlimeManager.GetTierNextPointLevel(tierIdx);
+                ToastCanvas.Toast(nextLv > 0 ? string.Format(TranslateManager.GetText("KingStat_TierNoPoint"), nextLv) : TranslateManager.GetText("KingStat_NoPoint"));
                 break;
         }
         Lobby.LobbyManager.Instance.GetLobbyCanvas(LobbyState.KingSlimeManagement).UpdateCanvas();

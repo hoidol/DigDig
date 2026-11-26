@@ -21,7 +21,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
     static UserKingSlimeManager KSUser => User.userKingSlimeManager;
     static KingSlimeData KSData => KingSlimeManager.Instance.GetKingSlimeData(User.userData.CharacterName);
 
-    // (2026-11-24) 레벨 스탯: 첫 묶음(Lv.5)의 첫 스탯에 포인트. 첫 묶음 해금 레벨부터 시작해 레벨업 2번
+    // (2026-11-24) 레벨 스탯: 첫 묶음(Lv.1~5)의 첫 스탯에 포인트. 첫 묶음 해금 레벨(Lv.1)부터 시작해 레벨업 2번
     const int TIER_IDX = 0;
     const int OPTION_IDX = 0;
     static KingLevelStatSetting.Tier Tier => KingLevelStatSetting.Tiers[TIER_IDX];

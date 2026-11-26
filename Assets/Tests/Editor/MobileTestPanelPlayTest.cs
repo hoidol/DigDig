@@ -30,13 +30,29 @@ public class MobileTestPanelPlayTest : InGamePlayTestBase
         yield return WaitFrames(1);
 
         int before = MinionFieldController.Instance.activeminions.Count;
-        Find("소환").onClick.Invoke();
+        Find("소환 (빈 칸)").onClick.Invoke();
         yield return WaitFrames(2);
         Assert.AreEqual(before + 1, MinionFieldController.Instance.activeminions.Count, "미니언 소환");
 
         Find("용사 장착").onClick.Invoke();
         yield return WaitFrames(2);
         Assert.IsNotNull(KingSlime.Instance.abilityInventory.Get<HeroKingAbility>(), "용사 장착");
+
+        // (2026-11-26) 웨이브 전환: 시작 → 정지 = 다음 wave 브레이크타임 + 저장 / 이전 웨이브 = wave 1로 복구
+        GameManager gm = GameManager.Instance;
+        int startNext = gm.breakTimeNextWaveIdx;
+        Find("웨이브 시작").onClick.Invoke();
+        yield return WaitFrames(3);
+        Assert.IsFalse(gm.isBreakTime, "웨이브 시작");
+        Find("정지 (적 제거").onClick.Invoke();
+        yield return WaitFrames(3);
+        Assert.IsTrue(gm.isBreakTime, "정지 → 브레이크타임");
+        Assert.AreEqual(startNext + 1, gm.breakTimeNextWaveIdx, "정지 → 다음 wave");
+        Assert.AreEqual(0, EnemyFieldController.Instance.GetTargetEnemies().Count, "정지 → 적 제거");
+        Assert.IsTrue(WaveSnapshotSystem.Has(startNext) && WaveSnapshotSystem.Has(startNext + 1), "브레이크타임마다 저장");
+        Find("이전 웨이브").onClick.Invoke();
+        yield return WaitFrames(3);
+        Assert.AreEqual(startNext, gm.breakTimeNextWaveIdx, "이전 웨이브 복구");
 
         // 나머지 버튼 전부 (TEST 제외)
         foreach (Button b in buttons)

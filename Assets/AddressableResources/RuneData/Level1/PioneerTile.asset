@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: PioneerTile
   m_EditorClassIdentifier: Assembly-CSharp::RuneData
   key: PioneerTile
-  itemName: "\uAC1C\uCC99 \uD0C0\uC77C"
+  runeName: "\uAC1C\uCC99 \uD0C0\uC77C"
   desc: "\uB9C9\uD78C \uCE78 \uD574\uC81C"
   level: 1
   maxCount: 3
   diceCoin: 0
   levelValues: []
-  itemPrefab: {fileID: 4602238498533850597, guid: 8abeaa612bcfe40739c15ea171fa4546,
+  runePrefab: {fileID: 4602238498533850597, guid: 8abeaa612bcfe40739c15ea171fa4546,
     type: 3}
   unlockConditions: []
   applyOrder: 0

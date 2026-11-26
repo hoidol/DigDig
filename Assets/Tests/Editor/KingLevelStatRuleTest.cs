@@ -4,6 +4,7 @@ using NUnit.Framework;
 // (2026-11-24) 킹 레벨 스탯: 유저 레벨 1당 1포인트, 묶음 해금 레벨·묶음 상한, 스탯 계산 (씬 없이)
 public class KingLevelStatRuleTest
 {
+    // (2026-11-26) 묶음 = 레벨 구간: Lv.1~5 포인트 → 1번 묶음, Lv.6~10 → 2번 … (묶음끼리 안 섞임)
     [Test]
     public void TotalPoints_OnePerLevel()
     {
@@ -13,12 +14,25 @@ public class KingLevelStatRuleTest
     }
 
     [Test]
+    public void TierEarnedPoints_ByLevelRange()
+    {
+        Assert.AreEqual(0, UserKingSlimeManager.GetTierEarnedPoints(0, 1, 5));
+        Assert.AreEqual(1, UserKingSlimeManager.GetTierEarnedPoints(1, 1, 5), "Lv.1 = 1번 묶음 1포인트");
+        Assert.AreEqual(5, UserKingSlimeManager.GetTierEarnedPoints(5, 1, 5));
+        Assert.AreEqual(5, UserKingSlimeManager.GetTierEarnedPoints(9, 1, 5), "구간이 끝나면 더 안 늘어남");
+        Assert.AreEqual(0, UserKingSlimeManager.GetTierEarnedPoints(5, 6, 5), "Lv.5엔 2번 묶음 포인트 없음");
+        Assert.AreEqual(2, UserKingSlimeManager.GetTierEarnedPoints(7, 6, 5), "Lv.6·7 = 2번 묶음 2포인트");
+    }
+
+    [Test]
     public void CanAddPoint_Order()
     {
-        Assert.AreEqual(KingStatPointResult.Locked, UserKingSlimeManager.CanAddPoint(4, 5, 0, 5, 4), "레벨 미달 = 잠김");
-        Assert.AreEqual(KingStatPointResult.Success, UserKingSlimeManager.CanAddPoint(5, 5, 4, 5, 1));
-        Assert.AreEqual(KingStatPointResult.TierFull, UserKingSlimeManager.CanAddPoint(7, 5, 5, 5, 2), "묶음 합계 5까지");
-        Assert.AreEqual(KingStatPointResult.NoPoint, UserKingSlimeManager.CanAddPoint(10, 10, 0, 5, 0), "남은 포인트 없음");
+        Assert.AreEqual(KingStatPointResult.Locked, UserKingSlimeManager.CanAddPoint(5, 6, 0, 5), "레벨 미달 = 잠김");
+        Assert.AreEqual(KingStatPointResult.Success, UserKingSlimeManager.CanAddPoint(1, 1, 0, 5), "Lv.1부터 1번 묶음");
+        Assert.AreEqual(KingStatPointResult.NoPoint, UserKingSlimeManager.CanAddPoint(3, 1, 3, 5), "Lv.3 = 1번 묶음 3포인트까지");
+        Assert.AreEqual(KingStatPointResult.Success, UserKingSlimeManager.CanAddPoint(5, 1, 4, 5));
+        Assert.AreEqual(KingStatPointResult.TierFull, UserKingSlimeManager.CanAddPoint(9, 1, 5, 5), "묶음 합계 5까지");
+        Assert.AreEqual(KingStatPointResult.NoPoint, UserKingSlimeManager.CanAddPoint(7, 6, 2, 5), "Lv.7 = 2번 묶음 2포인트까지");
     }
 
     [Test]
@@ -43,7 +57,7 @@ public class KingLevelStatRuleTest
             Assert.Greater(tiers[i].maxPoints, 0, $"{i}번 묶음 상한");
             Assert.LessOrEqual(tiers[i].options.Length, LevelStatContainer.SLOTS_PER_TIER, $"{i}번 묶음 스탯 수 ≤ 칸 수");
             if (i > 0)
-                Assert.Greater(tiers[i].unlockLevel, tiers[i - 1].unlockLevel, "묶음 해금 레벨은 오름차순");
+                Assert.AreEqual(tiers[i - 1].unlockLevel + tiers[i - 1].maxPoints, tiers[i].unlockLevel, "묶음 구간은 빈틈·겹침 없이 이어짐");
             foreach (var o in tiers[i].options)
             {
                 // 번역 key는 Translate.csv 기준 (에셋은 Play 때 임포트되므로 CSV를 직접 읽음)
@@ -58,28 +72,28 @@ public class KingLevelStatRuleTest
                 Assert.GreaterOrEqual(o.ValueAt(5), o.ValueAt(1), "5포인트까지 찍을 수 있고 값이 줄지 않음");
             }
         }
-        // 첫 묶음 = Lv.5 공격력 +1 / 공속 +2% / 공격 범위 +20(표시 ×100)
+        // 첫 묶음 = Lv.1~5 공격력 +1 / 공속 +2% / 공격 범위 +20(표시 ×100)
         var first = tiers[0];
-        Assert.AreEqual(5, first.unlockLevel);
+        Assert.AreEqual(1, first.unlockLevel);
         Assert.AreEqual(5, first.maxPoints);
         Assert.AreEqual("+1", first.options.First(o => o.statType == StatType.AttackPower).GetValueText(1));
         Assert.AreEqual("+2%", first.options.First(o => o.statType == StatType.AttackSpeed).GetValueText(1));
         Assert.AreEqual("+20", first.options.First(o => o.statType == StatType.AttackRange).GetValueText(1));
     }
 
-    // (2026-11-24) 용사 강화: Lv.5 = 스탯, Lv.10부터 능력
+    // (2026-11-24) 용사 강화: 1번 묶음(Lv.1~5) = 스탯, 2번(Lv.6~)부터 능력
     [Test]
     public void Tiers_StatsThenAbilities()
     {
         var tiers = KingLevelStatSetting.Tiers;
-        Assert.IsTrue(tiers[0].options.All(o => o.kind == KingLevelStatSetting.OptionKind.Stat), "Lv.5 = 스탯");
-        Assert.IsTrue(tiers.Where(t => t.unlockLevel >= 10).SelectMany(t => t.options).Any(o => o.kind == KingLevelStatSetting.OptionKind.Ability), "Lv.10부터 능력");
-        var lv10 = tiers.First(t => t.unlockLevel == 10);
+        Assert.IsTrue(tiers[0].options.All(o => o.kind == KingLevelStatSetting.OptionKind.Stat), "Lv.1~5 = 스탯");
+        Assert.IsTrue(tiers.Where(t => t.unlockLevel >= 6).SelectMany(t => t.options).Any(o => o.kind == KingLevelStatSetting.OptionKind.Ability), "Lv.6부터 능력");
+        var lv10 = tiers.First(t => t.unlockLevel == 6);
         CollectionAssert.AreEquivalent(new[] { HeroUpgradeAbility.EliteMinionAttack, HeroUpgradeAbility.EliteMinionAttackSpeed, HeroUpgradeAbility.EliteMinionSkillCooldown },
-            lv10.options.Select(o => o.ability), "Lv.10 = 정예병");
-        var lv30 = tiers.First(t => t.unlockLevel == 30);
+            lv10.options.Select(o => o.ability), "Lv.6~10 = 정예병");
+        var lv30 = tiers.First(t => t.unlockLevel == 26);
         CollectionAssert.AreEqual(new[] { HeroUpgradeAbility.StartDiceCoin, HeroUpgradeAbility.MinionCostDownChance, HeroUpgradeAbility.FirstOfferLv2Chance },
-            lv30.options.Select(o => o.ability), "Lv.30 = 준비 (판 시작)");
+            lv30.options.Select(o => o.ability), "Lv.26~30 = 준비 (판 시작)");
     }
 
     [Test]

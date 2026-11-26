@@ -29,17 +29,44 @@ public class UserKingSlimeManager : UserBaseManager
     static int UserLv => UserDataManager.Instance.userMyInfoManager.userMyInfoData.lv;
 
     #region 포인트 (씬 없이 계산하는 규칙은 static)
-    public static int GetTotalPoints(int userLv) => Mathf.Max(0, userLv) * KingLevelStatSetting.POINTS_PER_LEVEL;
+    // (2026-11-26) 포인트는 묶음마다 따로: 묶음 = 레벨 구간 [unlockLevel, unlockLevel + maxPoints - 1] (Lv.1~5 → 1번 묶음, Lv.6~10 → 2번 …)
+    // 그 구간 레벨에서 얻은 포인트는 그 묶음 칸 3개에만 나눠 찍음 (이전: 전체 포인트를 Lv.5·10…에 열린 묶음 어디에나)
+    public static int GetTierEarnedPoints(int userLv, int unlockLevel, int maxPoints) =>
+        Mathf.Clamp(userLv - unlockLevel + 1, 0, Mathf.Max(0, maxPoints)) * KingLevelStatSetting.POINTS_PER_LEVEL;
+    public static int GetTierEarnedPoints(int userLv, KingLevelStatSetting.Tier tier) =>
+        tier == null ? 0 : GetTierEarnedPoints(userLv, tier.unlockLevel, tier.maxPoints);
+    public static int GetTotalPoints(int userLv) => KingLevelStatSetting.Tiers.Sum(t => GetTierEarnedPoints(userLv, t));
 
     public int TotalPoints => GetTotalPoints(UserLv);
     public int UsedPoints => userKSData.statPoints.Sum(p => p.points);
-    public int RemainPoints => Mathf.Max(0, TotalPoints - UsedPoints);
+    public int RemainPoints
+    {
+        get
+        {
+            var tiers = KingLevelStatSetting.Tiers;
+            int sum = 0;
+            for (int i = 0; i < tiers.Length; i++)
+                sum += GetTierRemainPoints(i);
+            return sum;
+        }
+    }
 
     public int GetPoints(int tierIdx, int optionIdx) =>
         userKSData.statPoints.FirstOrDefault(p => p.tierIdx == tierIdx && p.optionIdx == optionIdx)?.points ?? 0;
 
     public int GetTierPoints(int tierIdx) =>
         userKSData.statPoints.Where(p => p.tierIdx == tierIdx).Sum(p => p.points);
+    public int GetTierEarnedPoints(int tierIdx) => GetTierEarnedPoints(UserLv, GetTier(tierIdx));
+    public int GetTierRemainPoints(int tierIdx) => Mathf.Max(0, GetTierEarnedPoints(tierIdx) - GetTierPoints(tierIdx));
+    // 이 묶음의 다음 포인트를 받는 레벨 (다 받았으면 -1)
+    public int GetTierNextPointLevel(int tierIdx)
+    {
+        var tier = GetTier(tierIdx);
+        if (tier == null)
+            return -1;
+        int earnedLevels = GetTierEarnedPoints(tierIdx) / Mathf.Max(1, KingLevelStatSetting.POINTS_PER_LEVEL);
+        return earnedLevels >= tier.maxPoints ? -1 : tier.unlockLevel + earnedLevels;
+    }
 
     public static bool IsTierUnlocked(int userLv, KingLevelStatSetting.Tier tier) => tier != null && userLv >= tier.unlockLevel;
     public bool IsTierUnlocked(int tierIdx) => IsTierUnlocked(UserLv, GetTier(tierIdx));
@@ -50,14 +77,14 @@ public class UserKingSlimeManager : UserBaseManager
         return tierIdx >= 0 && tierIdx < tiers.Length ? tiers[tierIdx] : null;
     }
 
-    // 1포인트를 찍을 수 있는지 (잠김 → 묶음 상한 → 남은 포인트 순으로 판정)
-    public static KingStatPointResult CanAddPoint(int userLv, int unlockLevel, int tierUsed, int maxPoints, int remain)
+    // 1포인트를 찍을 수 있는지 (잠김 → 묶음 상한 → 이 묶음에서 받은 포인트를 다 씀 순으로 판정)
+    public static KingStatPointResult CanAddPoint(int userLv, int unlockLevel, int tierUsed, int maxPoints)
     {
         if (userLv < unlockLevel)
             return KingStatPointResult.Locked;
         if (tierUsed >= maxPoints)
             return KingStatPointResult.TierFull;
-        if (remain <= 0)
+        if (tierUsed >= GetTierEarnedPoints(userLv, unlockLevel, maxPoints))
             return KingStatPointResult.NoPoint;
         return KingStatPointResult.Success;
     }
@@ -67,7 +94,7 @@ public class UserKingSlimeManager : UserBaseManager
         var tier = GetTier(tierIdx);
         if (tier == null || optionIdx < 0 || optionIdx >= tier.options.Length)
             return KingStatPointResult.Locked;
-        KingStatPointResult result = CanAddPoint(UserLv, tier.unlockLevel, GetTierPoints(tierIdx), tier.maxPoints, RemainPoints);
+        KingStatPointResult result = CanAddPoint(UserLv, tier.unlockLevel, GetTierPoints(tierIdx), tier.maxPoints);
         if (result != KingStatPointResult.Success)
             return result;
 
@@ -170,7 +197,7 @@ public enum KingStatPointResult
     Success,
     Locked,   // 묶음 해금 레벨 미달
     TierFull, // 묶음 포인트 상한
-    NoPoint,  // 남은 포인트 없음
+    NoPoint,  // 이 묶음에서 받은 포인트를 다 씀 (다음 포인트는 다음 레벨)
 }
 
 [System.Serializable]

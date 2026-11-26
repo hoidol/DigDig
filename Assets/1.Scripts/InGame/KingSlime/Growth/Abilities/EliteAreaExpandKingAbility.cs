@@ -14,6 +14,7 @@ public class EliteAreaExpandKingAbility : KingAbility
     public int[] maxMinionCountAdds = { 0, 1 };
 
     readonly List<Vector2Int> offsets = new List<Vector2Int>();
+    public IReadOnlyList<Vector2Int> Offsets => offsets; // 테스트 복구(WaveSnapshotSystem)용
     int addedMinionCount;
     EliteArea area;
 

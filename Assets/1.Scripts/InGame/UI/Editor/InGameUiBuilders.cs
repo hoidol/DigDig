@@ -93,6 +93,68 @@ public static class InGameUiBuilders
         Done(levelUp.gameObject, $"LevelUpCanvas:{(made.Length > 0 ? made : " (이미 다 있음)")}");
     }
 
+    // (2026-11-26) 레벨업 창: ① 스탯 변화 화면의 NewSkill(사용자가 카드 복사로 만든 칸) → 새 스킬 칸(LevelUpNewSkillPanel)으로 연결
+    //   ② 미니언 강화 새로고침 버튼을 카드 줄(LevelUpContainer) 맨 아래로 옮김 (레이아웃이 카드 아래에 배치, 카드 줄과 같이 켜지고 꺼짐)
+    [MenuItem("Tools/InGame/Connect LevelUp NewSkill · Move Reroll Into Cards")]
+    public static void ConnectLevelUpNewSkill()
+    {
+        var levelUp = Object.FindFirstObjectByType<InGame.LevelUpCanvas>(FindObjectsInactive.Include);
+        if (levelUp == null)
+        {
+            Debug.LogWarning("[InGameUiBuilders] LevelUpCanvas가 없음 (InGame 씬을 열고 실행)");
+            return;
+        }
+        Undo.RecordObject(levelUp, "Connect LevelUp NewSkill");
+        string made = "";
+
+        // ① 새 스킬 칸
+        Transform newSkill = levelUp.statScreenRoot != null ? levelUp.statScreenRoot.Find("NewSkill") : null;
+        if (newSkill == null)
+            Debug.LogWarning("[InGameUiBuilders] StatChangeScreen/NewSkill이 없음 (카드를 복사해 이름을 NewSkill로)");
+        else
+        {
+            var old = newSkill.GetComponent<LevelUpStatPanel>(); // 카드 복사본의 선택 기능은 빼야 함 (누르면 카드처럼 고르게 됨)
+            if (old != null)
+                Undo.DestroyObjectImmediate(old);
+            var panel = newSkill.GetComponent<LevelUpNewSkillPanel>();
+            if (panel == null)
+                panel = Undo.AddComponent<LevelUpNewSkillPanel>(newSkill.gameObject);
+            Undo.RecordObject(panel, "Connect LevelUp NewSkill");
+            panel.headerText = FindComp<TMPro.TMP_Text>(newSkill, "TitleText (1)") ?? panel.headerText;
+            panel.titleText = FindComp<TMPro.TMP_Text>(newSkill, "TitleText") ?? panel.titleText;
+            panel.descText = FindComp<TMPro.TMP_Text>(newSkill, "DescText") ?? panel.descText;
+            panel.thumImage = FindComp<Image>(newSkill, "IconBg/Thum") ?? panel.thumImage;
+            panel.levelText = FindComp<TMPro.TMP_Text>(newSkill, "IconBg/LevelBadge/LevelText") ?? panel.levelText;
+            panel.borderImage = FindComp<Image>(newSkill, "Border") ?? panel.borderImage;
+            panel.iconBgImage = FindComp<Image>(newSkill, "IconBg") ?? panel.iconBgImage;
+            EditorUtility.SetDirty(panel);
+            levelUp.newSkillPanel = panel;
+            made += " NewSkill";
+        }
+
+        // ② 새로고침 버튼 → 카드 줄 맨 아래
+        LevelUpStatPanel card = levelUp.levelUpStatPanels != null ? System.Array.Find(levelUp.levelUpStatPanels, p => p != null) : null;
+        Transform container = card != null ? card.transform.parent : null;
+        if (levelUp.rerollButton != null && container != null && levelUp.rerollButton.transform.parent != container)
+        {
+            Undo.SetTransformParent(levelUp.rerollButton.transform, container, "Move Reroll Button");
+            levelUp.rerollButton.transform.SetAsLastSibling();
+            var rt = (RectTransform)levelUp.rerollButton.transform;
+            Undo.RecordObject(rt, "Move Reroll Button");
+            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.localScale = Vector3.one;
+            made += " RerollButton→" + container.name;
+        }
+        EditorUtility.SetDirty(levelUp);
+        Done(levelUp.gameObject, $"LevelUpCanvas:{(made.Length > 0 ? made : " (바꿀 것 없음)")}");
+    }
+
+    static T FindComp<T>(Transform root, string path) where T : Component
+    {
+        Transform t = root.Find(path);
+        return t != null ? t.GetComponent<T>() : null;
+    }
+
     // 룬 정보 패널 강화 버튼 (패널 아래 가운데, 처음엔 꺼 둠) — 비어 있을 때만
     [MenuItem("Tools/InGame/Add Rune Upgrade Button To Info Panel")]
     public static void AddRuneUpgradeButton()
@@ -114,6 +176,25 @@ public static class InGameUiBuilders
         }
         EditorUtility.SetDirty(panel);
         Done(panel.upgradeButton.gameObject, "TileRuneInfoPanel/RuneUpgradeButton");
+    }
+
+    // (2026-11-26) 브레이크타임 미니언 카드 다시 뽑기 버튼: Next 버튼을 복사해 그 위에 (MinionOfferSystem.rerollButton). 이미 있으면 지우고 새로
+    [MenuItem("Tools/InGame/Add Offer Reroll Button")]
+    public static void AddOfferRerollButton()
+    {
+        var offer = Object.FindFirstObjectByType<MinionOfferSystem>(FindObjectsInactive.Include);
+        if (offer == null || offer.nextButton == null)
+        {
+            Debug.LogWarning("[InGameUiBuilders] MinionOfferSystem(nextButton 연결)이 없음 (InGame 씬을 열고 실행)");
+            return;
+        }
+        Undo.RecordObject(offer, "Add Offer Reroll Button");
+        if (offer.rerollButton != null)
+            Undo.DestroyObjectImmediate(offer.rerollButton.gameObject);
+        offer.rerollButton = offer.BuildRerollButtonForEditor();
+        Undo.RegisterCreatedObjectUndo(offer.rerollButton.gameObject, "Add Offer Reroll Button");
+        EditorUtility.SetDirty(offer);
+        Done(offer.rerollButton.gameObject, "OfferButtons/RerollButton");
     }
 
     static void Done(GameObject go, string what)

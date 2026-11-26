@@ -52,7 +52,7 @@ public class MinionOfferSystem : MonoBehaviour
     public MinionOfferCardInfo cardInfo;  // (2026-11-21) 카드를 누르면 위에 미니언 설명 (비우면 하위에서 찾고, 없으면 생성)
     public KingExpBuyPanel expBuyPanel;   // (2026-11-22) 카드 줄 왼쪽 킹 레벨·경험치 구매 (비우면 하위에서 찾고, 없으면 생성)
     public TMPro.TMP_Text levelUpChanceText; // (2026-11-23) 카드 줄 위 "Lv.2 카드 확률 N%" (비우면 실행 중 생성, 킹 Lv.0이면 숨김)
-    [Tooltip("카드 다시 뽑기 버튼. (2026-11-25) 브레이크타임 내내 보임: 용사 강화 보너스 무료 → 한 판 무료 2번 → 광고 3번 (RerollCounter.BreakOffer), 다 쓰면 숨김. 비우면 Next 버튼을 복사해 그 위에 생성")]
+    [Tooltip("카드 다시 뽑기 버튼. (2026-11-25) 브레이크타임 내내 보임: 용사 강화 보너스 무료 → 한 판 무료 2번 → 광고 3번 (RerollCounter.BreakOffer), 다 쓰면 숨김. 씬 OfferButtons/RerollButton (메뉴 Tools/InGame/Add Offer Reroll Button으로 생성, 모양·위치는 씬에서 수정)")]
     public Button rerollButton;
     public int freeRerolls;   // 용사 강화 BreakRerollChance 보너스 무료 다시 뽑기 (최대 1, 쌓이지 않음, 먼저 씀)
     TMPro.TMP_Text rerollText;
@@ -104,10 +104,14 @@ public class MinionOfferSystem : MonoBehaviour
         RefreshLevelUpChance();
         nextButton.onClick.AddListener(OnClickedNext);
         nextButton.gameObject.SetActive(false);
+        // (2026-11-26) 다시 뽑기 버튼은 씬 오브젝트만 씀 (실행 중 생성 안 함, CLAUDE.md UI 작성 규칙)
         if (rerollButton == null)
-            rerollButton = BuildRerollButton();
-        rerollButton.onClick.AddListener(OnClickedReroll);
-        rerollButton.gameObject.SetActive(false);
+            Debug.LogWarning("[MinionOfferSystem] rerollButton 연결 없음 → 메뉴 Tools/InGame/Add Offer Reroll Button 실행 후 씬 저장");
+        else
+        {
+            rerollButton.onClick.AddListener(OnClickedReroll);
+            rerollButton.gameObject.SetActive(false);
+        }
         HideGoldUI();
         SetPanelActive(GameManager.Instance != null && GameManager.Instance.isBreakTime);
         GameEventBus.Subscribe<BreakTimeStartEvent>(OnBreakTimeStart);
@@ -177,6 +181,8 @@ public class MinionOfferSystem : MonoBehaviour
     }
 
     int lastDealtWaveIdx = -1; // 부활로 같은 wave 브레이크타임가 다시 와도 카드를 또 주지 않음
+    // 테스트 전용(웨이브 전환): 다음 브레이크타임에 카드·주사위 코인을 다시 지급하게
+    public void ResetDealForTest() => lastDealtWaveIdx = -1;
 
     // 지금 브레이크타임의 주사위 코인 초기화(WAVE_DICE_COIN + 보너스)가 끝났는지 → 이후 얻은 보상 코인은 즉시 지급 (KingSlime.AddRewardDiceCoin)
     public static bool IsBreakDiceGranted =>
@@ -234,13 +240,14 @@ public class MinionOfferSystem : MonoBehaviour
         ? $"{TranslateManager.GetText("HeroUpgrade_RerollButton")} (무료)"
         : RerollCounter.BreakOffer.GetLabel("다시 뽑기");
 
-    // Next 버튼을 복사해 그 위에 "다시 뽑기" (씬에 rerollButton을 연결하면 그걸 씀)
-    Button BuildRerollButton()
+    // 에디터 메뉴(Tools/InGame/Add Offer Reroll Button) 전용: Next 버튼을 복사해 그 위에 "다시 뽑기" 버튼을 씬에 만듦
+    public Button BuildRerollButtonForEditor()
     {
         GameObject go = Instantiate(nextButton.gameObject, nextButton.transform.parent, false);
         go.name = "RerollButton";
+        go.SetActive(true);
         foreach (TranslateText t in go.GetComponentsInChildren<TranslateText>(true))
-            Destroy(t);
+            DestroyImmediate(t);
         Button button = go.GetComponent<Button>();
         button.onClick = new Button.ButtonClickedEvent();
         RectTransform rt = (RectTransform)go.transform;
@@ -249,7 +256,7 @@ public class MinionOfferSystem : MonoBehaviour
         TMPro.TMP_Text text = go.GetComponentInChildren<TMPro.TMP_Text>(true);
         if (text != null)
         {
-            text.text = TranslateManager.GetText("HeroUpgrade_RerollButton");
+            text.text = "다시 뽑기"; // 실행 중엔 남은 횟수와 함께 코드가 바꿈
             text.enableAutoSizing = true;
         }
         Image bg = go.GetComponent<Image>();

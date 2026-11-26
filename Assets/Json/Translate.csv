@@ -288,6 +288,7 @@ KingStat_RemainPoint	남은 포인트 {0}	Points left: {0}
 KingStat_Locked	Lv.{0}부터 찍을 수 있습니다.	Unlocks at Lv.{0}.
 KingStat_TierFull	이 묶음은 최대 {0}포인트까지 찍을 수 있습니다.	This row allows up to {0} points.
 KingStat_NoPoint	남은 포인트가 없습니다.	No points left.
+KingStat_TierNoPoint	이 줄의 다음 포인트는 Lv.{0}에 받습니다.	This row gets its next point at Lv.{0}.
 KingStat_ResetTitle	포인트 초기화	Reset Points
 KingStat_ResetBody	찍은 포인트를 모두 돌려받습니다. (무료)	Refund all spent points. (Free)
 KingStat_ResetDone	포인트를 초기화했습니다.	Points reset.
@@ -419,3 +420,5 @@ Minion.Berserker.Evolution	할키니	Fangy
 Minion.Berserker.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] {1}초 동안 {2}초마다 공격 범위 안 모든 적을 할큄 (공격력 {3}%) + 감속	[Button skill · {0}s cooldown] For {1}s, claws every enemy in range every {2}s ({3}% attack) and slows
 Minion.Mortar.Evolution	쏘다	Blaster
 Minion.Mortar.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] 깃발에서 적이 오는 쪽으로 폭탄 {1}발, 맞은 적 {2}% 확률로 스턴	[Button skill · {0}s cooldown] Drops {1} bombs from the flag toward incoming enemies, {2}% chance to stun
+MoveMinion_Title	미니언 이동	Move Minion
+MoveMinion_Body	주사위 코인 {0}개를 써서 옮길까요?	Spend {0} dice coins to move it?

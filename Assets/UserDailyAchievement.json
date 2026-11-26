@@ -1,9 +1,14 @@
 {
-    "date": "20261124",
+    "date": "20261126",
     "userDailyAchievements": [
         {
             "type": 2,
             "value": 1,
+            "getReward": false
+        },
+        {
+            "type": 0,
+            "value": 5,
             "getReward": false
         }
     ]

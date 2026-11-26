@@ -82,7 +82,9 @@ MonoBehaviour:
   slashExtraDistance: 1
   slashColor: {r: 0.75, g: 0.45, b: 1, a: 0.95}
   ghostDuration: 10
-  ghostDamageMul: 1
+  ghostDamageMul: 2
+  ghostSlowTime: 3
+  ghostSlowRate: 0.5
   ghostSpeed: 2.5
   ghostRadius: 0.6
   hitInterval: 0.5

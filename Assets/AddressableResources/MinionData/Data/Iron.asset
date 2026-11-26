@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Iron
   m_EditorClassIdentifier: Assembly-CSharp::IronMinionData
   key: Iron
-  desc: "\uC5D8\uB9AC\uD2B8, \uBCF4\uC2A4\uC5D0\uAC8C 2\uBC30 \uB370\uBBF8\uC9C0"
+  desc: "\uC5D8\uB9AC\uD2B8, \uBCF4\uC2A4\uC5D0\uAC8C {0}\uBC30 \uB370\uBBF8\uC9C0\uB97C
+    \uC90D\uB2C8\uB2E4."
   growth: 1
   attackType: 3
   tags: 2049
@@ -38,6 +39,10 @@ MonoBehaviour:
   thum: {fileID: 5103231540499187363, guid: f015d282bcabe4ecaba48ae172b2ea55, type: 3}
   evolvedSprite: {fileID: 0}
   evolutions: []
+  evolutionName: "\uCC98\uB839"
+  evolutionDesc: "\uC5D8\uB9AC\uD2B8\xB7\uBCF4\uC2A4\uC5D0\uAC8C {0}\uBC30 \uD53C\uD574,
+    \uBCF4\uC2A4\uB97C \uB54C\uB9AC\uBA74 \uC8FC\uBCC0 \uC801\uC5D0\uAC8C\uB3C4 \uBCF4\uC2A4
+    \uD53C\uD574\uC758 {1}%"
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 0
@@ -59,4 +64,16 @@ MonoBehaviour:
   - 1.75
   - 2
   - 2.25
+  - 4
+  stunChances:
+  - 0.1
+  - 0.15
+  - 0.2
+  - 0.25
+  - 0.3
+  stunTimes:
+  - 2
+  - 2.25
   - 2.5
+  - 2.75
+  - 3

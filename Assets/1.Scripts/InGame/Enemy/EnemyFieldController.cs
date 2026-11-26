@@ -96,6 +96,20 @@ public class EnemyFieldController : MonoSingleton<EnemyFieldController>
             enemy.Deactivate();
     }
 
+    // 테스트 전용: 일반 적 + 보스까지 보상·처치 이벤트 없이 제거
+    public void ClearAllForTest()
+    {
+        ClearAllEnemies();
+        foreach (Boss b in new List<Boss>(activeBosses))
+        {
+            if (b == null)
+                continue;
+            EnemyWorldCanvas.Instance?.Release(b);
+            Destroy(b.gameObject);
+        }
+        activeBosses.Clear();
+    }
+
     public void EnemyDeadEventListener(EnemyDeadEvent e)
     {
         RemoveActive(e.enemy);

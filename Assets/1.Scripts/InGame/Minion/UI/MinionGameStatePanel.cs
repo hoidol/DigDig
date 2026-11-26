@@ -70,7 +70,7 @@ public class MinionGameStatePanel : MonoBehaviour
         float width = self.rect.width;
         EvolutionSkillButton btn = EvolutionSkillButton.Create(self, size);
         ((RectTransform)btn.transform).anchoredPosition = new Vector2(width * 0.5f + size * 0.6f, size * 0.35f);
-        btn.gameObject.SetActive(false);
+        // (2026-11-26) 편집 모드에서 보이게 켜 둠 (실행 중엔 Bind/Refresh가 준비됐을 때만 켬)
         return btn;
     }
 #endif

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Flame
   m_EditorClassIdentifier: Assembly-CSharp::FlameMinionData
   key: Flame
-  desc: "\uD654\uC5FC\uD0C4\uC7441\uAC1C \uBC1C\uC0AC"
+  desc: "\uD654\uC5FC\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4. \uD654\uC5FC \uC2DC
+    {0}\uCD08 \uB3D9\uC548 \uCD08\uB2F9 {1} \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
   growth: 1
   attackType: 2
   tags: 257
@@ -38,6 +39,10 @@ MonoBehaviour:
   thum: {fileID: 403208247147482157, guid: 29f59aee2e03646a3bb625392fb400f4, type: 3}
   evolvedSprite: {fileID: 0}
   evolutions: []
+  evolutionName: "\uB9C8\uADF8\uBBF8"
+  evolutionDesc: "\uB9C8\uADF8\uB9C8\uB97C \uB358\uC838 \uB9DE\uC740 \uC790\uB9AC
+    \uC8FC\uBCC0\uC5D0 \uD654\uC5FC \uD3ED\uBC1C (\uACF5\uACA9\uB825 {1}% \uBC94\uC704
+    \uD53C\uD574 + \uD654\uC0C1), {2}% \uD655\uB960\uB85C {3}\uCD08 \uC2A4\uD134"
   displayStatTypes: 00000000020000000500000009000000
   baseMinionStats:
   - statType: 0

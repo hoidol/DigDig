@@ -107,7 +107,16 @@ public class KingLevelUpFlowPlayTest : InGamePlayTestBase
         float atkLv1 = king.statMgr.AttackPower;
 
         // Lv.2 1단계 스킬 해방 = 스탯 변화 화면에서 자동 (카드 없음) + 용사 레벨 2
-        yield return LevelUpFlow(king, canvas, hero.GetSkillName(0));
+        yield return LevelUp(king);
+        Assert.IsNotNull(canvas.newSkillPanel, "새 스킬 칸(StatChangeScreen/NewSkill) 연결");
+        Assert.IsTrue(canvas.newSkillPanel.gameObject.activeSelf, "Lv.2 스킬 해방 = 새 스킬 칸 보임");
+        Assert.AreEqual(hero.GetSkillName(0), canvas.newSkillPanel.titleText.text, "새 스킬 칸 = 1단계 스킬 이름");
+        StringAssert.Contains("1단계", canvas.newSkillPanel.headerText.text);
+        StringAssert.Contains("소모", canvas.newSkillPanel.descText.text, "소모 에너지 표시");
+        yield return ConfirmStatScreen(canvas, hero.GetSkillName(0));
+        if (canvas.CurrentStep == InGame.LevelUpCanvas.Step.HeroBoost)
+            Assert.Fail("Lv.2엔 용사 강화 없음");
+        yield return LevelUpRunePlayTest.PickMinionEnhanceCard();
         Assert.AreEqual(1, hero.UnlockedSkillCount);
         Assert.AreEqual(atkLv1 + archerData.GetAdd(StatType.AttackPower), king.statMgr.AttackPower, 0.01f, "레벨업 = 킹 공격력 +AddAttackPower");
         Assert.AreEqual(archerData.GetEliteBuffValue(2), minion.DoubleShotChance, 0.01f, "레인저 Lv.2 2발 확률 (Init + Add)");
@@ -115,6 +124,7 @@ public class KingLevelUpFlowPlayTest : InGamePlayTestBase
 
         // Lv.3 용사 강화 3장 = 정예 칸 추가 아닌 카드 2장 + 정예 칸 추가 1장 → 정예 칸 추가 (2단계 스킬 강화는 아직 안 나옴)
         yield return LevelUp(king);
+        Assert.IsFalse(canvas.newSkillPanel.gameObject.activeSelf, "스킬 해방이 없는 레벨 = 새 스킬 칸 숨김");
         yield return ConfirmStatScreen(canvas, "→");
         Assert.AreEqual(InGame.LevelUpCanvas.Step.HeroBoost, canvas.CurrentStep);
         var boost = Shown(canvas);
@@ -122,6 +132,14 @@ public class KingLevelUpFlowPlayTest : InGamePlayTestBase
         Assert.IsFalse(boost.Any(p => p.Data == archer), "용사 카드는 안 나옴");
         var expandCards = boost.Where(p => p.Data.category == AbilityCategory.TileExpand).ToArray();
         Assert.AreEqual(1, expandCards.Length, "정예 칸 추가 1장");
+        foreach (var p in boost) // (2026-11-26) 정예 칸 추가 카드 = 칸 그림만(아이콘 숨김), 나머지 = 아이콘
+        {
+            bool isExpand = p.Data.category == AbilityCategory.TileExpand;
+            if (p.iconBgImage != null)
+                Assert.AreEqual(!isExpand, p.iconBgImage.gameObject.activeSelf, $"{p.Data.title} IconBg 표시");
+            if (p.shapeGrid != null && isExpand)
+                Assert.IsTrue(p.shapeGrid.activeSelf, "정예 칸 추가 카드 = 칸 그림");
+        }
         Assert.IsFalse(boost.Any(p => p.Data.prefab is HeroSkillEnhanceKingAbility s && s.skillIndex == 1), "2단계 스킬 강화는 2단계 해방 후");
         expandCards[0].OnClickedSelect();
         yield return WaitFrames(2);
@@ -180,7 +198,7 @@ public class KingLevelUpFlowPlayTest : InGamePlayTestBase
         Assert.AreEqual(0, king.pendingLevelUps);
     }
 
-    static LevelUpStatPanel[] Shown(InGame.LevelUpCanvas canvas) => canvas.levelUpStatPanels.Where(p => p.gameObject.activeSelf).ToArray();
+    static LevelUpStatPanel[] Shown(InGame.LevelUpCanvas canvas) => canvas.levelUpStatPanels.Where(p => p != null && p.gameObject.activeSelf).ToArray();
 
     static IEnumerator LevelUp(KingSlime king)
     {
@@ -193,7 +211,12 @@ public class KingLevelUpFlowPlayTest : InGamePlayTestBase
     static IEnumerator ConfirmStatScreen(InGame.LevelUpCanvas canvas, string contains)
     {
         Assert.IsTrue(canvas.IsStatChangeScreen, $"Lv.{KingSlime.Instance.ChoiceLevel} 스탯 변화 화면이 안 나옴 (단계 {canvas.CurrentStep})");
-        StringAssert.Contains(contains, canvas.statScreenText.text);
+        // (2026-11-26) 해방한 스킬은 새 스킬 칸(NewSkill)에 이름·설명 → 글씨 둘을 합쳐 확인
+        var newSkill = canvas.newSkillPanel;
+        string shownText = canvas.statScreenText.text;
+        if (newSkill != null && newSkill.gameObject.activeSelf)
+            shownText += "\n" + newSkill.headerText?.text + "\n" + newSkill.titleText?.text + "\n" + newSkill.descText?.text;
+        StringAssert.Contains(contains, shownText);
         Assert.IsTrue(canvas.statScreenConfirmButton != null, "확인 버튼");
         int pending = KingSlime.Instance.pendingLevelUps;
         canvas.statScreenConfirmButton.onClick.Invoke();

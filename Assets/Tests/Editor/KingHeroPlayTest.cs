@@ -133,7 +133,7 @@ public class KingHeroPlayTest : InGamePlayTestBase
         }
         Assert.AreEqual(knight.greatswordSlowRate, e2.statusEffectHandler.FixedSlowRate, 0.001f, $"남은 대검 근처 둔화 (대검 {Object.FindObjectsOfType<HeroGreatSwordDrop>().Length}개, 적 체력 {e2.CurHp})");
 
-        // 2단계 칼날 회오리 = 킹 주변 적 피해 + 둔화, 에너지 2개 (모든 용사 공통)
+        // 2단계 칼날 회오리 = 킹 주변 적 피해 + 둔화, 에너지 1개 (모든 용사 공통, 3단계만 2개)
         // (2026-11-26) 최대 미니언 수 +1 = 2단계 해방이 아니라 용사 Lv.7 도달
         int maxMinion = MinionFieldController.Instance.minionMaxCount;
         king.lv = 6;
@@ -144,11 +144,10 @@ public class KingHeroPlayTest : InGamePlayTestBase
         knight.RefreshHeroLevel();
         Assert.AreEqual(maxMinion + 1, MinionFieldController.Instance.minionMaxCount, "용사 Lv.7 = 최대 미니언 수 +1");
         Assert.AreEqual(2, knight.MaxCharges, "킹 레벨로 에너지 최대가 늘지 않음");
-        Assert.AreEqual(2, knight.GetSkillCost(1), "2단계 = 에너지 2개");
+        Assert.AreEqual(1, knight.GetSkillCost(1), "2단계 = 에너지 1개");
+        Assert.AreEqual(2, knight.GetSkillCost(HeroKingAbility.COMMON_SKILL_INDEX), "3단계 = 에너지 2개");
         Assert.AreEqual(1, knight.Charges);
-        Assert.AreEqual(HeroKingAbility.UseResult.NoEnergy, knight.TryUseSkill(1), "에너지 1개로는 2단계 못 씀");
-        knight.FillChargesForTest();
-        Assert.AreEqual(HeroKingAbility.UseResult.Used, knight.TryUseSkill(1));
+        Assert.AreEqual(HeroKingAbility.UseResult.Used, knight.TryUseSkill(1), "에너지 1개로 2단계 사용");
         Assert.AreEqual(0, knight.Charges);
         Assert.IsTrue(knight.IsSpinActive);
         hp = e1.CurHp;
@@ -195,7 +194,7 @@ public class KingHeroPlayTest : InGamePlayTestBase
 
         float rangeBefore = plain.statDic[StatType.AttackRange];
         float spdBefore = plain.statDic[StatType.AttackSpeed];
-        archer.FillChargesForTest(); // 2단계 = 에너지 2개
+        archer.FillChargesForTest();
         Assert.AreEqual(HeroKingAbility.UseResult.Used, archer.TryUseSkill(1));
         yield return WaitFrames(2);
         Assert.IsTrue(archer.IsEyeActive);
@@ -240,7 +239,12 @@ public class KingHeroPlayTest : InGamePlayTestBase
         Assert.AreEqual(HeroKingAbility.UseResult.Used, necro.TryUseSkill(0));
         yield return WaitFrames(2);
         Assert.AreEqual(ghosts + 1, HeroGhost.ActiveCount, "망령 소환 안 됨");
-        necro.FillChargesForTest(); // 2단계 = 에너지 2개
+        // (2026-11-26) 망령에 닿으면 피해 + 3초 둔화
+        hp5 = e5.CurHp;
+        necro.GhostHit(e5);
+        Assert.Less(e5.CurHp, hp5, "망령 피해 없음");
+        Assert.AreEqual(necro.ghostSlowRate, e5.statusEffectHandler.FixedSlowRate, 0.001f, "망령 둔화 없음");
+        necro.FillChargesForTest();
         Assert.AreEqual(HeroKingAbility.UseResult.Used, necro.TryUseSkill(1));
         Assert.AreEqual(1.5f, e4.statusEffectHandler.CurseDamageMul, 0.001f, "저주 = 받는 피해 +50%");
         Assert.IsTrue(e4.statusEffectHandler.IsStunned, "저주 스턴 없음");

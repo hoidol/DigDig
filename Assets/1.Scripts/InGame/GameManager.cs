@@ -166,6 +166,42 @@ public class GameManager : MonoSingleton<GameManager>
         StartWave(breakTimeNextWaveIdx);
     }
 
+    #region 테스트 전용 (기기 테스트 패널 MobileTestPanel 웨이브 전환, 2026-11-26)
+    // 진행 중인 wave를 즉시 끝냄: 남은 소환 취소 + 적(보스 포함) 보상 없이 제거 → 평소 클리어처럼 다음 wave 브레이크타임. 브레이크타임이면 false
+    public bool StopWaveForTest()
+    {
+        if (!isPlaying || isBreakTime || CurrentWave == null)
+            return false;
+        EndActiveWavesForTest();
+        OnWaveCleared();
+        return true;
+    }
+
+    // nextWaveIdx의 브레이크타임으로 바로 이동 (진행 중 wave·적 정리). 그 wave 이후의 클리어 기록은 지움
+    public void GoToBreakTimeForTest(int nextWaveIdx)
+    {
+        if (!isPlaying)
+            return;
+        nextWaveIdx = Mathf.Clamp(nextWaveIdx, 0, GameSetting.LAST_WAVE - 1);
+        EndActiveWavesForTest();
+        clearWaveIdxes.RemoveAll(i => i >= nextWaveIdx);
+        isBreakTime = false;
+        StartBreakTime(nextWaveIdx);
+    }
+
+    void EndActiveWavesForTest()
+    {
+        foreach (Wave w in accWaves)
+        {
+            if (w == null || w.isEnd)
+                continue;
+            w.isSpawnEnd = true;
+            w.EndWave();
+        }
+        EnemyFieldController.Instance?.ClearAllForTest();
+    }
+    #endregion
+
     // 현재 wave를 다 소환했고 살아 있는 적이 없음 (보스 wave는 보스 처치 시 isSpawnEnd)
     bool IsCurrentWaveCleared()
     {

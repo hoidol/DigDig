@@ -7,7 +7,7 @@ using UnityEngine.TestTools;
 // (2026-11-25 갱신) 카드 소환 모드(MinionFieldController.LockMinionPosition): 한 번 놓은 미니언은 자리 고정
 // - 미니언을 머지가 안 되는 미니언 위에 놓음 → 자리 교체 없이 원위치 (이전: 교체)
 // - 같은 종·같은 머지 레벨 → 합성
-// - 미니언을 빈 칸에 놓음 → 원위치 (빈 칸 이동 없음)
+// - 미니언을 빈 칸에 놓음 → 브레이크타임 = 주사위 코인 2개로 이동(확인 팝업, 모자라면 토스트) / wave 중 = 원위치
 // - 킹 ↔ 미니언 자리 교체 없음 (원위치), 킹은 빈 칸으로 자유롭게 이동
 public class MergeSwapPlayTest : InGamePlayTestBase
 {
@@ -149,14 +149,45 @@ public class MergeSwapPlayTest : InGamePlayTestBase
         MinionFieldController.Instance.RemoveFieldMinion(merged);
         yield return WaitFrames(2);
 
-        // 5) 미니언을 빈 칸에 놓음 → 원위치 (자리 고정)
+        // 5) (2026-11-26) 브레이크타임에 미니언을 빈 칸에 놓음 → 주사위 코인 2개로 이동 (확인 팝업)
+        Assert.IsTrue(GameManager.Instance.isBreakTime, "게임 시작 = 브레이크타임");
+        KingSlime king = KingSlime.Instance;
         a = GetFreeTile(); b = GetFreeTile(a);
-        Minion fixedMinion = SpawnMinion("Iron", a, 0);
+        Minion moving = SpawnMinion("Iron", a, 0);
         yield return WaitFrames(2);
-        yield return DragDrop(fixedMinion, b);
-        Assert.AreSame(a, TileManager.Instance.GetTile(fixedMinion), "미니언 빈 칸 이동은 안 됨 (자리 고정)");
-        Assert.IsTrue(b.IsEmpty);
-        MinionFieldController.Instance.RemoveFieldMinion(fixedMinion);
+        //  코인 부족 → 팝업 없이 원위치
+        king.diceCoin = GameSetting.MOVE_MINION_DICE_COIN - 1;
+        yield return DragDrop(moving, b);
+        Assert.AreSame(a, TileManager.Instance.GetTile(moving), "코인 부족이면 원위치");
+        Assert.IsFalse(YesOrNoCanvas.Instance != null && YesOrNoCanvas.Instance.gameObject.activeInHierarchy, "코인 부족이면 팝업 없음");
+        Assert.AreEqual(GameSetting.MOVE_MINION_DICE_COIN - 1, king.diceCoin);
+        //  코인 충분 → 팝업 → No = 그대로
+        king.diceCoin = 5;
+        yield return DragDrop(moving, b);
+        Assert.IsTrue(YesOrNoCanvas.Instance.gameObject.activeInHierarchy, "이동 확인 팝업");
+        Assert.AreSame(a, TileManager.Instance.GetTile(moving), "Yes 전엔 원래 칸");
+        YesOrNoCanvas.Instance.OnClickedNo();
+        yield return WaitFrames(2);
+        Assert.AreSame(a, TileManager.Instance.GetTile(moving), "No = 이동 안 함");
+        Assert.AreEqual(5, king.diceCoin, "No = 코인 그대로");
+        //  Yes = 코인 2개 쓰고 이동
+        yield return DragDrop(moving, b);
+        YesOrNoCanvas.Instance.OnClickedYes();
+        yield return WaitFrames(2);
+        Assert.AreSame(b, TileManager.Instance.GetTile(moving), "Yes = 이동");
+        Assert.IsTrue(a.IsEmpty, "떠난 칸이 빔");
+        Assert.AreEqual(5 - GameSetting.MOVE_MINION_DICE_COIN, king.diceCoin, "주사위 코인 2개 소비");
+        Assert.AreEqual((Vector2)b.transform.position, (Vector2)moving.transform.position);
+
+        // 6) wave 중엔 빈 칸에 놓아도 원위치 (자리 고정)
+        GameManager.Instance.EndBreakTime();
+        yield return WaitFrames(2);
+        Assert.IsFalse(GameManager.Instance.isBreakTime);
+        king.diceCoin = 5;
+        yield return DragDrop(moving, a);
+        Assert.AreSame(b, TileManager.Instance.GetTile(moving), "wave 중엔 이동 안 됨");
+        Assert.AreEqual(5, king.diceCoin, "wave 중엔 코인 안 씀");
+        MinionFieldController.Instance.RemoveFieldMinion(moving);
         yield return WaitFrames(2);
     }
 }

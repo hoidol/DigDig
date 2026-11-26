@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Mortar
   m_EditorClassIdentifier: Assembly-CSharp::MortarMinionData
   key: Mortar
-  desc: "\uAE43\uBC1C \uC704\uCE58\uC5D0 \uD3ED\uD0C4 \uD3EC\uACA9"
+  desc: "\uAE43\uBC1C \uC704\uCE58\uC5D0 \uD3ED\uD0C4\uC744 \uB5A8\uC5B4\uB728\uB9BD\uB2C8\uB2E4(\uCD5C\uB300
+    {0}\uAE30). \uB9DE\uC740 \uC801\uC740 {1:0}% \uD655\uB960\uB85C \uB290\uB824\uC9D1\uB2C8\uB2E4."
   growth: 1
   attackType: 1
   tags: 2050
@@ -38,6 +39,10 @@ MonoBehaviour:
   thum: {fileID: -518926630350046119, guid: 84ab2b6a0d8e64b3eb8d5c76a9745d70, type: 3}
   evolvedSprite: {fileID: 0}
   evolutions: []
+  evolutionName: "\uC3D8\uB2E4"
+  evolutionDesc: "[\uBC84\uD2BC \uC2A4\uD0AC \xB7 \uCFE8\uD0C0\uC784 {0}\uCD08] \uAE43\uBC1C\uC5D0\uC11C
+    \uC801\uC774 \uC624\uB294 \uCABD\uC73C\uB85C \uD3ED\uD0C4 {1}\uBC1C, \uB9DE\uC740
+    \uC801 {2}% \uD655\uB960\uB85C \uC2A4\uD134"
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 0

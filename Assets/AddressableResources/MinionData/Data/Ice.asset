@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Ice
   m_EditorClassIdentifier: Assembly-CSharp::IceMinionData
   key: Ice
-  desc: "20% \uD655\uB960\uB85C \uBE59\uACB0\uB418\uB294 \uC5BC\uC74C\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+  desc: "\uBE59\uACB0\uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4. {0}\uCD08 \uB3D9\uC548
+    \uC774\uB3D9\uC18D\uB3C4\uB97C {1}% \uB0AE\uCDA5\uB2C8\uB2E4."
   growth: 1
   attackType: 2
   tags: 769
@@ -38,6 +39,11 @@ MonoBehaviour:
   thum: {fileID: -7560284153744367771, guid: 238d0ee5a22894beaae60545ac18e495, type: 3}
   evolvedSprite: {fileID: 0}
   evolutions: []
+  evolutionName: "\uBE59\uBE59"
+  evolutionDesc: "[\uBC84\uD2BC \uC2A4\uD0AC \xB7 \uCFE8\uD0C0\uC784 {0}\uCD08] \uD070
+    \uB208\uB369\uC774\uAC00 {1}\uCD08 \uB3D9\uC548 \uC8FC\uBCC0 \uAE38\uC744 \uB3CC\uBA70
+    \uB9DE\uC740 \uC801\uC744 {2}% \uD655\uB960\uB85C \uC5BC\uB9BC, {3}% \uD655\uB960\uB85C
+    {4}\uCD08 \uC2A4\uD134"
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 0
@@ -55,14 +61,14 @@ MonoBehaviour:
     - 0
   uniqueMinionStats: []
   durations:
-  - 1.5
-  - 2
-  - 2.5
-  - 2.75
   - 3
+  - 4
+  - 5
+  - 6
+  - 7
   slowRate:
-  - 0.7
   - 0.6
   - 0.5
   - 0.4
   - 0.3
+  - 0.2

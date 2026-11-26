@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: SlowTile
   m_EditorClassIdentifier: Assembly-CSharp::RuneData
   key: SlowTile
-  itemName: "\uB454\uD654 \uD0C0\uC77C"
-  desc: "{0}% 확률로 3초간 슬로우"
+  runeName: "\uB454\uD654 \uD0C0\uC77C"
+  desc: "{0}% \uD655\uB960\uB85C 3\uCD08\uAC04 \uC2AC\uB85C\uC6B0"
   level: 1
   maxCount: 3
-  diceCoin: 3
+  diceCoin: 0
   levelValues:
   - 25
   - 40
   - 70
-  itemPrefab: {fileID: 2203068897833715795, guid: 398dd09008aff4260bfe635ed3ba5232,
+  runePrefab: {fileID: 2203068897833715795, guid: 398dd09008aff4260bfe635ed3ba5232,
     type: 3}
   unlockConditions: []
   applyOrder: 0

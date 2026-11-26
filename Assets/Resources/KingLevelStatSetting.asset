@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: KingLevelStatSetting
   m_EditorClassIdentifier: Assembly-CSharp::KingLevelStatSetting
   tiers:
-  - unlockLevel: 5
+  - unlockLevel: 1
     maxPoints: 5
     options:
     - kind: 0
@@ -46,7 +46,7 @@ MonoBehaviour:
       multiply: 0
       displayMul: 100
       suffix: 
-  - unlockLevel: 10
+  - unlockLevel: 6
     maxPoints: 5
     options:
     - kind: 1
@@ -79,7 +79,7 @@ MonoBehaviour:
       multiply: 0
       displayMul: 1
       suffix: '%'
-  - unlockLevel: 15
+  - unlockLevel: 11
     maxPoints: 5
     options:
     - kind: 1
@@ -127,7 +127,7 @@ MonoBehaviour:
       multiply: 0
       displayMul: 1
       suffix: '%'
-  - unlockLevel: 20
+  - unlockLevel: 16
     maxPoints: 5
     options:
     - kind: 1
@@ -160,7 +160,7 @@ MonoBehaviour:
       multiply: 0
       displayMul: 1
       suffix: '%'
-  - unlockLevel: 25
+  - unlockLevel: 21
     maxPoints: 5
     options:
     - kind: 1
@@ -193,7 +193,7 @@ MonoBehaviour:
       multiply: 0
       displayMul: 1
       suffix: '%'
-  - unlockLevel: 30
+  - unlockLevel: 26
     maxPoints: 5
     options:
     - kind: 1

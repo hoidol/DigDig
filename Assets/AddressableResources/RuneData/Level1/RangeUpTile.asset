@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: RangeUpTile
   m_EditorClassIdentifier: Assembly-CSharp::RuneData
   key: RangeUpTile
-  itemName: "\uC0AC\uAC70\uB9AC \uD0C0\uC77C"
+  runeName: "\uC0AC\uAC70\uB9AC \uD0C0\uC77C"
   desc: "\uC0AC\uC815\uAC70\uB9AC +{0}"
   level: 1
   maxCount: 3
-  diceCoin: 3
+  diceCoin: 0
   levelValues:
-  - 1.5
+  - 1
+  - 2
   - 3
-  - 4.5
-  itemPrefab: {fileID: 6669746329265871750, guid: 84a8588149cc1428d841c2d1a596fdb4,
+  runePrefab: {fileID: 6669746329265871750, guid: 84a8588149cc1428d841c2d1a596fdb4,
     type: 3}
   unlockConditions: []
   applyOrder: 0

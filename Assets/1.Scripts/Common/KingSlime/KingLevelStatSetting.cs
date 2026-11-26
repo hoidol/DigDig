@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 
 // (2026-11-24) 용사 강화 (코드 이름 KingLevelStat): 유저 레벨 1당 포인트 1 → 로비 킹 관리 화면에서 묶음(Tier)의 칸에 찍음. 언제든 무료로 초기화
-// 묶음은 해금 레벨(Lv.5·10·15…)이 되어야 찍을 수 있고, 묶음마다 찍을 수 있는 포인트 합계 상한(maxPoints, 5). 한 칸에 5포인트 전부 가능
-// 칸 = 킹 스탯(Stat) 또는 판 운영·보드 능력(Ability, HeroUpgradeAbility → 인게임 HeroUpgradeSystem). Lv.5 = 스탯, Lv.10부터 능력
+// (2026-11-26) 묶음 = 레벨 구간: Lv.1~5에 얻은 포인트 → 1번 묶음 칸 3개, Lv.6~10 → 2번 … (구간 = unlockLevel부터 maxPoints 레벨, 포인트는 묶음끼리 안 섞임)
+// 한 칸에 5포인트 전부 가능. 칸 = 킹 스탯(Stat) 또는 판 운영·보드 능력(Ability, HeroUpgradeAbility → 인게임 HeroUpgradeSystem). 1번 묶음 = 스탯, 2번부터 능력
 // (이전 로비 재화 강화 KSUpgradeData·권능 Authority를 대체)
 // Resources/KingLevelStatSetting 에셋 인스펙터에서 수정, 에셋이 없으면 코드 기본값(DEFAULT_TIERS, 임시 수치)
 [CreateAssetMenu(fileName = "KingLevelStatSetting", menuName = "KingSlime/KingLevelStatSetting")]
@@ -97,9 +97,9 @@ public class KingLevelStatSetting : ScriptableObject
     [Serializable]
     public class Tier
     {
-        [Tooltip("이 유저 레벨부터 찍을 수 있음")]
-        public int unlockLevel = 5;
-        [Tooltip("이 묶음에 찍을 수 있는 포인트 합계 상한")]
+        [Tooltip("이 묶음 구간의 첫 레벨 (이 레벨부터 maxPoints 레벨 동안 얻는 포인트가 이 묶음 몫)")]
+        public int unlockLevel = 1;
+        [Tooltip("이 묶음에 찍을 수 있는 포인트 합계 상한 = 구간 레벨 수")]
         public int maxPoints = 5;
         public StatOption[] options = new StatOption[0];
 
@@ -115,37 +115,37 @@ public class KingLevelStatSetting : ScriptableObject
     // DEFAULT_TIERS를 직접 넣지 않음: 같은 배열을 가리키면 에셋을 불러올 때 코드 기본값까지 에셋 값으로 덮어써짐 (새 에셋은 CreateAsset에서 복사)
     public Tier[] tiers = new Tier[0];
 
-    // 임시 수치 (사용자가 에셋에서 조정). Lv.5 = 킹 스탯, Lv.10부터 능력 (2026-11-24 사용자 확정 구성)
+    // 임시 수치 (사용자가 에셋에서 조정). Lv.1~5 = 킹 스탯, Lv.6~부터 능력 (2026-11-24 사용자 확정 구성, 2026-11-26 구간 방식)
     // 빠진 능력(Lv.2 카드·경험치 보너스·막힌 칸·쌍둥이·시작 룬·모래시계·불굴·형태 다양·순혈·진화 공격력)은 코드만 남김 → 다시 쓰려면 칸에 넣기
     public static readonly Tier[] DEFAULT_TIERS =
     {
         // 킹
-        new Tier(5, 5,
+        new Tier(1, 5,
             new StatOption(StatType.AttackPower, 1f),
             new StatOption(StatType.AttackSpeed, 2f, multiply: true, suffix: "%"),
             new StatOption(StatType.AttackRange, 0.2f, displayMul: 100f)),
         // 정예병 (정예병 칸 미니언만)
-        new Tier(10, 5,
+        new Tier(6, 5,
             StatOption.Ability(HeroUpgradeAbility.EliteMinionAttack, 4f, "%"),
             StatOption.Ability(HeroUpgradeAbility.EliteMinionAttackSpeed, 3f, "%"),
             StatOption.Ability(HeroUpgradeAbility.EliteMinionSkillCooldown, 6f, "%")),
         // 전리품
-        new Tier(15, 5,
+        new Tier(11, 5,
             StatOption.Ability(HeroUpgradeAbility.EliteBossDiceChance, 1f, "%", 1, 2, 3, 4, 5),
             StatOption.Ability(HeroUpgradeAbility.BreakRerollChance, 1f, "%", 3, 4, 5, 6, 7),
             StatOption.Ability(HeroUpgradeAbility.RuneRewardLv2Chance, 1f, "%", 3, 4, 5, 6, 7)),
         // 병과
-        new Tier(20, 5,
+        new Tier(16, 5,
             StatOption.Ability(HeroUpgradeAbility.RangedAttackSpeed, 3f, "%"),
             StatOption.Ability(HeroUpgradeAbility.MeleeAttack, 5f, "%"),
             StatOption.Ability(HeroUpgradeAbility.MagicAttack, 4f, "%")),
         // 위기·상성
-        new Tier(25, 5,
+        new Tier(21, 5,
             StatOption.Ability(HeroUpgradeAbility.KingHitEnergyCharge, 5f),
             StatOption.Ability(HeroUpgradeAbility.KingHitEliteRage, 10f, "%"),
             StatOption.Ability(HeroUpgradeAbility.ResistEase, 5f, "%")),
         // 준비 (판 시작) (2026-11-25, 이전 Lv.30 상성(AttackVsDefence)은 코드만 남김)
-        new Tier(30, 5,
+        new Tier(26, 5,
             StatOption.Ability(HeroUpgradeAbility.StartDiceCoin, 1f),
             StatOption.Ability(HeroUpgradeAbility.MinionCostDownChance, 1f, "%"),
             StatOption.Ability(HeroUpgradeAbility.FirstOfferLv2Chance, 15f, "%")),

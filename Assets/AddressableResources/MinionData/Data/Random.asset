@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Random
   m_EditorClassIdentifier: Assembly-CSharp::RandomMinionData
   key: Random
-  desc: "{0}~{1} \uD53C\uD574\uB97C \uAC00\uC9C4 \uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
+  desc: "\uB79C\uB364\uD55C \uD53C\uD574\uB97C \uAC00\uC9C4 \uD0C4\uC744 \uBC1C\uC0AC\uD569\uB2C8\uB2E4."
   growth: 1
   attackType: 1
   tags: 1
@@ -38,6 +38,10 @@ MonoBehaviour:
   thum: {fileID: 8573962228187662794, guid: 6eca441ede46543cb8d8060cd203bc44, type: 3}
   evolvedSprite: {fileID: 0}
   evolutions: []
+  evolutionName: "\uD138\uBB49\uCE58"
+  evolutionDesc: "[\uBC84\uD2BC \uC2A4\uD0AC \xB7 \uCFE8\uD0C0\uC784 {0}\uCD08] {1}\uCD08
+    \uB3D9\uC548 {2}\uBC29\uD5A5\uC73C\uB85C \uBE60\uB974\uAC8C \uC18D\uC0AC (\uD0C4
+    \uD53C\uD574 {3}%)"
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 0

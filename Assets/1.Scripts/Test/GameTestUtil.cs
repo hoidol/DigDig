@@ -34,6 +34,60 @@ public static class GameTestUtil
                 MinionFieldController.Instance.RemoveFieldMinion(m);
     }
 
+    // ---- 적
+    // 적 소환 (일반 = 경로 번갈아, 엘리트·보스 = 주 경로, 엘리트·보스는 항상 Normal 방어 타입). 체력 = 지금 wave 기준
+    public static int SpawnEnemies(EnemyType enemyType, DefenceType defenceType, int count)
+    {
+        GameManager gm = GameManager.Instance;
+        EnemyFieldController field = EnemyFieldController.Instance;
+        StageData stage = gm != null ? gm.stageData : null;
+        if (stage == null || field == null)
+            return 0;
+        // 보스는 스테이지 데이터의 boss로 따로 생성 (BossWave와 같은 방식, 풀 밖)
+        if (enemyType == EnemyType.Boss)
+        {
+            if (stage.boss == null)
+                return 0;
+            for (int i = 0; i < count; i++)
+                Object.Instantiate(stage.boss).Spawn(field.GetSpawnPosition(), gm.waveIdx);
+            return count;
+        }
+        DefenceType def = enemyType == EnemyType.Normal ? defenceType : DefenceType.Normal;
+        Enemy prefab = stage.GetEnemyPrefab(enemyType, def);
+        if (prefab == null)
+        {
+            Debug.LogWarning($"[GameTestUtil] 적 프리팹 없음: {enemyType} / {def}");
+            return 0;
+        }
+        int spawned = 0;
+        for (int i = 0; i < count; i++)
+        {
+            Enemy enemy = field.Instantiate(prefab);
+            if (enemy == null)
+                continue;
+            if (enemyType == EnemyType.Normal)
+            {
+                Transform[] route = field.NextNormalRoute();
+                enemy.Spawn(route[0].position, gm.waveIdx);
+                enemy.SetRoute(route);
+            }
+            else
+                enemy.Spawn(field.GetSpawnPosition(), gm.waveIdx);
+            spawned++;
+        }
+        return spawned;
+    }
+
+    // 적 체력 (wave = waveIdx, 0부터). 종류별 배율 = 적 프리팹 EnemyData.hpMultiplier
+    public static float GetEnemyHp(StageData stage, int waveIdx, EnemyType type)
+    {
+        if (stage == null)
+            return 0f;
+        Enemy prefab = type == EnemyType.Boss ? stage.boss : stage.GetEnemyPrefab(type, DefenceType.Normal);
+        float mul = prefab != null && prefab.enemyData != null ? prefab.enemyData.hpMultiplier : 1f;
+        return Enemy.CalcWaveHp(stage, waveIdx) * mul;
+    }
+
     // ---- 용사
     public static AbilityData[] Heroes() => KingGrowthSetting.Instance != null
         ? KingGrowthSetting.Instance.heroAbilities.Where(h => h != null).ToArray() : new AbilityData[0];

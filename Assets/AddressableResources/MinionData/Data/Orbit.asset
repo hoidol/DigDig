@@ -38,6 +38,10 @@ MonoBehaviour:
   thum: {fileID: -8825436736869169133, guid: bf9c72f226f384b5b9bd9de6a6f09259, type: 3}
   evolvedSprite: {fileID: 0}
   evolutions: []
+  evolutionName: "\uB3CC\uB2E4\uB2E4"
+  evolutionDesc: "[\uBC84\uD2BC \uC2A4\uD0AC \xB7 \uCFE8\uD0C0\uC784 {0}\uCD08] {1}\uCD08
+    \uB3D9\uC548 \uD68C\uC804\uCCB4\uAC00 \uB2FF\uC740 \uACF3\uC5D0 \uBC94\uC704
+    \uD53C\uD574 (\uACF5\uACA9\uB825 {2}%) + \uAC10\uC18D"
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 0

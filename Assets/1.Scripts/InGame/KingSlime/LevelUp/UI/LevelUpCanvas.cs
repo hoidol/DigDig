@@ -16,6 +16,8 @@ namespace InGame
     public RectTransform statScreenRoot;
     public TMPro.TMP_Text statScreenText;
     public UnityEngine.UI.Button statScreenConfirmButton;
+    // (2026-11-26) 스탯 변화 화면 안 "새 스킬" 칸 (씬 StatChangeScreen/NewSkill): 스킬이 해방되는 레벨에 얻은 스킬을 자세히. 비우면 스탯 글씨에 같이 씀
+    public LevelUpNewSkillPanel newSkillPanel;
     // (2026-11-25) 미니언 강화 카드 새로고침 (한 판 무료 2번 → 광고 3번, RerollCounter). 비우면 실행 중 카드 아래에 생성 (카드의 선택 버튼 모양 복사)
     public UnityEngine.UI.Button rerollButton;
     public TMPro.TMP_Text rerollText;
@@ -37,6 +39,8 @@ namespace InGame
     public bool IsStatStep => CurrentStep == Step.MinionEnhance; // 지금 창 = 미니언 강화 카드 단계 (이름은 이전 능력치 카드 단계 그대로)
     public bool IsStatChangeScreen => CurrentStep == Step.StatChange && statScreenRoot != null && statScreenRoot.gameObject.activeSelf;
     string statChangeScreenText; // 이번 레벨의 스탯 변화 화면 글씨 (스킬 해방은 한 번만 일어나서 저장해 둠)
+    HeroKingAbility newSkillHero; // 이번 레벨에 해방한 스킬 (새 스킬 칸에 표시)
+    int newSkillIdx = -1;
 
     public static bool CanOpen => !RuneRewardSystem.IsOpen && Instance != null && KingSlime.Instance != null && KingSlime.Instance.pendingLevelUps > 0
         && GameManager.Instance != null && GameManager.Instance.isBreakTime;
@@ -46,6 +50,14 @@ namespace InGame
         if (!CanOpen || Instance.gameObject.activeSelf)
             return;
         Instance.OpenCanvas();
+    }
+
+    // (2026-11-26) 씬을 디자인하다 창을 켠 채 저장해도 게임 시작 때는 닫힌 상태로 (열려 있으면 OpenPending이 안 열림)
+    bool openedByCode;
+    void Start()
+    {
+        if (!openedByCode)
+            gameObject.SetActive(false);
     }
 
     void OnDestroy()
@@ -65,6 +77,8 @@ namespace InGame
         }
         CurrentStep = Step.Hero;
         statChangeScreenText = null;
+        newSkillHero = null;
+        newSkillIdx = -1;
         KingSlime.Instance?.ConsumeLevelUp();
         if (KingSlime.Instance != null && KingSlime.Instance.pendingLevelUps > 0)
         {
@@ -84,7 +98,10 @@ namespace InGame
     public override void OpenCanvas(Action closeCallback = null)
     {
         // (2026-11-22) 시간은 멈추지 않음 (브레이크타임에만 열려서 멈출 필요 없음, 룬 타일 선택도 마찬가지)
+        openedByCode = true;
         base.OpenCanvas(closeCallback);
+        // (2026-11-26) 씬에서 카드를 지우면 배열에 빈 칸(null)이 남음 → 빼고 씀 (모자라면 EnsurePanels가 첫 카드를 복사)
+        levelUpStatPanels = (levelUpStatPanels ?? new LevelUpStatPanel[0]).Where(p => p != null).ToArray();
 
         KingSlime king = KingSlime.Instance;
         KingGrowthSetting setting = KingGrowthSetting.Instance;
@@ -133,6 +150,7 @@ namespace InGame
         List<Vector2Int> expandTiles = LevelUpChoiceRule.PickExpandTiles(currentTiles, choices.Count, rng);
 
         EnsurePanels(choices.Count);
+        SetCardContainerActive(true);
         ShowReward();
         HideOldStatChangeText();
         if (headerText != null)
@@ -225,22 +243,19 @@ namespace InGame
     public void BuildRerollButton()
     {
         LevelUpStatPanel first = levelUpStatPanels != null ? levelUpStatPanels.FirstOrDefault(p => p != null) : null;
-        UnityEngine.UI.Button template = first != null ? first.GetComponentsInChildren<UnityEngine.UI.Button>(true).LastOrDefault() : null;
+        UnityEngine.UI.Button template = GetTemplateButton(first);
         if (template == null)
             return;
-        RectTransform panelRt = (RectTransform)first.transform;
-        RectTransform container = panelRt.parent as RectTransform;
-        UnityEngine.UI.Button btn = Instantiate(template, transform);
+        // (2026-11-26) 카드 줄(LevelUpContainer) 맨 아래 칸 = 카드 아래에 붙어 같이 켜지고 꺼짐 (이전: 창 루트, 카드 아래 위치를 계산)
+        Transform parent = first != null && first.transform.parent != null ? first.transform.parent : transform;
+        UnityEngine.UI.Button btn = Instantiate(template, parent);
         btn.name = "MinionEnhanceRerollButton";
-        btn.onClick = new UnityEngine.UI.Button.ButtonClickedEvent(); // 복사된 카드 선택 연결 제거
+        btn.onClick = new UnityEngine.UI.Button.ButtonClickedEvent(); // 복사된 버튼 연결 제거
+        btn.transform.SetAsLastSibling();
         RectTransform rt = (RectTransform)btn.transform;
         rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-        rt.pivot = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
         rt.sizeDelta = new Vector2(Mathf.Max(rt.sizeDelta.x, 320f), Mathf.Max(rt.sizeDelta.y, 90f));
-        // 카드 아래 끝 (카드는 열릴 때 크기 0에서 커지므로 부모 기준으로 계산)
-        Vector3 scale = container != null ? container.lossyScale : Vector3.one;
-        float bottom = panelRt.position.y - panelRt.rect.height * panelRt.pivot.y * scale.y;
-        rt.position = new Vector3(((RectTransform)transform).position.x, bottom - 30f * scale.y, rt.position.z);
         rerollText = btn.GetComponentInChildren<TMPro.TMP_Text>(true);
         if (rerollText != null)
             rerollText.enableAutoSizing = true;
@@ -390,6 +405,12 @@ namespace InGame
                 if (idx < 0)
                     break;
                 hero.UnlockNextSkill();
+                if (newSkillPanel != null && newSkillIdx < 0) // 첫 해방 스킬은 새 스킬 칸에 자세히 (한 번에 둘 이상이면 나머지는 글씨로)
+                {
+                    newSkillHero = hero;
+                    newSkillIdx = idx;
+                    continue;
+                }
                 string stageName = idx == HeroKingAbility.COMMON_SKILL_INDEX ? "3단계 공용 스킬" : $"{idx + 1}단계 스킬";
                 string skill = $"\n<color=#FFD54A><size=115%><b>{stageName} 해방! {hero.GetSkillName(idx)}</b></size></color>\n<size=85%>{hero.GetSkillDesc(idx)}</size>";
                 if (idx == 0) // 에너지는 1단계 해방 때 최대 2개
@@ -397,11 +418,23 @@ namespace InGame
                 lines.Add(skill);
             }
         }
-        return string.Join("\n", lines).Trim('\n');
+        string result = string.Join("\n", lines).Trim('\n');
+        // 스탯 변화가 없어도 새 스킬이 있으면 화면을 보여 줘야 함 (빈 글씨 = 화면 건너뜀)
+        return string.IsNullOrEmpty(result) && newSkillIdx >= 0 ? " " : result;
+    }
+
+    // 카드 줄(카드의 부모, 씬 LevelUpContainer): 카드 단계에선 켬, 스탯 변화 화면에선 끔 (씬에서 꺼 둔 채 저장해도 동작)
+    void SetCardContainerActive(bool active)
+    {
+        LevelUpStatPanel first = levelUpStatPanels != null ? levelUpStatPanels.FirstOrDefault(p => p != null) : null;
+        Transform container = first != null ? first.transform.parent : null;
+        if (container != null && container != transform)
+            container.gameObject.SetActive(active);
     }
 
     void ShowStatScreen(KingSlime king, string text)
     {
+        SetCardContainerActive(false);
         foreach (var panel in levelUpStatPanels ?? new LevelUpStatPanel[0])
             if (panel != null)
                 panel.gameObject.SetActive(false);
@@ -427,6 +460,13 @@ namespace InGame
         }
         if (statScreenText != null)
             statScreenText.text = text;
+        if (newSkillPanel != null)
+        {
+            if (newSkillIdx >= 0)
+                newSkillPanel.Show(newSkillHero, newSkillIdx);
+            else
+                newSkillPanel.Hide();
+        }
         statScreenRoot.DOKill();
         statScreenRoot.localScale = Vector3.one * 0.8f;
         statScreenRoot.DOScale(1f, 0.25f).SetEase(Ease.OutBack).SetUpdate(true);
@@ -498,7 +538,7 @@ namespace InGame
         t.raycastTarget = false;
         statScreenText = t;
 
-        UnityEngine.UI.Button template = first != null ? first.GetComponentsInChildren<UnityEngine.UI.Button>(true).LastOrDefault() : null;
+        UnityEngine.UI.Button template = GetTemplateButton(first);
         if (template != null)
         {
             UnityEngine.UI.Button btn = Instantiate(template, statScreenRoot);
@@ -616,6 +656,13 @@ namespace InGame
     }
     #endregion
 
+    // 빌더가 버튼을 만들 때 복사할 모양: 카드 안 버튼 → (2026-11-26 카드 선택 버튼 삭제) 씬의 확인·새로고침 버튼
+    UnityEngine.UI.Button GetTemplateButton(LevelUpStatPanel first)
+    {
+        UnityEngine.UI.Button b = first != null ? first.GetComponentsInChildren<UnityEngine.UI.Button>(true).LastOrDefault() : null;
+        return b != null ? b : statScreenConfirmButton != null ? statScreenConfirmButton : rerollButton;
+    }
+
     // 패널은 씬에 1개만 두어도 됨: 빈 칸(null)은 빼고, 모자라면 첫 패널을 같은 부모 아래에 복사
     void EnsurePanels(int count)
     {
@@ -630,6 +677,8 @@ namespace InGame
         {
             LevelUpStatPanel copy = Instantiate(panels[0], panels[0].transform.parent);
             copy.name = $"{panels[0].name}_{panels.Count}";
+            // 카드 줄 안에 다른 것(새로고침 버튼 등)이 있어도 카드끼리 붙어 있게 마지막 카드 바로 뒤에
+            copy.transform.SetSiblingIndex(panels[panels.Count - 1].transform.GetSiblingIndex() + 1);
             panels.Add(copy);
         }
         levelUpStatPanels = panels.ToArray();

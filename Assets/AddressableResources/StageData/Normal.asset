@@ -34,9 +34,9 @@ MonoBehaviour:
   multiHpPerWave: 1.03
   cycleHpMuls:
   - 1
+  - 1.05
   - 1.1
-  - 1.21
-  - 1.33
+  - 1.2
   defenceWaveTypes: 060000000100000002000000060000000000000003000000
   enemyPrefabs:
   - {fileID: -6271259298118201455, guid: 31b80da535408400eb25396f283ccbf4, type: 3}

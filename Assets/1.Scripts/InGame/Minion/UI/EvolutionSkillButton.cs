@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // (2026-11-26) 진화 발동 스킬 버튼: 미니언 머리 위 상태(MinionGameStatePanel) 오른쪽 살짝 위
-// 쿨타임 동안 = 미니언 그림이 어둡고 시계 방향으로 밝게 차오름 / 준비되면 금색 테두리 + 통통 → 누르면 MinionEvolution.UseActiveSkill
-// 발동 중엔 잠김. 대상이 없어 못 쓰면 토스트
+// (2026-11-26) 쿨타임이 다 찼을 때만 보임(충전 중·발동 중엔 숨김) → 금색 테두리 + 통통 → 누르면 MinionEvolution.UseActiveSkill
+// 누르기 전까지 쿨타임은 찬 채로 멈춰 있음(다음 충전은 발동이 끝난 뒤부터, ActiveSkillEvolution). 대상이 없어 못 쓰면 토스트
+// 위치·크기: 씬 템플릿(MinionGameStatePanel)과 이 버튼은 편집 모드에서 켜 두어 Scene 뷰에서 바로 옮길 수 있음 (실행 중엔 GameWorldCanvas가 템플릿을 숨김)
 // (2026-11-26) 씬에 있음: InGame 씬 GameWorldCanvas의 MinionGameStatePanel 템플릿 하위 (메뉴 Tools/InGame/Add Evolution Skill Button To State Panel). 실행 중 생성 없음 → 씬에서 직접 수정
 public class EvolutionSkillButton : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class EvolutionSkillButton : MonoBehaviour
     static readonly Color READY_OUTLINE = new Color(1f, 0.82f, 0.2f, 1f);
 
     Minion target;
-    public Image bg;       // 미니언 그림 (어둡게 = 쿨타임 중 바탕)
-    public Image fill;     // 시계 방향으로 차오르는 밝은 그림 (Filled Radial360)
+    public Image bg;       // 버튼 바탕 (씬 모양 그대로, 2026-11-26 미니언 그림 안 넣음)
+    public Image fill;     // 버튼 안쪽 (씬 모양 그대로)
     public Button button;
     public Outline outline; // 준비되면 금색 테두리
     RectTransform rect;
@@ -68,30 +69,25 @@ public class EvolutionSkillButton : MonoBehaviour
         if (rect == null)
             rect = (RectTransform)transform;
         target = minion;
-        Sprite icon = minion != null && minion.minionData != null
-            ? (minion.minionData.evolvedSprite != null ? minion.minionData.evolvedSprite : minion.minionData.thum) : null;
-        bg.sprite = icon;
-        fill.sprite = icon;
-        fill.enabled = icon != null;
+        // (2026-11-26) 미니언 썸네일은 안 보여줌 → 그림·색·글씨는 씬 템플릿 모양 그대로
         Refresh();
     }
 
     public void Refresh()
     {
         MinionEvolution evo = target != null ? target.EvolutionAbility : null;
-        bool show = evo != null && evo.HasActiveSkill;
+        // 쿨타임이 다 찼을 때만 보임
+        bool show = evo != null && evo.HasActiveSkill && evo.IsActiveSkillReady && !evo.IsActiveSkillRunning;
         if (gameObject.activeSelf != show)
             gameObject.SetActive(show);
         if (!show)
             return;
-        bool running = evo.IsActiveSkillRunning;
-        bool ready = evo.IsActiveSkillReady;
-        fill.fillAmount = running ? 1f : evo.ActiveSkillProgress;
-        fill.color = running ? new Color(1f, 0.9f, 0.6f, 1f) : Color.white;
-        outline.enabled = ready;
-        button.interactable = ready;
-        float pulse = ready ? 1f + 0.08f * Mathf.Sin(Time.unscaledTime * 6f) : 1f;
-        rect.localScale = Vector3.one * pulse;
+        if (fill != null)
+            fill.fillAmount = 1f;
+        if (outline != null)
+            outline.enabled = true;
+        button.interactable = true;
+        rect.localScale = Vector3.one * (1f + 0.08f * Mathf.Sin(Time.unscaledTime * 6f));
     }
 
     void OnClick()

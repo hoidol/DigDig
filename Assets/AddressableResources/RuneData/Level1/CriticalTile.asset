@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: CriticalTile
   m_EditorClassIdentifier: Assembly-CSharp::RuneData
   key: CriticalTile
-  itemName: "\uCE58\uBA85\uD0C0 \uD0C0\uC77C"
+  runeName: "\uCE58\uBA85\uD0C0 \uD0C0\uC77C"
   desc: "\uCE58\uBA85\uD0C0 \uD655\uB960 +{0}% \uC99D\uAC00 \uB370\uBBF8\uC9C0 2\uBC30"
   level: 1
   maxCount: 3
-  diceCoin: 3
+  diceCoin: 0
   levelValues:
-  - 30
+  - 25
   - 40
-  - 50
-  itemPrefab: {fileID: 8036864411089743931, guid: 95f36bc7321b043d489480a18ab52793,
+  - 60
+  runePrefab: {fileID: 8036864411089743931, guid: 95f36bc7321b043d489480a18ab52793,
     type: 3}
   unlockConditions: []
   applyOrder: 0

@@ -454,32 +454,7 @@ public class MinionTestWindow : EditorWindow
 
     // TileItemTestWindow도 사용
     public static void SpawnEnemies(EnemyType enemyType, DefenceType defenceType, int enemyCount)
-    {
-        StageData stage = GameManager.Instance.stageData;
-        EnemyFieldController field = EnemyFieldController.Instance;
-        DefenceType def = enemyType == EnemyType.Normal ? defenceType : DefenceType.Normal; // 엘리트·보스는 항상 Normal
-        Enemy prefab = stage != null ? stage.GetEnemyPrefab(enemyType, def) : null;
-        if (prefab == null)
-        {
-            Debug.LogWarning($"[MinionTest] 적 프리팹 없음: {enemyType} / {def}");
-            return;
-        }
-        int wave = GameManager.Instance.waveIdx;
-        for (int i = 0; i < enemyCount; i++)
-        {
-            Enemy enemy = field.Instantiate(prefab);
-            if (enemy == null)
-                continue;
-            if (enemyType == EnemyType.Normal)
-            {
-                Transform[] route = field.NextNormalRoute();
-                enemy.Spawn(route[0].position, wave);
-                enemy.SetRoute(route);
-            }
-            else
-                enemy.Spawn(field.GetSpawnPosition(), wave);
-        }
-    }
+        => GameTestUtil.SpawnEnemies(enemyType, defenceType, enemyCount); // (2026-11-26) 기기 테스트 패널과 공용
 
     // ---------------- 타일 아이템 ----------------
     void DrawTileRune()

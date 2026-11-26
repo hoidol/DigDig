@@ -46,8 +46,8 @@ public class GameSetting
    // (2026-11-24) 최대 Lv.8 (Lv.8 = 3단계 스킬 "용사가 될거야!"). 표는 Lv.0→1 ~ Lv.7→8
    public const int KING_MAX_LEVEL = 12;
    public static readonly int[] KING_LEVEL_EXPS = { 2, 2, 3, 3, 4, 4, 5, 5,6,6,7,7 };
-   // (2026-11-26) 용사 1·2단계 스킬 소모 에너지 (모든 용사 공통). 3단계(용사가 될거야!)는 프리팹 commonSkillCost
-   public static readonly int[] HERO_SKILL_COSTS = { 1, 2 };
+   // (2026-11-26 최신) 용사 스킬 소모 에너지 (모든 용사 공통, index = 스킬 단계): 1단계 1 · 2단계 1 · 3단계(용사가 될거야!) 2
+   public static readonly int[] HERO_SKILL_COSTS = { 1, 1, 2 };
    // (2026-11-24) 용사 에너지: wave 중 HERO_ENERGY_CHARGE_TIME초마다 1개 충전
    //   (2026-11-25 삭제: 정예병 칸 미니언 처치로 충전 시간 감소)
    // (2026-11-25) 충전 60 → 30초, 최대 개수 = 킹 레벨 기준 (Lv.2 = 2개, Lv.4 = 3, Lv.6 = 4, Lv.8 = 5. 이전: 해방한 스킬 수)
@@ -59,6 +59,8 @@ public class GameSetting
    public const int BUY_EXP_DICE_COIN_PRICE = 2;
    // (2026-11-26) 브레이크타임 룬 강화: 룬 칸을 누르면 주사위 코인 이만큼 내고 레벨 +1 (확정, TileRuneInfoPanel)
    public const int RUNE_UPGRADE_DICE_COIN = 3;
+   // (2026-11-26) 브레이크타임 미니언 자리 이동: 빈 칸에 놓으면 확인 팝업 → 주사위 코인 이만큼 내고 이동 (MinionFieldController)
+   public const int MOVE_MINION_DICE_COIN = 2;
    public const int BUY_EXP_AMOUNT = 1;
    // (2026-11-23) 킹 레벨업 보상: 레벨이 오를 때마다 주사위 코인 +1 (KingSlime.AddExp, 레벨업 창 아래에 표시)
    public const int LEVEL_UP_DICE_COIN = 1;

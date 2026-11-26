@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Berserker
   m_EditorClassIdentifier: Assembly-CSharp::BerserkerMinionData
   key: Berserker
-  desc: "\uAC00\uAE4C\uC774\uC11C \uC801\uC774 \uC8FD\uC744\uB54C \uB9C8\uB2E4 \uACF5\uC18D\uB3C4
-    \uC0C1\uC2B9(\uCD5C\uB300 \uC911\uCCA9 10\uD68C)"
+  desc: "\uC8FC\uBCC0(\uBC94\uC704 {0})\uC5D0\uC11C \uC801\uC774 \uC8FD\uC744 \uB54C\uB9C8\uB2E4
+    \uACF5\uACA9\uC18D\uB3C4 {1}% \uC99D\uAC00 (\uCD5C\uB300 {2}\uC911\uCCA9, {3}\uCD08
+    \uB3D9\uC548 \uCC98\uCE58\uAC00 \uC5C6\uC73C\uBA74 \uCD08\uAE30\uD654)"
   growth: 1
   attackType: 1
   tags: 1025
@@ -39,18 +40,22 @@ MonoBehaviour:
   thum: {fileID: 8703389998563471379, guid: 90756449b482d42e7bb388051b1e526c, type: 3}
   evolvedSprite: {fileID: 0}
   evolutions: []
+  evolutionName: "\uD560\uD0A4\uB2C8"
+  evolutionDesc: "[\uBC84\uD2BC \uC2A4\uD0AC \xB7 \uCFE8\uD0C0\uC784 {0}\uCD08] {1}\uCD08
+    \uB3D9\uC548 {2}\uCD08\uB9C8\uB2E4 \uACF5\uACA9 \uBC94\uC704 \uC548 \uBAA8\uB4E0
+    \uC801\uC744 \uD560\uD044 (\uACF5\uACA9\uB825 {3}%) + \uAC10\uC18D"
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 0
     values:
-    - 21.00
-    - 21.00
+    - 25.00
+    - 25.00
   - statType: 2
     values:
     - 50
   - statType: 5
     values:
-    - 3
+    - 1
   - statType: 3
     values:
     - 0

@@ -357,6 +357,19 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             return;
         }
 
+        // (2026-11-26) 카드 소환 모드 + 브레이크타임: 미니언을 빈 칸에 놓으면 주사위 코인 MOVE_MINION_DICE_COIN개로 이동 (확인 팝업, 모자라면 토스트)
+        if (canDrop && LockMinionPosition && source is Minion paidMinion && tile != null && tile.IsEmpty
+            && CanPayMoveNow() && TileManager.Instance.GetTile(paidMinion) != tile)
+        {
+            source.Transform.position = originPos; // 팝업에서 Yes를 누를 때까지 원래 자리
+            Tile originTile = TileManager.Instance.GetTile(source);
+            source.EndDrag(originTile);
+            GameEventBus.Publish(new DragEndEvent(source, originTile));
+            SelectTile(originTile);
+            RequestPaidMove(paidMinion, tile);
+            return;
+        }
+
         // 카드 소환 모드: 미니언은 빈 칸으로 이동 불가(머지만), 킹은 이동 가능
         if (canDrop && tile != null && tile.IsEmpty && !(LockMinionPosition && source is Minion))
         {
@@ -375,6 +388,52 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
 
     // (2026-11-19) 카드 소환 모드: 한 번 놓은 미니언은 자리 고정. 드래그는 머지용으로만 (빈 칸 이동·자리 교체 없음)
     public static bool LockMinionPosition => GameSetting.USE_WAVE_MINION_OFFER;
+
+    // (2026-11-26) 브레이크타임 유료 이동 가능 시점 (wave 중엔 자리 고정 그대로)
+    static bool CanPayMoveNow() => GameManager.Instance != null && GameManager.Instance.isBreakTime;
+
+    public static bool HasMoveDiceCoin(int diceCoin) => diceCoin >= GameSetting.MOVE_MINION_DICE_COIN;
+
+    // 확인 팝업 → Yes면 주사위 코인을 내고 이동. 코인이 모자라면 팝업 없이 토스트
+    void RequestPaidMove(Minion minion, Tile tile)
+    {
+        KingSlime king = KingSlime.Instance;
+        if (king == null || !HasMoveDiceCoin(king.diceCoin))
+        {
+            ToastCanvas.Toast(TranslateManager.GetText("Not enough dice coin"));
+            return;
+        }
+        if (YesOrNoCanvas.Instance == null)
+        {
+            TryPaidMove(minion, tile);
+            return;
+        }
+        YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("MoveMinion_Title"),
+            string.Format(TranslateManager.GetText("MoveMinion_Body"), GameSetting.MOVE_MINION_DICE_COIN),
+            yes => { if (yes) TryPaidMove(minion, tile); });
+    }
+
+    // 팝업이 떠 있는 동안 상황이 바뀌었을 수 있어 다시 확인 (wave 시작·칸이 참·미니언 사라짐·코인 부족)
+    public bool TryPaidMove(Minion minion, Tile tile)
+    {
+        KingSlime king = KingSlime.Instance;
+        if (minion == null || !minion.gameObject.activeInHierarchy || tile == null || !tile.IsEmpty || !CanPayMoveNow()
+            || TileManager.Instance.GetTile(minion) == null || king == null)
+            return false;
+        if (!HasMoveDiceCoin(king.diceCoin))
+        {
+            ToastCanvas.Toast(TranslateManager.GetText("Not enough dice coin"));
+            return false;
+        }
+        king.AddDiceCoin(-GameSetting.MOVE_MINION_DICE_COIN);
+        TileManager.Instance.RemoveTileObject(minion);
+        tile.SetTileObject(minion);
+        minion.EndDrag(tile);
+        SoundManager.Play(SFXType.DragDrop);
+        GameEventBus.Publish(new DragEndEvent(minion, tile));
+        SelectTile(tile);
+        return true;
+    }
 
     Minion FindMinion(Vector2 pos, Minion exclude)
     {

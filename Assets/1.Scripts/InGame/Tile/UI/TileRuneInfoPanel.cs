@@ -114,7 +114,7 @@ public class TileRuneInfoPanel : MonoBehaviour
         int price = GameSetting.RUNE_UPGRADE_DICE_COIN;
         bool enough = KingSlime.Instance != null && KingSlime.Instance.diceCoin >= price;
         if (upgradeText != null)
-            upgradeText.text = $"강화 Lv.{rune.upgradeLevel + 1}  <color={(enough ? "#FFFFFF" : "#FF5A5A")}>주사위 {price}</color>";
+            upgradeText.text = $"강화 Lv.{rune.upgradeLevel + 1}";
     }
 
     public void OnClickedUpgrade()

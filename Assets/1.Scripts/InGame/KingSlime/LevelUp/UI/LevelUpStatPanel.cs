@@ -2,16 +2,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 // (2026-11-20) 레벨업 카드 한 장. AbilityData를 받아 분류·아이콘·이름·설명·레벨을 보여주고, 고르면 킹이 그 능력을 얻음
 // 모양은 로비 패널(이전 KSUpgradePanel·AuthoritySlotPanel)과 같은 계열: 어두운 바탕 + 흰 버튼 배경(슬라이스) + 아이콘 + 외곽선 글씨
 // 카드 색(테두리·아이콘 바탕·분류 글씨) = 종류별 색, 용사는 용사 색(HeroKingAbility.tileColor)
-public class LevelUpStatPanel : MonoBehaviour
+// (2026-11-26) 카드 템플릿 = 가로로 긴 카드(왼쪽 아이콘 + 오른쪽 이름·설명)를 세로로 쌓음, 선택 버튼 없이 카드 어디를 눌러도 선택(OnPointerClick)
+//   글씨·그림 위치는 씬 템플릿 그대로 (코드가 옮기지 않음)
+public class LevelUpStatPanel : MonoBehaviour, IPointerClickHandler
 {
     public TMP_Text titleText;       // 비우면 설명 위에 굵게
     public TMP_Text descriptionText;
     public TMP_Text levelText;       // 비워도 됨. 고르면 될 레벨 (Lv.N, 처음이면 NEW)
-    public TMP_Text categoryText;    // 비워도 됨. 능력치 / 종족 …
+    public TMP_Text categoryText;    // 비워도 됨. 능력치 / 종족 … (비우면 행운·대박 표시는 제목 앞에)
     public Image thumImage;          // 비워도 됨
     public Image borderImage;        // 비워도 됨 (카드 색)
     public Image iconBgImage;        // 비워도 됨 (카드 색)
@@ -19,9 +22,6 @@ public class LevelUpStatPanel : MonoBehaviour
     public GameObject shapeGrid;
     public Image[] shapeCells;
     public Color shapeEmptyColor = new Color(1f, 1f, 1f, 0.15f);
-    [Header("설명 영역: 모양이 있을 때 / 없을 때 (위쪽 기준 y, 높이)")]
-    public Vector2 descWithShape = new Vector2(-515, 140);
-    public Vector2 descNoShape = new Vector2(-410, 245);
 
     public Color statColor = new Color(0.31f, 0.64f, 1f);
     public Color raceColor = new Color(1f, 0.78f, 0.29f);
@@ -92,6 +92,15 @@ public class LevelUpStatPanel : MonoBehaviour
             if (hero != null) { raceCol = hero.tileColor; raceCol.a = 1f; }
         }
         DrawGrid(currentTiles, extraTile, raceCol * new Color(1f, 1f, 1f, 0.6f), GetColor(data));
+        SetIconVisible(false); // (2026-11-26) 정예 칸 추가 카드 = 아이콘 대신 칸 그림(ShapeGrid)만
+    }
+
+    // 아이콘 바탕(IconBg, 아이콘·레벨 배지 포함) 켜기/끄기. 씬에서 꺼 둔 채 저장해도 일반 카드에선 켬
+    void SetIconVisible(bool visible)
+    {
+        GameObject icon = iconBgImage != null ? iconBgImage.gameObject : thumImage != null ? thumImage.gameObject : null;
+        if (icon != null && icon != gameObject)
+            icon.SetActive(visible);
     }
 
     void DrawGrid(IList<Vector2Int> tiles, Vector2Int? extra, Color tileColor, Color extraColor = default)
@@ -109,7 +118,6 @@ public class LevelUpStatPanel : MonoBehaviour
                 : tiles != null && tiles.Contains(offset) ? tileColor
                 : shapeEmptyColor;
         }
-        SetDescArea(true);
     }
 
     static string GetOffsetName(Vector2Int o)
@@ -126,6 +134,7 @@ public class LevelUpStatPanel : MonoBehaviour
     {
         this.data = data;
         expandTile = null;
+        SetIconVisible(true);
         heroTiles = null;
         skillHero = null;
         string desc = data.GetDescription(nextLevel);
@@ -160,12 +169,21 @@ public class LevelUpStatPanel : MonoBehaviour
             iconBgImage.color = color;
         if (categoryText != null)
         {
-            categoryText.text = data.IsLuckyEnhance
-                ? (data.minionAmount >= MinionEnhanceSystem.JACKPOT_AMOUNT ? $"대박! 강화 ×{data.minionAmount}" : $"행운! 강화 ×{data.minionAmount}")
-                : GetCategoryName(data.category);
+            categoryText.text = data.IsLuckyEnhance ? GetLuckyLabel(data) : GetCategoryName(data.category);
             categoryText.color = color;
         }
+        else if (data.IsLuckyEnhance) // 분류 글씨가 없는 카드 → 행운·대박은 제목 앞에 카드 색으로 (×2·×3 카드인지 꼭 보이게)
+        {
+            string label = $"<color=#{ColorUtility.ToHtmlStringRGB(color)}>{(data.minionAmount >= MinionEnhanceSystem.JACKPOT_AMOUNT ? "대박!" : "행운!")}</color> ";
+            if (titleText != null)
+                titleText.text = label + titleText.text;
+            else
+                descriptionText.text = label + descriptionText.text;
+        }
     }
+
+    static string GetLuckyLabel(AbilityData data) =>
+        data.minionAmount >= MinionEnhanceSystem.JACKPOT_AMOUNT ? $"대박! 강화 ×{data.minionAmount}" : $"행운! 강화 ×{data.minionAmount}";
 
     // 종족이면 버프 칸 모양 표시 + 설명을 그 아래로
     void SetShape(Vector2Int[] offsets, Color color)
@@ -183,17 +201,6 @@ public class LevelUpStatPanel : MonoBehaviour
                 shapeCells[i].color = System.Array.IndexOf(offsets, offset) >= 0 ? color : shapeEmptyColor;
             }
         }
-        SetDescArea(show);
-    }
-
-    void SetDescArea(bool show)
-    {
-        Vector2 area = show ? descWithShape : descNoShape;
-        RectTransform rt = descriptionText.rectTransform;
-        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 1f);
-        rt.pivot = new Vector2(0.5f, 1f);
-        rt.anchoredPosition = new Vector2(0, area.x);
-        rt.sizeDelta = new Vector2(rt.sizeDelta.x, area.y);
     }
 
     public Color luckyColor = new Color(1f, 0.82f, 0.2f); // (2026-11-25) 행운 미니언 강화 카드 (×2) 금색
@@ -238,6 +245,14 @@ public class LevelUpStatPanel : MonoBehaviour
             case AbilityCategory.MinionEnhance: return "미니언 강화";
             default: return "능력치";
         }
+    }
+
+    // (2026-11-26) 카드 어디를 눌러도 선택 (선택 버튼 삭제). 튀어나오는 중(크기 0.5 미만)엔 무시 → 창이 뜨자마자 잘못 누르는 것 방지
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.dragging || transform.localScale.x < 0.5f)
+            return;
+        OnClickedSelect();
     }
 
     public void OnClickedSelect()

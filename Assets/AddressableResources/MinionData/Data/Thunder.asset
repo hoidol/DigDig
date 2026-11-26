@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Thunder
   m_EditorClassIdentifier: Assembly-CSharp::ThunderMinionData
   key: Thunder
-  desc: "\uBC88\uAC1C\uB97C \uB5A8\uC5B4\uB4DC\uB824 \uC8FC\uBCC0 \uB370\uBBF8\uC9C0"
+  desc: "\uBC88\uAC1C\uB97C \uB5A8\uC5B4\uB728\uB824 \uC8FC\uBCC0 \uC801\uC5D0\uAC8C
+    \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4. (\uBC94\uC704 {0}, \uCD5C\uB300 {1}\uAE30)"
   growth: 1
   attackType: 2
   tags: 2
@@ -38,6 +39,10 @@ MonoBehaviour:
   thum: {fileID: -8105560202311982947, guid: f9245f631d9654bfdbef5d1ac1570e45, type: 3}
   evolvedSprite: {fileID: 0}
   evolutions: []
+  evolutionName: "\uBB35\uBB35\uCC9C\uCC9C"
+  evolutionDesc: "[\uBC84\uD2BC \uC2A4\uD0AC \xB7 \uCFE8\uD0C0\uC784 {0}\uCD08] {1}\uCD08
+    \uB3D9\uC548 \uAD6C\uB984 {2}\uAC1C\uAC00 \uBAB8 \uC8FC\uBCC0\uC744 \uB3CC\uBA70
+    {3}\uCD08\uB9C8\uB2E4 \uBC88\uAC1C (\uACF5\uACA9\uB825 {4}% + {5}\uCD08 \uC2A4\uD134)"
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 0

@@ -91,6 +91,22 @@ public static class MinionEnhanceSystem
                     m.UpdateMinion();
     }
 
+    // 테스트 복구(WaveSnapshotSystem)용: 지금 강화 레벨 전부 / 통째로 되돌리기
+    public static List<(string key, StatType stat, int lv)> GetAllLevels()
+    {
+        var list = new List<(string, StatType, int)>();
+        foreach (var kv in levels)
+            list.Add((kv.Key.key, kv.Key.stat, kv.Value));
+        return list;
+    }
+
+    public static void RestoreLevels(IEnumerable<(string key, StatType stat, int lv)> saved)
+    {
+        levels.Clear();
+        foreach (var s in saved)
+            levels[(s.key, s.stat)] = s.lv;
+    }
+
     public static void SetLevel(string key, StatType stat, int lv)
     {
         levels[(key, stat)] = Mathf.Clamp(lv, 0, MAX_LEVEL);

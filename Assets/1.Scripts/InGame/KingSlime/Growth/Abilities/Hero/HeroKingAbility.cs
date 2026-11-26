@@ -10,7 +10,7 @@ using UnityEngine;
 // - 스킬 3단계 (2026-11-26 해방 레벨 Lv.2·6·10, 스탯 변화 화면에서 자동): Lv.2 = skills[0], Lv.6 = skills[1], Lv.10 = 공용 "용사가 될거야!" (모든 필드 미니언 버프). 해방 = UnlockNextSkill
 // - 에너지: wave 중 충전 시간(30초)마다 1개, 최대 = 1단계 해방 때 2개 + 에너지 보유 증가 카드 (자동 증가 없음)
 //   (2026-11-25 삭제: 정예병 칸 미니언·킹 처치로 충전 시간 감소) 충전 가속 카드(HeroEnergyKingAbility) = 충전 시간 ×0.8/Lv (2026-11-26 곱하기)
-//   하단 스킬 패널(HeroSkillHud)을 누르면 에너지를 쓰고 발동 (1단계 1개·2단계 2개, GetSkillCost). 대상이 없으면 발동 안 함(에너지 그대로)
+//   하단 스킬 패널(HeroSkillHud)을 누르면 에너지를 쓰고 발동 (1·2단계 1개, 3단계 2개, GetSkillCost). 대상이 없으면 발동 안 함(에너지 그대로)
 // - 에너지 컨셉(이름·아이콘·색)은 용사마다 (기사 = 투지, 레인저 = 집중, 네크로멘서 = 어둠)
 // - (2026-11-25) 기본 공격을 탄 대신 바꿀 수 있음 (TryKingAttack: 기사 = 근거리 휘두르기, 네크로멘서 = 원거리 슬래쉬)
 //   위치 지정 스킬 (NeedsTargetPosition): 버튼 → "원하는 위치를 누르세요" → 필드를 누른 곳에 발동 (TryUseSkillAt)
@@ -307,6 +307,13 @@ public abstract class HeroKingAbility : KingAbility
         Charges = MaxCharges;
         ChargeProgress = 0f;
     }
+
+    // 테스트 복구(WaveSnapshotSystem)용
+    public void SetChargesForTest(int charges)
+    {
+        Charges = Mathf.Clamp(charges, 0, MaxCharges);
+        ChargeProgress = 0f;
+    }
     #endregion
 
     #region 스킬
@@ -358,11 +365,9 @@ public abstract class HeroKingAbility : KingAbility
     public bool IsSkillUnlocked(int idx) => idx >= 0 && idx < UnlockedSkillCount;
 
     // (2026-11-24) 스킬마다 소모 에너지 (하단 스킬 버튼에 아이콘 개수로 표시). 최대 개수보다 크면 못 씀
-    // (2026-11-26) 1·2단계 소모량은 모든 용사 공통 = GameSetting.HERO_SKILL_COSTS (1단계 1, 2단계 2). 3단계는 commonSkillCost
+    // (2026-11-26 최신) 소모량은 모든 용사 공통 = GameSetting.HERO_SKILL_COSTS (1단계 1, 2단계 1, 3단계 2). 프리팹 commonSkillCost는 안 씀
     public int GetSkillCost(int idx)
     {
-        if (idx == COMMON_SKILL_INDEX)
-            return Mathf.Max(1, commonSkillCost);
         int[] costs = GameSetting.HERO_SKILL_COSTS;
         return idx >= 0 && idx < costs.Length ? Mathf.Max(1, costs[idx]) : 1;
     }

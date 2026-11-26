@@ -214,7 +214,7 @@ public class StageData : ScriptableObject
     }
 
     // "1/1.1/1.2" → float 배열 (파싱 실패한 값은 경고 후 제외)
-    float[] ParseFloatList(string raw, string column)
+    public float[] ParseFloatList(string raw, string column)
     {
         var list = new List<float>();
         if (string.IsNullOrEmpty(raw))

@@ -120,7 +120,8 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     {
         get
         {
-            if (IsBeingDragged) // (2026-11-21) 드래그 중엔 스킬 쿨타임 멈춤
+            // (2026-11-21) 드래그 중 · (2026-11-26) 브레이크타임 중엔 스킬 쿨타임 멈춤 (진화 발동 스킬 충전 포함)
+            if (IsBeingDragged || (GameManager.Instance != null && GameManager.Instance.isBreakTime))
             {
                 pendingSkillTime = 0f;
                 return 0f;
