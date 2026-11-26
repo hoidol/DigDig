@@ -4,7 +4,8 @@ using UnityEngine;
 // (2026-11-25) 개편
 //   기본 공격 = 물리 · 다중 타겟 2 (1 + bonusTargets)
 //   1단계 "화살비" (위치 지정) = 누른 곳(rainRadius)에 rainDuration초 동안 화살비, 1초마다 킹 공격력 × rainDamageMul 범위 피해 (발동 즉시 1번 → rainDuration번)
-//   2단계 "매의 눈" = eyeDuration초 동안 필드의 모든 미니언·킹 공격 범위·공속 ×eyeRangeMul·×eyeSpeedMul + 모두 체력이 가장 높은 적을 노림
+//   2단계 "매의 눈" = eyeDuration초 동안 필드의 모든 미니언·킹 공격 범위 ×eyeRangeMul + 모두 체력이 가장 높은 적을 노림
+//   (2026-11-26 사용자 변경: 공속 증가 삭제, 공격 범위 +50% / 강화 +100% = HeroData.csv Skill2Value 0.5/1)
 public class RangerHero : HeroKingAbility
 {
     public int bonusTargets = 1;
@@ -17,8 +18,7 @@ public class RangerHero : HeroKingAbility
 
     [Header("2단계: 매의 눈")]
     public float eyeDuration = 4f;
-    public float eyeRangeMul = 2f;
-    public float eyeSpeedMul = 2f;
+    public float eyeRangeMul = 1.5f; // HeroData.csv Skill2Value가 없을 때만
 
     int addedTargets;
     readonly UnitBuffGroup eyeBuff = new UnitBuffGroup();
@@ -26,16 +26,15 @@ public class RangerHero : HeroKingAbility
 
     protected override string GetAttackFormText() => $"다중 타겟 {1 + bonusTargets}";
 
-    // (2026-11-25) 수치 = HeroData.csv (Skill1Value: 지속 시간, 피해 / Skill2Value: 지속 시간, 공격 범위·공속 증가 비율(1 = +100%)), 스킬 강화 카드 = 강화 값
+    // (2026-11-25) 수치 = HeroData.csv (Skill1Value: 지속 시간, 피해 / Skill2Value: 지속 시간, 공격 범위 증가 비율(0.5 = +50%)), 스킬 강화 카드 = 강화 값
     float RainDuration => SkillValue(0, 0, rainDuration);
     float RainDamage => SkillValue(0, 1, rainDamageMul);
     float EyeDuration => SkillValue(1, 0, eyeDuration);
-    float EyeRangeMul => 1f + SkillValue(1, 1, eyeRangeMul - 1f);
-    float EyeSpeedMul => 1f + SkillValue(1, 1, eyeSpeedMul - 1f);
+    public float EyeRangeMul => 1f + SkillValue(1, 1, eyeRangeMul - 1f);
 
     protected override string GetSkillText(int idx) => idx == 0
         ? $"누른 곳에 {Num(RainDuration)}초간 화살비, 1초마다 킹 공격력 {Num(RainDamage * 100f)}% 범위 피해"
-        : $"{Num(EyeDuration)}초간 모든 미니언·킹 공격 범위 +{Num((EyeRangeMul - 1f) * 100f)}%, 공속 +{Num((EyeSpeedMul - 1f) * 100f)}%, 체력이 가장 높은 적을 공격";
+        : $"{Num(EyeDuration)}초간 모든 미니언·킹 공격 범위 +{Num((EyeRangeMul - 1f) * 100f)}%, 체력이 가장 높은 적을 공격";
 
     public override bool NeedsTargetPosition(int idx) => idx == 0;
     public override float GetTargetRadius(int idx) => idx == 0 ? rainRadius : 0f;
@@ -66,7 +65,6 @@ public class RangerHero : HeroKingAbility
         eyeBuff.Apply(king, EyeDuration, () => new[]
         {
             new Buff(StatType.AttackRange, EyeRangeMul, StatOpType.Multiply),
-            new Buff(StatType.AttackSpeed, EyeSpeedMul, StatOpType.Multiply) { effectType = EffectType.AttackSpeedUp },
         });
         ForcedAllyFindTarget = FindTargetType.HighHp;
         Fx(EffectType.Thunder, king.transform.position);

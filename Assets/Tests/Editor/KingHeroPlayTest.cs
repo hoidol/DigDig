@@ -199,8 +199,9 @@ public class KingHeroPlayTest : InGamePlayTestBase
         Assert.AreEqual(HeroKingAbility.UseResult.Used, archer.TryUseSkill(1));
         yield return WaitFrames(2);
         Assert.IsTrue(archer.IsEyeActive);
-        Assert.AreEqual(rangeBefore * 2f, plain.statDic[StatType.AttackRange], 0.01f, "매의 눈 = 공격 범위 ×2");
-        Assert.AreEqual(spdBefore * 2f, plain.statDic[StatType.AttackSpeed], 0.01f, "매의 눈 = 공속 ×2");
+        Assert.AreEqual(rangeBefore * archer.EyeRangeMul, plain.statDic[StatType.AttackRange], 0.01f, "매의 눈 = 공격 범위 ×(1 + Skill2Value)");
+        Assert.AreEqual(1.5f, archer.EyeRangeMul, 0.001f, "HeroData.csv Skill2Value 0.5 = +50%");
+        Assert.AreEqual(spdBefore, plain.statDic[StatType.AttackSpeed], 0.01f, "(2026-11-26) 매의 눈은 공속을 안 올림");
         Assert.AreEqual(FindTargetType.HighHp, plain.EffectiveFindTargetType, "매의 눈 = 높은 체력 노림");
         Assert.AreEqual(FindTargetType.HighHp, king.EffectiveFindTargetType);
         inv.Remove(archerData);

@@ -42,34 +42,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8911bc5b212240bea668e7bc04f8123b, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RangerHero
   key: HeroRanger
   data: {fileID: 0}
   level: 0
   heroType: 1
-  tileOffsets:
+  heroDataKey: 
+  eliteOffsets:
   - {x: -1, y: -1}
   - {x: 1, y: -1}
-  tileBuffs:
+  eliteBuffs:
   - statType: 16
     value: 20
     opType: 0
-  levelMuls:
-  - 1
-  - 1.5
-  - 2
-  - 2.5
-  - 3
   tileColor: {r: 0.4, g: 1, b: 0.5, a: 0.35}
   kingAttackType: 1
-  energyName: "\uc9d1\uc911"
+  energyName: "\uC9D1\uC911"
   energyIcon: {fileID: 0}
   energyColor: {r: 0.4, g: 1, b: 0.5, a: 1}
   skills:
-  - name: "\ud654\uc0b4\ube44"
+  - name: "\uD654\uC0B4\uBE44"
     icon: {fileID: 0}
-  - name: "\ub9e4\uc758 \ub208"
+  - name: "\uB9E4\uC758 \uB208"
     icon: {fileID: 0}
   commonSkillIcon: {fileID: 0}
   commonSkillCost: 1
@@ -82,5 +77,4 @@ MonoBehaviour:
   rainDamageMul: 5
   rainTickInterval: 1
   eyeDuration: 4
-  eyeRangeMul: 2
-  eyeSpeedMul: 2
+  eyeRangeMul: 1.5
