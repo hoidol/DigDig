@@ -48,10 +48,7 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
     {
         string stageKey = GameManager.Instance.stageData.key;
         if (!MultiGame.IsActive)
-        {
-            LocalGameSave.Clear(); // (2026-11-27) 싱글 판이 끝남 → 이어하기 저장 삭제
-            PlayRecorder.Finish(GameManager.Instance.isCleared); // 플레이 기록: 로컬 백업 → 서버
-        }
+            PlayRecorder.Finish(GameManager.Instance.isCleared); // (2026-11-27) 플레이 기록: 로컬 백업 → 서버
         // 한 판 = 결과 화면까지 (부활해도 같은 판)
         UserDataManager.Instance.userStageManager.TryStage(stageKey);
         GameEventBus.Publish(new TryStageEvent(stageKey));

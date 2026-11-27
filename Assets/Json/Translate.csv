@@ -446,10 +446,10 @@ Product.HeroPass	용사 패스	Hero Pass
 Product.HeroPass.Desc	구독하는 동안 모든 용사를 이용할 수 있어요. 매월 자동 갱신되며 언제든 스토어에서 해지할 수 있어요.	Use every hero while subscribed. Renews monthly; cancel anytime in the store.
 Purchase_BaseGamePack	기본 게임 팩 구매 완료! 광고 제거·게임 속도·용사 패스 30일이 적용되었습니다.	Base Game Pack purchased! Ad removal, game speed and a 30-day Hero Pass are active.
 HeroPass_Subscribed	구독 중	Subscribed
-Multi_StartButton	멀티 게임	Multiplayer
-Multi_CancelButton	매칭 취소	Cancel Match
-Multi_NoticeTitle	멀티 게임	Multiplayer
-Multi_NoticeBody	8명이 모이면 시작합니다. 기다리는 동안 혼자 하기를 계속할 수 있어요.\n온라인 게임 중에는 배속 상품·광고 제거 상품 기능을 사용할 수 없습니다.\n참여할까요?	The match starts when 8 players join. You can keep playing solo while you wait.\nGame speed and ad removal purchases are disabled in online games.\nJoin?
+Multi_StartButton	온라인 게임	Online Game
+Multi_CancelButton	취소	Cancel
+Multi_NoticeTitle	온라인 게임	Online Game
+Multi_NoticeBody	8명이 모이면 시작합니다.\n온라인 게임 중에는 배속 상품·광고 제거 상품 기능을 사용할 수 없습니다.\n참여할까요?	The match starts when 8 players join.\nGame speed and ad removal purchases are disabled in online games.\nJoin?
 Multi_Matching	매칭 중	Matching
 Multi_CancelTitle	매칭 취소	Cancel Match
 Multi_CancelBody	매칭을 취소할까요?	Cancel matchmaking?
@@ -457,7 +457,6 @@ Multi_JoinFailed	매칭에 참여하지 못했습니다. 잠시 후 다시 시�
 Multi_Ready	READY	READY
 Multi_ReadyDone	준비 완료	Ready!
 Multi_ReadyTitle	곧 시작합니다!	Starting soon!
-Lobby_Resume	이어하기	Continue
 Multi_Players	참가자	Players
 Multi_MyRank	내 순위 {0}/{1}	My Rank {0}/{1}
 Multi_StatusReached	도착 {0}	Arrived {0}
@@ -494,10 +493,12 @@ Multi_InviteText	마왕을 꿈꾸는 슬라임과 함께 대전해요! {0}	Battl
 Multi_CodeShareText	같이 하자! 방 코드: {0}\n게임 받기: {1}	Join my room! Code: {0}\nGet the game: {1}
 Multi_Host	방장	Host
 Share_Copied	복사했습니다. 붙여 넣어 공유하세요.	Copied. Paste it to share.
-Multi_AiNotice	방이 꽉 안 차면 AI 봇으로 대체됩니다.	Empty seats will be filled with AI bots.
+Multi_AiNotice	부족한 인원은 AI봇으로 대체됩니다.	Empty seats will be filled with AI bots.
 Multi_AiFilling	AI 봇으로 빈자리를 채우는 중…	Filling empty seats with AI…
 Multi_StartIn	{0}초 후 시작합니다!	Starting in {0}s!
 Nickname_Taken	이미 사용 중인 닉네임입니다.	This nickname is already taken.
 Nickname_CheckFailed	닉네임을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.	Could not check the nickname. Please try again.
 Minion.Mine.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] 폭탄이 적 경로를 한 바퀴 굴러가며 닿는 적마다 폭발 (범위 {1}, 공격력 {2}%)	[Button skill · {0}s cooldown] A bomb rolls once around the enemy path, exploding on every enemy it touches (radius {1}, {2}% attack)
 Nickname_SpecialChar	한글·영문·숫자만 쓸 수 있어요. (공백·특수문자 X)	Use letters and numbers only (no spaces or symbols).
+Multi_RemainSec	{0}초	{0}s
+Multi_WaitingOthers	다른 유저를 기다리는 중…	Waiting for other players…

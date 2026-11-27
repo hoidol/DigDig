@@ -4,14 +4,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // (2026-11-27) 멀티 매칭 (씬을 넘어 살아 있음, 처음 쓸 때 Instance 생성)
-// 대기열 참여 → 방 구독 → 오른쪽 위 N/8 (Resources/UI/MultiMatchStatus 프리팹, 메뉴 Tools/Multi/Create MultiMatchStatus Prefab)
-// → 8명이 차면 멀티 InGame(+ MultiGameUI 씬 추가)으로. 싱글 판을 하던 중이면 그 판은 마지막 브레이크타임 저장본(LocalGameSave)으로 나중에 이어하기
+// 대기열 참여 → 방 구독 → (2026-11-27) 로비 대기 창(MultiWaitingPanel, 화면 전체를 막음: 가운데 N/8 · 300→0초 · 코드 · 공유)
+// → 8명이 차면 "5초 후 시작" → 온라인 게임 InGame(+ MultiGameUI 씬 추가)으로. 대기 중 로컬 게임·이어하기 없음
 // 서버 = Firebase (에디터·테스트는 FakeMultiBackend: 봇이 채움)
 // (2026-11-27) 들어가는 방법 3가지: 빠른 매칭(Join) · 방만들기(CreateRoom, 코드로만 입장) · 코드입력(JoinByCode)
 // 방장 = 접속 중 가장 먼저 들어온 사람 (나가면 다음 사람). 방장이 하는 일: 8명이 차면 fullAt · Ready 수마다 startAt · 오래된 방 정리 (OnRoomChanged)
 public class MultiMatchManager : MonoBehaviour
 {
-    public const string STATUS_PREFAB_PATH = "UI/MultiMatchStatus";
     public const string UI_SCENE_NAME = "MultiGameUI";
     public const string INGAME_SCENE_NAME = "InGame";
     public const string LOBBY_SCENE_NAME = "Lobby";
@@ -43,7 +42,7 @@ public class MultiMatchManager : MonoBehaviour
     public IMultiBackend Backend { get; private set; }
     public event Action<MultiRoomState> RoomChanged;
 
-    MultiMatchStatusPanel statusPanel;
+    MultiWaitingPanel statusPanel; // 지금 씬(로비)의 대기 창
     int prevStageOrder;
     DifficultyType prevDifficulty;
 
@@ -176,7 +175,6 @@ public class MultiMatchManager : MonoBehaviour
     {
         State = MatchState.InGame;
         UpdateStatus();
-        // 하던 싱글 판(InGame)은 마지막 브레이크타임 저장본이 이미 있음 (LocalGameSave)
         prevStageOrder = UserDataManager.stageOrder;
         prevDifficulty = UserDataManager.difficultyType;
         UserDataManager.stageOrder = MultiGame.MULTI_STAGE_ORDER;
@@ -292,25 +290,23 @@ public class MultiMatchManager : MonoBehaviour
     public long ServerNowMs => Backend != null ? Backend.ServerNowMs : DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     public string MyUid => Backend?.MyUid;
 
-    // ---- 오른쪽 위 N/8 (대기 중에만)
+    // ---- 로비 대기 창 (대기 중에만, 지금 씬에서 찾음 — 꺼 둔 채 저장해도 찾음)
     void EnsureStatusPanel()
     {
         if (statusPanel != null)
             return;
-        MultiMatchStatusPanel prefab = Resources.Load<MultiMatchStatusPanel>(STATUS_PREFAB_PATH);
-        if (prefab == null)
-        {
-            Debug.LogWarning($"[Multi] Resources/{STATUS_PREFAB_PATH} 프리팹 없음 — 메뉴 Tools/Multi/Create MultiMatchStatus Prefab");
-            return;
-        }
-        statusPanel = Instantiate(prefab, transform);
+        statusPanel = FindFirstObjectByType<MultiWaitingPanel>(FindObjectsInactive.Include);
+        if (statusPanel == null)
+            Debug.LogWarning("[Multi] 로비 대기 창(MultiWaitingPanel) 없음 — 메뉴 Tools/Lobby/Add Online Waiting Canvas");
     }
 
     void UpdateStatus()
     {
+        if (statusPanel == null && IsWaiting)
+            EnsureStatusPanel();
         if (statusPanel == null)
             return;
-        statusPanel.gameObject.SetActive(IsWaiting);
+        statusPanel.SetVisible(IsWaiting);
         if (IsWaiting)
         {
             long now = ServerNowMs;

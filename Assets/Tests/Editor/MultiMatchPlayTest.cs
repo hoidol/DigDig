@@ -9,9 +9,9 @@ using UnityEngine.TestTools;
 using UnityEngine.UI;
 
 // (2026-11-27) 멀티 1단계 흐름 (가짜 서버 FakeMultiBackend: 봇이 채움)
-// 싱글 판(브레이크타임 저장) → 대기열 참여 → 8명 → 멀티 InGame + MultiGameUI(Ready 창 8줄) → Ready → 카운트다운 끝 → 동시 시작(배속·광고 제거 효과 없음)
+// 대기열 참여 → 8명 → 멀티 InGame + MultiGameUI(Ready 창 8줄) → Ready → 카운트다운 끝 → 동시 시작(배속·광고 제거 효과 없음)
 // → (2단계) 오른쪽 위 다른 유저 7줄(봇 상황) · [보기] = 그 유저 배치 + 내 카메라 끔 · 웨이브 50 보스 처치 = 결과 창(우승) + 전적
-// → 로비 → 이어하기 = 싱글 판의 저장한 브레이크타임 (미니언 그대로)
+// → 로비 (2026-11-27 대기 중 로컬 게임·이어하기 삭제)
 public class MultiMatchPlayTest : InGamePlayTestBase
 {
     [UnityTest]
@@ -45,15 +45,6 @@ public class MultiMatchPlayTest : InGamePlayTestBase
         FakeMultiBackend.botWaveInterval = 0.3f;
         try
         {
-            // 1) 싱글 판: 미니언 하나 두고 지금 브레이크타임 저장
-            yield return WaitFor(() => GameManager.Instance.isBreakTime, "브레이크타임이 안 옴");
-            Tile tile = GetFreeTile();
-            string key = MinionManager.Instance.minionDataDic.Keys.First(k => GameSetting.IsUsedMinion(k));
-            SpawnMinion(key, tile, 1);
-            Vector2Int tileIdx = tile.index;
-            LocalGameSave.Save(GameSnapshot.Capture(GameManager.Instance.breakTimeNextWaveIdx));
-            Assert.IsTrue(LocalGameSave.HasSave, "싱글 판 저장");
-
             // 2) 대기열 → 8명 → 멀티 InGame
             GameManager singleGm = GameManager.Instance;
             MultiMatchManager.Instance.Join().Forget();
@@ -117,13 +108,6 @@ public class MultiMatchPlayTest : InGamePlayTestBase
             result.lobbyButton.onClick.Invoke();
             yield return WaitFor(() => SceneManager.GetActiveScene().name == "Lobby", "로비로 안 감");
             Assert.IsFalse(MultiGame.IsActive);
-            yield return WaitFrames(5);
-            Assert.IsTrue(LocalGameSave.RequestResume(), "이어하기 저장 없음");
-            SceneManager.LoadScene("InGame");
-            yield return WaitFor(() => SceneManager.GetActiveScene().name == "InGame" && GameManager.Instance != null && GameManager.Instance.IsGameStarted, "이어하기 InGame 시작 안 함");
-            yield return WaitFrames(5);
-            Tile restored = TileManager.Instance.GetTile(tileIdx);
-            Assert.IsTrue(restored != null && restored.tileObject is Minion m && m.key == key && m.mergeLevel == 1, "이어하기: 저장한 미니언 그대로");
         }
         finally
         {
@@ -131,7 +115,6 @@ public class MultiMatchPlayTest : InGamePlayTestBase
             FakeMultiBackend.botWaveInterval = prevWave;
             MultiMatchManager.ForceFakeBackend = null;
             MultiMatchManager.ResetForTest();
-            LocalGameSave.Clear();
         }
     }
 }

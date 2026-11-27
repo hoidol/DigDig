@@ -8,8 +8,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // (2026-11-27) 멀티 UI를 씬·프리팹에 실제로 만듦 (이후 모양은 직접 수정)
-// - Tools/Lobby/Add Multi Game Buttons : 로비 BattleCanvas에 [멀티 게임](Play 왼쪽)·[이어하기](Play 오른쪽) 버튼 (난이도 버튼 복사)
-// - Tools/Multi/Create MultiMatchStatus Prefab : Resources/UI/MultiMatchStatus (오른쪽 위 "매칭 중 2/8" + 취소)
+// - Tools/Lobby/Add Multi Game Buttons : 로비 BattleCanvas에 [온라인 게임](Play 왼쪽) 버튼 (난이도 버튼 복사)
+// - Tools/Lobby/Add Online Waiting Canvas : 로비 대기 창 (화면 전체, 가운데 N/8 · 300→0초 · 코드 · 공유) + 예전 [이어하기] 버튼 삭제
 // - Tools/Multi/Create MultiGameUI Scene : Assets/4.Scenes/MultiGameUI.unity (오른쪽 위 다른 유저 목록 · 보기 · Ready · 결과) + 빌드 설정에 추가
 // 다시 실행하면 지우고 새로 — ⚠ MultiGameUI 씬은 이후 직접 수정함(2026-11-27 StatusRow_Template: 미니언 글씨 삭제·WAVE N 등) → 다시 실행하면 그 수정이 사라짐
 public static class MultiUiBuilder
@@ -52,21 +52,7 @@ public static class MultiUiBuilder
         record.text = "우승 0 · 클리어 0";
         record.gameObject.AddComponent<MultiRecordText>();
 
-        // 이어하기: 감싸는 오브젝트(root)를 숨기고 켬
-        var wrap = new GameObject("LocalResume", typeof(RectTransform));
-        Undo.RegisterCreatedObjectUndo(wrap, "Multi buttons");
-        var wrt = (RectTransform)wrap.transform;
-        wrt.SetParent(src.parent, false);
-        CopyRect((RectTransform)src, wrt);
-        wrt.anchoredPosition = new Vector2(380f, 544f);
-        wrt.sizeDelta = new Vector2(220f, 120f);
-        GameObject resume = CloneButton(src, "LocalResumeButton", "Lobby_Resume", Vector2.zero);
-        var rrt = (RectTransform)resume.transform;
-        rrt.SetParent(wrt, false);
-        rrt.anchorMin = Vector2.zero;
-        rrt.anchorMax = Vector2.one;
-        rrt.offsetMin = rrt.offsetMax = Vector2.zero;
-        resume.AddComponent<LocalResumeButton>().root = wrap;
+        // (2026-11-27) 이어하기 버튼 삭제 (대기 중 로컬 게임·이어하기 없음)
 
         EditorSceneManager.MarkSceneDirty(battle.gameObject.scene);
         Debug.Log("[MultiUiBuilder] 로비 멀티 게임·이어하기 버튼 생성 (씬 저장은 직접)");
@@ -110,74 +96,96 @@ public static class MultiUiBuilder
         dst.pivot = src.pivot;
     }
 
-    // ---------------- 오른쪽 위 매칭 표시 프리팹
-    [MenuItem("Tools/Multi/Create MultiMatchStatus Prefab")]
-    public static void CreateStatusPrefab()
+    // ---------------- 로비 대기 창 (2026-11-27, 이전 오른쪽 위 MultiMatchStatus 프리팹 대체)
+    [MenuItem("Tools/Lobby/Add Online Waiting Canvas")]
+    public static void AddWaitingCanvas()
     {
-        var root = new GameObject("MultiMatchStatus", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        BattleCanvas battle = Object.FindFirstObjectByType<BattleCanvas>(FindObjectsInactive.Include);
+        if (battle == null)
+        {
+            Debug.LogWarning("[MultiUiBuilder] Lobby 씬을 열고 실행");
+            return;
+        }
+        Scene scene = battle.gameObject.scene;
+        foreach (GameObject r in scene.GetRootGameObjects())
+        {
+            if (r.name == "OnlineWaitingCanvas")
+                Undo.DestroyObjectImmediate(r);
+            else
+                foreach (Transform t in r.GetComponentsInChildren<Transform>(true).Where(t => t != null && t.name == "LocalResume").ToArray())
+                    Undo.DestroyObjectImmediate(t.gameObject); // 예전 [이어하기]
+        }
+
+        var root = new GameObject("OnlineWaitingCanvas", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+        Undo.RegisterCreatedObjectUndo(root, "Online waiting");
+        SceneManager.MoveGameObjectToScene(root, scene);
         var canvas = root.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 300;
+        canvas.sortingOrder = 1500; // 로비 화면들(최대 1000) 위, 팝업·토스트(5000) 아래
         SetupScaler(root.GetComponent<CanvasScaler>());
 
-        RectTransform panel = NewImage("Panel", root.transform, PANEL);
-        panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(1f, 1f);
-        panel.anchoredPosition = new Vector2(-24f, -170f);
-        panel.sizeDelta = new Vector2(380f, 320f);
+        RectTransform dim = NewImage("Panel", root.transform, new Color(0f, 0f, 0f, 0.88f)); // 화면 전체를 막음
+        Box(dim, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+        RectTransform box = NewImage("Box", dim, PANEL);
+        Place(box, new Vector2(0f, 40f), new Vector2(960f, 1420f));
 
-        TMP_Text title = NewText("TitleText", panel, 28f, TextAlignmentOptions.MidlineLeft, new Color(0.8f, 0.82f, 0.9f));
-        Box(title.rectTransform, new Vector2(0f, 1f), new Vector2(0.7f, 1f), new Vector2(20f, -50f), new Vector2(0f, -8f));
-        title.text = "매칭 중";
-        TMP_Text count = NewText("CountText", panel, 46f, TextAlignmentOptions.MidlineLeft, Color.white);
-        Box(count.rectTransform, new Vector2(0f, 1f), new Vector2(0.7f, 1f), new Vector2(20f, -104f), new Vector2(0f, -46f));
-        count.text = "1/8";
-        TMP_Text code = NewText("CodeText", panel, 24f, TextAlignmentOptions.MidlineLeft, new Color(1f, 0.85f, 0.3f));
-        Box(code.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -138f), new Vector2(-60f, -104f));
-        code.text = "코드 1234567";
-        RectTransform host = Badge(panel, "HostMark", new Color(1f, 0.8f, 0.2f, 1f), "★");
-        host.anchorMin = host.anchorMax = host.pivot = new Vector2(0f, 1f);
-        host.anchoredPosition = new Vector2(250f, -110f);
-
-        RectTransform cancel = NewImage("CancelButton", panel, new Color(0.75f, 0.25f, 0.25f, 1f));
-        cancel.anchorMin = cancel.anchorMax = cancel.pivot = new Vector2(1f, 1f);
-        cancel.anchoredPosition = new Vector2(-14f, -14f);
-        cancel.sizeDelta = new Vector2(80f, 80f);
-        Button cancelButton = cancel.gameObject.AddComponent<Button>();
-        TMP_Text x = NewText("Text", cancel, 42f, TextAlignmentOptions.Center, Color.white);
-        Box(x.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-        x.text = "X";
-
-        // 내 전적 + 남은 시간 + 안내 (2026-11-27)
-        TMP_Text record = NewText("RecordText", panel, 24f, TextAlignmentOptions.MidlineLeft, Color.white);
-        Box(record.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -170f), new Vector2(-20f, -138f));
+        TMP_Text title = NewText("TitleText", box, 60f, TextAlignmentOptions.Center, Color.white);
+        Place(title.rectTransform, new Vector2(0f, 600f), new Vector2(880f, 90f));
+        AddTranslate(title, "Multi_StartButton");
+        TMP_Text record = NewText("RecordText", box, 32f, TextAlignmentOptions.Center, new Color(1f, 0.85f, 0.3f));
+        Place(record.rectTransform, new Vector2(0f, 520f), new Vector2(880f, 50f));
         record.text = "우승 0 · 클리어 0";
-        TMP_Text timer = NewText("TimerText", panel, 40f, TextAlignmentOptions.MidlineLeft, new Color(0.6f, 0.9f, 1f));
-        Box(timer.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -216f), new Vector2(-20f, -170f));
-        timer.text = "5:00";
-        TMP_Text notice = NewText("NoticeText", panel, 20f, TextAlignmentOptions.MidlineLeft, new Color(0.85f, 0.87f, 0.92f));
-        Box(notice.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(20f, -258f), new Vector2(-14f, -216f));
-        notice.text = "방이 꽉 안 차면 AI 봇으로 대체됩니다.";
-        notice.enableWordWrapping = true;
 
-        Button invite = SmallButton(panel, "InviteButton", "Multi_Invite", new Vector2(0f, 0f), new Vector2(0.5f, 0f), new Color(0.25f, 0.55f, 0.95f, 1f));
-        Button share = SmallButton(panel, "ShareCodeButton", "Multi_ShareCode", new Vector2(0.5f, 0f), new Vector2(1f, 0f), new Color(0.35f, 0.75f, 0.45f, 1f));
+        TMP_Text count = NewText("CountText", box, 230f, TextAlignmentOptions.Center, Color.white);
+        Place(count.rectTransform, new Vector2(0f, 260f), new Vector2(880f, 280f));
+        count.text = "1/8";
+        TMP_Text timer = NewText("TimerText", box, 70f, TextAlignmentOptions.Center, new Color(0.6f, 0.9f, 1f));
+        Place(timer.rectTransform, new Vector2(0f, 60f), new Vector2(880f, 100f));
+        timer.text = "300초";
+        TMP_Text notice = NewText("NoticeText", box, 38f, TextAlignmentOptions.Center, new Color(0.85f, 0.87f, 0.92f));
+        Place(notice.rectTransform, new Vector2(0f, -40f), new Vector2(880f, 60f));
+        notice.text = "다른 유저를 기다리는 중…";
+        TMP_Text aiNotice = NewText("AiNoticeText", box, 26f, TextAlignmentOptions.Center, new Color(0.65f, 0.68f, 0.75f));
+        Place(aiNotice.rectTransform, new Vector2(0f, -100f), new Vector2(880f, 44f));
+        aiNotice.text = "부족한 인원은 AI봇으로 대체됩니다.";
 
-        var status = root.AddComponent<MultiMatchStatusPanel>();
-        status.titleText = title;
-        status.countText = count;
-        status.codeText = code;
-        status.hostMark = host.gameObject;
-        status.cancelButton = cancelButton;
-        status.inviteButton = invite;
-        status.shareCodeButton = share;
-        status.timerText = timer;
-        status.noticeText = notice;
-        status.recordText = record;
+        TMP_Text code = NewText("CodeText", box, 44f, TextAlignmentOptions.Center, new Color(1f, 0.85f, 0.3f));
+        Place(code.rectTransform, new Vector2(0f, -220f), new Vector2(880f, 70f));
+        code.text = "코드 1234567";
+        RectTransform host = Badge(box, "HostMark", new Color(1f, 0.8f, 0.2f, 1f), "★");
+        host.anchorMin = host.anchorMax = host.pivot = new Vector2(0.5f, 0.5f);
+        host.anchoredPosition = new Vector2(250f, -220f);
+        host.sizeDelta = new Vector2(44f, 44f);
 
-        System.IO.Directory.CreateDirectory("Assets/Resources/UI");
-        PrefabUtility.SaveAsPrefabAsset(root, STATUS_PREFAB);
-        Object.DestroyImmediate(root);
-        Debug.Log($"[MultiUiBuilder] {STATUS_PREFAB} 생성");
+        Button invite = WideButton(box, "InviteButton", "Multi_Invite", new Vector2(0f, -340f), new Color(0.25f, 0.55f, 0.95f, 1f)); // 방 코드 + 게임 링크
+        Button cancel = WideButton(box, "CancelButton", "Multi_CancelButton", new Vector2(0f, -540f), new Color(0.75f, 0.25f, 0.25f, 1f));
+
+        var panel = root.AddComponent<MultiWaitingPanel>();
+        panel.root = dim.gameObject;
+        panel.countText = count;
+        panel.timerText = timer;
+        panel.noticeText = notice;
+        panel.aiNoticeText = aiNotice;
+        panel.codeText = code;
+        panel.recordText = record;
+        panel.hostMark = host.gameObject;
+        panel.cancelButton = cancel;
+        panel.inviteButton = invite;
+        dim.gameObject.SetActive(false);
+
+        EditorSceneManager.MarkSceneDirty(scene);
+        Debug.Log("[MultiUiBuilder] 로비 온라인 게임 대기 창 생성 (씬 저장은 직접)");
+    }
+
+    static Button WideButton(RectTransform parent, string name, string key, Vector2 pos, Color color)
+    {
+        RectTransform b = NewImage(name, parent, color);
+        Place(b, pos, new Vector2(360f, 120f));
+        Button button = b.gameObject.AddComponent<Button>();
+        TMP_Text t = NewText("Text", b, 42f, TextAlignmentOptions.Center, Color.white);
+        Box(t.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+        AddTranslate(t, key);
+        return button;
     }
 
     // 패널 아래쪽 작은 버튼 (가로 범위 xMin~xMax)
@@ -225,6 +233,38 @@ public static class MultiUiBuilder
         }
         EditorSceneManager.MarkSceneDirty(ready.gameObject.scene);
         Debug.Log("[MultiUiBuilder] Ready 줄 방장 표시 추가 (씬 저장은 직접)");
+    }
+
+    // (2026-11-27) MultiGameUI: 다른 유저 목록에서 순위 글씨 삭제 (줄의 RankText · 위쪽 MyRankText), 닉네임·킹 글씨를 왼쪽으로 당김
+    [MenuItem("Tools/Multi/Remove Rank From Players Panel")]
+    public static void RemoveRankFromPlayersPanel()
+    {
+        MultiPlayersPanel panel = Object.FindFirstObjectByType<MultiPlayersPanel>(FindObjectsInactive.Include);
+        if (panel == null)
+        {
+            Debug.LogWarning("[MultiUiBuilder] MultiGameUI 씬을 열고 실행");
+            return;
+        }
+        if (panel.myRankText != null)
+            Undo.DestroyObjectImmediate(panel.myRankText.gameObject);
+        MultiStatusRow row = panel.rowTemplate;
+        if (row != null)
+        {
+            Transform rank = row.transform.Find("RankText");
+            if (rank != null)
+            {
+                float shift = ((RectTransform)rank).offsetMax.x;
+                Undo.DestroyObjectImmediate(rank.gameObject);
+                foreach (TMP_Text t in new[] { row.nicknameText, row.kingText })
+                    if (t != null && t.rectTransform.offsetMin.x >= shift)
+                    {
+                        Undo.RecordObject(t.rectTransform, "Remove rank");
+                        t.rectTransform.offsetMin = new Vector2(t.rectTransform.offsetMin.x - shift + 6f, t.rectTransform.offsetMin.y);
+                    }
+            }
+        }
+        EditorSceneManager.MarkSceneDirty(panel.gameObject.scene);
+        Debug.Log("[MultiUiBuilder] 다른 유저 목록 순위 글씨 삭제");
     }
 
     // Lobby: [멀티 게임] 위에 작은 글씨 [방만들기]·[코드입력] + 코드 입력 창 (있으면 새로)
@@ -439,9 +479,6 @@ public static class MultiUiBuilder
         TMP_Text toggleText = NewText("Text", toggle, 30f, TextAlignmentOptions.MidlineRight, Color.white);
         Box(toggleText.rectTransform, Vector2.zero, Vector2.one, new Vector2(0f, 0f), new Vector2(-20f, 0f));
         toggleText.text = "참가자 ▲";
-        TMP_Text myRank = NewText("MyRankText", toggle, 30f, TextAlignmentOptions.MidlineLeft, new Color(1f, 0.85f, 0.3f));
-        Box(myRank.rectTransform, Vector2.zero, Vector2.one, new Vector2(20f, 0f), Vector2.zero);
-        myRank.text = "내 순위 1/8";
 
         RectTransform list = NewImage("List", panel, new Color(0f, 0f, 0f, 0.55f));
         list.anchorMin = list.anchorMax = list.pivot = new Vector2(1f, 1f);
@@ -457,15 +494,12 @@ public static class MultiUiBuilder
         RectTransform row = NewImage("StatusRow_Template", list, ROW);
         var le = row.gameObject.AddComponent<LayoutElement>();
         le.preferredHeight = le.minHeight = 100f;
-        TMP_Text rank = NewText("RankText", row, 36f, TextAlignmentOptions.Center, new Color(1f, 0.85f, 0.3f));
-        Box(rank.rectTransform, new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(0f, 0f), new Vector2(54f, 0f));
-        rank.text = "2";
-        TMP_Text nick = Line(row, "NicknameText", 26f, 30f, Color.white, 60f, 140f);
+        TMP_Text nick = Line(row, "NicknameText", 26f, 30f, Color.white, 12f, 140f);
         nick.text = "닉네임";
         TMP_Text wave = NewText("WaveText", row, 26f, TextAlignmentOptions.MidlineRight, new Color(0.6f, 0.9f, 1f));
         Box(wave.rectTransform, new Vector2(1f, 0.66f), new Vector2(1f, 1f), new Vector2(-230f, 0f), new Vector2(-116f, -2f));
         wave.text = "WAVE 12";
-        TMP_Text king = Line(row, "KingText", 22f, 0f, new Color(0.85f, 0.85f, 0.9f), 60f, 116f);
+        TMP_Text king = Line(row, "KingText", 22f, 0f, new Color(0.85f, 0.85f, 0.9f), 12f, 116f);
         king.text = "Lv.5 기사";
         RectTransform view = NewImage("ViewButton", row, new Color(0.25f, 0.55f, 0.95f, 1f));
         view.anchorMin = view.anchorMax = view.pivot = new Vector2(1f, 0.5f);
@@ -477,7 +511,6 @@ public static class MultiUiBuilder
         AddTranslate(viewText, "Multi_View");
         RectTransform reached = Badge(row, "ReachedMark", new Color(1f, 0.8f, 0.2f, 1f), "★");
         var rowComp = row.gameObject.AddComponent<MultiStatusRow>();
-        rowComp.rankText = rank;
         rowComp.nicknameText = nick;
         rowComp.waveText = wave;
         rowComp.kingText = king;
@@ -489,7 +522,6 @@ public static class MultiUiBuilder
         comp.listRoot = list.gameObject;
         comp.toggleButton = toggleButton;
         comp.toggleText = toggleText;
-        comp.myRankText = myRank;
         comp.rowTemplate = rowComp;
         comp.rowContainer = list;
         comp.spectatePanel = spectate;

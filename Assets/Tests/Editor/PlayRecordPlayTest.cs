@@ -116,7 +116,6 @@ public class PlayRecordPlayTest : InGamePlayTestBase
             MultiMatchManager.ForceFakeBackend = null;
             PlayRecordStore.ForceFake = null;
             MultiMatchManager.ResetForTest();
-            LocalGameSave.Clear();
             PlayRecordBackup.ClearForTest();
         }
     }

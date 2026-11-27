@@ -18,7 +18,6 @@ public class GameManager : MonoSingleton<GameManager>
     void OnDestroy()
     {
         HeroUpgradeSystem.End();
-        LocalGameSave.End();
         PlayRecorder.End();
     }
 
@@ -90,14 +89,10 @@ public class GameManager : MonoSingleton<GameManager>
             InGameMissionSystem.Begin();
         }
 
-        // (2026-11-27) 싱글 판은 브레이크타임마다 저장 (멀티 대기 중 매칭되면 나중에 이어하기)
-        if (!MultiGame.IsActive)
-            LocalGameSave.Begin(this);
-
         GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
         // 첫 플레이 튜토리얼: 페이드 전에 시작해 킹 위치 지정 같은 준비가 화면이 밝아지기 전에 끝나게 한다
-        if (TutorialManager.Instance != null && !MultiGame.IsActive && !LocalGameSave.PendingResume)
+        if (TutorialManager.Instance != null && !MultiGame.IsActive)
             TutorialManager.Instance.TryBegin(TutorialType.FirstPlay);
 
         FadeCanvs.Instance.FadeIn(stageData.Title, () =>
@@ -129,8 +124,7 @@ public class GameManager : MonoSingleton<GameManager>
                 return;
         }
         StartGame();
-        bool resumed = LocalGameSave.TryResumeAfterStart(); // 이어하기면 저장한 브레이크타임으로
-        PlayRecorder.Begin(this, resumed); // (2026-11-27) 플레이 기록 (브레이크타임마다)
+        PlayRecorder.Begin(this); // (2026-11-27) 플레이 기록 (브레이크타임마다)
     }
 
     bool isGameStarted;

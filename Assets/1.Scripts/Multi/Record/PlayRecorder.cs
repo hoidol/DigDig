@@ -4,7 +4,7 @@ using UnityEngine;
 // (2026-11-27) 플레이 기록 (스테이지 1 보통만, 싱글·멀티): 브레이크타임이 시작될 때마다(카드 지급 뒤 다음 프레임) 지금 상태 한 장(PlayRecord.Frame)
 // 장면마다 그 브레이크타임이 시작된 서버 시각(ServerClock)도 남김
 // 판이 끝나면(결과 화면·멀티 결과) 로컬 백업(PlayRecordBackup) → 서버(공용 DB, 최대 300판 돌려쓰기)
-// 싱글 진행 중 기록은 파일(PlayRecordCurrent)에도 남김 → 멀티 다녀와서 이어하기면 같은 판으로 이어 씀, 새 판을 시작하면 이전 판은 abandoned로 끝냄
+// 싱글 진행 중 기록은 파일(PlayRecordCurrent)에도 남김 → 앱이 꺼지는 등으로 끝내지 못한 판은 다음 판을 시작할 때 abandoned로 끝냄
 public static class PlayRecorder
 {
     public const string CURRENT_FILE = "PlayRecordCurrent";
@@ -18,8 +18,8 @@ public static class PlayRecorder
     public static bool ShouldRecord(int stageOrder, DifficultyType difficulty) =>
         stageOrder == StageData.FIRST_STAGE_ORDER && difficulty == DifficultyType.Normal;
 
-    // GameManager: StartGame + 이어하기 복구 뒤
-    public static void Begin(MonoBehaviour owner, bool resumed)
+    // GameManager: StartGame 뒤
+    public static void Begin(MonoBehaviour owner)
     {
         End();
         if (!ShouldRecord(UserDataManager.stageOrder, UserDataManager.difficultyType))
@@ -27,30 +27,22 @@ public static class PlayRecorder
         runner = owner;
         bool multi = MultiGame.IsActive;
         PlayRecord saved = multi ? null : LoadCurrent();
-        if (!multi && resumed && saved != null && saved.frames.Count > 0)
+        if (saved != null && saved.frames.Count > 0)
         {
-            current = saved;
-            GameResultStats.RestoreFrom(saved.frames[saved.frames.Count - 1].t);
+            saved.abandoned = true; // 끝내지 못한 이전 판 (앱 종료 등)
+            FinishInternal(saved, false);
         }
-        else
+        current = new PlayRecord
         {
-            if (saved != null && saved.frames.Count > 0)
-            {
-                saved.abandoned = true; // 끝내지 않고 새 판 시작
-                FinishInternal(saved, false);
-            }
-            current = new PlayRecord
-            {
-                id = System.Guid.NewGuid().ToString("N"),
-                mode = multi ? PlayRecord.MODE_MULTI : PlayRecord.MODE_SINGLE,
-                stageOrder = UserDataManager.stageOrder,
-                difficulty = UserDataManager.difficultyType,
-                startedAt = ServerClock.NowMs,
-            };
-        }
+            id = System.Guid.NewGuid().ToString("N"),
+            mode = multi ? PlayRecord.MODE_MULTI : PlayRecord.MODE_SINGLE,
+            stageOrder = UserDataManager.stageOrder,
+            difficulty = UserDataManager.difficultyType,
+            startedAt = ServerClock.NowMs,
+        };
         GameEventBus.Subscribe<BreakTimeStartEvent>(OnBreakTimeStart);
         if (GameManager.Instance != null && GameManager.Instance.isBreakTime)
-            runner.StartCoroutine(CaptureNextFrame()); // 이미 시작한 브레이크타임 (wave 1 / 이어하기)
+            runner.StartCoroutine(CaptureNextFrame()); // 이미 시작한 브레이크타임 (wave 1)
     }
 
     // 씬이 바뀌어 기록을 멈춤 (판은 안 끝남 — 싱글은 파일에 남아 있음)

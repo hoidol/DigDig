@@ -25,7 +25,7 @@ public static class MultiShare
     {
         if (string.IsNullOrEmpty(code))
             return false;
-        NativeShareUtil.Share(CodeText(code), TranslateManager.GetText("Multi_ShareCode"));
+        NativeShareUtil.Share(CodeText(code), TranslateManager.GetText("Multi_Invite"));
         return true;
     }
 }

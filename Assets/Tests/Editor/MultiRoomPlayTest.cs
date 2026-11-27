@@ -14,8 +14,8 @@ public class MultiRoomPlayTest : InGamePlayTestBase
     [UnityTest]
     public IEnumerator CreateRoom_JoinByCode_HostHandover()
     {
-        if (!Application.isPlaying) { BeforeEnterPlayMode(); yield return new EnterPlayMode(); }
-        yield return WaitGameStart();
+        if (!Application.isPlaying) { BeforeEnterPlayMode(LOBBY_SCENE_PATH); yield return new EnterPlayMode(); }
+        yield return WaitLobbyStart(); // (2026-11-27) 대기 창은 로비에
         yield return Body();
         AssertNoErrors();
     }
@@ -48,22 +48,26 @@ public class MultiRoomPlayTest : InGamePlayTestBase
             Assert.IsTrue(mm.IsHost, "방을 만든 사람 = 방장");
             Assert.IsTrue(MultiGame.IsValidCode(mm.RoomCode), $"7자리 코드 ({mm.RoomCode})");
             Assert.IsFalse(mm.Room.isPrivate, "방만들기 방도 다른 방과 똑같음 (빠른 매칭·코드 모두)");
-            MultiMatchStatusPanel status = mm.GetComponentInChildren<MultiMatchStatusPanel>(true);
-            Assert.IsNotNull(status, "대기 표시 없음");
+            MultiWaitingPanel status = Object.FindFirstObjectByType<MultiWaitingPanel>(FindObjectsInactive.Include);
+            Assert.IsNotNull(status, "로비 대기 창 없음 (Tools/Lobby/Add Online Waiting Canvas)");
+            Assert.IsTrue(status.root.activeInHierarchy, "대기 중 대기 창이 화면을 막음");
+            Assert.AreEqual("1/8", status.countText.text, "가운데 인원 수");
             Assert.IsTrue(status.codeText.text.Contains(mm.RoomCode), "대기 표시에 코드");
             Assert.IsTrue(status.hostMark.activeSelf, "방장 표시");
             yield return WaitFrames(2);
             Assert.IsTrue(status.timerText.gameObject.activeSelf, "AI로 채우기까지 남은 시간");
-            Assert.AreEqual(TranslateManager.GetText("Multi_AiNotice"), status.noticeText.text, "AI 대체 안내");
+            StringAssert.Contains("30", status.timerText.text, "300초부터 줄어듦");
+            Assert.AreEqual(TranslateManager.GetText("Multi_AiNotice"), status.aiNoticeText.text, "부족한 인원은 AI봇으로 대체 (작게)");
+            Assert.AreEqual(TranslateManager.GetText("Multi_WaitingOthers"), status.noticeText.text, "기다리는 중");
             var u = UserDataManager.Instance.userData;
             Assert.AreEqual(string.Format(TranslateManager.GetText("Multi_Record"), u.multiChampion, u.multiClear), status.recordText.text, "대기 표시에 우승·클리어");
             status.inviteButton.onClick.Invoke();
             StringAssert.Contains(MultiShare.GameLink, NativeShareUtil.LastShared, "친구 초대 = 게임 링크");
-            status.shareCodeButton.onClick.Invoke();
-            StringAssert.Contains(mm.RoomCode, NativeShareUtil.LastShared, "코드 공유 = 7자리 코드");
+            StringAssert.Contains(mm.RoomCode, NativeShareUtil.LastShared, "친구 초대 = 7자리 방 코드도 같이");
             mm.Cancel().Forget();
             yield return WaitFrames(2);
             Assert.AreEqual(MultiMatchManager.MatchState.Idle, mm.State);
+            Assert.IsFalse(status.root.activeSelf, "취소하면 대기 창 닫힘");
 
             // 2) 코드입력: 봇 3명이 먼저 있는 방 → 방장 = 봇1
             mm.JoinByCode("1234567").Forget();
@@ -96,7 +100,6 @@ public class MultiRoomPlayTest : InGamePlayTestBase
             FakeMultiBackend.botJoinInterval = prevInterval;
             MultiMatchManager.ForceFakeBackend = null;
             MultiMatchManager.ResetForTest();
-            LocalGameSave.Clear();
         }
     }
 }

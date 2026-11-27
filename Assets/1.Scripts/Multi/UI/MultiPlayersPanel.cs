@@ -4,14 +4,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// (2026-11-27) 멀티 판 중 오른쪽 위 다른 유저 상황 (MultiGameUI 씬): 순위 순 7명 (나 제외), 접기 버튼, [보기] → MultiSpectatePanel
+// (2026-11-27) 멀티 판 중 오른쪽 위 다른 유저 상황 (MultiGameUI 씬): 방에 들어온 순서로 7명 (나 제외, 순위 표시 없음), 접기 버튼, [보기] → MultiSpectatePanel
 // 줄 = 씬의 템플릿(rowTemplate) 복사. 게임이 시작되면 보임
 public class MultiPlayersPanel : MonoBehaviour
 {
     public GameObject listRoot;          // 접으면 숨기는 부분
     public Button toggleButton;          // 접기·펴기
     public TMP_Text toggleText;          // "참가자 ▲/▼" (선택)
-    public TMP_Text myRankText;          // "내 순위 3/8" (선택)
+    public TMP_Text myRankText;          // (2026-11-27) 순위 표시 삭제 → 씬에 남아 있으면 숨김 (메뉴 Tools/Multi/Remove Rank From Players Panel)
     public MultiStatusRow rowTemplate;
     public Transform rowContainer;
     public MultiSpectatePanel spectatePanel;
@@ -46,7 +46,7 @@ public class MultiPlayersPanel : MonoBehaviour
             shown = show;
             if (listRoot != null && open) listRoot.SetActive(show);
             if (toggleButton != null) toggleButton.gameObject.SetActive(show);
-            if (myRankText != null) myRankText.gameObject.SetActive(show);
+            if (myRankText != null) myRankText.gameObject.SetActive(false);
         }
     }
 
@@ -68,8 +68,9 @@ public class MultiPlayersPanel : MonoBehaviour
             return;
         }
         string me = MultiMatchManager.Exists ? MultiMatchManager.Instance.MyUid : null;
-        List<MultiPlayerState> ranked = MultiGame.Rank(room.players);
-        List<(int rank, MultiPlayerState p)> others = ranked.Select((p, i) => (i + 1, p)).Where(x => x.p.uid != me).ToList();
+        // (2026-11-27) 순위 대신 방에 들어온 순서 (joinedAt)
+        List<MultiPlayerState> others = room.players.Where(p => p != null && p.uid != me)
+            .OrderBy(p => p.joinedAt).ThenBy(p => p.uid).ToList();
         rowTemplate.gameObject.SetActive(false);
         Transform parent = rowContainer != null ? rowContainer : rowTemplate.transform.parent;
         while (rows.Count < others.Count)
@@ -79,12 +80,7 @@ public class MultiPlayersPanel : MonoBehaviour
             bool active = i < others.Count;
             rows[i].gameObject.SetActive(active);
             if (active)
-                rows[i].Set(others[i].rank, others[i].p, OnView);
-        }
-        if (myRankText != null)
-        {
-            int myRank = ranked.FindIndex(p => p.uid == me) + 1;
-            myRankText.text = string.Format(TranslateManager.GetText("Multi_MyRank"), myRank, ranked.Count);
+                rows[i].Set(others[i], OnView);
         }
         if (spectatePanel != null)
             spectatePanel.Refresh(room);
