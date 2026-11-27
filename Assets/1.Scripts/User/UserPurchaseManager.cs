@@ -39,6 +39,10 @@ public class UserPurchaseManager : UserBaseManager
         userPurchase.purchaseTime = TimeManager.NowToString();
         userPurchaseData.userPurchases.Add(userPurchase);
         RequestSave();
+        if (key == InAppProductInfo.HERO_PASS_KEY) // (2026-11-27) 용사 패스 구독 결제 → 바로 구독 중 (이후 상태는 스토어 확인)
+            HeroPass.SetActive(true);
+        else if (key == InAppProductInfo.BASE_GAME_PACK_KEY)
+            HeroPass.NotifyChanged(); // 기본 게임 팩의 용사 패스 기간 시작
         return userPurchase;
     }
 

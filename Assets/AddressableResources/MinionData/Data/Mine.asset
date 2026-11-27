@@ -22,8 +22,7 @@ MonoBehaviour:
   attackPowerRandomRatio: 0
   hasSkill: 0
   offerDiceCoinPrice: 2
-  buyCurrencyType: 0
-  buyPrice: 500
+  unlockType: 0
   reinforceAttackPowerPercent: 5
   attackSfx:
     name: 
@@ -41,7 +40,9 @@ MonoBehaviour:
   evolvedSprite: {fileID: 0}
   evolutions: []
   evolutionName: "\uBC1C\uBE44\uB9C8"
-  evolutionDesc: 
+  evolutionDesc: "[\uBC84\uD2BC \uC2A4\uD0AC \xB7 \uCFE8\uD0C0\uC784 {0}\uCD08] \uD3ED\uD0C4\uC774
+    \uC801 \uACBD\uB85C\uB97C \uD55C \uBC14\uD034 \uAD74\uB7EC\uAC00\uBA70 \uB2FF\uB294
+    \uC801\uB9C8\uB2E4 \uD3ED\uBC1C (\uBC94\uC704 {1}, \uACF5\uACA9\uB825 {2}%)"
   displayStatTypes: 000000000200000005000000
   baseMinionStats:
   - statType: 0

@@ -32,6 +32,9 @@ namespace Lobby
                 EnemyManager.Instance.LoadTask,
                 MinionManager.Instance.LoadTask
             );
+            UserDataManager.Instance.GrantAutoUnlocks(); // (2026-11-27) 미니언 데이터를 읽은 뒤 자동 해금 미니언 지급
+            MultiMatchManager.CleanupOldRoomsOnLobby(); // (2026-11-27) 시작 5시간 지난 멀티 방 정리 (누구든 로비에 들어오면, 10분에 한 번)
+            PlayRecordBackup.UploadPendingAsync().Forget(); // (2026-11-27) 못 올린 플레이 기록 다시 올리기
             var sound = SoundManager.Instance;
             if (sound != null)
                 sound.PlayBGM(BGMType.Lobby);
@@ -97,9 +100,12 @@ namespace Lobby
                 }
                 await closed.Task;
 
-                // 이 레벨에 새로 받은 미니언 안내
+                // 이 레벨에 해금된 미니언 안내 (자동 = 획득, 광고·유료 = 해금 가능)
                 foreach (string key in myInfo.lastUnlockedMinionKeys)
-                    ToastCanvas.Toast(string.Format(TranslateManager.GetText("Minion_LevelUnlocked"), TranslateManager.GetText($"Minion.{key}")));
+                {
+                    bool owned = UserDataManager.Instance.userMinionManager.GetUserMinion(key).own;
+                    ToastCanvas.Toast(string.Format(TranslateManager.GetText(owned ? "Minion_LevelGranted" : "Minion_LevelUnlocked"), TranslateManager.GetText($"Minion.{key}")));
+                }
             }
             if (gainExp > 0)
                 foreach (var p in panels)

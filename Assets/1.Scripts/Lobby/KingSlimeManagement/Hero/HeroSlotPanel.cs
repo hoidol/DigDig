@@ -45,7 +45,7 @@ public class HeroSlotPanel : MonoBehaviour
         if (lockObject != null)
             lockObject.SetActive(!owned);
         if (lockText != null)
-            lockText.text = data.buyPrice > 0 && UserLevelOk(data) ? $"{data.buyPrice}" : $"Lv.{data.unlockLv}";
+            lockText.text = !data.isFree ? TranslateManager.GetText("HeroPass_Label") : $"Lv.{data.unlockLv}"; // (2026-11-27) 패스 용사 = "용사 패스"
         if (selectedObject != null)
             selectedObject.SetActive(selected);
         else

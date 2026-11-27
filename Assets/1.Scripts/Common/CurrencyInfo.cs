@@ -6,14 +6,12 @@ public static class CurrencyInfo
     {
         switch (currencyType)
         {
-            case CurrencyType.Gold:
-                return Resources.Load<Sprite>("Icons/Currency/Gold");
+            case CurrencyType.Energe:
+                return Resources.Load<Sprite>("Icons/Currency/Energy");
             case CurrencyType.Ad:
                 return Resources.Load<Sprite>("Icons/Currency/Ad");
             case CurrencyType.InApp:
                 return Resources.Load<Sprite>("Icons/Currency/InApp");
-            case CurrencyType.Dia:
-                return Resources.Load<Sprite>("Icons/Currency/Dia");
             default:
                 return null;
         }

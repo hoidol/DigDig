@@ -82,16 +82,15 @@ public class SettingPlayTest : InGamePlayTestBase
         FirebaseAuth auth = FirebaseManager.Instance != null ? FirebaseManager.Instance.firebaseAuth : null;
         bool signedIn = auth != null && auth.IsReady && auth.IsSignedIn;
         canvas.Refresh();
-        Assert.AreEqual(!signedIn, canvas.loginPanel.activeSelf, $"로그인 패널 (로그인됨 = {signedIn})");
+        // (2026-11-27) 로그인은 Title 씬에서 → 설정 창의 로그인 패널·로그인 버튼은 없어도 됨 (있으면 상태에 맞게)
+        if (canvas.loginPanel != null)
+            Assert.AreEqual(!signedIn, canvas.loginPanel.activeSelf, $"로그인 패널 (로그인됨 = {signedIn})");
         Assert.AreEqual(signedIn, canvas.loginStatePanel.activeSelf, $"로그인 상태 패널 (로그인됨 = {signedIn})");
         if (signedIn)
             StringAssert.Contains(auth.UserId, canvas.uidText.text, "Player ID 표시");
         Debug.Log($"[SettingPlayTest] signedIn = {signedIn}");
 
         // 버튼 연결 (컴포넌트가 붙어 있어야 동작)
-        Assert.IsNotNull(canvas.loginPanel.GetComponentInChildren<FirebaseAnonyLoginButton>(true), "게스트 로그인 버튼");
-        Assert.IsNotNull(canvas.googleLoginButton.GetComponent<FirebaseGoogleLoginButton>(), "Google 로그인 버튼");
-        Assert.IsNotNull(canvas.appleLoginButton.GetComponent<FirebaseAppleLoginButton>(), "Apple 로그인 버튼");
         Assert.IsNotNull(canvas.loginStatePanel.GetComponentInChildren<UserDataSaveButton>(true), "서버 저장 버튼");
         Assert.IsNotNull(canvas.loginStatePanel.GetComponentInChildren<UserDataLoadButton>(true), "서버 불러오기 버튼");
         Assert.IsNotNull(canvas.discordButton, "Discord 버튼");

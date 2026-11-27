@@ -112,12 +112,13 @@ public class StageUnlockTest
     // 인게임 킹 레벨
     // (2026-11-22) 필요 경험치 = 2 + 레벨
     [TestCase(0, 2)]
-    // (2026-11-23) 2,2,2,3,3,3,4,4,4 (최대 Lv.9, 그 이상은 마지막 값)
+    // (2026-11-26) GameSetting.KING_LEVEL_EXPS = 2,2,3,3,4,4,5,5,6,6,7,7 (최대 Lv.12, 그 이상은 마지막 값)
     [TestCase(1, 2)]
     [TestCase(3, 3)]
-    [TestCase(6, 4)]
-    [TestCase(8, 4)]
-    [TestCase(10, 4)]
+    [TestCase(6, 5)]
+    [TestCase(8, 6)]
+    [TestCase(10, 7)]
+    [TestCase(20, 7)]
     public void KingMaxExp(int lv, int expected)
     {
         Assert.AreEqual(expected, KingSlime.GetMaxExp(lv));
@@ -154,7 +155,8 @@ public class StageUnlockTest
         Assert.IsFalse(GameManager.IsLastWave(48));
         Assert.IsTrue(GameManager.IsLastWave(49));
         Assert.AreEqual(WaveType.Boss, GameManager.GetWaveType(49));
-        Assert.AreEqual(100, GameSetting.FINAL_BOSS_WAVE_NORMAL_COUNT);
+        Assert.AreEqual(50, GameSetting.FINAL_BOSS_WAVE_NORMAL_COUNT);
+        Assert.AreEqual(2f, GameSetting.FINAL_BOSS_WAVE_SPAWN_INTERVAL);
     }
 }
 
@@ -359,33 +361,72 @@ public class SellMinionRefundTest
     }
 }
 
-// (2026-11-24) 스테이지 이용권: 스테이지 1(order 0)은 모든 난이도 무료, 2부터 이용권 필요. 이용권 = 인앱 비소모성(구매 복원 대상)
-public class StagePassRuleTest
+// (2026-11-27) 판매 상품 4개 (광고 제거 · 게임 속도 · 기본 게임 팩 · 용사 패스), 스테이지 이용권 삭제
+public class ProductRuleTest
 {
-    [TestCase(0, false)]
-    [TestCase(1, true)]
-    [TestCase(2, true)]
-    public void NeedsStagePass(int order, bool expected)
+    [Test]
+    public void Products_AreFour()
     {
-        Assert.AreEqual(expected, StageData.NeedsStagePass(order));
+        CollectionAssert.AreEquivalent(
+            new[] { InAppProductInfo.REMOVE_AD_KEY, InAppProductInfo.GAME_SPEED_UP_KEY, InAppProductInfo.BASE_GAME_PACK_KEY, InAppProductInfo.HERO_PASS_KEY },
+            InAppProductInfo.PRODUCTS.Select(p => p.key).ToArray());
+    }
+
+    // 기본 게임 팩 = 광고 제거 + 게임 속도 효과
+    [Test]
+    public void BaseGamePack_GivesRemoveAdAndSpeed()
+    {
+        CollectionAssert.Contains(InAppProductInfo.REMOVE_AD_KEYS, InAppProductInfo.BASE_GAME_PACK_KEY);
+        CollectionAssert.Contains(InAppProductInfo.GAME_SPEED_UP_KEYS, InAppProductInfo.BASE_GAME_PACK_KEY);
+    }
+
+    // 기본 게임 팩 = 구매 시각부터 BASE_GAME_PACK_HERO_DAYS일 용사 패스
+    [Test]
+    public void BaseGamePack_HeroDays()
+    {
+        var bought = new System.DateTime(2026, 11, 1, 12, 0, 0);
+        string time = TimeManager.DateTimeToString(bought);
+        Assert.IsTrue(HeroPass.IsBundleActiveAt(time, bought.AddDays(InAppProductInfo.BASE_GAME_PACK_HERO_DAYS - 1)));
+        Assert.IsFalse(HeroPass.IsBundleActiveAt(time, bought.AddDays(InAppProductInfo.BASE_GAME_PACK_HERO_DAYS + 1)));
+        Assert.IsFalse(HeroPass.IsBundleActiveAt("", bought));
+    }
+
+    // (2026-11-27) 용사 패스 = 월 구독 (ProductData.csv), 구독 확인 후 OFFLINE_GRACE_HOURS 동안 유효
+    [Test]
+    public void HeroPass_IsSubscription()
+    {
+        var info = InAppProductInfo.GetByKey(InAppProductInfo.HERO_PASS_KEY);
+        Assert.IsNotNull(info, "ProductData.csv에 HeroPass 행 없음");
+        Assert.AreEqual(UnityEngine.Purchasing.ProductType.Subscription, info.productType);
+        Assert.IsFalse(string.IsNullOrEmpty(info.productId));
     }
 
     [Test]
-    public void StagePass_IsNonConsumableInApp()
+    public void HeroPass_ActiveUntil()
     {
-        var info = InAppProductInfo.GetByKey(InAppProductInfo.STAGE_PASS_KEY);
-        Assert.IsNotNull(info);
-        Assert.AreEqual(UnityEngine.Purchasing.ProductType.NonConsumable, info.productType);
+        var now = new System.DateTime(2026, 11, 27, 0, 0, 0, System.DateTimeKind.Utc);
+        Assert.IsTrue(HeroPass.IsActiveAt(now.AddHours(1).Ticks.ToString(), now), "유효 기간 안");
+        Assert.IsFalse(HeroPass.IsActiveAt(now.AddHours(-1).Ticks.ToString(), now), "유효 기간 지남");
+        Assert.IsFalse(HeroPass.IsActiveAt("", now), "확인 기록 없음");
     }
 
     [Test]
-    public void HasStagePass_ByPurchaseRecord()
+    public void HeroPass_OwnedHeroes()
     {
-        var manager = new UserPurchaseManager();
-        typeof(UserPurchaseManager).GetProperty("userPurchaseData").SetValue(manager, new UserPurchaseData());
-        Assert.IsFalse(StageData.HasStagePass(manager));
-        manager.userPurchaseData.userPurchases.Add(new UserPurchase { key = InAppProductInfo.STAGE_PASS_KEY });
-        Assert.IsTrue(StageData.HasStagePass(manager));
+        var table = HeroDataTable.Instance;
+        Assume.That(table != null, "HeroData 없음");
+        var mgr = new UserHeroManager();
+        typeof(UserHeroManager).GetProperty("userHeroData").SetValue(mgr, new UserHeroData());
+        var passHero = table.heroDatas.FirstOrDefault(h => h != null && !h.hidden && !h.isFree);
+        Assume.That(passHero != null, "패스 용사(isFree가 아닌 용사) 없음");
+        try
+        {
+            HeroPass.ForceActiveForTest = false;
+            Assert.IsFalse(mgr.IsOwned(passHero.key), "패스 없으면 패스 용사 못 씀");
+            HeroPass.ForceActiveForTest = true;
+            Assert.IsTrue(mgr.IsOwned(passHero.key), "패스 있으면 패스 용사 이용");
+        }
+        finally { HeroPass.ForceActiveForTest = null; }
     }
 }
 

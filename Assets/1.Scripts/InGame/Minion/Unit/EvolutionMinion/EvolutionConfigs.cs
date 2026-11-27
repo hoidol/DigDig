@@ -65,6 +65,21 @@ public class IceEvolutionConfig : EvolutionConfig
     public override object[] GetDescArgs() => new[] { Num(cooldown), Num(hailDuration), Pct(iceChance), Pct(stunChance), Num(stunDuration) };
 }
 
+// (2026-11-27) 발비(Mine) → 발비마: 발동 스킬 — 폭탄이 내 칸 묶음 주변 적 경로를 한 바퀴 굴러가며 닿는 적마다 폭발 (같은 적은 한 번)
+[Serializable]
+public class MineEvolutionConfig : EvolutionConfig
+{
+    [Tooltip("쿨타임(초)")] public float cooldown = 10f;
+    [Tooltip("굴러가는 속도 (초당 거리) — 한 바퀴 시간 = 경로 길이 / 속도")] public float rollSpeed = 3.5f;
+    [Tooltip("적에 닿는 거리")] public float triggerRadius = 0.45f;
+    [Tooltip("폭발 범위")] public float explodeRadius = 1.1f;
+    [Tooltip("폭발 피해 (공격력 배율)")] public float explodeDamageMul = 2f;
+    [Tooltip("폭발 한 번에 최대 적 수")] public int explodeMaxHit = 6;
+    [Tooltip("폭탄 크기")] public float bombScale = 0.9f;
+    public override Type BehaviourType => typeof(MineEvolution);
+    public override object[] GetDescArgs() => new[] { Num(cooldown), Num(explodeRadius), Pct(explodeDamageMul) };
+}
+
 // 찌릿이: 필드의 다른 찌릿이와 번개 선으로 연결 → 선에 닿은 적 피해 + 감속
 [Serializable]
 public class LightningEvolutionConfig : EvolutionConfig

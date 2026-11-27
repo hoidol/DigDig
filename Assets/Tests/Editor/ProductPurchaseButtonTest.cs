@@ -17,7 +17,7 @@ public class ProductPurchaseButtonTest
         var manager = managerObj.AddComponent<ProductManager>();
         manager.productDatas = new[]
         {
-            new ProductData { key = "GoldProduct", currencyType = CurrencyType.Gold, price = 300 },
+            new ProductData { key = "GoldProduct", currencyType = CurrencyType.Energe, price = 300 }, // (2026-11-27) 골드 삭제 → 에너지
             new ProductData { key = "AdProduct", currencyType = CurrencyType.Ad },
             new ProductData { key = "InAppProduct", productId = "com.test.inapp", currencyType = CurrencyType.InApp, price = 1.99f },
         };
@@ -51,7 +51,7 @@ public class ProductPurchaseButtonTest
         Assert.IsTrue(button.currencyDisplayPanel.gameObject.activeSelf);
         Assert.IsFalse(button.inAppPurchasePriceText.gameObject.activeSelf);
         Assert.AreEqual("300", button.currencyDisplayPanel.valueText.text);
-        Assert.AreEqual(CurrencyInfo.GetSprite(CurrencyType.Gold), button.currencyDisplayPanel.currencyImage.sprite);
+        Assert.AreEqual(CurrencyInfo.GetSprite(CurrencyType.Energe), button.currencyDisplayPanel.currencyImage.sprite);
     }
 
     [Test]

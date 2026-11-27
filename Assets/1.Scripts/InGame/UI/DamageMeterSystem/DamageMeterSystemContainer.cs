@@ -1,7 +1,7 @@
-using System.Linq;
 using UnityEngine;
 
-// 피해 집계 창: 장착 5종을 패널에 하나씩, 피해가 큰 순서로 정렬해 보여준다
+// 피해 집계 창: 장착 미니언 + 킹(슬라임)을 패널에 하나씩, 피해가 큰 순서로 정렬해 보여준다 (2026-11-27 킹 줄 추가)
+// 줄 수 = 장착 수 + 1 → 씬에 패널이 모자라면 경고만 (Tools/InGame/Add King Row To DamageMeter 로 패널 추가)
 // 켜져 있는 동안 REFRESH_INTERVAL(실제 시간)마다 갱신 → 일시정지·튜토리얼 슬로우 중에도 갱신
 public class DamageMeterSystemContainer : MonoBehaviour
 {
@@ -10,6 +10,7 @@ public class DamageMeterSystemContainer : MonoBehaviour
     public DamageMeterSystemPanel[] damageMeterSystemPanels; // 비워 두면 하위 전부
 
     float refreshTimer;
+    bool warned;
 
     void OnEnable()
     {
@@ -31,20 +32,14 @@ public class DamageMeterSystemContainer : MonoBehaviour
         if (MinionManager.Instance == null || MinionManager.Instance.minionDataDic.Count == 0)
             return; // 미니언 데이터 로드 전
 
-        UserMinion[] equipped = UserDataManager.Instance.userMinionManager.userMinionData.equiptedMinions;
-        // 장착 순서를 기본으로 두고 피해가 큰 순서로 (같으면 장착 순서)
-        MinionData[] datas = (equipped ?? new UserMinion[0])
-            .Where(e => e != null && e.MinionData != null)
-            .Select(e => e.MinionData)
-            .Distinct()
-            .Select((data, idx) => (data, idx))
-            .OrderByDescending(e => DamageMeterSystem.GetDamage(e.data.key))
-            .ThenBy(e => e.idx)
-            .Select(e => e.data)
-            .ToArray();
-
-        double maxDamage = datas.Length > 0 ? DamageMeterSystem.GetDamage(datas[0].key) : 0;
-        double totalDamage = DamageMeterSystem.TotalDamage;
+        var entries = DamageMeterSystem.GetEntries();
+        if (entries.Count > damageMeterSystemPanels.Length && !warned)
+        {
+            warned = true;
+            Debug.LogWarning($"[DamageMeterSystemContainer] 줄 {entries.Count}개에 패널 {damageMeterSystemPanels.Length}개 — 메뉴 Tools/InGame/Add King Row To DamageMeter");
+        }
+        double maxDamage = entries.Count > 0 ? entries[0].damage : 0;
+        double totalDamage = DamageMeterSystem.AllDamage;
 
         for (int i = 0; i < damageMeterSystemPanels.Length; i++)
         {
@@ -52,13 +47,13 @@ public class DamageMeterSystemContainer : MonoBehaviour
             if (panel == null)
                 continue;
 
-            bool active = i < datas.Length;
+            bool active = i < entries.Count;
             panel.gameObject.SetActive(active);
             if (!active)
                 continue;
 
             panel.transform.SetSiblingIndex(i);
-            panel.SetData(datas[i], DamageMeterSystem.GetDamage(datas[i].key), maxDamage, totalDamage);
+            panel.SetData(entries[i], maxDamage, totalDamage);
         }
     }
 }

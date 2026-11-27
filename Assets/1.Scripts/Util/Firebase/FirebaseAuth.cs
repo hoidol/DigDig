@@ -86,10 +86,7 @@ public class FirebaseAuth : MonoBehaviour
             Debug.Log($"[FirebaseAuth] 자동 로그인 : {auth.CurrentUser.UserId} ({CurrentLoginType})");
             NotifySignedIn(auth.CurrentUser);
         }
-        else
-        {
-            EnsureSignedInAsync().Forget(); // 로그인 UI 생기기 전까지 익명으로 미리 로그인
-        }
+        // (2026-11-27) 로그인 안 돼 있으면 Title 씬의 로그인 창에서 고름 (이전: 익명으로 미리 로그인)
     }
 
     void Update()

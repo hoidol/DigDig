@@ -16,56 +16,20 @@ MonoBehaviour:
   - key: RemoveAd
     productId: remove_ad
     currencyType: 5
-    price: 4.99
-  - key: RemoveAdPackage
-    productId: remove_ad_package
-    currencyType: 5
+    productType: 1
     price: 7.99
   - key: GameSpeedUp
     productId: game_speed_up
     currencyType: 5
-    price: 2.99
-  - key: GameSpeedUpPackage
-    productId: game_speed_up_package
+    productType: 1
+    price: 3.99
+  - key: BaseGamePack
+    productId: best_game_pack
     currencyType: 5
-    price: 5.99
-  - key: DrawEquipment_Normal_Ad
-    productId: 
-    currencyType: 4
-    price: 1
-  - key: DrawEquipment_Normal_Dia
-    productId: 
-    currencyType: 1
-    price: 25
-  - key: DrawEquipment_Unique
-    productId: 
-    currencyType: 1
-    price: 50
-  - key: Dia_20
-    productId: dia_20
+    productType: 1
+    price: 16.99
+  - key: HeroPass
+    productId: hero_pass_subscription_1_mouth
     currencyType: 5
-    price: 1.99
-  - key: Dia_110
-    productId: dia_110
-    currencyType: 5
-    price: 5.9
-  - key: Dia_550
-    productId: dia_550
-    currencyType: 5
-    price: 17.9
-  - key: Gold_1000
-    productId: 
-    currencyType: 1
-    price: 12
-  - key: Gold_5500
-    productId: 
-    currencyType: 1
-    price: 54
-  - key: Gold_30000
-    productId: 
-    currencyType: 1
-    price: 270
-  - key: StagePass
-    productId: stage_pass
-    currencyType: 5
-    price: 2.99
+    productType: 2
+    price: 10.99

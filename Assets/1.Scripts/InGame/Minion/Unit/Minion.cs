@@ -48,6 +48,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
             return;
         isEvolved = true;
         evolution = branch;
+        GameResultStats.RecordEvolve(); // (2026-11-27) 결과 화면: 진화 수
         Debug.Log($"[Evolve] {key} 진화 (머지 레벨 {mergeLevel}, 갈래 {branch?.key})");
         ApplyEvolvedLook(true);
         if (branch != null && branch.config != null && branch.config.BehaviourType != null) // (2026-11-26) Setting 수치 + 동작 클래스

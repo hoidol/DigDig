@@ -17,6 +17,9 @@ public static class FirebaseDatabaseConfig
     public const string RANKING_URL = "";
     public static readonly string[] USERDATA_URLS = { };
     public static readonly int[] ASSIGNABLE_SHARDS = { };
+    public const string MULTI_URL = "";
+    public const string COMMON_URL = "";
+    public const string SHARED_URL = "";
 #else
     public const string RANKING_URL = "https://dreamofslime-ranking.asia-southeast1.firebasedatabase.app/";
     public static readonly string[] USERDATA_URLS =
@@ -25,6 +28,12 @@ public static class FirebaseDatabaseConfig
         "https://dreamofslime-userdatas-2.asia-southeast1.firebasedatabase.app/", // 1
     };
     public static readonly int[] ASSIGNABLE_SHARDS = { 0, 1 };
+    // (2026-11-27) 멀티 게임 데이터 (방·대기열). 방은 시작 5시간 뒤 지움 (FirebaseMultiBackend). 보안 규칙 = firebase/multi.rules.json
+    public const string MULTI_URL = "https://dreamofslime-mutlgame-data1.asia-southeast1.firebasedatabase.app/";
+    // (2026-11-27) 플레이 기록 (판마다 브레이크타임 상태, 최대 300판 돌려쓰기 → 멀티 AI 봇이 재생). 보안 규칙 = firebase/common.rules.json
+    public const string COMMON_URL = "https://dreamofslime-multigame-common-data.asia-southeast1.firebasedatabase.app/";
+    // (2026-11-27) 서버 공용 데이터 (닉네임 중복 확인 nicknames/{key} = uid). 보안 규칙 = firebase/shared.rules.json
+    public const string SHARED_URL = "https://dreamofslime-37cb2-default-rtdb.firebaseio.com/";
 #endif
 
     // 유저 → 샤드 배정 기록 위치 (따로 인스턴스 두지 않고 랭킹 인스턴스에 둔다)
@@ -33,6 +42,9 @@ public static class FirebaseDatabaseConfig
 
     public static Firebase.Database.FirebaseDatabase Ranking => Firebase.Database.FirebaseDatabase.GetInstance(RANKING_URL);
     public static Firebase.Database.FirebaseDatabase ShardMap => Firebase.Database.FirebaseDatabase.GetInstance(SHARD_MAP_URL);
+    public static Firebase.Database.FirebaseDatabase Shared => Firebase.Database.FirebaseDatabase.GetInstance(SHARED_URL);
+    public static Firebase.Database.FirebaseDatabase Common => Firebase.Database.FirebaseDatabase.GetInstance(COMMON_URL);
+    public static Firebase.Database.FirebaseDatabase Multi => Firebase.Database.FirebaseDatabase.GetInstance(MULTI_URL);
     public static Firebase.Database.FirebaseDatabase UserData(int shard) => Firebase.Database.FirebaseDatabase.GetInstance(USERDATA_URLS[shard]);
 
     // 새 유저 샤드 선택 : ASSIGNABLE_SHARDS 중 uid 해시로 고름.

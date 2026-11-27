@@ -40,12 +40,15 @@ public class UnitShopPlayTest : InGamePlayTestBase
         // 보유를 끄면 구매 가능 → 구매 → 보유
         heroMgr.GetUserHero(hero.key).own = false;
         hero.UpdatePanel();
-        Assert.IsTrue(hero.buyButton.interactable, "미보유 용사 = 구매 가능");
-        Assert.AreEqual(MinionBuyResult.Success, hero.Buy());
+        Assert.IsTrue(hero.buyButton.interactable, "미보유 용사 = 해금 가능");
+        MinionBuyResult result = MinionBuyResult.Locked;
+        hero.Buy(r => result = r);
+        yield return WaitFrames(3); // 광고(테스트 중엔 바로 성공)·결제 콜백
+        Assert.AreEqual(MinionBuyResult.Success, result);
         Assert.IsTrue(heroMgr.IsOwned(hero.key));
         Assert.AreEqual(TranslateManager.GetText("Shop_Owned"), hero.priceDisplay.valueText.text);
 
-        // 미니언: 잠김 = "Lv.N" → 레벨을 올리고 재화를 주면 구매
+        // 미니언: 잠김 = "Lv.N" → 레벨을 올리면 해금 가능 → 해금 (2026-11-27 골드·다이아 대신 자동·광고·유료)
         var minionMgr = UserDataManager.Instance.userMinionManager;
         var info = UserDataManager.Instance.userMyInfoManager.userMyInfoData;
         int prevLv = info.lv;
@@ -59,15 +62,13 @@ public class UnitShopPlayTest : InGamePlayTestBase
             Assert.IsFalse(minion.buyButton.interactable);
         }
         info.lv = 99;
-        MinionData data = MinionManager.Instance.GetMinionData(minion.key);
-        if (data.buyCurrencyType == CurrencyType.Dia) UserDataManager.Instance.AddDia(data.buyPrice);
-        else UserDataManager.Instance.AddGold(data.buyPrice);
         minion.UpdatePanel();
-        Assert.IsTrue(minion.buyButton.interactable, "레벨 도달 = 구매 가능");
-        int before = UserDataManager.Instance.userData.GetCurrency(data.buyCurrencyType);
-        Assert.AreEqual(MinionBuyResult.Success, minion.Buy());
+        Assert.IsTrue(minion.buyButton.interactable, "레벨 도달 = 해금 가능");
+        result = MinionBuyResult.Locked;
+        minion.Buy(r => result = r);
+        yield return WaitFrames(3);
+        Assert.AreEqual(MinionBuyResult.Success, result);
         Assert.IsTrue(minionMgr.GetUserMinion(minion.key).own, "미니언 보유");
-        Assert.AreEqual(before - data.buyPrice, UserDataManager.Instance.userData.GetCurrency(data.buyCurrencyType), "재화 차감");
         info.lv = prevLv;
     }
 }

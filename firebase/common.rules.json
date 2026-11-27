@@ -1,0 +1,30 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "meta": {
+      "nextIndex": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".validate": "newData.isNumber() && (!data.exists() || newData.val() === data.val() + 1)"
+      }
+    },
+
+    "index": {
+      ".read": "auth != null",
+      "$slot": {
+        ".write": "auth != null",
+        ".validate": "$slot.matches(/^([0-9]|[1-9][0-9])$/) && newData.hasChildren(['slot', 'mode', 'finalWave', 'frameCount'])"
+      }
+    },
+
+    "records": {
+      "$slot": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".validate": "$slot.matches(/^([0-9]|[1-9][0-9])$/) && newData.isString() && newData.val().length <= 400000"
+      }
+    }
+  }
+}

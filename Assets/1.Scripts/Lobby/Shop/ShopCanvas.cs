@@ -15,7 +15,7 @@ public class ShopCanvas : BaseLobbyCanvas
         // (2026-11-26) 용사·미니언 판매 줄: 씬에 둔 줄(UnitShopSection)의 칸 템플릿을 데이터 수만큼 복사 (씬에 만들기 = Tools/Lobby/Add Hero·Minion Shop Sections)
         foreach (UnitShopSection section in GetComponentsInChildren<UnitShopSection>(true))
             section.Fill();
-        productContainers = GetComponentsInChildren<ProductContainer>();
+        productContainers = GetComponentsInChildren<ProductContainer>(true); // (2026-11-27) 꺼진 탭(용사·미니언 스크롤) 안의 줄도 포함
     }
 
     public override void OpenCanvas(Action closeCallback = null)

@@ -20,8 +20,7 @@ MonoBehaviour:
   attackPowerRandomRatio: 0.67
   hasSkill: 1
   offerDiceCoinPrice: 2
-  buyCurrencyType: 0
-  buyPrice: 0
+  unlockType: 0
   reinforceAttackPowerPercent: 10
   attackSfx:
     name: 

@@ -13,49 +13,8 @@ using UnityEngine;
 // BuildSetting.isTestMode일 때만 (MobileTestPanel이 Begin)
 public static class WaveSnapshotSystem
 {
-    class AbilitySnap
-    {
-        public AbilityData data;
-        public int level;
-        public Vector2Int[] heroOffsets;      // 용사 정예병 칸
-        public int unlockedSkills;            // 용사 스킬 해방 수
-        public int charges;                   // 용사 에너지
-        public List<Vector2Int> expandOffsets; // 정예 칸 추가 카드 (레벨마다 칸 하나)
-    }
-
-    class MinionSnap
-    {
-        public Vector2Int tile;
-        public string key;
-        public int mergeLevel;
-        public bool evolved;
-        public string evolutionKey;
-        public FindTargetType findTarget;
-        public RotationDirection? rotation;
-        public BuffRangeShape? buffShape;
-    }
-
-    class RuneSnap
-    {
-        public Vector2Int tile;
-        public string key;
-        public int level;
-    }
-
-    class Snapshot
-    {
-        public int nextWaveIdx;
-        public Vector2Int? kingTile;
-        public int lv, exp, diceCoin, minionMaxCount;
-        public float curHp;
-        public List<AbilitySnap> abilities = new();
-        public List<MinionSnap> minions = new();
-        public List<RuneSnap> runes = new();
-        public List<Vector2Int> blocked = new();
-        public List<(string key, StatType stat, int lv)> enhances = new();
-    }
-
-    static readonly Dictionary<int, Snapshot> snapshots = new();
+    // (2026-11-27) 저장 내용·복구는 GameSnapshot (로컬 판 이어하기와 공용)
+    static readonly Dictionary<int, GameSnapshot> snapshots = new();
     static MonoBehaviour runner;
     static bool restoring;
     static bool subscribed;
@@ -103,228 +62,26 @@ public static class WaveSnapshotSystem
         Capture(nextWaveIdx);
     }
 
-    #region 저장
     static void Capture(int nextWaveIdx)
     {
-        KingSlime king = KingSlime.Instance;
-        TileManager tm = TileManager.Instance;
-        if (king == null || tm == null)
+        GameSnapshot snap = GameSnapshot.Capture(nextWaveIdx);
+        if (snap == null)
             return;
-        var s = new Snapshot
-        {
-            nextWaveIdx = nextWaveIdx,
-            lv = king.lv,
-            exp = king.exp,
-            diceCoin = king.diceCoin,
-            curHp = king.health != null ? king.health.curHp : 0f,
-            minionMaxCount = MinionFieldController.Instance != null ? MinionFieldController.Instance.minionMaxCount : 0,
-        };
-        Tile kingTile = tm.GetTile(king);
-        if (kingTile != null)
-            s.kingTile = kingTile.index;
-
-        foreach (KingAbility a in king.abilityInventory.Abilities)
-        {
-            if (a == null || a.data == null)
-                continue;
-            var snap = new AbilitySnap { data = a.data, level = a.level };
-            if (a is HeroKingAbility hero)
-            {
-                snap.heroOffsets = hero.eliteOffsets != null ? (Vector2Int[])hero.eliteOffsets.Clone() : null;
-                snap.unlockedSkills = hero.UnlockedSkillCount;
-                snap.charges = hero.Charges;
-            }
-            if (a is EliteAreaExpandKingAbility expand)
-                snap.expandOffsets = new List<Vector2Int>(expand.Offsets);
-            s.abilities.Add(snap);
-        }
-
-        foreach (Tile t in tm.tiles)
-        {
-            if (t == null)
-                continue;
-            if (t.isBlocked)
-                s.blocked.Add(t.index);
-            if (t.tileObject is Minion m)
-            {
-                s.minions.Add(new MinionSnap
-                {
-                    tile = t.index,
-                    key = m.key,
-                    mergeLevel = m.mergeLevel,
-                    evolved = m.isEvolved,
-                    evolutionKey = m.evolution != null ? m.evolution.key : null,
-                    findTarget = m.findTargetType,
-                    rotation = m is IRotationDirectionUnit r ? r.RotationDirection : null,
-                    buffShape = m is IBuffRangeUnit b ? b.BuffRangeShape : null,
-                });
-            }
-            if (t.tileRune is TileRune rune)
-                s.runes.Add(new RuneSnap { tile = t.index, key = rune.key, level = rune.upgradeLevel });
-        }
-        s.enhances = MinionEnhanceSystem.GetAllLevels();
-        snapshots[nextWaveIdx] = s;
-        Debug.Log($"[WaveSnapshot] Wave {nextWaveIdx + 1} 저장: 미니언 {s.minions.Count} · 룬 {s.runes.Count} · 킹 Lv.{s.lv}");
+        snapshots[nextWaveIdx] = snap;
+        Debug.Log($"[WaveSnapshot] Wave {nextWaveIdx + 1} 저장: 미니언 {snap.minions.Count} · 룬 {snap.runes.Count} · 킹 Lv.{snap.lv}");
     }
-    #endregion
 
-    #region 복구
     // 저장해 둔 그 wave 브레이크타임으로 되돌림. 저장이 없으면 false
     public static bool Restore(int nextWaveIdx)
     {
-        if (!snapshots.TryGetValue(nextWaveIdx, out Snapshot s))
+        if (!snapshots.TryGetValue(nextWaveIdx, out GameSnapshot s))
             return false;
-        GameManager gm = GameManager.Instance;
-        KingSlime king = KingSlime.Instance;
-        TileManager tm = TileManager.Instance;
-        if (gm == null || king == null || tm == null)
-            return false;
-
         restoring = true;
-        try
-        {
-            CloseOpenWindows(king);
-
-            // 1) wave·적 정리 + 판 비우기
-            GameTestUtil.ClearFieldMinions();
-            foreach (TileRune r in king.runeInventory.curRunes.OfType<TileRune>().ToList())
-                king.RemoveRune(r);
-            foreach (Tile t in tm.tiles)
-            {
-                if (t == null)
-                    continue;
-                bool block = s.blocked.Contains(t.index);
-                if (block && !t.isBlocked && t.IsEmpty)
-                    t.Block();
-                else if (!block && t.isBlocked)
-                    t.Unblock();
-            }
-
-            // 2) 킹 칸
-            if (s.kingTile.HasValue)
-            {
-                Tile kt = tm.GetTile(s.kingTile.Value);
-                Tile cur = tm.GetTile(king);
-                if (kt != null && kt != cur && kt.IsEmpty)
-                {
-                    tm.RemoveTileObject(king);
-                    kt.SetTileObject(king);
-                }
-            }
-
-            // 3) 킹 레벨·성장 능력 (용사가 레벨을 보므로 레벨 먼저)
-            KingAbilityInventory inv = king.abilityInventory;
-            foreach (KingAbility a in inv.Abilities.ToList())
-                inv.Remove(a.data);
-            king.lv = s.lv;
-            king.exp = s.exp;
-            king.pendingLevelUps = 0;
-            foreach (AbilitySnap a in s.abilities)
-                RestoreAbility(inv, a);
-            inv.Get<HeroKingAbility>()?.RefreshHeroLevel();
-
-            // 4) 미니언 강화 카드 → 미니언 (UpdateMinion이 강화 레벨을 읽음)
-            MinionEnhanceSystem.RestoreLevels(s.enhances);
-            foreach (MinionSnap m in s.minions)
-                RestoreMinion(tm, m);
-
-            // 5) 룬
-            foreach (RuneSnap r in s.runes)
-            {
-                Tile t = tm.GetTile(r.tile);
-                if (t == null || t.tileRune != null)
-                    continue;
-                king.AddRune(r.key, t).Forget();
-                if (t.tileRune is TileRune installed)
-                    while (installed.upgradeLevel < r.level && installed.ForceUpgrade()) { }
-            }
-
-            // 6) 그 wave 브레이크타임으로 이동 → 카드·주사위 코인 새로 지급 후 저장한 코인으로 맞춤
-            king.bonusDiceCoinNextBreak = 0;
-            king.pendingRuneRewards = 0;
-            MinionOfferSystem.Instance?.ResetDealForTest();
-            gm.GoToBreakTimeForTest(nextWaveIdx);
-            king.AddDiceCoin(s.diceCoin - king.diceCoin);
-            if (MinionFieldController.Instance != null)
-                MinionFieldController.Instance.minionMaxCount = s.minionMaxCount;
-            if (king.health != null)
-                king.health.curHp = Mathf.Min(s.curHp, king.MaxHp);
-            king.UpdateCharacter();
-            GameEventBus.Publish(new ExpChangedEvent(king.exp, king.MaxExp, king.lv));
-            KingSlimeManageCanvas.Instance?.UpdateCanvas();
-        }
-        finally
-        {
-            restoring = false;
-        }
-        Debug.Log($"[WaveSnapshot] Wave {nextWaveIdx + 1} 복구");
-        return true;
+        bool ok;
+        try { ok = s.Apply(); }
+        finally { restoring = false; }
+        if (ok)
+            Debug.Log($"[WaveSnapshot] Wave {nextWaveIdx + 1} 복구");
+        return ok;
     }
-
-    static void RestoreAbility(KingAbilityInventory inv, AbilitySnap a)
-    {
-        if (a.data == null || a.data.prefab == null)
-            return;
-        if (a.expandOffsets != null && a.expandOffsets.Count > 0)
-        {
-            // 정예 칸 추가: 레벨마다 칸 하나 (추가 전에 extraOffset 지정)
-            for (int i = 0; i < a.expandOffsets.Count; i++)
-            {
-                Vector2Int off = a.expandOffsets[i];
-                if (i == 0)
-                    inv.Add(a.data, ab => { if (ab is EliteAreaExpandKingAbility e) e.extraOffset = off; });
-                else
-                {
-                    if (inv.Get(a.data) is EliteAreaExpandKingAbility e)
-                        e.extraOffset = off;
-                    inv.Add(a.data);
-                }
-            }
-            return;
-        }
-        inv.Add(a.data, ab =>
-        {
-            if (ab is HeroKingAbility h && a.heroOffsets != null)
-                h.eliteOffsets = (Vector2Int[])a.heroOffsets.Clone();
-        });
-        for (int lv = 1; lv < a.level; lv++)
-            inv.Add(a.data);
-        if (inv.Get(a.data) is HeroKingAbility hero)
-        {
-            for (int i = 0; i < a.unlockedSkills; i++)
-                hero.UnlockNextSkill();
-            hero.SetChargesForTest(a.charges);
-        }
-    }
-
-    static void RestoreMinion(TileManager tm, MinionSnap m)
-    {
-        Tile t = tm.GetTile(m.tile);
-        if (t == null || !t.IsEmpty || MinionManager.Instance == null || !MinionManager.Instance.minionDataDic.ContainsKey(m.key))
-            return;
-        Minion minion = KingSlime.Instance.AddMinion(m.key, m.mergeLevel);
-        t.SetTileObject(minion);
-        if (m.evolved && minion.CanEvolve)
-        {
-            var branches = minion.minionData.GetEvolutions();
-            MinionEvolutionData branch = branches.FirstOrDefault(b => b != null && b.key == m.evolutionKey);
-            minion.Evolve(branch != null ? branch : (branches.Count > 0 ? branches[0] : null));
-        }
-        minion.SetFindTargetType(m.findTarget);
-        if (m.rotation.HasValue && minion is IRotationDirectionUnit r)
-            r.SetRotationDirection(m.rotation.Value);
-        if (m.buffShape.HasValue && minion is IBuffRangeUnit b)
-            b.SetBuffRangeShape(m.buffShape.Value);
-    }
-
-    // 열려 있는 레벨업·룬 선택 창 닫기 (밀린 레벨업은 버림)
-    static void CloseOpenWindows(KingSlime king)
-    {
-        king.pendingLevelUps = 0;
-        if (InGame.LevelUpCanvas.Instance != null && InGame.LevelUpCanvas.Instance.gameObject.activeSelf)
-            InGame.LevelUpCanvas.Instance.gameObject.SetActive(false);
-        if (SelectRuneCanvas.Instance != null && SelectRuneCanvas.Instance.gameObject.activeSelf)
-            SelectRuneCanvas.Instance.gameObject.SetActive(false);
-    }
-    #endregion
 }

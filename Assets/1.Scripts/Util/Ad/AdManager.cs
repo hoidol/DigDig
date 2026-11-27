@@ -23,7 +23,7 @@ public class AdManager : MonoSingleton<AdManager>
     // 성공하면 광고 시청 업적(Watch_Ad) +1 — 광고 없이 성공한 경우도 포함
     public static void Show(string ad_id, AdType adType, Action<bool> callback)
     {
-        if (UserDataManager.Instance != null && UserDataManager.Instance.isAdRemoved)
+        if (UserDataManager.Instance != null && UserDataManager.Instance.IsAdRemovedEffective) // 멀티 판에선 광고 제거 효과 없음
         {
             Succeed(callback);
             return;

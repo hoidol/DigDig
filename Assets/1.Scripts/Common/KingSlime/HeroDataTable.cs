@@ -70,8 +70,7 @@ public class HeroDataTable : ScriptableObject
         public bool HasEliteBuff => eliteBuffInit != 0f || eliteBuffAdd != 0f;
         public bool hidden;
         public string desc;
-        public CurrencyType buyCurrency;
-        public int buyPrice;
+        public bool isFree; // (2026-11-27) HeroData.csv isFree TRUE = 레벨이 되면 무료 보유, 아니면 용사 패스(구독) 필요
         public int unlockLv;
 
         public bool TryGetStat(StatType statType, out float value)
@@ -164,8 +163,7 @@ public class HeroDataTable : ScriptableObject
                     table.HasColumn($"Skill{i}Value") ? row.Get($"Skill{i}Value") : ""));
             data.hidden = string.Equals(row.Get("hidden")?.Trim(), "TRUE", System.StringComparison.OrdinalIgnoreCase);
             data.desc = table.HasColumn("Desc") ? row.Get("Desc") : "";
-            data.buyCurrency = row.TryGetEnum("BuyCurrency", out CurrencyType c) ? c : CurrencyType.Gold;
-            data.buyPrice = row.TryGetInt("BuyPrice", out int price) ? price : 0;
+            data.isFree = string.Equals(row.Get("isFree")?.Trim(), "TRUE", System.StringComparison.OrdinalIgnoreCase);
             data.unlockLv = row.TryGetInt("unnlockLv", out int lv) || row.TryGetInt("unlockLv", out lv) ? lv : 0;
             datas.Add(data);
         }

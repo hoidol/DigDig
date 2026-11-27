@@ -2,25 +2,36 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 피해 집계 한 줄: 미니언 썸네일 + 바(1위 대비) + 피해량 + 비율(전체 대비)
+// 피해 집계 한 줄: 썸네일 + 바(1위 대비) + 피해량 + 비율(전체 대비). 미니언·킹 공용 (2026-11-27 킹 줄 추가)
+// nameText·detailText는 선택 (결과 화면 줄에만 있음, 비우면 건너뜀)
 public class DamageMeterSystemPanel : MonoBehaviour
 {
     public Image thumImage;
     public Slider slider;        // 로비 미니언 경험치 바와 같은 Slider_02_Orange (조작 불가)
     public TMP_Text damageText;
     public TMP_Text percentText;
+    public TMP_Text nameText;    // 이름 (용사 이름·미니언 이름)
+    public TMP_Text detailText;  // 킹 = "스킬 N%"
 
-    MinionData minionData;
+    Sprite thum;
 
-    public void SetData(MinionData data, double damage, double maxDamage, double totalDamage)
+    public void SetData(DamageMeterSystem.Entry entry, double maxDamage, double totalDamage)
     {
-        if (minionData != data)
+        if (thum != entry.thum)
         {
-            minionData = data;
+            thum = entry.thum;
             if (thumImage != null)
-                thumImage.SetThum(data.thum);
+                thumImage.SetThum(entry.thum);
+        }
+        if (nameText != null)
+            nameText.text = entry.name;
+        if (detailText != null)
+        {
+            detailText.gameObject.SetActive(!string.IsNullOrEmpty(entry.detail));
+            detailText.text = entry.detail;
         }
 
+        double damage = entry.damage;
         if (slider != null)
             slider.value = maxDamage > 0 ? (float)(damage / maxDamage) : 0f;
         if (damageText != null)

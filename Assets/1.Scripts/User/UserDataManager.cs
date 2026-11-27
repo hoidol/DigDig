@@ -8,7 +8,9 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     public const string UserDataFileName = "UserData";
     // public static string STAGE_KEY = GameSetting.FIRST_STAGE_KEY;// "Gateway1";
     public bool isAdRemoved = false;
-    public bool IsGameSpeedUp => userPurchaseManager.HasPurchasedAny(InAppProductInfo.GAME_SPEED_UP_KEYS);
+    // (2026-11-27) 멀티 판에서는 배속 상품·광고 제거 상품 효과 없음
+    public bool IsGameSpeedUp => !MultiGame.IsActive && userPurchaseManager.HasPurchasedAny(InAppProductInfo.GAME_SPEED_UP_KEYS);
+    public bool IsAdRemovedEffective => isAdRemoved && !MultiGame.IsActive;
     public static DifficultyType difficultyType = DifficultyType.Normal;
     public static int stageOrder = StageData.FIRST_STAGE_ORDER; // 지금 선택한 스테이지 order (0부터, 화면 표시 = +1, 로비 < > 버튼)
 
@@ -81,8 +83,17 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userMyInfoManager.LoadData();
         userKingSlimeManager.LoadData();
         userHeroManager.LoadData();
-        // (2026-11-24) 레벨 해금 미니언은 자동 지급하지 않음 → 로비에서 구매 (UserMinionManager.BuyMinion)
+        // (2026-11-27) 해금 방식이 자동(BuyCurrency 빈칸)인 용사·미니언은 레벨이 되면 보유 (미니언은 데이터 로드 후 LobbyManager에서 한 번 더)
+        GrantAutoUnlocks();
         isAdRemoved = userPurchaseManager.HasPurchasedAny(InAppProductInfo.REMOVE_AD_KEYS);
+    }
+
+    // 자동 해금 용사·미니언 지급 (불러올 때·유저 레벨업·로비 시작)
+    public void GrantAutoUnlocks()
+    {
+        int lv = userMyInfoManager?.userMyInfoData != null ? userMyInfoManager.userMyInfoData.lv : 0;
+        userHeroManager?.GrantAutoUnlocks(lv);
+        userMinionManager?.GrantAutoUnlocks(lv);
     }
 
     // 클라우드 저장용 묶음 (FirebaseDatabase)
@@ -177,14 +188,14 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         Save();
     }
 
-    public void AddGold(int count)
+    // 멀티 판 하나가 끝남 (MultiInGameSession)
+    public void AddMultiRecord(bool champion, bool clear)
     {
-        userData.gold += count;
-        Save();
-    }
-    public void AddDia(int count)
-    {
-        userData.dia += count;
+        userData.multiGames++;
+        if (clear)
+            userData.multiClear++;
+        if (champion)
+            userData.multiChampion++;
         Save();
     }
 
@@ -203,12 +214,6 @@ public class UserDataManager : MonoSingleton<UserDataManager>
 
         switch (currencyType)
         {
-            case CurrencyType.Gold:
-                userData.gold -= count;
-                break;
-            case CurrencyType.Dia:
-                userData.dia -= count;
-                break;
             case CurrencyType.Energe:
                 userData.energe -= count;
                 GameEventBus.Publish(new ChangedEnergeEvent(userData.energe, -count));
@@ -226,19 +231,18 @@ public class UserDataManager : MonoSingleton<UserDataManager>
 public class UserData
 {
     public string uid;
-    public int gold; //던전 수정 조작 느낌으로
-    public int dia; //던전 수정 조작 느낌으로
+    // (2026-11-27) 골드·다이아 삭제 (이전 저장 파일의 gold·dia 값은 읽지 않고 버림)
     public int energe;
+    // (2026-11-27) 멀티 전적: 우승(1등) · 클리어(웨이브 50 보스 처치) · 판수. 1등이면 우승·클리어 둘 다 +1. UI엔 우승·클리어만
+    public int multiChampion;
+    public int multiClear;
+    public int multiGames;
     // public bool isAdRemoved;
 
     public int GetCurrency(CurrencyType currencyType)
     {
         switch (currencyType)
         {
-            case CurrencyType.Gold:
-                return gold;
-            case CurrencyType.Dia:
-                return dia;
             case CurrencyType.Energe:
                 return energe;
         }
@@ -262,5 +266,6 @@ public class UserCloudData
 
 public enum CurrencyType
 {
-    Gold, Dia, Energe, DrawTicket /* 사용 안 함 (2026-11-20 뽑기권 삭제). 번호 유지용 */, Ad, InApp
+    // (2026-11-27) 골드(0)·다이아(1)·뽑기권(3) 삭제. 씬·에셋에 번호로 저장되므로 남은 값의 번호는 그대로
+    Energe = 2, Ad = 4, InApp = 5
 }

@@ -23,11 +23,7 @@ public class BattleCanvas : BaseLobbyCanvas
     public Image stageThumImage;
     public GameObject stageLockedGO;
 
-    // (2026-11-24) 스테이지 이용권: 이용권이 필요한 스테이지면 Play 버튼 자리에 구매 버튼 → 누르면 바로 결제
-    public Button playButton; // 비우면 OnClickedBtn이 연결된 하위 버튼 중 스테이지 이동 버튼이 아닌 것
-    public Button stagePassButton; // 비우면 Play 버튼을 복사해 실행 중 생성
-    public TMP_Text stagePassText; // 구매 버튼 글씨 (StagePass_Buy, {0} = 가격). 비우면 구매 버튼의 첫 글씨
-    bool isPurchasingStagePass;
+    // (2026-11-27) 스테이지 이용권 삭제 (모든 스테이지 무료, 클리어 해금만)
 
     // (2026-11-26) 하단 클리어 팁 띠지 (지금 스테이지·난이도). 씬에 만들어 연결 (Tools/Lobby/Add ClearTip Band To Lobby Scene)
     public ClearTipTicker clearTipTicker;
@@ -39,7 +35,6 @@ public class BattleCanvas : BaseLobbyCanvas
         // 씬의 스테이지 이동 버튼에 Play(OnClickedBtn)가 같이 연결돼 있으면 끔 (> 를 누르면 게임이 시작되던 문제)
         DisablePersistentCalls(preStageButton);
         DisablePersistentCalls(nextStageButton);
-        EnsureStagePassButton();
         if (preStageButton != null)
             preStageButton.onClick.AddListener(() => MoveStage(-1));
         if (nextStageButton != null)
@@ -138,26 +133,8 @@ public class BattleCanvas : BaseLobbyCanvas
             nextStageButton.gameObject.SetActive(StageManager.Instance.GetNeighborStageOrder(stageData.order, 1) >= 0);
 
         stageLockedGO.SetActive(!stageData.ChekcUnlock());
-        UpdateStagePassButton();
         if (clearTipTicker != null && clearTipTicker.isActiveAndEnabled)
             clearTipTicker.Refresh(); // 스테이지·난이도가 바뀌면 그 팁으로
-    }
-
-    // 클리어 해금은 됐는데 이용권이 없으면 Play 대신 이용권 구매 버튼
-    void UpdateStagePassButton()
-    {
-        bool needPass = stageData.ChekcUnlock() && stageData.IsMissingStagePass;
-        if (playButton != null)
-            playButton.gameObject.SetActive(!needPass);
-        if (stagePassButton == null)
-            return;
-        stagePassButton.gameObject.SetActive(needPass);
-        if (needPass && stagePassText != null)
-        {
-            ProductData productData = GetStagePassProduct();
-            string price = productData != null ? productData.GetPriceToString() : "";
-            stagePassText.text = string.Format(TranslateManager.GetText("StagePass_Buy"), price);
-        }
     }
 
     static void DisablePersistentCalls(Button button)
@@ -169,79 +146,11 @@ public class BattleCanvas : BaseLobbyCanvas
                 button.onClick.SetPersistentListenerState(i, UnityEngine.Events.UnityEventCallState.Off);
     }
 
-    // Play 버튼 찾기 + 이용권 구매 버튼이 없으면 Play 버튼을 복사해 만듦 (에너지 표시·번역 글씨는 뺌)
-    void EnsureStagePassButton()
-    {
-        if (playButton == null)
-            foreach (Button button in GetComponentsInChildren<Button>(true))
-            {
-                if (button == preStageButton || button == nextStageButton)
-                    continue;
-                for (int i = 0; i < button.onClick.GetPersistentEventCount(); i++)
-                    if (button.onClick.GetPersistentTarget(i) == this && button.onClick.GetPersistentMethodName(i) == nameof(OnClickedBtn))
-                    {
-                        playButton = button;
-                        break;
-                    }
-                if (playButton != null)
-                    break;
-            }
-
-        if (stagePassButton == null && playButton != null)
-        {
-            stagePassButton = Instantiate(playButton, playButton.transform.parent);
-            stagePassButton.name = "StagePassButton";
-            stagePassButton.transform.SetSiblingIndex(playButton.transform.GetSiblingIndex() + 1);
-            stagePassButton.onClick = new Button.ButtonClickedEvent(); // 복사된 OnClickedBtn 연결 제거
-            foreach (TranslateText translate in stagePassButton.GetComponentsInChildren<TranslateText>(true))
-                Destroy(translate);
-            Transform energe = FindChild(stagePassButton.transform, "EnergePanel");
-            if (energe != null)
-                energe.gameObject.SetActive(false);
-            stagePassButton.gameObject.SetActive(false);
-        }
-        if (stagePassButton == null)
-            return;
-        if (stagePassText == null)
-            foreach (TMP_Text text in stagePassButton.GetComponentsInChildren<TMP_Text>(true))
-                if (!FindParent(text.transform, "EnergePanel"))
-                {
-                    stagePassText = text;
-                    break;
-                }
-        stagePassButton.onClick.AddListener(BuyStagePass);
-    }
-
-    static Transform FindChild(Transform root, string name)
-    {
-        foreach (Transform t in root.GetComponentsInChildren<Transform>(true))
-            if (t.name == name)
-                return t;
-        return null;
-    }
-
-    static bool FindParent(Transform t, string name)
-    {
-        for (; t != null; t = t.parent)
-            if (t.name == name)
-                return true;
-        return false;
-    }
-
-    static ProductData GetStagePassProduct()
-        => ProductManager.Instance != null ? ProductManager.Instance.GetProductData(InAppProductInfo.STAGE_PASS_KEY) : null;
-
     public void OnClickedBtn()
     {
         if (!stageData.ChekcUnlock())
         {
             ToastCanvas.Toast(stageData.GetLockedMessage());
-            return;
-        }
-        // 스테이지 2부터는 이용권 필요 (보통은 구매 버튼이 Play 자리를 대신함)
-        if (stageData.IsMissingStagePass)
-        {
-            BuyStagePass();
             return;
         }
         // 게임 시작 = 에너지 PLAY_COST_ENERGE 소모. 모자라면 시작 안 함
@@ -252,33 +161,5 @@ public class BattleCanvas : BaseLobbyCanvas
             return;
         }
         SceneManager.LoadScene("InGame");
-    }
-
-    // 이용권 구매 버튼 → 바로 결제 → 구매 기록(UserPurchaseManager) → Play 버튼으로 바뀜 (게임은 바로 시작하지 않음)
-    public void BuyStagePass()
-    {
-        if (isPurchasingStagePass || StageData.HasStagePass())
-            return;
-        ProductData productData = GetStagePassProduct();
-        if (productData == null)
-        {
-            ToastCanvas.Toast(TranslateManager.GetText("Purchase_Unavailable"));
-            return;
-        }
-        isPurchasingStagePass = true;
-        BlockCanvas.Instance.OpenCanvas(TranslateManager.GetText("Purchasing"));
-        ProductManager.Instance.TryToBuy(productData, async success =>
-        {
-            await UniTask.SwitchToMainThread(); // 결제 SDK 콜백은 메인 스레드가 아닐 수 있음
-            isPurchasingStagePass = false;
-            BlockCanvas.Instance.CloseCanvas();
-            if (!success)
-                return;
-            if (!StageData.HasStagePass()) // 구매 복원과 겹쳐도 기록은 하나
-                UserDataManager.Instance.userPurchaseManager.AddUserPurchase(productData);
-            SoundManager.Play(SFXType.PurchaseComplete);
-            ToastCanvas.Toast(TranslateManager.GetText("StagePass_Purchased"));
-            UpdateCanvas();
-        });
     }
 }

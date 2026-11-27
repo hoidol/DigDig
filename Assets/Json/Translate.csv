@@ -179,9 +179,7 @@ Purchase_Package	패키지 구매 완료! 보상이 지급되었습니다.	Packa
 Purchase_RemoveAd	광고가 제거되었습니다. 이제 광고 없이 보상을 받습니다.	Ads removed. You now get rewards without watching ads.
 Purchase_GameSpeedUp	게임 속도 증가 구매 완료! 이제 5배속까지 쓸 수 있습니다.	Game speed boost purchased! You can now play at up to 5x speed.
 Product.RemoveAd.Desc	광고 없이 바로 보상을 받습니다.	Get rewards instantly without watching ads.
-Product.GameSpeedUp.Desc	게임 속도를 5배까지 올릴 수 있습니다.	Play at up to 5x game speed.
-Product.RemoveAdPackage.Desc	광고 제거 + 추가 보상	Ad removal + bonus rewards
-Product.GameSpeedUpPackage.Desc	게임 속도 5배 + 추가 보상	5x game speed + bonus rewards
+Product.GameSpeedUp.Desc	게임 속도 3배속·5배속을 추가합니다.	Adds 3x and 5x game speed.
 Achievement.KillEnemy	적 처치	Defeat enemies
 Achievement.ClearStage	스테이지 클리어	Clear stages
 Achievement.Login	접속	Log in
@@ -200,7 +198,7 @@ Lobby_My	마이	My
 Lobby_Shop	상점	Shop
 Lobby_Minion	미니언	Minions
 Lobby_Town	타운	Town
-Lobby_Authority	용사 강화	Hero Upgrade
+Lobby_Training	수련	Training
 Common_Desc	설명	Description
 Common_Selected	선택됨	Selected
 Common_Select	선택하기	Select
@@ -216,7 +214,7 @@ Achievement_Claim	받기	Claim
 Achievement_Processing	진행 중	In Progress
 Achievement_Complete	완료	Completed
 Draw_Result	결과	RESULT
-Authority_TierTitle	Lv {0} 용사 강화	Lv {0} Hero Upgrade
+Training_TierTitle	Lv {0} 수련	Lv {0} Training
 KS_Stats	능력치	Stats
 KS_Category_Attack	공격	Attack
 KS_Category_Support	보조	Support
@@ -245,8 +243,6 @@ Shop_UniqueChest	고급 미니언 상자	Premium Minion Chest
 Shop_NoAd	광고 제거	No Ads
 Product.RemoveAd	광고 제거	Remove Ads
 Product.GameSpeedUp	게임 배속	Game Speed Up
-Product.RemoveAdPackage	광고 제거 패키지	Ad Remove Package
-Product.GameSpeedUpPackage	게임 배속 패키지	Game Speed Up Package
 Minion_SelectToSwap	교체할 미니언을 선택해주세요.	Select a minion to replace.
 Minion_MergeLevel	머지 레벨	Merge Level
 Minion_Unowned	미보유	Not Owned
@@ -292,11 +288,10 @@ KingStat_TierNoPoint	이 줄의 다음 포인트는 Lv.{0}에 받습니다.	This
 KingStat_ResetTitle	포인트 초기화	Reset Points
 KingStat_ResetBody	찍은 포인트를 모두 돌려받습니다. (무료)	Refund all spent points. (Free)
 KingStat_ResetDone	포인트를 초기화했습니다.	Points reset.
+KingStat_TierRemain	남은 포인트 {0}	Points left: {0}
 KingStat_PointGained	킹 스탯 포인트를 찍을 수 있습니다! (남은 포인트 {0})	You have king stat points to spend! ({0} left)
 Stage_Title	스테이지 {0}	Stage {0}
 Stage_Locked	스테이지 {0} 보통을 클리어해야 합니다.	Clear Stage {0} Normal first.
-StagePass_Buy	스테이지 이용권 구매\n{0}	Buy Stage Pass\n{0}
-StagePass_Purchased	스테이지 이용권을 구매했습니다! 이제 모든 스테이지를 이용할 수 있습니다.	Stage Pass purchased! All stages are now available.
 HeroUpgrade_DiceNextBreak	다음 웨이브 주사위 +1	Next wave dice +1
 HeroUpgrade_Freeze	적 정지!	Enemies frozen!
 HeroUpgrade_LastStand	버텼다!	Hold on!
@@ -422,3 +417,87 @@ Minion.Mortar.Evolution	쏘다	Blaster
 Minion.Mortar.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] 깃발에서 적이 오는 쪽으로 폭탄 {1}발, 맞은 적 {2}% 확률로 스턴	[Button skill · {0}s cooldown] Drops {1} bombs from the flag toward incoming enemies, {2}% chance to stun
 MoveMinion_Title	미니언 이동	Move Minion
 MoveMinion_Body	주사위 코인 {0}개를 써서 옮길까요?	Spend {0} dice coins to move it?
+Shop_Tab_Package	패키지	Package
+Shop_Tab_Hero	용사	Hero
+Shop_Tab_Minion	미니언	Minion
+DamageMeter_King	킹슬라임	King Slime
+DamageMeter_KingSkill	스킬 {0}%	Skill {0}%
+Result_Stat_PlayTime	플레이 시간	Play Time
+Result_Stat_BestWave	최고 기록	Best
+Result_Stat_Kill	처치한 적	Kills
+Result_Stat_StrongKill	강적 처치	Elite·Boss Kills
+Result_Stat_StrongKill_Value	엘리트 {0} · 보스 {1}	Elite {0} · Boss {1}
+Result_Stat_Leak	놓친 적	Leaked
+Result_Stat_Card	놓은 카드	Cards Placed
+Result_Stat_Merge	합성 · 진화	Merges · Evolutions
+Result_Stat_King	용사	Hero
+Result_DamageTitle	피해 순위	Damage
+Unlock_NotReady	준비 중	Coming soon
+Unlock_Confirm_Ad	광고를 보고 {0}을(를) 해금할까요?	Watch an ad to unlock {0}?
+Unlock_Confirm_InApp	{0}을(를) {1}에 구매할까요?	Buy {0} for {1}?
+Minion_LevelGranted	{0}을(를) 획득했습니다!	You got {0}!
+HeroPass_Label	용사 패스	Hero Pass
+HeroPass_Title	용사 패스	Hero Pass
+HeroPass_Confirm	용사 패스(월 {0})를 구독하면 모든 용사를 이용할 수 있어요.\n구독할까요?	Subscribe to the Hero Pass ({0}/month) to use every hero.\nSubscribe?
+HeroPass_Bought	용사 패스 구독 완료! 모든 용사를 이용할 수 있어요.	Hero Pass active! All heroes unlocked.
+Product.BaseGamePack	기본 게임 팩	Base Game Pack
+Product.BaseGamePack.Desc	영구 광고 제거 + 게임 속도 + 용사 패스 30일	Permanent ad removal + game speed + 30-day Hero Pass
+Product.HeroPass	용사 패스	Hero Pass
+Product.HeroPass.Desc	구독하는 동안 모든 용사를 이용할 수 있어요. 매월 자동 갱신되며 언제든 스토어에서 해지할 수 있어요.	Use every hero while subscribed. Renews monthly; cancel anytime in the store.
+Purchase_BaseGamePack	기본 게임 팩 구매 완료! 광고 제거·게임 속도·용사 패스 30일이 적용되었습니다.	Base Game Pack purchased! Ad removal, game speed and a 30-day Hero Pass are active.
+HeroPass_Subscribed	구독 중	Subscribed
+Multi_StartButton	멀티 게임	Multiplayer
+Multi_CancelButton	매칭 취소	Cancel Match
+Multi_NoticeTitle	멀티 게임	Multiplayer
+Multi_NoticeBody	8명이 모이면 시작합니다. 기다리는 동안 혼자 하기를 계속할 수 있어요.\n온라인 게임 중에는 배속 상품·광고 제거 상품 기능을 사용할 수 없습니다.\n참여할까요?	The match starts when 8 players join. You can keep playing solo while you wait.\nGame speed and ad removal purchases are disabled in online games.\nJoin?
+Multi_Matching	매칭 중	Matching
+Multi_CancelTitle	매칭 취소	Cancel Match
+Multi_CancelBody	매칭을 취소할까요?	Cancel matchmaking?
+Multi_JoinFailed	매칭에 참여하지 못했습니다. 잠시 후 다시 시도해 주세요.	Could not join. Please try again later.
+Multi_Ready	READY	READY
+Multi_ReadyDone	준비 완료	Ready!
+Multi_ReadyTitle	곧 시작합니다!	Starting soon!
+Lobby_Resume	이어하기	Continue
+Multi_Players	참가자	Players
+Multi_MyRank	내 순위 {0}/{1}	My Rank {0}/{1}
+Multi_StatusReached	도착 {0}	Arrived {0}
+Multi_ResultChampion	우승!	Champion!
+Multi_ResultClear	클리어!	Clear!
+Multi_Record	우승 {0} · 클리어 {1}	Wins {0} · Clears {1}
+Multi_ToLobby	로비로	Lobby
+Multi_View	보기	View
+Multi_Close	닫기	Close
+Multi_StatusWave	WAVE {0}	WAVE {0}
+Multi_ResultEnd	게임 종료	Game Over
+Title_Connecting	서버에 연결 중…	Connecting…
+Title_LoginTitle	로그인	Sign In
+Nickname_Title	닉네임을 정해 주세요	Choose a nickname
+Nickname_Placeholder	닉네임 입력	Enter nickname
+Nickname_Hint	{0}~{1}자 · 한글·영문·숫자	{0}–{1} characters · letters and numbers
+Nickname_Length	닉네임은 {0}~{1}자로 정해 주세요.	Nickname must be {0}–{1} characters.
+Nickname_Invalid	사용할 수 없는 닉네임입니다.	This nickname cannot be used.
+Nickname_Banned	사용할 수 없는 단어가 들어 있습니다.	Contains a word that is not allowed.
+Nickname_Confirm	확인	OK
+Multi_CreateRoom	방만들기	Create Room
+Multi_EnterCode	코드입력	Enter Code
+Multi_CodeInputTitle	방 코드 입력	Enter Room Code
+Multi_CodeEnter	입장	Join
+Multi_CodeInvalid	{0}자리 숫자를 입력해 주세요.	Enter a {0}-digit code.
+Multi_CodeNotFound	그 코드의 방이 없습니다.	No room with that code.
+Multi_RoomFull	방이 가득 찼습니다.	The room is full.
+Multi_RoomStarted	이미 시작한 방입니다.	That game has already started.
+Multi_CodeLabel	코드 {0}	Code {0}
+Multi_CodeNotReady	방 코드를 만드는 중입니다.	Room code is not ready yet.
+Multi_Invite	친구 초대	Invite
+Multi_ShareCode	코드 공유	Share Code
+Multi_InviteText	마왕을 꿈꾸는 슬라임과 함께 대전해요! {0}	Battle with me in King Slime! {0}
+Multi_CodeShareText	같이 하자! 방 코드: {0}\n게임 받기: {1}	Join my room! Code: {0}\nGet the game: {1}
+Multi_Host	방장	Host
+Share_Copied	복사했습니다. 붙여 넣어 공유하세요.	Copied. Paste it to share.
+Multi_AiNotice	방이 꽉 안 차면 AI 봇으로 대체됩니다.	Empty seats will be filled with AI bots.
+Multi_AiFilling	AI 봇으로 빈자리를 채우는 중…	Filling empty seats with AI…
+Multi_StartIn	{0}초 후 시작합니다!	Starting in {0}s!
+Nickname_Taken	이미 사용 중인 닉네임입니다.	This nickname is already taken.
+Nickname_CheckFailed	닉네임을 확인하지 못했습니다. 잠시 후 다시 시도해 주세요.	Could not check the nickname. Please try again.
+Minion.Mine.EvolutionDesc	[버튼 스킬 · 쿨타임 {0}초] 폭탄이 적 경로를 한 바퀴 굴러가며 닿는 적마다 폭발 (범위 {1}, 공격력 {2}%)	[Button skill · {0}s cooldown] A bomb rolls once around the enemy path, exploding on every enemy it touches (radius {1}, {2}% attack)
+Nickname_SpecialChar	한글·영문·숫자만 쓸 수 있어요. (공백·특수문자 X)	Use letters and numbers only (no spaces or symbols).

@@ -18,6 +18,8 @@ public class GameManager : MonoSingleton<GameManager>
     void OnDestroy()
     {
         HeroUpgradeSystem.End();
+        LocalGameSave.End();
+        PlayRecorder.End();
     }
 
 
@@ -88,10 +90,14 @@ public class GameManager : MonoSingleton<GameManager>
             InGameMissionSystem.Begin();
         }
 
+        // (2026-11-27) 싱글 판은 브레이크타임마다 저장 (멀티 대기 중 매칭되면 나중에 이어하기)
+        if (!MultiGame.IsActive)
+            LocalGameSave.Begin(this);
+
         GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
         // 첫 플레이 튜토리얼: 페이드 전에 시작해 킹 위치 지정 같은 준비가 화면이 밝아지기 전에 끝나게 한다
-        if (TutorialManager.Instance != null)
+        if (TutorialManager.Instance != null && !MultiGame.IsActive && !LocalGameSave.PendingResume)
             TutorialManager.Instance.TryBegin(TutorialType.FirstPlay);
 
         FadeCanvs.Instance.FadeIn(stageData.Title, () =>
@@ -116,7 +122,15 @@ public class GameManager : MonoSingleton<GameManager>
             if (await UniTask.Yield(PlayerLoopTiming.Update, destroyCancellationToken).SuppressCancellationThrow())
                 return;
         }
+        // (2026-11-27) 멀티: Ready 창 카운트다운이 끝날 때까지 (모두 같은 시각에 시작)
+        while (MultiGame.IsActive && !MultiGame.CanStart)
+        {
+            if (await UniTask.Yield(PlayerLoopTiming.Update, destroyCancellationToken).SuppressCancellationThrow())
+                return;
+        }
         StartGame();
+        bool resumed = LocalGameSave.TryResumeAfterStart(); // 이어하기면 저장한 브레이크타임으로
+        PlayRecorder.Begin(this, resumed); // (2026-11-27) 플레이 기록 (브레이크타임마다)
     }
 
     bool isGameStarted;
@@ -129,6 +143,7 @@ public class GameManager : MonoSingleton<GameManager>
             return;
         isGameStarted = true;
         DamageMeterSystem.Clear(); // 피해 집계는 한 판 누적
+        GameResultStats.Clear(); // (2026-11-27) 결과 화면 통계 (플레이 시간·처치 수 등)
         MinionEnhanceSystem.Clear(); // (2026-11-25) 레벨업 미니언 강화는 한 판
 
         waveIdx = 0;
@@ -361,6 +376,7 @@ public class GameManager : MonoSingleton<GameManager>
             return;
 
         gameTimer += Time.deltaTime;
+        GameResultStats.AddPlayTime(Mathf.Min(Time.unscaledDeltaTime, 1f)); // 실제 시간 (앱 백그라운드 복귀 프레임은 1초까지만)
     }
 
 

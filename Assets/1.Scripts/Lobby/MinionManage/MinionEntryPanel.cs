@@ -52,10 +52,11 @@ namespace Lobby
             MinionInfoCanvas.Instance.OpenCanvas(minionData);
         }
 
+        // (2026-11-27) 광고 시청 / 유료 결제로 해금 (UnitUnlock)
         void OpenBuyConfirm()
         {
-            string currency = TranslateManager.GetText($"Currency.{minionData.buyCurrencyType}");
-            string body = string.Format(TranslateManager.GetText("Minion_BuyConfirm_Body"), minionData.Title, currency, minionData.buyPrice);
+            string body = string.Format(TranslateManager.GetText(UnitShopPanel.UnitUnlockConfirmKey(minionData.unlockType)), minionData.Title,
+                UnitUnlock.GetPriceText(minionData.unlockType, UnitUnlock.MinionProductKey(minionData.key)));
             YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("Minion_BuyConfirm_Title"), body, yes =>
             {
                 if (yes)
@@ -65,19 +66,15 @@ namespace Lobby
 
         void Buy()
         {
-            MinionBuyResult result = UserDataManager.Instance.userMinionManager.BuyMinion(minionData.key);
-            if (result == MinionBuyResult.NotEnoughCurrency)
+            MinionData data = minionData;
+            UserDataManager.Instance.userMinionManager.UnlockMinion(data.key, result =>
             {
-                SoundManager.Play(SFXType.Fail_NotEnough);
-                ToastCanvas.Toast(string.Format(TranslateManager.GetText("Currency_NotEnough"),
-                    TranslateManager.GetText($"Currency.{minionData.buyCurrencyType}")));
-                return;
-            }
-            if (result != MinionBuyResult.Success)
-                return;
-            SoundManager.Play(SFXType.PurchaseComplete);
-            ToastCanvas.Toast(string.Format(TranslateManager.GetText("Minion_Bought"), minionData.Title));
-            LobbyManager.Instance.GetLobbyCanvas(LobbyState.Minion).UpdateCanvas(); // 칸 상태·정렬 갱신
+                if (result != MinionBuyResult.Success)
+                    return;
+                SoundManager.Play(SFXType.PurchaseComplete);
+                ToastCanvas.Toast(string.Format(TranslateManager.GetText("Minion_Bought"), data.Title));
+                LobbyManager.Instance.GetLobbyCanvas(LobbyState.Minion).UpdateCanvas(); // 칸 상태·정렬 갱신
+            });
         }
 
         // ---- 구매 상태 표시 (2026-11-24): 씬에서 직접 만든 오브젝트를 연결. 비운 칸은 건너뜀 (실행 중 생성 없음) ----
@@ -91,14 +88,13 @@ namespace Lobby
         public GameObject lockedObject;
 
         [Header("글씨·아이콘")]
-        [Tooltip("구매 가격 숫자 (구매 가능일 때). 재화가 모자라면 notEnoughColor")]
+        [Tooltip("해금 가능일 때 \"광고\" / 유료 가격 글씨")]
         public TMP_Text priceText;
-        [Tooltip("구매 재화 아이콘 (Resources/Icons/Currency/{재화})")]
+        [Tooltip("해금 방식 아이콘 (광고 = Icons/Currency/Ad, 유료 = Icons/Currency/InApp)")]
         public Image currencyIcon;
         [Tooltip("해금 레벨 \"Lv.N\" (잠김일 때, 번역 Minion_UnlockLevel)")]
         public TMP_Text unlockLevelText;
         public Color priceColor = Color.white;
-        public Color notEnoughColor = new Color(1f, 0.4f, 0.4f);
 
         public MinionBuyState BuyState { get; private set; }
 
@@ -119,15 +115,15 @@ namespace Lobby
 
             if (BuyState == MinionBuyState.Buyable)
             {
-                bool enough = UserDataManager.Instance.userData.GetCurrency(minionData.buyCurrencyType) >= minionData.buyPrice;
                 if (priceText != null)
                 {
-                    priceText.text = minionData.buyPrice.ToString("N0");
-                    priceText.color = enough ? priceColor : notEnoughColor;
+                    priceText.text = UnitUnlock.GetPriceText(minionData.unlockType, UnitUnlock.MinionProductKey(minionData.key));
+                    priceText.color = priceColor;
                 }
                 if (currencyIcon != null)
                 {
-                    Sprite icon = GetCurrencyIcon(minionData.buyCurrencyType);
+                    Sprite icon = UnitUnlock.GetIcon(minionData.unlockType);
+                    currencyIcon.gameObject.SetActive(icon != null);
                     if (icon != null)
                         currencyIcon.sprite = icon;
                 }
@@ -143,7 +139,5 @@ namespace Lobby
             if (obj != null && obj.activeSelf != active)
                 obj.SetActive(active);
         }
-
-        public static Sprite GetCurrencyIcon(CurrencyType type) => Resources.Load<Sprite>($"Icons/Currency/{type}");
     }
 }

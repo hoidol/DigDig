@@ -42,7 +42,8 @@ public class KingSlimeHealth : MonoBehaviour, IHittable
 
         float prevHp = curHp;
         curHp -= damageData.ApplyDamage(hpPoint.position);
-        HeroUpgradeSystem.OnKingDamaged(prevHp - Mathf.Max(0f, curHp)); // (2026-11-24) 용사 강화: 에너지 충전·정예병 분노
+        HeroUpgradeSystem.OnKingDamaged(prevHp - Mathf.Max(0f, curHp));
+        GameResultStats.RecordKingDamage(prevHp - Mathf.Max(0f, curHp)); // (2026-11-27) 결과 화면: 받은 피해 // (2026-11-24) 용사 강화: 에너지 충전·정예병 분노
         if (curHp <= 0)
         {
             // (2026-11-24) 용사 강화 LastStand: 판당 1번 버팀

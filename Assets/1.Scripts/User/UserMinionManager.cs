@@ -196,9 +196,9 @@ public class UserMinionManager : UserBaseManager
         return userMinion;
     }
 
-    #region 레벨 해금 → 구매 (2026-11-24)
-    // 유저 레벨이 되면 자동 지급이 아니라 "구매할 수 있게" 됨. 재화·가격 = MinionData.buyCurrencyType/buyPrice (MinionData.csv)
-    // 초기 지급 미니언은 처음부터 보유. 예전 자동 지급으로 이미 보유한 미니언은 그대로 보유
+    #region 레벨 해금 (2026-11-27 골드·다이아 구매 → 자동 / 광고 / 유료, UnitUnlock)
+    // 유저 레벨이 되면: 해금 방식 자동(MinionData.unlockType Auto) = 바로 보유 / 광고·유료 = "해금 가능" → 미니언 관리 화면·상점에서 광고 시청·결제
+    // 초기 지급 미니언은 처음부터 보유. 이미 보유한 미니언은 그대로 보유
 
     // 유저 레벨 lv까지 해금된(구매 가능해진) 미니언 key (GameSetting.MINION_LEVEL_UNLOCKS, 씬 없이 계산)
     public static string[] GetLevelUnlockKeys(int lv) =>
@@ -234,24 +234,51 @@ public class UserMinionManager : UserBaseManager
     public bool HasBuyableMinion() =>
         GameSetting.MINION_LEVEL_UNLOCKS.Any(e => GetBuyState(e.key) == MinionBuyState.Buyable);
 
-    // 구매: 구매 가능 상태 + 재화가 충분하면 차감 후 보유. 결과로 실패 이유를 돌려줌
-    public MinionBuyResult BuyMinion(string key)
+    // 자동 해금 미니언 중 레벨이 된 것 보유 (미니언 데이터가 아직 안 읽혔으면 건너뜀 → 로비 시작 때 다시)
+    public void GrantAutoUnlocks(int lv)
+    {
+        if (userMinionData == null || MinionManager.Instance == null || MinionManager.Instance.minionDataDic.Count == 0)
+            return;
+        foreach (var e in GameSetting.MINION_LEVEL_UNLOCKS)
+        {
+            if (GetUserMinion(e.key).own)
+                continue;
+            MinionManager.Instance.minionDataDic.TryGetValue(e.key, out MinionData data);
+            // 자동 해금 = 레벨 도달 / 유료 해금 = 구매 기록이 있으면(구매 복원·다른 기기) 보유
+            bool auto = data != null && data.unlockType == UnitUnlockType.Auto && lv >= e.lv;
+            var purchase = UserDataManager.Instance != null ? UserDataManager.Instance.userPurchaseManager : null;
+            bool bought = purchase?.userPurchaseData != null && purchase.HasPurchased(UnitUnlock.MinionProductKey(e.key));
+            if (auto || bought)
+                AddUserMinion(e.key);
+        }
+    }
+
+    // 해금: 해금 가능 상태 → 광고 시청 / 결제(자동이면 바로) → 성공하면 보유. 결과는 done으로 (광고·결제는 나중에 옴)
+    public void UnlockMinion(string key, System.Action<MinionBuyResult> done)
     {
         MinionBuyState state = GetBuyState(key);
-        if (state == MinionBuyState.Owned)
-            return MinionBuyResult.AlreadyOwned;
-        if (state == MinionBuyState.Locked)
-            return MinionBuyResult.Locked;
-
+        if (state != MinionBuyState.Buyable)
+        {
+            done?.Invoke(state == MinionBuyState.Owned ? MinionBuyResult.AlreadyOwned : MinionBuyResult.Locked);
+            return;
+        }
         MinionData data = MinionManager.Instance.GetMinionData(key);
         if (data == null)
-            return MinionBuyResult.Locked;
-        if (!UserDataManager.Instance.TryUseCurrency(data.buyCurrencyType, data.buyPrice))
-            return MinionBuyResult.NotEnoughCurrency;
-
-        AddUserMinion(key);
-        GameEventBus.Publish(new BoughtMinionEvent(key));
-        return MinionBuyResult.Success;
+        {
+            done?.Invoke(MinionBuyResult.Locked);
+            return;
+        }
+        UnitUnlock.Pay(data.unlockType, UnitUnlock.MinionProductKey(key), ok =>
+        {
+            if (!ok)
+            {
+                done?.Invoke(MinionBuyResult.Cancelled);
+                return;
+            }
+            AddUserMinion(key);
+            GameEventBus.Publish(new BoughtMinionEvent(key));
+            done?.Invoke(MinionBuyResult.Success);
+        });
     }
     #endregion
 
@@ -329,7 +356,7 @@ public class UserMinion
     public MinionData MinionData => MinionManager.Instance.GetMinionData(key);
     // (2026-11-24) 미니언 강화(강화 레벨·경험치) 삭제. 이전 저장의 enhanceLevel·exp 값은 읽지 않고 버림
 }
-// (2026-11-24) 로비 미니언 구매 상태: 보유 / 구매 가능(유저 레벨 도달) / 잠김(레벨 미달)
+// (2026-11-24) 로비 미니언 해금 상태: 보유 / 해금 가능(유저 레벨 도달, 광고·유료) / 잠김(레벨 미달). 용사도 같이 씀
 public enum MinionBuyState
 {
     Owned,
@@ -342,7 +369,7 @@ public enum MinionBuyResult
     Success,
     AlreadyOwned,
     Locked,
-    NotEnoughCurrency,
+    Cancelled, // (2026-11-27) 광고를 끝까지 안 봄 / 결제 취소·실패·상품 준비 중 (이전 NotEnoughCurrency)
 }
 
 // 로비에서 미니언을 샀을 때 (미니언 관리 화면·빨간 점 갱신)

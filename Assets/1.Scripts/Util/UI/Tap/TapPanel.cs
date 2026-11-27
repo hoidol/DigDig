@@ -5,7 +5,7 @@ public class TapPanel : MonoBehaviour
     public int idx;
     public void UpdatePanel()
     {
-        if (GetComponentInParent<TapContainer>().selectedIdx == idx)
+        if (GetComponentInParent<TapContainer>(true).selectedIdx == idx)
         {
             gameObject.SetActive(true);
         }

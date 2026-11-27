@@ -6,7 +6,7 @@ using UnityEngine.Purchasing;
 
 public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
 {
-    // 상품 목록 = InAppProductInfo.PRODUCTS
+    // 상품 목록 = InAppProductInfo.PRODUCTS (= ProductData.csv의 InApp 행)
     public bool IsInitialized { get; private set; }
 
     public event Action OnStoreInitialized;
@@ -28,6 +28,7 @@ public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
         storeController.OnPurchaseDeferred += HandlePurchaseDeferred;
         storeController.OnStoreConnected += HandleStoreConnected;
         storeController.OnStoreDisconnected += HandleStoreDisconnected;
+        storeController.OnCheckEntitlement += HandleCheckEntitlement; // (2026-11-27) 용사 패스 구독 확인
 
         await storeController.Connect();
     }
@@ -53,6 +54,45 @@ public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
         IsInitialized = true;
         Debug.Log($"[IAP] 상품 정보 로드 완료 : {products.Count}개");
         OnStoreInitialized?.Invoke();
+        CheckHeroPass();
+    }
+
+    // ---- (2026-11-27) 용사 패스(구독) 상태 확인: 스토어 연결 후·앱 복귀·구매 복원 때 → HeroPass.SetActive
+    public void CheckHeroPass()
+    {
+        if (!IsInitialized)
+            return;
+        InAppProductInfo.Info info = InAppProductInfo.GetByKey(InAppProductInfo.HERO_PASS_KEY);
+        Product product = info != null ? GetProduct(info.productId) : null;
+        if (product == null)
+            return;
+        storeController.CheckEntitlement(product);
+    }
+
+    private void HandleCheckEntitlement(Entitlement entitlement)
+    {
+        InAppProductInfo.Info info = InAppProductInfo.GetByKey(InAppProductInfo.HERO_PASS_KEY);
+        if (info == null || entitlement?.Product == null || entitlement.Product.definition.id != info.productId)
+            return;
+        switch (entitlement.Status)
+        {
+            case EntitlementStatus.FullyEntitled:
+            case EntitlementStatus.EntitledButNotFinished:
+                HeroPass.SetActive(true);
+                break;
+            case EntitlementStatus.NotEntitled:
+                HeroPass.SetActive(false);
+                break;
+            default: // Unknown: 마지막 확인 결과 유지 (오프라인 유예)
+                Debug.LogWarning($"[IAP] 용사 패스 상태 확인 실패 : {entitlement.ErrorMessage}");
+                break;
+        }
+    }
+
+    void OnApplicationFocus(bool focus)
+    {
+        if (focus)
+            CheckHeroPass(); // 다른 곳에서 해지·갱신했을 수 있음
     }
 
     private void HandleProductsFetchFailed(ProductFetchFailed failure)
@@ -138,6 +178,7 @@ public class InAppPurchaseManager : MonoSingleton<InAppPurchaseManager>
             {
                 Debug.Log("[IAP] 구매 복원 완료");
                 RestoreOwnedProducts();
+                CheckHeroPass();
             }
             else
             {

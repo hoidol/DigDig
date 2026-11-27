@@ -76,18 +76,22 @@ public class KSHeroTabPlayTest : InGamePlayTestBase
             Assert.IsNull(canvas.heroContainer.SelectedKey, "미보유 용사는 선택 안 됨");
         }
 
-        // (2026-11-26) 보유 = UserHeroManager.own: 무료 용사는 자동 보유, 보유를 끄면 선택 안 됨 → 다시 보유하면 선택됨
+        // (2026-11-26) 보유 = UserHeroManager.own: 자동 해금 용사는 레벨이 되면 보유(2026-11-27), 보유를 끄면 선택 안 됨 → 다시 보유하면 선택됨
         var heroMgr = UserDataManager.Instance.userHeroManager;
-        foreach (var h in heroes.Where(h => h.buyPrice <= 0))
-            Assert.IsTrue(heroMgr.IsOwned(h.key), $"무료 용사 {h.key} 자동 보유");
-        Assert.AreEqual(MinionBuyResult.AlreadyOwned, heroMgr.BuyHero(hero.key), "보유한 용사는 다시 못 삼");
+        foreach (var h in heroes.Where(h => h.isFree && lv >= h.unlockLv))
+            Assert.IsTrue(heroMgr.IsOwned(h.key), $"무료 용사 {h.key} 보유 (isFree, 레벨 도달)");
+        MinionBuyResult result = MinionBuyResult.Locked;
+        heroMgr.UnlockHero(hero.key, r => result = r);
+        Assert.AreEqual(MinionBuyResult.AlreadyOwned, result, "보유한 용사는 다시 못 삼");
         heroMgr.GetUserHero(hero.key).own = false;
         canvas.heroContainer.Refresh();
         slots[ownedIdx].button.onClick.Invoke();
         yield return WaitFrames(2);
         Assert.IsNull(canvas.heroContainer.SelectedKey, "보유하지 않으면 선택 안 됨");
-        Assert.AreEqual(MinionBuyState.Buyable, heroMgr.GetBuyState(hero.key), "해금 레벨 도달 + 미보유 = 구매 가능");
-        Assert.AreEqual(MinionBuyResult.Success, heroMgr.BuyHero(hero.key), "가격 없는 용사 구매 = 바로 보유");
+        Assert.AreEqual(MinionBuyState.Buyable, heroMgr.GetBuyState(hero.key), "해금 레벨 도달 + 미보유 = 해금 가능");
+        heroMgr.UnlockHero(hero.key, r => result = r);
+        yield return WaitFrames(3); // 광고(테스트 중엔 바로 성공)·자동 해금 콜백
+        Assert.AreEqual(MinionBuyResult.Success, result, "해금 = 보유");
         Assert.IsTrue(heroMgr.IsOwned(hero.key));
         canvas.heroContainer.Refresh();
         slots[ownedIdx].button.onClick.Invoke();

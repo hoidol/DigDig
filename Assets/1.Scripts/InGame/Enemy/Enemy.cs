@@ -361,6 +361,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
             return;
         EffectManager.Instance.Play(EffectType.StoneBreak, transform.position);
         GameEventBus.Publish(new EnemyDeadEvent(this));
+        GameResultStats.RecordEnemyRemoved(this, curHp <= 0); // (2026-11-27) 결과 화면: 처치 / 경로 끝 도착
         if (curHp <= 0) // 업적은 처치만 (경로 끝 도착 제외)
         {
             SoundManager.Play(this is Boss ? SFXType.BossDead : SFXType.EnemyDead);

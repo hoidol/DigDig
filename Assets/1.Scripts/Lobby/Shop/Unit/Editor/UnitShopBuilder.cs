@@ -9,6 +9,7 @@ using UnityEngine.UI;
 // 모양 = 기존 다이아 상품 줄(섹션 제목 + Dia_SlotContainer)을 복사: 칸 틀·제목·그림·가격 버튼은 그대로, 다이아 상품 기능만 빼고 UnitShopPanel 템플릿 1개
 // 자리 = 예전 미니언 뽑기 줄(Title_DailyDeals (1) + DrawMinion_SlotContainer (1), 스크립트 삭제됨)을 꺼 두고 그 자리. 이미 있으면 지우고 새로
 // 실행 중엔 UnitShopSection이 템플릿을 데이터 수만큼 복사. 이후 모양은 씬에서 직접 수정
+// (2026-11-27) 다이아·골드 상품 줄 삭제로 복사할 원본(Dia_SlotContainer)이 없음 → 이 메뉴는 원본이 없으면 아무것도 지우지 않고 멈춤. 지금 줄은 Hero_Scroll·Minion_Scroll 안에 있음
 public static class UnitShopBuilder
 {
     public const int COLUMN_COUNT = 3;
@@ -22,6 +23,11 @@ public static class UnitShopBuilder
         if (shop == null)
         {
             Debug.LogWarning("[UnitShopBuilder] ShopCanvas가 열린 씬에 없음 (Lobby 씬을 열고 실행)");
+            return;
+        }
+        if (FindChild(shop.transform, DIA_SECTION) == null)
+        {
+            Debug.LogWarning("[UnitShopBuilder] 복사할 원본(Dia_SlotContainer)이 없어 멈춤 — 용사·미니언 줄은 씬에서 직접 수정");
             return;
         }
         foreach (UnitShopSection old in shop.GetComponentsInChildren<UnitShopSection>(true))
@@ -192,7 +198,7 @@ public static class UnitShopBuilder
         var iconImg = igo.GetComponent<Image>();
         iconImg.preserveAspect = true;
         iconImg.raycastTarget = false;
-        iconImg.sprite = CurrencyInfo.GetSprite(CurrencyType.Gold);
+        iconImg.sprite = CurrencyInfo.GetSprite(CurrencyType.Ad);
         var display = button.gameObject.AddComponent<CurrencyDisplayPanel>();
         display.currencyImage = iconImg;
         display.valueText = priceText;

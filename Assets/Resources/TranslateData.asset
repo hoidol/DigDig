@@ -611,15 +611,8 @@ MonoBehaviour:
     kr: "\uAD11\uACE0 \uC5C6\uC774 \uBC14\uB85C \uBCF4\uC0C1\uC744 \uBC1B\uC2B5\uB2C8\uB2E4."
     en: Get rewards instantly without watching ads.
   - key: Product.GameSpeedUp.Desc
-    kr: "\uAC8C\uC784 \uC18D\uB3C4\uB97C 5\uBC30\uAE4C\uC9C0 \uC62C\uB9B4 \uC218
-      \uC788\uC2B5\uB2C8\uB2E4."
-    en: Play at up to 5x game speed.
-  - key: Product.RemoveAdPackage.Desc
-    kr: "\uAD11\uACE0 \uC81C\uAC70 + \uCD94\uAC00 \uBCF4\uC0C1"
-    en: Ad removal + bonus rewards
-  - key: Product.GameSpeedUpPackage.Desc
-    kr: "\uAC8C\uC784 \uC18D\uB3C4 5\uBC30 + \uCD94\uAC00 \uBCF4\uC0C1"
-    en: 5x game speed + bonus rewards
+    kr: "\uAC8C\uC784 \uC18D\uB3C4 3\uBC30\uC18D\xB75\uBC30\uC18D\uC744 \uCD94\uAC00\uD569\uB2C8\uB2E4."
+    en: Adds 3x and 5x game speed.
   - key: Achievement.KillEnemy
     kr: "\uC801 \uCC98\uCE58"
     en: Defeat enemies
@@ -674,9 +667,9 @@ MonoBehaviour:
   - key: Lobby_Town
     kr: "\uD0C0\uC6B4"
     en: Town
-  - key: Lobby_Authority
-    kr: "\uC6A9\uC0AC \uAC15\uD654"
-    en: Hero Upgrade
+  - key: Lobby_Training
+    kr: "\uC218\uB828"
+    en: Training
   - key: Common_Desc
     kr: "\uC124\uBA85"
     en: Description
@@ -722,9 +715,9 @@ MonoBehaviour:
   - key: Draw_Result
     kr: "\uACB0\uACFC"
     en: RESULT
-  - key: Authority_TierTitle
-    kr: "Lv {0} \uC6A9\uC0AC \uAC15\uD654"
-    en: Lv {0} Hero Upgrade
+  - key: Training_TierTitle
+    kr: "Lv {0} \uC218\uB828"
+    en: Lv {0} Training
   - key: KS_Stats
     kr: "\uB2A5\uB825\uCE58"
     en: Stats
@@ -810,12 +803,6 @@ MonoBehaviour:
   - key: Product.GameSpeedUp
     kr: "\uAC8C\uC784 \uBC30\uC18D"
     en: Game Speed Up
-  - key: Product.RemoveAdPackage
-    kr: "\uAD11\uACE0 \uC81C\uAC70 \uD328\uD0A4\uC9C0"
-    en: Ad Remove Package
-  - key: Product.GameSpeedUpPackage
-    kr: "\uAC8C\uC784 \uBC30\uC18D \uD328\uD0A4\uC9C0"
-    en: Game Speed Up Package
   - key: Minion_SelectToSwap
     kr: "\uAD50\uCCB4\uD560 \uBBF8\uB2C8\uC5B8\uC744 \uC120\uD0DD\uD574\uC8FC\uC138\uC694."
     en: Select a minion to replace.
@@ -955,6 +942,9 @@ MonoBehaviour:
   - key: KingStat_ResetDone
     kr: "\uD3EC\uC778\uD2B8\uB97C \uCD08\uAE30\uD654\uD588\uC2B5\uB2C8\uB2E4."
     en: Points reset.
+  - key: KingStat_TierRemain
+    kr: "\uB0A8\uC740 \uD3EC\uC778\uD2B8 {0}"
+    en: 'Points left: {0}'
   - key: KingStat_PointGained
     kr: "\uD0B9 \uC2A4\uD0EF \uD3EC\uC778\uD2B8\uB97C \uCC0D\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4!
       (\uB0A8\uC740 \uD3EC\uC778\uD2B8 {0})"
@@ -966,14 +956,6 @@ MonoBehaviour:
     kr: "\uC2A4\uD14C\uC774\uC9C0 {0} \uBCF4\uD1B5\uC744 \uD074\uB9AC\uC5B4\uD574\uC57C
       \uD569\uB2C8\uB2E4."
     en: Clear Stage {0} Normal first.
-  - key: StagePass_Buy
-    kr: "\uC2A4\uD14C\uC774\uC9C0 \uC774\uC6A9\uAD8C \uAD6C\uB9E4\\n{0}"
-    en: Buy Stage Pass\n{0}
-  - key: StagePass_Purchased
-    kr: "\uC2A4\uD14C\uC774\uC9C0 \uC774\uC6A9\uAD8C\uC744 \uAD6C\uB9E4\uD588\uC2B5\uB2C8\uB2E4!
-      \uC774\uC81C \uBAA8\uB4E0 \uC2A4\uD14C\uC774\uC9C0\uB97C \uC774\uC6A9\uD560
-      \uC218 \uC788\uC2B5\uB2C8\uB2E4."
-    en: Stage Pass purchased! All stages are now available.
   - key: HeroUpgrade_DiceNextBreak
     kr: "\uB2E4\uC74C \uC6E8\uC774\uBE0C \uC8FC\uC0AC\uC704 +1"
     en: Next wave dice +1
@@ -1401,3 +1383,282 @@ MonoBehaviour:
       \uC801 {2}% \uD655\uB960\uB85C \uC2A4\uD134"
     en: "[Button skill \xB7 {0}s cooldown] Drops {1} bombs from the flag toward incoming
       enemies, {2}% chance to stun"
+  - key: MoveMinion_Title
+    kr: "\uBBF8\uB2C8\uC5B8 \uC774\uB3D9"
+    en: Move Minion
+  - key: MoveMinion_Body
+    kr: "\uC8FC\uC0AC\uC704 \uCF54\uC778 {0}\uAC1C\uB97C \uC368\uC11C \uC62E\uAE38\uAE4C\uC694?"
+    en: Spend {0} dice coins to move it?
+  - key: Shop_Tab_Package
+    kr: "\uD328\uD0A4\uC9C0"
+    en: Package
+  - key: Shop_Tab_Hero
+    kr: "\uC6A9\uC0AC"
+    en: Hero
+  - key: Shop_Tab_Minion
+    kr: "\uBBF8\uB2C8\uC5B8"
+    en: Minion
+  - key: DamageMeter_King
+    kr: "\uD0B9\uC2AC\uB77C\uC784"
+    en: King Slime
+  - key: DamageMeter_KingSkill
+    kr: "\uC2A4\uD0AC {0}%"
+    en: Skill {0}%
+  - key: Result_Stat_PlayTime
+    kr: "\uD50C\uB808\uC774 \uC2DC\uAC04"
+    en: Play Time
+  - key: Result_Stat_BestWave
+    kr: "\uCD5C\uACE0 \uAE30\uB85D"
+    en: Best
+  - key: Result_Stat_Kill
+    kr: "\uCC98\uCE58\uD55C \uC801"
+    en: Kills
+  - key: Result_Stat_StrongKill
+    kr: "\uAC15\uC801 \uCC98\uCE58"
+    en: "Elite\xB7Boss Kills"
+  - key: Result_Stat_StrongKill_Value
+    kr: "\uC5D8\uB9AC\uD2B8 {0} \xB7 \uBCF4\uC2A4 {1}"
+    en: "Elite {0} \xB7 Boss {1}"
+  - key: Result_Stat_Leak
+    kr: "\uB193\uCE5C \uC801"
+    en: Leaked
+  - key: Result_Stat_Card
+    kr: "\uB193\uC740 \uCE74\uB4DC"
+    en: Cards Placed
+  - key: Result_Stat_Merge
+    kr: "\uD569\uC131 \xB7 \uC9C4\uD654"
+    en: "Merges \xB7 Evolutions"
+  - key: Result_Stat_King
+    kr: "\uC6A9\uC0AC"
+    en: Hero
+  - key: Result_DamageTitle
+    kr: "\uD53C\uD574 \uC21C\uC704"
+    en: Damage
+  - key: Unlock_NotReady
+    kr: "\uC900\uBE44 \uC911"
+    en: Coming soon
+  - key: Unlock_Confirm_Ad
+    kr: "\uAD11\uACE0\uB97C \uBCF4\uACE0 {0}\uC744(\uB97C) \uD574\uAE08\uD560\uAE4C\uC694?"
+    en: Watch an ad to unlock {0}?
+  - key: Unlock_Confirm_InApp
+    kr: "{0}\uC744(\uB97C) {1}\uC5D0 \uAD6C\uB9E4\uD560\uAE4C\uC694?"
+    en: Buy {0} for {1}?
+  - key: Minion_LevelGranted
+    kr: "{0}\uC744(\uB97C) \uD68D\uB4DD\uD588\uC2B5\uB2C8\uB2E4!"
+    en: You got {0}!
+  - key: HeroPass_Label
+    kr: "\uC6A9\uC0AC \uD328\uC2A4"
+    en: Hero Pass
+  - key: HeroPass_Title
+    kr: "\uC6A9\uC0AC \uD328\uC2A4"
+    en: Hero Pass
+  - key: HeroPass_Confirm
+    kr: "\uC6A9\uC0AC \uD328\uC2A4(\uC6D4 {0})\uB97C \uAD6C\uB3C5\uD558\uBA74 \uBAA8\uB4E0
+      \uC6A9\uC0AC\uB97C \uC774\uC6A9\uD560 \uC218 \uC788\uC5B4\uC694.\\n\uAD6C\uB3C5\uD560\uAE4C\uC694?"
+    en: Subscribe to the Hero Pass ({0}/month) to use every hero.\nSubscribe?
+  - key: HeroPass_Bought
+    kr: "\uC6A9\uC0AC \uD328\uC2A4 \uAD6C\uB3C5 \uC644\uB8CC! \uBAA8\uB4E0 \uC6A9\uC0AC\uB97C
+      \uC774\uC6A9\uD560 \uC218 \uC788\uC5B4\uC694."
+    en: Hero Pass active! All heroes unlocked.
+  - key: Product.BaseGamePack
+    kr: "\uAE30\uBCF8 \uAC8C\uC784 \uD329"
+    en: Base Game Pack
+  - key: Product.BaseGamePack.Desc
+    kr: "\uC601\uAD6C \uAD11\uACE0 \uC81C\uAC70 + \uAC8C\uC784 \uC18D\uB3C4 + \uC6A9\uC0AC
+      \uD328\uC2A4 30\uC77C"
+    en: Permanent ad removal + game speed + 30-day Hero Pass
+  - key: Product.HeroPass
+    kr: "\uC6A9\uC0AC \uD328\uC2A4"
+    en: Hero Pass
+  - key: Product.HeroPass.Desc
+    kr: "\uAD6C\uB3C5\uD558\uB294 \uB3D9\uC548 \uBAA8\uB4E0 \uC6A9\uC0AC\uB97C \uC774\uC6A9\uD560
+      \uC218 \uC788\uC5B4\uC694. \uB9E4\uC6D4 \uC790\uB3D9 \uAC31\uC2E0\uB418\uBA70
+      \uC5B8\uC81C\uB4E0 \uC2A4\uD1A0\uC5B4\uC5D0\uC11C \uD574\uC9C0\uD560 \uC218
+      \uC788\uC5B4\uC694."
+    en: Use every hero while subscribed. Renews monthly; cancel anytime in the store.
+  - key: Purchase_BaseGamePack
+    kr: "\uAE30\uBCF8 \uAC8C\uC784 \uD329 \uAD6C\uB9E4 \uC644\uB8CC! \uAD11\uACE0
+      \uC81C\uAC70\xB7\uAC8C\uC784 \uC18D\uB3C4\xB7\uC6A9\uC0AC \uD328\uC2A4 30\uC77C\uC774
+      \uC801\uC6A9\uB418\uC5C8\uC2B5\uB2C8\uB2E4."
+    en: Base Game Pack purchased! Ad removal, game speed and a 30-day Hero Pass are
+      active.
+  - key: HeroPass_Subscribed
+    kr: "\uAD6C\uB3C5 \uC911"
+    en: Subscribed
+  - key: Multi_StartButton
+    kr: "\uBA40\uD2F0 \uAC8C\uC784"
+    en: Multiplayer
+  - key: Multi_CancelButton
+    kr: "\uB9E4\uCE6D \uCDE8\uC18C"
+    en: Cancel Match
+  - key: Multi_NoticeTitle
+    kr: "\uBA40\uD2F0 \uAC8C\uC784"
+    en: Multiplayer
+  - key: Multi_NoticeBody
+    kr: "8\uBA85\uC774 \uBAA8\uC774\uBA74 \uC2DC\uC791\uD569\uB2C8\uB2E4. \uAE30\uB2E4\uB9AC\uB294
+      \uB3D9\uC548 \uD63C\uC790 \uD558\uAE30\uB97C \uACC4\uC18D\uD560 \uC218 \uC788\uC5B4\uC694.\\n\uC628\uB77C\uC778
+      \uAC8C\uC784 \uC911\uC5D0\uB294 \uBC30\uC18D \uC0C1\uD488\xB7\uAD11\uACE0 \uC81C\uAC70
+      \uC0C1\uD488 \uAE30\uB2A5\uC744 \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.\\n\uCC38\uC5EC\uD560\uAE4C\uC694?"
+    en: The match starts when 8 players join. You can keep playing solo while you
+      wait.\nGame speed and ad removal purchases are disabled in online games.\nJoin?
+  - key: Multi_Matching
+    kr: "\uB9E4\uCE6D \uC911"
+    en: Matching
+  - key: Multi_CancelTitle
+    kr: "\uB9E4\uCE6D \uCDE8\uC18C"
+    en: Cancel Match
+  - key: Multi_CancelBody
+    kr: "\uB9E4\uCE6D\uC744 \uCDE8\uC18C\uD560\uAE4C\uC694?"
+    en: Cancel matchmaking?
+  - key: Multi_JoinFailed
+    kr: "\uB9E4\uCE6D\uC5D0 \uCC38\uC5EC\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.
+      \uC7A0\uC2DC \uD6C4 \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694."
+    en: Could not join. Please try again later.
+  - key: Multi_Ready
+    kr: READY
+    en: READY
+  - key: Multi_ReadyDone
+    kr: "\uC900\uBE44 \uC644\uB8CC"
+    en: Ready!
+  - key: Multi_ReadyTitle
+    kr: "\uACE7 \uC2DC\uC791\uD569\uB2C8\uB2E4!"
+    en: Starting soon!
+  - key: Lobby_Resume
+    kr: "\uC774\uC5B4\uD558\uAE30"
+    en: Continue
+  - key: Multi_Players
+    kr: "\uCC38\uAC00\uC790"
+    en: Players
+  - key: Multi_MyRank
+    kr: "\uB0B4 \uC21C\uC704 {0}/{1}"
+    en: My Rank {0}/{1}
+  - key: Multi_StatusReached
+    kr: "\uB3C4\uCC29 {0}"
+    en: Arrived {0}
+  - key: Multi_ResultChampion
+    kr: "\uC6B0\uC2B9!"
+    en: Champion!
+  - key: Multi_ResultClear
+    kr: "\uD074\uB9AC\uC5B4!"
+    en: Clear!
+  - key: Multi_Record
+    kr: "\uC6B0\uC2B9 {0} \xB7 \uD074\uB9AC\uC5B4 {1}"
+    en: "Wins {0} \xB7 Clears {1}"
+  - key: Multi_ToLobby
+    kr: "\uB85C\uBE44\uB85C"
+    en: Lobby
+  - key: Multi_View
+    kr: "\uBCF4\uAE30"
+    en: View
+  - key: Multi_Close
+    kr: "\uB2EB\uAE30"
+    en: Close
+  - key: Multi_StatusWave
+    kr: WAVE {0}
+    en: WAVE {0}
+  - key: Multi_ResultEnd
+    kr: "\uAC8C\uC784 \uC885\uB8CC"
+    en: Game Over
+  - key: Title_Connecting
+    kr: "\uC11C\uBC84\uC5D0 \uC5F0\uACB0 \uC911\u2026"
+    en: "Connecting\u2026"
+  - key: Title_LoginTitle
+    kr: "\uB85C\uADF8\uC778"
+    en: Sign In
+  - key: Nickname_Title
+    kr: "\uB2C9\uB124\uC784\uC744 \uC815\uD574 \uC8FC\uC138\uC694"
+    en: Choose a nickname
+  - key: Nickname_Placeholder
+    kr: "\uB2C9\uB124\uC784 \uC785\uB825"
+    en: Enter nickname
+  - key: Nickname_Hint
+    kr: "{0}~{1}\uC790 \xB7 \uD55C\uAE00\xB7\uC601\uBB38\xB7\uC22B\uC790"
+    en: "{0}\u2013{1} characters \xB7 letters and numbers"
+  - key: Nickname_Length
+    kr: "\uB2C9\uB124\uC784\uC740 {0}~{1}\uC790\uB85C \uC815\uD574 \uC8FC\uC138\uC694."
+    en: "Nickname must be {0}\u2013{1} characters."
+  - key: Nickname_Invalid
+    kr: "\uC0AC\uC6A9\uD560 \uC218 \uC5C6\uB294 \uB2C9\uB124\uC784\uC785\uB2C8\uB2E4."
+    en: This nickname cannot be used.
+  - key: Nickname_Banned
+    kr: "\uC0AC\uC6A9\uD560 \uC218 \uC5C6\uB294 \uB2E8\uC5B4\uAC00 \uB4E4\uC5B4 \uC788\uC2B5\uB2C8\uB2E4."
+    en: Contains a word that is not allowed.
+  - key: Nickname_Confirm
+    kr: "\uD655\uC778"
+    en: OK
+  - key: Multi_CreateRoom
+    kr: "\uBC29\uB9CC\uB4E4\uAE30"
+    en: Create Room
+  - key: Multi_EnterCode
+    kr: "\uCF54\uB4DC\uC785\uB825"
+    en: Enter Code
+  - key: Multi_CodeInputTitle
+    kr: "\uBC29 \uCF54\uB4DC \uC785\uB825"
+    en: Enter Room Code
+  - key: Multi_CodeEnter
+    kr: "\uC785\uC7A5"
+    en: Join
+  - key: Multi_CodeInvalid
+    kr: "{0}\uC790\uB9AC \uC22B\uC790\uB97C \uC785\uB825\uD574 \uC8FC\uC138\uC694."
+    en: Enter a {0}-digit code.
+  - key: Multi_CodeNotFound
+    kr: "\uADF8 \uCF54\uB4DC\uC758 \uBC29\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
+    en: No room with that code.
+  - key: Multi_RoomFull
+    kr: "\uBC29\uC774 \uAC00\uB4DD \uCC3C\uC2B5\uB2C8\uB2E4."
+    en: The room is full.
+  - key: Multi_RoomStarted
+    kr: "\uC774\uBBF8 \uC2DC\uC791\uD55C \uBC29\uC785\uB2C8\uB2E4."
+    en: That game has already started.
+  - key: Multi_CodeLabel
+    kr: "\uCF54\uB4DC {0}"
+    en: Code {0}
+  - key: Multi_CodeNotReady
+    kr: "\uBC29 \uCF54\uB4DC\uB97C \uB9CC\uB4DC\uB294 \uC911\uC785\uB2C8\uB2E4."
+    en: Room code is not ready yet.
+  - key: Multi_Invite
+    kr: "\uCE5C\uAD6C \uCD08\uB300"
+    en: Invite
+  - key: Multi_ShareCode
+    kr: "\uCF54\uB4DC \uACF5\uC720"
+    en: Share Code
+  - key: Multi_InviteText
+    kr: "\uB9C8\uC655\uC744 \uAFC8\uAFB8\uB294 \uC2AC\uB77C\uC784\uACFC \uD568\uAED8
+      \uB300\uC804\uD574\uC694! {0}"
+    en: Battle with me in King Slime! {0}
+  - key: Multi_CodeShareText
+    kr: "\uAC19\uC774 \uD558\uC790! \uBC29 \uCF54\uB4DC: {0}\\n\uAC8C\uC784 \uBC1B\uAE30:
+      {1}"
+    en: 'Join my room! Code: {0}\nGet the game: {1}'
+  - key: Multi_Host
+    kr: "\uBC29\uC7A5"
+    en: Host
+  - key: Share_Copied
+    kr: "\uBCF5\uC0AC\uD588\uC2B5\uB2C8\uB2E4. \uBD99\uC5EC \uB123\uC5B4 \uACF5\uC720\uD558\uC138\uC694."
+    en: Copied. Paste it to share.
+  - key: Multi_AiNotice
+    kr: "\uBC29\uC774 \uAF49 \uC548 \uCC28\uBA74 AI \uBD07\uC73C\uB85C \uB300\uCCB4\uB429\uB2C8\uB2E4."
+    en: Empty seats will be filled with AI bots.
+  - key: Multi_AiFilling
+    kr: "AI \uBD07\uC73C\uB85C \uBE48\uC790\uB9AC\uB97C \uCC44\uC6B0\uB294 \uC911\u2026"
+    en: "Filling empty seats with AI\u2026"
+  - key: Multi_StartIn
+    kr: "{0}\uCD08 \uD6C4 \uC2DC\uC791\uD569\uB2C8\uB2E4!"
+    en: Starting in {0}s!
+  - key: Nickname_Taken
+    kr: "\uC774\uBBF8 \uC0AC\uC6A9 \uC911\uC778 \uB2C9\uB124\uC784\uC785\uB2C8\uB2E4."
+    en: This nickname is already taken.
+  - key: Nickname_CheckFailed
+    kr: "\uB2C9\uB124\uC784\uC744 \uD655\uC778\uD558\uC9C0 \uBABB\uD588\uC2B5\uB2C8\uB2E4.
+      \uC7A0\uC2DC \uD6C4 \uB2E4\uC2DC \uC2DC\uB3C4\uD574 \uC8FC\uC138\uC694."
+    en: Could not check the nickname. Please try again.
+  - key: Minion.Mine.EvolutionDesc
+    kr: "[\uBC84\uD2BC \uC2A4\uD0AC \xB7 \uCFE8\uD0C0\uC784 {0}\uCD08] \uD3ED\uD0C4\uC774
+      \uC801 \uACBD\uB85C\uB97C \uD55C \uBC14\uD034 \uAD74\uB7EC\uAC00\uBA70 \uB2FF\uB294
+      \uC801\uB9C8\uB2E4 \uD3ED\uBC1C (\uBC94\uC704 {1}, \uACF5\uACA9\uB825 {2}%)"
+    en: "[Button skill \xB7 {0}s cooldown] A bomb rolls once around the enemy path,
+      exploding on every enemy it touches (radius {1}, {2}% attack)"
+  - key: Nickname_SpecialChar
+    kr: "\uD55C\uAE00\xB7\uC601\uBB38\xB7\uC22B\uC790\uB9CC \uC4F8 \uC218 \uC788\uC5B4\uC694.
+      (\uACF5\uBC31\xB7\uD2B9\uC218\uBB38\uC790 X)"
+    en: Use letters and numbers only (no spaces or symbols).

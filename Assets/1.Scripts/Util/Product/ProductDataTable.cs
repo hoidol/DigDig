@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 상품 데이터. Json/ProductData.csv 한 행 = 상품 하나 (key, currencyType, price)
-// 인앱 상품의 productId는 InAppProductInfo에서 key로 채운다(CSV productId 열은 쓰지 않음)
+// 상품 데이터. Json/ProductData.csv 한 행 = 상품 하나 (Key, ProductId, CurrencyType, Price, ProductType)
+// (2026-11-27) 인앱 상품의 스토어 ID·종류도 CSV가 원본 (ProductId·ProductType 열, 이전엔 InAppProductInfo 코드 목록)
 // DataTableImporter가 CSV → Resources/ProductData.asset, ProductManager가 시작할 때 불러옴
 public class ProductDataTable : ScriptableObject
 {
@@ -58,9 +58,17 @@ public class ProductDataTable : ScriptableObject
             if (row.TryGetFloat("price", out float price)) data.price = price;
             if (currencyType == CurrencyType.InApp)
             {
-                data.productId = InAppProductInfo.GetProductId(key);
+                data.productId = row.Get("productId");
                 if (string.IsNullOrEmpty(data.productId))
-                    Debug.LogWarning($"[ProductDataTable] {row.lineNumber}줄 {key} 인앱 상품인데 InAppProductInfo에 없음 → 결제 불가");
+                    Debug.LogWarning($"[ProductDataTable] {row.lineNumber}줄 {key} 인앱 상품인데 ProductId 없음 → 결제 불가");
+                string typeText = row.Get("productType");
+                if (!string.IsNullOrEmpty(typeText))
+                {
+                    if (System.Enum.TryParse(typeText, true, out UnityEngine.Purchasing.ProductType productType))
+                        data.productType = productType;
+                    else
+                        Debug.LogWarning($"[ProductDataTable] {row.lineNumber}줄 {key} ProductType '{typeText}' 알 수 없음 → NonConsumable");
+                }
             }
             datas.Add(data);
         }

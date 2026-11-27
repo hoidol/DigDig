@@ -452,7 +452,7 @@ public abstract class HeroKingAbility : KingAbility
 
     // ---- 카드 설명 ({0} = 전체 설명)
     public override string GetValueText(int level) =>
-        $"정예병 칸 미니언: {GetEliteBuffText(king != null ? HeroLevel : 1)} (레벨업마다 상승)\n"
+        $"정예 버프: {GetEliteBuffText(king != null ? HeroLevel : 1)}\n"
         + $"킹 공격: {GetAttackTypeName(kingAttackType)} · {GetAttackFormText()}\n"
         + $"에너지: <color=#{ColorUtility.ToHtmlStringRGB(energyColor)}>{energyName}</color>\n"
         + $"Lv.2 <b>{GetSkillName(0)}</b> · Lv.5 <b>{GetSkillName(1)}</b>";

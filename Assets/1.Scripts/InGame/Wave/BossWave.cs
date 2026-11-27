@@ -17,7 +17,8 @@ public class BossWave : Wave
         GameEventBus.Subscribe<BossDeadEvent>(OnBossDeadEvent);
         boss = Instantiate(GameManager.Instance.stageData.boss);
         boss.Spawn(EnemyFieldController.Instance.GetSpawnPosition(), wIdx); // BossSpawnEvent는 Boss.Spawn에서 발행, 체력바는 머리 위(EnemyWorldCanvas)
-        // (2026-11-26) 마지막 보스 wave(50) = 보스 + 일반 적 FINAL_BOSS_WAVE_NORMAL_COUNT(100)마리. wave 클리어 = 보스 처치 + 일반 적 소환 끝 + 필드 적 0
+        // (2026-11-26) 마지막 보스 wave(50) = 보스 + 일반 적 FINAL_BOSS_WAVE_NORMAL_COUNT(50)마리, FINAL_BOSS_WAVE_SPAWN_INTERVAL(2초)마다 1마리
+        // wave 클리어 = 보스 처치 + 필드 적 0 (2026-11-27 보스를 잡으면 남은 소환 취소)
         if (GameManager.IsLastWave(wIdx) && GameSetting.FINAL_BOSS_WAVE_NORMAL_COUNT > 0)
         {
             normalSpawnDone = false;
@@ -33,7 +34,7 @@ public class BossWave : Wave
             BattleWave.SpawnEnemy(EnemyType.Normal, waveIdx, waveDefenceType);
             if (i == count - 1)
                 break;
-            if (await UniTask.Delay(TimeSpan.FromSeconds(GameSetting.ENEMY_SPAWN_INTERVAL), cancellationToken: token).SuppressCancellationThrow())
+            if (await UniTask.Delay(TimeSpan.FromSeconds(GameSetting.FINAL_BOSS_WAVE_SPAWN_INTERVAL), cancellationToken: token).SuppressCancellationThrow())
                 return;
         }
         normalSpawnDone = true;
@@ -65,6 +66,12 @@ public class BossWave : Wave
             return;
 
         bossDead = true;
+        // (2026-11-27) 보스를 잡으면 일반 적은 더 소환하지 않음 (필드에 남은 적은 그대로)
+        if (!normalSpawnDone)
+        {
+            cts?.Cancel();
+            normalSpawnDone = true;
+        }
         RefreshSpawnEnd();
         // 카드 소환 모드: 남은 적까지 다 처리되면 GameManager가 준비 단계로 (여기서 다음 wave를 바로 시작하지 않음)
         if (GameSetting.USE_WAVE_MINION_OFFER)

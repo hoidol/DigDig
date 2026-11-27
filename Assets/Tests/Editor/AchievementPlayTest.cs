@@ -170,9 +170,9 @@ public class AchievementPlayTest : InGamePlayTestBase
         yield return WaitFrames(2);
         Assert.AreEqual($"{dailyGoal - 1}/{dailyGoal}", dailyKill.progressText.text, "집계하면 열려 있는 창이 바로 갱신돼야 함 (UpdateAchievementEvent)");
         AssertAllPanels("일일 목표 1 모자람");
-        int gold = User.gold;
+        int gold = User.energe;
         ClickClaim(dailyKill);
-        Assert.AreEqual(gold, User.gold, "목표 미달인데 보상 지급");
+        Assert.AreEqual(gold, User.energe, "목표 미달인데 보상 지급");
 
         AchievementManager.Report(AchievementType.KillEnemy, 200); // 목표 초과
         yield return WaitFrames(2);
@@ -184,15 +184,15 @@ public class AchievementPlayTest : InGamePlayTestBase
         int reward = int.Parse(dailyKill.achievementData.rewardData.value);
         ClickClaim(dailyKill);
         yield return WaitFrames(2);
-        Assert.AreEqual(gold + reward, User.gold, "일일 보상 골드");
+        Assert.AreEqual(gold + reward, User.energe, "일일 보상 에너지 (2026-11-27 골드 삭제)");
         Assert.IsTrue(dailyKill.gottenRewardObj.activeSelf && !dailyKill.claimObj.activeSelf && !dailyKill.processingObj.activeSelf, "보상 받음 = gottenRewardObj만");
         Assert.IsFalse(dailyTap.redDot.activeSelf, "받고 나면 일일 탭 redDot 꺼짐");
         ClickClaim(dailyKill);
         Mgr.dailyAchievementManager.GetReward(dailyKill.achievementData);
-        Assert.AreEqual(gold + reward, User.gold, "일일 보상은 하루 한 번");
-        var goldPanels = UnityEngine.Object.FindObjectsByType<CurrencyPanel>(FindObjectsSortMode.None).Where(p => p.currencyType == CurrencyType.Gold && p.isActiveAndEnabled).ToArray();
+        Assert.AreEqual(gold + reward, User.energe, "일일 보상은 하루 한 번");
+        var goldPanels = UnityEngine.Object.FindObjectsByType<CurrencyPanel>(FindObjectsSortMode.None).Where(p => p.currencyType == CurrencyType.Energe && p.isActiveAndEnabled).ToArray();
         foreach (CurrencyPanel p in goldPanels)
-            Assert.AreEqual(User.gold.ToString(), p.currencyText.text, $"보상 후 골드 표시 ({p.name})");
+            Assert.AreEqual(EnergeManager.Current.ToString(), p.currencyText.text, $"보상 후 에너지 표시 ({p.name})");
         AssertAllPanels("일일 수령");
 
         // 3) 누적: 목표 = InitGoal + IncreaseGoal × 클리어 횟수, 초과분 이월, 받으면 다음 목표
@@ -203,7 +203,7 @@ public class AchievementPlayTest : InGamePlayTestBase
         int total = dailyGoal - 1 + 200;
         Assert.AreEqual(total, CumulativeValue(AchievementType.KillEnemy), "누적도 같이 집계");
         Assert.AreEqual($"{total}/{killData.initGoal}", cumKill.progressText.text);
-        gold = User.gold;
+        gold = User.energe;
         int cumReward = int.Parse(killData.rewardData.value);
         int expectedValue = total;
         for (int clear = 0; clear < 3; clear++)
@@ -214,7 +214,7 @@ public class AchievementPlayTest : InGamePlayTestBase
             ClickClaim(cumKill);
             yield return WaitFrames(2);
             expectedValue -= goal;
-            Assert.AreEqual(gold + cumReward * (clear + 1), User.gold, $"누적 보상 {clear + 1}번째");
+            Assert.AreEqual(gold + cumReward * (clear + 1), User.energe, $"누적 보상 {clear + 1}번째");
             Assert.AreEqual(expectedValue, CumulativeValue(AchievementType.KillEnemy), "받으면 목표만큼 빼고 나머지는 이월");
             Assert.AreEqual(clear + 1, CumulativeUser(AchievementType.KillEnemy).clearCount);
             AssertPanel(cumKill, $"누적 {clear + 1}회 수령");
@@ -228,7 +228,7 @@ public class AchievementPlayTest : InGamePlayTestBase
         Assert.AreEqual("0/2", login.progressText.text, "Login 다음 목표");
         Assert.IsTrue(login.processingObj.activeSelf && !login.claimObj.activeSelf);
 
-        // 4) 광고: 성공할 때마다 Watch_Ad +1 (광고 제거 구매자도). 목표는 IncreaseGoal 0이라 계속 2, 보상 다이아
+        // 4) 광고: 성공할 때마다 Watch_Ad +1 (광고 제거 구매자도). 목표는 IncreaseGoal 0이라 계속 2, 보상 에너지
         var ad = Panel<CumulativeAchievementPanel>(AchievementType.Watch_Ad);
         bool wasAdRemoved = UserDataManager.Instance.isAdRemoved;
         UserDataManager.Instance.isAdRemoved = false;
@@ -243,10 +243,10 @@ public class AchievementPlayTest : InGamePlayTestBase
         Assert.AreEqual(2, CumulativeValue(AchievementType.Watch_Ad), "광고 제거 구매자도 Watch_Ad 집계");
         UserDataManager.Instance.isAdRemoved = wasAdRemoved;
         yield return WaitFrames(2);
-        int dia = User.dia;
+        int energe = User.energe;
         ClickClaim(ad);
         yield return WaitFrames(2);
-        Assert.AreEqual(dia + int.Parse(ad.achievementData.rewardData.value), User.dia, "Watch_Ad 보상 다이아");
+        Assert.AreEqual(energe + int.Parse(ad.achievementData.rewardData.value), User.energe, "Watch_Ad 보상 에너지");
         Assert.AreEqual(2, ad.achievementData.GetGoal(), "IncreaseGoal 0 → 목표 그대로");
         Assert.AreEqual("0/2", ad.progressText.text);
 

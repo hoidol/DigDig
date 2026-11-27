@@ -23,11 +23,6 @@ public class RewardData
         {
             case RewardType.Minion:
                 return MinionManager.Instance.GetMinionData(value).thum;
-            case RewardType.Gold:
-                return Resources.Load<Sprite>("Icons/Gold");
-            // 아래 재화는 Resources/Icons/Currency 아이콘 (이전 경로 Icons/Dia 등은 파일이 없었음)
-            case RewardType.Dia:
-                return CurrencyInfo.GetSprite(CurrencyType.Dia);
             case RewardType.Energe:
                 return Resources.Load<Sprite>("Icons/Currency/Energy");
             case RewardType.Exp:
@@ -42,12 +37,6 @@ public class RewardData
             case RewardType.Minion:
                 RewardCanvas.Instance.OpenCanvas(this);
                 UserDataManager.Instance.userMinionManager.AddUserMinion(value);
-                break;
-            case RewardType.Gold:
-                UserDataManager.Instance.AddGold(int.Parse(value));
-                break;
-            case RewardType.Dia:
-                UserDataManager.Instance.AddDia(int.Parse(value));
                 break;
             case RewardType.Energe:
                 UserDataManager.Instance.AddEnerge(int.Parse(value));
@@ -65,11 +54,10 @@ public class UserReward
     public string id;
     public bool gotten;
 }
+// (2026-11-27) 골드(1)·다이아(2) 삭제. 번호로 저장될 수 있어 남은 값의 번호는 그대로
 public enum RewardType
 {
-    Minion,
-    Gold,
-    Dia,
-    Energe,
-    Exp,
+    Minion = 0,
+    Energe = 3,
+    Exp = 4,
 }

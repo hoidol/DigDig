@@ -61,7 +61,7 @@ public class RerollCounter
         });
     }
 
-    static bool AdRemoved => UserDataManager.Instance != null && UserDataManager.Instance.isAdRemoved;
+    static bool AdRemoved => UserDataManager.Instance != null && UserDataManager.Instance.IsAdRemovedEffective;
 
     // 버튼 글씨: "새로고침 (2/2)" / "광고 보고 새로고침 (3)" / 광고 제거 = "새로고침 (+3)"
     public string GetLabel(string verb)

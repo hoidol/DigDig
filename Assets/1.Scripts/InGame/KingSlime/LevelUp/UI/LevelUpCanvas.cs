@@ -8,6 +8,9 @@ namespace InGame
     public class LevelUpCanvas : CanvasUI<LevelUpCanvas>
 {
     public LevelUpStatPanel[] levelUpStatPanels;
+    // (2026-11-27) Lv.1 용사 선택 카드 = 일반 카드와 따로 (씬 LevelUpCanvas/Panel/Bg/HeroSelectContainer, 메뉴 Tools/InGame/Add Hero Select Cards To LevelUpCanvas)
+    //   1장만 두면 모자란 만큼 복사. 비어 있으면 경고 + 일반 카드로 대신 보여 줌
+    public HeroSelectCard[] heroSelectCards;
     public TMPro.TMP_Text headerText; // 비워도 됨. "레벨 업!"
     public TMPro.TMP_Text subText;    // 비워도 됨. 무엇을 고르는지 (종족을 선택하세요 …)
     // (2026-11-25) 이전 작은 능력치 변화 글씨. (2026-11-26) 스탯 변화 화면(statScreen*)으로 옮겨서 항상 숨김 (씬 연결 유지용)
@@ -137,6 +140,8 @@ namespace InGame
             break;
         }
 
+        heroSelectCards = (heroSelectCards ?? new HeroSelectCard[0]).Where(c => c != null).ToArray();
+        SetHeroContainerActive(false);
         if (CurrentStep == Step.StatChange)
         {
             ShowStatScreen(king, statChangeScreenText);
@@ -149,8 +154,13 @@ namespace InGame
         List<Vector2Int> currentTiles = king != null ? king.abilityInventory.GetBuffTileOffsets() : new List<Vector2Int>();
         List<Vector2Int> expandTiles = LevelUpChoiceRule.PickExpandTiles(currentTiles, choices.Count, rng);
 
-        EnsurePanels(choices.Count);
-        SetCardContainerActive(true);
+        bool useHeroCards = stage == AbilityCategory.Hero && heroSelectCards.Length > 0;
+        if (stage == AbilityCategory.Hero && !useHeroCards)
+            Debug.LogWarning("[LevelUpCanvas] 용사 선택 카드(heroSelectCards)가 비어 있음 → 메뉴 Tools/InGame/Add Hero Select Cards To LevelUpCanvas");
+        EnsurePanels(useHeroCards ? 0 : choices.Count);
+        SetCardContainerActive(!useHeroCards);
+        if (useHeroCards)
+            ShowHeroCards(choices);
         ShowReward();
         HideOldStatChangeText();
         if (headerText != null)
@@ -166,7 +176,7 @@ namespace InGame
                 : "능력을 선택하세요";
         }
         int i = 0;
-        foreach (var panel in levelUpStatPanels)
+        foreach (var panel in useHeroCards ? new LevelUpStatPanel[0] : levelUpStatPanels)
         {
             bool active = i < choices.Count;
             panel.gameObject.SetActive(active);
@@ -347,12 +357,12 @@ namespace InGame
         if (first)
         {
             if (!string.IsNullOrEmpty(eliteTo))
-                lines.Add($"정예병 칸 : <color=#7CFF6B>{eliteTo}</color>");
+                lines.Add($"정예 버프 : <color=#7CFF6B>{eliteTo}</color>");
             return string.Join("\n", lines);
         }
         string eliteFrom = hero.GetEliteBuffText(toLevel - 1);
         if (eliteFrom != eliteTo)
-            lines.Add($"정예병 칸 : {eliteFrom} → <color=#7CFF6B>{eliteTo}</color>");
+            lines.Add($"정예 버프 : {eliteFrom} → <color=#7CFF6B>{eliteTo}</color>");
         return string.Join("\n", lines);
     }
 
@@ -421,6 +431,38 @@ namespace InGame
         string result = string.Join("\n", lines).Trim('\n');
         // 스탯 변화가 없어도 새 스킬이 있으면 화면을 보여 줘야 함 (빈 글씨 = 화면 건너뜀)
         return string.IsNullOrEmpty(result) && newSkillIdx >= 0 ? " " : result;
+    }
+
+    // (2026-11-27) 용사 선택 카드: 카드마다 정예 버프 칸 랜덤 2칸
+    void ShowHeroCards(List<AbilityData> choices)
+    {
+        var cards = heroSelectCards.ToList();
+        while (cards.Count < choices.Count)
+        {
+            HeroSelectCard copy = Instantiate(cards[0], cards[0].transform.parent);
+            copy.name = $"{cards[0].name}_{cards.Count}";
+            copy.transform.SetSiblingIndex(cards[cards.Count - 1].transform.GetSiblingIndex() + 1);
+            cards.Add(copy);
+        }
+        heroSelectCards = cards.ToArray();
+        SetHeroContainerActive(true);
+        for (int i = 0; i < heroSelectCards.Length; i++)
+        {
+            bool active = i < choices.Count;
+            heroSelectCards[i].gameObject.SetActive(active);
+            if (!active)
+                continue;
+            heroSelectCards[i].Set(choices[i], LevelUpChoiceRule.PickHeroTiles(rng));
+            heroSelectCards[i].PlayAppear(i);
+        }
+    }
+
+    void SetHeroContainerActive(bool active)
+    {
+        HeroSelectCard first = heroSelectCards != null ? heroSelectCards.FirstOrDefault(c => c != null) : null;
+        Transform container = first != null ? first.transform.parent : null;
+        if (container != null && container != transform)
+            container.gameObject.SetActive(active);
     }
 
     // 카드 줄(카드의 부모, 씬 LevelUpContainer): 카드 단계에선 켬, 스탯 변화 화면에선 끔 (씬에서 꺼 둔 채 저장해도 동작)

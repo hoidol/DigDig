@@ -56,11 +56,11 @@ public class AchievementRuleTest
     public void Csv_UnknownType_SkippedWithError()
     {
         UnityEngine.TestTools.LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex("알 수 없는 Type 'NoSuchType'"));
-        var datas = DailyAchievementManager.ParseCsv("Type\tGoal\tRewardType\tRewardValue\nKillEnemy\t5\tGold\t10\nNoSuchType\t5\tGold\t10\n");
+        var datas = DailyAchievementManager.ParseCsv("Type\tGoal\tRewardType\tRewardValue\nKillEnemy\t5\tEnerge\t10\nNoSuchType\t5\tEnerge\t10\n");
         Assert.AreEqual(1, datas.Count);
         Assert.AreEqual(AchievementType.KillEnemy, datas[0].type);
         Assert.AreEqual(5, datas[0].goal);
-        Assert.AreEqual(RewardType.Gold, datas[0].rewardData.rewardType);
+        Assert.AreEqual(RewardType.Energe, datas[0].rewardData.rewardType);
         Assert.AreEqual("10", datas[0].rewardData.value);
     }
 

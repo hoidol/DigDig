@@ -3,7 +3,7 @@ using UnityEngine;
 
 // (2026-11-26) 5성 진화 수치를 한곳에서: Resources/MinionEvolutionSetting 에셋 인스펙터 (종마다 한 칸)
 // 에셋이 없으면 코드 기본값 (EvolutionConfigs.cs 초기값). 메뉴 Tools/Data/Create MinionEvolutionSetting 으로 에셋 생성
-// 여기에 칸이 있는 종만 진화 (5성이 되면 진화 선택 창), 칸이 없는 종(쾅쾅이 등)은 5성 그대로
+// 여기에 칸이 있는 종만 진화 (5성이 되면 진화 선택 창). (2026-11-27) 발비(Mine)도 추가 → 지금 게임에서 쓰는 12종 모두 진화
 [CreateAssetMenu(menuName = "KingSlime/MinionEvolutionSetting", fileName = "MinionEvolutionSetting")]
 public class MinionEvolutionSetting : ScriptableObject
 {
@@ -20,6 +20,7 @@ public class MinionEvolutionSetting : ScriptableObject
     [Header("할키 (Berserker) → 할키니")] public BerserkerEvolutionConfig berserker = new BerserkerEvolutionConfig();
     [Header("쏘나 (Mortar) → 쏘다")] public MortarEvolutionConfig mortar = new MortarEvolutionConfig();
     [Header("묵천 (Thunder) → 묵묵천천")] public ThunderEvolutionConfig thunder = new ThunderEvolutionConfig();
+    [Header("발비 (Mine) → 발비마")] public MineEvolutionConfig mine = new MineEvolutionConfig();
 
     // 미니언 key → Config (칸이 없으면 null = 진화 없음)
     public EvolutionConfig Get(string key)
@@ -37,11 +38,12 @@ public class MinionEvolutionSetting : ScriptableObject
             case "Berserker": return berserker;
             case "Mortar": return mortar;
             case "Thunder": return thunder;
+            case "Mine": return mine;
             default: return null;
         }
     }
 
-    public static readonly string[] EVOLVING_KEYS = { "Flame", "Random", "Ice", "Lightning", "Orbit", "Bounce", "Iron", "Pierce", "Berserker", "Mortar", "Thunder" };
+    public static readonly string[] EVOLVING_KEYS = { "Flame", "Random", "Ice", "Lightning", "Orbit", "Bounce", "Iron", "Pierce", "Berserker", "Mortar", "Thunder", "Mine" };
 
     static MinionEvolutionSetting instance;
     public static MinionEvolutionSetting Instance

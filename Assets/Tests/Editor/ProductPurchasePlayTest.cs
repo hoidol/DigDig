@@ -8,7 +8,7 @@ using UnityEngine.UI;
 // ProductPurchaseButton 구매 흐름 (로비): 재화 확인·차감 / 광고 시청 / 인앱 결제 후 onPurchased, ProductPanel.Purchased 연결
 public class ProductPurchasePlayTest : InGamePlayTestBase
 {
-    const string GOLD_KEY = "Test_GoldProduct";
+    const string GOLD_KEY = "Test_EnergeProduct"; // (2026-11-27) 골드 삭제 → 재화 상품 테스트는 에너지로
     const string AD_KEY = "Test_AdProduct";
     const string INAPP_KEY = "Test_InAppProduct";
     const int PRICE = 300;
@@ -21,7 +21,7 @@ public class ProductPurchasePlayTest : InGamePlayTestBase
         yield return WaitLobbyStart();
         ProductManager.Instance.productDatas = ProductManager.Instance.productDatas.Concat(new[]
         {
-            new ProductData { key = GOLD_KEY, currencyType = CurrencyType.Gold, price = PRICE },
+            new ProductData { key = GOLD_KEY, currencyType = CurrencyType.Energe, price = PRICE },
             new ProductData { key = AD_KEY, currencyType = CurrencyType.Ad },
             new ProductData { key = INAPP_KEY, productId = "com.test.inapp", currencyType = CurrencyType.InApp, price = 1200 },
         }).ToArray();
@@ -36,8 +36,8 @@ public class ProductPurchasePlayTest : InGamePlayTestBase
 
     static int Gold
     {
-        get => UserDataManager.Instance.userData.gold;
-        set => UserDataManager.Instance.userData.gold = value;
+        get => UserDataManager.Instance.userData.energe;
+        set => UserDataManager.Instance.userData.energe = value;
     }
 
     [UnityTest]
@@ -194,44 +194,6 @@ public class ProductPurchasePlayTest : InGamePlayTestBase
         button.Purchase();
         yield return WaitPurchase();
         Assert.AreEqual(2, purchasedCount, "제한을 넘어 구매됨");
-        AssertNoErrors();
-    }
-
-    // 골드 상품: 다이아 차감 → 골드 지급, 제목은 지급 개수
-    [UnityTest]
-    public IEnumerator GoldProductPanel_SpendsDiaGivesGold()
-    {
-        if (!Application.isPlaying) { BeforeEnterPlayMode(LOBBY_SCENE_PATH); yield return new EnterPlayMode(); }
-        yield return Setup();
-        yield return GoldProductPanel_SpendsDiaGivesGoldBody();
-    }
-
-    IEnumerator GoldProductPanel_SpendsDiaGivesGoldBody()
-    {
-        const string KEY = "Test_Gold_1000";
-        ProductManager.Instance.productDatas = ProductManager.Instance.productDatas
-            .Append(new ProductData { key = KEY, currencyType = CurrencyType.Dia, price = 10 }).ToArray();
-        var panel = new GameObject("TestGoldPanel").AddComponent<GoldProductPanel>();
-        panel.amount = 1000;
-        panel.titleText = new GameObject("Title").AddComponent<TMPro.TextMeshProUGUI>();
-        button.transform.SetParent(panel.transform);
-        button.key = KEY;
-        button.onPurchased.AddListener(panel.Purchased);
-        panel.OpenPanel();
-        Assert.AreEqual("골드 1,000", panel.titleText.text);
-
-        var data = UserDataManager.Instance.userData;
-        data.dia = 15;
-        data.gold = 0;
-        button.Purchase();
-        yield return WaitPurchase();
-        Assert.AreEqual(5, data.dia, "다이아 10 차감");
-        Assert.AreEqual(1000, data.gold, "골드 1000 지급");
-
-        button.Purchase(); // 다이아 5 → 모자람
-        yield return WaitPurchase();
-        Assert.AreEqual(5, data.dia);
-        Assert.AreEqual(1000, data.gold, "다이아가 모자란데 골드 지급됨");
         AssertNoErrors();
     }
 }

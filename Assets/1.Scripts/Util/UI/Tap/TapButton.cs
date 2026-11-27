@@ -16,7 +16,7 @@ public class TapButton : ButtonUI
 
     public virtual void UpdateButton()
     {
-        if(GetComponentInParent<TapContainer>().selectedIdx == idx)
+        if(GetComponentInParent<TapContainer>(true).selectedIdx == idx)
         {
             //if (activeSprtie == null)
             //    image.sprite = Resources.Load<Sprite>("UI/btn_rectangle_pressed_purple");
@@ -34,6 +34,6 @@ public class TapButton : ButtonUI
     public override void OnClickedBtn()
     {
         SoundManager.Play(SFXType.TabChange);
-        GetComponentInParent<TapContainer>().Switch(idx);
+        GetComponentInParent<TapContainer>(true).Switch(idx);
     }
 }

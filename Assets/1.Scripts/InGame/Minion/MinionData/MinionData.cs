@@ -39,11 +39,9 @@ public class MinionData : ScriptableObject
     [Tooltip("wave 카드(MinionOfferCard)로 이 미니언을 놓을 때 드는 주사위 코인 (MinionData.csv Coin 열)")]
     public int offerDiceCoinPrice = GameSetting.OFFER_MINION_DICE_COIN_PRICE;
 
-    // (2026-11-24) 로비 구매: 유저 레벨로 해금되면 이 재화·가격으로 구매 (MinionData.csv BuyCurrency·BuyPrice 열). 초기 지급 미니언은 안 씀
-    [Tooltip("로비에서 이 미니언을 살 때 쓰는 재화 (MinionData.csv BuyCurrency 열)")]
-    public CurrencyType buyCurrencyType = CurrencyType.Gold;
-    [Tooltip("로비 구매 가격 (MinionData.csv BuyPrice 열)")]
-    public int buyPrice;
+    // (2026-11-27) 해금 방식: 유저 레벨이 되면 자동 / 광고 / 유료 (MinionData.csv BuyCurrency 열: 빈칸 / Ad / InApp, UnitUnlock). 초기 지급 미니언은 안 씀
+    [Tooltip("레벨 해금 방식 (MinionData.csv BuyCurrency 열: 빈칸 = 자동, Ad, InApp)")]
+    public UnitUnlockType unlockType = UnitUnlockType.Auto;
 
     [Tooltip("인게임 직접 강화 1레벨당 공격력 증가(%). 종마다 다름 (MinionData.csv ReinforceAttackPower)")]
     public float reinforceAttackPowerPercent = 10f;
@@ -253,9 +251,8 @@ public class MinionData : ScriptableObject
         // 카드 소환 가격 (주사위 코인)
         if (row.TryGetInt("Coin", out int coin))
             offerDiceCoinPrice = coin;
-        // 로비 구매 재화·가격 (비면 골드 0)
-        buyCurrencyType = row.TryGetEnum("BuyCurrency", out CurrencyType buyCurrency) ? buyCurrency : CurrencyType.Gold;
-        buyPrice = row.TryGetInt("BuyPrice", out int price) ? price : 0;
+        // 레벨 해금 방식 (비면 자동)
+        unlockType = UnitUnlock.Parse(table.HasColumn("BuyCurrency") ? row.Get("BuyCurrency") : "");
         if (table.HasColumn("AttackType"))
         {
             if (row.TryGetEnum("AttackType", out AttackType parsedAttackType))

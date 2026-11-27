@@ -49,6 +49,43 @@ public class UserMyInfoManager : UserBaseManager
     }
 
 
+    // ---- (2026-11-27) 닉네임 (Title 씬에서 처음 정함)
+    public const int NICKNAME_MIN = 2;
+    public const int NICKNAME_MAX = 10;
+
+    // 아직 안 정함 = 처음 만든 기본값(GUID)
+    public bool HasNickname => !string.IsNullOrWhiteSpace(userMyInfoData.nickname) && !System.Guid.TryParse(userMyInfoData.nickname, out _);
+
+    // 닉네임 규칙: 앞뒤 공백 정리 · 2~10자 · (2026-11-27) 한글·영문·숫자만 (공백·특수문자 X) · 금칙어 X (씬 없이 계산). 문제가 없으면 null, 있으면 번역 key
+    static readonly System.Text.RegularExpressions.Regex NICKNAME_CHARS = new System.Text.RegularExpressions.Regex("^[가-힣A-Za-z0-9]+$");
+    public static string ValidateNickname(string raw, out string nickname)
+    {
+        nickname = (raw ?? "").Trim();
+        if (nickname.Length < NICKNAME_MIN || nickname.Length > NICKNAME_MAX)
+            return "Nickname_Length";
+        if (nickname.Contains('\n') || nickname.Contains('\t'))
+            return "Nickname_Invalid";
+        if (!NICKNAME_CHARS.IsMatch(nickname)) // 특수문자·공백·자모만 X (서버 key로 못 쓰는 글자도 여기서 걸림)
+            return "Nickname_SpecialChar";
+        if (System.Guid.TryParse(nickname, out _))
+            return "Nickname_Invalid";
+        if (ClearTipManager.MaskNow(nickname) != nickname)
+            return "Nickname_Banned";
+        return null;
+    }
+
+    public bool SetNickname(string raw)
+    {
+        if (ValidateNickname(raw, out string nickname) != null)
+            return false;
+        if (userMyInfoData.nickname != nickname)
+            userMyInfoData.nickChangeCount++;
+        userMyInfoData.nickname = nickname;
+        RequestSave();
+        GameEventBus.Publish(new ChangedUserExpEvent()); // MyInfoPanel 다시 그림 (닉네임 표시)
+        return true;
+    }
+
     public void AddExp(int exp)
     {
         exp = GetGainExp(userMyInfoData.lv, exp);
@@ -94,8 +131,9 @@ public class UserMyInfoManager : UserBaseManager
             userMyInfoData.lv++;
             // 최대 레벨에 도달하면 남은 경험치는 버림
             userMyInfoData.exp = IsMaxLv ? 0 : remainExp;
-            // 이 레벨에 구매할 수 있게 된 미니언 (로비 레벨업 창 뒤에 토스트, 2026-11-24 자동 지급 → 구매)
+            // 이 레벨에 해금된 미니언 (로비 레벨업 창 뒤에 토스트). (2026-11-27) 자동 해금 용사·미니언은 여기서 바로 보유
             lastUnlockedMinionKeys = new List<string>(UserMinionManager.GetLevelUnlockKeysAt(userMyInfoData.lv));
+            UserDataManager.Instance?.GrantAutoUnlocks();
             RequestSave();
             GameEventBus.Publish(new ChangedUserExpEvent());
             return true;

@@ -107,7 +107,6 @@ public class WaveResultPlayTest : InGamePlayTestBase
         var user = UserDataManager.Instance;
         string stageKey = GameManager.Instance.stageData.key;
         UserStage stage = user.userStageManager.GetUserStage(stageKey);
-        int gold = user.userData.gold;
         int exp = user.userMyInfoManager.userMyInfoData.exp;
         int tryCount = stage.tryCount;
         int maxWave = stage.maxWave;
@@ -117,7 +116,7 @@ public class WaveResultPlayTest : InGamePlayTestBase
         Assert.IsFalse(GameManager.Instance.isPlaying, "체력 0인데 게임이 안 끝남");
         Assert.IsTrue(FailCanvas.Instance.gameObject.activeSelf, "실패 화면이 안 열림");
         Assert.AreEqual(tryCount, stage.tryCount, "도전 횟수는 결과 화면에서 올라야 함 (사망 시점 X)");
-        Assert.AreEqual(gold, user.userData.gold, "결과 화면 전에 보상이 들어감");
+        Assert.AreEqual(exp, user.userMyInfoManager.userMyInfoData.exp, "결과 화면 전에 보상이 들어감");
 
         FailCanvas.Instance.OnClickedCancel();
         yield return WaitFrames(3);
@@ -132,13 +131,20 @@ public class WaveResultPlayTest : InGamePlayTestBase
         Assert.AreEqual(GameManager.Instance.isCleared ? "STAGE CLEAR!" : "GAME OVER", result.resultTitleText?.text, "결과 제목");
         // Assert.AreEqual((Mathf.Max(maxWave, waveIdx) + 1).ToString(), result.bestWaveText.text, "최고 웨이브 (이번 판 포함)");
 
-        Assert.AreEqual(gold + waveIdx, user.userData.gold, "골드 보상 (= waveIdx)");
         Assert.AreEqual(exp + waveIdx / 2, user.userMyInfoManager.userMyInfoData.exp, "경험치 보상 (= waveIdx / 2)");
         Assert.AreEqual(Mathf.Max(maxWave, waveIdx), stage.maxWave, "최고 wave 기록");
         Assert.AreEqual(waveIdx > maxWave, result.newRecordObj.activeSelf, "신기록 표시");
 
         int shownRewards = result.rewardPanels.Count(p => p.gameObject.activeSelf);
-        Assert.AreEqual(2, shownRewards, "보상 패널 수 (골드·경험치)");
+        Assert.AreEqual(1, shownRewards, "보상 패널 수 (경험치만, 2026-11-27 골드 삭제)");
+
+        // (2026-11-27) 게임 기록: 통계 칸 + 피해 순위 (장착 미니언 + 킹)
+        Assert.IsNotNull(result.statsPanel, "결과 화면 게임 기록(statsPanel) 연결 안 됨");
+        var statRows = result.statsPanel.statContainer.GetComponentsInChildren<ResultStatRow>(false);
+        Assert.AreEqual(ResultStatsPanel.GetStats(1).Count, statRows.Length, "통계 칸 수");
+        Assert.IsTrue(statRows.Any(r => r.valueText.text == $"WAVE {Mathf.Max(maxWave, waveIdx) + 1}"), "최고 기록 칸");
+        var dmgRows = result.statsPanel.damageContainer.GetComponentsInChildren<DamageMeterSystemPanel>(false);
+        Assert.AreEqual(DamageMeterSystem.GetEntries().Count, dmgRows.Length, "피해 순위 줄 수 (장착 미니언 + 킹)");
 
         // 광고 보고 2배: 같은 양을 한 번 더 지급 (한 번만)
         if (result.adDoubleRewardButton != null)
@@ -146,7 +152,6 @@ public class WaveResultPlayTest : InGamePlayTestBase
         result.OnClickedDoubleReward();
         yield return WaitFrames(3);
         Assert.IsTrue(result.IsDoubled, "2배 보상이 적용 안 됨");
-        Assert.AreEqual(gold + waveIdx * 2, user.userData.gold, "골드 2배");
         Assert.AreEqual(exp + waveIdx / 2 * 2, user.userMyInfoManager.userMyInfoData.exp, "경험치 2배");
         if (result.adDoubleRewardButton != null)
             Assert.IsFalse(result.adDoubleRewardButton.activeSelf, "2배 받은 뒤 버튼 숨김");
@@ -155,13 +160,12 @@ public class WaveResultPlayTest : InGamePlayTestBase
         while (UnityEditor.EditorApplication.timeSinceStartup < popEnd)
             yield return WaitFrames(1);
         var shownValues = result.rewardPanels.Where(p => p.gameObject.activeSelf).Select(p => p.rewardValueText.text).ToList();
-        CollectionAssert.Contains(shownValues, (waveIdx * 2).ToString(), "골드 패널 2배 값 표시");
-        CollectionAssert.Contains(shownValues, (3 * 2).ToString(), "뽑기권 패널 2배 값 표시");
+        CollectionAssert.Contains(shownValues, (waveIdx / 2 * 2).ToString(), "경험치 패널 2배 값 표시");
         foreach (var p in result.rewardPanels.Where(p => p.gameObject.activeSelf))
             Assert.AreEqual(1f, p.rewardValueText.transform.localScale.x, 0.01f, "이펙트 후 원래 크기");
         result.OnClickedDoubleReward();
         yield return WaitFrames(3);
-        Assert.AreEqual(gold + waveIdx * 2, user.userData.gold, "2배는 한 번만");
+        Assert.AreEqual(exp + waveIdx / 2 * 2, user.userMyInfoManager.userMyInfoData.exp, "2배는 한 번만");
 
         // 홈 → 로비 씬
         result.OnClickedHome();
@@ -197,11 +201,11 @@ public class WaveResultPlayTest : InGamePlayTestBase
         PlayerPrefs.DeleteKey(FailCanvas.DAILY_RESURRECTION_DATE_KEY); // 오늘 처음 → 가득
         UserStage stage = UserDataManager.Instance.userStageManager.GetUserStage(GameManager.Instance.stageData.key);
         int tryCount = stage.tryCount;
-        int gold = UserDataManager.Instance.userData.gold;
+        int exp = UserDataManager.Instance.userMyInfoManager.userMyInfoData.exp;
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         Assert.IsTrue(FailCanvas.Instance.gameObject.activeSelf);
-        Assert.AreEqual($"일일 부활 {FailCanvas.MAX_DAILY_RESURRECTION_COUNT}", FailCanvas.Instance.leftResurrectionText.text, "처음엔 5회");
+        Assert.AreEqual(ReviveText(FailCanvas.MAX_DAILY_RESURRECTION_COUNT), FailCanvas.Instance.leftResurrectionText.text, "처음엔 5회");
         Assert.IsTrue(FailCanvas.Instance.adRetryButton.activeSelf, "부활 버튼이 안 보임");
 
         FailCanvas.Instance.OnClickeResume(); // 광고(AdManager 없음 → 성공 처리) 후 부활
@@ -213,18 +217,21 @@ public class WaveResultPlayTest : InGamePlayTestBase
         Assert.AreEqual(KingSlime.Instance.health.MaxHp, KingSlime.Instance.CurHp, 0.01f, "부활 후 체력 가득");
         Assert.AreEqual(lastCleared + 1, GameManager.Instance.waveIdx, "마지막으로 종료된 wave의 다음 wave부터");
         Assert.IsFalse(GameManager.Instance.accWaves.Any(w => w != null && w.waveIdx > lastCleared + 1), "이후 wave가 남아 있음");
-        Assert.AreEqual(gold, UserDataManager.Instance.userData.gold, "부활했는데 보상이 들어감");
+        Assert.AreEqual(exp, UserDataManager.Instance.userMyInfoManager.userMyInfoData.exp, "부활했는데 보상이 들어감");
         yield return WaitRealtime(2f);
 
         // 다시 사망 → 결과 화면: 한 판으로 도전 횟수 +1
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
-        Assert.AreEqual($"일일 부활 {FailCanvas.MAX_DAILY_RESURRECTION_COUNT - 1}", FailCanvas.Instance.leftResurrectionText.text);
+        Assert.AreEqual(ReviveText(FailCanvas.MAX_DAILY_RESURRECTION_COUNT - 1), FailCanvas.Instance.leftResurrectionText.text);
         FailCanvas.Instance.OnClickedCancel();
         yield return WaitFrames(3);
         Assert.AreEqual(tryCount + 1, stage.tryCount, "부활 포함 한 판 = 도전 1회");
         AssertNoErrors();
     }
+
+    // 남은 부활 글씨 (언어 설정과 상관없이 비교)
+    static string ReviveText(int count) => string.Format(TranslateManager.GetText("Resurrection_Daily"), count);
 
     // 일일 부활 5회 제한: 다 쓰면 버튼 숨김·눌러도 부활 안 함, 날짜가 바뀌면 다시 5회
     [UnityTest]
@@ -242,7 +249,7 @@ public class WaveResultPlayTest : InGamePlayTestBase
 
         KingSlime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
-        Assert.AreEqual("일일 부활 0", FailCanvas.Instance.leftResurrectionText.text);
+        Assert.AreEqual(ReviveText(0), FailCanvas.Instance.leftResurrectionText.text);
         Assert.IsFalse(FailCanvas.Instance.adRetryButton.activeSelf, "횟수를 다 썼는데 부활 버튼이 보임");
         FailCanvas.Instance.OnClickeResume();
         yield return WaitFrames(3);

@@ -21,12 +21,12 @@ public class ProductDataTableTest
     public void LoadsRows()
     {
         Assert.IsNotEmpty(table.productDatas, "ProductData.csv에서 읽은 상품 없음");
-        var gold = table.productDatas.First(d => d.key == "Gold_1000");
-        Assert.AreEqual(CurrencyType.Dia, gold.currencyType);
-        Assert.AreEqual(12f, gold.price);
+        var pass = table.productDatas.First(d => d.key == "HeroPass");
+        Assert.AreEqual(CurrencyType.InApp, pass.currencyType);
+        Assert.AreEqual(UnityEngine.Purchasing.ProductType.Subscription, pass.productType);
         var removeAd = table.productDatas.First(d => d.key == "RemoveAd");
         Assert.AreEqual("remove_ad", removeAd.productId);
-        Assert.AreEqual(4.99f, removeAd.price, 0.001f);
+        Assert.AreEqual(7.99f, removeAd.price, 0.001f);
     }
 
     [Test]

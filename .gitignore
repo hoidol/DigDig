@@ -87,3 +87,11 @@ unity_project/build
 # 테스트 실행 기록
 /Assets/Resources/PerformanceTestRunInfo.json*
 /Assets/Resources/PerformanceTestRunSettings.json*
+
+# (2026-11-27) 로컬 판 이어하기 저장 파일 (에디터에선 Assets 아래에 생김)
+Assets/LocalGameSave.json
+Assets/LocalGameSave.json.meta
+Assets/PlayRecordCurrent.json
+Assets/PlayRecordCurrent.json.meta
+Assets/PlayRecordBackup.json
+Assets/PlayRecordBackup.json.meta

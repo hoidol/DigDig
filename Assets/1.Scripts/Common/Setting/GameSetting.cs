@@ -33,8 +33,10 @@ public class GameSetting
 
    // 마지막 wave(표시 번호, 2026-11-19 무한 → 80, 2026-11-20 → 60, 2026-11-26 → 50). 이 wave(보스)를 처치하면 게임 클리어
    public const int LAST_WAVE = 50;
-   // (2026-11-26) 마지막 보스 wave에는 보스와 함께 일반 적도 이만큼 (ENEMY_SPAWN_INTERVAL 간격, BossWave). 다른 보스 wave는 보스만
-   public const int FINAL_BOSS_WAVE_NORMAL_COUNT = 100;
+   // (2026-11-26) 마지막 보스 wave에는 보스와 함께 일반 적도 이만큼 (FINAL_BOSS_WAVE_SPAWN_INTERVAL 간격, BossWave). 다른 보스 wave는 보스만
+   // (2026-11-27) 100 → 50마리, 간격 0.5 → 2초, 보스를 잡으면 남은 소환 취소
+   public const int FINAL_BOSS_WAVE_NORMAL_COUNT = 50;
+   public const float FINAL_BOSS_WAVE_SPAWN_INTERVAL = 2f;
    // N번째 wave(1부터)가 BOSS_WAVE_INTERVAL의 배수면 보스, ELITE_WAVE_INTERVAL의 배수면 엘리트 (보스 우선)
    public const int ELITE_WAVE_INTERVAL = 5;
    public const int BOSS_WAVE_INTERVAL = 25; // (2026-11-26) 20 → 25: 보스 = wave 25·50

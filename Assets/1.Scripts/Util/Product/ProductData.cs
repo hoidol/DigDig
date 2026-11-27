@@ -8,6 +8,8 @@ public class ProductData
     public static string GetDesc(string key) => TranslateManager.GetText($"Product.{key}.Desc");
     // public string adId; //광고용
     public CurrencyType currencyType;
+    // (2026-11-27) 인앱 상품 종류 (ProductData.csv ProductType 열: NonConsumable / Consumable / Subscription). 인앱이 아니면 안 씀
+    public UnityEngine.Purchasing.ProductType productType = UnityEngine.Purchasing.ProductType.NonConsumable;
     public float price; // 재화 = 개수, 인앱 = 스토어 가격을 못 받을 때 표시용(USD)
     public string GetPriceToString()
     {

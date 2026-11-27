@@ -14,9 +14,10 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
     public GameObject newRecordObj;
     public RewardPanel[] rewardPanels;
     public GameObject adDoubleRewardButton; // 광고 보고 보상 2배 (한 판에 1번)
+    // (2026-11-27) 게임 기록: 통계 칸 + 피해 순위 (씬에 만들어 연결: Tools/InGame/Add Result Stats To ResultCanvas)
+    public ResultStatsPanel statsPanel;
 
-    // 이번 결과 화면에서 지급한 기본 보상 (2배 = 같은 양을 한 번 더 지급)
-    int rewardGold;
+    // 이번 결과 화면에서 지급한 기본 보상 (2배 = 같은 양을 한 번 더 지급). (2026-11-27) 골드 삭제 → 경험치만
     int rewardExp;
     bool isDoubled;
     bool isWatchingAd; // 광고 보는 동안 중복 클릭·홈 이동 방지
@@ -29,6 +30,12 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
 
     public override void OpenCanvas(Action closeCallback = null)
     {
+        // (2026-11-27) 멀티 판: 싱글 결과·보상 대신 멀티 결과 창 (순위·전적, MultiInGameSession)
+        if (MultiGame.IsActive && MultiInGameSession.Instance != null)
+        {
+            MultiInGameSession.Instance.OnLocalGameEnded(GameManager.Instance.isCleared);
+            return;
+        }
 
         base.OpenCanvas(closeCallback);
 
@@ -40,6 +47,11 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
     void UpdateCanvas()
     {
         string stageKey = GameManager.Instance.stageData.key;
+        if (!MultiGame.IsActive)
+        {
+            LocalGameSave.Clear(); // (2026-11-27) 싱글 판이 끝남 → 이어하기 저장 삭제
+            PlayRecorder.Finish(GameManager.Instance.isCleared); // 플레이 기록: 로컬 백업 → 서버
+        }
         // 한 판 = 결과 화면까지 (부활해도 같은 판)
         UserDataManager.Instance.userStageManager.TryStage(stageKey);
         GameEventBus.Publish(new TryStageEvent(stageKey));
@@ -82,10 +94,11 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
                 tipPanel.Hide();
         }
 
-        int gold = passedWaveCount;
-
-        if (gold > 0)
-            UserDataManager.Instance.AddGold(gold);
+        // 게임 기록 (최고 기록 = 이번 판 포함, 표시 번호)
+        if (statsPanel != null)
+            statsPanel.Show(Mathf.Max(userStage.maxWave, GameManager.Instance.waveIdx) + 1);
+        else
+            Debug.LogWarning("[ResultCanvas] statsPanel 없음 — 메뉴 Tools/InGame/Add Result Stats To ResultCanvas");
 
         //최대 깊이에 따라서 보상 받게 하자
         // float distance = Vector2.Distance(Character.Instance.transform.position,Vector2.zero); 
@@ -96,8 +109,6 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         rewardExp = UserMyInfoManager.GetGainExp(myInfo.userMyInfoData.lv, passedWaveCount / 2);
         myInfo.AddExp(rewardExp);
         UserMyInfoManager.unshownGainExp += rewardExp; // 로비에서 바가 차오르는 연출
-
-        rewardGold = gold;
 
         ShowRewards();
         SoundManager.Play(SFXType.RewardGet);
@@ -120,8 +131,6 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         List<RewardData> rewardDatas = new List<RewardData>();
         if (rewardExp > 0)
             rewardDatas.Add(new RewardData() { rewardType = RewardType.Exp, value = (rewardExp * mul).ToString() });
-        if (rewardGold > 0)
-            rewardDatas.Add(new RewardData() { rewardType = RewardType.Gold, value = (rewardGold * mul).ToString() });
 
         for (int i = 0; i < rewardPanels.Length; i++)
         {
@@ -144,12 +153,12 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             adDoubleRewardButton.SetActive(!isDoubled && rewardDatas.Count > 0);
     }
 
-    // 광고 보고 보상 2배 (경험치·골드 모두). 광고 성공 시에만, 광고 제거 구매자는 광고 없이
+    // 광고 보고 보상 2배 (경험치). 광고 성공 시에만, 광고 제거 구매자는 광고 없이
     public void OnClickedDoubleReward()
     {
         if (isDoubled || isWatchingAd)
             return;
-        if (rewardExp <= 0 && rewardGold <= 0)
+        if (rewardExp <= 0)
             return;
 
         isWatchingAd = true;
@@ -174,9 +183,6 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
             UserDataManager.Instance.userMyInfoManager.AddExp(rewardExp);
             UserMyInfoManager.unshownGainExp += rewardExp;
         }
-        if (rewardGold > 0)
-            UserDataManager.Instance.AddGold(rewardGold);
-
         ShowRewards(true);
         SoundManager.Play(SFXType.RewardDouble);
     }
@@ -186,6 +192,11 @@ public class ResultCanvas : CanvasUI<ResultCanvas>
         if (isWatchingAd)
             return;
         CloseCanvas();
+        if (MultiGame.IsActive && MultiMatchManager.Exists) // (2026-11-27) 멀티 판을 나감 (멀티 상태 정리 + 로비, 싱글 저장본은 로비 [이어하기])
+        {
+            MultiMatchManager.Instance.ExitMultiGame();
+            return;
+        }
         FadeCanvs.Instance.FadeOutIn(null, () => { SceneManager.LoadScene("Lobby"); });
     }
 }

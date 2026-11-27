@@ -2,14 +2,15 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-// 패키지 상품: 하나를 사면 rewards(재화 여러 종)를 한 번에 지급. 한 번만 살 수 있고 구매하면 패널을 숨긴다
-// 구매 버튼 onPurchased에 Purchased 등록. 구매 여부는 하위 버튼 key의 구매 기록으로 판단
+// 한 번만 사는 인앱 상품 칸 (2026-11-27 판매 상품 = 광고 제거·게임 속도·기본 게임 팩 + 용사 패스(HeroPassPanel)). 구매하면 패널을 숨긴다
+// 구매 여부 = 하위 버튼 key의 구매 기록 (광고 제거·게임 속도 칸은 효과를 이미 가졌는지, 기본 게임 팩으로 얻은 경우 포함)
+// rewards = 구매 시 추가 지급 재화(에너지), 구매 버튼 onPurchased에 Purchased 등록
 public class PackageProductPanel : ProductPanel
 {
     [System.Serializable]
     public class Reward
     {
-        public CurrencyType currencyType; // Gold / Dia / Energe
+        public CurrencyType currencyType; // Energe
         public int amount;
     }
 
@@ -20,7 +21,7 @@ public class PackageProductPanel : ProductPanel
     // 구매 완료 토스트 (Translate key)
     protected virtual string PurchasedMessageKey => "Purchase_Package";
 
-    public bool IsPurchased
+    public virtual bool IsPurchased
     {
         get
         {
@@ -59,8 +60,6 @@ public class PackageProductPanel : ProductPanel
         UserDataManager user = UserDataManager.Instance;
         switch (reward.currencyType)
         {
-            case CurrencyType.Gold: user.AddGold(reward.amount); break;
-            case CurrencyType.Dia: user.AddDia(reward.amount); break;
             case CurrencyType.Energe: user.AddEnerge(reward.amount); break;
             default:
                 Debug.LogError($"[{name}] 패키지로 지급할 수 없는 재화 : {reward.currencyType}");

@@ -448,6 +448,7 @@ public class MinionOfferSystem : MonoBehaviour
             tile.SetTileObject(minion);
             SoundManager.Play(SFXType.MinionAppear);
             AchievementManager.Report(AchievementType.SpawnMinion);
+            GameResultStats.RecordCardPlaced();
         }
         else if (tile.tileObject is Minion target && CanMergeCard(key, cardLevel, target))
         {
@@ -458,6 +459,7 @@ public class MinionOfferSystem : MonoBehaviour
             SoundManager.Play(SFXType.MinionMerge);
             MinionFieldController.Instance.mergeCount++;
             AchievementManager.Report(AchievementType.MergeMinion);
+            GameResultStats.RecordCardPlaced();
             GameEventBus.Publish(new MergedMinionEvent());
         }
         else

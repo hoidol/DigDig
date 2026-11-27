@@ -149,6 +149,172 @@ public static class InGameUiBuilders
         Done(levelUp.gameObject, $"LevelUpCanvas:{(made.Length > 0 ? made : " (바꿀 것 없음)")}");
     }
 
+    // (2026-11-27) Lv.1 용사 선택 카드: LevelUpCanvas 카드 줄(LevelUpContainer) 옆에 HeroSelectContainer + 카드 1장 (일반 카드 모양 복사 → HeroSelectCard)
+    // 카드 = 왼쪽 아이콘 · 가운데 이름 + "정예 버프 : …" · 오른쪽 정예 버프 칸 3×3 (레벨 배지 등 다른 글씨 없음). 이미 있으면 지우고 새로
+    [MenuItem("Tools/InGame/Add Hero Select Cards To LevelUpCanvas")]
+    public static void AddHeroSelectCards()
+    {
+        var levelUp = Object.FindFirstObjectByType<InGame.LevelUpCanvas>(FindObjectsInactive.Include);
+        LevelUpStatPanel src = levelUp != null && levelUp.levelUpStatPanels != null ? System.Array.Find(levelUp.levelUpStatPanels, p => p != null) : null;
+        if (src == null)
+        {
+            Debug.LogWarning("[InGameUiBuilders] LevelUpCanvas 또는 레벨업 카드가 없음 (InGame 씬을 열고 실행)");
+            return;
+        }
+        Undo.RecordObject(levelUp, "Add Hero Select Cards");
+        var srcContainer = (RectTransform)src.transform.parent;
+        Transform oldContainer = srcContainer.parent.Find("HeroSelectContainer");
+        if (oldContainer != null)
+            Undo.DestroyObjectImmediate(oldContainer.gameObject);
+
+        // 카드 줄: LevelUpContainer와 같은 자리·같은 세로 레이아웃
+        var containerGo = new GameObject("HeroSelectContainer", typeof(RectTransform));
+        Undo.RegisterCreatedObjectUndo(containerGo, "Add Hero Select Cards");
+        var container = (RectTransform)containerGo.transform;
+        container.SetParent(srcContainer.parent, false);
+        container.SetSiblingIndex(srcContainer.GetSiblingIndex() + 1);
+        container.anchorMin = srcContainer.anchorMin;
+        container.anchorMax = srcContainer.anchorMax;
+        container.pivot = srcContainer.pivot;
+        container.sizeDelta = srcContainer.sizeDelta;
+        container.anchoredPosition = srcContainer.anchoredPosition;
+        var srcLayout = srcContainer.GetComponent<VerticalLayoutGroup>();
+        if (srcLayout != null)
+            EditorUtility.CopySerialized(srcLayout, containerGo.AddComponent<VerticalLayoutGroup>());
+
+        // 카드 1장: 일반 카드 복사 → 컴포넌트 교체
+        GameObject cardGo = Object.Instantiate(src.gameObject, container);
+        cardGo.name = "HeroSelectCard";
+        cardGo.SetActive(true);
+        Object.DestroyImmediate(cardGo.GetComponent<LevelUpStatPanel>());
+        var card = cardGo.AddComponent<HeroSelectCard>();
+        Transform t = cardGo.transform;
+        card.titleText = FindComp<TMPro.TMP_Text>(t, "TitleText");
+        card.eliteBuffText = FindComp<TMPro.TMP_Text>(t, "DescText");
+        card.thumImage = FindComp<Image>(t, "IconBg/Thum");
+        card.iconBgImage = FindComp<Image>(t, "IconBg");
+        card.borderImage = FindComp<Image>(t, "Border");
+        Transform badge = t.Find("IconBg/LevelBadge");
+        if (badge != null)
+            Object.DestroyImmediate(badge.gameObject);
+
+        // 배치 (카드 1000×300): 아이콘 왼쪽 · 글씨 가운데 · 칸 그림 오른쪽
+        if (card.iconBgImage != null)
+        {
+            card.iconBgImage.gameObject.SetActive(true);
+            Place(card.iconBgImage.rectTransform, new Vector2(-355f, 0f), new Vector2(230f, 230f));
+        }
+        if (card.titleText != null)
+        {
+            Place(card.titleText.rectTransform, new Vector2(-25f, 55f), new Vector2(390f, 80f));
+            card.titleText.alignment = TMPro.TextAlignmentOptions.MidlineLeft;
+            card.titleText.text = "용사 이름";
+        }
+        if (card.eliteBuffText != null)
+        {
+            Place(card.eliteBuffText.rectTransform, new Vector2(-25f, -45f), new Vector2(390f, 110f));
+            card.eliteBuffText.alignment = TMPro.TextAlignmentOptions.MidlineLeft;
+            card.eliteBuffText.fontSize = 40;
+            card.eliteBuffText.enableAutoSizing = false;
+            card.eliteBuffText.text = "정예 버프 : 공격력 +10%";
+        }
+        Transform grid = t.Find("ShapeGrid");
+        if (grid != null)
+        {
+            grid.gameObject.SetActive(true);
+            SetShapeGrid((RectTransform)grid, new Vector2(330f, 0f));
+            card.shapeCells = new Image[9];
+            for (int i = 0; i < 9 && i < grid.childCount; i++)
+                card.shapeCells[i] = grid.GetChild(i).GetComponent<Image>();
+        }
+        EditorUtility.SetDirty(card);
+        containerGo.SetActive(false);
+        levelUp.heroSelectCards = new[] { card };
+        EditorUtility.SetDirty(levelUp);
+        Done(containerGo, "HeroSelectContainer/HeroSelectCard");
+    }
+
+    // (2026-11-27) 레벨업 카드(LevelUpCard: 미니언 강화·용사 강화) 안을 가로형으로: 왼쪽 아이콘(또는 정예 칸 그림) · 오른쪽 이름 + 설명
+    // 카드 자체가 선택 (선택하기 버튼이 남아 있으면 지움). 이후 모양은 씬에서 직접 수정
+    [MenuItem("Tools/InGame/Layout LevelUp Card Horizontal")]
+    public static void LayoutLevelUpCardHorizontal()
+    {
+        var levelUp = Object.FindFirstObjectByType<InGame.LevelUpCanvas>(FindObjectsInactive.Include);
+        LevelUpStatPanel card = levelUp != null && levelUp.levelUpStatPanels != null ? System.Array.Find(levelUp.levelUpStatPanels, p => p != null) : null;
+        if (card == null)
+        {
+            Debug.LogWarning("[InGameUiBuilders] 레벨업 카드가 없음 (InGame 씬을 열고 실행)");
+            return;
+        }
+        Transform t = card.transform;
+        foreach (var rt in t.GetComponentsInChildren<RectTransform>(true))
+            Undo.RecordObject(rt, "Layout LevelUp Card");
+        foreach (var tmp in t.GetComponentsInChildren<TMPro.TMP_Text>(true))
+            Undo.RecordObject(tmp, "Layout LevelUp Card");
+        int removed = 0;
+        foreach (var b in t.GetComponentsInChildren<Button>(true))
+        {
+            Undo.DestroyObjectImmediate(b.gameObject);
+            removed++;
+        }
+        Transform icon = t.Find("IconBg");
+        if (icon != null)
+            Place((RectTransform)icon, new Vector2(-355f, 0f), new Vector2(230f, 230f));
+        Transform grid = t.Find("ShapeGrid");
+        if (grid != null)
+            SetShapeGrid((RectTransform)grid, new Vector2(-355f, 0f));
+        if (card.titleText != null)
+        {
+            Place(card.titleText.rectTransform, new Vector2(105f, 55f), new Vector2(620f, 80f));
+            card.titleText.alignment = TMPro.TextAlignmentOptions.MidlineLeft;
+        }
+        if (card.descriptionText != null)
+        {
+            Place(card.descriptionText.rectTransform, new Vector2(105f, -45f), new Vector2(620f, 120f));
+            card.descriptionText.alignment = TMPro.TextAlignmentOptions.MidlineLeft;
+        }
+        // 용사 선택 카드 칸 그림도 같은 칸 크기로
+        if (levelUp.heroSelectCards != null)
+            foreach (var hero in levelUp.heroSelectCards)
+            {
+                Transform hg = hero != null ? hero.transform.Find("ShapeGrid") : null;
+                if (hg == null)
+                    continue;
+                Undo.RecordObject(hg, "Layout LevelUp Card");
+                SetShapeGrid((RectTransform)hg, ((RectTransform)hg).anchoredPosition);
+            }
+        EditorUtility.SetDirty(card);
+        Done(card.gameObject, $"LevelUpCard 가로형 (버튼 {removed}개 삭제)");
+    }
+
+    // 정예 칸 3×3 그림: 칸 72 · 간격 10 (GridLayoutGroup이 있으면 그걸로, 없으면 직접 배치)
+    static void SetShapeGrid(RectTransform grid, Vector2 pos)
+    {
+        const float CELL = 72f, GAP = 10f;
+        Place(grid, pos, Vector2.one * (CELL * 3 + GAP * 2));
+        var layout = grid.GetComponent<GridLayoutGroup>();
+        if (layout != null)
+        {
+            Undo.RecordObject(layout, "Shape Grid");
+            layout.cellSize = Vector2.one * CELL;
+            layout.spacing = Vector2.one * GAP;
+            layout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            layout.constraintCount = 3;
+            layout.childAlignment = TextAnchor.MiddleCenter;
+            return;
+        }
+        for (int i = 0; i < 9 && i < grid.childCount; i++)
+            Place((RectTransform)grid.GetChild(i), new Vector2((i % 3 - 1) * (CELL + GAP), -(i / 3 - 1) * (CELL + GAP)), Vector2.one * CELL);
+    }
+
+    // 가운데 기준으로 자리·크기
+    static void Place(RectTransform rt, Vector2 pos, Vector2 size)
+    {
+        rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = size;
+        rt.anchoredPosition = pos;
+    }
+
     static T FindComp<T>(Transform root, string path) where T : Component
     {
         Transform t = root.Find(path);

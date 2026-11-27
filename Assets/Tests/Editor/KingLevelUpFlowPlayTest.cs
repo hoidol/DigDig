@@ -53,17 +53,20 @@ public class KingLevelUpFlowPlayTest : InGamePlayTestBase
         yield return LevelUp(king);
         Assert.IsTrue(canvas.rewardPanel != null && canvas.rewardPanel.gameObject.activeInHierarchy, "레벨업 보상(주사위 코인 +1) 표시");
         Assert.AreEqual(InGame.LevelUpCanvas.Step.Hero, canvas.CurrentStep, "레벨업 첫 화면 = 용사 카드");
-        var shown = Shown(canvas);
-        Assert.AreEqual(3, shown.Length, "용사 3장");
+        // (2026-11-27) 용사 선택 = 전용 카드(HeroSelectCard): 이름 + "정예 버프 : …" 한 줄만
+        var heroCards = canvas.heroSelectCards.Where(c => c != null && c.gameObject.activeInHierarchy).ToArray();
+        Assert.AreEqual(3, heroCards.Length, "용사 3장 (HeroSelectCard)");
+        Assert.AreEqual(0, Shown(canvas).Count(p => p.gameObject.activeInHierarchy), "용사 선택 중엔 일반 카드 줄 숨김");
+        StringAssert.StartsWith("정예 버프 : ", heroCards[0].eliteBuffText.text);
         AbilityData archer = setting.heroAbilities.First(d => d.prefab is RangerHero);
         int bonusBefore = king.shotModifier.bonusShootCount;
         var heroTiles = new[] { new Vector2Int(-1, -1), new Vector2Int(1, -1) };
-        shown[0].SetHeroData(archer, heroTiles);
-        shown[0].OnClickedSelect();
+        heroCards[0].Set(archer, heroTiles);
+        heroCards[0].OnClickedSelect();
         yield return WaitFrames(2);
         Assert.AreEqual(1, inv.GetLevel(archer));
         // (2026-11-26) 용사를 고르면 용사 스탯 변화 화면 (킹 기본 → 용사 Lv.1 + 정예병 칸)
-        yield return ConfirmStatScreen(canvas, "정예병 칸");
+        yield return ConfirmStatScreen(canvas, "정예 버프");
         // (2026-11-25) 미니언 강화 카드 새로고침: 무료 2번 → 광고 3번 (테스트에선 광고 바로 성공), 다 쓰면 버튼 숨김
         Assert.IsTrue(canvas.IsStatStep);
         Assert.IsTrue(canvas.rerollButton != null && canvas.rerollButton.gameObject.activeInHierarchy, "새로고침 버튼");
