@@ -101,7 +101,7 @@ public static class MultiGame
     public const float AI_FILL_WAIT_SEC = 300f;
     public const float AI_TICK_SEC = 2f;          // 방장이 봇 상황을 올리는 간격
     public const string AI_UID_PREFIX = "ai_";
-    static readonly string[] AI_NAME_HEAD = { "슬라임", "꼬마용사", "마왕", "도깨비", "불꽃", "얼음", "번개", "달빛", "별빛", "초코", "말랑", "킹" };
+    static readonly string[] AI_NAME_HEAD = { "슬라임", "꼬마용사", "마왕", "도깨비", "불꽃", "얼음", "번개", "달빛", "별빛", "초코", "말랑", "슬라임" };
     public static string RandomAiNickname(System.Random rng) => $"{AI_NAME_HEAD[rng.Next(AI_NAME_HEAD.Length)]}{rng.Next(10, 1000)}";
     public static bool IsAiUid(string uid) => uid != null && uid.StartsWith(AI_UID_PREFIX);
 
@@ -154,7 +154,7 @@ public class MultiPlayerState
     public int aiSlot = -1;    // 재생하는 기록 칸 (PlayRecordStore)
     // ---- 판 상황 (MultiStatusReporter가 브레이크타임·wave 시작마다 씀)
     public int wave;          // 지금 wave (브레이크타임이면 다음 wave)
-    public int kingLv;
+    public int slimeLv;
     public string heroKey;    // HeroData key (없으면 빈칸)
     public string minions;    // "Key:표시레벨,..." (MultiGame.FormatMinions)
     public string board;      // 판 배치 JSON (MultiBoard, 보기 화면)
@@ -201,7 +201,7 @@ public class MultiBoard
         public bool evolved;
         public string rune;     // 룬 key
         public int runeLv;
-        public bool king;
+        public bool slime;
         public bool blocked;
     }
     public List<Cell> cells = new List<Cell>();

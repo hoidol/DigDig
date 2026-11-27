@@ -100,25 +100,25 @@ public class ClearTipPlayTest : InGamePlayTestBase
         UserDataManager.Instance.userStageManager.ClearStage(key);
         Assert.IsTrue(ClearTipManager.CanWrite(key), "클리어하면 팁 자격");
         input.Show(key);
-        input.inputField.text = "  킹을 가운데에  ";
+        input.inputField.text = "  슬라임을 가운데에  ";
         input.OnClickedSubmit();
         yield return WaitFrames(3);
         Assert.IsTrue(input.Submitted, "등록 완료");
         Assert.IsFalse(input.inputField.interactable, "등록 후 입력 잠김");
         ticker.Refresh(true);
         yield return WaitFrames(3);
-        StringAssert.EndsWith(": 킹을 가운데에", ticker.CurrentText, "올린 팁이 띠지에 (다른 팁이 없으면 첫 줄)");
+        StringAssert.EndsWith(": 슬라임을 가운데에", ticker.CurrentText, "올린 팁이 띠지에 (다른 팁이 없으면 첫 줄)");
 
         // 다른 팁이 있으면 내 팁은 2번째 줄
         server[key].Add(new ClearTip { uid = "u9", nickname = "고수", text = "보스 전엔 룬을", updatedAt = 999 });
         ClearTipManager.ClearCacheForTest();
-        ClearTipManager.UploadAsync(key, "킹을 가운데에").Forget(); // 앱을 켠 동안 내 팁 기억 (캐시 초기화로 지워져서 다시)
+        ClearTipManager.UploadAsync(key, "슬라임을 가운데에").Forget(); // 앱을 켠 동안 내 팁 기억 (캐시 초기화로 지워져서 다시)
         yield return WaitFrames(2);
         ticker.Refresh(true);
         yield return WaitFrames(3);
         Assert.AreEqual(2, ticker.Tips.Count);
         Assert.AreEqual("고수 : 보스 전엔 룬을", ticker.CurrentText, "첫 줄 = 다른 사람 팁");
-        StringAssert.EndsWith(": 킹을 가운데에", ticker.Tips[1].DisplayText, "내 팁 = 2번째");
+        StringAssert.EndsWith(": 슬라임을 가운데에", ticker.Tips[1].DisplayText, "내 팁 = 2번째");
         Object.Destroy(input.gameObject);
     }
 }

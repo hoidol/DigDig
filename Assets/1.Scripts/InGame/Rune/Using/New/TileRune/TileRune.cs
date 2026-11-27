@@ -44,7 +44,7 @@ public abstract class TileRune : Rune, ITileRune
         return desc;
     }
 
-    // 칸 위 유닛(미니언·킹)에게 효과를 주는 룬인지 (설명 안내용). 칸 없이 바로 효과(슬라임 수 증가)·타일 고치기는 false
+    // 칸 위 유닛(미니언·슬라임)에게 효과를 주는 룬인지 (설명 안내용). 칸 없이 바로 효과(슬라임 수 증가)·타일 고치기는 false
     public virtual bool AppliesToTileUnit => NeedTile;
 
     void ApplyLevel()
@@ -116,7 +116,7 @@ public abstract class TileRune : Rune, ITileRune
 
         // 캐릭터 위치에서 타일로 점프해서 날아감
         transform.DOKill();
-        transform.position = KingSlime.Instance.transform.position;
+        transform.position = Slime.Instance.transform.position;
         transform.DOJump(tile.transform.position, JUMP_POWER, 1, JUMP_DURATION).SetEase(Ease.OutQuad);
     }
     const float JUMP_POWER = 1.5f;

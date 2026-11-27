@@ -280,16 +280,16 @@ Minion_Bought	{0} 구매 완료!	{0} purchased!
 Currency_NotEnough	{0}이(가) 부족합니다.	Not enough {0}.
 Minion_BuyConfirm_Title	미니언 구매	Buy Minion
 Minion_BuyConfirm_Body	{0}을(를) {1} {2:N0}에 구매할까요?	Buy {0} for {2:N0} {1}?
-KingStat_RemainPoint	남은 포인트 {0}	Points left: {0}
-KingStat_Locked	Lv.{0}부터 찍을 수 있습니다.	Unlocks at Lv.{0}.
-KingStat_TierFull	이 묶음은 최대 {0}포인트까지 찍을 수 있습니다.	This row allows up to {0} points.
-KingStat_NoPoint	남은 포인트가 없습니다.	No points left.
-KingStat_TierNoPoint	이 줄의 다음 포인트는 Lv.{0}에 받습니다.	This row gets its next point at Lv.{0}.
-KingStat_ResetTitle	포인트 초기화	Reset Points
-KingStat_ResetBody	찍은 포인트를 모두 돌려받습니다. (무료)	Refund all spent points. (Free)
-KingStat_ResetDone	포인트를 초기화했습니다.	Points reset.
-KingStat_TierRemain	남은 포인트 {0}	Points left: {0}
-KingStat_PointGained	킹 스탯 포인트를 찍을 수 있습니다! (남은 포인트 {0})	You have king stat points to spend! ({0} left)
+SlimeStat_RemainPoint	남은 포인트 {0}	Points left: {0}
+SlimeStat_Locked	Lv.{0}부터 찍을 수 있습니다.	Unlocks at Lv.{0}.
+SlimeStat_TierFull	이 묶음은 최대 {0}포인트까지 찍을 수 있습니다.	This row allows up to {0} points.
+SlimeStat_NoPoint	남은 포인트가 없습니다.	No points left.
+SlimeStat_TierNoPoint	이 줄의 다음 포인트는 Lv.{0}에 받습니다.	This row gets its next point at Lv.{0}.
+SlimeStat_ResetTitle	포인트 초기화	Reset Points
+SlimeStat_ResetBody	찍은 포인트를 모두 돌려받습니다. (무료)	Refund all spent points. (Free)
+SlimeStat_ResetDone	포인트를 초기화했습니다.	Points reset.
+SlimeStat_TierRemain	남은 포인트 {0}	Points left: {0}
+SlimeStat_PointGained	슬라임 스탯 포인트를 찍을 수 있습니다! (남은 포인트 {0})	You have slime stat points to spend! ({0} left)
 Stage_Title	스테이지 {0}	Stage {0}
 Stage_Locked	스테이지 {0} 보통을 클리어해야 합니다.	Clear Stage {0} Normal first.
 HeroUpgrade_DiceNextBreak	다음 웨이브 주사위 +1	Next wave dice +1
@@ -339,10 +339,10 @@ HeroUpgrade.MeleeAttack	근거리 병과	Melee Corps
 HeroUpgrade.MeleeAttack.Desc	근거리(근접·회전형) 미니언 공격력 +{0}%	+{0}% attack for melee/orbit minions
 HeroUpgrade.MagicAttack	마법 병과	Magic Corps
 HeroUpgrade.MagicAttack.Desc	마법 미니언 공격력 +{0}%	+{0}% attack for magic minions
-HeroUpgrade.KingHitEnergyCharge	투혼	Fighting Spirit
-HeroUpgrade.KingHitEnergyCharge.Desc	킹이 피해를 받으면 피해 1당 용사 에너지 충전 {0}초	Each 1 damage the king takes charges hero energy by {0}s
-HeroUpgrade.KingHitEliteRage	복수심	Vengeance
-HeroUpgrade.KingHitEliteRage.Desc	킹이 피해를 받으면 정예병 칸 미니언 3초간 공격력 +{0}%	When the king is hit, elite-tile minions gain +{0}% attack for 3s
+HeroUpgrade.SlimeHitEnergyCharge	투혼	Fighting Spirit
+HeroUpgrade.SlimeHitEnergyCharge.Desc	슬라임이 피해를 받으면 피해 1당 용사 에너지 충전 {0}초	Each 1 damage the slime takes charges hero energy by {0}s
+HeroUpgrade.SlimeHitEliteRage	복수심	Vengeance
+HeroUpgrade.SlimeHitEliteRage.Desc	슬라임이 피해를 받으면 정예병 칸 미니언 3초간 공격력 +{0}%	When the slime is hit, elite-tile minions gain +{0}% attack for 3s
 HeroUpgrade.ResistEase	꿰뚫는 공격	Piercing Strikes
 HeroUpgrade.ResistEase.Desc	내성 상대로 받는 피해 감소 {0}%p 완화	Resistance penalty eased by {0}%p
 HeroUpgrade.AttackVsDefence	{0} → {1}	{0} → {1}
@@ -420,8 +420,8 @@ MoveMinion_Body	주사위 코인 {0}개를 써서 옮길까요?	Spend {0} dice c
 Shop_Tab_Package	패키지	Package
 Shop_Tab_Hero	용사	Hero
 Shop_Tab_Minion	미니언	Minion
-DamageMeter_King	킹슬라임	King Slime
-DamageMeter_KingSkill	스킬 {0}%	Skill {0}%
+DamageMeter_Slime	슬라임	Slime
+DamageMeter_SlimeSkill	스킬 {0}%	Skill {0}%
 Result_Stat_PlayTime	플레이 시간	Play Time
 Result_Stat_BestWave	최고 기록	Best
 Result_Stat_Kill	처치한 적	Kills
@@ -430,7 +430,7 @@ Result_Stat_StrongKill_Value	엘리트 {0} · 보스 {1}	Elite {0} · Boss {1}
 Result_Stat_Leak	놓친 적	Leaked
 Result_Stat_Card	놓은 카드	Cards Placed
 Result_Stat_Merge	합성 · 진화	Merges · Evolutions
-Result_Stat_King	용사	Hero
+Result_Stat_Slime	용사	Hero
 Result_DamageTitle	피해 순위	Damage
 Unlock_NotReady	준비 중	Coming soon
 Unlock_Confirm_Ad	광고를 보고 {0}을(를) 해금할까요?	Watch an ad to unlock {0}?
@@ -489,7 +489,7 @@ Multi_CodeLabel	코드 {0}	Code {0}
 Multi_CodeNotReady	방 코드를 만드는 중입니다.	Room code is not ready yet.
 Multi_Invite	친구 초대	Invite
 Multi_ShareCode	코드 공유	Share Code
-Multi_InviteText	마왕을 꿈꾸는 슬라임과 함께 대전해요! {0}	Battle with me in King Slime! {0}
+Multi_InviteText	마왕을 꿈꾸는 슬라임과 함께 대전해요! {0}	Battle with me in Slime! {0}
 Multi_CodeShareText	같이 하자! 방 코드: {0}\n게임 받기: {1}	Join my room! Code: {0}\nGet the game: {1}
 Multi_Host	방장	Host
 Share_Copied	복사했습니다. 붙여 넣어 공유하세요.	Copied. Paste it to share.

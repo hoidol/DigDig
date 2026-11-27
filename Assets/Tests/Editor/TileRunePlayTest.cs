@@ -61,7 +61,7 @@ public class TileRunePlayTest : InGamePlayTestBase
                 Assert.IsTrue(pioneer.CanPickTile(blocked), "개척 타일로 막힌 칸을 고를 수 없음");
 
                 int blockedBefore = TileManager.Instance.tiles.Count(t => t.isBlocked);
-                KingSlime.Instance.AddRune(data.key, blocked).Forget();
+                Slime.Instance.AddRune(data.key, blocked).Forget();
                 yield return WaitFrames(2);
                 Assert.IsFalse(blocked.isBlocked, $"{data.key}: 고른 막힌 칸이 해제되지 않음");
                 Assert.AreEqual(blockedBefore - 1, TileManager.Instance.tiles.Count(t => t.isBlocked), $"{data.key}: 막힌 칸이 1개만 해제되어야 함");
@@ -77,7 +77,7 @@ public class TileRunePlayTest : InGamePlayTestBase
                 Assert.IsFalse(tileRunePrefab.NeedTile, $"{data.key}: 타일 선택이 필요함");
                 int maxBefore = MinionFieldController.Instance.minionMaxCount;
                 int installedBefore = TileManager.Instance.tiles.Count(t => t.tileRune != null);
-                KingSlime.Instance.AddRune(data.key).Forget();
+                Slime.Instance.AddRune(data.key).Forget();
                 yield return WaitFrames(2);
                 Assert.AreEqual(maxBefore + AddMinionSpawnCountRune.ADD_COUNT, MinionFieldController.Instance.minionMaxCount, $"{data.key}: 최대 슬라임 수가 안 늘어남");
                 Assert.AreEqual(installedBefore, TileManager.Instance.tiles.Count(t => t.tileRune != null), $"{data.key}: 타일에 설치됨");
@@ -86,7 +86,7 @@ public class TileRunePlayTest : InGamePlayTestBase
 
             Tile tile = GetFreeTile();
             Assert.IsNotNull(tile, "빈 타일 없음");
-            KingSlime.Instance.AddRune(data.key, tile).Forget();
+            Slime.Instance.AddRune(data.key, tile).Forget();
             yield return WaitFrames(2);
 
             TileRune installed = tile.tileRune as TileRune;
@@ -111,7 +111,7 @@ public class TileRunePlayTest : InGamePlayTestBase
             {
                 if (minion != null)
                     MinionFieldController.Instance.RemoveFieldMinion(minion);
-                KingSlime.Instance.RemoveRune(installed);
+                Slime.Instance.RemoveRune(installed);
             }
             catch (System.Exception e)
             {
@@ -146,7 +146,7 @@ public class TileRunePlayTest : InGamePlayTestBase
         {
             current = $"{c.key}/{c.stat}";
             Tile tile = GetFreeTile(plainTile);
-            KingSlime.Instance.AddRune(c.key, tile).Forget();
+            Slime.Instance.AddRune(c.key, tile).Forget();
             yield return WaitFrames(2);
             Minion onRune = SpawnMinion(HOST_MINION, tile);
             yield return WaitFrames(2);
@@ -159,7 +159,7 @@ public class TileRunePlayTest : InGamePlayTestBase
                 Assert.Less(after, before, $"{current}: 스탯이 내려가지 않음");
 
             MinionFieldController.Instance.RemoveFieldMinion(onRune);
-            KingSlime.Instance.RemoveRune((TileRune)tile.tileRune);
+            Slime.Instance.RemoveRune((TileRune)tile.tileRune);
             yield return WaitFrames(2);
         }
         AssertNoErrors();
@@ -190,7 +190,7 @@ public class TileRunePlayTest : InGamePlayTestBase
         Assert.IsFalse(((CrossBuffMinion)buffer).IsRangeExpanded);
 
         MinionFieldController.Instance.RemoveFieldMinion(buffer);
-        KingSlime.Instance.AddRune("MaxExpandBuffRangeTile", center).Forget();
+        Slime.Instance.AddRune("MaxExpandBuffRangeTile", center).Forget();
         yield return WaitFrames(2);
         Assert.IsInstanceOf<ExpandBuffRangeTileRune>(center.tileRune, "버프 범위 확장 아이템이 설치되지 않음");
 

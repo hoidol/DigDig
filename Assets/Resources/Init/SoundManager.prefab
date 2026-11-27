@@ -504,7 +504,7 @@ MonoBehaviour:
     minInterval: 0
     loop: 0
     playOnAwake: 0
-  - name: KingUpgrade
+  - name: SlimeUpgrade
     sfxType: 51
     audioClip: {fileID: 8300000, guid: 806b3206fbe14478a85da553f4920da2, type: 3}
     volume: 0.8

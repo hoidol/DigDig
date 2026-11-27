@@ -1,0 +1,42 @@
+using UnityEngine;
+
+public class SlimeShortcutInfoPanel : MonoBehaviour
+{
+    public InGame.MinionStatPanel[] statPanels;
+    // public OwnItemPanel[] ownItemPanels;
+    public void SetCharacter(Slime character)
+    {
+        gameObject.SetActive(true);
+        // for(int i = 0; i < ownItemPanels.Length; i++)
+        // {
+        //     ownItemPanels[i].gameObject.SetActive(false);
+        // }
+
+        // for(int i = 0; i < Character.Instance.itemInventory.ownItemKeys.Count; i++)
+        // {
+        //     ownItemPanels[i].SetRuneData(RuneData.GetRuneData(Character.Instance.itemInventory.ownItemKeys[i]));
+        // }
+        //공격력
+        //공격 속도
+        //공격 범위
+        StatType[] displayStatTypes =
+        {
+            StatType.AttackPower
+        };
+
+        for (int i = 0; i < statPanels.Length; i++)
+        {
+            if (i < displayStatTypes.Length)
+            {
+                statPanels[i].gameObject.SetActive(true);
+                statPanels[i].titleText.text = character.statMgr.statDic[displayStatTypes[i]].Title;
+                statPanels[i].valueText.text = character.statMgr.statDic[displayStatTypes[i]].value.ToString();
+                statPanels[i].thumImage.sprite = character.statMgr.statDic[displayStatTypes[i]].Thum;
+            }
+            else
+            {
+                statPanels[i].gameObject.SetActive(false);
+            }
+        }
+    }
+}

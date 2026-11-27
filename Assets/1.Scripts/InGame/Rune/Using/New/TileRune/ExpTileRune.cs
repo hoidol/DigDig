@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// (2026-11-21) 경험치 룬: 이 칸 유닛이 적을 처치하면(마지막 타격, Enemy.LastAttacker) 레벨 값% 확률로 킹 경험치 +exp (Values 30/50/70)
+// (2026-11-21) 경험치 룬: 이 칸 유닛이 적을 처치하면(마지막 타격, Enemy.LastAttacker) 레벨 값% 확률로 슬라임 경험치 +exp (Values 30/50/70)
 public class ExpTileRune : TileRune
 {
     public float chance = 30f;
@@ -20,7 +20,7 @@ public class ExpTileRune : TileRune
             return;
         if (Random.Range(0f, 100f) >= chance)
             return;
-        KingSlime.Instance?.AddExp(exp);
+        Slime.Instance?.AddExp(exp);
         EffectManager.PlayPopText(e.position, $"EXP +{exp}", new Color(0.55f, 0.9f, 1f));
     }
 }

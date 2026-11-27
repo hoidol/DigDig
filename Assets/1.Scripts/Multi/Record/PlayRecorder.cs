@@ -70,16 +70,16 @@ public static class PlayRecorder
         if (current == null || GameManager.Instance == null)
             return;
         MultiStatus s = MultiInGameSession.BuildStatus();
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         var frame = new PlayRecord.Frame
         {
             t = GameResultStats.PlayTime,
             at = ServerClock.NowMs,
             wave = s.wave,
-            kingLv = s.kingLv,
+            slimeLv = s.slimeLv,
             heroKey = s.heroKey,
-            hp = king != null && king.MaxHp > 0 ? Mathf.Clamp01(king.CurHp / king.MaxHp) : 1f,
-            diceCoin = king != null ? king.diceCoin : 0,
+            hp = slime != null && slime.MaxHp > 0 ? Mathf.Clamp01(slime.CurHp / slime.MaxHp) : 1f,
+            diceCoin = slime != null ? slime.diceCoin : 0,
             minions = s.minions,
             board = s.board,
         };

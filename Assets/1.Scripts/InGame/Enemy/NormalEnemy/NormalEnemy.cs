@@ -45,12 +45,12 @@ public class NormalEnemy : Enemy
         // 카드 소환 모드: 주사위 코인은 wave 준비 단계 지급만 (처치로는 못 얻음)
         // if (!GameSetting.USE_WAVE_MINION_OFFER && Random.Range(0f, 10f) < 1)
         // {
-        //     KingSlime.Instance.AddDiceCoin(1);
+        //     Slime.Instance.AddDiceCoin(1);
         //     DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{1}");    
         // }
         // // (2026-11-22) 처치 경험치 없음 (경험치는 주사위 코인으로 구매)
         // int gold = GetKillGold(wave);
-        // KingSlime.Instance.AddCoin(gold);
+        // Slime.Instance.AddCoin(gold);
         // SoundManager.Play(SFXType.CoinGet);
         // CoinText.Instantiate().SetCoinText(transform.position, $"+{gold}");
     }

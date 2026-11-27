@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // (2026-11-27) 한 판 결과 통계 (결과 화면 ResultStatsPanel이 읽음). 초기화 = GameManager.StartGame (부활해도 이어서 셈)
-// 피해는 DamageMeterSystem(미니언 종별 + 킹 기본 공격·스킬), 합성 횟수는 MinionFieldController.mergeCount
+// 피해는 DamageMeterSystem(미니언 종별 + 슬라임 기본 공격·스킬), 합성 횟수는 MinionFieldController.mergeCount
 public static class GameResultStats
 {
     public static float PlayTime { get; private set; }     // 실제 시간(초, 배속·일시정지와 무관하게 흐른 시간)
@@ -9,7 +9,7 @@ public static class GameResultStats
     public static int EliteKillCount { get; private set; } // 엘리트·보너스 엘리트
     public static int BossKillCount { get; private set; }
     public static int LeakCount { get; private set; }      // 경로 끝에 도착한 적
-    public static int KingDamageTaken { get; private set; }// 킹이 받은 피해 (체력)
+    public static int SlimeDamageTaken { get; private set; }// 슬라임이 받은 피해 (체력)
     public static int PlacedCardCount { get; private set; }// 놓은 미니언 카드 (빈 칸 소환 + 카드 합성)
     public static int EvolveCount { get; private set; }    // 진화한 미니언
 
@@ -17,7 +17,7 @@ public static class GameResultStats
     {
         PlayTime = 0;
         KillCount = EliteKillCount = BossKillCount = LeakCount = 0;
-        KingDamageTaken = PlacedCardCount = EvolveCount = 0;
+        SlimeDamageTaken = PlacedCardCount = EvolveCount = 0;
     }
 
     public static void AddPlayTime(float seconds) => PlayTime += seconds;
@@ -41,10 +41,10 @@ public static class GameResultStats
             EliteKillCount++;
     }
 
-    public static void RecordKingDamage(float damage)
+    public static void RecordSlimeDamage(float damage)
     {
         if (damage > 0)
-            KingDamageTaken += Mathf.RoundToInt(damage);
+            SlimeDamageTaken += Mathf.RoundToInt(damage);
     }
 
     public static void RecordCardPlaced() => PlacedCardCount++;

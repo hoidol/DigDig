@@ -28,7 +28,7 @@ public interface IMultiBackend
 
     UniTask AddAiPlayerAsync(string roomId, string aiUid, string nickname, int recordSlot); // AI 봇 자리 + 정보 (Ready 상태)
 
-    // 판 상황 (wave·킹·미니언·배치). uid = null이면 나, 아니면 그 AI 봇 (방장)
+    // 판 상황 (wave·슬라임·미니언·배치). uid = null이면 나, 아니면 그 AI 봇 (방장)
     UniTask UpdateStatusAsync(string roomId, MultiStatus status, string uid = null);
     // 웨이브 50 보스 처치 → 도착 시각 기록 + 가장 먼저면 우승(true)
     UniTask<bool> ReportReachAsync(string roomId, string uid = null);
@@ -50,7 +50,7 @@ public class MultiJoinResult
 public class MultiStatus
 {
     public int wave;
-    public int kingLv;
+    public int slimeLv;
     public string heroKey;
     public string minions;
     public string board;

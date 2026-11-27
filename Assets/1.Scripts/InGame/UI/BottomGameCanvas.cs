@@ -9,7 +9,7 @@ public class BottomGameCanvas : MonoBehaviour
     public AllySettingPanel allySettingPanel;
     [FormerlySerializedAs("tileItemInfoPanel")] public TileRuneInfoPanel tileRuneInfoPanel;
     public GameObject hideGameObject; // allySettingPanel이 보이는 동안 숨김. 비우면 하위의 "HideGame"을 찾음
-    // (2026-11-24) wave 중 하단 UI (킹 체력·용사 에너지·스킬 버튼). 비우면 실행 중 OfferButtons 자리에 생성
+    // (2026-11-24) wave 중 하단 UI (슬라임 체력·용사 에너지·스킬 버튼). 비우면 실행 중 OfferButtons 자리에 생성
     public HeroSkillHud heroSkillHud;
     bool waveActive;
 
@@ -68,7 +68,7 @@ public class BottomGameCanvas : MonoBehaviour
     void UpdateButtonObject()
     {
         ToggleButtonObject.SetActive(offerReady && !tileSelected);
-        // wave 중 하단 = 킹 체력·에너지·스킬 (타일 선택 중엔 유닛 정보에 자리를 내줌)
+        // wave 중 하단 = 슬라임 체력·에너지·스킬 (타일 선택 중엔 유닛 정보에 자리를 내줌)
         if (heroSkillHud != null)
             heroSkillHud.gameObject.SetActive(waveActive && !tileSelected);
     }
@@ -90,7 +90,7 @@ public class BottomGameCanvas : MonoBehaviour
         hideGameObject.SetActive(!allySettingPanel.obj.activeSelf);
     }
 
-    // 타일 선택 시 위 유닛 정보 + 타일(아이템) 정보. 빈 타일(유닛·아이템 없음)은 반응 없음 (킹 버프 칸이면 버프 칸 정보)
+    // 타일 선택 시 위 유닛 정보 + 타일(아이템) 정보. 빈 타일(유닛·아이템 없음)은 반응 없음 (슬라임 버프 칸이면 버프 칸 정보)
     void OnTileSelectedEvent(TileSelectedEvent e)
     {
         if (e.tile.tileObject == null && e.tile.tileRune == null && !EliteArea.IsEliteTile(e.tile))

@@ -15,9 +15,9 @@ public abstract class OrbitRuneBase : TriggerCycleRune
     public override void OnEquip()
     {
         base.OnEquip();
-        transform.SetParent(KingSlime.Instance.bodyCenterTr);
+        transform.SetParent(Slime.Instance.bodyCenterTr);
         transform.localRotation = Quaternion.identity;
-        transform.position = KingSlime.Instance.bodyCenterTr.position;
+        transform.position = Slime.Instance.bodyCenterTr.position;
         //transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
         RebuildOrbs();
         UpdateRune();

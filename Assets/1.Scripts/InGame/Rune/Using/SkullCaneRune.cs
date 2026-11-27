@@ -12,13 +12,13 @@ public class SkullCaneRune : Rune
         float addCritChance =  critChance;
         //크리티컬 확률
         critChanceBuff = new Buff(StatType.CritChance, addCritChance, StatOpType.Add);
-        KingSlime.Instance.AddBuff(critChanceBuff);
+        Slime.Instance.AddBuff(critChanceBuff);
 
     }
     void Release()
     {
         if (critChanceBuff != null)
-            KingSlime.Instance.RemoveBuff(critChanceBuff);
+            Slime.Instance.RemoveBuff(critChanceBuff);
     }
 
 

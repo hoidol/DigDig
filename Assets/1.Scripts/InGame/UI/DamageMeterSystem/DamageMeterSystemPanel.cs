@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 피해 집계 한 줄: 썸네일 + 바(1위 대비) + 피해량 + 비율(전체 대비). 미니언·킹 공용 (2026-11-27 킹 줄 추가)
+// 피해 집계 한 줄: 썸네일 + 바(1위 대비) + 피해량 + 비율(전체 대비). 미니언·슬라임 공용 (2026-11-27 슬라임 줄 추가)
 // nameText·detailText는 선택 (결과 화면 줄에만 있음, 비우면 건너뜀)
 public class DamageMeterSystemPanel : MonoBehaviour
 {
@@ -11,7 +11,7 @@ public class DamageMeterSystemPanel : MonoBehaviour
     public TMP_Text damageText;
     public TMP_Text percentText;
     public TMP_Text nameText;    // 이름 (용사 이름·미니언 이름)
-    public TMP_Text detailText;  // 킹 = "스킬 N%"
+    public TMP_Text detailText;  // 슬라임 = "스킬 N%"
 
     Sprite thum;
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 // (2026-11-23) 한 판의 미션 목록. Resources/InGameMissionSetting 에셋 인스펙터에서 추가·수치 수정 (종류 = Mission 하위 클래스)
 // 에셋이 없거나 비어 있으면 코드 기본 목록(CreateDefaults)
-[CreateAssetMenu(fileName = "InGameMissionSetting", menuName = "KingSlime/InGameMissionSetting")]
+[CreateAssetMenu(fileName = "InGameMissionSetting", menuName = "Slime/InGameMissionSetting")]
 public class InGameMissionSetting : ScriptableObject
 {
     public const string RESOURCE_PATH = "InGameMissionSetting";

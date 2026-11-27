@@ -20,7 +20,7 @@ MonoBehaviour:
     gid: 754105383
     range: 
   - enabled: 1
-    csvPath: Json/KingSlimeData.csv
+    csvPath: Json/SlimeData.csv
     sheetId: 
     gid: 1244868266
     range: 

@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// (2026-11-27) 보기 화면 칸 하나 (MultiSpectatePanel이 템플릿을 칸 수만큼 복사): 미니언 그림 + lvN · 룬 그림 · 킹 표시 · 막힌 칸
+// (2026-11-27) 보기 화면 칸 하나 (MultiSpectatePanel이 템플릿을 칸 수만큼 복사): 미니언 그림 + lvN · 룬 그림 · 슬라임 표시 · 막힌 칸
 public class MultiSpectateCell : MonoBehaviour
 {
     public Image bgImage;
@@ -10,7 +10,7 @@ public class MultiSpectateCell : MonoBehaviour
     public TMP_Text lvText;
     public GameObject evolvedMark;
     public Image runeImage;
-    public GameObject kingMark;
+    public GameObject slimeMark;
     public GameObject blockedMark;
 
     public Vector2Int Index { get; set; }
@@ -40,8 +40,8 @@ public class MultiSpectateCell : MonoBehaviour
             if (rd != null)
                 runeImage.sprite = rd.thum;
         }
-        if (kingMark != null)
-            kingMark.SetActive(cell != null && cell.king);
+        if (slimeMark != null)
+            slimeMark.SetActive(cell != null && cell.slime);
         if (blockedMark != null)
             blockedMark.SetActive(cell != null && cell.blocked);
     }

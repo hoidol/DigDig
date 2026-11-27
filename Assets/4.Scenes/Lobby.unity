@@ -42020,7 +42020,7 @@ GameObject:
   - component: {fileID: 751120015}
   - component: {fileID: 751120018}
   m_Layer: 5
-  m_Name: KingSlimeButton (1)
+  m_Name: SlimeButton (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -59140,7 +59140,7 @@ GameObject:
   - component: {fileID: 1084581853}
   - component: {fileID: 1084581852}
   m_Layer: 5
-  m_Name: KingSlimeState
+  m_Name: SlimeState
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60906,11 +60906,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LobbyReturnController
   bossTr: {fileID: 1584537143}
   nextBossTr: {fileID: 1835635614}
-  kingSlimeTr: {fileID: 1725644439}
+  slimeTr: {fileID: 1725644439}
   bossMoverTr: {fileID: 453644084}
   boss: {fileID: 7907002465455536538}
   nextBoss: {fileID: 286995368}
-  kingSlime: {fileID: 4137370383956233223}
+  slime: {fileID: 4137370383956233223}
   curWaveText: {fileID: 1236679681}
   nextWaveText: {fileID: 1584935862}
   hopCount: 3
@@ -84817,7 +84817,7 @@ GameObject:
   - component: {fileID: 1603976677}
   - component: {fileID: 1603976681}
   m_Layer: 5
-  m_Name: KingSlimeManagementCanvas
+  m_Name: SlimeManagementCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84927,7 +84927,7 @@ MonoBehaviour:
   heroPreviewImage: {fileID: 323566420}
   heroPreviewName: {fileID: 1274945890}
   heroPreviewDesc: {fileID: 28857090}
-  kingSlimeBody: {fileID: 2081058440}
+  slimeBody: {fileID: 2081058440}
 --- !u!1 &1607140220
 GameObject:
   m_ObjectHideFlags: 0
@@ -92298,7 +92298,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1725644439}
   m_Layer: 0
-  m_Name: KingSlimeTr
+  m_Name: SlimeTr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111996,7 +111996,7 @@ GameObject:
   - component: {fileID: 2081058443}
   - component: {fileID: 2081058442}
   m_Layer: 5
-  m_Name: KingSlimeBody
+  m_Name: SlimeBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -123123,7 +123123,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4137370383956233223}
   m_Layer: 0
-  m_Name: KingSlime
+  m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

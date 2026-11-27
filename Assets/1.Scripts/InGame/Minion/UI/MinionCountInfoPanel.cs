@@ -26,7 +26,7 @@ public class MinionCountInfoPanel : MonoBehaviour
     // 꺼져 있던 동안 바뀐 값도 다시 켜질 때 반영
     void OnEnable()
     {
-        if (MinionFieldController.Instance != null && KingSlime.Instance != null)
+        if (MinionFieldController.Instance != null && Slime.Instance != null)
             UpdatePanel();
     }
 
@@ -39,7 +39,7 @@ public class MinionCountInfoPanel : MonoBehaviour
 
     void UpdatePanel()
     {
-        if (infoText == null || MinionFieldController.Instance == null || KingSlime.Instance == null || KingSlime.Instance.minionInventory == null)
+        if (infoText == null || MinionFieldController.Instance == null || Slime.Instance == null || Slime.Instance.minionInventory == null)
             return;
         infoText.text = $"{MinionFieldController.Instance.CountedMinionCount}/{MinionFieldController.Instance.minionMaxCount}";
     }

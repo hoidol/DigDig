@@ -109,29 +109,29 @@ public class StageUnlockTest
         Assert.AreEqual(expected, NormalEnemy.GetKillGold(waveIdx));
     }
 
-    // 인게임 킹 레벨
+    // 인게임 슬라임 레벨
     // (2026-11-22) 필요 경험치 = 2 + 레벨
     [TestCase(0, 2)]
-    // (2026-11-26) GameSetting.KING_LEVEL_EXPS = 2,2,3,3,4,4,5,5,6,6,7,7 (최대 Lv.12, 그 이상은 마지막 값)
+    // (2026-11-26) GameSetting.SLIME_LEVEL_EXPS = 2,2,3,3,4,4,5,5,6,6,7,7 (최대 Lv.12, 그 이상은 마지막 값)
     [TestCase(1, 2)]
     [TestCase(3, 3)]
     [TestCase(6, 5)]
     [TestCase(8, 6)]
     [TestCase(10, 7)]
     [TestCase(20, 7)]
-    public void KingMaxExp(int lv, int expected)
+    public void SlimeMaxExp(int lv, int expected)
     {
-        Assert.AreEqual(expected, KingSlime.GetMaxExp(lv));
+        Assert.AreEqual(expected, Slime.GetMaxExp(lv));
     }
 
-    // (2026-11-23) wave 카드 Lv.2 확률 = 킹 레벨 × 1%
+    // (2026-11-23) wave 카드 Lv.2 확률 = 슬라임 레벨 × 1%
     [TestCase(0, 0f)]
     [TestCase(1, 1f)]
     [TestCase(2, 2f)]
     [TestCase(9, 9f)]
-    public void OfferLevelUpChance_ByKingLevel(int kingLv, float expected)
+    public void OfferLevelUpChance_BySlimeLevel(int slimeLv, float expected)
     {
-        Assert.AreEqual(expected, MinionOfferSystem.GetOfferLevelUpChance(kingLv), 0.0001f);
+        Assert.AreEqual(expected, MinionOfferSystem.GetOfferLevelUpChance(slimeLv), 0.0001f);
     }
 
 
@@ -474,7 +474,7 @@ public class CameraPanRuleTest
     }
 }
 
-// (2026-11-25) 용사 에너지 최대 = 2 + 에너지 보유 증가 카드 (킹 레벨 자동 증가 삭제 → HeroEnergyMaxRuleTest 삭제)
+// (2026-11-25) 용사 에너지 최대 = 2 + 에너지 보유 증가 카드 (슬라임 레벨 자동 증가 삭제 → HeroEnergyMaxRuleTest 삭제)
 
 // (2026-11-25) 레벨업 미니언 강화 카드 (종 × 스탯)
 public class MinionEnhanceRuleTest

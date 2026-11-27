@@ -28,17 +28,17 @@ public class WaveResultPlayTest : InGamePlayTestBase
         try
         {
             int bossIdx = GameSetting.BOSS_WAVE_INTERVAL - 1;
-            int waveClearGold = (int)KingSlime.Instance.statMgr.GetValue(StatType.WaveClearGold);
+            int waveClearGold = (int)Slime.Instance.statMgr.GetValue(StatType.WaveClearGold);
 
             // 0 → 보스 wave까지 진행
             while (GameManager.Instance.waveIdx < bossIdx)
             {
                 int idx = GameManager.Instance.waveIdx;
                 current = $"wave {idx}";
-                int coin = KingSlime.Instance.coin;
+                int coin = Slime.Instance.coin;
                 yield return SkipWave();
                 Assert.AreEqual(idx + 1, GameManager.Instance.waveIdx, $"wave {idx}에서 다음 wave로 넘어가지 않음");
-                Assert.GreaterOrEqual(KingSlime.Instance.coin - coin, waveClearGold, $"wave {idx} 종료 코인(WaveClearGold {waveClearGold})"); // 처치 코인이 더해질 수 있음
+                Assert.GreaterOrEqual(Slime.Instance.coin - coin, waveClearGold, $"wave {idx} 종료 코인(WaveClearGold {waveClearGold})"); // 처치 코인이 더해질 수 있음
             }
 
             foreach (var (idx, type) in started)
@@ -66,7 +66,7 @@ public class WaveResultPlayTest : InGamePlayTestBase
             Assert.IsNotNull(FindBoss(), "보스가 사라짐");
 
             // 보스 처치 → 종료 코인 + 바로 다음 wave
-            int coinBeforeBoss = KingSlime.Instance.coin;
+            int coinBeforeBoss = Slime.Instance.coin;
             boss.TakeDamage(KILL);
             yield return WaitRealtime(0.5f);
             Assert.AreEqual(bossIdx + 1, GameManager.Instance.waveIdx, "보스 처치 후 다음 wave로 안 넘어감");
@@ -76,7 +76,7 @@ public class WaveResultPlayTest : InGamePlayTestBase
                 yield return WaitRealtime(0.2f);
             }
             Assert.AreEqual(WaveType.Battle, GameManager.Instance.CurrentWave.waveType);
-            Assert.GreaterOrEqual(KingSlime.Instance.coin - coinBeforeBoss, waveClearGold, "보스 처치 시 wave 종료 코인");
+            Assert.GreaterOrEqual(Slime.Instance.coin - coinBeforeBoss, waveClearGold, "보스 처치 시 wave 종료 코인");
             Assert.IsTrue(GameManager.Instance.isPlaying, "보스 처치 후 게임이 끝남 (무한 웨이브)");
         }
         finally
@@ -111,7 +111,7 @@ public class WaveResultPlayTest : InGamePlayTestBase
         int tryCount = stage.tryCount;
         int maxWave = stage.maxWave;
 
-        KingSlime.Instance.TakeDamage(KILL);
+        Slime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         Assert.IsFalse(GameManager.Instance.isPlaying, "체력 0인데 게임이 안 끝남");
         Assert.IsTrue(FailCanvas.Instance.gameObject.activeSelf, "실패 화면이 안 열림");
@@ -138,13 +138,13 @@ public class WaveResultPlayTest : InGamePlayTestBase
         int shownRewards = result.rewardPanels.Count(p => p.gameObject.activeSelf);
         Assert.AreEqual(1, shownRewards, "보상 패널 수 (경험치만, 2026-11-27 골드 삭제)");
 
-        // (2026-11-27) 게임 기록: 통계 칸 + 피해 순위 (장착 미니언 + 킹)
+        // (2026-11-27) 게임 기록: 통계 칸 + 피해 순위 (장착 미니언 + 슬라임)
         Assert.IsNotNull(result.statsPanel, "결과 화면 게임 기록(statsPanel) 연결 안 됨");
         var statRows = result.statsPanel.statContainer.GetComponentsInChildren<ResultStatRow>(false);
         Assert.AreEqual(ResultStatsPanel.GetStats(1).Count, statRows.Length, "통계 칸 수");
         Assert.IsTrue(statRows.Any(r => r.valueText.text == $"WAVE {Mathf.Max(maxWave, waveIdx) + 1}"), "최고 기록 칸");
         var dmgRows = result.statsPanel.damageContainer.GetComponentsInChildren<DamageMeterSystemPanel>(false);
-        Assert.AreEqual(DamageMeterSystem.GetEntries().Count, dmgRows.Length, "피해 순위 줄 수 (장착 미니언 + 킹)");
+        Assert.AreEqual(DamageMeterSystem.GetEntries().Count, dmgRows.Length, "피해 순위 줄 수 (장착 미니언 + 슬라임)");
 
         // 광고 보고 2배: 같은 양을 한 번 더 지급 (한 번만)
         if (result.adDoubleRewardButton != null)
@@ -202,7 +202,7 @@ public class WaveResultPlayTest : InGamePlayTestBase
         UserStage stage = UserDataManager.Instance.userStageManager.GetUserStage(GameManager.Instance.stageData.key);
         int tryCount = stage.tryCount;
         int exp = UserDataManager.Instance.userMyInfoManager.userMyInfoData.exp;
-        KingSlime.Instance.TakeDamage(KILL);
+        Slime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         Assert.IsTrue(FailCanvas.Instance.gameObject.activeSelf);
         Assert.AreEqual(ReviveText(FailCanvas.MAX_DAILY_RESURRECTION_COUNT), FailCanvas.Instance.leftResurrectionText.text, "처음엔 5회");
@@ -214,14 +214,14 @@ public class WaveResultPlayTest : InGamePlayTestBase
         Assert.AreEqual(tryCount, stage.tryCount, "부활했는데 도전 횟수가 오름");
         Assert.IsTrue(GameManager.Instance.isPlaying, "부활 후 게임이 재개되지 않음");
         Assert.IsFalse(FailCanvas.Instance.gameObject.activeSelf);
-        Assert.AreEqual(KingSlime.Instance.health.MaxHp, KingSlime.Instance.CurHp, 0.01f, "부활 후 체력 가득");
+        Assert.AreEqual(Slime.Instance.health.MaxHp, Slime.Instance.CurHp, 0.01f, "부활 후 체력 가득");
         Assert.AreEqual(lastCleared + 1, GameManager.Instance.waveIdx, "마지막으로 종료된 wave의 다음 wave부터");
         Assert.IsFalse(GameManager.Instance.accWaves.Any(w => w != null && w.waveIdx > lastCleared + 1), "이후 wave가 남아 있음");
         Assert.AreEqual(exp, UserDataManager.Instance.userMyInfoManager.userMyInfoData.exp, "부활했는데 보상이 들어감");
         yield return WaitRealtime(2f);
 
         // 다시 사망 → 결과 화면: 한 판으로 도전 횟수 +1
-        KingSlime.Instance.TakeDamage(KILL);
+        Slime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         Assert.AreEqual(ReviveText(FailCanvas.MAX_DAILY_RESURRECTION_COUNT - 1), FailCanvas.Instance.leftResurrectionText.text);
         FailCanvas.Instance.OnClickedCancel();
@@ -247,7 +247,7 @@ public class WaveResultPlayTest : InGamePlayTestBase
         PlayerPrefs.SetString(FailCanvas.DAILY_RESURRECTION_DATE_KEY, System.DateTime.Now.ToString("yyyyMMdd"));
         PlayerPrefs.SetInt(FailCanvas.DAILY_RESURRECTION_COUNT_KEY, 0);
 
-        KingSlime.Instance.TakeDamage(KILL);
+        Slime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         Assert.AreEqual(ReviveText(0), FailCanvas.Instance.leftResurrectionText.text);
         Assert.IsFalse(FailCanvas.Instance.adRetryButton.activeSelf, "횟수를 다 썼는데 부활 버튼이 보임");

@@ -70,11 +70,11 @@ public class MultiAiDirector
                 continue;
             }
             PlayRecord.Frame frame = MultiGame.FrameAt(record, elapsed);
-            if (frame == null || (frame.wave == bot.wave && frame.kingLv == bot.kingLv && frame.minions == bot.minions))
+            if (frame == null || (frame.wave == bot.wave && frame.slimeLv == bot.slimeLv && frame.minions == bot.minions))
                 continue;
             backend.UpdateStatusAsync(room.roomId, new MultiStatus
             {
-                wave = frame.wave, kingLv = frame.kingLv, heroKey = frame.heroKey, minions = frame.minions, board = frame.board,
+                wave = frame.wave, slimeLv = frame.slimeLv, heroKey = frame.heroKey, minions = frame.minions, board = frame.board,
             }, bot.uid).Forget();
         }
     }

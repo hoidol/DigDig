@@ -10,8 +10,8 @@ using UnityEngine;
 // 그 미니언이 준 피해(DamageMeterSystem)를 잰다. 머지 레벨 0~4를 차례로, 종 하나 또는 전체.
 // 결과는 Library/MinionDamageTest.json에 쌓이고(같은 난이도·wave·key·레벨은 덮어씀) 측정마다
 // Assets/MinionDamageTest/MinionDamage_{난이도}_Wave{N}.xlsx 를 다시 만든다 (요약 + 상세 시트)
-// 측정 중: 킹 무적·킹 공격 끔·권능 끔(측정 시작 시 정리, 다시 켜지 않음 → 측정 후엔 Play를 다시 시작 권장)
-// (2026-11-22) 킹 성장 능력(종족·직업·패시브 등)도 측정 시작 시 전부 제거(다시 안 생김) → 킹 패시브 공격·버프 칸 없이 미니언만
+// 측정 중: 슬라임 무적·슬라임 공격 끔·권능 끔(측정 시작 시 정리, 다시 켜지 않음 → 측정 후엔 Play를 다시 시작 권장)
+// (2026-11-22) 슬라임 성장 능력(종족·직업·패시브 등)도 측정 시작 시 전부 제거(다시 안 생김) → 슬라임 패시브 공격·버프 칸 없이 미니언만
 //   속도 = 항상 최대(TIME_SCALE), 엘리트·보스 없이 옵션(noEliteBoss = 엘리트·보스 wave도 일반 전투로, 파일 이름 _NoEliteBoss)
 //   상성 무시 옵션(noDefence = 방어 타입 배율 전부 1, DefenceInfo.ignoreForTest, 파일 이름 _NoDefence)
 public static class MinionDamageBenchmark
@@ -104,10 +104,10 @@ public static class MinionDamageBenchmark
         prevTimeScale = Time.timeScale;
         warnedFileLocked = false;
 
-        KingSlime.Instance.enabled = false; // 킹 공격(Weapon) 끔
-        // 킹 성장 능력 전부 제거 (패시브 공격·버프 칸 없이 미니언만 측정, 다시 안 생김)
-        foreach (KingAbility a in KingSlime.Instance.abilityInventory.Abilities.ToList())
-            KingSlime.Instance.abilityInventory.Remove(a.data);
+        Slime.Instance.enabled = false; // 슬라임 공격(Weapon) 끔
+        // 슬라임 성장 능력 전부 제거 (패시브 공격·버프 칸 없이 미니언만 측정, 다시 안 생김)
+        foreach (SlimeAbility a in Slime.Instance.abilityInventory.Abilities.ToList())
+            Slime.Instance.abilityInventory.Remove(a.data);
         if (!subscribed)
         {
             GameEventBus.Subscribe<EnemyDeadEvent>(OnEnemyDead);
@@ -149,8 +149,8 @@ public static class MinionDamageBenchmark
         if (Application.isPlaying)
         {
             Time.timeScale = prevTimeScale;
-            if (KingSlime.Instance != null)
-                KingSlime.Instance.enabled = true;
+            if (Slime.Instance != null)
+                Slime.Instance.enabled = true;
         }
         AssetDatabase.Refresh();
         Debug.Log($"[MinionDamage] {reason} → {GetOutputPathSafe()}");
@@ -171,13 +171,13 @@ public static class MinionDamageBenchmark
 
     static void Update()
     {
-        if (!Application.isPlaying || GameManager.Instance == null || KingSlime.Instance == null)
+        if (!Application.isPlaying || GameManager.Instance == null || Slime.Instance == null)
             return;
         GameManager gm = GameManager.Instance;
-        KingSlime king = KingSlime.Instance;
-        king.enabled = false; // 킹 공격 끔 (다른 곳에서 켜도 측정 중엔 계속 끔)
-        if (king.health != null && king.health.curHp < king.MaxHp)
-            king.health.curHp = king.MaxHp; // 무적 (시간 초과 피해로 죽지 않게)
+        Slime slime = Slime.Instance;
+        slime.enabled = false; // 슬라임 공격 끔 (다른 곳에서 켜도 측정 중엔 계속 끔)
+        if (slime.health != null && slime.health.curHp < slime.MaxHp)
+            slime.health.curHp = slime.MaxHp; // 무적 (시간 초과 피해로 죽지 않게)
         Time.timeScale = speed;
 
         switch (state)
@@ -205,7 +205,7 @@ public static class MinionDamageBenchmark
     {
         CleanField(gm);
 
-        // 킹이 측정 칸에 있으면 비켜 둠
+        // 슬라임이 측정 칸에 있으면 비켜 둠
         Tile tile = TileManager.Instance.GetTile(TILE_INDEX);
         if (tile == null)
         {
@@ -214,11 +214,11 @@ public static class MinionDamageBenchmark
         }
         if (tile.isBlocked)
             tile.Unblock();
-        if (ReferenceEquals(tile.tileObject, KingSlime.Instance))
+        if (ReferenceEquals(tile.tileObject, Slime.Instance))
         {
             Tile other = TileManager.Instance.tiles.LastOrDefault(t => t.IsEmpty && t != tile);
-            TileManager.Instance.RemoveTileObject(KingSlime.Instance);
-            other?.SetTileObject(KingSlime.Instance);
+            TileManager.Instance.RemoveTileObject(Slime.Instance);
+            other?.SetTileObject(Slime.Instance);
         }
         if (tile.tileObject != null)
         {
@@ -227,7 +227,7 @@ public static class MinionDamageBenchmark
         }
 
         UnityEngine.Random.InitState(RANDOM_SEED);
-        Minion minion = KingSlime.Instance.AddMinion(current.key, current.lv);
+        Minion minion = Slime.Instance.AddMinion(current.key, current.lv);
         tile.SetTileObject(minion);
         attackPower = minion.statDic.TryGetValue(StatType.AttackPower, out float ap) ? ap : 0;
         attackSpeed = minion.AttackSpeed;

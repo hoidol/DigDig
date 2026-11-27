@@ -1,7 +1,7 @@
 // LightningLine 전용 가산 셰이더.
 // CartoonVFX9X 셰이더는 UV 타일링/오프셋이 없어서 LineRenderer로 스프라이트 시트의 한 줄만 고를 수 없음 → _MainTex_ST(타일링/오프셋) 지원.
 // LightMode 태그 없음(SRPDefaultUnlit) → 2D Renderer에서도 그려짐.
-Shader "KingSlime/LightningLineAdditive"
+Shader "Slime/LightningLineAdditive"
 {
     Properties
     {

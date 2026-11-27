@@ -1,0 +1,13 @@
+// 강제 크리티컬 - 명중 시 CritPower 배율 적용
+using UnityEngine;
+
+public class CritBehavior : IBulletForce
+{
+public int ApplyOrder => 0;
+    public float GetMultiDamage(BulletObject bullet, IHittable hit, RaycastHit2D hit2D, Vector2 shootDir)
+    {
+        SlimeBulletObject pb = bullet as SlimeBulletObject;
+        // pb.damageData.mustCrit = true;
+        return 0;
+    }
+}

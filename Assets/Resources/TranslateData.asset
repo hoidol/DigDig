@@ -916,39 +916,39 @@ MonoBehaviour:
   - key: Minion_BuyConfirm_Body
     kr: "{0}\uC744(\uB97C) {1} {2:N0}\uC5D0 \uAD6C\uB9E4\uD560\uAE4C\uC694?"
     en: Buy {0} for {2:N0} {1}?
-  - key: KingStat_RemainPoint
+  - key: SlimeStat_RemainPoint
     kr: "\uB0A8\uC740 \uD3EC\uC778\uD2B8 {0}"
     en: 'Points left: {0}'
-  - key: KingStat_Locked
+  - key: SlimeStat_Locked
     kr: "Lv.{0}\uBD80\uD130 \uCC0D\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
     en: Unlocks at Lv.{0}.
-  - key: KingStat_TierFull
+  - key: SlimeStat_TierFull
     kr: "\uC774 \uBB36\uC74C\uC740 \uCD5C\uB300 {0}\uD3EC\uC778\uD2B8\uAE4C\uC9C0
       \uCC0D\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
     en: This row allows up to {0} points.
-  - key: KingStat_NoPoint
+  - key: SlimeStat_NoPoint
     kr: "\uB0A8\uC740 \uD3EC\uC778\uD2B8\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."
     en: No points left.
-  - key: KingStat_TierNoPoint
+  - key: SlimeStat_TierNoPoint
     kr: "\uC774 \uC904\uC758 \uB2E4\uC74C \uD3EC\uC778\uD2B8\uB294 Lv.{0}\uC5D0 \uBC1B\uC2B5\uB2C8\uB2E4."
     en: This row gets its next point at Lv.{0}.
-  - key: KingStat_ResetTitle
+  - key: SlimeStat_ResetTitle
     kr: "\uD3EC\uC778\uD2B8 \uCD08\uAE30\uD654"
     en: Reset Points
-  - key: KingStat_ResetBody
+  - key: SlimeStat_ResetBody
     kr: "\uCC0D\uC740 \uD3EC\uC778\uD2B8\uB97C \uBAA8\uB450 \uB3CC\uB824\uBC1B\uC2B5\uB2C8\uB2E4.
       (\uBB34\uB8CC)"
     en: Refund all spent points. (Free)
-  - key: KingStat_ResetDone
+  - key: SlimeStat_ResetDone
     kr: "\uD3EC\uC778\uD2B8\uB97C \uCD08\uAE30\uD654\uD588\uC2B5\uB2C8\uB2E4."
     en: Points reset.
-  - key: KingStat_TierRemain
+  - key: SlimeStat_TierRemain
     kr: "\uB0A8\uC740 \uD3EC\uC778\uD2B8 {0}"
     en: 'Points left: {0}'
-  - key: KingStat_PointGained
+  - key: SlimeStat_PointGained
     kr: "\uD0B9 \uC2A4\uD0EF \uD3EC\uC778\uD2B8\uB97C \uCC0D\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4!
       (\uB0A8\uC740 \uD3EC\uC778\uD2B8 {0})"
-    en: You have king stat points to spend! ({0} left)
+    en: You have slime stat points to spend! ({0} left)
   - key: Stage_Title
     kr: "\uC2A4\uD14C\uC774\uC9C0 {0}"
     en: Stage {0}
@@ -1110,20 +1110,20 @@ MonoBehaviour:
   - key: HeroUpgrade.MagicAttack.Desc
     kr: "\uB9C8\uBC95 \uBBF8\uB2C8\uC5B8 \uACF5\uACA9\uB825 +{0}%"
     en: +{0}% attack for magic minions
-  - key: HeroUpgrade.KingHitEnergyCharge
+  - key: HeroUpgrade.SlimeHitEnergyCharge
     kr: "\uD22C\uD63C"
     en: Fighting Spirit
-  - key: HeroUpgrade.KingHitEnergyCharge.Desc
+  - key: HeroUpgrade.SlimeHitEnergyCharge.Desc
     kr: "\uD0B9\uC774 \uD53C\uD574\uB97C \uBC1B\uC73C\uBA74 \uD53C\uD574 1\uB2F9
       \uC6A9\uC0AC \uC5D0\uB108\uC9C0 \uCDA9\uC804 {0}\uCD08"
-    en: Each 1 damage the king takes charges hero energy by {0}s
-  - key: HeroUpgrade.KingHitEliteRage
+    en: Each 1 damage the slime takes charges hero energy by {0}s
+  - key: HeroUpgrade.SlimeHitEliteRage
     kr: "\uBCF5\uC218\uC2EC"
     en: Vengeance
-  - key: HeroUpgrade.KingHitEliteRage.Desc
+  - key: HeroUpgrade.SlimeHitEliteRage.Desc
     kr: "\uD0B9\uC774 \uD53C\uD574\uB97C \uBC1B\uC73C\uBA74 \uC815\uC608\uBCD1 \uCE78
       \uBBF8\uB2C8\uC5B8 3\uCD08\uAC04 \uACF5\uACA9\uB825 +{0}%"
-    en: When the king is hit, elite-tile minions gain +{0}% attack for 3s
+    en: When the slime is hit, elite-tile minions gain +{0}% attack for 3s
   - key: HeroUpgrade.ResistEase
     kr: "\uAFF0\uB6AB\uB294 \uACF5\uACA9"
     en: Piercing Strikes
@@ -1398,10 +1398,10 @@ MonoBehaviour:
   - key: Shop_Tab_Minion
     kr: "\uBBF8\uB2C8\uC5B8"
     en: Minion
-  - key: DamageMeter_King
+  - key: DamageMeter_Slime
     kr: "\uD0B9\uC2AC\uB77C\uC784"
-    en: King Slime
-  - key: DamageMeter_KingSkill
+    en: Slime
+  - key: DamageMeter_SlimeSkill
     kr: "\uC2A4\uD0AC {0}%"
     en: Skill {0}%
   - key: Result_Stat_PlayTime
@@ -1428,7 +1428,7 @@ MonoBehaviour:
   - key: Result_Stat_Merge
     kr: "\uD569\uC131 \xB7 \uC9C4\uD654"
     en: "Merges \xB7 Evolutions"
-  - key: Result_Stat_King
+  - key: Result_Stat_Slime
     kr: "\uC6A9\uC0AC"
     en: Hero
   - key: Result_DamageTitle
@@ -1621,7 +1621,7 @@ MonoBehaviour:
   - key: Multi_InviteText
     kr: "\uB9C8\uC655\uC744 \uAFC8\uAFB8\uB294 \uC2AC\uB77C\uC784\uACFC \uD568\uAED8
       \uB300\uC804\uD574\uC694! {0}"
-    en: Battle with me in King Slime! {0}
+    en: Battle with me in Slime! {0}
   - key: Multi_CodeShareText
     kr: "\uAC19\uC774 \uD558\uC790! \uBC29 \uCF54\uB4DC: {0}\\n\uAC8C\uC784 \uBC1B\uAE30:
       {1}"

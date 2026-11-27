@@ -10,13 +10,13 @@ public class LeatherBootsRune : Rune
         float addMoveSpeed =  moveSpeed;
         //이동속도
         // moveSpeedBuff = new Buff(StatType.MoveSpeed, addMoveSpeed, StatOpType.Add);
-        KingSlime.Instance.AddBuff(moveSpeedBuff);
+        Slime.Instance.AddBuff(moveSpeedBuff);
 
     }
     void Release()
     {
         if (moveSpeedBuff != null)
-            KingSlime.Instance.RemoveBuff(moveSpeedBuff);
+            Slime.Instance.RemoveBuff(moveSpeedBuff);
     }
 
 

@@ -31,7 +31,7 @@ public class SpawnMinionTutorialStep : TutorialStep
             tile = TileManager.Instance.GetRandomEmptyTile();
         if (tile != null)
         {
-            Minion minion = KingSlime.Instance.AddMinion(minionKey, 0);
+            Minion minion = Slime.Instance.AddMinion(minionKey, 0);
             tile.SetTileObject(minion);
             SoundManager.Play(SFXType.MinionAppear);
         }

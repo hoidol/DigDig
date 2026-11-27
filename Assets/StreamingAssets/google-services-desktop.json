@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:327107647483:android:ec79d1d6d0db2ed1a21d5e",
+        "android_client_info": {
+          "package_name": "com.BEI.BeHero"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327107647483-hj58sakqlj59r74publ7gr485bv7f5dn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdoUHgT5CDVzYF4JHGJb6jipBrncp8Nbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327107647483-hj58sakqlj59r74publ7gr485bv7f5dn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:327107647483:android:7ef74f22296cc08ba21d5e",
         "android_client_info": {
           "package_name": "com.BEI.KingSlime"

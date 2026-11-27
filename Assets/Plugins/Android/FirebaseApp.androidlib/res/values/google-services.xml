@@ -6,6 +6,6 @@
   <string name="project_id" translatable="false">dreamofslime-37cb2</string>
   <string name="google_api_key" translatable="false">AIzaSyAdoUHgT5CDVzYF4JHGJb6jipBrncp8Nbw</string>
   <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAdoUHgT5CDVzYF4JHGJb6jipBrncp8Nbw</string>
-  <string name="google_app_id" translatable="false">1:327107647483:android:7ef74f22296cc08ba21d5e</string>
+  <string name="google_app_id" translatable="false">1:327107647483:android:ec79d1d6d0db2ed1a21d5e</string>
   <string name="default_web_client_id" translatable="false">327107647483-hj58sakqlj59r74publ7gr485bv7f5dn.apps.googleusercontent.com</string>
 </resources>

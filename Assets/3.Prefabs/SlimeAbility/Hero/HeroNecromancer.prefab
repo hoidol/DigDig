@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &895607169404089561
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 878678265481525183}
+  - component: {fileID: 601886977430299317}
+  m_Layer: 0
+  m_Name: HeroNecromancer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &878678265481525183
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895607169404089561}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &601886977430299317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895607169404089561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5942758b4a94431bac80b7b2f00a7755, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::NecromancerHero
+  key: HeroNecromancer
+  data: {fileID: 0}
+  level: 0
+  heroType: 2
+  tileOffsets:
+  - {x: -1, y: 1}
+  - {x: 1, y: 1}
+  tileBuffs:
+  - statType: 3
+    value: 5
+    opType: 0
+  levelMuls:
+  - 1
+  - 1.5
+  - 2
+  - 2.5
+  - 3
+  tileColor: {r: 0.7, g: 0.45, b: 1, a: 0.35}
+  slimeAttackType: 0
+  energyName: "\uc5b4\ub460"
+  energyIcon: {fileID: 0}
+  energyColor: {r: 0.7, g: 0.45, b: 1, a: 1}
+  skills:
+  - name: "\ub9dd\ub839 \uc18c\ud658"
+    icon: {fileID: 0}
+  - name: "\uc800\uc8fc"
+    icon: {fileID: 0}
+  commonSkillIcon: {fileID: 0}
+  commonSkillCost: 1
+  commonDuration: 10
+  commonAttackPowerMul: 1.5
+  commonAttackSpeedMul: 1.5
+  slashDamageMul: 1
+  slashSpeed: 9
+  slashWidth: 0.6
+  slashExtraDistance: 1
+  slashColor: {r: 0.75, g: 0.45, b: 1, a: 0.95}
+  ghostDuration: 10
+  ghostDamageMul: 2
+  ghostSlowTime: 3
+  ghostSlowRate: 0.5
+  ghostSpeed: 2.5
+  ghostRadius: 0.6
+  hitInterval: 0.5
+  curseDuration: 5
+  curseDamageBonus: 0.5
+  curseStun: 3

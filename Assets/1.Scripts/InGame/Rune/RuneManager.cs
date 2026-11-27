@@ -63,9 +63,9 @@ public class RuneManager : MonoSingleton<RuneManager>, ILoadData
             //     continue;
             // }
 
-            if (KingSlime.Instance.statMgr.runeStatDic.ContainsKey(level1RuneDatas[i].key))
+            if (Slime.Instance.statMgr.runeStatDic.ContainsKey(level1RuneDatas[i].key))
             {
-                if (KingSlime.Instance.statMgr.runeStatDic[level1RuneDatas[i].key].count >= level1RuneDatas[i].maxCount)
+                if (Slime.Instance.statMgr.runeStatDic[level1RuneDatas[i].key].count >= level1RuneDatas[i].maxCount)
                     continue;
             }
 
@@ -89,7 +89,7 @@ public class RuneManager : MonoSingleton<RuneManager>, ILoadData
         {
             if (!(data.runePrefab is TileRune tileRune) || !tileRune.CanDraw() || !data.CheckUnlock())
                 return false;
-            if (!tileRune.IgnoreMaxCount && KingSlime.Instance.statMgr.runeStatDic.TryGetValue(data.key, out CharacterRuneStat stat) && stat.count >= data.maxCount)
+            if (!tileRune.IgnoreMaxCount && Slime.Instance.statMgr.runeStatDic.TryGetValue(data.key, out CharacterRuneStat stat) && stat.count >= data.maxCount)
                 return false;
             return true;
         }).ToList();
@@ -110,7 +110,7 @@ public class RuneManager : MonoSingleton<RuneManager>, ILoadData
             .Take(count).ToList();
     }
 
-    // (2026-11-21) 레벨업 룬 카드 후보 = KingGrowthSetting.runeKeys 중 지금 나올 수 있는 룬 (CanDraw: 타일 고치기는 막힌 칸이 있을 때만)
+    // (2026-11-21) 레벨업 룬 카드 후보 = SlimeGrowthSetting.runeKeys 중 지금 나올 수 있는 룬 (CanDraw: 타일 고치기는 막힌 칸이 있을 때만)
     // 보유 수 제한 없음 (같은 룬 칸에 또 고르면 레벨 +1, 최대 Lv.3)
     public List<RuneData> GetLevelUpRunes(IEnumerable<string> keys)
     {
@@ -143,8 +143,8 @@ public class RuneManager : MonoSingleton<RuneManager>, ILoadData
         List<MergeRuneData> mergeRuneList = mergeRuneDatas.Where(e => e.childRuneKeys.Contains(runeKey)).ToList();
         for (int i = 0; i < mergeRuneList.Count; i++)
         {
-            Rune child1 = KingSlime.Instance.runeInventory.GetRune(mergeRuneList[i].childRuneKeys[0]);
-            Rune child2 = KingSlime.Instance.runeInventory.GetRune(mergeRuneList[i].childRuneKeys[1]);
+            Rune child1 = Slime.Instance.runeInventory.GetRune(mergeRuneList[i].childRuneKeys[0]);
+            Rune child2 = Slime.Instance.runeInventory.GetRune(mergeRuneList[i].childRuneKeys[1]);
 
             if (child1 != null && child2 != null)
                 return true;
@@ -160,8 +160,8 @@ public class RuneManager : MonoSingleton<RuneManager>, ILoadData
         List<MergeRuneData> curMergeRuneDataList = new List<MergeRuneData>();
         for (int i = 0; i < mergeRuneDataList.Count; i++)
         {
-            Rune child1 = KingSlime.Instance.runeInventory.GetRune(mergeRuneDataList[i].childRuneKeys[0]);
-            Rune child2 = KingSlime.Instance.runeInventory.GetRune(mergeRuneDataList[i].childRuneKeys[1]);
+            Rune child1 = Slime.Instance.runeInventory.GetRune(mergeRuneDataList[i].childRuneKeys[0]);
+            Rune child2 = Slime.Instance.runeInventory.GetRune(mergeRuneDataList[i].childRuneKeys[1]);
 
             if (child1 != null && child2 != null)
                 curMergeRuneDataList.Add(mergeRuneDataList[i]);
@@ -172,7 +172,7 @@ public class RuneManager : MonoSingleton<RuneManager>, ILoadData
 
     public List<MergeRuneData> GetMergeRuneDataList()
     {
-        return mergeRuneDatas.Where(e => e.childRuneKeys.All(key => KingSlime.Instance.runeInventory.GetRune(key) != null)).ToList();
+        return mergeRuneDatas.Where(e => e.childRuneKeys.All(key => Slime.Instance.runeInventory.GetRune(key) != null)).ToList();
     }
 
 

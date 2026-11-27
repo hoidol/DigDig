@@ -18,23 +18,23 @@ public class HeroUpgradePlayTest : InGamePlayTestBase
 
     IEnumerator Body()
     {
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         try
         {
             // ── 시작 효과: 주사위 코인 예약 · 막힌 칸 해제 · 룬 보상 ──
             current = "시작 효과";
-            int bonusDice = king.bonusDiceCoinNextBreak;
+            int bonusDice = slime.bonusDiceCoinNextBreak;
             int blocked = TileManager.Instance.tiles.Count(t => t.isBlocked);
-            int runes = king.pendingRuneRewards;
+            int runes = slime.pendingRuneRewards;
             HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.StartDiceCoin, 3);
             HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.StartUnblockTile, 1);
             HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.StartRuneChance, 100);
             HeroUpgradeSystem.ApplyStartEffects();
-            Assert.AreEqual(bonusDice + 3, king.bonusDiceCoinNextBreak, "시작 주사위 코인 = 다음 브레이크타임 보너스");
+            Assert.AreEqual(bonusDice + 3, slime.bonusDiceCoinNextBreak, "시작 주사위 코인 = 다음 브레이크타임 보너스");
             if (blocked > 0)
                 Assert.AreEqual(blocked - 1, TileManager.Instance.tiles.Count(t => t.isBlocked), "막힌 칸 1칸 해제");
-            Assert.AreEqual(runes + 1, king.pendingRuneRewards, "시작 룬 보상 100%");
-            king.pendingRuneRewards = runes;
+            Assert.AreEqual(runes + 1, slime.pendingRuneRewards, "시작 룬 보상 100%");
+            slime.pendingRuneRewards = runes;
 
             // ── 카드 Lv.2 확률 ──
             current = "카드 확률";
@@ -77,22 +77,22 @@ public class HeroUpgradePlayTest : InGamePlayTestBase
             // ── 엘리트·보스 처치 주사위 ──
             current = "처치 주사위";
             HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.EliteBossDiceChance, 100);
-            // 보상 주사위 코인은 브레이크타임 지급이 끝났으면 즉시, 아니면 다음 브레이크타임 (KingSlime.AddRewardDiceCoin) → 합계로 확인
-            int dice = king.bonusDiceCoinNextBreak + king.diceCoin;
-            HeroUpgradeSystem.OnEliteBossKilled(king.transform.position);
-            Assert.AreEqual(dice + 1, king.bonusDiceCoinNextBreak + king.diceCoin, "처치 주사위 100%");
+            // 보상 주사위 코인은 브레이크타임 지급이 끝났으면 즉시, 아니면 다음 브레이크타임 (Slime.AddRewardDiceCoin) → 합계로 확인
+            int dice = slime.bonusDiceCoinNextBreak + slime.diceCoin;
+            HeroUpgradeSystem.OnEliteBossKilled(slime.transform.position);
+            Assert.AreEqual(dice + 1, slime.bonusDiceCoinNextBreak + slime.diceCoin, "처치 주사위 100%");
 
             // ── 경험치 구매 보너스 ──
             current = "경험치 구매";
             HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.ExpBuyBonusChance, 100);
-            king.AddDiceCoin(GameSetting.BUY_EXP_DICE_COIN_PRICE);
-            int lv = king.lv, exp = king.exp;
-            Assert.IsTrue(king.TryBuyExp(), "경험치 구매 실패");
-            int gained = (king.lv - lv) > 0 ? -1 : king.exp - exp;
+            slime.AddDiceCoin(GameSetting.BUY_EXP_DICE_COIN_PRICE);
+            int lv = slime.lv, exp = slime.exp;
+            Assert.IsTrue(slime.TryBuyExp(), "경험치 구매 실패");
+            int gained = (slime.lv - lv) > 0 ? -1 : slime.exp - exp;
             if (gained >= 0)
                 Assert.AreEqual(GameSetting.BUY_EXP_AMOUNT + 1, gained, "경험치 +1 더");
             else
-                Assert.Greater(king.lv, lv, "레벨업으로 넘어감");
+                Assert.Greater(slime.lv, lv, "레벨업으로 넘어감");
 
             // ── 같은 종 이웃 공격력 ──
             current = "쌍둥이";
@@ -173,11 +173,11 @@ public class HeroUpgradePlayTest : InGamePlayTestBase
             Assert.AreEqual(0.75f * 1.05f, HeroUpgradeSystem.ApplyDefenceMultiplier(0.75f, AttackType.Vibration, DefenceType.Light), 0.0001f, "진동 → 경갑 +5%");
             Assert.AreEqual(0.75f, HeroUpgradeSystem.ApplyDefenceMultiplier(0.75f, AttackType.Magic, DefenceType.Light), 0.0001f, "다른 공격 타입은 그대로");
 
-            // ── 정예병 칸 · 킹 피격 (용사가 있을 때만 정예병 칸이 생김) ──
+            // ── 정예병 칸 · 슬라임 피격 (용사가 있을 때만 정예병 칸이 생김) ──
             current = "정예병";
             HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.EliteMinionAttack, 10);
-            HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.KingHitEliteRage, 20);
-            var area = EliteArea.GetOrCreate(king);
+            HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.SlimeHitEliteRage, 20);
+            var area = EliteArea.GetOrCreate(slime);
             object src = new object();
             area.SetShape(src, new[] { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down });
             area.SetEliteBuffs(src, new[] { new Buff(StatType.CritChance, 0f, StatOpType.Add) });
@@ -185,39 +185,39 @@ public class HeroUpgradePlayTest : InGamePlayTestBase
             if (eliteTile != null)
             {
                 HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.EliteMinionAttack, 0);
-                HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.KingHitEliteRage, 0);
+                HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.SlimeHitEliteRage, 0);
                 Minion em = SpawnMinion("Iron", eliteTile, 0);
                 yield return WaitFrames(2);
                 float baseAtk = em.statDic[StatType.AttackPower];
                 HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.EliteMinionAttack, 10);
-                HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.KingHitEliteRage, 20);
+                HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.SlimeHitEliteRage, 20);
                 area.Refresh();
                 Assert.AreEqual(baseAtk * 1.1f, em.statDic[StatType.AttackPower], baseAtk * 0.001f, "정예병 공격력 +10%");
-                king.health.curHp = king.health.MaxHp;
-                king.TakeDamage(new DamageData { damage = 1f, attackType = AttackType.Chaos });
-                Assert.AreEqual(baseAtk * 1.1f * 1.2f, em.statDic[StatType.AttackPower], baseAtk * 0.001f, "킹 피격 → 정예병 공격력 +20%");
+                slime.health.curHp = slime.health.MaxHp;
+                slime.TakeDamage(new DamageData { damage = 1f, attackType = AttackType.Chaos });
+                Assert.AreEqual(baseAtk * 1.1f * 1.2f, em.statDic[StatType.AttackPower], baseAtk * 0.001f, "슬라임 피격 → 정예병 공격력 +20%");
                 MinionFieldController.Instance.RemoveFieldMinion(em);
                 yield return WaitFrames(2);
             }
             area.RemoveShape(src);
             area.RemoveEliteBuffs(src);
             HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.EliteMinionAttack, 0);
-            HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.KingHitEliteRage, 0);
+            HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.SlimeHitEliteRage, 0);
 
-            // ── 킹 체력: 낮은 체력 적 정지 · 불굴 ──
-            current = "킹 체력";
+            // ── 슬라임 체력: 낮은 체력 적 정지 · 불굴 ──
+            current = "슬라임 체력";
             HeroUpgradeSystem.ResetOncePerRunForTest();
             HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.LowHpFreeze, 2);
             HeroUpgradeSystem.SetForTest(HeroUpgradeAbility.LastStand, 30);
             Enemy.ClearFreezeAll();
-            float max = king.health.MaxHp;
-            king.health.curHp = max;
-            king.TakeDamage(new DamageData { damage = max * 0.8f, attackType = AttackType.Chaos });
+            float max = slime.health.MaxHp;
+            slime.health.curHp = max;
+            slime.TakeDamage(new DamageData { damage = max * 0.8f, attackType = AttackType.Chaos });
             Assert.IsTrue(Enemy.IsFrozenAll, "체력 30% 아래 → 적 정지");
-            king.TakeDamage(KILL);
-            Assert.AreEqual(max * 0.3f, king.health.CurHp, 0.01f, "불굴: 체력 30%로 버팀");
-            king.TakeDamage(KILL);
-            Assert.AreEqual(0f, king.health.CurHp, "불굴은 판당 1번");
+            slime.TakeDamage(KILL);
+            Assert.AreEqual(max * 0.3f, slime.health.CurHp, 0.01f, "불굴: 체력 30%로 버팀");
+            slime.TakeDamage(KILL);
+            Assert.AreEqual(0f, slime.health.CurHp, "불굴은 판당 1번");
         }
         finally
         {

@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 // (2026-11-27) 멀티 판 진행 중 (멀티 InGame에 MultiMatchManager가 만듦, 씬과 같이 사라짐)
-// - 내 판 상황 올리기: 브레이크타임 시작(다음 프레임, 카드 지급 후)·wave 시작 때 wave·킹 레벨·용사·미니언·판 배치
+// - 내 판 상황 올리기: 브레이크타임 시작(다음 프레임, 카드 지급 후)·wave 시작 때 wave·슬라임 레벨·용사·미니언·판 배치
 // - 웨이브 50 보스 처치(= 클리어) → 도착 기록(서버 시각) + 가장 먼저면 우승 → 전적 우승·클리어
 // - 내 판이 끝남(클리어 또는 부활 안 하고 포기) → 종료 기록 + 판수 → 멀티 결과 창 (ResultCanvas 대신, 싱글 보상 없음)
 public class MultiInGameSession : MonoBehaviour
@@ -51,15 +51,15 @@ public class MultiInGameSession : MonoBehaviour
     public static MultiStatus BuildStatus()
     {
         GameManager gm = GameManager.Instance;
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         TileManager tm = TileManager.Instance;
         var status = new MultiStatus();
         if (gm != null)
             status.wave = (gm.isBreakTime ? gm.breakTimeNextWaveIdx : gm.waveIdx) + 1;
-        if (king != null)
+        if (slime != null)
         {
-            status.kingLv = king.lv;
-            HeroKingAbility hero = king.abilityInventory != null ? king.abilityInventory.Get<HeroKingAbility>() : null;
+            status.slimeLv = slime.lv;
+            HeroSlimeAbility hero = slime.abilityInventory != null ? slime.abilityInventory.Get<HeroSlimeAbility>() : null;
             status.heroKey = hero != null ? hero.HeroDataKey : "";
         }
         if (tm != null)
@@ -80,9 +80,9 @@ public class MultiInGameSession : MonoBehaviour
                     minions.Add((m.key, m.mergeLevel + 1));
                     any = true;
                 }
-                else if (t.tileObject is KingSlime)
+                else if (t.tileObject is Slime)
                 {
-                    cell.king = true;
+                    cell.slime = true;
                     any = true;
                 }
                 if (t.tileRune is TileRune rune)

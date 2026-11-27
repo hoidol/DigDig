@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // (2026-11-23) 인게임 미션 진행. 한 판 동안 InGameMissionSetting의 미션을 모두 동시에 진행, 미션마다 한 번만 완료
-// 보상 = 완료 후 처음 오는 브레이크타임 주사위 코인 (KingSlime.bonusDiceCoinNextBreak → MinionOfferSystem이 브레이크타임에 지급)
+// 보상 = 완료 후 처음 오는 브레이크타임 주사위 코인 (Slime.bonusDiceCoinNextBreak → MinionOfferSystem이 브레이크타임에 지급)
 //  - wave 클리어 순간 완료(WaveEndEvent가 BreakTimeStartEvent보다 먼저) → 바로 그 브레이크타임
 //  - 브레이크타임 중 배치로 완료 → 다음 브레이크타임
 // 판정 시점: wave 시작 / wave 클리어 / 필드 상황은 0.2초(실제 시간)마다
@@ -78,7 +78,7 @@ public class InGameMissionSystem : MonoBehaviour
         Check();
     }
 
-    // 타일 위 미니언 (킹 제외)
+    // 타일 위 미니언 (슬라임 제외)
     void CollectField()
     {
         ctx.fieldMinions.Clear();
@@ -117,8 +117,8 @@ public class InGameMissionSystem : MonoBehaviour
 
     void GiveReward(Mission mission)
     {
-        if (mission.rewardDiceCoin > 0 && KingSlime.Instance != null)
-            KingSlime.Instance.AddRewardDiceCoin(mission.rewardDiceCoin); // (2026-11-25) 브레이크타임 중 완료면 즉시
+        if (mission.rewardDiceCoin > 0 && Slime.Instance != null)
+            Slime.Instance.AddRewardDiceCoin(mission.rewardDiceCoin); // (2026-11-25) 브레이크타임 중 완료면 즉시
         ToastCanvas.Toast(string.Format(TranslateManager.GetText("Mission_Complete"), mission.GetTitle(), mission.rewardDiceCoin));
         SoundManager.Play(SFXType.RewardGet);
     }

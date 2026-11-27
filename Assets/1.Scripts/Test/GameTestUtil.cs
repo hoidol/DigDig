@@ -13,12 +13,12 @@ public static class GameTestUtil
     // 빈 칸(막힘 X, 유닛 X)에 소환. 칸을 주면 그 칸 (비어 있어야 함)
     public static Minion SpawnMinion(string key, int mergeLevel, bool evolve, Tile tile = null)
     {
-        if (string.IsNullOrEmpty(key) || KingSlime.Instance == null || TileManager.Instance == null)
+        if (string.IsNullOrEmpty(key) || Slime.Instance == null || TileManager.Instance == null)
             return null;
         tile ??= TileManager.Instance.tiles.FirstOrDefault(t => t != null && !t.isBlocked && t.IsEmpty);
         if (tile == null || tile.isBlocked || !tile.IsEmpty)
             return null;
-        Minion minion = KingSlime.Instance.AddMinion(key, Mathf.Clamp(mergeLevel, 0, MinionData.MAX_MERGE_LEVEL));
+        Minion minion = Slime.Instance.AddMinion(key, Mathf.Clamp(mergeLevel, 0, MinionData.MAX_MERGE_LEVEL));
         tile.SetTileObject(minion);
         if (evolve && minion.CanEvolve && mergeLevel >= MinionData.MAX_MERGE_LEVEL)
             minion.Evolve();
@@ -89,46 +89,46 @@ public static class GameTestUtil
     }
 
     // ---- 용사
-    public static AbilityData[] Heroes() => KingGrowthSetting.Instance != null
-        ? KingGrowthSetting.Instance.heroAbilities.Where(h => h != null).ToArray() : new AbilityData[0];
+    public static AbilityData[] Heroes() => SlimeGrowthSetting.Instance != null
+        ? SlimeGrowthSetting.Instance.heroAbilities.Where(h => h != null).ToArray() : new AbilityData[0];
 
-    // 킹 성장 능력 전부 제거 → 킹 레벨 → 용사 → 스킬 해방(레벨까지) → 1·2단계 스킬 강화
-    public static HeroKingAbility EquipHero(AbilityData heroData, int level, bool enhanceSkills)
+    // 슬라임 성장 능력 전부 제거 → 슬라임 레벨 → 용사 → 스킬 해방(레벨까지) → 1·2단계 스킬 강화
+    public static HeroSlimeAbility EquipHero(AbilityData heroData, int level, bool enhanceSkills)
     {
-        KingSlime king = KingSlime.Instance;
-        if (king == null || heroData == null)
+        Slime slime = Slime.Instance;
+        if (slime == null || heroData == null)
             return null;
-        KingAbilityInventory inv = king.abilityInventory;
-        foreach (KingAbility a in inv.Abilities.ToList())
+        SlimeAbilityInventory inv = slime.abilityInventory;
+        foreach (SlimeAbility a in inv.Abilities.ToList())
             inv.Remove(a.data);
-        king.lv = Mathf.Clamp(level, 1, GameSetting.KING_MAX_LEVEL);
-        king.pendingLevelUps = 0;
+        slime.lv = Mathf.Clamp(level, 1, GameSetting.SLIME_MAX_LEVEL);
+        slime.pendingLevelUps = 0;
         inv.Add(heroData);
-        HeroKingAbility hero = inv.Get<HeroKingAbility>();
+        HeroSlimeAbility hero = inv.Get<HeroSlimeAbility>();
         if (hero == null)
             return null;
-        for (int i = 0; i < HeroKingAbility.SKILL_COUNT; i++)
-            if (king.lv >= LevelUpChoiceRule.GetSkillUnlockLevel(i))
+        for (int i = 0; i < HeroSlimeAbility.SKILL_COUNT; i++)
+            if (slime.lv >= LevelUpChoiceRule.GetSkillUnlockLevel(i))
                 hero.UnlockNextSkill();
-        if (enhanceSkills && KingGrowthSetting.Instance != null)
-            foreach (AbilityData d in KingGrowthSetting.Instance.heroBoostAbilities)
-                if (d != null && d.prefab is HeroSkillEnhanceKingAbility s && s.skillIndex < hero.UnlockedSkillCount)
+        if (enhanceSkills && SlimeGrowthSetting.Instance != null)
+            foreach (AbilityData d in SlimeGrowthSetting.Instance.heroBoostAbilities)
+                if (d != null && d.prefab is HeroSkillEnhanceSlimeAbility s && s.skillIndex < hero.UnlockedSkillCount)
                     inv.Add(d);
         hero.RefreshHeroLevel();
-        GameEventBus.Publish(new ExpChangedEvent(king.exp, king.MaxExp, king.lv)); // 경험치바·HUD 갱신
+        GameEventBus.Publish(new ExpChangedEvent(slime.exp, slime.MaxExp, slime.lv)); // 경험치바·HUD 갱신
         return hero;
     }
 
-    // 스킬 바로 쓰기: 브레이크타임이면 wave 시작, 에너지가 모자라면 채움, 위치 지정 스킬 = 적이 가장 몰린 곳 (없으면 킹 앞)
-    public static HeroKingAbility.UseResult UseHeroSkill(HeroKingAbility hero, int idx)
+    // 스킬 바로 쓰기: 브레이크타임이면 wave 시작, 에너지가 모자라면 채움, 위치 지정 스킬 = 적이 가장 몰린 곳 (없으면 슬라임 앞)
+    public static HeroSlimeAbility.UseResult UseHeroSkill(HeroSlimeAbility hero, int idx)
     {
         if (GameManager.Instance != null && GameManager.Instance.isBreakTime)
             GameManager.Instance.EndBreakTime();
         if (hero.Charges < hero.GetSkillCost(idx))
             hero.FillChargesForTest();
-        if (idx != HeroKingAbility.COMMON_SKILL_INDEX && hero.NeedsTargetPosition(idx))
+        if (idx != HeroSlimeAbility.COMMON_SKILL_INDEX && hero.NeedsTargetPosition(idx))
         {
-            Vector2 pos = HeroKingAbility.FindDensest(1.5f, out Vector2 p) ? p : (Vector2)KingSlime.Instance.transform.position + Vector2.right * 2f;
+            Vector2 pos = HeroSlimeAbility.FindDensest(1.5f, out Vector2 p) ? p : (Vector2)Slime.Instance.transform.position + Vector2.right * 2f;
             return hero.TryUseSkillAt(idx, pos);
         }
         return hero.TryUseSkill(idx);

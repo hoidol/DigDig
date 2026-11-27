@@ -11,7 +11,7 @@ using UnityEngine;
 // - Tools/Data/Import Changed : 원본 테이블이 바뀐 데이터만 반영 (Play 진입 시 PreGameStartEditor가 자동 호출)
 public static class DataTableImporter
 {
-    static readonly string[] ASSET_ROOTS = { "Assets/AddressableResources", "Assets/Resources/KingSlimeData" };
+    static readonly string[] ASSET_ROOTS = { "Assets/AddressableResources", "Assets/Resources/SlimeData" };
     const string MENU_ROOT = "Tools/Data/";
     const string AUTO_IMPORT_MENU = MENU_ROOT + "Auto Import On Play";
 
@@ -32,7 +32,7 @@ public static class DataTableImporter
     // 새 데이터 타입은 여기에 한 줄 추가
     static readonly Entry[] entries =
     {
-        new Entry("CharacterData", new[] { "KingSlimeData.csv" }, () => LoadAll<KingSlimeData>(d => d.LoadData())),
+        new Entry("CharacterData", new[] { "SlimeData.csv" }, () => LoadAll<SlimeData>(d => d.LoadData())),
         new Entry("EnemyData", new[] { "EnemyData.csv" }, () => LoadAll<EnemyData>(d => d.LoadData())),
         new Entry("StageData", new[] { "StageData.csv" }, () => LoadAll<StageData>(d => d.LoadData())),
         new Entry("MinionData", new[] { "MinionData.csv" }, () => LoadAll<MinionData>(d => d.LoadData())),

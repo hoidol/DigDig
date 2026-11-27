@@ -32,7 +32,7 @@ public class EnemyDamageData : DamageData
             damage = 1;
 
         string dText = $"{(int)damage}";
-        KingSlimeTakeDamageText.SetText(pos, dText);
+        SlimeTakeDamageText.SetText(pos, dText);
         return damage;
     }
 }
@@ -42,7 +42,7 @@ public class AllyUnitDamageData : DamageData
 {
     public IAllyUnit allyUnit;
     public override IAllyUnit Attacker => allyUnit ?? source;
-    // (2026-11-25) 킹 피해 집계 구분 (HeroKingAbility.TAG_*, null = 기본 공격). DamageMeterSystem.Record
+    // (2026-11-25) 슬라임 피해 집계 구분 (HeroSlimeAbility.TAG_*, null = 기본 공격). DamageMeterSystem.Record
     public string meterTag;
 
     // 발사 시 설정 (캐릭터 탄: 캐릭터 치명타 스탯, 타일 아이템: TileRune.ModifyDamageData)
@@ -91,13 +91,13 @@ public class AllyUnitDamageData : DamageData
     public void Init(IAllyUnit allyUnit)
     {
         this.allyUnit = allyUnit;
-        // 슬라임 치명타 확률 스탯(설의 버프 등). 연발 탄도 SetBullet → Init을 거치므로 같이 적용됨. 캐릭터 탄은 KingSlimeBulletObject에서 덮어씀
+        // 슬라임 치명타 확률 스탯(설의 버프 등). 연발 탄도 SetBullet → Init을 거치므로 같이 적용됨. 캐릭터 탄은 SlimeBulletObject에서 덮어씀
         critChance = allyUnit is Minion minion ? minion.CritChance : 0;
         critPower = allyUnit is Minion ? GameSetting.INIT_CRIT_POWER : 2f; // 슬라임 치명타 배율 (캐릭터 탄은 발사 시 캐릭터 스탯으로 덮어씀)
         ignoreDefence = false;
-        // 엘리트·보스 피해 +% 스탯 (미니언 = 버프, 킹 = 스탯). 거인 사냥 타일은 OnFired에서 여기에 곱함
+        // 엘리트·보스 피해 +% 스탯 (미니언 = 버프, 슬라임 = 스탯). 거인 사냥 타일은 OnFired에서 여기에 곱함
         float eliteBossBonus = allyUnit is Minion m ? m.EliteBossDamage
-            : allyUnit is KingSlime k && k.statMgr != null ? k.statMgr.GetValue(StatType.EliteBossDamage) : 0f;
+            : allyUnit is Slime k && k.statMgr != null ? k.statMgr.GetValue(StatType.EliteBossDamage) : 0f;
         eliteBossDamageMul = 1f + eliteBossBonus / 100f;
         lightDamageMul = 1f + GetBonusStat(allyUnit, StatType.DamageToLight) / 100f;
         normalDamageMul = 1f + GetBonusStat(allyUnit, StatType.DamageToNormal) / 100f;
@@ -105,12 +105,12 @@ public class AllyUnitDamageData : DamageData
         etherealDamageMul = 1f + GetBonusStat(allyUnit, StatType.DamageToEthereal) / 100f;
     }
 
-    // 버프로만 오르는 % 스탯 (미니언 = statDic, 킹 = statMgr). 없으면 0
+    // 버프로만 오르는 % 스탯 (미니언 = statDic, 슬라임 = statMgr). 없으면 0
     static float GetBonusStat(IAllyUnit allyUnit, StatType statType)
     {
         if (allyUnit is Minion m)
             return m.statDic.TryGetValue(statType, out float v) ? v : 0f;
-        if (allyUnit is KingSlime k && k.statMgr != null)
+        if (allyUnit is Slime k && k.statMgr != null)
             return k.statMgr.GetValue(statType);
         return 0f;
     }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 // (2026-11-27) 에디터·테스트용 가짜 멀티 서버 (에디터엔 Firebase 네이티브가 없음)
 // 들어가면 봇이 botJoinInterval초마다 한 명씩 들어와 8명을 채우고, 카운트다운 중 랜덤하게 Ready
-// 시작 뒤 봇은 botWaveInterval초마다 wave +1 (미니언·킹 레벨도 조금씩), 낮은 확률로 탈락, wave 50이면 도착
+// 시작 뒤 봇은 botWaveInterval초마다 wave +1 (미니언·슬라임 레벨도 조금씩), 낮은 확률로 탈락, wave 50이면 도착
 // 시간은 실제 시간(unscaled). 방 번호는 1부터, 코드는 7자리
 // 방장: 내가 먼저 들어간 방(빠른 매칭·방만들기)은 내가 방장 → fullAt·startAt은 MultiMatchManager가 씀
 //   코드입력 = 봇들이 먼저 있는 남의 방(방장 = 봇) → 가짜 서버가 방장 일을 대신 함. SimulateLeave로 방장이 나가는 상황
@@ -128,8 +128,8 @@ public class FakeMultiBackend : IMultiBackend
                 continue;
             bot.wave++;
             if (bot.wave % 3 == 0)
-                bot.kingLv = Mathf.Min(12, bot.kingLv + 1);
-            if (bot.kingLv >= 1 && string.IsNullOrEmpty(bot.heroKey))
+                bot.slimeLv = Mathf.Min(12, bot.slimeLv + 1);
+            if (bot.slimeLv >= 1 && string.IsNullOrEmpty(bot.heroKey))
                 bot.heroKey = BOT_HEROES[UnityEngine.Random.Range(0, BOT_HEROES.Length)];
             if (minions.Count < 8)
                 minions.Add((BOT_MINIONS[UnityEngine.Random.Range(0, BOT_MINIONS.Length)], 1));
@@ -165,7 +165,7 @@ public class FakeMultiBackend : IMultiBackend
             board.cells.Add(new MultiBoard.Cell { x = i % 6, y = i / 6, minion = m.key, lv = m.lv });
             i++;
         }
-        board.cells.Add(new MultiBoard.Cell { x = 3, y = 4, king = true });
+        board.cells.Add(new MultiBoard.Cell { x = 3, y = 4, slime = true });
         return JsonUtility.ToJson(board);
     }
 
@@ -248,7 +248,7 @@ public class FakeMultiBackend : IMultiBackend
         if (me != null && status != null)
         {
             me.wave = status.wave;
-            me.kingLv = status.kingLv;
+            me.slimeLv = status.slimeLv;
             me.heroKey = status.heroKey;
             me.minions = status.minions;
             me.board = status.board;
@@ -290,7 +290,7 @@ public class FakeMultiBackend : IMultiBackend
         foreach (MultiPlayerState p in room.players)
             copy.players.Add(new MultiPlayerState
             {
-                uid = p.uid, nickname = p.nickname, ready = p.ready, joinedAt = p.joinedAt, online = p.online, ai = p.ai, aiSlot = p.aiSlot, wave = p.wave, kingLv = p.kingLv,
+                uid = p.uid, nickname = p.nickname, ready = p.ready, joinedAt = p.joinedAt, online = p.online, ai = p.ai, aiSlot = p.aiSlot, wave = p.wave, slimeLv = p.slimeLv,
                 heroKey = p.heroKey, minions = p.minions, board = p.board, reachedAt = p.reachedAt, ended = p.ended, endedAt = p.endedAt,
             });
         listener(copy);

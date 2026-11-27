@@ -5,14 +5,14 @@ public class GameSetting
    // public const int MAX_EQUIPT_BULLET_COUNT = 5;
    // public const int MAX_MF_GROUP_POINT = 5; //MemoryFragment
    public static string FIRST_STAGE_KEY = "Normal_0"; // 스테이지 key = "{난이도}_{order}" (StageData.MakeKey, order 0부터)
-   public static KingSlimeName INIT_CHARACTER_NAME = KingSlimeName.Lucky;
+   public static SlimeName INIT_CHARACTER_NAME = SlimeName.Lucky;
    // (2026-11-20) 초기 지급·레벨 지급 미니언 = Resources/MinionUnlockSetting 에셋에서 설정 (수확·팔랑이는 게임에서 뺌)
    public static string[] INIT_MINION_KEYS => MinionUnlockSetting.InitKeys;
    public static (string key, int lv)[] MINION_LEVEL_UNLOCKS =>
       System.Array.ConvertAll(MinionUnlockSetting.LevelUnlocks, e => (e.key, e.level));
    // (2026-11-19) wave마다 카드 3장 지급 → 드래그로 소환 (MinionOfferSystem). 골드 소환·강화·코인 표시는 숨김. 합성 결과 = 같은 종
    public const bool USE_WAVE_MINION_OFFER = true;
-   // (2026-11-19) 카드 소환 비용 = 주사위 코인(KingSlime.diceCoin). 브레이크타임마다 WAVE_DICE_COIN 지급, 카드 가격 = MinionData.offerDiceCoinPrice(기본값이 OFFER_MINION_DICE_COIN_PRICE)
+   // (2026-11-19) 카드 소환 비용 = 주사위 코인(Slime.diceCoin). 브레이크타임마다 WAVE_DICE_COIN 지급, 카드 가격 = MinionData.offerDiceCoinPrice(기본값이 OFFER_MINION_DICE_COIN_PRICE)
    public const int WAVE_DICE_COIN = 5;
    public const int OFFER_MINION_DICE_COIN_PRICE = 2;
    // 게임에서 쓰는 미니언 =초기 지급 + 레벨 지급. 뽑기·미니언 관리 화면은 이 목록만
@@ -43,18 +43,18 @@ public class GameSetting
    // 일반 적 처치 코인이 이 wave 수마다 +1 (NormalEnemy.GetKillGold, 2026-11-19 이전 10)
    public const int KILL_GOLD_WAVE_INTERVAL = 20;
 
-   // (2026-11-22) 인게임 킹 레벨: 경험치는 주사위 코인으로 구매만 (처치 경험치 없음, KingExpBuyPanel)
+   // (2026-11-22) 인게임 슬라임 레벨: 경험치는 주사위 코인으로 구매만 (처치 경험치 없음, SlimeExpBuyPanel)
    // (2026-11-23) 최대 Lv.9, 필요 경험치 = 레벨마다 표 (Lv.0→1 ~ Lv.8→9). 최대 레벨이면 경험치 MAX (더 못 삼)
    // (2026-11-24) 최대 Lv.8 (Lv.8 = 3단계 스킬 "용사가 될거야!"). 표는 Lv.0→1 ~ Lv.7→8
-   public const int KING_MAX_LEVEL = 12;
-   public static readonly int[] KING_LEVEL_EXPS = { 2, 2, 3, 3, 4, 4, 5, 5,6,6,7,7 };
+   public const int SLIME_MAX_LEVEL = 12;
+   public static readonly int[] SLIME_LEVEL_EXPS = { 2, 2, 3, 3, 4, 4, 5, 5,6,6,7,7 };
    // (2026-11-26 최신) 용사 스킬 소모 에너지 (모든 용사 공통, index = 스킬 단계): 1단계 1 · 2단계 1 · 3단계(용사가 될거야!) 2
    public static readonly int[] HERO_SKILL_COSTS = { 1, 1, 2 };
    // (2026-11-24) 용사 에너지: wave 중 HERO_ENERGY_CHARGE_TIME초마다 1개 충전
    //   (2026-11-25 삭제: 정예병 칸 미니언 처치로 충전 시간 감소)
-   // (2026-11-25) 충전 60 → 30초, 최대 개수 = 킹 레벨 기준 (Lv.2 = 2개, Lv.4 = 3, Lv.6 = 4, Lv.8 = 5. 이전: 해방한 스킬 수)
+   // (2026-11-25) 충전 60 → 30초, 최대 개수 = 슬라임 레벨 기준 (Lv.2 = 2개, Lv.4 = 3, Lv.6 = 4, Lv.8 = 5. 이전: 해방한 스킬 수)
    public const float HERO_ENERGY_CHARGE_TIME = 30f;
-   // (2026-11-25) 에너지 최대 = 1단계 스킬 해방 때 2개, 이후 자동 증가 없음 → 용사 강화 카드 "에너지 보유 증가"(+1/Lv, 최대 3)로만 (이전: 킹 레벨 기준 2→3→4→5)
+   // (2026-11-25) 에너지 최대 = 1단계 스킬 해방 때 2개, 이후 자동 증가 없음 → 용사 강화 카드 "에너지 보유 증가"(+1/Lv, 최대 3)로만 (이전: 슬라임 레벨 기준 2→3→4→5)
    public const int HERO_ENERGY_BASE_MAX = 2;
    public const float HERO_MIN_CHARGE_TIME = 5f; // 충전 가속 카드를 다 골라도 이 아래로는 안 줄어듦 (2026-11-26 15 → 5: ×0.8 5레벨 = 9.8초까지 내려가게)
    // 경험치 구매: 주사위 코인 BUY_EXP_DICE_COIN_PRICE개 → 경험치 BUY_EXP_AMOUNT
@@ -64,7 +64,7 @@ public class GameSetting
    // (2026-11-26) 브레이크타임 미니언 자리 이동: 빈 칸에 놓으면 확인 팝업 → 주사위 코인 이만큼 내고 이동 (MinionFieldController)
    public const int MOVE_MINION_DICE_COIN = 2;
    public const int BUY_EXP_AMOUNT = 1;
-   // (2026-11-23) 킹 레벨업 보상: 레벨이 오를 때마다 주사위 코인 +1 (KingSlime.AddExp, 레벨업 창 아래에 표시)
+   // (2026-11-23) 슬라임 레벨업 보상: 레벨이 오를 때마다 주사위 코인 +1 (Slime.AddExp, 레벨업 창 아래에 표시)
    public const int LEVEL_UP_DICE_COIN = 1;
    // 보너스 엘리트: 다음 브레이크타임 주사위 코인 +1 (경험치 없음)
    public const int BONUS_ELITE_NEXT_DICE_COIN = 1;

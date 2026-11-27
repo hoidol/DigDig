@@ -39,7 +39,7 @@ public class BoomRune : Rune, IFired, IComboFire
     {
         if (triggerCounter < triggerCount)
             return;
-        await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+        await UniTask.Delay(Slime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
 
         MortarBulletSpec boomBullet = new MortarBulletSpec();
         boomBullet.boomRange = boomRange;
@@ -47,7 +47,7 @@ public class BoomRune : Rune, IFired, IComboFire
         Vector2 shootDir = new Vector2(
             dir.x * Mathf.Cos(angleOffset) - dir.y * Mathf.Sin(angleOffset),
             dir.x * Mathf.Sin(angleOffset) + dir.y * Mathf.Cos(angleOffset));
-        KingSlime.Instance.Shoot(boomBullet, shootDir);
+        Slime.Instance.Shoot(boomBullet, shootDir);
 
         // Character.Instance.AddHp(-itemData.consumeHp);
         

@@ -7,13 +7,13 @@ public class EliteEnemy : NormalEnemy
     [SerializeField] EnemyAttackPattern enemyAttackPattern;
 
 
-    public const int REACH_END_DAMAGE = 7; // (2026-11-22) 엘리트(보너스 엘리트 포함)가 경로 끝에 도착하면 킹 피해 (이전 10)
+    public const int REACH_END_DAMAGE = 7; // (2026-11-22) 엘리트(보너스 엘리트 포함)가 경로 끝에 도착하면 슬라임 피해 (이전 10)
 
     protected override void ReachPathEnd()
     {
         rg2d.linearVelocity = Vector2.zero;
         damageData.damage = REACH_END_DAMAGE;
-        KingSlime.Instance.TakeDamage(damageData);
+        Slime.Instance.TakeDamage(damageData);
         Destroy();
     }
     public const int ELITE_DICE_COIN = 2;
@@ -37,12 +37,12 @@ public class EliteEnemy : NormalEnemy
             // (2026-11-20) 다음 브레이크타임 주사위 코인 +1 (2026-11-22 처치 경험치 삭제)
             if (giveDiceCoin)
             {
-                KingSlime.Instance.AddDiceCoin(BONUS_ELITE_DICE_COIN);
+                Slime.Instance.AddDiceCoin(BONUS_ELITE_DICE_COIN);
                 DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{BONUS_ELITE_DICE_COIN}");
             }
             else
             {
-                bool now = KingSlime.Instance.AddRewardDiceCoin(GameSetting.BONUS_ELITE_NEXT_DICE_COIN);
+                bool now = Slime.Instance.AddRewardDiceCoin(GameSetting.BONUS_ELITE_NEXT_DICE_COIN);
                 DiceCoinText.Instantiate().SetDiceCoinText(transform.position, now ? $"+{GameSetting.BONUS_ELITE_NEXT_DICE_COIN}" :
                     string.Format(TranslateManager.GetText("BonusElite_NextDiceCoin"), GameSetting.BONUS_ELITE_NEXT_DICE_COIN));
             }
@@ -51,7 +51,7 @@ public class EliteEnemy : NormalEnemy
 
         if (giveDiceCoin)
         {
-            KingSlime.Instance.AddDiceCoin(ELITE_DICE_COIN);
+            Slime.Instance.AddDiceCoin(ELITE_DICE_COIN);
             DiceCoinText.Instantiate().SetDiceCoinText(transform.position, $"+{ELITE_DICE_COIN}");
         }
 

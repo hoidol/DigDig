@@ -1,0 +1,214 @@
+
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+[System.Serializable]
+public class SlimeStatManager
+{
+    [SerializeField] List<SlimeStat> statList = new();
+    public Dictionary<StatType, SlimeStat> statDic = new Dictionary<StatType, SlimeStat>();
+    public Dictionary<string, InGameUserMinionData> minionDic = new Dictionary<string, InGameUserMinionData>();
+
+    // public Dictionary<LevelUpStatType, CharacterLevelUpStat> levelUpStatDic = new Dictionary<LevelUpStatType, CharacterLevelUpStat>();
+    public Dictionary<string, CharacterRuneStat> runeStatDic = new Dictionary<string, CharacterRuneStat>();
+    public List<Buff> activeBuffs = new List<Buff>();
+
+    public float MaxHp => statDic[StatType.MaxHp].value;
+    public float AttackPower => statDic[StatType.AttackPower].value;
+    public float AttackSpeed => statDic[StatType.AttackSpeed].value;
+    public float CritChance => statDic[StatType.CritChance].value;
+    public float CritPower => statDic[StatType.CritPower].value;
+    public float AttackRange => statDic[StatType.AttackRange].value;
+
+    public SlimeData slimeData;
+    public Slime slime;
+
+    // StatType 전부 (StatType이 추가되면 자동 포함)
+    StatType[] usingStatTypes = Enumerable.Range(0, (int)StatType.Count).Select(i => (StatType)i).ToArray();
+
+    public float GetValue(StatType statType) => statDic.TryGetValue(statType, out var stat) ? stat.value : 0f;
+
+    public SlimeStatManager(Slime p, SlimeName slimeName)
+    {
+        slime = p;
+
+        slimeData = SlimeManager.Instance.GetSlimeData(slimeName);
+
+        statDic.Clear();
+        statList.Clear();
+
+        for (int i = 0; i < usingStatTypes.Length; i++)
+        {
+            var ps = new SlimeStat { statType = usingStatTypes[i] };
+            // Debug.Log($"ps.statType {ps.statType}");
+            ps.initValue = SlimeManager.Instance.GetTotalStatValue(slimeData, ps.statType); //SlimeData + 로비 업그레이드
+            statList.Add(ps);
+            statDic.Add(ps.statType, ps);
+        }
+
+        // for (int i = 0; i < LevelUpStatManager.Instance.levelUpStatDatas.Length; i++)
+        // {
+        //     var pl = new CharacterLevelUpStat { type = LevelUpStatManager.Instance.levelUpStatDatas[i].type };
+        //     levelUpStatDic.Add(pl.type, pl);
+        // }
+
+        minionDic.Clear();
+        UserDataManager.Instance.userMinionManager.userMinionData.userMinions.ForEach(s =>
+        {
+            minionDic.Add(s.key, new InGameUserMinionData()
+            {
+                key = s.key,
+                count = 0,
+                reinforceLevel = 0
+            });
+        });
+
+        Reset();
+    }
+
+    // (2026-11-24) 슬라임 기본 스탯 교체: 용사를 고르면 HeroData.csv의 그 용사 행, null이면 SlimeData (용사 강화 포인트는 그대로 위에 적용)
+    // HeroData에 없는 스탯은 SlimeData 값. 적용은 Slime.ApplyHeroBaseStats → UpdateCharacter
+    // (2026-11-25) heroLevel = 용사 레벨(슬라임 레벨, 1부터) → 기본 + Add × (heroLevel - 1)
+    public HeroDataTable.HeroData heroData;
+    public int heroLevel = 1;
+    public void SetHeroBase(HeroDataTable.HeroData hero, int heroLevel = 1)
+    {
+        heroData = hero;
+        this.heroLevel = Mathf.Max(1, heroLevel);
+        foreach (StatType statType in usingStatTypes)
+            statDic[statType].initValue = GetHeroStat(hero, statType, this.heroLevel);
+    }
+
+    // 용사 레벨 lv일 때 슬라임 기본 스탯 (용사 강화 포인트 포함, 버프 제외). 레벨업 창 "공격력 15 → 23" 표시에도 사용
+    public float GetHeroStat(HeroDataTable.HeroData hero, StatType statType, int lv)
+    {
+        float baseValue = hero != null && hero.TryGetStat(statType, lv, out float v) ? v : slimeData.GetSlimeStat(statType)?.value ?? 0f;
+        return SlimeManager.Instance.GetTotalStatValue(baseValue, statType);
+    }
+
+    void Reset()
+    {
+        for (int i = 0; i < usingStatTypes.Length; i++)
+        {
+            StatType statType = usingStatTypes[i];
+            statDic[statType].value = statDic[statType].initValue;
+        }
+    }
+    public void UpdateStat()
+    {
+        Reset();
+
+
+
+        foreach (var buff in activeBuffs)
+        {
+            var stat = statDic[buff.statType];
+            stat.value = buff.Apply(stat.value);
+        }
+    }
+
+    // public void AddLevelUpState(LevelUpStatType type, int lv)
+    // {
+    //     if (!levelUpStatDic.ContainsKey(type))
+    //     {
+    //         levelUpStatDic.Add(type, new CharacterLevelUpStat()
+    //         {
+    //             type = type,
+    //             lv = 0
+    //         });
+    //     }
+    //     levelUpStatDic[type].lv += lv;
+    // }
+    public void AddRune(string key, int count=1)
+    {
+        if (!runeStatDic.ContainsKey(key))
+        {
+            runeStatDic.Add(key, new CharacterRuneStat()
+            {
+                key = key,
+                count = 0
+            });
+        }
+        runeStatDic[key].count += count;
+        // itemStatDic[key].sum += count;
+        if (runeStatDic[key].count <= 0)
+        {
+            //아이템 제거하기
+            runeStatDic.Remove(key);
+        }
+    }
+
+    public void AddMinion(string key, int count = 1)
+    {
+        if (!minionDic.ContainsKey(key))
+        {
+            minionDic.Add(key, new InGameUserMinionData()
+            {
+                key = key,
+                count = 0
+            });
+        }
+        minionDic[key].count += count;
+    }
+
+    public int GetReinforceLevel(string key) => minionDic.TryGetValue(key, out var minion) ? minion.reinforceLevel : 0;
+
+    // 필드에 그 종이 있는지 (강화는 필드에 있을 때만)
+    public bool HasMinionOnField(string key) => minionDic.TryGetValue(key, out var minion) && minion.count > 0;
+
+    public void LevelUpMinion(string key)
+    {
+        if (minionDic.ContainsKey(key))
+        {
+            minionDic[key].reinforceLevel += 1;
+            GameEventBus.Publish(new MinionLevelUpReinforceEvent() { key = key, reinforceLevel = minionDic[key].reinforceLevel });
+        }
+
+    }
+
+    public void RemoveMinion(string key)
+    {
+        // 수가 0이 돼도 항목은 남긴다: 머지로 그 종이 잠깐 사라져도 강화 레벨(종 단위 투자)은 유지
+        if (minionDic.ContainsKey(key))
+            minionDic[key].count = Mathf.Max(0, minionDic[key].count - 1);
+    }
+    
+    public CharacterRuneStat GetCharacterRuneStat(string key)
+    {
+        return runeStatDic[key];
+    }
+}
+
+[System.Serializable]
+public class SlimeStat
+{
+    public StatType statType;
+    public float initValue; //SlimeData + 업그레이드
+    public float value; //0~1
+
+    public string Title => StatData.GetTitle(statType);
+    public Sprite Thum => StatData.GetThum(statType);
+
+    // public string GetValueToString()
+    // {
+    //     return value.ToString();
+    // }
+
+
+}
+
+
+[System.Serializable]
+public class CharacterRuneStat
+{
+    public string key;
+    public int count; //현재 총 누적 개수
+}
+
+[System.Serializable]
+public class MinionLevelUpReinforceEvent
+{
+    public string key;
+    public int reinforceLevel;
+}

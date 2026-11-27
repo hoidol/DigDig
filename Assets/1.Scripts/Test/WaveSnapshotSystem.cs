@@ -6,7 +6,7 @@ using UnityEngine;
 
 // (2026-11-26) 테스트 전용 웨이브 저장·복구 (기기 테스트 패널 MobileTestPanel [웨이브 전환] 탭)
 // 브레이크타임이 시작될 때마다(= 그 wave를 준비하기 전, 레벨업·카드 사용 전) 판 상태를 wave별로 저장:
-//   킹(칸·레벨·경험치·체력·주사위 코인·성장 능력(용사·정예 칸·스킬 해방·에너지·강화 카드)) · 미니언(칸·종·머지 레벨·진화 갈래·타겟/회전/버프 범위 설정)
+//   슬라임(칸·레벨·경험치·체력·주사위 코인·성장 능력(용사·정예 칸·스킬 해방·에너지·강화 카드)) · 미니언(칸·종·머지 레벨·진화 갈래·타겟/회전/버프 범위 설정)
 //   · 룬(칸·종·레벨) · 막힌 칸 · 미니언 강화 카드 레벨 · 필드 최대 미니언 수
 //   카드(오퍼 미니언)는 저장 안 함 → 복구하면 그 wave 브레이크타임으로 가서 카드·주사위 코인을 새로 받고, 저장한 주사위 코인으로 맞춤
 // 저장 안 함(복구 안 됨): 성장 룬 누적 공격력 · 미션 진행 · 피해 집계 · 받지 않은 룬 보상 · 박격포 깃발 위치
@@ -68,7 +68,7 @@ public static class WaveSnapshotSystem
         if (snap == null)
             return;
         snapshots[nextWaveIdx] = snap;
-        Debug.Log($"[WaveSnapshot] Wave {nextWaveIdx + 1} 저장: 미니언 {snap.minions.Count} · 룬 {snap.runes.Count} · 킹 Lv.{snap.lv}");
+        Debug.Log($"[WaveSnapshot] Wave {nextWaveIdx + 1} 저장: 미니언 {snap.minions.Count} · 룬 {snap.runes.Count} · 슬라임 Lv.{snap.lv}");
     }
 
     // 저장해 둔 그 wave 브레이크타임으로 되돌림. 저장이 없으면 false

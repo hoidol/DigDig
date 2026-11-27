@@ -19,8 +19,8 @@ public class PlayRecordPlayTest : InGamePlayTestBase
             Assert.Less(EditorApplication.timeSinceStartup, end, msg);
             if (EditorApplication.isPaused)
                 EditorApplication.isPaused = false;
-            if (KingSlime.Instance != null)
-                KingSlime.Instance.AddHp(100000, false);
+            if (Slime.Instance != null)
+                Slime.Instance.AddHp(100000, false);
             yield return null;
         }
     }

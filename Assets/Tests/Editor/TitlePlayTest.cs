@@ -9,12 +9,12 @@ using UnityEngine.TestTools;
 public class NicknameRuleTest
 {
     [TestCase("슬라임", true)]
-    [TestCase("  킹슬  ", true)] // 앞뒤 공백은 정리 (2자)
-    [TestCase("King99", true)]
-    [TestCase("킹 슬", false)]   // 가운데 공백 X
-    [TestCase("킹!", false)]     // 특수문자 X
+    [TestCase("  슬라임슬  ", true)] // 앞뒤 공백은 정리 (2자)
+    [TestCase("Slime99", true)]
+    [TestCase("슬라임 슬", false)]   // 가운데 공백 X
+    [TestCase("슬라임!", false)]     // 특수문자 X
     [TestCase("ㅋㅋ", false)]     // 자모만 X
-    [TestCase("킹_슬", false)]
+    [TestCase("슬라임_슬", false)]
     [TestCase("a", false)]       // 너무 짧음
     [TestCase("12345678901", false)] // 11자
     [TestCase("시발놈", false)]   // 금칙어
@@ -26,7 +26,7 @@ public class NicknameRuleTest
 
     [TestCase("a.b")]
     [TestCase("a/b")]
-    [TestCase("[킹]")]
+    [TestCase("[슬라임]")]
     public void ServerKeyChars_NotAllowed(string raw) => Assert.IsNotNull(UserMyInfoManager.ValidateNickname(raw, out _));
 
     [Test]

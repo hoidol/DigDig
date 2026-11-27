@@ -39,7 +39,7 @@ public abstract class GrantRune : Rune
     public List<Minion> GetTargets()
     {
         List<Minion> targets = new List<Minion>();
-        Tile center = TileManager.Instance.GetTile(KingSlime.Instance);
+        Tile center = TileManager.Instance.GetTile(Slime.Instance);
         foreach (Tile tile in TileManager.Instance.GetTilesAround(center, AreaOffsets))
         {
             if (tile.tileGroup != center.tileGroup) // 바로 옆 칸이라도 그룹이 다르면 영향 없음

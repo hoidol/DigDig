@@ -25,7 +25,7 @@ public class MinionMovement : MonoBehaviour
 
     public virtual void FixedUpdate()
     {
-        Vector2 vec = KingSlime.Instance.transform.position - transform.position;
+        Vector2 vec = Slime.Instance.transform.position - transform.position;
         float tempMoveSpeed = moveSpeed;
         if (vec.magnitude < outRange)
         {

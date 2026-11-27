@@ -11093,7 +11093,7 @@ GameObject:
   - component: {fileID: 342555245}
   - component: {fileID: 342555244}
   m_Layer: 5
-  m_Name: KingSlimeManageCanvas
+  m_Name: SlimeManageCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15446,7 +15446,7 @@ GameObject:
   - component: {fileID: 473240680}
   - component: {fileID: 473240670}
   m_Layer: 16
-  m_Name: Lucky_KingSlime
+  m_Name: Lucky_Slime
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15483,13 +15483,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc15c4c22994841f18cd2ce6c275b4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kingslimeName: 0
+  slimeName: 0
   rg: {fileID: 0}
   statMgr:
     statList: []
     activeBuffs: []
-    kingslimeData: {fileID: 0}
-    kingslime: {fileID: 0}
+    slimeData: {fileID: 0}
+    slime: {fileID: 0}
     heroData:
       skills: []
       key: 
@@ -16042,7 +16042,7 @@ GameObject:
   - component: {fileID: 479152369}
   - component: {fileID: 479152368}
   m_Layer: 5
-  m_Name: KingSlimeShortcutInfoPanel
+  m_Name: SlimeShortcutInfoPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35090,7 +35090,7 @@ GameObject:
   - component: {fileID: 1141272832}
   - component: {fileID: 1141272833}
   m_Layer: 0
-  m_Name: KingExpBuyPanel
+  m_Name: SlimeExpBuyPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -35128,7 +35128,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2886e3e8c3429427baee923767f337a1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KingExpBuyPanel
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeExpBuyPanel
   levelText: {fileID: 243831997}
   expSlider: {fileID: 0}
   buyButton: {fileID: 445001337}
@@ -40775,7 +40775,7 @@ MonoBehaviour:
   minionShortcutInfoPanel: {fileID: 1472114640}
   attackTypePanel: {fileID: 46652507}
   sellMinionButton: {fileID: 1888076332}
-  kingClassInfoPanel: {fileID: 1835317155}
+  slimeClassInfoPanel: {fileID: 1835317155}
 --- !u!1 &1332651604
 GameObject:
   m_ObjectHideFlags: 0
@@ -51193,7 +51193,7 @@ GameObject:
   - component: {fileID: 1619467920}
   - component: {fileID: 1619467919}
   m_Layer: 0
-  m_Name: King
+  m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -57022,7 +57022,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d40da9e4937479fa267a851a5e09ff3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::KingClassInfoPanel
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeClassInfoPanel
   raceBadge: {fileID: 444390796}
   raceIcon: {fileID: 2060270701}
   raceText: {fileID: 1221727732}
@@ -62785,7 +62785,7 @@ GameObject:
   - component: {fileID: 2083567928}
   - component: {fileID: 2083567927}
   m_Layer: 0
-  m_Name: King
+  m_Name: Slime
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -34,7 +34,7 @@ public class KillCoinBehavior : IBulletBehavior
             return true;
 
         enemy.killedBy = null;
-        KingSlime.Instance.AddCoin(rune.addCoin);
+        Slime.Instance.AddCoin(rune.addCoin);
         CoinText.Instantiate().SetCoinText(hit.Transform.position + Vector3.up * 0.4f, $"+{rune.addCoin}");
         return true;
     }

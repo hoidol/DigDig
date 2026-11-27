@@ -4,7 +4,7 @@ using UnityEngine;
 public class DialogueTutorialStep : TutorialStep
 {
     [Header("화자 (TutorialCanvas.speakers의 key). 이름·초상화가 대화창에 나옴")]
-    public string speakerKey = "KingSlime";
+    public string speakerKey = "Slime";
 
     [Header("대사 목록 (번역 key면 번역문, 아니면 적은 글씨 그대로)")]
     [TextArea(2, 5)]

@@ -25,8 +25,8 @@ namespace EffectMaker
         public const string TILE_SPRITE_PATH = "Assets/2.Sprites/BaseTile0.png";
         public const string ENEMY_SPRITE_PATH = "Assets/2.Sprites/Minion/Growth1/enemy1.png";
         public const string MINION_SPRITE_FOLDER = "Assets/2.Sprites/Minion/Growth1";
-        public const string KING_BODY_PATH = "Assets/2.Sprites/Character/Body.png";
-        public const string KING_EYES_PATH = "Assets/2.Sprites/Character/eyes.png";
+        public const string SLIME_BODY_PATH = "Assets/2.Sprites/Character/Body.png";
+        public const string SLIME_EYES_PATH = "Assets/2.Sprites/Character/eyes.png";
 
         class RunningEffect
         {
@@ -123,10 +123,10 @@ namespace EffectMaker
             caster = NewObject("Caster", root.transform).transform;
             caster.position = GetTilePos(Mathf.Clamp(s.casterTile, 0, 3));
 
-            if (s.casterType == CasterType.King)
+            if (s.casterType == CasterType.Slime)
             {
-                var body = NewSprite("Body", caster, LoadSprite(KING_BODY_PATH), 0.9f, CASTER_ORDER);
-                var eyes = NewSprite("Eyes", caster, LoadSprite(KING_EYES_PATH), 1f, CASTER_ORDER + 1);
+                var body = NewSprite("Body", caster, LoadSprite(SLIME_BODY_PATH), 0.9f, CASTER_ORDER);
+                var eyes = NewSprite("Eyes", caster, LoadSprite(SLIME_EYES_PATH), 1f, CASTER_ORDER + 1);
                 eyes.transform.localScale = body.transform.localScale; // 몸과 같은 비율
             }
             else

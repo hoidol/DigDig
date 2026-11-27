@@ -13,7 +13,7 @@ using UnityEngine;
 // iOS 서명: 환경 변수 KS_APPLE_TEAM_ID (자동 서명).
 public static class ReleaseBuild
 {
-    public const string APP_ID = "com.BEI.KingSlime";
+    public const string APP_ID = "com.BEI.BeHero";
 
     public static void BuildAndroid()
     {

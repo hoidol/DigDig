@@ -122,7 +122,7 @@ public abstract class Boss : Enemy, IEnemySpecialAttackPattern
     {
         rg2d.linearVelocity = Vector2.zero;
         damageData.damage = 99999;
-        KingSlime.Instance.TakeDamage(damageData);
+        Slime.Instance.TakeDamage(damageData);
 
     }
     public BossBehaviour GetBossBehaviour(string name)

@@ -160,8 +160,8 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
     public FindTargetType FindTargetType => findTargetType;
     // (2026-11-25) 실제로 쓰는 타겟 방식 (용사 스킬이 잠깐 바꿀 수 있음, 레인저 매의 눈. 랜덤 타겟 룬 차례는 그대로)
-    public FindTargetType EffectiveFindTargetType => findTargetType != FindTargetType.Random && HeroKingAbility.ForcedAllyFindTarget.HasValue
-        ? HeroKingAbility.ForcedAllyFindTarget.Value : findTargetType;
+    public FindTargetType EffectiveFindTargetType => findTargetType != FindTargetType.Random && HeroSlimeAbility.ForcedAllyFindTarget.HasValue
+        ? HeroSlimeAbility.ForcedAllyFindTarget.Value : findTargetType;
     // 타겟 방식 설정이 의미 있는지 (회전체·경로 순환처럼 타겟을 노리지 않는 슬라임은 false → 설정 버튼 숨김)
     public virtual bool UseFindTarget => true;
 
@@ -499,9 +499,9 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
     // 시각적 변화(탄 수, 체인 수 등)는 강화가 아니라 머지 레벨로 준다
     public virtual void UpdateReinforce()
     {
-        if (KingSlime.Instance == null) // 씬 종료 중 (킹이 먼저 파괴됨)
+        if (Slime.Instance == null) // 씬 종료 중 (슬라임이 먼저 파괴됨)
             return;
-        int reinforceLevel = KingSlime.Instance.statMgr.GetReinforceLevel(minionData.key);
+        int reinforceLevel = Slime.Instance.statMgr.GetReinforceLevel(minionData.key);
         statDic[StatType.AttackPower] *= 1f + minionData.reinforceAttackPowerPercent / 100f * reinforceLevel;
     }
 
@@ -634,7 +634,7 @@ public abstract class Minion : MonoBehaviour, IAllyUnit, ITileObject, IBuffable,
 
     async UniTaskVoid DoubleShot(BulletSpec spec, IAllyUnit allyUnit, Vector2 pos, Vector2 dir, float damage)
     {
-        if (await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow())
+        if (await UniTask.Delay(Slime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow())
             return;
         if (!gameObject.activeInHierarchy)
             return;

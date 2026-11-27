@@ -12,13 +12,13 @@ public class WoodSwordRune : Rune
         float addAP =  attackPower;
         //공격력
         atkPowerBuff = new Buff(StatType.AttackPower, addAP, StatOpType.Add);
-        KingSlime.Instance.AddBuff(atkPowerBuff);
+        Slime.Instance.AddBuff(atkPowerBuff);
 
     }
     void Release()
     {
         if (atkPowerBuff != null)
-            KingSlime.Instance.RemoveBuff(atkPowerBuff);
+            Slime.Instance.RemoveBuff(atkPowerBuff);
     }
 
 

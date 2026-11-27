@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 12615797}
   - component: {fileID: 12615796}
   m_Layer: 0
-  m_Name: KingMark
+  m_Name: SlimeMark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1104,7 +1104,7 @@ MonoBehaviour:
   lvText: {fileID: 1658078244}
   evolvedMark: {fileID: 1712556930}
   runeImage: {fileID: 303714090}
-  kingMark: {fileID: 12615794}
+  slimeMark: {fileID: 12615794}
   blockedMark: {fileID: 156275758}
 --- !u!114 &259605475
 MonoBehaviour:
@@ -1922,7 +1922,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: KING
+  m_text: SLIME
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fb074ab2e8b3b4c0c8bb83691e429c70, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 15ca3fb7112a94757bd37e7a29a7b202, type: 2}
@@ -6024,7 +6024,7 @@ MonoBehaviour:
   nicknameText: {fileID: 1848916121}
   waveText: {fileID: 1161858537}
   minionsText: {fileID: 0}
-  kingText: {fileID: 2095894822}
+  slimeText: {fileID: 2095894822}
   viewButton: {fileID: 1523462716}
   reachedMark: {fileID: 103974949}
   outMark: {fileID: 0}
@@ -6561,7 +6561,7 @@ GameObject:
   - component: {fileID: 2095894823}
   - component: {fileID: 2095894822}
   m_Layer: 0
-  m_Name: KingText
+  m_Name: SlimeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

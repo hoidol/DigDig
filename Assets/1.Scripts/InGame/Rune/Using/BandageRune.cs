@@ -14,7 +14,7 @@ public class BandageRune : TriggerRune
     {
         base.OnTrigger();
         Debug.Log("BandageItem OnTrigger()");
-        KingSlime.Instance.AddHp(healAmount);
+        Slime.Instance.AddHp(healAmount);
     }
 
     public override string GetDescription()

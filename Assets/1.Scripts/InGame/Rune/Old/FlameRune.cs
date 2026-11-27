@@ -29,10 +29,10 @@ public class FlameRune : Rune, IFired
             flameBullet.burnDPS = burnDPS;
 
             Vector2 randomDir = Random.insideUnitCircle.normalized;
-            KingSlime.Instance.Shoot(flameBullet, randomDir);
+            Slime.Instance.Shoot(flameBullet, randomDir);
 
             randomDir = Random.insideUnitCircle.normalized;
-            KingSlime.Instance.Shoot(flameBullet, randomDir);
+            Slime.Instance.Shoot(flameBullet, randomDir);
 
             // Character.Instance.AddHp(-itemData.consumeHp);
             

@@ -60,16 +60,16 @@ public class StageMapPlayTest : InGamePlayTestBase
         int reached = 0;
         double timeout = EditorApplication.timeSinceStartup + 60;
         var seenRoutes = new System.Collections.Generic.HashSet<Transform[]>();
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         while (EditorApplication.timeSinceStartup < timeout)
         {
-            king.enabled = false; // 킹 공격 끔 → 적이 경로 끝까지 감
+            slime.enabled = false; // 슬라임 공격 끔 → 적이 경로 끝까지 감
             foreach (Enemy e in field.activeEnemies)
                 if (e.route != null)
                     seenRoutes.Add(e.route);
-            if (king.health.curHp < king.MaxHp)
-                reached++; // 경로 끝 도착 = 킹 피해
-            king.health.curHp = king.MaxHp;
+            if (slime.health.curHp < slime.MaxHp)
+                reached++; // 경로 끝 도착 = 슬라임 피해
+            slime.health.curHp = slime.MaxHp;
             if (seenRoutes.Count >= field.Routes.Count && reached > 0)
                 break;
             if (EditorApplication.isPaused)

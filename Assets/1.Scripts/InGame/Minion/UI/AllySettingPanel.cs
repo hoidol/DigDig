@@ -10,19 +10,19 @@ public class AllySettingPanel : MonoBehaviour
     public SetRotationDirectionButton setRotationDirectionButton; // 회전체·경로 순환 슬라임: 시계 / 반시계
     // public TMP_Text nameText;
     // public Image thumImage;
-    public KingSlimeShortcutInfoPanel characterShortcutInfoPanel;
+    public SlimeShortcutInfoPanel characterShortcutInfoPanel;
     public MinionShortcutInfoPanel minionShortcutInfoPanel;
     public AttackTypePanel attackTypePanel;
-    public SellMinionButton sellMinionButton; // 비우면 하위에서 찾음. 미니언만 판매(킹은 숨김)
-    public KingClassInfoPanel kingClassInfoPanel; // (2026-11-21) 킹 선택 시 종족·직업 칸 + 설명. 비우면 하위에서 찾음
+    public SellMinionButton sellMinionButton; // 비우면 하위에서 찾음. 미니언만 판매(슬라임은 숨김)
+    public SlimeClassInfoPanel slimeClassInfoPanel; // (2026-11-21) 슬라임 선택 시 종족·직업 칸 + 설명. 비우면 하위에서 찾음
 
     IAllyUnit targetMinion;
     void Awake()
     {
         if (sellMinionButton == null)
             sellMinionButton = GetComponentInChildren<SellMinionButton>(true);
-        if (kingClassInfoPanel == null)
-            kingClassInfoPanel = GetComponentInChildren<KingClassInfoPanel>(true);
+        if (slimeClassInfoPanel == null)
+            slimeClassInfoPanel = GetComponentInChildren<SlimeClassInfoPanel>(true);
     }
     void Start()
     {
@@ -41,14 +41,14 @@ public class AllySettingPanel : MonoBehaviour
         minionShortcutInfoPanel.gameObject.SetActive(false);
         if (allyUnit.AllyType == AllyType.Character)
         {
-            KingSlimeData characterData = KingSlimeManager.Instance.GetKingSlimeData(KingSlime.Instance.kingslimeName );
+            SlimeData characterData = SlimeManager.Instance.GetSlimeData(Slime.Instance.slimeName );
             // thumImage.sprite = characterData.thum;
             // nameText.text = characterData.Title;
             
-            attackTypePanel.SetAttackType(GetAttackType(KingSlime.Instance.weapon.attackType, KingSlime.Instance.shotModifier));
-            characterShortcutInfoPanel.SetCharacter(KingSlime.Instance);
-            if (kingClassInfoPanel != null)
-                kingClassInfoPanel.ShowKing(KingSlime.Instance);
+            attackTypePanel.SetAttackType(GetAttackType(Slime.Instance.weapon.attackType, Slime.Instance.shotModifier));
+            characterShortcutInfoPanel.SetCharacter(Slime.Instance);
+            if (slimeClassInfoPanel != null)
+                slimeClassInfoPanel.ShowSlime(Slime.Instance);
         }
         else
         {
@@ -57,8 +57,8 @@ public class AllySettingPanel : MonoBehaviour
             // nameText.text = minion.minionData.Title;
             attackTypePanel.SetAttackType(GetAttackType(minion.minionData.attackType, minion.shotModifier));
             minionShortcutInfoPanel.SetMinion(minion);
-            if (kingClassInfoPanel != null)
-                kingClassInfoPanel.ShowMinion();
+            if (slimeClassInfoPanel != null)
+                slimeClassInfoPanel.ShowMinion();
         }
         obj.SetActive(true);
         // 유닛이 쓸 수 있는 설정 버튼만 노출 (각 버튼이 IsAvailable로 판단)

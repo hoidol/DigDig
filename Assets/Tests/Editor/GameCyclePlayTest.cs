@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
-// 게임 한 사이클을 실제 버튼 흐름으로: 로비(킹 레벨 스탯 포인트) → 전투 버튼 → 인게임(부활 성공 / 포기) → 결과 → 로비(레벨업 창)
+// 게임 한 사이클을 실제 버튼 흐름으로: 로비(슬라임 레벨 스탯 포인트) → 전투 버튼 → 인게임(부활 성공 / 포기) → 결과 → 로비(레벨업 창)
 // → 다시 포인트 → 인게임(바로 사망) → 로비. 단계마다 UserDataManager 메모리 값과 저장 파일(Assets/User*.json)을 함께 확인한다.
 public class GameCyclePlayTest : InGamePlayTestBase
 {
@@ -18,19 +18,19 @@ public class GameCyclePlayTest : InGamePlayTestBase
 
     static UserDataManager User => UserDataManager.Instance;
     static UserMyInfoManager MyInfo => User.userMyInfoManager;
-    static UserKingSlimeManager KSUser => User.userKingSlimeManager;
-    static KingSlimeData KSData => KingSlimeManager.Instance.GetKingSlimeData(User.userData.CharacterName);
+    static UserSlimeManager KSUser => User.userSlimeManager;
+    static SlimeData KSData => SlimeManager.Instance.GetSlimeData(User.userData.CharacterName);
 
     // (2026-11-24) 레벨 스탯: 첫 묶음(Lv.1~5)의 첫 스탯에 포인트. 첫 묶음 해금 레벨(Lv.1)부터 시작해 레벨업 2번
     const int TIER_IDX = 0;
     const int OPTION_IDX = 0;
-    static KingLevelStatSetting.Tier Tier => KingLevelStatSetting.Tiers[TIER_IDX];
-    static KingLevelStatSetting.StatOption Option => Tier.options[OPTION_IDX];
+    static SlimeLevelStatSetting.Tier Tier => SlimeLevelStatSetting.Tiers[TIER_IDX];
+    static SlimeLevelStatSetting.StatOption Option => Tier.options[OPTION_IDX];
     static int StartLv => Tier.unlockLevel;
 
     static float ExpectedStat(StatType statType)
     {
-        float baseValue = KSData.GetKingSlimeStat(statType)?.value ?? 0f;
+        float baseValue = KSData.GetSlimeStat(statType)?.value ?? 0f;
         float add = 0f, mul = 0f;
         int points = KSUser.GetPoints(TIER_IDX, OPTION_IDX);
         if (Option.statType == statType)
@@ -38,14 +38,14 @@ public class GameCyclePlayTest : InGamePlayTestBase
             if (Option.multiply) mul = Option.valuePerPoint * points;
             else add = Option.valuePerPoint * points;
         }
-        return UserKingSlimeManager.CalcStat(baseValue, add, mul);
+        return UserSlimeManager.CalcStat(baseValue, add, mul);
     }
 
     static T Saved<T>(string fileName) => SaveManager.LoadData<T>(fileName);
     static UserData SavedUserData => Saved<UserData>(UserDataManager.UserDataFileName);
     static UserMyInfoData SavedMyInfo => Saved<UserMyInfoData>(UserMyInfoManager.UserDataFileName);
     static UserStage SavedStage(string key) => Saved<UserStageData>(UserStageManager.UserDataFileName).userStages.FirstOrDefault(s => s.key == key);
-    static int SavedPoints() => Saved<UserKSData>(UserKingSlimeManager.UserDataFileName).statPoints.FirstOrDefault(p => p.tierIdx == TIER_IDX && p.optionIdx == OPTION_IDX)?.points ?? 0;
+    static int SavedPoints() => Saved<UserKSData>(UserSlimeManager.UserDataFileName).statPoints.FirstOrDefault(p => p.tierIdx == TIER_IDX && p.optionIdx == OPTION_IDX)?.points ?? 0;
 
     [UnityTest]
     public IEnumerator Lobby_InGame_Result_LevelUp_Cycle()
@@ -71,7 +71,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         stage.maxWave = 0;
         int tryCount = stage.tryCount;
 
-        // ── 1. 로비 킹 레벨 스탯 (칸 클릭) ──
+        // ── 1. 로비 슬라임 레벨 스탯 (칸 클릭) ──
         yield return UpgradeInLobby(upgradeStat, 1);
 
         // ── 2. 전투 버튼 → 인게임: 에너지 차감, 업그레이드 반영 ──
@@ -90,7 +90,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return StartGameFromLobby();
         Assert.AreEqual(stageKey, GameManager.Instance.stageData.key, "선택한 난이도 스테이지로 시작");
         Assert.AreEqual(energe - GameSetting.PLAY_COST_ENERGE, User.userData.energe, "전투 시작 시 에너지 차감");
-        AssertKingStat(upgradeStat);
+        AssertSlimeStat(upgradeStat);
 
         // ── 3. 사망 → 부활(광고 성공): 보상·도전 횟수 변화 없음 ──
         current = "1판 부활";
@@ -100,7 +100,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
         PlayerPrefs.DeleteKey(FailCanvas.DAILY_RESURRECTION_DATE_KEY); // 오늘 처음 → 5회
         int exp = MyInfo.userMyInfoData.exp;
 
-        KingSlime.Instance.TakeDamage(KILL);
+        Slime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         Assert.IsTrue(FailCanvas.Instance.gameObject.activeSelf, "사망 시 실패 화면");
         FailCanvas.Instance.OnClickeResume();
@@ -115,7 +115,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
             yield return SkipWave();
         Assert.AreEqual(FIRST_RUN_WAVE, GameManager.Instance.waveIdx);
 
-        KingSlime.Instance.TakeDamage(KILL);
+        Slime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         FailCanvas.Instance.OnClickedCancel();
         yield return WaitFrames(3);
@@ -174,10 +174,10 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return UpgradeInLobby(upgradeStat, 2);
         current = "2판";
         yield return StartGameFromLobby();
-        AssertKingStat(upgradeStat);
+        AssertSlimeStat(upgradeStat);
 
         MinionFieldController.Instance.mergeCount = 0;
-        KingSlime.Instance.TakeDamage(KILL);
+        Slime.Instance.TakeDamage(KILL);
         yield return WaitFrames(3);
         FailCanvas.Instance.OnClickedCancel();
         yield return WaitFrames(3);
@@ -211,7 +211,7 @@ public class GameCyclePlayTest : InGamePlayTestBase
     IEnumerator UpgradeInLobby(StatType statType, int expectedPoints)
     {
         current = $"레벨 스탯 → {expectedPoints}포인트";
-        Lobby.LobbyManager.Instance.OpenCanvas(LobbyState.KingSlimeManagement);
+        Lobby.LobbyManager.Instance.OpenCanvas(LobbyState.SlimeManagement);
         yield return WaitFrames(3);
         var canvas = Object.FindFirstObjectByType<KSManagementCanvas>(FindObjectsInactive.Include);
         Assert.IsTrue(canvas != null && canvas.gameObject.activeInHierarchy, "KSManagementCanvas가 안 열림");
@@ -241,12 +241,12 @@ public class GameCyclePlayTest : InGamePlayTestBase
         yield return WaitUntil(() => GameManager.Instance != null && GameManager.Instance.isPlaying, "인게임이 시작되지 않음");
     }
 
-    void AssertKingStat(StatType statType)
+    void AssertSlimeStat(StatType statType)
     {
         float expected = ExpectedStat(statType);
-        Assert.AreEqual(expected, KingSlime.Instance.statMgr.GetValue(statType), EPSILON, $"인게임 {statType} (기본 + 레벨 스탯)");
+        Assert.AreEqual(expected, Slime.Instance.statMgr.GetValue(statType), EPSILON, $"인게임 {statType} (기본 + 레벨 스탯)");
         if (statType == StatType.MaxHp)
-            Assert.AreEqual(expected, KingSlime.Instance.health.MaxHp, EPSILON, "킹 최대 체력");
+            Assert.AreEqual(expected, Slime.Instance.health.MaxHp, EPSILON, "슬라임 최대 체력");
     }
 
     static void AssertMyInfoPanels()

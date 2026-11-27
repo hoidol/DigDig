@@ -24,7 +24,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             GameEventBus.Publish(new MinionMaxCountChangedEvent());
         }
     }
-    public int CountedMinionCount => KingSlime.Instance.minionInventory.curMinions.Count; // 최대 수 판정에 쓰는 슬라임 수
+    public int CountedMinionCount => Slime.Instance.minionInventory.curMinions.Count; // 최대 수 판정에 쓰는 슬라임 수
     public int mergeCount;
     public int reinforceCount;
     // public int mergeCoinGetCounter;
@@ -51,8 +51,8 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
     {
         string key = s.key;
         int level = s.mergeLevel;
-        KingSlime.Instance.RemoveMinion(s);
-        Minion minion = KingSlime.Instance.AddMinion(key, level + 1);
+        Slime.Instance.RemoveMinion(s);
+        Minion minion = Slime.Instance.AddMinion(key, level + 1);
         return minion;
     }
 
@@ -87,10 +87,10 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             dragObject = null;
 
         TileManager.Instance.RemoveTileObject(minion);
-        KingSlime.Instance.RemoveMinion(minion);
+        Slime.Instance.RemoveMinion(minion);
         if (wasSelected)
             SelectTile(null);
-        KingSlimeManageCanvas.Instance.UpdateCanvas();
+        SlimeManageCanvas.Instance.UpdateCanvas();
     }
 
     // 필드의 슬라임을 다른 슬라임으로 교체 (같은 타일). 성장·조커 변신 등
@@ -103,15 +103,15 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             dragObject = null;
 
         TileManager.Instance.RemoveTileObject(old);
-        KingSlime.Instance.RemoveMinion(old);
-        Minion minion = KingSlime.Instance.AddMinion(key, lv);
+        Slime.Instance.RemoveMinion(old);
+        Minion minion = Slime.Instance.AddMinion(key, lv);
         if (tile != null)
             tile.SetTileObject(minion);
         if (minion != null)
             minion.CopyUnitOptionsFrom(old); // 그 칸에 있던 미니언 설정 유지 (카드 합성·성장·변신)
         if (wasSelected)
             SelectTile(tile);
-        KingSlimeManageCanvas.Instance.UpdateCanvas();
+        SlimeManageCanvas.Instance.UpdateCanvas();
         return minion;
     }
 
@@ -128,7 +128,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
 
     void Awake()
     {
-        // 로비 업그레이드·장비는 GameManager에서 킹 스탯(MaxMinionCount)으로 더함 (여기서 또 더하면 두 번 적용됨)
+        // 로비 업그레이드·장비는 GameManager에서 슬라임 스탯(MaxMinionCount)으로 더함 (여기서 또 더하면 두 번 적용됨)
         minionMaxCount = GameSetting.MINION_MIN_EXIST_COUNT;
 
         if (minionLayer == 0)
@@ -250,7 +250,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         Vector3 mousePos = GetMouseWorldPos();
         ITileObject tileObject = FindMinion(mousePos, null);
         if (tileObject == null && IsCharacterAt(mousePos))
-            tileObject = KingSlime.Instance;
+            tileObject = Slime.Instance;
 
         if (dragFilter != null && (tileObject == null || !dragFilter(tileObject)))
             return;
@@ -311,7 +311,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         return true;
     }
 
-    // 슬라임끼리 놓으면 머지 시도(머지가 안 되면 두 슬라임 자리 교체), 킹 ↔ 슬라임은 자리 교체, 빈 타일이면 이동, 그 외엔 원위치
+    // 슬라임끼리 놓으면 머지 시도(머지가 안 되면 두 슬라임 자리 교체), 슬라임 ↔ 슬라임은 자리 교체, 빈 타일이면 이동, 그 외엔 원위치
     void EndDrag()
     {
         ITileObject source = dragObject;
@@ -347,9 +347,9 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             }
         }
 
-        // 킹 ↔ 슬라임: 머지 대상이 아니므로 자리 교체 (카드 소환 모드에선 미니언이 움직이므로 안 함)
+        // 슬라임 ↔ 슬라임: 머지 대상이 아니므로 자리 교체 (카드 소환 모드에선 미니언이 움직이므로 안 함)
         if (canDrop && !LockMinionPosition && tile != null && tile.tileObject != null && tile.tileObject != source
-            && (source is KingSlime || tile.tileObject is KingSlime)
+            && (source is Slime || tile.tileObject is Slime)
             && SwapTileObjects(source, tile.tileObject))
         {
             GameEventBus.Publish(new DragEndEvent(source, tile));
@@ -370,7 +370,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
             return;
         }
 
-        // 카드 소환 모드: 미니언은 빈 칸으로 이동 불가(머지만), 킹은 이동 가능
+        // 카드 소환 모드: 미니언은 빈 칸으로 이동 불가(머지만), 슬라임은 이동 가능
         if (canDrop && tile != null && tile.IsEmpty && !(LockMinionPosition && source is Minion))
         {
             TileManager.Instance.RemoveTileObject(source);
@@ -397,8 +397,8 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
     // 확인 팝업 → Yes면 주사위 코인을 내고 이동. 코인이 모자라면 팝업 없이 토스트
     void RequestPaidMove(Minion minion, Tile tile)
     {
-        KingSlime king = KingSlime.Instance;
-        if (king == null || !HasMoveDiceCoin(king.diceCoin))
+        Slime slime = Slime.Instance;
+        if (slime == null || !HasMoveDiceCoin(slime.diceCoin))
         {
             ToastCanvas.Toast(TranslateManager.GetText("Not enough dice coin"));
             return;
@@ -416,16 +416,16 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
     // 팝업이 떠 있는 동안 상황이 바뀌었을 수 있어 다시 확인 (wave 시작·칸이 참·미니언 사라짐·코인 부족)
     public bool TryPaidMove(Minion minion, Tile tile)
     {
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         if (minion == null || !minion.gameObject.activeInHierarchy || tile == null || !tile.IsEmpty || !CanPayMoveNow()
-            || TileManager.Instance.GetTile(minion) == null || king == null)
+            || TileManager.Instance.GetTile(minion) == null || slime == null)
             return false;
-        if (!HasMoveDiceCoin(king.diceCoin))
+        if (!HasMoveDiceCoin(slime.diceCoin))
         {
             ToastCanvas.Toast(TranslateManager.GetText("Not enough dice coin"));
             return false;
         }
-        king.AddDiceCoin(-GameSetting.MOVE_MINION_DICE_COIN);
+        slime.AddDiceCoin(-GameSetting.MOVE_MINION_DICE_COIN);
         TileManager.Instance.RemoveTileObject(minion);
         tile.SetTileObject(minion);
         minion.EndDrag(tile);
@@ -459,7 +459,7 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
     // 둘 다 옮겨 놓은 것과 같이 EndDrag(새 타일) 처리 → 지옥불 위치 등 타일 기준 상태 갱신
     public static bool SwapMinions(Minion a, Minion b) => SwapTileObjects(a, b);
 
-    // 두 타일 오브젝트(슬라임·킹)의 타일을 맞바꾼다. 킹 ↔ 슬라임 교체에도 사용
+    // 두 타일 오브젝트(슬라임·슬라임)의 타일을 맞바꾼다. 슬라임 ↔ 슬라임 교체에도 사용
     public static bool SwapTileObjects(ITileObject a, ITileObject b)
     {
         if (a == null || b == null || a == b)
@@ -499,9 +499,9 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         // 희생 합성(한쪽만 희생)은 전용 소리
         SoundManager.Play((source is SacrificeMinion) != (target is SacrificeMinion) ? SFXType.SacrificeMerge : SFXType.MinionMerge);
 
-        KingSlime.Instance.RemoveMinion(source);
-        KingSlime.Instance.RemoveMinion(target);
-        Minion merged = KingSlime.Instance.AddMinion(mergeResultKey, lv);
+        Slime.Instance.RemoveMinion(source);
+        Slime.Instance.RemoveMinion(target);
+        Minion merged = Slime.Instance.AddMinion(mergeResultKey, lv);
         if (tile != null)
             tile.SetTileObject(merged);
         if (merged != null)
@@ -515,17 +515,17 @@ public class MinionFieldController : MonoSingleton<MinionFieldController>
         // Character.Instance.AddMergeCoin(1);
         GameEventBus.Publish(new MergedMinionEvent());
         SelectTile(tile); // 합성 결과 슬라임 선택
-        KingSlimeManageCanvas.Instance.UpdateCanvas();
+        SlimeManageCanvas.Instance.UpdateCanvas();
     }
 
     bool IsCharacterAt(Vector2 pos)
     {
-        if (KingSlime.Instance == null)
+        if (Slime.Instance == null)
             return false;
 
         foreach (Collider2D col in Physics2D.OverlapPointAll(pos, characterLayer))
         {
-            if (col.GetComponentInParent<KingSlime>() == KingSlime.Instance)
+            if (col.GetComponentInParent<Slime>() == Slime.Instance)
                 return true;
         }
         return false;

@@ -4,7 +4,7 @@ using UnityEngine;
 // (2026-11-26) 5성 진화 수치를 한곳에서: Resources/MinionEvolutionSetting 에셋 인스펙터 (종마다 한 칸)
 // 에셋이 없으면 코드 기본값 (EvolutionConfigs.cs 초기값). 메뉴 Tools/Data/Create MinionEvolutionSetting 으로 에셋 생성
 // 여기에 칸이 있는 종만 진화 (5성이 되면 진화 선택 창). (2026-11-27) 발비(Mine)도 추가 → 지금 게임에서 쓰는 12종 모두 진화
-[CreateAssetMenu(menuName = "KingSlime/MinionEvolutionSetting", fileName = "MinionEvolutionSetting")]
+[CreateAssetMenu(menuName = "Slime/MinionEvolutionSetting", fileName = "MinionEvolutionSetting")]
 public class MinionEvolutionSetting : ScriptableObject
 {
     public const string RESOURCE_PATH = "MinionEvolutionSetting";

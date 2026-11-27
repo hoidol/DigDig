@@ -47,13 +47,13 @@ public class EvolutionTileDrawPlayTest : InGamePlayTestBase
         Assert.That(appear, Is.InRange(DRAWS * 0.3f, DRAWS * 0.5f), $"등장 {appear}/{DRAWS} (기대 약 40%)");
 
         // 진화 타일 1개 (빈 칸에 설치, 슬라임 2마리 > 1개) → 여전히 등장
-        KingSlime.Instance.AddRune(KEY, GetFreeTile()).Forget();
+        Slime.Instance.AddRune(KEY, GetFreeTile()).Forget();
         yield return WaitFrames(2);
         Assert.AreEqual(1, EvolutionTileRune.InstalledCount);
         Assert.Greater(CountAppear(), 0, "슬라임 2 > 타일 1인데 안 나옴 (보유 상한에 막힘?)");
 
         // 진화 타일 2개 = 슬라임 2마리 → 안 나옴
-        KingSlime.Instance.AddRune(KEY, GetFreeTile()).Forget();
+        Slime.Instance.AddRune(KEY, GetFreeTile()).Forget();
         yield return WaitFrames(2);
         Assert.AreEqual(2, EvolutionTileRune.InstalledCount);
         Assert.AreEqual(0, CountAppear(), "슬라임 수 = 타일 수인데 등장");

@@ -18,10 +18,10 @@ public class RuneUpgradePlayTest : InGamePlayTestBase
 
     IEnumerator Body()
     {
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         Assert.IsTrue(GameManager.Instance.isBreakTime, "게임 시작 = 브레이크타임");
         Tile tile = GetFreeTile();
-        king.AddRune("AttackPowerTile", tile).Forget();
+        slime.AddRune("AttackPowerTile", tile).Forget();
         yield return WaitFrames(5);
         TileRune rune = tile.tileRune as TileRune;
         Assert.IsNotNull(rune, "룬 설치 안 됨");
@@ -35,25 +35,25 @@ public class RuneUpgradePlayTest : InGamePlayTestBase
         StringAssert.Contains("Lv.1", panel.lvText.text);
 
         // 코인 부족 → 강화 안 됨
-        king.AddDiceCoin(-king.diceCoin + 2);
+        slime.AddDiceCoin(-slime.diceCoin + 2);
         panel.upgradeButton.onClick.Invoke();
         Assert.AreEqual(1, rune.upgradeLevel, "코인 2개로는 강화 안 됨");
-        Assert.AreEqual(2, king.diceCoin);
+        Assert.AreEqual(2, slime.diceCoin);
 
         // 3개 → Lv.2, 다시 3개 → Lv.3 (최대) → 버튼 숨김
-        king.AddDiceCoin(GameSetting.RUNE_UPGRADE_DICE_COIN * 2 - 2);
+        slime.AddDiceCoin(GameSetting.RUNE_UPGRADE_DICE_COIN * 2 - 2);
         panel.upgradeButton.onClick.Invoke();
         Assert.AreEqual(2, rune.upgradeLevel, "강화 Lv.2");
-        Assert.AreEqual(GameSetting.RUNE_UPGRADE_DICE_COIN, king.diceCoin, "주사위 코인 3개 소모");
+        Assert.AreEqual(GameSetting.RUNE_UPGRADE_DICE_COIN, slime.diceCoin, "주사위 코인 3개 소모");
         StringAssert.Contains("Lv.2", panel.lvText.text);
         panel.upgradeButton.onClick.Invoke();
         Assert.AreEqual(rune.runeData.MaxLevel, rune.upgradeLevel, "최대 레벨");
-        Assert.AreEqual(0, king.diceCoin);
+        Assert.AreEqual(0, slime.diceCoin);
         Assert.IsFalse(panel.upgradeButton.gameObject.activeSelf, "최대 레벨이면 버튼 숨김");
 
         // wave 중엔 강화 버튼 없음
         Tile tile2 = GetFreeTile(tile);
-        king.AddRune("AttackSpeedTile", tile2).Forget();
+        slime.AddRune("AttackSpeedTile", tile2).Forget();
         yield return WaitFrames(5);
         GameManager.Instance.EndBreakTime();
         yield return WaitFrames(2);

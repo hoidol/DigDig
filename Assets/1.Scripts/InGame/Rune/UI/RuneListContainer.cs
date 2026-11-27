@@ -25,7 +25,7 @@ public class RuneListContainer : MonoBehaviour
 
     void UpdateContainer()
     {
-        List<Rune> runes = KingSlime.Instance.runeInventory.curRunes;
+        List<Rune> runes = Slime.Instance.runeInventory.curRunes;
         for (int i = 0; i < runeNotifyEffectPanels.Length; i++)
         {
             if (i < runes.Count)

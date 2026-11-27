@@ -44,8 +44,8 @@ public class RedEyeRune : Rune
         if (coolTimer > 0)
             return;
 
-        KingSlime.Instance.weapon.Shoot(null, KingSlime.Instance.weapon.GetAttackDirection());
-        await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+        Slime.Instance.weapon.Shoot(null, Slime.Instance.weapon.GetAttackDirection());
+        await UniTask.Delay(Slime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
         // Character.Instance.AddHp(-count);
         coolTimer = coolTime;
     }

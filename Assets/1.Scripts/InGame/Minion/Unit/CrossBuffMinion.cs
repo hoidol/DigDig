@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 십자 4칸 버프 슬라임 공용 (Breeze 공속 / Rage 공격력 / Keen 치명타 확률)
-// 기본 탄 발사 + 내 타일 기준 상하좌우 4칸(설정 버튼으로 대각 4칸 선택 가능) 슬라임·킹에게 Buff(BuffStatType, 값, BuffOpType)
+// 기본 탄 발사 + 내 타일 기준 상하좌우 4칸(설정 버튼으로 대각 4칸 선택 가능) 슬라임·슬라임에게 Buff(BuffStatType, 값, BuffOpType)
 // 범위는 내 타일의 TileGroup 안에서만 (바로 옆 칸이라도 그룹이 다르면 영향 없음)
 // 타일 위 오브젝트가 바뀔 때마다(소환/이동/머지) 대상을 다시 계산 → 들어온 슬라임은 버프, 나간 슬라임은 해제
 // 여러 버프 슬라임이 같은 슬라임을 감싸면 버프는 각각 적용 (Multiply는 곱, Add는 합)
@@ -52,7 +52,7 @@ public abstract class CrossBuffMinion : Minion, IBuffRangeUnit
     protected abstract StatType BuffStatType { get; }
     protected virtual StatOpType BuffOpType => crossBuffMinionData.buffOpType;
 
-    // 버프를 준 대상(슬라임·킹) → 걸어준 Buff들 (RemoveBuff는 참조로 지우므로 인스턴스를 들고 있음)
+    // 버프를 준 대상(슬라임·슬라임) → 걸어준 Buff들 (RemoveBuff는 참조로 지우므로 인스턴스를 들고 있음)
     readonly Dictionary<IBuffable, List<Buff>> appliedBuffs = new Dictionary<IBuffable, List<Buff>>();
     float appliedValue; // 지금 걸려 있는 버프 값 (포위 여부 등으로 바뀌면 전부 다시 걸기)
 
@@ -136,7 +136,7 @@ public abstract class CrossBuffMinion : Minion, IBuffRangeUnit
     // 버프 대상 조건. 하위 클래스에서 제외 규칙을 추가할 수 있음
     protected virtual bool CanBuff(IBuffable target) => !ReferenceEquals(target, this);
 
-    // 내 타일 기준 십자/대각 4칸(버프 범위 확장 타일 위면 8방향), 같은 TileGroup 안의 슬라임·킹 (내 타일이 없으면 빈 목록)
+    // 내 타일 기준 십자/대각 4칸(버프 범위 확장 타일 위면 8방향), 같은 TileGroup 안의 슬라임·슬라임 (내 타일이 없으면 빈 목록)
     List<IBuffable> GetTargets()
     {
         List<IBuffable> targets = new List<IBuffable>();

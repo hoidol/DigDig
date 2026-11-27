@@ -37,8 +37,8 @@ public class ChainRune : Rune, IFired, IComboFire
             return;
 
         active = false;
-        await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
-        KingSlime.Instance.Shoot(bullet, dir);
+        await UniTask.Delay(Slime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+        Slime.Instance.Shoot(bullet, dir);
 
         // Character.Instance.AddHp(-itemData.consumeHp);
         triggerCounter = 0;

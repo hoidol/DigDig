@@ -7,8 +7,8 @@ using UnityEngine;
 using UnityEngine.TestTools;
 
 // 첫 플레이 튜토리얼(TutorialManager가 FirstPlayTutorial 프리팹을 생성)을 처음부터 끝까지 진행
-// 대화는 대화창 터치, 킹 이동·합성은 드롭(MinionFieldController.DropAt), 소환은 소환 버튼 클릭으로 흉내
-// 확인: wave 시작 블록 전엔 wave 안 시작 / 블록 순서대로 진행 / 킹 칸·소환 종·칸·합성 / 끝나면 완료 기록·오브젝트 삭제·wave 진행
+// 대화는 대화창 터치, 슬라임 이동·합성은 드롭(MinionFieldController.DropAt), 소환은 소환 버튼 클릭으로 흉내
+// 확인: wave 시작 블록 전엔 wave 안 시작 / 블록 순서대로 진행 / 슬라임 칸·소환 종·칸·합성 / 끝나면 완료 기록·오브젝트 삭제·wave 진행
 public class TutorialPlayTest : InGamePlayTestBase
 {
     const float STEP_TIMEOUT = 20f; // 실시간(초), 블록 하나
@@ -58,10 +58,10 @@ public class TutorialPlayTest : InGamePlayTestBase
                         if (tutorial.canvas.dialogueObject.activeInHierarchy)
                             tutorial.canvas.dialogueTouchButton.onClick.Invoke();
                         break;
-                    case MoveKingTutorialStep move:
+                    case MoveSlimeTutorialStep move:
                         Assert.IsFalse(tutorial.canvas.blockObject.activeSelf, $"{current}: 화면 블록이 안 풀림");
                         Assert.IsTrue(tutorial.canvas.finger.gameObject.activeInHierarchy, $"{current}: 손 안내가 안 나옴");
-                        yield return Drop(KingSlime.Instance, TileManager.Instance.GetTile(move.targetTileIndex));
+                        yield return Drop(Slime.Instance, TileManager.Instance.GetTile(move.targetTileIndex));
                         break;
                     case MergeMinionTutorialStep merge:
                         Tile from = TileManager.Instance.GetTile(merge.fromTileIndex);
@@ -72,10 +72,10 @@ public class TutorialPlayTest : InGamePlayTestBase
                 yield return WaitRealtime(0.05f);
             }
 
-            if (step is MoveKingTutorialStep moved)
-                Assert.AreSame(TileManager.Instance.GetTile(moved.targetTileIndex), TileManager.Instance.GetTile(KingSlime.Instance), $"{current}: 킹이 목표 칸에 없음");
-            if (step is SetKingTileTutorialStep set)
-                Assert.AreSame(TileManager.Instance.GetTile(set.tileIndex), TileManager.Instance.GetTile(KingSlime.Instance), $"{current}: 킹이 지정 칸에 없음");
+            if (step is MoveSlimeTutorialStep moved)
+                Assert.AreSame(TileManager.Instance.GetTile(moved.targetTileIndex), TileManager.Instance.GetTile(Slime.Instance), $"{current}: 슬라임이 목표 칸에 없음");
+            if (step is SetSlimeTileTutorialStep set)
+                Assert.AreSame(TileManager.Instance.GetTile(set.tileIndex), TileManager.Instance.GetTile(Slime.Instance), $"{current}: 슬라임이 지정 칸에 없음");
             if (step is StartWaveTutorialStep)
                 Assert.IsTrue(GameManager.Instance.isPlaying, $"{current}: wave가 시작되지 않음");
             if (step is SpawnMinionTutorialStep spawned) // (2026-11-20) 버튼 없이 바로 소환

@@ -307,7 +307,7 @@ public class AchievementPlayTest : InGamePlayTestBase
     {
         Assert.IsNotNull(Mgr, "인게임에 AchievementManager 없음");
         ResetAchievements(new DateTime(2030, 1, 10, 9, 0, 0));
-        Time.timeScale = 0f; // 적이 저절로 죽거나 킹이 맞지 않게 멈추고 행동만 확인
+        Time.timeScale = 0f; // 적이 저절로 죽거나 슬라임이 맞지 않게 멈추고 행동만 확인
 
         // 버튼이 아닌 소환(카드·무료 소환 등)은 SpawnMinion으로 안 셈 (2026-11-20 골드 소환 버튼 삭제)
         Minion a = SpawnMinion("Iron", GetFreeTile(), 0);

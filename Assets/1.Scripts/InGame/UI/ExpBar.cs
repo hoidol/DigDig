@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// (2026-11-20) 인게임 킹 경험치바 (화면 상단). KingSlime.AddExp → ExpChangedEvent
+// (2026-11-20) 인게임 슬라임 경험치바 (화면 상단). Slime.AddExp → ExpChangedEvent
 // slider를 씬에서 연결하면 그걸 쓰고, 비어 있으면 실행 중 이 오브젝트 크기에 맞춰 기본 Slider를 만든다
 // (2026-11-21) 밀린 레벨업이 있으면 레벨 글씨 = "LEVEL UP!"(+밀린 수, 노란색). (2026-11-22) 경험치가 다 차면 레벨업 창이 바로 열림
 public class ExpBar : MonoBehaviour
@@ -24,11 +24,11 @@ public class ExpBar : MonoBehaviour
             normalLevelColor = levelText.color;
         GameEventBus.Subscribe<ExpChangedEvent>(OnExpChanged);
 
-        KingSlime king = KingSlime.Instance;
-        if (king != null)
-            Refresh(king.exp, king.MaxExp, king.lv);
+        Slime slime = Slime.Instance;
+        if (slime != null)
+            Refresh(slime.exp, slime.MaxExp, slime.lv);
         else
-            Refresh(0, KingSlime.GetMaxExp(0), 0);
+            Refresh(0, Slime.GetMaxExp(0), 0);
     }
 
     void OnDestroy()
@@ -41,12 +41,12 @@ public class ExpBar : MonoBehaviour
     // 레벨 글씨 = 레벨업 상태 (밀린 수는 이벤트 없이도 바뀌므로 매 프레임 확인, 글씨가 바뀔 때만 갱신)
     void Update()
     {
-        KingSlime king = KingSlime.Instance;
-        if (king == null || levelText == null)
+        Slime slime = Slime.Instance;
+        if (slime == null || levelText == null)
             return;
-        int pending = king.pendingLevelUps;
-        // (2026-11-23) 표시 레벨 = king.lv (Lv.0 시작, 최대 Lv.9)
-        string label = pending <= 0 ? $"Lv.{king.lv}" : "LEVEL UP!" + (pending > 1 ? $" x{pending}" : "");
+        int pending = slime.pendingLevelUps;
+        // (2026-11-23) 표시 레벨 = slime.lv (Lv.0 시작, 최대 Lv.9)
+        string label = pending <= 0 ? $"Lv.{slime.lv}" : "LEVEL UP!" + (pending > 1 ? $" x{pending}" : "");
         if (label == lastLabel)
             return;
         lastLabel = label;
@@ -56,7 +56,7 @@ public class ExpBar : MonoBehaviour
 
     void Refresh(int exp, int maxExp, int lv)
     {
-        bool isMax = KingSlime.IsMaxLevel(lv);
+        bool isMax = Slime.IsMaxLevel(lv);
         float ratio = isMax ? 1f : maxExp > 0 ? (float)exp / maxExp : 0f;
         if (slider != null)
             slider.value = ratio;

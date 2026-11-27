@@ -10,13 +10,13 @@ public class LeatherGlovesRune : Rune
         float addAttackSpeed =  attackSpeed;
         //공격속도
         attackSpeedBuff = new Buff(StatType.AttackSpeed, addAttackSpeed, StatOpType.Add);
-        KingSlime.Instance.AddBuff(attackSpeedBuff);
+        Slime.Instance.AddBuff(attackSpeedBuff);
 
     }
     void Release()
     {
         if (attackSpeedBuff != null)
-            KingSlime.Instance.RemoveBuff(attackSpeedBuff);
+            Slime.Instance.RemoveBuff(attackSpeedBuff);
     }
 
 

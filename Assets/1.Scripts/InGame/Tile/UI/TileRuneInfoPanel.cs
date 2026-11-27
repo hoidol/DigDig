@@ -7,7 +7,7 @@ using UnityEngine.UI;
 // (2026-11-22) 룬 강화(UpgradeTileItemButton)·제거(SellTileItemButton) 버튼 삭제
 // (2026-11-26) 룬 강화 다시: 브레이크타임에 룬 칸을 누르면 강화 버튼 → 주사위 코인 RUNE_UPGRADE_DICE_COIN(3)개로 레벨 +1 (확정, 최대 레벨까지)
 //   wave 중·최대 레벨·강화 불가 룬이면 버튼 숨김. 버튼 = upgradeButton (씬에 있음: 메뉴 Tools/InGame/Add Rune Upgrade Button To Info Panel. 실행 중 생성 없음)
-// (2026-11-21) 킹 버프 칸(빈 칸·미니언이 있는 칸)이면 같은 자리에 버프 칸 정보: 종족·직업·패시브가 주는 버프 (EliteArea.GetEliteDescription)
+// (2026-11-21) 슬라임 버프 칸(빈 칸·미니언이 있는 칸)이면 같은 자리에 버프 칸 정보: 종족·직업·패시브가 주는 버프 (EliteArea.GetEliteDescription)
 //   룬이 있는 버프 칸은 룬 설명 아래에 버프 칸 정보를 덧붙임
 public class TileRuneInfoPanel : MonoBehaviour
 {
@@ -78,7 +78,7 @@ public class TileRuneInfoPanel : MonoBehaviour
     {
         lvText.text = "정예병 칸"; // (2026-11-24) 버프 칸 → 정예병 칸
         descText.text = EliteArea.Current.GetEliteDescription();
-        HeroKingAbility hero = KingSlime.Instance.abilityInventory.Get<HeroKingAbility>();
+        HeroSlimeAbility hero = Slime.Instance.abilityInventory.Get<HeroSlimeAbility>();
         Sprite icon = hero != null && hero.data != null ? hero.data.thum : null;
         thumImage.sprite = icon;
         thumImage.gameObject.SetActive(icon != null);
@@ -112,7 +112,7 @@ public class TileRuneInfoPanel : MonoBehaviour
         if (!show)
             return;
         int price = GameSetting.RUNE_UPGRADE_DICE_COIN;
-        bool enough = KingSlime.Instance != null && KingSlime.Instance.diceCoin >= price;
+        bool enough = Slime.Instance != null && Slime.Instance.diceCoin >= price;
         if (upgradeText != null)
             upgradeText.text = $"강화 Lv.{rune.upgradeLevel + 1}";
     }
@@ -120,16 +120,16 @@ public class TileRuneInfoPanel : MonoBehaviour
     public void OnClickedUpgrade()
     {
         TileRune rune = CurrentRune;
-        KingSlime king = KingSlime.Instance;
-        if (!CanUpgradeNow(rune) || king == null)
+        Slime slime = Slime.Instance;
+        if (!CanUpgradeNow(rune) || slime == null)
             return;
         int price = GameSetting.RUNE_UPGRADE_DICE_COIN;
-        if (king.diceCoin < price)
+        if (slime.diceCoin < price)
         {
             ToastCanvas.Toast("Not enough dice coin");
             return;
         }
-        king.AddDiceCoin(-price);
+        slime.AddDiceCoin(-price);
         if (rune.ForceUpgrade())
         {
             SoundManager.Play(SFXType.TileItemUpgradeSuccess);

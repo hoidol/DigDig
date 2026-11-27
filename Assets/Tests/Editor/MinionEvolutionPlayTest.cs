@@ -37,7 +37,7 @@ public class MinionEvolutionPlayTest : InGamePlayTestBase
         foreach (string key in MinionEvolutionSetting.EVOLVING_KEYS)
         {
             current = key;
-            KingSlime.Instance.health.curHp = KingSlime.Instance.MaxHp;
+            Slime.Instance.health.curHp = Slime.Instance.MaxHp;
             if (!MinionManager.Instance.minionDataDic.ContainsKey(key))
             {
                 Debug.LogWarning($"[EvolutionTest] {key} 데이터 없음 → 건너뜀");

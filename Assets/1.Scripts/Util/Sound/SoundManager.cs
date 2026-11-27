@@ -256,7 +256,7 @@ public enum SFXType
 
     // 로비
     ChestOpen, CardFlip,
-    MinionLevelUp, KingUpgrade, UserLevelUp, AuthoritySelect, AchievementReward, PurchaseComplete,
+    MinionLevelUp, SlimeUpgrade, UserLevelUp, AuthoritySelect, AchievementReward, PurchaseComplete,
 }
 
 public enum BGMType

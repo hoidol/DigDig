@@ -21,7 +21,7 @@ public class NatureRune : Rune
         float addRecoveryHp =  recoveryHp;
         //초당 회복력
         // recoveryHpBuff = new Buff(StatType.RecoveryHp, addRecoveryHp, StatOpType.Add);
-        KingSlime.Instance.AddBuff(recoveryHpBuff);
+        Slime.Instance.AddBuff(recoveryHpBuff);
     }
 
 
@@ -29,7 +29,7 @@ public class NatureRune : Rune
     {
 
         if (recoveryHpBuff != null)
-            KingSlime.Instance.RemoveBuff(recoveryHpBuff);
+            Slime.Instance.RemoveBuff(recoveryHpBuff);
     }
 
 

@@ -13,9 +13,9 @@ public class PlayRecord
         public float t;          // 판 시작부터 실제 시간(초) — AI 봇 재생 기준
         public long at;          // 이 브레이크타임이 시작된 서버 시각 (ms, Unix UTC, ServerClock)
         public int wave;         // 다음 wave (브레이크타임)
-        public int kingLv;
+        public int slimeLv;
         public string heroKey;
-        public float hp;         // 킹 체력 비율 0~1
+        public float hp;         // 슬라임 체력 비율 0~1
         public int diceCoin;
         public string minions;   // "Key:표시레벨,…" (MultiGame.FormatMinions)
         public string board;     // MultiBoard JSON

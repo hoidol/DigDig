@@ -16,9 +16,9 @@ public class ShieldRune : TriggerCycleRune
     // protected virtual int OrbCount => count;
     public override void OnEquip()
     {
-        transform.SetParent(KingSlime.Instance.transform);
+        transform.SetParent(Slime.Instance.transform);
         transform.localRotation = Quaternion.identity;
-        transform.position = KingSlime.Instance.transform.position;
+        transform.position = Slime.Instance.transform.position;
 
         base.OnEquip();
     }

@@ -223,7 +223,7 @@ public class SelectRuneCanvas : CanvasUI<SelectRuneCanvas>
             ToastCanvas.Toast(TranslateManager.GetText(prefab.PickFailMessageKey(tile)));
             return;
         }
-        KingSlime.Instance.AddRune(selectedRune.key, tile).Forget();
+        Slime.Instance.AddRune(selectedRune.key, tile).Forget();
         SoundManager.Play(SFXType.ItemInstall);
         ToastCanvas.Toast(TranslateManager.GetText(prefab is PioneerTileRune ? "Rune_TileRepaired" : "Rune_Applied"));
         if (IsRuneRewardOpen && tile.tileRune is TileRune installed)
@@ -330,7 +330,7 @@ public class SelectRuneCanvas : CanvasUI<SelectRuneCanvas>
 
     void Install(Tile tile)
     {
-        KingSlime.Instance.AddRune(selectedRune.key, tile).Forget();
+        Slime.Instance.AddRune(selectedRune.key, tile).Forget();
         SoundManager.Play(SFXType.ItemInstall);
         CloseCanvas();
     }

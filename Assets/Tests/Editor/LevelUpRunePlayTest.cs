@@ -20,7 +20,7 @@ public class LevelUpRunePlayTest : InGamePlayTestBase
     // 빈 칸 = 새김 / 같은 룬 칸 = 레벨 +1 / 다른 룬 칸 = 팝업(계속 고름)
     IEnumerator Body()
     {
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         var select = SelectRuneCanvas.Instance;
         var atk = RuneManager.Instance.GetRuneData("AttackPowerTile");
         var spd = RuneManager.Instance.GetRuneData("AttackSpeedTile");
@@ -72,9 +72,9 @@ public class LevelUpRunePlayTest : InGamePlayTestBase
         Assert.AreEqual(3, done);
     }
 
-    static IEnumerator LevelUpAndOpen(KingSlime king)
+    static IEnumerator LevelUpAndOpen(Slime slime)
     {
-        king.AddExp(king.MaxExp);
+        slime.AddExp(slime.MaxExp);
         yield return WaitFrames(1);
         InGame.LevelUpCanvas.OpenPending();
         yield return WaitFrames(2);
@@ -86,7 +86,7 @@ public class LevelUpRunePlayTest : InGamePlayTestBase
     {
         var canvas = InGame.LevelUpCanvas.Instance;
         Assert.IsTrue(canvas.IsStatStep, "단계 카드 다음은 미니언 강화 카드");
-        int pending = KingSlime.Instance.pendingLevelUps;
+        int pending = Slime.Instance.pendingLevelUps;
         var shown = canvas.levelUpStatPanels.Where(p => p.gameObject.activeSelf).ToList();
         Assert.AreEqual(3, shown.Count, "미니언 강화 카드 3장");
         var datas = shown.Select(p => p.Data).ToList();
@@ -97,6 +97,6 @@ public class LevelUpRunePlayTest : InGamePlayTestBase
         shown[0].OnClickedSelect();
         yield return WaitFrames(2);
         Assert.AreEqual(before + pick.minionAmount, MinionEnhanceSystem.GetLevel(pick.minionKey, pick.minionStat), "미니언 강화 레벨 +1 (행운 카드 +2)");
-        Assert.AreEqual(pending - 1, KingSlime.Instance.pendingLevelUps, "미니언 강화를 고르면 레벨업 소모");
+        Assert.AreEqual(pending - 1, Slime.Instance.pendingLevelUps, "미니언 강화를 고르면 레벨업 소모");
     }
 }

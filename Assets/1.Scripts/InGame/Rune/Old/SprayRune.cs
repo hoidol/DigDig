@@ -52,7 +52,7 @@ public class SprayRune : Rune
         for (int i = 0; i < bCount; i++)
         {
             Vector2 dir = Quaternion.Euler(0, 0, angleStep * i) * baseDir;
-            KingSlime.Instance.Shoot(new AllyBulletSpec(), dir);
+            Slime.Instance.Shoot(new AllyBulletSpec(), dir);
         }
 
         // Character.Instance.AddHp(-itemData.consumeHp);

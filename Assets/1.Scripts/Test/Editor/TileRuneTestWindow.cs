@@ -73,20 +73,20 @@ public class TileRuneTestWindow : EditorWindow
             freezeEnemies = false;
     }
 
-    static bool InGameReady => Application.isPlaying && KingSlime.Instance != null && GameManager.Instance != null
+    static bool InGameReady => Application.isPlaying && Slime.Instance != null && GameManager.Instance != null
                                && MinionFieldController.Instance != null && TileManager.Instance != null && RuneManager.Instance != null;
 
     void OnEditorUpdate()
     {
         if (!InGameReady)
             return;
-        KingSlime king = KingSlime.Instance;
-        if (invincible && king.health != null && king.health.curHp < king.MaxHp)
-            king.health.curHp = king.MaxHp;
+        Slime slime = Slime.Instance;
+        if (invincible && slime.health != null && slime.health.curHp < slime.MaxHp)
+            slime.health.curHp = slime.MaxHp;
         if (infiniteCoin)
         {
-            if (king.coin < 100000)
-                king.AddCoin(100000 - king.coin);
+            if (slime.coin < 100000)
+                slime.AddCoin(100000 - slime.coin);
             // 주사위 코인은 채우지 않음 (필요하면 직접 추가)
         }
         if (freezeEnemies)
@@ -185,7 +185,7 @@ public class TileRuneTestWindow : EditorWindow
             return "-";
         string unit = tile.isBlocked ? "■"
             : tile.tileObject is Minion m ? $"{m.key} {m.mergeLevel + 1}"
-            : tile.tileObject is KingSlime ? "킹"
+            : tile.tileObject is Slime ? "슬라임"
             : "";
         string rune = tile.tileRune is TileRune ti ? $"{ti.key.Replace("Tile", "")} Lv{ti.upgradeLevel}" : "";
         return $"{unit}\n{rune}";
@@ -238,7 +238,7 @@ public class TileRuneTestWindow : EditorWindow
                 GUI.enabled = cur != null && !tile.isBlocked;
                 if (GUILayout.Button($"교체 (Lv.{installLevel})"))
                 {
-                    KingSlime.Instance.RemoveRune(cur);
+                    Slime.Instance.RemoveRune(cur);
                     Install(runeKey, tile, installLevel);
                 }
             }
@@ -251,7 +251,7 @@ public class TileRuneTestWindow : EditorWindow
                 cur.TryUpgrade(0f);
             GUI.enabled = cur != null;
             if (GUILayout.Button("아이템 제거"))
-                KingSlime.Instance.RemoveRune(cur);
+                Slime.Instance.RemoveRune(cur);
             GUI.enabled = tile.isBlocked;
             if (GUILayout.Button("막힘 풀기"))
                 TileManager.Instance.UnblockTile(tile);
@@ -272,8 +272,8 @@ public class TileRuneTestWindow : EditorWindow
             if (m.activeBuffs.Count > 0)
                 EditorGUILayout.LabelField("버프: " + string.Join(", ", m.activeBuffs.Select(b => $"{b.statType} {b.opType} {b.value:0.##}")));
         }
-        else if (tile.tileObject is KingSlime)
-            EditorGUILayout.LabelField("킹슬라임");
+        else if (tile.tileObject is Slime)
+            EditorGUILayout.LabelField("슬라임");
         else
             EditorGUILayout.LabelField("유닛 없음");
     }
@@ -298,7 +298,7 @@ public class TileRuneTestWindow : EditorWindow
             GUI.enabled = tile.IsEmpty;
             if (GUILayout.Button($"이 칸에 미니언 (머지 {mergeLevel + 1})"))
             {
-                Minion minion = KingSlime.Instance.AddMinion(minionKey, mergeLevel);
+                Minion minion = Slime.Instance.AddMinion(minionKey, mergeLevel);
                 tile.SetTileObject(minion);
             }
             GUI.enabled = tile.tileObject is Minion;
@@ -311,7 +311,7 @@ public class TileRuneTestWindow : EditorWindow
     // 설치 후 원하는 레벨까지 확정 강화 (AddItem은 안에서 바로 설치까지 끝남)
     static void Install(string key, Tile tile, int level)
     {
-        KingSlime.Instance.AddRune(key, tile).Forget();
+        Slime.Instance.AddRune(key, tile).Forget();
         if (tile != null && tile.tileRune is TileRune installed)
             while (installed.upgradeLevel < level && installed.TryUpgrade(0f)) { }
     }
@@ -319,7 +319,7 @@ public class TileRuneTestWindow : EditorWindow
     // ---------------- 설치된 아이템 ----------------
     void DrawInstalledList()
     {
-        TileRune[] runes = KingSlime.Instance.runeInventory.curRunes.OfType<TileRune>().ToArray();
+        TileRune[] runes = Slime.Instance.runeInventory.curRunes.OfType<TileRune>().ToArray();
         Header($"보유 타일 아이템 {runes.Length}개");
         foreach (TileRune rune in runes)
         {
@@ -333,7 +333,7 @@ public class TileRuneTestWindow : EditorWindow
                     target = rune.tile.index;
                 GUI.enabled = true;
                 if (GUILayout.Button("제거", GUILayout.Width(50)))
-                    KingSlime.Instance.RemoveRune(rune);
+                    Slime.Instance.RemoveRune(rune);
             }
         }
         using (new EditorGUILayout.HorizontalScope())
@@ -351,7 +351,7 @@ public class TileRuneTestWindow : EditorWindow
             if (GUILayout.Button("전부 제거"))
                 foreach (TileRune rune in runes)
                     if (rune != null)
-                        KingSlime.Instance.RemoveRune(rune);
+                        Slime.Instance.RemoveRune(rune);
             GUI.enabled = true;
         }
     }
@@ -369,7 +369,7 @@ public class TileRuneTestWindow : EditorWindow
     void DrawConvenience()
     {
         Header("편의 (Minion Test 창과 같은 기능)");
-        invincible = EditorGUILayout.Toggle("킹 무적", invincible);
+        invincible = EditorGUILayout.Toggle("슬라임 무적", invincible);
         infiniteCoin = EditorGUILayout.Toggle("코인·주사위 코인 무한", infiniteCoin);
         using (new EditorGUILayout.HorizontalScope())
         {

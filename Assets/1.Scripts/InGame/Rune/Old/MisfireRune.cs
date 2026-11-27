@@ -12,9 +12,9 @@ public class MisfireRune : TriggerRune
 
     public override void OnEquip()
     {
-        transform.SetParent(KingSlime.Instance.transform);
+        transform.SetParent(Slime.Instance.transform);
         transform.localRotation = Quaternion.identity;
-        transform.position = KingSlime.Instance.transform.position;
+        transform.position = Slime.Instance.transform.position;
 
         base.OnEquip();
     }
@@ -28,7 +28,7 @@ public class MisfireRune : TriggerRune
     {
         base.OnTrigger();
         effect.Play();
-        Collider2D[] hits = Physics2D.OverlapCircleAll(KingSlime.Instance.transform.position, radiuse, LayerMask.GetMask("Hittable"));
+        Collider2D[] hits = Physics2D.OverlapCircleAll(Slime.Instance.transform.position, radiuse, LayerMask.GetMask("Hittable"));
         int hitCount=0;
         for (int i = 0; i < hits.Length; i++)
         {
@@ -39,7 +39,7 @@ public class MisfireRune : TriggerRune
                 
                 StatusEffectHandler handler = (hittable as Component)?.GetComponent<StatusEffectHandler>();
                 handler?.Apply(new FlameEffect(duration ,DPS));
-                hittable.TakeDamage(new DamageData { damage = KingSlime.Instance.statMgr.AttackPower });
+                hittable.TakeDamage(new DamageData { damage = Slime.Instance.statMgr.AttackPower });
                 hitCount ++;
             }
         }

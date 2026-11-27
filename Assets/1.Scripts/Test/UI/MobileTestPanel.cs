@@ -12,7 +12,7 @@ using UnityEngine.UI;
 // (2026-11-26) 위쪽 탭: [미니언 소환] [적 소환] [웨이브 전환] [적 체력] [용사] [기타]
 //   웨이브 전환: 브레이크타임마다 판 상태를 저장(WaveSnapshotSystem) → [이전/다음 웨이브] = 그 wave 브레이크타임(레벨업·카드 사용 전)으로 복구
 //               [정지] = 적 전부 제거 + 바로 다음 wave 브레이크타임 / [웨이브 시작] = 적이 나옴 / 번호 고르고 [이동] = 배치 그대로 그 wave로
-//   wave 결과 요약: wave가 끝날 때마다 걸린 시간·처치·도착·킹이 받은 피해·피해 상위 미니언 (웨이브 전환 탭, 최근 5개)
+//   wave 결과 요약: wave가 끝날 때마다 걸린 시간·처치·도착·슬라임이 받은 피해·피해 상위 미니언 (웨이브 전환 탭, 최근 5개)
 //   적 체력: EnemyHp·AddHpRatioPerWave·MultiHpPerWave·CycleHpMuls 입력 → 적용(지금 판만, 씬을 나가면 원래대로) + wave별 체력 표시
 // 동작은 에디터 Minion Test 창과 같은 GameTestUtil
 public class MobileTestPanel : MonoBehaviour
@@ -46,10 +46,10 @@ public class MobileTestPanel : MonoBehaviour
 
     // 미니언·용사·기타
     TMP_Text minionText, mergeText, evolveText, heroText, levelText, enhanceText, speedText, invincibleText, infoText;
-    readonly TMP_Text[] skillTexts = new TMP_Text[HeroKingAbility.SKILL_COUNT];
-    int minionIdx, mergeLevel, heroIdx, heroLevel = GameSetting.KING_MAX_LEVEL, speed = 1;
+    readonly TMP_Text[] skillTexts = new TMP_Text[HeroSlimeAbility.SKILL_COUNT];
+    int minionIdx, mergeLevel, heroIdx, heroLevel = GameSetting.SLIME_MAX_LEVEL, speed = 1;
     bool evolve, enhance;
-    bool invincible; // (2026-11-26) 기본 꺼짐 (켜져 있으면 킹 체력이 줄지 않음)
+    bool invincible; // (2026-11-26) 기본 꺼짐 (켜져 있으면 슬라임 체력이 줄지 않음)
     static readonly int[] SPEEDS = { 1, 2, 4, 8 };
 
     // 적 소환
@@ -68,7 +68,7 @@ public class MobileTestPanel : MonoBehaviour
     bool recording;
     int recWave, recKills, recLeaked;
     float recStartTime, recStartHp;
-    double recStartKingDamage;
+    double recStartSlimeDamage;
     readonly Dictionary<string, double> recStartDamage = new();
     readonly List<string> summaries = new();
     const int MAX_SUMMARIES = 5;
@@ -107,11 +107,11 @@ public class MobileTestPanel : MonoBehaviour
 
     void Update()
     {
-        KingSlime king = KingSlime.Instance;
-        if (king == null)
+        Slime slime = Slime.Instance;
+        if (slime == null)
             return;
-        if (invincible && king.health != null && king.health.curHp < king.MaxHp)
-            king.health.curHp = king.MaxHp;
+        if (invincible && slime.health != null && slime.health.curHp < slime.MaxHp)
+            slime.health.curHp = slime.MaxHp;
         if (speed > 1 && Time.timeScale > 0f && !Mathf.Approximately(Time.timeScale, speed))
             Time.timeScale = speed;
         if (freezeEnemies)
@@ -123,7 +123,7 @@ public class MobileTestPanel : MonoBehaviour
     #region 동작: 미니언·용사·기타
     List<string> Keys => GameTestUtil.MinionKeys();
     AbilityData[] Heroes => GameTestUtil.Heroes();
-    HeroKingAbility CurrentHero => KingSlime.Instance != null ? KingSlime.Instance.abilityInventory.Get<HeroKingAbility>() : null;
+    HeroSlimeAbility CurrentHero => Slime.Instance != null ? Slime.Instance.abilityInventory.Get<HeroSlimeAbility>() : null;
 
     void SpawnMinion()
     {
@@ -140,20 +140,20 @@ public class MobileTestPanel : MonoBehaviour
         AbilityData[] heroes = Heroes;
         if (heroes.Length == 0)
             return;
-        HeroKingAbility hero = GameTestUtil.EquipHero(heroes[Mathf.Clamp(heroIdx, 0, heroes.Length - 1)], heroLevel, enhance);
+        HeroSlimeAbility hero = GameTestUtil.EquipHero(heroes[Mathf.Clamp(heroIdx, 0, heroes.Length - 1)], heroLevel, enhance);
         ToastCanvas.Toast(hero != null ? $"{hero.data.title} Lv.{heroLevel} 장착" : "용사 장착 실패");
     }
 
     void UseSkill(int idx)
     {
-        HeroKingAbility hero = CurrentHero;
+        HeroSlimeAbility hero = CurrentHero;
         if (hero == null)
         {
             ToastCanvas.Toast("용사를 먼저 장착하세요");
             return;
         }
-        HeroKingAbility.UseResult r = GameTestUtil.UseHeroSkill(hero, idx);
-        if (r != HeroKingAbility.UseResult.Used)
+        HeroSlimeAbility.UseResult r = GameTestUtil.UseHeroSkill(hero, idx);
+        if (r != HeroSlimeAbility.UseResult.Used)
             ToastCanvas.Toast($"{hero.GetSkillName(idx)}: {r}");
     }
 
@@ -166,9 +166,9 @@ public class MobileTestPanel : MonoBehaviour
 
     void FullHeal()
     {
-        KingSlime king = KingSlime.Instance;
-        if (king != null && king.health != null)
-            king.health.curHp = king.MaxHp;
+        Slime slime = Slime.Instance;
+        if (slime != null && slime.health != null)
+            slime.health.curHp = slime.MaxHp;
     }
     #endregion
 
@@ -274,13 +274,13 @@ public class MobileTestPanel : MonoBehaviour
     #region wave 결과 요약
     void OnWaveStart(WaveStartEvent e)
     {
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         recording = true;
         recWave = e.waveIdx;
         recKills = recLeaked = 0;
         recStartTime = GameManager.Instance != null ? GameManager.Instance.gameTimer : 0f;
-        recStartHp = king != null && king.health != null ? king.health.curHp : 0f;
-        recStartKingDamage = DamageMeterSystem.KingTotalDamage;
+        recStartHp = slime != null && slime.health != null ? slime.health.curHp : 0f;
+        recStartSlimeDamage = DamageMeterSystem.SlimeTotalDamage;
         recStartDamage.Clear();
         foreach (string key in Keys)
             recStartDamage[key] = DamageMeterSystem.GetDamage(key);
@@ -301,15 +301,15 @@ public class MobileTestPanel : MonoBehaviour
         if (!recording)
             return;
         recording = false;
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         float time = (GameManager.Instance != null ? GameManager.Instance.gameTimer : 0f) - recStartTime;
-        float hpLost = king != null && king.health != null ? Mathf.Max(0f, recStartHp - king.health.curHp) : 0f;
+        float hpLost = slime != null && slime.health != null ? Mathf.Max(0f, recStartHp - slime.health.curHp) : 0f;
         var top = recStartDamage.Keys
             .Select(k => (k, d: DamageMeterSystem.GetDamage(k) - recStartDamage[k]))
             .Where(x => x.d > 0).OrderByDescending(x => x.d).Take(3)
             .Select(x => $"{MinionName(x.k)} {x.d:N0}");
-        double kingDmg = DamageMeterSystem.KingTotalDamage - recStartKingDamage;
-        summaries.Insert(0, $"W{recWave + 1} {time:0}초 · 처치 {recKills} · 도착 {recLeaked} · 킹 -{hpLost:0}{(invincible ? "(무적)" : "")} · 킹 피해 {kingDmg:N0}"
+        double slimeDmg = DamageMeterSystem.SlimeTotalDamage - recStartSlimeDamage;
+        summaries.Insert(0, $"W{recWave + 1} {time:0}초 · 처치 {recKills} · 도착 {recLeaked} · 슬라임 -{hpLost:0}{(invincible ? "(무적)" : "")} · 슬라임 피해 {slimeDmg:N0}"
             + (top.Any() ? $"\n   {string.Join(" / ", top)}" : ""));
         while (summaries.Count > MAX_SUMMARIES)
             summaries.RemoveAt(summaries.Count - 1);
@@ -404,7 +404,7 @@ public class MobileTestPanel : MonoBehaviour
     void RefreshTexts()
     {
         GameManager gm = GameManager.Instance;
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         // 미니언
         List<string> keys = Keys;
         if (keys.Count > 0)
@@ -422,9 +422,9 @@ public class MobileTestPanel : MonoBehaviour
             heroIdx = (heroIdx % heroes.Length + heroes.Length) % heroes.Length;
             heroText.text = heroes[heroIdx].title;
         }
-        levelText.text = $"킹 Lv.{heroLevel}";
+        levelText.text = $"슬라임 Lv.{heroLevel}";
         enhanceText.text = enhance ? "스킬 강화 ON" : "스킬 강화 OFF";
-        HeroKingAbility hero = CurrentHero;
+        HeroSlimeAbility hero = CurrentHero;
         for (int i = 0; i < skillTexts.Length; i++)
             skillTexts[i].text = hero != null ? $"{i + 1}. {hero.GetSkillName(i)}{(hero.IsSkillUnlocked(i) ? "" : " (잠김)")}" : $"스킬 {i + 1}";
         // 기타
@@ -450,10 +450,10 @@ public class MobileTestPanel : MonoBehaviour
         hpWaveText.text = $"Wave {hpWave}";
         hpInfoText.text = GetHpInfo();
         // 아래 공통 정보
-        infoText.text = king == null ? "" :
-            $"킹 체력 {(king.health != null ? king.health.curHp : 0):0}/{king.MaxHp:0} · Lv.{king.lv} · 주사위 {king.diceCoin}"
+        infoText.text = slime == null ? "" :
+            $"슬라임 체력 {(slime.health != null ? slime.health.curHp : 0):0}/{slime.MaxHp:0} · Lv.{slime.lv} · 주사위 {slime.diceCoin}"
             + (hero != null ? $" · {hero.data.title} 에너지 {hero.Charges}/{hero.MaxCharges}" : "")
-            + $"\n킹 피해 {DamageMeterSystem.KingTotalDamage:N0} · 미니언 피해 {DamageMeterSystem.TotalDamage:N0}";
+            + $"\n슬라임 피해 {DamageMeterSystem.SlimeTotalDamage:N0} · 미니언 피해 {DamageMeterSystem.TotalDamage:N0}";
     }
 
     #region UI (코드로 생성)
@@ -608,7 +608,7 @@ public class MobileTestPanel : MonoBehaviour
         summaryText.fontSizeMax = 24;
         summaryText.alignment = TextAlignmentOptions.TopLeft;
         summaryText.GetComponent<LayoutElement>().preferredHeight = 300f;
-        TMP_Text help = Label(p, "이전/다음 웨이브 = 그 wave 브레이크타임(레벨업·카드 사용 전) 상태로 복구: 미니언·룬·막힌 칸·킹 레벨·용사·미니언 강화·주사위 코인. 카드는 새로 받음.\n다음 웨이브에 저장이 없으면 지금 배치 그대로 이동.");
+        TMP_Text help = Label(p, "이전/다음 웨이브 = 그 wave 브레이크타임(레벨업·카드 사용 전) 상태로 복구: 미니언·룬·막힌 칸·슬라임 레벨·용사·미니언 강화·주사위 코인. 카드는 새로 받음.\n다음 웨이브에 저장이 없으면 지금 배치 그대로 이동.");
         help.fontSize = 22;
         help.fontSizeMax = 22;
         help.GetComponent<LayoutElement>().preferredHeight = 90f;
@@ -644,13 +644,13 @@ public class MobileTestPanel : MonoBehaviour
         {
             Arrow(r, "◀", () => heroLevel = Mathf.Max(1, heroLevel - 1));
             levelText = Label(r, "");
-            Arrow(r, "▶", () => heroLevel = Mathf.Min(GameSetting.KING_MAX_LEVEL, heroLevel + 1));
+            Arrow(r, "▶", () => heroLevel = Mathf.Min(GameSetting.SLIME_MAX_LEVEL, heroLevel + 1));
             Btn(r, "", () => enhance = !enhance, out enhanceText);
         });
         Row(p, r => { Btn(r, "용사 장착", EquipHero, out _); Btn(r, "에너지 채우기", () => CurrentHero?.FillChargesForTest(), out _); });
         Row(p, r =>
         {
-            for (int i = 0; i < HeroKingAbility.SKILL_COUNT; i++)
+            for (int i = 0; i < HeroSlimeAbility.SKILL_COUNT; i++)
             {
                 int idx = i;
                 Btn(r, "", () => UseSkill(idx), out skillTexts[i]);
@@ -669,8 +669,8 @@ public class MobileTestPanel : MonoBehaviour
         });
         Row(p, r =>
         {
-            Btn(r, "주사위 +10", () => KingSlime.Instance?.AddDiceCoin(10), out _);
-            Btn(r, "경험치 +1", () => KingSlime.Instance?.AddExp(1), out _);
+            Btn(r, "주사위 +10", () => Slime.Instance?.AddDiceCoin(10), out _);
+            Btn(r, "경험치 +1", () => Slime.Instance?.AddExp(1), out _);
         });
     }
 

@@ -4,7 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-// (2026-11-26) 로비 킹 관리 화면 [용사] 탭: HeroData 용사 3열 그리드, 보유 용사를 누르면 킹슬라임 자리에 용사 정보, 다시 누르면 해제
+// (2026-11-26) 로비 슬라임 관리 화면 [용사] 탭: HeroData 용사 3열 그리드, 보유 용사를 누르면 슬라임 자리에 용사 정보, 다시 누르면 해제
 // [수련] 탭 = 레벨 스탯. 미보유 용사는 눌러도 반응 없음
 public class KSHeroTabPlayTest : InGamePlayTestBase
 {
@@ -19,7 +19,7 @@ public class KSHeroTabPlayTest : InGamePlayTestBase
 
     IEnumerator Body()
     {
-        Lobby.LobbyManager.Instance.OpenCanvas(LobbyState.KingSlimeManagement);
+        Lobby.LobbyManager.Instance.OpenCanvas(LobbyState.SlimeManagement);
         yield return WaitFrames(3);
         var canvas = Object.FindFirstObjectByType<KSManagementCanvas>(FindObjectsInactive.Include);
         Assert.IsTrue(canvas != null && canvas.gameObject.activeInHierarchy, "KSManagementCanvas가 안 열림");
@@ -41,8 +41,8 @@ public class KSHeroTabPlayTest : InGamePlayTestBase
         Assert.AreEqual(heroes.Count, slots.Length, "HeroData 용사 수만큼 칸");
         Assert.Greater(slots.Length, 0);
 
-        // 보유 용사를 누르면 용사 정보, 킹슬라임 숨김
-        Assert.IsTrue(canvas.kingSlimeBody == null || canvas.kingSlimeBody.activeSelf, "처음엔 킹슬라임");
+        // 보유 용사를 누르면 용사 정보, 슬라임 숨김
+        Assert.IsTrue(canvas.slimeBody == null || canvas.slimeBody.activeSelf, "처음엔 슬라임");
         int lv = HeroCollectionContainer.UserLevel;
         int ownedIdx = heroes.FindIndex(h => HeroCollectionContainer.IsOwned(h, lv));
         Assert.GreaterOrEqual(ownedIdx, 0, "보유 용사 없음");
@@ -51,21 +51,21 @@ public class KSHeroTabPlayTest : InGamePlayTestBase
         yield return WaitFrames(2);
         Assert.AreEqual(hero.key, canvas.heroContainer.SelectedKey);
         Assert.IsTrue(canvas.heroPreview != null && canvas.heroPreview.gameObject.activeSelf, "용사 정보");
-        if (canvas.kingSlimeBody != null)
-            Assert.IsFalse(canvas.kingSlimeBody.activeSelf, "용사 정보 동안 킹슬라임 숨김");
+        if (canvas.slimeBody != null)
+            Assert.IsFalse(canvas.slimeBody.activeSelf, "용사 정보 동안 슬라임 숨김");
         Assert.AreEqual(hero.desc, canvas.heroPreviewDesc.text);
         // 능력치 칸 = 용사 Lv.1 공격력 (+ 수련 포인트)
         var atkPanel = canvas.kSStatStateContainer.currentKSAbilityInfoPanels.FirstOrDefault(p => p != null && p.statType == StatType.AttackPower);
         if (atkPanel != null && hero.TryGetStat(StatType.AttackPower, 1, out float heroAtk))
-            Assert.AreEqual(StatData.GetValueToString(StatType.AttackPower, KingSlimeManager.Instance.GetTotalStatValue(heroAtk, StatType.AttackPower)), atkPanel.valueText.text, "용사 공격력 표시");
+            Assert.AreEqual(StatData.GetValueToString(StatType.AttackPower, SlimeManager.Instance.GetTotalStatValue(heroAtk, StatType.AttackPower)), atkPanel.valueText.text, "용사 공격력 표시");
 
-        // 다시 누르면 해제 → 킹슬라임
+        // 다시 누르면 해제 → 슬라임
         slots[ownedIdx].button.onClick.Invoke();
         yield return WaitFrames(2);
         Assert.IsNull(canvas.heroContainer.SelectedKey, "다시 누르면 해제");
         Assert.IsFalse(canvas.heroPreview.gameObject.activeSelf);
-        if (canvas.kingSlimeBody != null)
-            Assert.IsTrue(canvas.kingSlimeBody.activeSelf, "해제하면 킹슬라임");
+        if (canvas.slimeBody != null)
+            Assert.IsTrue(canvas.slimeBody.activeSelf, "해제하면 슬라임");
 
         // 미보유 용사는 반응 없음 (있을 때만)
         int lockedIdx = heroes.FindIndex(h => !HeroCollectionContainer.IsOwned(h, lv));

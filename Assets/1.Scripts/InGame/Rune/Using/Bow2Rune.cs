@@ -11,7 +11,7 @@ public class Bow2Rune : Rune, IFired
     async UniTaskVoid Shoot(Vector2 dir )
     {
         await UniTask.Delay(Weapon.COMBO_ATTACK_INTERVAL_MS);
-        KingSlime.Instance.weapon.Shoot(null, dir);           
+        Slime.Instance.weapon.Shoot(null, dir);           
     }
 
     public void OnFired(ref BulletSpec bullet, ref AllyBulletObject bulletObject, Vector2 dir)

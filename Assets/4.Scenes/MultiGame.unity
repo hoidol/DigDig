@@ -13222,7 +13222,7 @@ GameObject:
   - component: {fileID: 342555245}
   - component: {fileID: 342555244}
   m_Layer: 5
-  m_Name: KingSlimeManageCanvas
+  m_Name: SlimeManageCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19051,7 +19051,7 @@ GameObject:
   - component: {fileID: 473240680}
   - component: {fileID: 473240670}
   m_Layer: 16
-  m_Name: Lucky_KingSlime
+  m_Name: Lucky_Slime
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19088,13 +19088,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc15c4c22994841f18cd2ce6c275b4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kingslimeName: 0
+  slimeName: 0
   rg: {fileID: 0}
   statMgr:
     statList: []
     activeBuffs: []
-    kingslimeData: {fileID: 0}
-    kingslime: {fileID: 0}
+    slimeData: {fileID: 0}
+    slime: {fileID: 0}
   animator: {fileID: 620131728}
   bodyRootTr: {fileID: 620131727}
   bodyCenterTr: {fileID: 4137370385699168244}
@@ -19632,7 +19632,7 @@ GameObject:
   - component: {fileID: 479152369}
   - component: {fileID: 479152368}
   m_Layer: 5
-  m_Name: KingSlimeShortcutInfoPanel
+  m_Name: SlimeShortcutInfoPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49578,7 +49578,7 @@ MonoBehaviour:
   minionShortcutInfoPanel: {fileID: 1472114640}
   attackTypePanel: {fileID: 46652507}
   sellMinionButton: {fileID: 0}
-  kingClassInfoPanel: {fileID: 0}
+  slimeClassInfoPanel: {fileID: 0}
 --- !u!1 &1326019815
 GameObject:
   m_ObjectHideFlags: 0

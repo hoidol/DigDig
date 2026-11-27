@@ -11,8 +11,8 @@ using UnityEngine.UI;
 // - Reset Tutorial Progress: 완료 기록(PlayerPrefs) 삭제 → 다시 처음 실행한 유저처럼
 public static class TutorialEditorMenu
 {
-    const string KING_SPEAKER_KEY = "KingSlime";
-    const string KING_SPEAKER_NAME = "마왕을 꿈꾸는 슬라임";
+    const string SLIME_SPEAKER_KEY = "Slime";
+    const string SLIME_SPEAKER_NAME = "마왕을 꿈꾸는 슬라임";
 
     public const string MANAGER_PREFAB_PATH = "Assets/Resources/Init/TutorialManager.prefab";
     public const string TUTORIAL_PREFAB_DIR = "Assets/3.Prefabs/Tutorial";
@@ -65,15 +65,15 @@ public static class TutorialEditorMenu
         Transform steps = new GameObject("Steps").transform;
         steps.SetParent(root.transform, false);
 
-        AddStep<SetKingTileTutorialStep>(steps, "01_킹 위치 지정 (오른쪽 아래 그룹)", s => s.tileIndex = new Vector2Int(4, 4));
+        AddStep<SetSlimeTileTutorialStep>(steps, "01_슬라임 위치 지정 (오른쪽 아래 그룹)", s => s.tileIndex = new Vector2Int(4, 4));
         AddStep<WaitFadeEndTutorialStep>(steps, "02_페이드 끝날 때까지 대기");
         AddDialogue(steps, "03_대화");
         AddStep<StartWaveTutorialStep>(steps, "04_wave 시작");
         AddStep<WaitTutorialStep>(steps, "05_대기", s => s.seconds = 3f);
-        AddStep<MoveKingTutorialStep>(steps, "06_킹 이동 (왼쪽 위 그룹의 왼쪽 아래)", s => s.targetTileIndex = new Vector2Int(0, 2));
+        AddStep<MoveSlimeTutorialStep>(steps, "06_슬라임 이동 (왼쪽 위 그룹의 왼쪽 아래)", s => s.targetTileIndex = new Vector2Int(0, 2));
         AddStep<WaitTutorialStep>(steps, "07_대기", s => s.seconds = 2f);
         AddDialogue(steps, "08_대화");
-        AddStep<MoveKingTutorialStep>(steps, "09_킹 이동 (칸 입력)", s => s.targetTileIndex = new Vector2Int(3, 2));
+        AddStep<MoveSlimeTutorialStep>(steps, "09_슬라임 이동 (칸 입력)", s => s.targetTileIndex = new Vector2Int(3, 2));
         AddDialogue(steps, "10_대화");
         // 1기씩 블록으로 분리 (사이에 대화를 끼울 수 있음). 1번째와 3번째를 같은 key로 → 합성 블록에서 3번째를 1번째 위로
         AddStep<SpawnMinionTutorialStep>(steps, "12_소환 1 (Ice)", s => { s.minionKey = "Ice"; s.tileIndex = new Vector2Int(1, 1); });
@@ -93,7 +93,7 @@ public static class TutorialEditorMenu
     {
         AddStep<DialogueTutorialStep>(parent, name, s =>
         {
-            s.speakerKey = KING_SPEAKER_KEY;
+            s.speakerKey = SLIME_SPEAKER_KEY;
             s.lines = new[] { "(대사를 입력하세요)" };
         });
     }
@@ -165,7 +165,7 @@ public static class TutorialEditorMenu
         nameRect.offsetMin = new Vector2(50, -90);
         nameRect.offsetMax = new Vector2(-50, -25);
         nameText.color = new Color(1f, 0.85f, 0.3f);
-        nameText.text = KING_SPEAKER_NAME;
+        nameText.text = SLIME_SPEAKER_NAME;
         tutorialCanvas.speakerNameText = nameText;
 
         TextMeshProUGUI text = CreateText("Text", panelGO.transform, 48, TextAlignmentOptions.Center);
@@ -177,7 +177,7 @@ public static class TutorialEditorMenu
         text.text = "대사";
         tutorialCanvas.dialogueText = text;
 
-        tutorialCanvas.speakers.Add(new TutorialSpeaker { key = KING_SPEAKER_KEY, name = KING_SPEAKER_NAME });
+        tutorialCanvas.speakers.Add(new TutorialSpeaker { key = SLIME_SPEAKER_KEY, name = SLIME_SPEAKER_NAME });
 
         // 손가락 안내: 임시 모양(원하는 손가락 이미지로 교체). 손끝이 가리키는 점 = pivot
         GameObject fingerGO = new GameObject("Finger", typeof(RectTransform));

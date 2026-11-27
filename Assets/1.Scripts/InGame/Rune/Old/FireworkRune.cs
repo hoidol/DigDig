@@ -31,7 +31,7 @@ public class FireworkRune : TriggerCycleRune, IFired
     {
         IsActive = true;
         attackSpeedBuff = new Buff(StatType.AttackSpeed, attackSpeed, StatOpType.Multiply);
-        KingSlime.Instance.AddBuff(attackSpeedBuff);
+        Slime.Instance.AddBuff(attackSpeedBuff);
 
         // Character.Instance.AddHp(-itemData.consumeHp);
     }
@@ -46,7 +46,7 @@ public class FireworkRune : TriggerCycleRune, IFired
     public override void OnDeactivate()
     {
         if (attackSpeedBuff != null)
-            KingSlime.Instance.RemoveBuff(attackSpeedBuff);
+            Slime.Instance.RemoveBuff(attackSpeedBuff);
 
         attackSpeedBuff = null;
         IsActive = false;
@@ -62,6 +62,6 @@ public class FireworkRune : TriggerCycleRune, IFired
         flameBullet.burnDPS = burnDPS;
 
         Vector2 randomDir = Random.insideUnitCircle.normalized;
-        KingSlime.Instance.Shoot(flameBullet, randomDir);
+        Slime.Instance.Shoot(flameBullet, randomDir);
     }
 }

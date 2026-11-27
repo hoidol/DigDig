@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// (2026-11-27) 보기 화면 (MultiGameUI 씬): 다른 유저의 판 배치(마지막 브레이크타임·wave 시작 때 올린 것) + wave·킹·미니언
+// (2026-11-27) 보기 화면 (MultiGameUI 씬): 다른 유저의 판 배치(마지막 브레이크타임·wave 시작 때 올린 것) + wave·슬라임·미니언
 // 내 게임은 그대로 돌아가고 메인 카메라만 끔 (화면 = 이 창). 닫으면 카메라 다시 켬
 // 칸 배치 = 내 맵(멀티는 모두 같은 스테이지)의 타일 위치를 창 크기에 맞춰 줄임, 칸 = 씬의 템플릿(cellTemplate) 복사
 public class MultiSpectatePanel : MonoBehaviour
@@ -77,7 +77,7 @@ public class MultiSpectatePanel : MonoBehaviour
             return;
         }
         if (nicknameText != null) nicknameText.text = MultiGame.DisplayName(p);
-        if (infoText != null) infoText.text = $"{MultiUiText.Wave(p)} · {MultiUiText.King(p)} · {MultiUiText.Status(p, room.StartAtMs)}";
+        if (infoText != null) infoText.text = $"{MultiUiText.Wave(p)} · {MultiUiText.Slime(p)} · {MultiUiText.Status(p, room.StartAtMs)}";
         if (minionsText != null) minionsText.text = MultiUiText.Minions(p.minions, 12);
         MultiBoard board = null;
         if (!string.IsNullOrEmpty(p.board))

@@ -278,7 +278,7 @@ public abstract class Enemy : MonoBehaviour, IHittable
     protected virtual void ReachPathEnd()
     {
         rg2d.linearVelocity = Vector2.zero;
-        KingSlime.Instance.TakeDamage(damageData);
+        Slime.Instance.TakeDamage(damageData);
         Destroy();
     }
 

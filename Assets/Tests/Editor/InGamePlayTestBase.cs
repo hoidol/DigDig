@@ -219,15 +219,15 @@ public abstract class InGamePlayTestBase
             EditorApplication.isPaused = false;
     }
 
-    // 실시간 기준 대기. 킹이 죽으면 EndGame에서 저장되므로 죽지 않게 체력을 채운다
+    // 실시간 기준 대기. 슬라임이 죽으면 EndGame에서 저장되므로 죽지 않게 체력을 채운다
     protected static IEnumerator WaitRealtime(float seconds)
     {
         double end = EditorApplication.timeSinceStartup + seconds;
         do
         {
             Unpause();
-            if (KingSlime.Instance != null)
-                KingSlime.Instance.AddHp(100000, false);
+            if (Slime.Instance != null)
+                Slime.Instance.AddHp(100000, false);
             yield return null;
         } while (EditorApplication.timeSinceStartup < end);
     }
@@ -286,7 +286,7 @@ public abstract class InGamePlayTestBase
         // (2026-11-24) 게임에서 쓰는 미니언만 데이터를 로드함 (AddressableResources/MinionData/Data) → 옛 미니언 테스트는 건너뜀
         if (!MinionManager.Instance.minionDataDic.ContainsKey(key))
             Assert.Ignore($"{key} 미니언 데이터가 로드되지 않음 (게임에서 안 쓰는 미니언)");
-        Minion minion = KingSlime.Instance.AddMinion(key, lv);
+        Minion minion = Slime.Instance.AddMinion(key, lv);
         tile.SetTileObject(minion);
         return minion;
     }

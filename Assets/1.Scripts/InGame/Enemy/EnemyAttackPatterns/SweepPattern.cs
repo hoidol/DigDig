@@ -44,7 +44,7 @@ public class SweepPattern : EnemyAttackPattern
         {
             if (!col.CompareTag("Player")) continue;
 
-            KingSlime.Instance.TakeDamage(damageData);
+            Slime.Instance.TakeDamage(damageData);
         }
     }
 

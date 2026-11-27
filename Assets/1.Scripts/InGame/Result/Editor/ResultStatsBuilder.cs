@@ -9,7 +9,7 @@ using UnityEngine.UI;
 // - ResultCanvas/Panel/Bg를 세로로 늘리고 기존 칸(최종 웨이브·보상·버튼·클리어 팁)을 위아래로 다시 배치
 // - ResultStats(2열 그리드 + StatRow_Template) · 피해 순위 제목 · ResultDamage(세로 줄 + DamageRow_Template = 피해 집계 줄 복사 + 이름·스킬 비율 글씨)
 // - ResultCanvas.statsPanel 연결. 이미 있으면 지우고 새로
-// 피해 집계 창 킹 줄: Tools/InGame/Add King Row To DamageMeter (패널 하나 추가)
+// 피해 집계 창 슬라임 줄: Tools/InGame/Add Slime Row To DamageMeter (패널 하나 추가)
 public static class ResultStatsBuilder
 {
     const float BG_HEIGHT = 1760f, BG_Y = 60f, TOP = BG_HEIGHT / 2f, OLD_TOP = 500f;
@@ -183,9 +183,9 @@ public static class ResultStatsBuilder
         Debug.Log("[ResultStatsBuilder] 결과 화면 게임 기록 UI 생성 (씬 저장은 직접)");
     }
 
-    // 피해 집계 창(장착 5종)에 킹 줄 패널 하나 추가 (줄 수 = 장착 수 + 1)
-    [MenuItem("Tools/InGame/Add King Row To DamageMeter")]
-    public static void AddKingRow()
+    // 피해 집계 창(장착 5종)에 슬라임 줄 패널 하나 추가 (줄 수 = 장착 수 + 1)
+    [MenuItem("Tools/InGame/Add Slime Row To DamageMeter")]
+    public static void AddSlimeRow()
     {
         DamageMeterSystemContainer meter = Object.FindFirstObjectByType<DamageMeterSystemContainer>(FindObjectsInactive.Include);
         if (meter == null)
@@ -203,21 +203,21 @@ public static class ResultStatsBuilder
         var rt = (RectTransform)meter.transform;
         var vlg = meter.GetComponent<VerticalLayoutGroup>();
         float rowH = ((RectTransform)panels[0].transform).sizeDelta.y + (vlg != null ? vlg.spacing : 0f);
-        Undo.RecordObject(rt, "King row");
+        Undo.RecordObject(rt, "Slime row");
         for (int i = panels.Length; i < need; i++)
         {
             GameObject go = Object.Instantiate(panels[panels.Length - 1].gameObject, meter.transform);
-            Undo.RegisterCreatedObjectUndo(go, "King row");
+            Undo.RegisterCreatedObjectUndo(go, "Slime row");
             go.name = $"DamageMeterSystemPanel{i + 1}";
             float oldH = rt.sizeDelta.y;
             rt.sizeDelta = new Vector2(rt.sizeDelta.x, oldH + rowH);
             rt.anchoredPosition -= new Vector2(0f, rowH * (1f - rt.pivot.y)); // 위쪽 끝은 그대로
         }
-        Undo.RecordObject(meter, "King row");
+        Undo.RecordObject(meter, "Slime row");
         meter.damageMeterSystemPanels = meter.GetComponentsInChildren<DamageMeterSystemPanel>(true);
         EditorUtility.SetDirty(meter);
         EditorSceneManager.MarkSceneDirty(meter.gameObject.scene);
-        Debug.Log("[ResultStatsBuilder] 피해 집계 킹 줄 패널 추가 (씬 저장은 직접)");
+        Debug.Log("[ResultStatsBuilder] 피해 집계 슬라임 줄 패널 추가 (씬 저장은 직접)");
     }
 
     static RectTransform NewRect(string name, Transform parent, Vector2 pos, Vector2 size)

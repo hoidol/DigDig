@@ -6,11 +6,11 @@ public class BrokenMagazineRune : Rune
     public override void OnEquip()
     {
         // buff = new Buff(StatType.BulletCount, -5, StatOpType.Add);
-        KingSlime.Instance.AddBuff(buff);
+        Slime.Instance.AddBuff(buff);
     }
 
     public override void OnUnequip()
     {
-        KingSlime.Instance.RemoveBuff(buff);
+        Slime.Instance.RemoveBuff(buff);
     }
 }

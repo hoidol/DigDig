@@ -62,7 +62,7 @@ public class BossWave : Wave
         boss = null;
         GameEventBus.Unsubscribe<BossDeadEvent>(OnBossDeadEvent);
 
-        if (KingSlime.Instance.CurHp <= 0)
+        if (Slime.Instance.CurHp <= 0)
             return;
 
         bossDead = true;

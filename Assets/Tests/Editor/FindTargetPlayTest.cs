@@ -25,7 +25,7 @@ public class FindTargetPlayTest : InGamePlayTestBase
     {
         // ── 기본값 ──
         current = "기본값";
-        Assert.AreEqual(FindTargetType.First, KingSlime.Instance.FindTargetType, "킹 기본 = 먼저 온 적");
+        Assert.AreEqual(FindTargetType.First, Slime.Instance.FindTargetType, "슬라임 기본 = 먼저 온 적");
         Minion pierce = SpawnMinion("Pierce", GetFreeTile(), 0);
         Minion ice = SpawnMinion("Ice", GetFreeTile(), 0);
         yield return WaitFrames(2);
@@ -38,7 +38,7 @@ public class FindTargetPlayTest : InGamePlayTestBase
         // ── First = 사거리 안에서 가장 먼저 소환된 적 (멀어도) ──
         current = "First 선택";
         Enemy.FreezeAll(30f); // 적이 움직이지 않게
-        Vector2 center = KingSlime.Instance.transform.position;
+        Vector2 center = Slime.Instance.transform.position;
         Enemy prefab = GameManager.Instance.stageData.GetEnemyPrefab(EnemyType.Normal, DefenceType.Normal);
         Enemy early = EnemyFieldController.Instance.Instantiate(prefab);
         early.Spawn(center + new Vector2(1.5f, 0f), 0); // 먼저 소환, 멀리

@@ -206,7 +206,7 @@ public class FakePlayRecordStore : IPlayRecordStore
                 board.cells.Add(new MultiBoard.Cell { x = i % 6, y = i / 6, minion = minions[i].Item1, lv = minions[i].Item2 });
             r.frames.Add(new PlayRecord.Frame
             {
-                t = t, wave = w, kingLv = Math.Min(12, w / 4), heroKey = w >= 4 ? "Knight" : "", hp = 1f, diceCoin = 5,
+                t = t, wave = w, slimeLv = Math.Min(12, w / 4), heroKey = w >= 4 ? "Knight" : "", hp = 1f, diceCoin = 5,
                 minions = MultiGame.FormatMinions(minions), board = JsonUtility.ToJson(board),
             });
             t += secondsPerWave * (0.75f + (float)rng.NextDouble() * 0.5f);

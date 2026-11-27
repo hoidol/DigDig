@@ -28,10 +28,10 @@ public static class MultiUiText
     }
 
     // "Lv.5 기사" / 용사 전 "Lv.0"
-    public static string King(MultiPlayerState p)
+    public static string Slime(MultiPlayerState p)
     {
         string hero = HeroName(p.heroKey);
-        return string.IsNullOrEmpty(hero) ? $"Lv.{p.kingLv}" : $"Lv.{p.kingLv} {hero}";
+        return string.IsNullOrEmpty(hero) ? $"Lv.{p.slimeLv}" : $"Lv.{p.slimeLv} {hero}";
     }
 
     // (2026-11-27) "WAVE 12" (씬 StatusRow_Template 디자인에 맞춤)

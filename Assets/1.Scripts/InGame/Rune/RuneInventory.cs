@@ -73,7 +73,7 @@ public class RuneInventory : MonoBehaviour
     public void UpdateInventory()
     {
         // itemStatDic에는 없는데 curItems에 있는 아이템 Destroy
-        foreach (var rune in curRunes.Where(i => !KingSlime.Instance.statMgr.runeStatDic.ContainsKey(i.key)).ToList())
+        foreach (var rune in curRunes.Where(i => !Slime.Instance.statMgr.runeStatDic.ContainsKey(i.key)).ToList())
         {
             rune.OnUnequip();
             Destroy(rune.gameObject);

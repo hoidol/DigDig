@@ -29,13 +29,13 @@ public class MinionOfferSystem : MonoBehaviour
     // 카드 가격 할인: 가격이 2 이상이고 확률에 걸리면 1 (공짜 카드는 안 나오게)
     public static int RollCardDiscount(string key) =>
         GetCardPrice(key) > 1 && HeroUpgradeSystem.Roll(HeroUpgradeAbility.MinionCostDownChance) ? 1 : 0;
-    // (2026-11-23) 카드 머지 레벨 확률 = 킹 레벨 × OFFER_LEVEL_UP_CHANCE_PER_KING_LEVEL(%) → 머지 레벨 1(표시 Lv.2), 나머지 0
-    //   킹 Lv.0 = 0%, Lv.1 = 1%, Lv.2 = 2% … (카드 줄 위에 작게 표시, Lv.0이면 숨김)
-    public const float OFFER_LEVEL_UP_CHANCE_PER_KING_LEVEL = 1f;
-    public static float GetOfferLevelUpChance(int kingLevel) => Mathf.Max(0, kingLevel) * OFFER_LEVEL_UP_CHANCE_PER_KING_LEVEL;
-    // 지금 Lv.2 카드 확률 = 킹 레벨 확률 + 용사 강화(OfferLv2Chance, 첫 지급이면 FirstOfferLv2Chance도)
+    // (2026-11-23) 카드 머지 레벨 확률 = 슬라임 레벨 × OFFER_LEVEL_UP_CHANCE_PER_SLIME_LEVEL(%) → 머지 레벨 1(표시 Lv.2), 나머지 0
+    //   슬라임 Lv.0 = 0%, Lv.1 = 1%, Lv.2 = 2% … (카드 줄 위에 작게 표시, Lv.0이면 숨김)
+    public const float OFFER_LEVEL_UP_CHANCE_PER_SLIME_LEVEL = 1f;
+    public static float GetOfferLevelUpChance(int slimeLevel) => Mathf.Max(0, slimeLevel) * OFFER_LEVEL_UP_CHANCE_PER_SLIME_LEVEL;
+    // 지금 Lv.2 카드 확률 = 슬라임 레벨 확률 + 용사 강화(OfferLv2Chance, 첫 지급이면 FirstOfferLv2Chance도)
     public static float GetCurrentLevelUpChance(bool firstDeal) =>
-        GetOfferLevelUpChance(KingSlime.Instance != null ? KingSlime.Instance.lv : 0) + HeroUpgradeSystem.GetOfferLv2Bonus(firstDeal);
+        GetOfferLevelUpChance(Slime.Instance != null ? Slime.Instance.lv : 0) + HeroUpgradeSystem.GetOfferLv2Bonus(firstDeal);
     public static int RollOfferMergeLevel(bool firstDeal = false)
     {
         float chance = GetCurrentLevelUpChance(firstDeal);
@@ -50,8 +50,8 @@ public class MinionOfferSystem : MonoBehaviour
     public MinionOfferCard cardTemplate;  // 카드 하나 (꺼 둔 채로 두면 복사해서 씀)
     public Button nextButton;             // 브레이크타임 Next 버튼
     public MinionOfferCardInfo cardInfo;  // (2026-11-21) 카드를 누르면 위에 미니언 설명 (비우면 하위에서 찾고, 없으면 생성)
-    public KingExpBuyPanel expBuyPanel;   // (2026-11-22) 카드 줄 왼쪽 킹 레벨·경험치 구매 (비우면 하위에서 찾고, 없으면 생성)
-    public TMPro.TMP_Text levelUpChanceText; // (2026-11-23) 카드 줄 위 "Lv.2 카드 확률 N%" (비우면 실행 중 생성, 킹 Lv.0이면 숨김)
+    public SlimeExpBuyPanel expBuyPanel;   // (2026-11-22) 카드 줄 왼쪽 슬라임 레벨·경험치 구매 (비우면 하위에서 찾고, 없으면 생성)
+    public TMPro.TMP_Text levelUpChanceText; // (2026-11-23) 카드 줄 위 "Lv.2 카드 확률 N%" (비우면 실행 중 생성, 슬라임 Lv.0이면 숨김)
     [Tooltip("카드 다시 뽑기 버튼. (2026-11-25) 브레이크타임 내내 보임: 용사 강화 보너스 무료 → 한 판 무료 2번 → 광고 3번 (RerollCounter.BreakOffer), 다 쓰면 숨김. 씬 OfferButtons/RerollButton (메뉴 Tools/InGame/Add Offer Reroll Button으로 생성, 모양·위치는 씬에서 수정)")]
     public Button rerollButton;
     public int freeRerolls;   // 용사 강화 BreakRerollChance 보너스 무료 다시 뽑기 (최대 1, 쌓이지 않음, 먼저 씀)
@@ -90,12 +90,12 @@ public class MinionOfferSystem : MonoBehaviour
         if (cardInfo == null)
             cardInfo = MinionOfferCardInfo.Build(transform, GetComponentInChildren<TMPro.TMP_Text>(true)?.font);
         if (expBuyPanel == null)
-            expBuyPanel = GetComponentInChildren<KingExpBuyPanel>(true);
+            expBuyPanel = GetComponentInChildren<SlimeExpBuyPanel>(true);
         if (expBuyPanel == null)
         {
             DiceCoinPanel dicePanel = FindFirstObjectByType<DiceCoinPanel>(FindObjectsInactive.Include);
             Image diceIcon = dicePanel != null ? dicePanel.GetComponentInChildren<Image>(true) : null;
-            expBuyPanel = KingExpBuyPanel.Build(transform as RectTransform ?? (RectTransform)cardContainer.parent, GetComponentInChildren<TMPro.TMP_Text>(true)?.font,
+            expBuyPanel = SlimeExpBuyPanel.Build(transform as RectTransform ?? (RectTransform)cardContainer.parent, GetComponentInChildren<TMPro.TMP_Text>(true)?.font,
                 nextButton.GetComponent<Image>()?.sprite, diceIcon != null ? diceIcon.sprite : null);
         }
         expBuyPanel.Init();
@@ -184,7 +184,7 @@ public class MinionOfferSystem : MonoBehaviour
     // 테스트 전용(웨이브 전환): 다음 브레이크타임에 카드·주사위 코인을 다시 지급하게
     public void ResetDealForTest() => lastDealtWaveIdx = -1;
 
-    // 지금 브레이크타임의 주사위 코인 초기화(WAVE_DICE_COIN + 보너스)가 끝났는지 → 이후 얻은 보상 코인은 즉시 지급 (KingSlime.AddRewardDiceCoin)
+    // 지금 브레이크타임의 주사위 코인 초기화(WAVE_DICE_COIN + 보너스)가 끝났는지 → 이후 얻은 보상 코인은 즉시 지급 (Slime.AddRewardDiceCoin)
     public static bool IsBreakDiceGranted =>
         Instance != null && GameManager.Instance != null && GameManager.Instance.isBreakTime
         && Instance.lastDealtWaveIdx == GameManager.Instance.breakTimeNextWaveIdx;
@@ -199,16 +199,16 @@ public class MinionOfferSystem : MonoBehaviour
         lastDealtWaveIdx = e.nextWaveIdx;
         // (2026-11-20) 브레이크타임마다 주사위 코인을 WAVE_DICE_COIN개로 초기화 (남은 코인은 이월하지 않음)
         // (2026-11-20) + 보너스 엘리트 처치로 모아 둔 코인 (받으면 0으로)
-        KingSlime king = KingSlime.Instance;
-        int bonus = king.bonusDiceCoinNextBreak;
-        king.bonusDiceCoinNextBreak = 0;
-        king.AddDiceCoin(GameSetting.WAVE_DICE_COIN + bonus - king.diceCoin);
+        Slime slime = Slime.Instance;
+        int bonus = slime.bonusDiceCoinNextBreak;
+        slime.bonusDiceCoinNextBreak = 0;
+        slime.AddDiceCoin(GameSetting.WAVE_DICE_COIN + bonus - slime.diceCoin);
         DealOffers();
         // (2026-11-24) 용사 강화 BreakRerollChance: 확률로 카드 다시 뽑기 무료 1회 (남아 있으면 그대로, 쌓이지 않음)
         if (freeRerolls < 1 && HeroUpgradeSystem.Roll(HeroUpgradeAbility.BreakRerollChance))
         {
             freeRerolls = 1;
-            EffectManager.PlayPopText((Vector2)king.transform.position + Vector2.up, TranslateManager.GetText("HeroUpgrade_RerollGained"), new Color(0.6f, 1f, 0.8f));
+            EffectManager.PlayPopText((Vector2)slime.transform.position + Vector2.up, TranslateManager.GetText("HeroUpgrade_RerollGained"), new Color(0.6f, 1f, 0.8f));
         }
     }
 
@@ -289,8 +289,8 @@ public class MinionOfferSystem : MonoBehaviour
         MinionData data = MinionManager.Instance.GetMinionData(key);
         return data != null ? data.offerDiceCoinPrice : GameSetting.OFFER_MINION_DICE_COIN_PRICE;
     }
-    public static bool CanAffordCard(string key) => KingSlime.Instance.diceCoin >= GetCardPrice(key);
-    public static bool CanAffordCard(OfferCard card) => KingSlime.Instance.diceCoin >= card.Price;
+    public static bool CanAffordCard(string key) => Slime.Instance.diceCoin >= GetCardPrice(key);
+    public static bool CanAffordCard(OfferCard card) => Slime.Instance.diceCoin >= card.Price;
 
     // 코인이 바뀌면 카드 표시(가격·흐림) 갱신
     void OnDiceCoin(DiceCoinEvent e) => RefreshCards();
@@ -330,7 +330,7 @@ public class MinionOfferSystem : MonoBehaviour
     void OnClickedNext()
     {
         SoundManager.Play(SFXType.NextWaveButton);
-        string body = GetNextWaveWarning(KingSlime.Instance != null && KingSlime.Instance.pendingLevelUps > 0, HasAffordableCard());
+        string body = GetNextWaveWarning(Slime.Instance != null && Slime.Instance.pendingLevelUps > 0, HasAffordableCard());
         if (body != null && YesOrNoCanvas.Instance != null)
         {
             YesOrNoCanvas.Instance.OpenCanvas(TranslateManager.GetText("NextWave_DiceCoinLeft_Title"), body, yes =>
@@ -430,7 +430,7 @@ public class MinionOfferSystem : MonoBehaviour
         if (tile == null)
             return false;
         int price = hand[handIdx].Price;
-        if (KingSlime.Instance.diceCoin < price)
+        if (Slime.Instance.diceCoin < price)
         {
             ToastCanvas.Toast("Not enough dice coin");
             return false;
@@ -444,7 +444,7 @@ public class MinionOfferSystem : MonoBehaviour
                 ToastCanvas.Toast("Max Minion");
                 return false;
             }
-            Minion minion = KingSlime.Instance.AddMinion(key, cardLevel);
+            Minion minion = Slime.Instance.AddMinion(key, cardLevel);
             tile.SetTileObject(minion);
             SoundManager.Play(SFXType.MinionAppear);
             AchievementManager.Report(AchievementType.SpawnMinion);
@@ -468,8 +468,8 @@ public class MinionOfferSystem : MonoBehaviour
         }
 
         hand[handIdx] = null; // 자리 유지 (RemoveAt하면 뒤 카드가 앞으로 당겨짐)
-        KingSlime.Instance.AddDiceCoin(-price); // DiceCoinEvent → RefreshCards
-        KingSlimeManageCanvas.Instance.UpdateCanvas();
+        Slime.Instance.AddDiceCoin(-price); // DiceCoinEvent → RefreshCards
+        SlimeManageCanvas.Instance.UpdateCanvas();
         // (2026-11-23) 카드를 모두 쓰면 (브레이크타임 중) 새 카드 OFFER_COUNT장
         if (hand.TrueForAll(c => c == null) && GameManager.Instance.isBreakTime)
             DealOffers();

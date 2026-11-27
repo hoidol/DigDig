@@ -6,19 +6,19 @@ using UnityEditor;
 using UnityEngine;
 
 // (2026-11-25) 용사 피해 측정 (MinionTestWindow "용사 테스트"에서 실행, InGame Play 중, 에디터 전용)
-// 미니언 없이 킹(용사) 혼자 칸 (2,2)에서 지정 wave를 처음부터 끝까지 돌려 킹이 준 피해를 잰다 (DamageMeterSystem 킹 피해)
-//   구분 = 기본 공격 / 1단계 스킬 / 2단계 스킬 (HeroKingAbility.TAG_*). 3단계 공용 스킬·매의 눈 같은 버프는 기본 공격 피해에 섞여 들어감
+// 미니언 없이 슬라임(용사) 혼자 칸 (2,2)에서 지정 wave를 처음부터 끝까지 돌려 슬라임이 준 피해를 잰다 (DamageMeterSystem 슬라임 피해)
+//   구분 = 기본 공격 / 1단계 스킬 / 2단계 스킬 (HeroSlimeAbility.TAG_*). 3단계 공용 스킬·매의 눈 같은 버프는 기본 공격 피해에 섞여 들어감
 // 용사 레벨(1~8) = 그 레벨까지의 HeroData 스탯·해방 스킬, 스킬 강화 옵션 = 1·2단계 스킬 강화 카드를 고른 상태
 // 스킬은 에너지가 모이면 자동 사용 (위치 지정 스킬 = 적이 가장 몰린 곳), 에너지는 실제처럼 충전
 // 결과: Library/HeroDamageTest.json 누적 → Assets/MinionDamageTest/HeroDamage_{난이도}_Wave{N}.xlsx (요약 + 상세)
-// 측정 중: 킹 무적, 필드 미니언·적 정리, 킹 성장 능력은 측정마다 새로 장착 (측정 후엔 Play를 다시 시작 권장)
+// 측정 중: 슬라임 무적, 필드 미니언·적 정리, 슬라임 성장 능력은 측정마다 새로 장착 (측정 후엔 Play를 다시 시작 권장)
 public static class HeroDamageBenchmark
 {
     public static readonly Vector2Int TILE_INDEX = new Vector2Int(2, 2);
     const string STORE_PATH = "Library/HeroDamageTest.json";
     const int RANDOM_SEED = 1234;
     const float EXTRA_TIMEOUT = 30f;
-    const float MAX_WAVE_TIME = 180f; // 킹 혼자라 적이 경로 끝까지 가도 wave는 끝남. 그래도 안 끝나면 강제 종료
+    const float MAX_WAVE_TIME = 180f; // 슬라임 혼자라 적이 경로 끝까지 가도 wave는 끝남. 그래도 안 끝나면 강제 종료
 
     [Serializable]
     public class Result
@@ -56,7 +56,7 @@ public static class HeroDamageBenchmark
     static bool enhance, noEliteBoss, noDefence, subscribed, warnedFileLocked;
     static float prevTimeScale, startGameTime;
     static int kills, leaked, totalCount;
-    static readonly int[] uses = new int[HeroKingAbility.SKILL_COUNT];
+    static readonly int[] uses = new int[HeroSlimeAbility.SKILL_COUNT];
 
     public static bool IsRunning => state != State.Idle;
     public static string Progress => IsRunning
@@ -81,13 +81,13 @@ public static class HeroDamageBenchmark
         }
         queue.Clear();
         foreach (AbilityData h in heroes)
-            if (h != null && h.prefab is HeroKingAbility)
+            if (h != null && h.prefab is HeroSlimeAbility)
                 queue.Enqueue(h);
         totalCount = queue.Count;
         if (totalCount == 0)
             return;
         waveNum = Mathf.Clamp(wave, 1, GameSetting.LAST_WAVE);
-        heroLevel = Mathf.Clamp(level, 1, GameSetting.KING_MAX_LEVEL);
+        heroLevel = Mathf.Clamp(level, 1, GameSetting.SLIME_MAX_LEVEL);
         enhance = enhanceSkills;
         noEliteBoss = withoutEliteBoss;
         noDefence = ignoreDefence;
@@ -151,13 +151,13 @@ public static class HeroDamageBenchmark
 
     static void Update()
     {
-        if (!Application.isPlaying || GameManager.Instance == null || KingSlime.Instance == null)
+        if (!Application.isPlaying || GameManager.Instance == null || Slime.Instance == null)
             return;
         GameManager gm = GameManager.Instance;
-        KingSlime king = KingSlime.Instance;
-        king.enabled = true;
-        if (king.health != null && king.health.curHp < king.MaxHp)
-            king.health.curHp = king.MaxHp;
+        Slime slime = Slime.Instance;
+        slime.enabled = true;
+        if (slime.health != null && slime.health.curHp < slime.MaxHp)
+            slime.health.curHp = slime.MaxHp;
         Time.timeScale = MinionDamageBenchmark.TIME_SCALE;
 
         switch (state)
@@ -171,7 +171,7 @@ public static class HeroDamageBenchmark
                 StartRun(gm);
                 break;
             case State.Running:
-                AutoUseSkills(king);
+                AutoUseSkills(slime);
                 float elapsed = gm.gameTimer - startGameTime;
                 if (gm.isBreakTime || elapsed > MAX_WAVE_TIME + EXTRA_TIMEOUT)
                 {
@@ -183,25 +183,25 @@ public static class HeroDamageBenchmark
     }
 
     // 에너지가 모이면 높은 단계 스킬부터 (위치 지정 = 적이 가장 몰린 곳)
-    static void AutoUseSkills(KingSlime king)
+    static void AutoUseSkills(Slime slime)
     {
-        HeroKingAbility hero = king.abilityInventory.Get<HeroKingAbility>();
+        HeroSlimeAbility hero = slime.abilityInventory.Get<HeroSlimeAbility>();
         if (hero == null)
             return;
         for (int idx = hero.UnlockedSkillCount - 1; idx >= 0; idx--)
         {
             if (hero.Charges < hero.GetSkillCost(idx))
                 continue;
-            HeroKingAbility.UseResult r;
-            if (idx != HeroKingAbility.COMMON_SKILL_INDEX && hero.NeedsTargetPosition(idx))
+            HeroSlimeAbility.UseResult r;
+            if (idx != HeroSlimeAbility.COMMON_SKILL_INDEX && hero.NeedsTargetPosition(idx))
             {
-                if (!HeroKingAbility.FindDensest(Mathf.Max(1f, hero.GetTargetRadius(idx)), out Vector2 pos))
+                if (!HeroSlimeAbility.FindDensest(Mathf.Max(1f, hero.GetTargetRadius(idx)), out Vector2 pos))
                     continue;
                 r = hero.TryUseSkillAt(idx, pos);
             }
             else
                 r = hero.TryUseSkill(idx);
-            if (r == HeroKingAbility.UseResult.Used)
+            if (r == HeroSlimeAbility.UseResult.Used)
             {
                 uses[idx]++;
                 return;
@@ -210,7 +210,7 @@ public static class HeroDamageBenchmark
     }
 
     // 용사 장착 = GameTestUtil.EquipHero (기기 테스트 패널·창·자동 테스트 공용)
-    public static HeroKingAbility EquipHero(AbilityData heroData, int level, bool enhanceSkills) => GameTestUtil.EquipHero(heroData, level, enhanceSkills);
+    public static HeroSlimeAbility EquipHero(AbilityData heroData, int level, bool enhanceSkills) => GameTestUtil.EquipHero(heroData, level, enhanceSkills);
 
     static void StartRun(GameManager gm)
     {
@@ -223,21 +223,21 @@ public static class HeroDamageBenchmark
         }
         if (tile.isBlocked)
             tile.Unblock();
-        KingSlime king = KingSlime.Instance;
-        if (!ReferenceEquals(tile.tileObject, king))
+        Slime slime = Slime.Instance;
+        if (!ReferenceEquals(tile.tileObject, slime))
         {
             if (tile.tileObject != null)
             {
                 Finish($"칸 {TILE_INDEX}이 비어 있지 않음");
                 return;
             }
-            TileManager.Instance.RemoveTileObject(king);
-            tile.SetTileObject(king);
-            king.transform.position = tile.transform.position;
+            TileManager.Instance.RemoveTileObject(slime);
+            tile.SetTileObject(slime);
+            slime.transform.position = tile.transform.position;
         }
 
         UnityEngine.Random.InitState(RANDOM_SEED);
-        HeroKingAbility hero = EquipHero(current, heroLevel, enhance);
+        HeroSlimeAbility hero = EquipHero(current, heroLevel, enhance);
         if (hero == null)
         {
             Finish($"{current.key} 용사 장착 실패");
@@ -281,7 +281,7 @@ public static class HeroDamageBenchmark
 
     static void EndRun(GameManager gm, bool timeout)
     {
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         var result = new Result
         {
             difficulty = gm.stageData != null ? gm.stageData.key : "",
@@ -289,12 +289,12 @@ public static class HeroDamageBenchmark
             hero = current.key,
             level = heroLevel,
             enhanced = enhance,
-            attackPower = king.statMgr.AttackPower,
-            attackSpeed = king.statMgr.AttackSpeed,
-            damage = DamageMeterSystem.KingTotalDamage,
-            basicDamage = DamageMeterSystem.GetKingDamage(HeroKingAbility.TAG_BASIC),
-            skill1Damage = DamageMeterSystem.GetKingDamage(HeroKingAbility.TAG_SKILL1),
-            skill2Damage = DamageMeterSystem.GetKingDamage(HeroKingAbility.TAG_SKILL2),
+            attackPower = slime.statMgr.AttackPower,
+            attackSpeed = slime.statMgr.AttackSpeed,
+            damage = DamageMeterSystem.SlimeTotalDamage,
+            basicDamage = DamageMeterSystem.GetSlimeDamage(HeroSlimeAbility.TAG_BASIC),
+            skill1Damage = DamageMeterSystem.GetSlimeDamage(HeroSlimeAbility.TAG_SKILL1),
+            skill2Damage = DamageMeterSystem.GetSlimeDamage(HeroSlimeAbility.TAG_SKILL2),
             skill1Uses = uses[0], skill2Uses = uses[1], skill3Uses = uses[2],
             duration = gm.gameTimer - startGameTime,
             kills = kills,
@@ -372,7 +372,7 @@ public static class HeroDamageBenchmark
 
     static string HeroName(string key)
     {
-        AbilityData d = KingGrowthSetting.Instance != null ? KingGrowthSetting.Instance.heroAbilities.FirstOrDefault(h => h != null && h.key == key) : null;
+        AbilityData d = SlimeGrowthSetting.Instance != null ? SlimeGrowthSetting.Instance.heroAbilities.FirstOrDefault(h => h != null && h.key == key) : null;
         return d != null && !string.IsNullOrEmpty(d.title) ? d.title : key;
     }
 }

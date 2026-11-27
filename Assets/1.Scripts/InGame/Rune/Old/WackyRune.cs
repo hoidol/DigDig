@@ -17,7 +17,7 @@ public class WackyRune : Rune, IFired
         if (Random.value >= PROBS)
             return;
         Vector2 randomDir = Random.insideUnitCircle.normalized;
-        KingSlime.Instance.Shoot(new KingSlimeBulletSpec(), randomDir);
+        Slime.Instance.Shoot(new SlimeBulletSpec(), randomDir);
         // Character.Instance.AddHp(-itemData.consumeHp);
     }
 }

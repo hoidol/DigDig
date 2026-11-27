@@ -29,14 +29,14 @@ public class EvolutionTileRune : TileRune //타일 위에 설치되는 아이템
     IEnumerator CoConsume()
     {
         yield return null;
-        if (this != null && KingSlime.Instance != null)
-            KingSlime.Instance.RemoveRune(this);
+        if (this != null && Slime.Instance != null)
+            Slime.Instance.RemoveRune(this);
     }
 
     // 진화 타일 수가 진화할 슬라임 수보다 적을 때만 (같으면 안 나옴, 많아지는 경우는 없어야 함)
     public static bool CanDrawFor(int evolvableMinionCount, int evolutionTileCount) => evolutionTileCount < evolvableMinionCount;
 
-    public static int EvolvableMinionCount => KingSlime.Instance.minionInventory.curMinions.Count(s => s != null && s.CanEvolve);
+    public static int EvolvableMinionCount => Slime.Instance.minionInventory.curMinions.Count(s => s != null && s.CanEvolve);
     public static int InstalledCount => TileManager.Instance.tiles.Count(t => t.tileRune is EvolutionTileRune);
 
     public override bool CanDraw() => CanDrawFor(EvolvableMinionCount, InstalledCount);

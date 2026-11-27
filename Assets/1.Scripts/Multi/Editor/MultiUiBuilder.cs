@@ -235,7 +235,7 @@ public static class MultiUiBuilder
         Debug.Log("[MultiUiBuilder] Ready 줄 방장 표시 추가 (씬 저장은 직접)");
     }
 
-    // (2026-11-27) MultiGameUI: 다른 유저 목록에서 순위 글씨 삭제 (줄의 RankText · 위쪽 MyRankText), 닉네임·킹 글씨를 왼쪽으로 당김
+    // (2026-11-27) MultiGameUI: 다른 유저 목록에서 순위 글씨 삭제 (줄의 RankText · 위쪽 MyRankText), 닉네임·슬라임 글씨를 왼쪽으로 당김
     [MenuItem("Tools/Multi/Remove Rank From Players Panel")]
     public static void RemoveRankFromPlayersPanel()
     {
@@ -255,7 +255,7 @@ public static class MultiUiBuilder
             {
                 float shift = ((RectTransform)rank).offsetMax.x;
                 Undo.DestroyObjectImmediate(rank.gameObject);
-                foreach (TMP_Text t in new[] { row.nicknameText, row.kingText })
+                foreach (TMP_Text t in new[] { row.nicknameText, row.slimeText })
                     if (t != null && t.rectTransform.offsetMin.x >= shift)
                     {
                         Undo.RecordObject(t.rectTransform, "Remove rank");
@@ -499,8 +499,8 @@ public static class MultiUiBuilder
         TMP_Text wave = NewText("WaveText", row, 26f, TextAlignmentOptions.MidlineRight, new Color(0.6f, 0.9f, 1f));
         Box(wave.rectTransform, new Vector2(1f, 0.66f), new Vector2(1f, 1f), new Vector2(-230f, 0f), new Vector2(-116f, -2f));
         wave.text = "WAVE 12";
-        TMP_Text king = Line(row, "KingText", 22f, 0f, new Color(0.85f, 0.85f, 0.9f), 12f, 116f);
-        king.text = "Lv.5 기사";
+        TMP_Text slime = Line(row, "SlimeText", 22f, 0f, new Color(0.85f, 0.85f, 0.9f), 12f, 116f);
+        slime.text = "Lv.5 기사";
         RectTransform view = NewImage("ViewButton", row, new Color(0.25f, 0.55f, 0.95f, 1f));
         view.anchorMin = view.anchorMax = view.pivot = new Vector2(1f, 0.5f);
         view.anchoredPosition = new Vector2(-10f, 0f);
@@ -513,7 +513,7 @@ public static class MultiUiBuilder
         var rowComp = row.gameObject.AddComponent<MultiStatusRow>();
         rowComp.nicknameText = nick;
         rowComp.waveText = wave;
-        rowComp.kingText = king;
+        rowComp.slimeText = slime;
         rowComp.viewButton = viewButton;
         rowComp.reachedMark = reached.gameObject;
         row.gameObject.SetActive(false);
@@ -589,11 +589,11 @@ public static class MultiUiBuilder
         Image ri = runeImg.gameObject.AddComponent<Image>();
         ri.preserveAspect = true;
         ri.raycastTarget = false;
-        RectTransform king = NewImage("KingMark", cell, new Color(1f, 0.85f, 0.3f, 0.9f));
-        Box(king, new Vector2(0.15f, 0.15f), new Vector2(0.85f, 0.85f), Vector2.zero, Vector2.zero);
-        TMP_Text kingText = NewText("Text", king, 40f, TextAlignmentOptions.Center, Color.black);
-        Box(kingText.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-        kingText.text = "KING";
+        RectTransform slime = NewImage("SlimeMark", cell, new Color(1f, 0.85f, 0.3f, 0.9f));
+        Box(slime, new Vector2(0.15f, 0.15f), new Vector2(0.85f, 0.85f), Vector2.zero, Vector2.zero);
+        TMP_Text slimeText = NewText("Text", slime, 40f, TextAlignmentOptions.Center, Color.black);
+        Box(slimeText.rectTransform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+        slimeText.text = "SLIME";
         RectTransform blocked = NewImage("BlockedMark", cell, new Color(0f, 0f, 0f, 0.75f));
         Box(blocked, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
         var cellComp = cell.gameObject.AddComponent<MultiSpectateCell>();
@@ -602,7 +602,7 @@ public static class MultiUiBuilder
         cellComp.lvText = lv;
         cellComp.evolvedMark = evo.gameObject;
         cellComp.runeImage = ri;
-        cellComp.kingMark = king.gameObject;
+        cellComp.slimeMark = slime.gameObject;
         cellComp.blockedMark = blocked.gameObject;
         cell.gameObject.SetActive(false);
 

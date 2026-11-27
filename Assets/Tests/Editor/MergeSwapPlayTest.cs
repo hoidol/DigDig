@@ -8,7 +8,7 @@ using UnityEngine.TestTools;
 // - 미니언을 머지가 안 되는 미니언 위에 놓음 → 자리 교체 없이 원위치 (이전: 교체)
 // - 같은 종·같은 머지 레벨 → 합성
 // - 미니언을 빈 칸에 놓음 → 브레이크타임 = 주사위 코인 2개로 이동(확인 팝업, 모자라면 토스트) / wave 중 = 원위치
-// - 킹 ↔ 미니언 자리 교체 없음 (원위치), 킹은 빈 칸으로 자유롭게 이동
+// - 슬라임 ↔ 미니언 자리 교체 없음 (원위치), 슬라임은 빈 칸으로 자유롭게 이동
 public class MergeSwapPlayTest : InGamePlayTestBase
 {
     const int MAX = MinionData.MAX_MERGE_LEVEL;
@@ -24,11 +24,11 @@ public class MergeSwapPlayTest : InGamePlayTestBase
     }
 
     [UnityTest]
-    public IEnumerator KingSlime_NoSwap_MovesToEmpty()
+    public IEnumerator Slime_NoSwap_MovesToEmpty()
     {
         if (!Application.isPlaying) { BeforeEnterPlayMode(); yield return new EnterPlayMode(); }
         yield return WaitGameStart();
-        yield return KingBody();
+        yield return SlimeBody();
         AssertNoErrors();
     }
 
@@ -45,33 +45,33 @@ public class MergeSwapPlayTest : InGamePlayTestBase
         yield return WaitFrames(3);
     }
 
-    IEnumerator KingBody()
+    IEnumerator SlimeBody()
     {
         Assert.IsNotNull(DROP_AT, "MinionFieldController.DropAt 없음");
-        KingSlime king = KingSlime.Instance;
-        Tile kingTile = TileManager.Instance.GetTile(king);
-        Assert.IsNotNull(kingTile, "킹이 타일 위에 없음");
+        Slime slime = Slime.Instance;
+        Tile slimeTile = TileManager.Instance.GetTile(slime);
+        Assert.IsNotNull(slimeTile, "슬라임이 타일 위에 없음");
 
-        // 1) 킹을 미니언 위에 놓음 → 교체 없이 원위치
-        Tile minionTile = GetFreeTile(kingTile);
+        // 1) 슬라임을 미니언 위에 놓음 → 교체 없이 원위치
+        Tile minionTile = GetFreeTile(slimeTile);
         Minion minion = SpawnMinion("Iron", minionTile, 0);
         yield return WaitFrames(2);
-        yield return DragDrop(king, minionTile);
-        Assert.AreSame(kingTile, TileManager.Instance.GetTile(king), "킹 → 미니언: 킹은 원래 칸");
-        Assert.AreSame(minionTile, TileManager.Instance.GetTile(minion), "킹 → 미니언: 미니언은 그대로");
-        Assert.AreEqual((Vector2)kingTile.transform.position, (Vector2)king.transform.position, "킹 위치 원위치");
+        yield return DragDrop(slime, minionTile);
+        Assert.AreSame(slimeTile, TileManager.Instance.GetTile(slime), "슬라임 → 미니언: 슬라임은 원래 칸");
+        Assert.AreSame(minionTile, TileManager.Instance.GetTile(minion), "슬라임 → 미니언: 미니언은 그대로");
+        Assert.AreEqual((Vector2)slimeTile.transform.position, (Vector2)slime.transform.position, "슬라임 위치 원위치");
 
-        // 2) 미니언을 킹 위에 놓음 → 원위치
-        yield return DragDrop(minion, kingTile);
-        Assert.AreSame(kingTile, TileManager.Instance.GetTile(king), "미니언 → 킹: 킹 그대로");
-        Assert.AreSame(minionTile, TileManager.Instance.GetTile(minion), "미니언 → 킹: 미니언 원위치");
+        // 2) 미니언을 슬라임 위에 놓음 → 원위치
+        yield return DragDrop(minion, slimeTile);
+        Assert.AreSame(slimeTile, TileManager.Instance.GetTile(slime), "미니언 → 슬라임: 슬라임 그대로");
+        Assert.AreSame(minionTile, TileManager.Instance.GetTile(minion), "미니언 → 슬라임: 미니언 원위치");
         Assert.AreEqual((Vector2)minionTile.transform.position, (Vector2)minion.transform.position, "미니언 위치 원위치");
 
-        // 3) 킹은 빈 칸으로 이동
-        Tile empty = GetFreeTile(kingTile, minionTile);
-        yield return DragDrop(king, empty);
-        Assert.AreSame(empty, TileManager.Instance.GetTile(king), "킹 빈 칸 이동 안 됨");
-        Assert.IsTrue(kingTile.IsEmpty, "킹이 떠난 칸이 비지 않음");
+        // 3) 슬라임은 빈 칸으로 이동
+        Tile empty = GetFreeTile(slimeTile, minionTile);
+        yield return DragDrop(slime, empty);
+        Assert.AreSame(empty, TileManager.Instance.GetTile(slime), "슬라임 빈 칸 이동 안 됨");
+        Assert.IsTrue(slimeTile.IsEmpty, "슬라임이 떠난 칸이 비지 않음");
 
         MinionFieldController.Instance.RemoveFieldMinion(minion);
         yield return WaitFrames(2);
@@ -151,42 +151,42 @@ public class MergeSwapPlayTest : InGamePlayTestBase
 
         // 5) (2026-11-26) 브레이크타임에 미니언을 빈 칸에 놓음 → 주사위 코인 2개로 이동 (확인 팝업)
         Assert.IsTrue(GameManager.Instance.isBreakTime, "게임 시작 = 브레이크타임");
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         a = GetFreeTile(); b = GetFreeTile(a);
         Minion moving = SpawnMinion("Iron", a, 0);
         yield return WaitFrames(2);
         //  코인 부족 → 팝업 없이 원위치
-        king.diceCoin = GameSetting.MOVE_MINION_DICE_COIN - 1;
+        slime.diceCoin = GameSetting.MOVE_MINION_DICE_COIN - 1;
         yield return DragDrop(moving, b);
         Assert.AreSame(a, TileManager.Instance.GetTile(moving), "코인 부족이면 원위치");
         Assert.IsFalse(YesOrNoCanvas.Instance != null && YesOrNoCanvas.Instance.gameObject.activeInHierarchy, "코인 부족이면 팝업 없음");
-        Assert.AreEqual(GameSetting.MOVE_MINION_DICE_COIN - 1, king.diceCoin);
+        Assert.AreEqual(GameSetting.MOVE_MINION_DICE_COIN - 1, slime.diceCoin);
         //  코인 충분 → 팝업 → No = 그대로
-        king.diceCoin = 5;
+        slime.diceCoin = 5;
         yield return DragDrop(moving, b);
         Assert.IsTrue(YesOrNoCanvas.Instance.gameObject.activeInHierarchy, "이동 확인 팝업");
         Assert.AreSame(a, TileManager.Instance.GetTile(moving), "Yes 전엔 원래 칸");
         YesOrNoCanvas.Instance.OnClickedNo();
         yield return WaitFrames(2);
         Assert.AreSame(a, TileManager.Instance.GetTile(moving), "No = 이동 안 함");
-        Assert.AreEqual(5, king.diceCoin, "No = 코인 그대로");
+        Assert.AreEqual(5, slime.diceCoin, "No = 코인 그대로");
         //  Yes = 코인 2개 쓰고 이동
         yield return DragDrop(moving, b);
         YesOrNoCanvas.Instance.OnClickedYes();
         yield return WaitFrames(2);
         Assert.AreSame(b, TileManager.Instance.GetTile(moving), "Yes = 이동");
         Assert.IsTrue(a.IsEmpty, "떠난 칸이 빔");
-        Assert.AreEqual(5 - GameSetting.MOVE_MINION_DICE_COIN, king.diceCoin, "주사위 코인 2개 소비");
+        Assert.AreEqual(5 - GameSetting.MOVE_MINION_DICE_COIN, slime.diceCoin, "주사위 코인 2개 소비");
         Assert.AreEqual((Vector2)b.transform.position, (Vector2)moving.transform.position);
 
         // 6) wave 중엔 빈 칸에 놓아도 원위치 (자리 고정)
         GameManager.Instance.EndBreakTime();
         yield return WaitFrames(2);
         Assert.IsFalse(GameManager.Instance.isBreakTime);
-        king.diceCoin = 5;
+        slime.diceCoin = 5;
         yield return DragDrop(moving, a);
         Assert.AreSame(b, TileManager.Instance.GetTile(moving), "wave 중엔 이동 안 됨");
-        Assert.AreEqual(5, king.diceCoin, "wave 중엔 코인 안 씀");
+        Assert.AreEqual(5, slime.diceCoin, "wave 중엔 코인 안 씀");
         MinionFieldController.Instance.RemoveFieldMinion(moving);
         yield return WaitFrames(2);
     }

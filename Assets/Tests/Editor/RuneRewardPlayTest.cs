@@ -19,14 +19,14 @@ public class RuneRewardPlayTest : InGamePlayTestBase
 
     IEnumerator Body()
     {
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         var select = SelectRuneCanvas.Instance;
         Assert.IsTrue(GameManager.Instance.isBreakTime);
 
         // 1) 엘리트·보스 처치 2번 → 적립만 (창은 다음 브레이크타임 시작에)
-        RuneRewardSystem.AddReward(king.transform.position);
-        RuneRewardSystem.AddReward(king.transform.position);
-        Assert.AreEqual(2, king.pendingRuneRewards);
+        RuneRewardSystem.AddReward(slime.transform.position);
+        RuneRewardSystem.AddReward(slime.transform.position);
+        Assert.AreEqual(2, slime.pendingRuneRewards);
         Assert.IsFalse(RuneRewardSystem.IsOpen);
         Assert.AreEqual(2, RuneRewardChest.Count, "처치 자리에 보상 상자 2개");
 
@@ -45,7 +45,7 @@ public class RuneRewardPlayTest : InGamePlayTestBase
         Assert.IsFalse(nextButton.gameObject.activeSelf, "룬을 고르는 동안 Next 숨김");
 
         // 3) 레벨업은 룬 보상이 끝날 때까지 대기
-        king.AddExp(king.MaxExp);
+        slime.AddExp(slime.MaxExp);
         yield return WaitFrames(2);
         Assert.IsFalse(InGame.LevelUpCanvas.Instance.gameObject.activeSelf, "룬 보상 중엔 레벨업 창 대기");
 
@@ -65,7 +65,7 @@ public class RuneRewardPlayTest : InGamePlayTestBase
         MinionFieldController.Instance.tilePickCallback(tile);
         yield return WaitFrames(3);
         Assert.AreEqual(rune.key, (tile.tileRune as TileRune)?.key, "룬이 새겨지지 않음");
-        Assert.AreEqual(1, king.pendingRuneRewards);
+        Assert.AreEqual(1, slime.pendingRuneRewards);
         Assert.IsTrue(RuneRewardSystem.IsOpen, "보상이 남았으면 연속으로 열림");
 
         // 6) 두 번째 보상 → 끝나면 밀린 레벨업 창
@@ -74,7 +74,7 @@ public class RuneRewardPlayTest : InGamePlayTestBase
         Tile tile2 = TileManager.Instance.tiles.First(t => t != tile && t.IsEmpty && t.CanAddTileRune && t.tileObject == null);
         MinionFieldController.Instance.tilePickCallback(tile2);
         yield return WaitFrames(3);
-        Assert.AreEqual(0, king.pendingRuneRewards);
+        Assert.AreEqual(0, slime.pendingRuneRewards);
         Assert.IsFalse(RuneRewardSystem.IsOpen);
         Assert.IsFalse(select.gameObject.activeSelf);
         Assert.IsTrue(InGame.LevelUpCanvas.Instance.gameObject.activeSelf, "룬 보상이 끝나면 밀린 레벨업 창");

@@ -83,7 +83,7 @@ public class BerserkerMinion : Minion
             tileRune.ModifyDamageData(damageData);
         AccumulateDamage(damageData.damage);
         hittable.TakeDamage(damageData);
-        // (2026-11-26) 타격 이펙트 = 킹(기사) 휘두르기를 얇게 만든 손톱 할퀴기 3줄 (이전: 공용 Hit 이펙트)
+        // (2026-11-26) 타격 이펙트 = 슬라임(기사) 휘두르기를 얇게 만든 손톱 할퀴기 3줄 (이전: 공용 Hit 이펙트)
         HeroSkillVisual.PlayClaw(hittable.Transform.position, dir, CLAW_COLOR);
         IBulletBehavior hitBehavior = tileRune != null ? tileRune.HitBehavior : null; // 확률형은 읽을 때 판정하므로 한 번만 읽음
         if (hitBehavior != null)

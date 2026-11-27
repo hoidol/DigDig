@@ -46,7 +46,7 @@ public class MinionOptionPlayTest : InGamePlayTestBase
         AssertButtons(panel, buff, target: true, buffRange: true, rotation: false);
         AssertButtons(panel, orbit, target: false, buffRange: false, rotation: true);
         AssertButtons(panel, hail, target: false, buffRange: false, rotation: true);
-        AssertButtons(panel, KingSlime.Instance, target: true, buffRange: false, rotation: false);
+        AssertButtons(panel, Slime.Instance, target: true, buffRange: false, rotation: false);
 
         // 버튼 클릭 → 값 순환
         panel.SetMinion(buff);

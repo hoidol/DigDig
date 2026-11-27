@@ -4,7 +4,7 @@ using TMPro;
 public class GameCanvas : MonoBehaviour
 {
     public TMP_Text waveText;
-    // (2026-11-20) 킹 경험치바 = GameCanvas 화면 최상단. 씬 하위에 ExpBar가 있으면 그걸 쓰고, 없으면 Panel 맨 위에 생성
+    // (2026-11-20) 슬라임 경험치바 = GameCanvas 화면 최상단. 씬 하위에 ExpBar가 있으면 그걸 쓰고, 없으면 Panel 맨 위에 생성
     public ExpBar expBar;
     const float EXP_BAR_HEIGHT = 26f;
 

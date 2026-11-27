@@ -12,7 +12,7 @@ using UnityEngine;
 //   codes/{7자리 코드} = 방 번호 (방을 만든 사람이 만듦, 친구는 코드입력으로 입장)
 //   rooms/{방 번호} = { createdAt, code, isPrivate(안 씀, 모든 방 같음), seats{uid:true}(자리, 트랜잭션 8명), fullAt(방장이 8명 차면 서버 시각 = 시작 기준),
 //                     startAt(방장이 Ready 수마다 다시 씀), winnerUid(가장 먼저 도착, 트랜잭션),
-//                     players/{uid} = { nickname, ready, joinedAt, online, wave, kingLv, heroKey, minions, board, reachedAt, ended, endedAt } }
+//                     players/{uid} = { nickname, ready, joinedAt, online, wave, slimeLv, heroKey, minions, board, reachedAt, ended, endedAt } }
 // 방장 = online인 사람 중 가장 먼저 들어온 사람 (MultiRoomState.HostUid, 방장이 나가거나 끊기면 다음 사람) → fullAt·startAt·오래된 방 정리 (MultiMatchManager)
 // 지우기: 방은 시작(fullAt, 안 찼으면 createdAt) 5시간 뒤 삭제 (방장이 될 때 CleanupOldRoomsAsync, 규칙도 5시간 지난 방만 삭제 허용). 코드도 같이 지움
 // 대기 중 앱이 꺼지면 자리·유저를 비움(onDisconnect). 방이 차면 그 대신 online = false
@@ -375,7 +375,7 @@ public class FirebaseMultiBackend : IMultiBackend
             await Player(roomId, who ?? uid).UpdateChildrenAsync(new Dictionary<string, object>
             {
                 { "wave", status.wave },
-                { "kingLv", status.kingLv },
+                { "slimeLv", status.slimeLv },
                 { "heroKey", status.heroKey ?? "" },
                 { "minions", status.minions ?? "" },
                 { "board", status.board ?? "" },
@@ -450,7 +450,7 @@ public class FirebaseMultiBackend : IMultiBackend
                 aiSlot = p.Child("aiSlot").Value != null ? (int)ToLong(p.Child("aiSlot").Value) : -1,
                 joinedAt = ToLong(p.Child("joinedAt").Value),
                 wave = (int)ToLong(p.Child("wave").Value),
-                kingLv = (int)ToLong(p.Child("kingLv").Value),
+                slimeLv = (int)ToLong(p.Child("slimeLv").Value),
                 heroKey = p.Child("heroKey").Value as string ?? "",
                 minions = p.Child("minions").Value as string ?? "",
                 board = p.Child("board").Value as string ?? "",

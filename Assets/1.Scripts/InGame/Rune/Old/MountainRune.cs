@@ -19,13 +19,13 @@ public class MountainRune : Rune
     void Release()
     {
         if (maxHpBuff != null)
-            KingSlime.Instance.RemoveBuff(maxHpBuff);
+            Slime.Instance.RemoveBuff(maxHpBuff);
 
         if (attackPowerBuff != null)
-            KingSlime.Instance.RemoveBuff(attackPowerBuff);
+            Slime.Instance.RemoveBuff(attackPowerBuff);
 
         if (attackPowerBuff != null)
-            KingSlime.Instance.RemoveBuff(attackPowerBuff);
+            Slime.Instance.RemoveBuff(attackPowerBuff);
 
     }
     public override void UpdateRune()
@@ -34,11 +34,11 @@ public class MountainRune : Rune
         Release();
         //최대 체력
         maxHpBuff = new Buff(StatType.MaxHp, maxHp, StatOpType.Add);
-        KingSlime.Instance.AddBuff(maxHpBuff);
+        Slime.Instance.AddBuff(maxHpBuff);
 
         //공격 효율
         attackPowerBuff = new Buff(StatType.AttackPower, attackPower, StatOpType.Add);
-        KingSlime.Instance.AddBuff(attackPowerBuff);
+        Slime.Instance.AddBuff(attackPowerBuff);
 
         //초당 회복력
         // recoveryHpBuff = new Buff(StatType.RecoveryHp, recoveryHp*count, StatOpType.Add);

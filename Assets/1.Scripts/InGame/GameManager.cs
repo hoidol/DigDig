@@ -48,7 +48,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         PlayInGameBGM();
         GameEventBus.Subscribe<EnemyDeadEvent>(EnemyDeadEventListener);
-        GameEventBus.Subscribe<KingSlimeHpChangedEvent>(OnCharacterHpChangedEvent);
+        GameEventBus.Subscribe<SlimeHpChangedEvent>(OnCharacterHpChangedEvent);
         GameEventBus.Subscribe<SpawnMinionEvent>(OnSpawnMinieEvent);
 
         Debug.Log($"[GameManager] 스테이지 {UserDataManager.stageOrder} / {UserDataManager.difficultyType}");
@@ -72,13 +72,13 @@ public class GameManager : MonoSingleton<GameManager>
         // 캐릭터를 임의의 빈 타일 위에 배치
         Tile characterTile = TileManager.Instance.GetRandomEmptyTile();
         if (characterTile != null)
-            characterTile.SetTileObject(KingSlime.Instance);
+            characterTile.SetTileObject(Slime.Instance);
         else
             Debug.LogWarning("GameManager 캐릭터를 올릴 빈 타일 없음");
 
-        MinionFieldController.Instance.minionMaxCount += (int)KingSlime.Instance.statMgr.GetValue(StatType.MaxMinionCount);
+        MinionFieldController.Instance.minionMaxCount += (int)Slime.Instance.statMgr.GetValue(StatType.MaxMinionCount);
 
-        // (2026-11-24) 용사 강화 능력 (타일·킹 배치 후, 첫 브레이크타임 전): 시작 주사위 코인·막힌 칸 해제·시작 룬 등
+        // (2026-11-24) 용사 강화 능력 (타일·슬라임 배치 후, 첫 브레이크타임 전): 시작 주사위 코인·막힌 칸 해제·시작 룬 등
         HeroUpgradeSystem.Begin();
 
         // wave 카드 소환 (골드 소환 대신). wave 시작 이벤트보다 먼저 만들어 첫 wave 카드도 받게 함
@@ -91,7 +91,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         GameEventBus.Publish(new StartGameEvent(stageData));
         // 기존 Start() 로직 (이벤트 구독, FadeIn → StartGame) 이어서 진행
-        // 첫 플레이 튜토리얼: 페이드 전에 시작해 킹 위치 지정 같은 준비가 화면이 밝아지기 전에 끝나게 한다
+        // 첫 플레이 튜토리얼: 페이드 전에 시작해 슬라임 위치 지정 같은 준비가 화면이 밝아지기 전에 끝나게 한다
         if (TutorialManager.Instance != null && !MultiGame.IsActive)
             TutorialManager.Instance.TryBegin(TutorialType.FirstPlay);
 
@@ -144,7 +144,7 @@ public class GameManager : MonoSingleton<GameManager>
         gameTimer = 0;
         isPlaying = true;
 
-        KingSlime.Instance.AddCoin((int)KingSlime.Instance.statMgr.GetValue(StatType.StartGold));
+        Slime.Instance.AddCoin((int)Slime.Instance.statMgr.GetValue(StatType.StartGold));
         if (GameSetting.USE_WAVE_MINION_OFFER)
             StartBreakTime(0); // 첫 wave 전에도 카드를 받고 배치 → Next
         else
@@ -218,7 +218,7 @@ public class GameManager : MonoSingleton<GameManager>
         return wave != null && wave.isSpawnEnd && EnemyFieldController.Instance.ActiveEnemyCount == 0;
     }
 
-    // (2026-11-24) wave 시간 제한(90초 지나면 남은 적 제거 + 킹 피해) 삭제 → 적을 모두 처리해야 wave 클리어
+    // (2026-11-24) wave 시간 제한(90초 지나면 남은 적 제거 + 슬라임 피해) 삭제 → 적을 모두 처리해야 wave 클리어
 
     void OnWaveCleared()
     {
@@ -324,7 +324,7 @@ public class GameManager : MonoSingleton<GameManager>
             return;
 
         clearWaveIdxes.Add(endWaveIdx);
-        KingSlime.Instance.AddCoin((int)KingSlime.Instance.statMgr.GetValue(StatType.WaveClearGold));
+        Slime.Instance.AddCoin((int)Slime.Instance.statMgr.GetValue(StatType.WaveClearGold));
         GameEventBus.Publish(new WaveEndEvent(endWaveIdx));
     }
 
@@ -437,7 +437,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         EnemyFieldController.Instance.ClearAllEnemies();
 
-        KingSlime.Instance.AddHp(KingSlime.Instance.health.MaxHp);
+        Slime.Instance.AddHp(Slime.Instance.health.MaxHp);
         isPlaying = true;
         GameEventBus.Publish(new ResumeEvent());
 
@@ -448,7 +448,7 @@ public class GameManager : MonoSingleton<GameManager>
             StartWave(waveIdx);
     }
 
-    void OnCharacterHpChangedEvent(KingSlimeHpChangedEvent e)
+    void OnCharacterHpChangedEvent(SlimeHpChangedEvent e)
     {
         if (e.curHp <= 0)
         {

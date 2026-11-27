@@ -102,8 +102,8 @@ public class JokerMinion : Minion
                 break;
             case Card.Clover:
                 int coin = GetCloverCoin(mergeLevel);
-                if (KingSlime.Instance != null)
-                    KingSlime.Instance.AddCoin(coin);
+                if (Slime.Instance != null)
+                    Slime.Instance.AddCoin(coin);
                 ShowCard("Joker_Card_Clover", CLOVER_COLOR, $" +{coin}");
                 break;
             default:

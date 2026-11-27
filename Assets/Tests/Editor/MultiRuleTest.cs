@@ -42,14 +42,14 @@ public class MultiRuleTest
     [Test]
     public void Snapshot_JsonRoundTrip()
     {
-        var s = new GameSnapshot { nextWaveIdx = 7, lv = 3, exp = 2, diceCoin = 4, hasKingTile = true, kingTile = new Vector2Int(2, 3) };
+        var s = new GameSnapshot { nextWaveIdx = 7, lv = 3, exp = 2, diceCoin = 4, hasSlimeTile = true, slimeTile = new Vector2Int(2, 3) };
         s.minions.Add(new GameSnapshot.MinionSnap { tile = new Vector2Int(1, 1), key = "Flame", mergeLevel = 2, hasRotation = true, rotation = RotationDirection.Clockwise });
         s.runes.Add(new GameSnapshot.RuneSnap { tile = new Vector2Int(0, 0), key = "AttackPowerTile", level = 2 });
         s.abilities.Add(new GameSnapshot.AbilitySnap { dataKey = "HeroKnight", level = 1, unlockedSkills = 1, heroOffsets = { new Vector2Int(-1, 0) } });
         s.enhances.Add(new GameSnapshot.EnhanceSnap { key = "Flame", stat = StatType.AttackPower, lv = 2 });
         var back = JsonUtility.FromJson<GameSnapshot>(JsonUtility.ToJson(s));
         Assert.AreEqual(7, back.nextWaveIdx);
-        Assert.AreEqual(new Vector2Int(2, 3), back.kingTile);
+        Assert.AreEqual(new Vector2Int(2, 3), back.slimeTile);
         Assert.AreEqual("Flame", back.minions[0].key);
         Assert.AreEqual(RotationDirection.Clockwise, back.minions[0].rotation);
         Assert.AreEqual(2, back.runes[0].level);

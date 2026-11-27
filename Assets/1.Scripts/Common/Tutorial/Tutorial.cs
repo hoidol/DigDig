@@ -6,7 +6,7 @@ using UnityEngine;
 public enum TutorialType
 {
     None = 0,
-    FirstPlay = 1, // 처음 실행: 로비 대신 바로 InGame → 킹 이동 → 첫 소환
+    FirstPlay = 1, // 처음 실행: 로비 대신 바로 InGame → 슬라임 이동 → 첫 소환
 }
 
 // 튜토리얼 하나(종류 = tutorialType). 프리팹으로 두고 TutorialManager가 필요할 때 생성한다
@@ -93,7 +93,7 @@ public class Tutorial : MonoBehaviour
             hiddenObjects.Add(go);
         }
 
-        // 튜토리얼 동안 화면은 기본으로 막아 두고, 직접 조작하는 단계(킹 이동·소환)만 그 단계 동안 푼다
+        // 튜토리얼 동안 화면은 기본으로 막아 두고, 직접 조작하는 단계(슬라임 이동·소환)만 그 단계 동안 푼다
         if (canvas != null)
         {
             canvas.gameObject.SetActive(true);

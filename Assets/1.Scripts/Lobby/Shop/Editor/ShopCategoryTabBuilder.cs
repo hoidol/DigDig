@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 // (2026-11-27) 상점 탭: ShopCanvas/Panel/Bg/Top/CategoryButtons 하위에 탭 버튼 3개(Package·Hero·Minion, TapButton idx 0·1·2)
 // + Bg 하위 Package_Scroll·Hero_Scroll·Minion_Scroll에 TapPanel(idx 0·1·2) + Bg에 TapContainer(버튼·패널 연결)
-// 버튼 모양 = 킹 관리 화면 탭 버튼(TrainingCategoryButton) 복사. 선택된 탭 = ColorSetting.activeColor, 나머지 = inactiveColor (TapButton)
+// 버튼 모양 = 슬라임 관리 화면 탭 버튼(TrainingCategoryButton) 복사. 선택된 탭 = ColorSetting.activeColor, 나머지 = inactiveColor (TapButton)
 // 다시 실행하면 버튼은 지우고 새로 만듦. 이후 모양은 씬에서 직접 수정
 public static class ShopCategoryTabBuilder
 {

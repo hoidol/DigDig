@@ -15,6 +15,6 @@ public class CoinPanel : MonoBehaviour
     }
     public void UpdatePanel()
     {
-        coinText.text = KingSlime.Instance.coin.ToString();
+        coinText.text = Slime.Instance.coin.ToString();
     }
 }

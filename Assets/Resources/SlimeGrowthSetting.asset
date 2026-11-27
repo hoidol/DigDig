@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05f72101614c54e6a892ab40de648852, type: 3}
+  m_Name: SlimeGrowthSetting
+  m_EditorClassIdentifier: Assembly-CSharp::SlimeGrowthSetting
+  heroAbilities:
+  - {fileID: 11400000, guid: 089d3ff5278543ddb7f118abf2e0637f, type: 2}
+  - {fileID: 11400000, guid: 7d7ebc5acf714b8bad44c0db705c9c55, type: 2}
+  - {fileID: 11400000, guid: 0c7fd01ab1b843d9ba3a42282a2015a9, type: 2}
+  heroBoostAbilities:
+  - {fileID: 11400000, guid: 72cbd67299184d85a853beb9946c6f46, type: 2}
+  - {fileID: 11400000, guid: 3459fefedf08408ca2777d1d87826b4d, type: 2}
+  - {fileID: 11400000, guid: 069fd8032a79413d9964b00887e36ca5, type: 2}
+  - {fileID: 11400000, guid: 8bceb59d7ab64394867f3e8f479d29c2, type: 2}
+  - {fileID: 11400000, guid: 7ba29b5a066847829ebf75545a23d509, type: 2}
+  runeKeys:
+  - AttackPowerTile
+  - AttackSpeedTile
+  - CritPowerTile
+  - SkillCooldownTile
+  - RangeUpTile
+  - PioneerTile
+  - GiantSlayerTile
+  - BurstShotTile
+  - MultiTargetTile
+  - GrowthTile
+  - ExpTile
+  - SlowTile
+  - StunTile

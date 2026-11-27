@@ -49,10 +49,10 @@ public class GhostRune : Rune, IPreFire, IComboFire
         if (!active)
             return;
 
-        await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
+        await UniTask.Delay(Slime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: cts.Token);
         Ghost ghost = Instantiate(ghostPrefab);
-        ghost.transform.position = KingSlime.Instance.transform.position;
-        ghost.damage = KingSlime.Instance.statMgr.AttackPower;
+        ghost.transform.position = Slime.Instance.transform.position;
+        ghost.damage = Slime.Instance.statMgr.AttackPower;
         ghost.Shoot(dir);    
         
         triggerCounter = 0;

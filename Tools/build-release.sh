@@ -54,7 +54,7 @@ distribute() { # $1 = file, $2 = app id
 }
 
 if [[ $PLATFORM == (android|all) ]]; then
-  APK=$OUT/Android/KingSlime.apk
+  APK=$OUT/Android/Slime.apk
   unity_build BuildAndroid Android "$APK" "$OUT/android.log"
   distribute "$APK" $FIREBASE_ANDROID_APP
 fi
@@ -67,7 +67,7 @@ if [[ $PLATFORM == (ios|all) ]]; then
   # Firebase SDK(CocoaPods)가 있으면 workspace가 생김
   if [[ -d $XC/Unity-iPhone.xcworkspace ]]; then proj=(-workspace "$XC/Unity-iPhone.xcworkspace")
   else proj=(-project "$XC/Unity-iPhone.xcodeproj"); fi
-  ARCHIVE=$OUT/iOS/KingSlime.xcarchive
+  ARCHIVE=$OUT/iOS/Slime.xcarchive
   echo "Xcode archive … log: $OUT/ios-xcode.log"
   xcodebuild "${proj[@]}" -scheme Unity-iPhone -configuration Release -destination generic/platform=iOS \
     -archivePath "$ARCHIVE" -allowProvisioningUpdates DEVELOPMENT_TEAM=$KS_APPLE_TEAM_ID CODE_SIGN_STYLE=Automatic \

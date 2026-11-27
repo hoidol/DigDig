@@ -36,7 +36,7 @@ public class MobileTestPanelPlayTest : InGamePlayTestBase
 
         Find("용사 장착").onClick.Invoke();
         yield return WaitFrames(2);
-        Assert.IsNotNull(KingSlime.Instance.abilityInventory.Get<HeroKingAbility>(), "용사 장착");
+        Assert.IsNotNull(Slime.Instance.abilityInventory.Get<HeroSlimeAbility>(), "용사 장착");
 
         // (2026-11-26) 웨이브 전환: 시작 → 정지 = 다음 wave 브레이크타임 + 저장 / 이전 웨이브 = wave 1로 복구
         GameManager gm = GameManager.Instance;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 // (2026-11-27) 판 상태 저장·복구 (브레이크타임 시작 = 그 wave를 준비하기 전, 레벨업·카드 사용 전)
 // 쓰는 곳: 기기 테스트 패널 웨이브 전환(WaveSnapshotSystem). (2026-11-27 로컬 판 이어하기는 삭제)
-// 저장: 킹(칸·레벨·경험치·체력·주사위 코인·성장 능력(용사·정예 칸·스킬 해방·에너지·강화 카드)) · 미니언(칸·종·머지 레벨·진화 갈래·타겟/회전/버프 범위)
+// 저장: 슬라임(칸·레벨·경험치·체력·주사위 코인·성장 능력(용사·정예 칸·스킬 해방·에너지·강화 카드)) · 미니언(칸·종·머지 레벨·진화 갈래·타겟/회전/버프 범위)
 //   · 룬(칸·종·레벨) · 막힌 칸 · 미니언 강화 카드 레벨 · 필드 최대 미니언 수
 // 카드(오퍼)는 저장 안 함 → 복구하면 그 wave 브레이크타임으로 가서 카드를 새로 받고, 주사위 코인은 저장값으로 맞춤
 // 저장 안 함: 성장 룬 누적 공격력 · 미션 진행 · 피해 집계 · 받지 않은 룬 보상 · 박격포 깃발 위치
@@ -56,8 +56,8 @@ public class GameSnapshot
     }
 
     public int nextWaveIdx;
-    public bool hasKingTile;
-    public Vector2Int kingTile;
+    public bool hasSlimeTile;
+    public Vector2Int slimeTile;
     public int lv, exp, diceCoin, minionMaxCount;
     public float curHp;
     public List<AbilitySnap> abilities = new List<AbilitySnap>();
@@ -69,39 +69,39 @@ public class GameSnapshot
     #region 저장
     public static GameSnapshot Capture(int nextWaveIdx)
     {
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         TileManager tm = TileManager.Instance;
-        if (king == null || tm == null)
+        if (slime == null || tm == null)
             return null;
         var s = new GameSnapshot
         {
             nextWaveIdx = nextWaveIdx,
-            lv = king.lv,
-            exp = king.exp,
-            diceCoin = king.diceCoin,
-            curHp = king.health != null ? king.health.curHp : 0f,
+            lv = slime.lv,
+            exp = slime.exp,
+            diceCoin = slime.diceCoin,
+            curHp = slime.health != null ? slime.health.curHp : 0f,
             minionMaxCount = MinionFieldController.Instance != null ? MinionFieldController.Instance.minionMaxCount : 0,
         };
-        Tile kingTile = tm.GetTile(king);
-        if (kingTile != null)
+        Tile slimeTile = tm.GetTile(slime);
+        if (slimeTile != null)
         {
-            s.hasKingTile = true;
-            s.kingTile = kingTile.index;
+            s.hasSlimeTile = true;
+            s.slimeTile = slimeTile.index;
         }
 
-        foreach (KingAbility a in king.abilityInventory.Abilities)
+        foreach (SlimeAbility a in slime.abilityInventory.Abilities)
         {
             if (a == null || a.data == null || string.IsNullOrEmpty(a.data.key))
                 continue;
             var snap = new AbilitySnap { dataKey = a.data.key, level = a.level };
-            if (a is HeroKingAbility hero)
+            if (a is HeroSlimeAbility hero)
             {
                 if (hero.eliteOffsets != null)
                     snap.heroOffsets = new List<Vector2Int>(hero.eliteOffsets);
                 snap.unlockedSkills = hero.UnlockedSkillCount;
                 snap.charges = hero.Charges;
             }
-            if (a is EliteAreaExpandKingAbility expand)
+            if (a is EliteAreaExpandSlimeAbility expand)
                 snap.expandOffsets = new List<Vector2Int>(expand.Offsets);
             s.abilities.Add(snap);
         }
@@ -151,20 +151,20 @@ public class GameSnapshot
     public bool Apply()
     {
         GameManager gm = GameManager.Instance;
-        KingSlime king = KingSlime.Instance;
+        Slime slime = Slime.Instance;
         TileManager tm = TileManager.Instance;
-        if (gm == null || king == null || tm == null)
+        if (gm == null || slime == null || tm == null)
             return false;
 
         IsRestoring = true;
         try
         {
-            CloseOpenWindows(king);
+            CloseOpenWindows(slime);
 
             // 1) 판 비우기
             GameTestUtil.ClearFieldMinions();
-            foreach (TileRune r in king.runeInventory.curRunes.OfType<TileRune>().ToList())
-                king.RemoveRune(r);
+            foreach (TileRune r in slime.runeInventory.curRunes.OfType<TileRune>().ToList())
+                slime.RemoveRune(r);
             foreach (Tile t in tm.tiles)
             {
                 if (t == null)
@@ -176,28 +176,28 @@ public class GameSnapshot
                     t.Unblock();
             }
 
-            // 2) 킹 칸
-            if (hasKingTile)
+            // 2) 슬라임 칸
+            if (hasSlimeTile)
             {
-                Tile kt = tm.GetTile(kingTile);
-                Tile cur = tm.GetTile(king);
+                Tile kt = tm.GetTile(slimeTile);
+                Tile cur = tm.GetTile(slime);
                 if (kt != null && kt != cur && kt.IsEmpty)
                 {
-                    tm.RemoveTileObject(king);
-                    kt.SetTileObject(king);
+                    tm.RemoveTileObject(slime);
+                    kt.SetTileObject(slime);
                 }
             }
 
-            // 3) 킹 레벨·성장 능력 (용사가 레벨을 보므로 레벨 먼저)
-            KingAbilityInventory inv = king.abilityInventory;
-            foreach (KingAbility a in inv.Abilities.ToList())
+            // 3) 슬라임 레벨·성장 능력 (용사가 레벨을 보므로 레벨 먼저)
+            SlimeAbilityInventory inv = slime.abilityInventory;
+            foreach (SlimeAbility a in inv.Abilities.ToList())
                 inv.Remove(a.data);
-            king.lv = lv;
-            king.exp = exp;
-            king.pendingLevelUps = 0;
+            slime.lv = lv;
+            slime.exp = exp;
+            slime.pendingLevelUps = 0;
             foreach (AbilitySnap a in abilities)
                 RestoreAbility(inv, a);
-            inv.Get<HeroKingAbility>()?.RefreshHeroLevel();
+            inv.Get<HeroSlimeAbility>()?.RefreshHeroLevel();
 
             // 4) 미니언 강화 카드 → 미니언 (UpdateMinion이 강화 레벨을 읽음)
             MinionEnhanceSystem.RestoreLevels(enhances.Select(e => (e.key, e.stat, e.lv)));
@@ -210,24 +210,24 @@ public class GameSnapshot
                 Tile t = tm.GetTile(r.tile);
                 if (t == null || t.tileRune != null)
                     continue;
-                king.AddRune(r.key, t).Forget();
+                slime.AddRune(r.key, t).Forget();
                 if (t.tileRune is TileRune installed)
                     while (installed.upgradeLevel < r.level && installed.ForceUpgrade()) { }
             }
 
             // 6) 그 wave 브레이크타임으로 이동 → 카드·주사위 코인 새로 지급 후 저장한 코인으로 맞춤
-            king.bonusDiceCoinNextBreak = 0;
-            king.pendingRuneRewards = 0;
+            slime.bonusDiceCoinNextBreak = 0;
+            slime.pendingRuneRewards = 0;
             MinionOfferSystem.Instance?.ResetDealForTest();
             gm.GoToBreakTimeForTest(nextWaveIdx);
-            king.AddDiceCoin(diceCoin - king.diceCoin);
+            slime.AddDiceCoin(diceCoin - slime.diceCoin);
             if (MinionFieldController.Instance != null)
                 MinionFieldController.Instance.minionMaxCount = minionMaxCount;
-            if (king.health != null)
-                king.health.curHp = Mathf.Min(curHp, king.MaxHp);
-            king.UpdateCharacter();
-            GameEventBus.Publish(new ExpChangedEvent(king.exp, king.MaxExp, king.lv));
-            KingSlimeManageCanvas.Instance?.UpdateCanvas();
+            if (slime.health != null)
+                slime.health.curHp = Mathf.Min(curHp, slime.MaxHp);
+            slime.UpdateCharacter();
+            GameEventBus.Publish(new ExpChangedEvent(slime.exp, slime.MaxExp, slime.lv));
+            SlimeManageCanvas.Instance?.UpdateCanvas();
         }
         finally
         {
@@ -236,12 +236,12 @@ public class GameSnapshot
         return true;
     }
 
-    // 능력 key → AbilityData (용사·용사 강화 카드, 그 밖은 Resources/KingGrowth 아래 전부)
+    // 능력 key → AbilityData (용사·용사 강화 카드, 그 밖은 Resources/SlimeGrowth 아래 전부)
     public static AbilityData FindAbilityData(string key)
     {
         if (string.IsNullOrEmpty(key))
             return null;
-        KingGrowthSetting setting = KingGrowthSetting.Instance;
+        SlimeGrowthSetting setting = SlimeGrowthSetting.Instance;
         if (setting != null)
         {
             foreach (AbilityData[] list in new[] { setting.heroAbilities, setting.heroBoostAbilities })
@@ -250,10 +250,10 @@ public class GameSnapshot
                         if (d != null && d.key == key)
                             return d;
         }
-        return Resources.LoadAll<AbilityData>("KingGrowth").FirstOrDefault(d => d != null && d.key == key);
+        return Resources.LoadAll<AbilityData>("SlimeGrowth").FirstOrDefault(d => d != null && d.key == key);
     }
 
-    static void RestoreAbility(KingAbilityInventory inv, AbilitySnap a)
+    static void RestoreAbility(SlimeAbilityInventory inv, AbilitySnap a)
     {
         AbilityData data = FindAbilityData(a.dataKey);
         if (data == null || data.prefab == null)
@@ -268,10 +268,10 @@ public class GameSnapshot
             {
                 Vector2Int off = a.expandOffsets[i];
                 if (i == 0)
-                    inv.Add(data, ab => { if (ab is EliteAreaExpandKingAbility e) e.extraOffset = off; });
+                    inv.Add(data, ab => { if (ab is EliteAreaExpandSlimeAbility e) e.extraOffset = off; });
                 else
                 {
-                    if (inv.Get(data) is EliteAreaExpandKingAbility e)
+                    if (inv.Get(data) is EliteAreaExpandSlimeAbility e)
                         e.extraOffset = off;
                     inv.Add(data);
                 }
@@ -280,12 +280,12 @@ public class GameSnapshot
         }
         inv.Add(data, ab =>
         {
-            if (ab is HeroKingAbility h && a.heroOffsets != null && a.heroOffsets.Count > 0)
+            if (ab is HeroSlimeAbility h && a.heroOffsets != null && a.heroOffsets.Count > 0)
                 h.eliteOffsets = a.heroOffsets.ToArray();
         });
         for (int lv = 1; lv < a.level; lv++)
             inv.Add(data);
-        if (inv.Get(data) is HeroKingAbility hero)
+        if (inv.Get(data) is HeroSlimeAbility hero)
         {
             for (int i = 0; i < a.unlockedSkills; i++)
                 hero.UnlockNextSkill();
@@ -298,7 +298,7 @@ public class GameSnapshot
         Tile t = tm.GetTile(m.tile);
         if (t == null || !t.IsEmpty || MinionManager.Instance == null || !MinionManager.Instance.minionDataDic.ContainsKey(m.key))
             return;
-        Minion minion = KingSlime.Instance.AddMinion(m.key, m.mergeLevel);
+        Minion minion = Slime.Instance.AddMinion(m.key, m.mergeLevel);
         t.SetTileObject(minion);
         if (m.evolved && minion.CanEvolve)
         {
@@ -314,9 +314,9 @@ public class GameSnapshot
     }
 
     // 열려 있는 레벨업·룬 선택 창 닫기 (밀린 레벨업은 버림)
-    static void CloseOpenWindows(KingSlime king)
+    static void CloseOpenWindows(Slime slime)
     {
-        king.pendingLevelUps = 0;
+        slime.pendingLevelUps = 0;
         if (InGame.LevelUpCanvas.Instance != null && InGame.LevelUpCanvas.Instance.gameObject.activeSelf)
             InGame.LevelUpCanvas.Instance.gameObject.SetActive(false);
         if (SelectRuneCanvas.Instance != null && SelectRuneCanvas.Instance.gameObject.activeSelf)

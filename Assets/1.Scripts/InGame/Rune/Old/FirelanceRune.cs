@@ -46,11 +46,11 @@ public class FirelanceRune : Rune
 
     void Fire()
     {
-        Vector2 dir = KingSlime.Instance.weapon.GetAttackDirection();
+        Vector2 dir = Slime.Instance.weapon.GetAttackDirection();
 
         Firelance firelance = Instantiate(firelancePrefab);
-        firelance.transform.position = KingSlime.Instance.transform.position;
-        firelance.damage = KingSlime.Instance.statMgr.AttackPower;
+        firelance.transform.position = Slime.Instance.transform.position;
+        firelance.damage = Slime.Instance.statMgr.AttackPower;
         firelance.duration = duration;
         firelance.dps = dp;
         firelance.Shoot(dir);

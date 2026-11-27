@@ -68,7 +68,7 @@
             "aiSlot": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() < 100" },
             "joinedAt": { ".validate": "newData.isNumber()" },
             "wave": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000" },
-            "kingLv": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+            "slimeLv": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
             "heroKey": { ".validate": "newData.isString() && newData.val().length <= 40" },
             "minions": { ".validate": "newData.isString() && newData.val().length <= 1000" },
             "board": { ".validate": "newData.isString() && newData.val().length <= 20000" },

@@ -35,7 +35,7 @@ public class StartSetting
             "UserManager",
             "StageManager",
             "EnemyManager",
-            "KingSlimeManager",
+            "SlimeManager",
             "MinionManager",
             "SoundManager",
             "AchievementManager",

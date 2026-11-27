@@ -111,10 +111,10 @@ namespace Lobby
                 foreach (var p in panels)
                     p.EndExpAnimation();
 
-            // (2026-11-24) 레벨업으로 킹 스탯 포인트가 생겼으면 안내 (레벨 1당 1포인트, 킹 관리 화면에서 찍음)
-            int remainPoints = UserDataManager.Instance.userKingSlimeManager.RemainPoints;
+            // (2026-11-24) 레벨업으로 슬라임 스탯 포인트가 생겼으면 안내 (레벨 1당 1포인트, 슬라임 관리 화면에서 찍음)
+            int remainPoints = UserDataManager.Instance.userSlimeManager.RemainPoints;
             if (leveledUp && remainPoints > 0)
-                ToastCanvas.Toast(string.Format(TranslateManager.GetText("KingStat_PointGained"), remainPoints));
+                ToastCanvas.Toast(string.Format(TranslateManager.GetText("SlimeStat_PointGained"), remainPoints));
         }
 
         void UpdateMyInfoPanels()
@@ -154,6 +154,6 @@ public enum LobbyState
     Shop,
     Minion,
     Battle,
-    KingSlimeManagement,
+    SlimeManagement,
     Town
 }

@@ -22,7 +22,7 @@ public class MushroomRune : Rune
         if (Random.Range(0f, 100f) >= recoverChance)
             return;
 
-        KingSlime.Instance.AddHp(recoverHp);
+        Slime.Instance.AddHp(recoverHp);
     }
 
     public override string GetDescription()

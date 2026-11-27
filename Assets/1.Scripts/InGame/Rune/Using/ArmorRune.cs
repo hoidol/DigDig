@@ -10,13 +10,13 @@ public class ArmorRune : Rune
         float addMaxHp =  hp;
         //최대 체력
         maxHpBuff = new Buff(StatType.MaxHp, addMaxHp, StatOpType.Add);
-        KingSlime.Instance.AddBuff(maxHpBuff);
+        Slime.Instance.AddBuff(maxHpBuff);
 
     }
     void Release()
     {
         if (maxHpBuff != null)
-            KingSlime.Instance.RemoveBuff(maxHpBuff);
+            Slime.Instance.RemoveBuff(maxHpBuff);
     }
 
 

@@ -44,8 +44,8 @@ public class DefenceTypePlayTest : InGamePlayTestBase
         Assert.AreEqual(AttackType.Physic, physic.AttackType, "Pierce 공격 속성");
         Assert.AreEqual(AttackType.Magic, magic.AttackType, "Ice 공격 속성");
         Assert.AreEqual(AttackType.Vibration, vibration.AttackType, "Iron 공격 속성 (2026-11-21 진동)");
-        // (2026-11-21) 킹 공격 타입 = 무기 설정 (화면 표시와 실제 탄이 같아야 함)
-        Assert.AreEqual(KingSlime.Instance.weapon.attackType, KingSlime.Instance.AttackType, "킹 공격 타입이 무기 설정과 다름");
+        // (2026-11-21) 슬라임 공격 타입 = 무기 설정 (화면 표시와 실제 탄이 같아야 함)
+        Assert.AreEqual(Slime.Instance.weapon.attackType, Slime.Instance.AttackType, "슬라임 공격 타입이 무기 설정과 다름");
 
         foreach (DefenceType defenceType in new[] { DefenceType.Light, DefenceType.Normal, DefenceType.Armored, DefenceType.Ethereal })
         {

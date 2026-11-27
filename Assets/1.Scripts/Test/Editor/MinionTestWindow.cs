@@ -62,7 +62,7 @@ public class MinionTestWindow : EditorWindow
         benchNoDefence = EditorPrefs.GetBool(PREFS + "benchNoDefence", true);
         benchUsedOnly = EditorPrefs.GetBool(PREFS + "benchUsedOnly", false);
         heroIdx = EditorPrefs.GetInt(PREFS + "heroIdx", 0);
-        heroLevel = EditorPrefs.GetInt(PREFS + "heroLevel", GameSetting.KING_MAX_LEVEL);
+        heroLevel = EditorPrefs.GetInt(PREFS + "heroLevel", GameSetting.SLIME_MAX_LEVEL);
         heroEnhance = EditorPrefs.GetBool(PREFS + "heroEnhance", false);
         EditorApplication.update += OnEditorUpdate;
         EditorApplication.playModeStateChanged += OnPlayModeChanged;
@@ -105,7 +105,7 @@ public class MinionTestWindow : EditorWindow
             freezeEnemies = false; // static 값이라 다음 Play에 남지 않게
     }
 
-    static bool InGameReady => Application.isPlaying && KingSlime.Instance != null && GameManager.Instance != null
+    static bool InGameReady => Application.isPlaying && Slime.Instance != null && GameManager.Instance != null
                                && MinionFieldController.Instance != null && TileManager.Instance != null;
 
     // 무적·코인 무한은 매 프레임 유지 (사망 시 EndGame에서 유저 데이터가 저장되므로 무적 기본 켬)
@@ -113,13 +113,13 @@ public class MinionTestWindow : EditorWindow
     {
         if (!InGameReady)
             return;
-        KingSlime king = KingSlime.Instance;
-        if (invincible && king.health != null && king.health.curHp < king.MaxHp)
-            king.health.curHp = king.MaxHp;
+        Slime slime = Slime.Instance;
+        if (invincible && slime.health != null && slime.health.curHp < slime.MaxHp)
+            slime.health.curHp = slime.MaxHp;
         if (infiniteCoin)
         {
-            if (king.coin < 100000)
-                king.AddCoin(100000 - king.coin);
+            if (slime.coin < 100000)
+                slime.AddCoin(100000 - slime.coin);
             // 주사위 코인은 채우지 않음 (필요하면 직접 추가)
         }
         if (freezeEnemies)
@@ -198,7 +198,7 @@ public class MinionTestWindow : EditorWindow
             if (GUILayout.Button("엑셀 다시 만들기"))
                 MinionDamageBenchmark.RewriteExcel(benchWave, benchNoEliteBoss, benchNoDefence);
         }
-        EditorGUILayout.HelpBox($"선택 Key = 아래 '미니언 소환'의 Key. 결과: {path}\n측정 중엔 킹 무적·킹 공격 끔·권능 끔·킹 성장 능력 제거(둘 다 다시 안 생김), 필드 미니언·적은 정리됨. Unity 창이 뒤에 있으면 느려질 수 있음.", MessageType.None);
+        EditorGUILayout.HelpBox($"선택 Key = 아래 '미니언 소환'의 Key. 결과: {path}\n측정 중엔 슬라임 무적·슬라임 공격 끔·권능 끔·슬라임 성장 능력 제거(둘 다 다시 안 생김), 필드 미니언·적은 정리됨. Unity 창이 뒤에 있으면 느려질 수 있음.", MessageType.None);
     }
 
     // ---------------- (2026-11-25) 용사 테스트 ----------------
@@ -209,17 +209,17 @@ public class MinionTestWindow : EditorWindow
     void DrawHero()
     {
         Header("용사 테스트");
-        AbilityData[] heroes = KingGrowthSetting.Instance != null ? KingGrowthSetting.Instance.heroAbilities.Where(h => h != null).ToArray() : new AbilityData[0];
+        AbilityData[] heroes = SlimeGrowthSetting.Instance != null ? SlimeGrowthSetting.Instance.heroAbilities.Where(h => h != null).ToArray() : new AbilityData[0];
         if (heroes.Length == 0)
         {
-            EditorGUILayout.HelpBox("KingGrowthSetting.heroAbilities 비어 있음", MessageType.Warning);
+            EditorGUILayout.HelpBox("SlimeGrowthSetting.heroAbilities 비어 있음", MessageType.Warning);
             return;
         }
         heroIdx = Mathf.Clamp(EditorGUILayout.Popup("용사", heroIdx, heroes.Select(h => $"{h.title} ({h.key})").ToArray()), 0, heroes.Length - 1);
-        heroLevel = EditorGUILayout.IntSlider("킹 레벨", heroLevel, 1, GameSetting.KING_MAX_LEVEL);
+        heroLevel = EditorGUILayout.IntSlider("슬라임 레벨", heroLevel, 1, GameSetting.SLIME_MAX_LEVEL);
         heroEnhance = EditorGUILayout.Toggle("1·2단계 스킬 강화", heroEnhance);
         AbilityData selected = heroes[heroIdx];
-        HeroKingAbility hero = KingSlime.Instance.abilityInventory.Get<HeroKingAbility>();
+        HeroSlimeAbility hero = Slime.Instance.abilityInventory.Get<HeroSlimeAbility>();
 
         if (HeroDamageBenchmark.IsRunning)
         {
@@ -239,10 +239,10 @@ public class MinionTestWindow : EditorWindow
         }
         if (hero != null)
         {
-            EditorGUILayout.LabelField($"지금: {hero.data?.title} Lv.{hero.HeroLevel} · 에너지 {hero.Charges}/{hero.MaxCharges} · 킹 공격력 {KingSlime.Instance.statMgr.AttackPower:0.#} · 킹 피해 {DamageMeterSystem.KingTotalDamage:N0}", EditorStyles.miniLabel);
+            EditorGUILayout.LabelField($"지금: {hero.data?.title} Lv.{hero.HeroLevel} · 에너지 {hero.Charges}/{hero.MaxCharges} · 슬라임 공격력 {Slime.Instance.statMgr.AttackPower:0.#} · 슬라임 피해 {DamageMeterSystem.SlimeTotalDamage:N0}", EditorStyles.miniLabel);
             using (new EditorGUILayout.HorizontalScope())
             {
-                for (int i = 0; i < HeroKingAbility.SKILL_COUNT; i++)
+                for (int i = 0; i < HeroSlimeAbility.SKILL_COUNT; i++)
                 {
                     GUI.enabled = hero.IsSkillUnlocked(i);
                     if (GUILayout.Button($"{i + 1}. {hero.GetSkillName(i)}"))
@@ -253,7 +253,7 @@ public class MinionTestWindow : EditorWindow
         }
 
         EditorGUILayout.Space(4);
-        EditorGUILayout.LabelField($"피해 측정: 미니언 없이 킹 혼자 칸 {HeroDamageBenchmark.TILE_INDEX}, wave {benchWave} (위 피해 측정의 wave·엘리트·상성 옵션 공용)", EditorStyles.miniLabel);
+        EditorGUILayout.LabelField($"피해 측정: 미니언 없이 슬라임 혼자 칸 {HeroDamageBenchmark.TILE_INDEX}, wave {benchWave} (위 피해 측정의 wave·엘리트·상성 옵션 공용)", EditorStyles.miniLabel);
         bool ready = GameManager.Instance.IsGameStarted && GameManager.Instance.isPlaying;
         GUI.enabled = ready;
         using (new EditorGUILayout.HorizontalScope())
@@ -276,7 +276,7 @@ public class MinionTestWindow : EditorWindow
         }
     }
 
-    static void UseHeroSkill(HeroKingAbility hero, int idx) =>
+    static void UseHeroSkill(HeroSlimeAbility hero, int idx) =>
         Debug.Log($"[용사 테스트] {hero.GetSkillName(idx)} → {GameTestUtil.UseHeroSkill(hero, idx)}");
 
     // ---------------- 소환 ----------------
@@ -344,7 +344,7 @@ public class MinionTestWindow : EditorWindow
             Debug.LogWarning(useTileIndex ? $"[MinionTest] {tileIndex} 칸에 이미 유닛이 있습니다" : "[MinionTest] 빈 칸이 없습니다");
             return null;
         }
-        Minion minion = KingSlime.Instance.AddMinion(key, mergeLevel);
+        Minion minion = Slime.Instance.AddMinion(key, mergeLevel);
         tile.SetTileObject(minion);
         if (evolve && minion.CanEvolve && mergeLevel >= MinionData.MAX_MERGE_LEVEL)
             minion.Evolve();
@@ -401,7 +401,7 @@ public class MinionTestWindow : EditorWindow
     void DrawConvenience()
     {
         Header("편의 (배속·골드는 TestCanvas에도 있음)");
-        invincible = EditorGUILayout.Toggle("킹 무적", invincible);
+        invincible = EditorGUILayout.Toggle("슬라임 무적", invincible);
         infiniteCoin = EditorGUILayout.Toggle("코인·주사위 코인 무한", infiniteCoin);
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -478,13 +478,13 @@ public class MinionTestWindow : EditorWindow
         {
             GUI.enabled = tile != null && tile.CanAddTileRune;
             if (GUILayout.Button("설치"))
-                KingSlime.Instance.AddRune(runeKey, tile).Forget();
+                Slime.Instance.AddRune(runeKey, tile).Forget();
             GUI.enabled = cur != null && cur.CanUpgrade && !cur.IsMaxLevel;
             if (GUILayout.Button("레벨 +1 (확정)"))
                 cur.TryUpgrade(0f);
             GUI.enabled = cur != null;
             if (GUILayout.Button("제거"))
-                KingSlime.Instance.RemoveRune(cur);
+                Slime.Instance.RemoveRune(cur);
             GUI.enabled = true;
         }
     }

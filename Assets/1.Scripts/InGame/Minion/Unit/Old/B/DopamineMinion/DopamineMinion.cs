@@ -151,7 +151,7 @@ public class DopamineMinion : Minion
             FireBullet(dir);
             nextDamageMul = 1f;
 
-            if (i > 0 && await UniTask.Delay(KingSlime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: token).SuppressCancellationThrow())
+            if (i > 0 && await UniTask.Delay(Slime.COMBO_ATTACK_INTERVAL_MS, cancellationToken: token).SuppressCancellationThrow())
                 return;
 
         }

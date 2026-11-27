@@ -66,7 +66,7 @@ public class ScavengerMinion : Minion
         if (isEvolved && e.enemy.IsEliteOrBoss)
             coin += EVOLVE_ELITE_BOSS_BONUS_COIN;
 
-        KingSlime.Instance.AddCoin(coin);
+        Slime.Instance.AddCoin(coin);
         CoinText.Instantiate().SetCoinText((Vector3)e.position + Vector3.up * 0.4f, $"+{coin}");
 
         killCharge++;
@@ -74,7 +74,7 @@ public class ScavengerMinion : Minion
         {
             killCharge = 0;
             int skillCoin = GetSkillCoin(mergeLevel);
-            KingSlime.Instance.AddCoin(skillCoin);
+            Slime.Instance.AddCoin(skillCoin);
             CoinText.Instantiate().SetCoinText(transform.position + Vector3.up * 0.8f, $"+{skillCoin}");
             PlaySkillAnim();
         }

@@ -8,13 +8,13 @@ namespace EffectMaker
     public enum CasterType
     {
         Minion,
-        King,
+        Slime,
     }
 
     // 이펙트가 생기는 자리
     public enum SpawnTarget
     {
-        Caster,         // 시전자(미니언/킹) 위치
+        Caster,         // 시전자(미니언/슬라임) 위치
         NearestEnemy,   // 시전자와 가장 가까운 적
         AllEnemies,     // 적 전부
         TileCenter,     // 2x2 타일 가운데

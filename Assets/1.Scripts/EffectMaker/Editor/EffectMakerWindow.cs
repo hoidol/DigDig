@@ -405,7 +405,7 @@ namespace EffectMaker
         }
 
         static readonly string[] SPAWN_TARGET_NAMES = { "시전자 위치", "가장 가까운 적", "적 전부", "타일 가운데", "시전자 → 적 방향" };
-        static readonly string[] CASTER_NAMES = { "미니언", "킹슬라임" };
+        static readonly string[] CASTER_NAMES = { "미니언", "슬라임" };
         static readonly string[] TILE_NAMES = { "왼쪽 위", "오른쪽 위", "왼쪽 아래", "오른쪽 아래" };
     }
 }

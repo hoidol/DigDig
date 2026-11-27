@@ -24,7 +24,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
     public UserMinionManager userMinionManager;
     public UserPurchaseManager userPurchaseManager;
     public UserMyInfoManager userMyInfoManager;
-    public UserKingSlimeManager userKingSlimeManager;
+    public UserSlimeManager userSlimeManager;
     public UserHeroManager userHeroManager; // (2026-11-26) 용사 보유
 
     private readonly List<UserBaseManager> dirtySaveManagers = new List<UserBaseManager>();
@@ -61,7 +61,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userPurchaseManager = new UserPurchaseManager();
         userMinionManager = new UserMinionManager();
         userMyInfoManager = new UserMyInfoManager();
-        userKingSlimeManager = new UserKingSlimeManager();
+        userSlimeManager = new UserSlimeManager();
         userHeroManager = new UserHeroManager();
 
         LoadAll();
@@ -81,7 +81,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         userPurchaseManager.LoadData();
         userMinionManager.LoadData();
         userMyInfoManager.LoadData();
-        userKingSlimeManager.LoadData();
+        userSlimeManager.LoadData();
         userHeroManager.LoadData();
         // (2026-11-27) 해금 방식이 자동(BuyCurrency 빈칸)인 용사·미니언은 레벨이 되면 보유 (미니언은 데이터 로드 후 LobbyManager에서 한 번 더)
         GrantAutoUnlocks();
@@ -108,7 +108,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             userPurchaseData = userPurchaseManager.userPurchaseData,
             userMinionData = userMinionManager.userMinionData,
             userMyInfoData = userMyInfoManager.userMyInfoData,
-            userKSData = userKingSlimeManager.userKSData,
+            userKSData = userSlimeManager.userKSData,
             userHeroData = userHeroManager.userHeroData,
         };
     }
@@ -124,7 +124,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
         SaveIfNotNull(UserPurchaseManager.UserDataFileName, data.userPurchaseData);
         SaveIfNotNull(UserMinionManager.UserDataFileName, data.userMinionData);
         SaveIfNotNull(UserMyInfoManager.UserDataFileName, data.userMyInfoData);
-        SaveIfNotNull(UserKingSlimeManager.UserDataFileName, data.userKSData);
+        SaveIfNotNull(UserSlimeManager.UserDataFileName, data.userKSData);
         SaveIfNotNull(UserHeroManager.UserDataFileName, data.userHeroData);
 
         LoadAll();
@@ -141,7 +141,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             { UserPurchaseManager.UserDataFileName, JsonUtility.ToJson(data.userPurchaseData) },
             { UserMinionManager.UserDataFileName, JsonUtility.ToJson(data.userMinionData) },
             { UserMyInfoManager.UserDataFileName, JsonUtility.ToJson(data.userMyInfoData) },
-            { UserKingSlimeManager.UserDataFileName, JsonUtility.ToJson(data.userKSData) },
+            { UserSlimeManager.UserDataFileName, JsonUtility.ToJson(data.userKSData) },
             { UserHeroManager.UserDataFileName, JsonUtility.ToJson(data.userHeroData) },
         };
     }
@@ -156,7 +156,7 @@ public class UserDataManager : MonoSingleton<UserDataManager>
             userPurchaseData = FromSection<UserPurchaseData>(sections, UserPurchaseManager.UserDataFileName),
             userMinionData = FromSection<UserMinionData>(sections, UserMinionManager.UserDataFileName),
             userMyInfoData = FromSection<UserMyInfoData>(sections, UserMyInfoManager.UserDataFileName),
-            userKSData = FromSection<UserKSData>(sections, UserKingSlimeManager.UserDataFileName),
+            userKSData = FromSection<UserKSData>(sections, UserSlimeManager.UserDataFileName),
             userHeroData = FromSection<UserHeroData>(sections, UserHeroManager.UserDataFileName),
         });
     }
@@ -249,7 +249,7 @@ public class UserData
         return 0;
     }
     public string characterName = "Lucky";
-    public KingSlimeName CharacterName => Enum.Parse<KingSlimeName>(characterName);
+    public SlimeName CharacterName => Enum.Parse<SlimeName>(characterName);
 }
 // 클라우드(Firebase) 저장 단위. 로컬 저장 파일들을 하나로 묶은 것
 [System.Serializable]

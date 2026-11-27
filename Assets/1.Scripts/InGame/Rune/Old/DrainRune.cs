@@ -26,7 +26,7 @@ public class DrainRune : Rune
         if (Random.value > healChance)
             return;
 
-        KingSlime.Instance.AddHp(healAmount);
+        Slime.Instance.AddHp(healAmount);
     }
 
     public override string GetDescription()
